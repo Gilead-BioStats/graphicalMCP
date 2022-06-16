@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<project name="gMCP" default="build">
+	
+	<dirname property="content.root" file="${ant.file}"/>
+	
+	<property name="jar.dir" location="${content.root}/../inst/java"/>
+	<property name="output.dir" location="${content.root}/../classes"/>
+	<!-- If you want to set another jdk for compilation, uncomment these lines and add executable="${jdk.bin}/javac" in the javac task. 
+	<property name="jdk.home" value="/usr/lib/jvm/java-6-openjdk"/>
+	<property name="jdk.bin" value="${jdk.home}/bin"/>	 -->
+	
+	<target name="clean" description="cleanup all">
+			<delete dir="${output.dir}"/>					
+	</target>
+	
+	<!-- Compiler options - if we drop 1.5 compatibility add compiler.arg -Xlint:unchecked -->
+
+	<property name="compiler.debug" value="on"/>
+	<property name="compiler.generate.no.warnings" value="off"/>
+	<property name="compiler.args" value="-target 1.5 -source 1.5 -encoding utf8"/> 
+	<property name="compiler.max.memory" value="128m"/>
+	
+	<path id="sourcepath">
+	        <dirset dir="${content.root}">
+	            <include name="*"/>
+	        </dirset>
+	</path>
+
+	<path id="libraries.classpath">
+	        <fileset dir="${content.root}/../../../build">
+	        	<include name="*.jar"/>	        		        	
+	        </fileset>
+		<fileset dir="${content.root}/../../CommonJavaJars/inst/java">
+		      	<include name="*.jar"/>	        		        	
+	    </fileset>
+	</path> 
+	
+	<path id="complete.classpath">
+		 <path refid="libraries.classpath"/>
+	</path>
+	
+	<target name="compile">
+			<mkdir dir="${output.dir}"/>	
+			<javac srcdir="${content.root}" destdir="${output.dir}" debug="${compiler.debug}" nowarn="${compiler.generate.no.warnings}"
+	                memorymaximumsize="${compiler.max.memory}" fork="true" includeantruntime="false">
+				<compilerarg line="${compiler.args}"/>
+				<classpath refid="complete.classpath"/>
+				<src refid="sourcepath"/>				
+			</javac>
+	</target>
+	
+	<target name="build" depends="clean, compile">				
+		
+		<copy todir="${output.dir}">
+		    <fileset dir="${content.root}">
+		      	<include name="**/*.jpg"/>
+		    	<include name="**/*.png"/>
+		    	<include name="**/*.properties"/>
+		    </fileset>
+		</copy>
+		
+		<jar destfile="${jar.dir}/gsrmtp.jar">
+			<fileset dir="${output.dir}"/>		
+		</jar>
+		
+	</target>
+		
+	<target name="javadoc">
+		<javadoc access="private" author="true" destdir="doc/javadoc" nodeprecated="false" nodeprecatedlist="false" noindex="false" nonavbar="false" notree="false" packagenames="org.mutoss,org.mutoss.gui,org.mutoss.gui.graph" source="1.5" sourcepath="src" splitindex="true" use="true" version="true"/>
+	</target>
+	
+</project>
