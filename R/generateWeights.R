@@ -27,19 +27,19 @@
 #' @keywords htest
 #' @examples
 #'
-#' g <- matrix(c(
-#'     0, 0, 1, 0,
-#'     0, 0, 0, 1,
-#'     0, 1, 0, 0,
-#'     1, 0, 0, 0
-#' ), nrow = 4, byrow = TRUE)
-#' ## Choose weights
-#' w <- c(.5, .5, 0, 0)
-#' ## Weights of conventional gMCP test:
-#' generateWeights(g, w)
+g <- matrix(c(
+    0, 0, 1, 0,
+    0, 0, 0, 1,
+    0, 1, 0, 0,
+    1, 0, 0, 0
+), nrow = 4, byrow = TRUE)
+## Choose weights
+w <- c(.5, .5, 0, 0)
+## Weights of conventional gMCP test:
+generateWeights(g, w)
 #'
-#' g <- Entangled2Maurer2012()
-#' generateWeights(g)
+g <- Entangled2Maurer2012()
+generateWeights(g)
 #'
 #' @export generateWeights
 #'
@@ -115,3 +115,18 @@ powerset = function(s){
     }
     return(l)
 }
+
+# https://stackoverflow.com/questions/18715580/algorithm-to-calculate-power-set-all-possible-subsets-of-a-set-in-r
+#
+# powerset = function(s){
+#     len = length(s)
+#     l = vector(mode="list",length=2^len) ; l[[1]]=numeric()
+#     counter = 1L
+#     for(x in 1L:length(s)){
+#         for(subset in 1L:counter){
+#             counter=counter+1L
+#             l[[counter]] = c(l[[subset]],s[x])
+#         }
+#     }
+#     return(l)
+# }
