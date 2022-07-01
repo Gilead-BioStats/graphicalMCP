@@ -1,9 +1,9 @@
 #' generateWeights
-#' 
+#'
 #' compute Weights for each intersection Hypotheses in the closure of a graph
 #' based multiple testing procedure
-#' 
-#' 
+#'
+#'
 #' @param g Graph either defined as a matrix (each element defines how much of the
 #' local alpha reserved for the hypothesis corresponding to its row index is
 #' passed on to the hypothesis corresponding to its column index), as \code{graphMCP}
@@ -26,55 +26,92 @@
 #' weighted Bonferroni, Simes or parametric tests - to appear
 #' @keywords htest
 #' @examples
-#' 
-#'  g <- matrix(c(0,0,1,0,
-#'                0,0,0,1,
-#'                0,1,0,0,
-#'                1,0,0,0), nrow = 4,byrow=TRUE)
-#'  ## Choose weights
-#'  w <- c(.5,.5,0,0)
-#'  ## Weights of conventional gMCP test:
-#'  generateWeights(g,w)
-#'  
+#'
+#' g <- matrix(c(
+#'     0, 0, 1, 0,
+#'     0, 0, 0, 1,
+#'     0, 1, 0, 0,
+#'     1, 0, 0, 0
+#' ), nrow = 4, byrow = TRUE)
+#' ## Choose weights
+#' w <- c(.5, .5, 0, 0)
+#' ## Weights of conventional gMCP test:
+#' generateWeights(g, w)
+#'
 #' g <- Entangled2Maurer2012()
 #' generateWeights(g)
-#' 
+#'
 #' @export generateWeights
-#' 
-generateWeights <- function(g,w){
-  if ("entangledMCP" %in% class(g)) {
-    mL <- getMatrices(g)
-    wL <- getWeights(g)
-    split <- g@weights
-    result <- 0    
-    for (i in 1:length(mL)) {
-      m <- mL[[i]]
-      w <- wL[i,]
-      result <- result + split[i]*generateWeights(m, w)      
+#'
+generateWeights <- function(g, w) {
+    if ("entangledMCP" %in% class(g)) {
+        mL <- getMatrices(g)
+        wL <- getWeights(g)
+        split <- g@weights
+        result <- 0
+        for (i in 1:length(mL)) {
+            m <- mL[[i]]
+            w <- wL[i, ]
+            result <- result + split[i] * generateWeights(m, w)
+        }
+        n <- dim(m)[1]
+        # If weights don't sum up to one:
+        result[, 1:n][result[, 1:n] > 0] <- 1
+        return(result)
+    } else if ("graphMCP" %in% class(g)) {
+        if (missing(w)) {
+            w <- getWeights(g)
+        }
+        g <- getMatrix(g)
     }
-    n <- dim(m)[1]
-    # If weights don't sum up to one:
-    result[,1:n][result[,1:n]>0] <- 1
-    return(result)
-  } else if ("graphMCP" %in% class(g)) {    
-    if (missing(w)) {
-      w <- getWeights(g)
-    }
-    g <- getMatrix(g)
-  }
-  ## compute all intersection hypotheses and corresponding weights for a given graph
-  n <- length(w)
-  intersect <- (permutations(n))[-1,]
-  g <- apply(intersect,1,function(i) list(int=i,
-                                          w=mtp.weights(i,g,w)#, g=mtp.edges(i,g,w)
-                                     ))
-  m <- as.matrix(as.data.frame(lapply(g,function(i) c(i$int,i$w))))
-  colnames(m) <- NULL
-  t(m)
+    ## compute all intersection hypotheses and corresponding weights for a given graph
+    n <- length(w)
+    intersect <- (permutations(n))[-1, ]
+    g <- apply(intersect, 1, function(i) {
+        list(
+            int = i,
+            w = mtp.weights(i, g, w) # , g=mtp.edges(i,g,w)
+        )
+    })
+    m <- as.matrix(as.data.frame(lapply(g, function(i) c(i$int, i$w))))
+    colnames(m) <- NULL
+    t(m)
 }
 
 # Calculation time note: n=22 needs 12 seconds on my computer.
 # With each further step calculation time nearly doubles.
 permutations <- function(n) {
-	outer((1:(2^n))-1, (n:1)-1, FUN=function(x,y) {(x%/%2^y)%%2})
+    outer((1:(2^n)) - 1, (n:1) - 1, FUN = function(x, y) {
+        (x %/% 2^y) %% 2
+    })
+}
+
+nPr <- function(n) {
+    m <- matrix(0, 2^n, n)
+
+    s = 1:n
+    l = vector(mode="list",length=2^n) ; l[[1]]=numeric()
+    counter = 1L
+    for(x in 1L:n){
+        for(subset in 1L:counter){
+            counter=counter+1L
+            l[[counter]] = c(l[[subset]],s[x])
+            m[counter,l[[counter]]] <- 1
+        }
+    }
+
+    return(m)
+}
+
+powerset = function(s){
+    len = length(s)
+    l = vector(mode="list",length=2^len) ; l[[1]]=numeric()
+    counter = 1L
+    for(x in 1L:length(s)){
+        for(subset in 1L:counter){
+            counter=counter+1L
+            l[[counter]] = c(l[[subset]],s[x])
+        }
+    }
+    return(l)
 }
