@@ -1,0 +1,3 @@
+1. review the .cpp power set function and double check performance
+2. replace mtp.weights and mtp.edges with calcWeight from dev/calcWeight.cpp
+3. add generateWeights3 from dev/comparison.R to library

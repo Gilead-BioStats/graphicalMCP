@@ -1,3 +1,8 @@
+TODO: 
+  - bottlenecks
+    - permutations: minor
+    - calcWeight: significant, replaces mtp.weights and mtp.edges
+  - how can we improve either of these functions
 Package: gMCP
 Type: Package
 Title: Graph Based Multiple Comparison Procedures
@@ -52,6 +57,7 @@ Collate:
     'generatePvals.R'
     'generateTest.R'
     'generateWeights.R'
+    'get_power_set.R'
     'graph2latex.R'
     'graphTest.R'
     'helperGUI.R'

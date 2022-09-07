@@ -138,7 +138,7 @@ mtp.weights <- function(h, g, w) {
         return(wt)
     }
 }
-
+# TODO: replace mtp.weights and mtp.edges with calcWeight from calcWeight.cpp
 # See mtp.weights documentation.
 mtp.edges <- function(h, g, w) {
     ## recursively compute the edges for the graph of a given intersection hypothesis

@@ -27,19 +27,19 @@
 #' @keywords htest
 #' @examples
 #'
-g <- matrix(c(
-    0, 0, 1, 0,
-    0, 0, 0, 1,
-    0, 1, 0, 0,
-    1, 0, 0, 0
-), nrow = 4, byrow = TRUE)
-## Choose weights
-w <- c(.5, .5, 0, 0)
-## Weights of conventional gMCP test:
-generateWeights(g, w)
-#'
-g <- Entangled2Maurer2012()
-generateWeights(g)
+#' g <- matrix(c(
+#'     0, 0, 1, 0,
+#'     0, 0, 0, 1,
+#'     0, 1, 0, 0,
+#'     1, 0, 0, 0
+#' ), nrow = 4, byrow = TRUE)
+#' ## Choose weights
+#' w <- c(.5, .5, 0, 0)
+#' ## Weights of conventional gMCP test:
+#' generateWeights(g, w)
+#' #'
+#' g <- Entangled2Maurer2012()
+#' generateWeights(g)
 #'
 #' @export generateWeights
 #'
@@ -89,21 +89,55 @@ permutations <- function(n) {
 nPr <- function(n) {
     m <- matrix(0, 2^n, n)
 
-    s = 1:n
-    l = vector(mode="list",length=2^n) ; l[[1]]=numeric()
+    set = 1:n
+    power_set = vector(mode="list",length=2^n) ; power_set[[1]]=numeric()
     counter = 1L
     for(x in 1L:n){
         for(subset in 1L:counter){
             counter=counter+1L
-            l[[counter]] = c(l[[subset]],s[x])
-            m[counter,l[[counter]]] <- 1
+            power_set[[counter]] = c(power_set[[subset]],set[x])
+            m[counter,power_set[[counter]]] <- 1
         }
     }
 
     return(m)
 }
 
-powerset = function(s){
+#get_power_set <- function(set) {
+#    n <- length(set)
+#    power_set <- vector(mode = 'list', length = 2^n) ; power_set[[1]] <- numeric()
+#    subset_index <- 1L # 1:2^n
+#
+#    # For each element in the set:
+#    for (element in 1L:n) {
+#        # For each subset currently captured:
+#        for (i in 1L:subset_index) {
+#            subset_index = subset_index + 1L
+#
+#            # Set the 
+#            power_set[[ subset_index ]] <- c(
+#                power_set[[ i ]], # subset i
+#                set[ element ] #
+#            )
+#        }
+#    }
+#
+#    power_set
+#}
+
+get_power_matrix <- function(n, power_set) {
+    power_matrix <- matrix(nrow = 2**n, ncol = n)
+    row <- vector(length = n)
+    for (i in seq_along(power_set)) {
+        power_matrix[i,] <- power_set[i]
+    }
+
+    power_matrix
+}
+
+# https://stackoverflow.com/questions/18715580/algorithm-to-calculate-power-set-all-possible-subsets-of-a-set-in-r
+#
+powerset <- function(s){
     len = length(s)
     l = vector(mode="list",length=2^len) ; l[[1]]=numeric()
     counter = 1L
@@ -115,18 +149,3 @@ powerset = function(s){
     }
     return(l)
 }
-
-# https://stackoverflow.com/questions/18715580/algorithm-to-calculate-power-set-all-possible-subsets-of-a-set-in-r
-#
-# powerset = function(s){
-#     len = length(s)
-#     l = vector(mode="list",length=2^len) ; l[[1]]=numeric()
-#     counter = 1L
-#     for(x in 1L:length(s)){
-#         for(subset in 1L:counter){
-#             counter=counter+1L
-#             l[[counter]] = c(l[[subset]],s[x])
-#         }
-#     }
-#     return(l)
-# }
