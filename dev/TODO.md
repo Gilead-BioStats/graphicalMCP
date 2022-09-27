@@ -1,0 +1,3 @@
+- organize and rename various power set and power matrix functions according to approach and performance
+- plot benchmarking of each approach with n on the x-axis and time on the y-axis
+- test out new approaches in gMCP
