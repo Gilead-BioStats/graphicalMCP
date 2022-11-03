@@ -4,8 +4,17 @@
 \alias{gMCP.extended}
 \title{Graph based Multiple Comparison Procedures}
 \usage{
-gMCP.extended(graph, pvalues, test, alpha = 0.05, eps = 10^(-3),
-  upscale = FALSE, verbose = FALSE, adjPValues = TRUE, ...)
+gMCP.extended(
+  graph,
+  pvalues,
+  test,
+  alpha = 0.05,
+  eps = 10^(-3),
+  upscale = FALSE,
+  verbose = FALSE,
+  adjPValues = TRUE,
+  ...
+)
 }
 \arguments{
 \item{graph}{A graph of class \code{\link{graphMCP}}.}
@@ -32,9 +41,9 @@ To provide your own test function see \code{?weighted.test.function}.}
 
 \item{eps}{A numeric scalar specifying a value for epsilon edges.}
 
-\item{upscale}{Logical. If \code{upscale=FALSE} then for each intersection 
-of hypotheses (i.e. each subgraph) a weighted test is performed at the 
-possibly reduced level alpha of sum(w)*alpha, 
+\item{upscale}{Logical. If \code{upscale=FALSE} then for each intersection
+of hypotheses (i.e. each subgraph) a weighted test is performed at the
+possibly reduced level alpha of sum(w)*alpha,
 where sum(w) is the sum of all node weights in this subset.
 If \code{upscale=TRUE} all weights are upscaled, so that sum(w)=1.}
 
@@ -64,16 +73,16 @@ Performs a graph based multiple test procedure for a given graph and unadjusted 
 
 
 g <- BonferroniHolm(5)
-gMCP(g, pvalues=c(0.01, 0.02, 0.04, 0.04, 0.7))
+gMCP(g, pvalues = c(0.01, 0.02, 0.04, 0.04, 0.7))
 # Simple Bonferroni with empty graph:
-g2 <- matrix2graph(matrix(0, nrow=5, ncol=5))
-gMCP(g2, pvalues=c(0.01, 0.02, 0.04, 0.04, 0.7))
+g2 <- matrix2graph(matrix(0, nrow = 5, ncol = 5))
+gMCP(g2, pvalues = c(0.01, 0.02, 0.04, 0.04, 0.7))
 # With 'upscale=TRUE' equal to BonferroniHolm:
-gMCP(g2, pvalues=c(0.01, 0.02, 0.04, 0.04, 0.7), upscale=TRUE)
+gMCP(g2, pvalues = c(0.01, 0.02, 0.04, 0.04, 0.7), upscale = TRUE)
 
 # Entangled graphs:
 g3 <- Entangled2Maurer2012()
-gMCP(g3, pvalues=c(0.01, 0.02, 0.04, 0.04, 0.7), correlation=diag(5))
+gMCP(g3, pvalues = c(0.01, 0.02, 0.04, 0.04, 0.7), correlation = diag(5))
 
 }
 \references{

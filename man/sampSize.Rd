@@ -4,9 +4,21 @@
 \alias{sampSize}
 \title{Sample size calculations}
 \usage{
-sampSize(graph, esf, effSize, powerReqFunc, target, corr.sim, alpha,
-  corr.test = NULL, type = c("quasirandom", "pseudorandom"),
-  upscale = FALSE, n.sim = 10000, verbose = FALSE, ...)
+sampSize(
+  graph,
+  esf,
+  effSize,
+  powerReqFunc,
+  target,
+  corr.sim,
+  alpha,
+  corr.test = NULL,
+  type = c("quasirandom", "pseudorandom"),
+  upscale = FALSE,
+  n.sim = 10000,
+  verbose = FALSE,
+  ...
+)
 }
 \arguments{
 \item{graph}{A graph of class \code{\link{graphMCP}}.}
@@ -15,15 +27,15 @@ sampSize(graph, esf, effSize, powerReqFunc, target, corr.sim, alpha,
 
 \item{effSize}{...}
 
-\item{powerReqFunc}{One power requirement function or a list of these. 
+\item{powerReqFunc}{One power requirement function or a list of these.
 % For example \code{function(x) {any(x)}} for at least one rejection or more complex user defined functions like \code{function(x) {(x[1]&&x[3])||(x[2]&&x[4])}}.
 If one is interested in the power to reject hypotheses 1 and 3
 one could specify: \cr\code{f=function(x) {x[1] && x[3]}}.\cr If the power
 of rejecting hypotheses 1 and 2 is also of interest one would use a
-(optionally named) list: \cr 
+(optionally named) list: \cr
 \code{f=list(power1and3=function(x) {x[1] && x[3]},}\cr
 \code{power1and2=function(x) {x[1] && x[2]})}.
-If the list has no names, the functions will be referenced 
+If the list has no names, the functions will be referenced
 to as "func1", "func2", etc. in the output.}
 
 \item{target}{Target power that should be at least achieved. Either a numeric scalar between 0 and 1 or if parameter \code{powerReqFunc} is a list a numeric vector of the same length as \code{powerReqFunc}.}
@@ -40,9 +52,9 @@ NAs.}
 randomized Lattice rule, and should be more efficient than
 \code{pseudorandom} that uses ordinary (pseudo) random numbers.}
 
-\item{upscale}{Logical. If \code{upscale=FALSE} then for each intersection 
-of hypotheses (i.e. each subgraph) a weighted test is performed at the 
-possibly reduced level alpha of sum(w)*alpha, 
+\item{upscale}{Logical. If \code{upscale=FALSE} then for each intersection
+of hypotheses (i.e. each subgraph) a weighted test is performed at the
+possibly reduced level alpha of sum(w)*alpha,
 where sum(w) is the sum of all node weights in this subset.
 If \code{upscale=TRUE} all weights are upscaled, so that sum(w)=1.}
 
@@ -67,22 +79,35 @@ Equation (3) of Bretz et al. (2011).}
 Sample size calculations
 }
 \examples{
-
 \dontrun{
 graph <- BonferroniHolm(4)
-powerReqFunc <- function(x) { (x[1] && x[2]) || x[3] }
-#TODO Still causing errors / loops.
-#sampSize(graph, alpha=0.05, powerReqFunc, target=0.8, mean=c(6,4,2) )
-#sampSize(graph, alpha=0.05, powerReqFunc, target=0.8, mean=c(-1,-1,-1), nsim=100)
-sampSize(graph, esf=c(1,1,1,1), effSize=c(1,1,1,1), 
-         corr.sim=diag(4), powerReqFunc=powerReqFunc, target=0.8, alpha=0.05)
-powerReqFunc=list('all(x[c(1,2)])'=function(x) {all(x[c(1,2)])},
-                  'any(x[c(0,1)])'=function(x) {any(x[c(0,1)])})
-sampSize(graph=graph, 
-         effSize=list("Scenario 1"=c(2, 0.2, 0.2, 0.2), 
-                      "Scenario 2"=c(0.2, 4, 0.2, 0.2)), 
-         esf=c(0.5, 0.7071067811865476, 0.5, 0.7071067811865476),
-         powerReqFunc=powerReqFunc, 
-         corr.sim=diag(4), target=c(0.8, 0.8), alpha=0.025)
+powerReqFunc <- function(x) {
+    (x[1] && x[2]) || x[3]
+}
+# TODO Still causing errors / loops.
+# sampSize(graph, alpha=0.05, powerReqFunc, target=0.8, mean=c(6,4,2) )
+# sampSize(graph, alpha=0.05, powerReqFunc, target=0.8, mean=c(-1,-1,-1), nsim=100)
+sampSize(graph,
+    esf = c(1, 1, 1, 1), effSize = c(1, 1, 1, 1),
+    corr.sim = diag(4), powerReqFunc = powerReqFunc, target = 0.8, alpha = 0.05
+)
+powerReqFunc <- list(
+    "all(x[c(1,2)])" = function(x) {
+        all(x[c(1, 2)])
+    },
+    "any(x[c(0,1)])" = function(x) {
+        any(x[c(0, 1)])
+    }
+)
+sampSize(
+    graph = graph,
+    effSize = list(
+        "Scenario 1" = c(2, 0.2, 0.2, 0.2),
+        "Scenario 2" = c(0.2, 4, 0.2, 0.2)
+    ),
+    esf = c(0.5, 0.7071067811865476, 0.5, 0.7071067811865476),
+    powerReqFunc = powerReqFunc,
+    corr.sim = diag(4), target = c(0.8, 0.8), alpha = 0.025
+)
 }
 }

@@ -27,11 +27,11 @@ Starts a graphical user interface for the correlation matrices.
 \examples{
 \dontrun{
 corMatWizard(5) # is equivalent to
-corMatWizard(matrix=diag(5))
-corMatWizard(names=c("H1", "H2", "H3", "E1", "E2"))
-C <- cor(matrix(rnorm(100),10), matrix(rnorm(100),10))
-corMatWizard(matrix="C") # or
-corMatWizard(matrix=C) 
+corMatWizard(matrix = diag(5))
+corMatWizard(names = c("H1", "H2", "H3", "E1", "E2"))
+C <- cor(matrix(rnorm(100), 10), matrix(rnorm(100), 10))
+corMatWizard(matrix = "C") # or
+corMatWizard(matrix = C)
 }
 
 }

@@ -5,8 +5,14 @@
 \title{Graphical User Interface for graphical described multiple comparison
 procedures}
 \usage{
-graphGUI(graph = "createdGraph", pvalues = numeric(0), grid = 0,
-  debug = FALSE, experimentalFeatures = FALSE, envir = globalenv())
+graphGUI(
+  graph = "createdGraph",
+  pvalues = numeric(0),
+  grid = 0,
+  debug = FALSE,
+  experimentalFeatures = FALSE,
+  envir = globalenv()
+)
 }
 \arguments{
 \item{graph}{Either a variable name for the graph, given as a character
@@ -47,22 +53,20 @@ See the vignette of this package for further details, since describing a GUI
 interface is better done with a lot of nice pictures.
 
 The GUI can save result files if asked to, can look for a new version on CRAN
-(if this behaviour has been approved by the user), will change the random seed in 
+(if this behaviour has been approved by the user), will change the random seed in
 the R session if this is specified by the user in the options (default: no)
 and could send bug reports if an error occurs and the user approves it.
 }
 \examples{
-
-
 \dontrun{
 graphGUI()
-pvalues <- c(9.7, 1.5, 0.5, 0.6, 0.4, 0.8, 4)/100 
-graphGUI(HommelEtAl2007(), pvalues=pvalues)
+pvalues <- c(9.7, 1.5, 0.5, 0.6, 0.4, 0.8, 4) / 100
+graphGUI(HommelEtAl2007(), pvalues = pvalues)
 
 x <- new.env()
-assign("graph", BonferroniHolm(3), envir=x)
-graphGUI("graph", envir=x)}
-
+assign("graph", BonferroniHolm(3), envir = x)
+graphGUI("graph", envir = x)
+}
 
 }
 \author{

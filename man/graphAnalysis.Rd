@@ -33,7 +33,6 @@ g <- BonferroniHolm(5)
 
 graphAnalysis(g)
 
-
 }
 \seealso{
 \code{\link{graphMCP}}

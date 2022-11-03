@@ -4,8 +4,14 @@
 \alias{bonferroni.test}
 \title{Weighted Bonferroni-test}
 \usage{
-bonferroni.test(pvalues, weights, alpha = 0.05, adjPValues = TRUE,
-  verbose = FALSE, ...)
+bonferroni.test(
+  pvalues,
+  weights,
+  alpha = 0.05,
+  adjPValues = TRUE,
+  verbose = FALSE,
+  ...
+)
 }
 \arguments{
 \item{pvalues}{A numeric vector specifying the p-values.}
@@ -26,7 +32,7 @@ Weighted Bonferroni-test
 }
 \examples{
 
-bonferroni.test(pvalues=c(0.1,0.2,0.05), weights=c(0.5,0.5,0))
-bonferroni.test(pvalues=c(0.1,0.2,0.05), weights=c(0.5,0.5,0), adjPValues=FALSE)
+bonferroni.test(pvalues = c(0.1, 0.2, 0.05), weights = c(0.5, 0.5, 0))
+bonferroni.test(pvalues = c(0.1, 0.2, 0.05), weights = c(0.5, 0.5, 0), adjPValues = FALSE)
 
 }

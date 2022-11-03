@@ -4,8 +4,14 @@
 \alias{simes.test}
 \title{Weighted Simes test}
 \usage{
-simes.test(pvalues, weights, alpha = 0.05, adjPValues = TRUE,
-  verbose = FALSE, ...)
+simes.test(
+  pvalues,
+  weights,
+  alpha = 0.05,
+  adjPValues = TRUE,
+  verbose = FALSE,
+  ...
+)
 }
 \arguments{
 \item{pvalues}{A numeric vector specifying the p-values.}
@@ -26,7 +32,7 @@ Weighted Simes test introduced by Benjamini and Hochberg (1997)
 }
 \examples{
 
-simes.test(pvalues=c(0.1,0.2,0.05), weights=c(0.5,0.5,0))
-simes.test(pvalues=c(0.1,0.2,0.05), weights=c(0.5,0.5,0), adjPValues=FALSE)
+simes.test(pvalues = c(0.1, 0.2, 0.05), weights = c(0.5, 0.5, 0))
+simes.test(pvalues = c(0.1, 0.2, 0.05), weights = c(0.5, 0.5, 0), adjPValues = FALSE)
 
 }

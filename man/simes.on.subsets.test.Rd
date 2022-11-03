@@ -4,8 +4,16 @@
 \alias{simes.on.subsets.test}
 \title{Simes on subsets, otherwise Bonferroni}
 \usage{
-simes.on.subsets.test(pvalues, weights, alpha = 0.05, adjPValues = TRUE,
-  verbose = FALSE, subsets, subset, ...)
+simes.on.subsets.test(
+  pvalues,
+  weights,
+  alpha = 0.05,
+  adjPValues = TRUE,
+  verbose = FALSE,
+  subsets,
+  subset,
+  ...
+)
 }
 \arguments{
 \item{pvalues}{A numeric vector specifying the p-values.}
@@ -35,12 +43,12 @@ Trimmed Simes test for intersections of two hypotheses and otherwise weighted Bo
 }
 \examples{
 
-simes.on.subsets.test(pvalues=c(0.1,0.2,0.05), weights=c(0.5,0.5,0))
-simes.on.subsets.test(pvalues=c(0.1,0.2,0.05), weights=c(0.5,0.5,0), adjPValues=FALSE)
+simes.on.subsets.test(pvalues = c(0.1, 0.2, 0.05), weights = c(0.5, 0.5, 0))
+simes.on.subsets.test(pvalues = c(0.1, 0.2, 0.05), weights = c(0.5, 0.5, 0), adjPValues = FALSE)
 
 graph <- BonferroniHolm(4)
 pvalues <- c(0.01, 0.05, 0.03, 0.02)
 
-gMCP.extended(graph=graph, pvalues=pvalues, test=simes.on.subsets.test, subsets=list(1:2, 3:4))
+gMCP.extended(graph = graph, pvalues = pvalues, test = simes.on.subsets.test, subsets = list(1:2, 3:4))
 
 }

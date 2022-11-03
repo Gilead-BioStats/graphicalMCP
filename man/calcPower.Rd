@@ -4,18 +4,28 @@
 \alias{calcPower}
 \title{Calculate power values}
 \usage{
-calcPower(weights, alpha, G, mean = rep(0, nrow(corr.sim)),
-  corr.sim = diag(length(mean)), corr.test = NULL, n.sim = 10000,
-  type = c("quasirandom", "pseudorandom"), f = list(), upscale = FALSE,
-  graph, ...)
+calcPower(
+  weights,
+  alpha,
+  G,
+  mean = rep(0, nrow(corr.sim)),
+  corr.sim = diag(length(mean)),
+  corr.test = NULL,
+  n.sim = 10000,
+  type = c("quasirandom", "pseudorandom"),
+  f = list(),
+  upscale = FALSE,
+  graph,
+  ...
+)
 }
 \arguments{
 \item{weights}{Initial weight levels for the test procedure (see graphTest
 function). Alternatively a \code{\link{graphMCP}} object can be given as parameter \code{graph}.}
 
 \item{alpha}{Overall alpha level of the procedure, see graphTest function.
-(For entangled graphs \code{alpha} should be a numeric vector of length 
-equal to the number of graphs, each element specifying the partial alpha 
+(For entangled graphs \code{alpha} should be a numeric vector of length
+equal to the number of graphs, each element specifying the partial alpha
 for the respective graph.
 The overall alpha level equals \code{sum(alpha)}.)}
 
@@ -44,15 +54,15 @@ randomized Lattice rule, and should be more efficient than
 function).  If one is interested in the power to reject hypotheses 1 and 3
 one could specify: \cr\code{f=function(x) {x[1] && x[3]}}.\cr If the power
 of rejecting hypotheses 1 and 2 is also of interest one would use a
-(optionally named) list: \cr 
+(optionally named) list: \cr
 \code{f=list(power1and3=function(x) {x[1] && x[3]},}\cr
 \code{power1and2=function(x) {x[1] && x[2]})}.
-If the list has no names, the functions will be referenced 
+If the list has no names, the functions will be referenced
 to as "func1", "func2", etc. in the output.}
 
-\item{upscale}{Logical. If \code{upscale=FALSE} then for each intersection 
-of hypotheses (i.e. each subgraph) a weighted test is performed at the 
-possibly reduced level alpha of sum(w)*alpha, 
+\item{upscale}{Logical. If \code{upscale=FALSE} then for each intersection
+of hypotheses (i.e. each subgraph) a weighted test is performed at the
+possibly reduced level alpha of sum(w)*alpha,
 where sum(w) is the sum of all node weights in this subset.
 If \code{upscale=TRUE} all weights are upscaled, so that sum(w)=1.}
 
@@ -60,7 +70,7 @@ If \code{upscale=TRUE} all weights are upscaled, so that sum(w)=1.}
 
 \item{...}{For backwards compatibility. For example up to version 0.8-7
 the parameters \code{corr.model} and \code{corr.test} were called \code{sigma}
-and \code{cr}. Also instead of supplying a graph object one could 
+and \code{cr}. Also instead of supplying a graph object one could
 supply a parameter \code{weights} and a transition matrix \code{G}.}
 
 \item{test}{In the parametric case there is more than one way to handle
@@ -92,45 +102,49 @@ number of rejections.
 ## significance levels
 graph <- simpleSuccessiveII()
 ## alternative (mvn distribution)
-corMat <- rbind(c(1, 0.5, 0.5, 0.5/2),
-                c(0.5,1,0.5/2,0.5),
-                c(0.5,0.5/2,1,0.5),
-                c(0.5/2,0.5,0.5,1))
+corMat <- rbind(
+    c(1, 0.5, 0.5, 0.5 / 2),
+    c(0.5, 1, 0.5 / 2, 0.5),
+    c(0.5, 0.5 / 2, 1, 0.5),
+    c(0.5 / 2, 0.5, 0.5, 1)
+)
 theta <- c(3, 0, 0, 0)
-calcPower(graph=graph, alpha=0.025, mean=theta, corr.sim=corMat, n.sim= 100000)
+calcPower(graph = graph, alpha = 0.025, mean = theta, corr.sim = corMat, n.sim = 100000)
 
 
 ## now reproduce all 14 simulation scenarios
 ## different graphs
-weights1 <- c(rep(1/2, 12), 1, 1)
-weights2 <- c(rep(1/2, 12), 0, 0)
+weights1 <- c(rep(1 / 2, 12), 1, 1)
+weights2 <- c(rep(1 / 2, 12), 0, 0)
 eps <- 0.01
-gam1 <- c(rep(0.5, 10), 1-eps, 0, 0, 0)
+gam1 <- c(rep(0.5, 10), 1 - eps, 0, 0, 0)
 gam2 <- gam1
 ## different multivariate normal alternatives
-rho <- c(rep(0.5, 8), 0, 0.99, rep(0.5,4))
+rho <- c(rep(0.5, 8), 0, 0.99, rep(0.5, 4))
 th1 <- c(0, 3, 3, 3, 2, 1, rep(3, 7), 0)
 th2 <- c(rep(0, 6), 3, 3, 3, 3, 0, 0, 0, 3)
 th3 <- c(0, 0, 3, 3, 3, 3, 0, 2, 2, 2, 3, 3, 3, 3)
-th4 <- c(0,0,0,3,3,3,0,2,2,2,0,0,0,0)
+th4 <- c(0, 0, 0, 3, 3, 3, 0, 2, 2, 2, 0, 0, 0, 0)
 
 ## function that calculates power values for one scenario
-simfunc <- function(nSim, a1, a2, g1, g2, rh, t1, t2, t3, t4, Gr){
-  al <- c(a1, a2, 0, 0)
-  G <- rbind(c(0, g1, 1-g1, 0), c(g2, 0, 0, 1-g2), c(0, 1, 0, 0), c(1, 0, 0, 0))
-  corMat <- rbind(c(1, 0.5, rh, rh/2), c(0.5,1,rh/2,rh), c(rh,rh/2,1,0.5), c(rh/2,rh,0.5,1))
-  mean <- c(t1, t2, t3, t4)
-  calcPower(weights=al, alpha=0.025, G=G, mean=mean, corr.sim=corMat, n.sim = nSim)
+simfunc <- function(nSim, a1, a2, g1, g2, rh, t1, t2, t3, t4, Gr) {
+    al <- c(a1, a2, 0, 0)
+    G <- rbind(c(0, g1, 1 - g1, 0), c(g2, 0, 0, 1 - g2), c(0, 1, 0, 0), c(1, 0, 0, 0))
+    corMat <- rbind(c(1, 0.5, rh, rh / 2), c(0.5, 1, rh / 2, rh), c(rh, rh / 2, 1, 0.5), c(rh / 2, rh, 0.5, 1))
+    mean <- c(t1, t2, t3, t4)
+    calcPower(weights = al, alpha = 0.025, G = G, mean = mean, corr.sim = corMat, n.sim = nSim)
 }
 
 ## calculate power for all 14 scenarios
 outList <- list()
-for(i in 1:14){
-  outList[[i]] <- simfunc(10000, weights1[i], weights2[i], 
-                    gam1[i], gam2[i], rho[i], th1[i], th2[i], th3[i], th4[i])
+for (i in 1:14) {
+    outList[[i]] <- simfunc(
+        10000, weights1[i], weights2[i],
+        gam1[i], gam2[i], rho[i], th1[i], th2[i], th3[i], th4[i]
+    )
 }
 
-## summarize data as in Stat Med paper Table I 
+## summarize data as in Stat Med paper Table I
 atlst1 <- as.numeric(lapply(outList, function(x) x$PowAtlst1))
 locpow <- do.call("rbind", lapply(outList, function(x) x$LocalPower))
 

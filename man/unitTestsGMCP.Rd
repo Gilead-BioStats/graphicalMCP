@@ -4,8 +4,13 @@
 \alias{unitTestsGMCP}
 \title{Run the R unit (and optional the JUnit) test suite for gMCP}
 \usage{
-unitTestsGMCP(extended = FALSE, java = FALSE, interactive = FALSE,
-  junitLibrary, outputPath)
+unitTestsGMCP(
+  extended = FALSE,
+  java = FALSE,
+  interactive = FALSE,
+  junitLibrary,
+  outputPath
+)
 }
 \arguments{
 \item{extended}{If \code{TRUE} (or if the environment variable
@@ -48,14 +53,10 @@ of these separated by comma (without blanks). A short cut for all three is
 "all".
 }
 \examples{
-
-
 \dontrun{
 unitTestsGMCP()
-unitTestsGMCP(extended=TRUE, java=TRUE, interactive=TRUE, outputPath="~/RUnitTests")
-
+unitTestsGMCP(extended = TRUE, java = TRUE, interactive = TRUE, outputPath = "~/RUnitTests")
 }
-
 
 }
 \author{

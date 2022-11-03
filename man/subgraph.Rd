@@ -26,7 +26,6 @@ graph <- improvedParallelGatekeeping()
 subgraph(graph, c(TRUE, FALSE, TRUE, FALSE))
 subgraph(graph, c("H1", "H3"))
 
-
 }
 \seealso{
 \code{\link{graphMCP}}

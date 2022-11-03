@@ -66,7 +66,7 @@ generateWeights <- function(g, w) {
     }
     ## compute all intersection hypotheses and corresponding weights for a given graph
     n <- length(w)
-    intersect <- (permutations(n))[-1, ]
+    intersect <- powerMatrix(n)
     g <- apply(intersect, 1, function(i) {
         list(
             int = i,

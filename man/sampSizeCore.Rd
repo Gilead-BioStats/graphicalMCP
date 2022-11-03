@@ -4,8 +4,17 @@
 \alias{sampSizeCore}
 \title{Function for sample size calculation}
 \usage{
-sampSizeCore(upperN, lowerN = floor(upperN/2), targFunc, target,
-  tol = 0.001, alRatio, Ntype = c("arm", "total"), verbose = FALSE, ...)
+sampSizeCore(
+  upperN,
+  lowerN = floor(upperN/2),
+  targFunc,
+  target,
+  tol = 0.001,
+  alRatio,
+  Ntype = c("arm", "total"),
+  verbose = FALSE,
+  ...
+)
 }
 \arguments{
 \item{upperN}{\code{targFunc(upperN)} should be bigger than target (otherwise \code{upperN} is doubled until this is the case).}
@@ -37,8 +46,10 @@ For details see the manual and examples.
 }
 \examples{
 
-f <- function(x){1/100*log(x)}
-gMCP:::sampSizeCore(upperN=1000, targFunc=f, target=0.008, verbose=TRUE, alRatio=1)
+f <- function(x) {
+    1 / 100 * log(x)
+}
+gMCP:::sampSizeCore(upperN = 1000, targFunc = f, target = 0.008, verbose = TRUE, alRatio = 1)
 
 }
 \author{

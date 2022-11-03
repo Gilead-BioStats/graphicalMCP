@@ -4,8 +4,15 @@
 \alias{parametric.test}
 \title{Weighted parametric test}
 \usage{
-parametric.test(pvalues, weights, alpha = 0.05, adjPValues = TRUE,
-  verbose = FALSE, correlation, ...)
+parametric.test(
+  pvalues,
+  weights,
+  alpha = 0.05,
+  adjPValues = TRUE,
+  verbose = FALSE,
+  correlation,
+  ...
+)
 }
 \arguments{
 \item{pvalues}{A numeric vector specifying the p-values.}

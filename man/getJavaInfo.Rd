@@ -20,7 +20,6 @@ character vector of length 1 containing the memory and runtime info.
 Get Memory and Runtime Info from JVM
 }
 \examples{
-
 \dontrun{
 cat(getJavaInfo())
 }

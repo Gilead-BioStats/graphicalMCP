@@ -4,16 +4,28 @@
 \alias{gMCP}
 \title{Graph based Multiple Comparison Procedures}
 \usage{
-gMCP(graph, pvalues, test, correlation, alpha = 0.05, approxEps = TRUE,
-  eps = 10^(-3), ..., upscale = ifelse(missing(test) &&
-  !missing(correlation) || !missing(test) && test == "Bretz2011", TRUE, FALSE),
-  useC = FALSE, verbose = FALSE, keepWeights = FALSE, adjPValues = TRUE)
+gMCP(
+  graph,
+  pvalues,
+  test,
+  correlation,
+  alpha = 0.05,
+  approxEps = TRUE,
+  eps = 10^(-3),
+  ...,
+  upscale = ifelse(missing(test) && !missing(correlation) || !missing(test) && test ==
+    "Bretz2011", TRUE, FALSE),
+  useC = FALSE,
+  verbose = FALSE,
+  keepWeights = FALSE,
+  adjPValues = TRUE
+)
 }
 \arguments{
 \item{graph}{A graph of class \code{\link{graphMCP}}.}
 
 \item{pvalues}{A numeric vector specifying the p-values for the graph based
-MCP. Note the assumptions in the details section for the parametric tests, 
+MCP. Note the assumptions in the details section for the parametric tests,
 when a correlation is specified.}
 
 \item{test}{Should be either \code{"Bonferroni"}, \code{"Simes"} or \code{"parametric"}.
@@ -40,9 +52,9 @@ substituted with the value given in the parameter \code{eps}.}
 
 \item{...}{Test specific arguments can be given here.}
 
-\item{upscale}{Logical. If \code{upscale=FALSE} then for each intersection 
-of hypotheses (i.e. each subgraph) a weighted test is performed at the 
-possibly reduced level alpha of sum(w)*alpha, 
+\item{upscale}{Logical. If \code{upscale=FALSE} then for each intersection
+of hypotheses (i.e. each subgraph) a weighted test is performed at the
+possibly reduced level alpha of sum(w)*alpha,
 where sum(w) is the sum of all node weights in this subset.
 If \code{upscale=TRUE} all weights are upscaled, so that sum(w)=1.
 
@@ -117,16 +129,16 @@ For further details see the given references.
 
 
 g <- BonferroniHolm(5)
-gMCP(g, pvalues=c(0.01, 0.02, 0.04, 0.04, 0.7))
+gMCP(g, pvalues = c(0.01, 0.02, 0.04, 0.04, 0.7))
 # Simple Bonferroni with empty graph:
-g2 <- matrix2graph(matrix(0, nrow=5, ncol=5))
-gMCP(g2, pvalues=c(0.01, 0.02, 0.04, 0.04, 0.7))
+g2 <- matrix2graph(matrix(0, nrow = 5, ncol = 5))
+gMCP(g2, pvalues = c(0.01, 0.02, 0.04, 0.04, 0.7))
 # With 'upscale=TRUE' equal to BonferroniHolm:
-gMCP(g2, pvalues=c(0.01, 0.02, 0.04, 0.04, 0.7), upscale=TRUE)
+gMCP(g2, pvalues = c(0.01, 0.02, 0.04, 0.04, 0.7), upscale = TRUE)
 
 # Entangled graphs:
 g3 <- Entangled2Maurer2012()
-gMCP(g3, pvalues=c(0.01, 0.02, 0.04, 0.04, 0.7), correlation=diag(5))
+gMCP(g3, pvalues = c(0.01, 0.02, 0.04, 0.04, 0.7), correlation = diag(5))
 
 }
 \references{

@@ -22,10 +22,12 @@ Imports:
     mvtnorm,
     Matrix,
     CommonJavaJars (>= 1.0.5),
+    Rcpp,
     rJava (>= 0.6-3),
     JavaGD,
     xlsxjars (>= 0.6.1),
     stats4
+LinkingTo: Rcpp
 Suggests:
     RUnit,
     Deducer,
@@ -39,7 +41,7 @@ SystemRequirements: Java (>= 5.0)
 License: GPL (>= 2)
 URL: http://gsrmtp.r-forge.r-project.org/
 BugReports: https://github.com/kornl/gMCP/issues
-RoxygenNote: 6.0.1
+RoxygenNote: 7.2.1
 Collate: 
     'analysis.R'
     'calcPower.R'
@@ -67,6 +69,7 @@ Collate:
     'modifyGraphs.R'
     'onLoad.R'
     'plotCI.R'
+    'powerMatrix.R'
     'powerPlot.R'
     'rqmvnorm.R'
     'sampSize.R'

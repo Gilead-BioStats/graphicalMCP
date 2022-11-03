@@ -4,15 +4,21 @@
 \alias{replaceVariables}
 \title{Replaces variables in a general graph with specified numeric values}
 \usage{
-replaceVariables(graph, variables = list(), ask = TRUE, partial = FALSE,
-  expand = TRUE, list = FALSE)
+replaceVariables(
+  graph,
+  variables = list(),
+  ask = TRUE,
+  partial = FALSE,
+  expand = TRUE,
+  list = FALSE
+)
 }
 \arguments{
 \item{graph}{A graph of class \code{\link{graphMCP}} or class
 \code{\link{entangledMCP}}.}
 
 \item{variables}{A named list with one or more specified real values, for example
-\code{list(a=0.5, b=0.8, "tau"=0.5)} or \code{list(a=c(0.5, 0.8), b=0.8, "tau"=0.5)}.  
+\code{list(a=0.5, b=0.8, "tau"=0.5)} or \code{list(a=c(0.5, 0.8), b=0.8, "tau"=0.5)}.
 If \code{ask=TRUE} and this list is
 missing at all or single variables are missing from the list, the user is
 asked for the values (if the session is not interactive an error is thrown).
@@ -21,7 +27,7 @@ For interactively entered values only single numbers are supported.}
 \item{ask}{If \code{FALSE} all variables that are not specified are not
 replaced.}
 
-\item{partial}{IF \code{TRUE} only specified variables are replaced and 
+\item{partial}{IF \code{TRUE} only specified variables are replaced and
 parameter \code{ask} is ignored.}
 
 \item{expand}{Used internally. Don't use yourself.}
@@ -44,8 +50,8 @@ graph <- HungEtWang2010()
 \dontrun{
 replaceVariables(graph)
 }
-replaceVariables(graph, list("tau"=0.5,"omega"=0.5, "nu"=0.5))
-replaceVariables(graph, list("tau"=c(0.1, 0.5, 0.9),"omega"=c(0.2, 0.8), "nu"=0.4))
+replaceVariables(graph, list("tau" = 0.5, "omega" = 0.5, "nu" = 0.5))
+replaceVariables(graph, list("tau" = c(0.1, 0.5, 0.9), "omega" = c(0.2, 0.8), "nu" = 0.4))
 
 }
 \seealso{

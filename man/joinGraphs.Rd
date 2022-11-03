@@ -41,7 +41,6 @@ g2 <- BonferroniHolm(3)
 
 joinGraphs(g1, g2)
 
-
 }
 \seealso{
 \code{\link{graphMCP}}

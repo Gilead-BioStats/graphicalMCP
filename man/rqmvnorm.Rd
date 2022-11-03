@@ -4,8 +4,12 @@
 \alias{rqmvnorm}
 \title{Random sample from the multivariate normal distribution}
 \usage{
-rqmvnorm(n, mean = rep(0, nrow(sigma)), sigma = diag(length(mean)),
-  type = c("quasirandom", "pseudorandom"))
+rqmvnorm(
+  n,
+  mean = rep(0, nrow(sigma)),
+  sigma = diag(length(mean)),
+  type = c("quasirandom", "pseudorandom")
+)
 }
 \arguments{
 \item{n}{Number of samples, when type = "quasirandom" is used this number is
@@ -32,7 +36,6 @@ on the implemented lattice rule for quasi-random numbers see Cools et al.
 
 sims <- rqmvnorm(100, mean = 1:2, sigma = diag(2))
 plot(sims)
-
 
 }
 \references{

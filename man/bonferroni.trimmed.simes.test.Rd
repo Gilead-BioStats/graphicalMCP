@@ -4,8 +4,14 @@
 \alias{bonferroni.trimmed.simes.test}
 \title{Trimmed Simes test for intersections of two hypotheses and otherwise weighted Bonferroni-test}
 \usage{
-bonferroni.trimmed.simes.test(pvalues, weights, alpha = 0.05,
-  adjPValues = FALSE, verbose = FALSE, ...)
+bonferroni.trimmed.simes.test(
+  pvalues,
+  weights,
+  alpha = 0.05,
+  adjPValues = FALSE,
+  verbose = FALSE,
+  ...
+)
 }
 \arguments{
 \item{pvalues}{A numeric vector specifying the p-values.}
@@ -26,12 +32,12 @@ Trimmed Simes test for intersections of two hypotheses and otherwise weighted Bo
 }
 \examples{
 
-bonferroni.trimmed.simes.test(pvalues=c(0.1,0.2,0.05), weights=c(0.5,0.5,0))
-bonferroni.trimmed.simes.test(pvalues=c(0.1,0.2,0.05), weights=c(0.5,0.5,0), adjPValues=FALSE)
+bonferroni.trimmed.simes.test(pvalues = c(0.1, 0.2, 0.05), weights = c(0.5, 0.5, 0))
+bonferroni.trimmed.simes.test(pvalues = c(0.1, 0.2, 0.05), weights = c(0.5, 0.5, 0), adjPValues = FALSE)
 
 }
 \references{
-Brannath, W., Bretz, F., Maurer, W., & Sarkar, S. (2009). 
-Trimmed Weighted Simes Test for Two One-Sided Hypotheses With Arbitrarily Correlated Test Statistics. 
+Brannath, W., Bretz, F., Maurer, W., & Sarkar, S. (2009).
+Trimmed Weighted Simes Test for Two One-Sided Hypotheses With Arbitrarily Correlated Test Statistics.
 Biometrical Journal, 51(6), 885-898.
 }

@@ -36,15 +36,13 @@ parameter.  If neither is given, the graph is placed as a circle.
 \examples{
 
 
-g <- matrix2graph(matrix(0, nrow=6, ncol=6))
+g <- matrix2graph(matrix(0, nrow = 6, ncol = 6))
 
-g <- placeNodes(g, nrow=2, force=TRUE)
+g <- placeNodes(g, nrow = 2, force = TRUE)
 
 \dontrun{
 graphGUI(g)
-
 }
-
 
 }
 \seealso{

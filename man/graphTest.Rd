@@ -4,8 +4,17 @@
 \alias{graphTest}
 \title{Multiple testing using graphs}
 \usage{
-graphTest(pvalues, weights = NULL, alpha = 0.05, G = NULL, cr = NULL,
-  graph = NULL, verbose = FALSE, test, upscale = FALSE)
+graphTest(
+  pvalues,
+  weights = NULL,
+  alpha = 0.05,
+  G = NULL,
+  cr = NULL,
+  graph = NULL,
+  verbose = FALSE,
+  test,
+  upscale = FALSE
+)
 }
 \arguments{
 \item{pvalues}{Either a vector or a matrix containing the local p-values for
@@ -43,9 +52,9 @@ even if the sum of weights is strictly smaller than one. If
 \code{test="simple-parametric"} the tests are performed as defined in
 Equation (3) of Bretz et al. (2011).}
 
-\item{upscale}{Logical. If \code{upscale=FALSE} then for each intersection 
-of hypotheses (i.e. each subgraph) a weighted test is performed at the 
-possibly reduced level alpha of sum(w)*alpha, 
+\item{upscale}{Logical. If \code{upscale=FALSE} then for each intersection
+of hypotheses (i.e. each subgraph) a weighted test is performed at the
+possibly reduced level alpha of sum(w)*alpha,
 where sum(w) is the sum of all node weights in this subset.
 If \code{upscale=TRUE} all weights are upscaled, so that sum(w)=1.}
 }
@@ -62,38 +71,44 @@ Note that the gMCP function in the gMCP package performs the same task.
 
 
 #### example from Bretz et al. (2010)
-weights <- c(1/3, 1/3, 1/3, 0, 0, 0)
-graph <- rbind(c(0,       0.5, 0,     0.5, 0,      0),
-               c(1/3,     0,   1/3,    0,   1/3,    0),
-               c(0,       0.5, 0,     0,   0,      0.5),
-               c(0,       1,   0,     0,   0,      0),
-               c(0.5,     0,   0.5,   0,   0,      0),
-               c(0,       1,   0,     0,   0,      0))
+weights <- c(1 / 3, 1 / 3, 1 / 3, 0, 0, 0)
+graph <- rbind(
+    c(0, 0.5, 0, 0.5, 0, 0),
+    c(1 / 3, 0, 1 / 3, 0, 1 / 3, 0),
+    c(0, 0.5, 0, 0, 0, 0.5),
+    c(0, 1, 0, 0, 0, 0),
+    c(0.5, 0, 0.5, 0, 0, 0),
+    c(0, 1, 0, 0, 0, 0)
+)
 pvals <- c(0.1, 0.008, 0.005, 0.15, 0.04, 0.006)
-graphTest(pvals, weights, alpha=0.025, graph)
+graphTest(pvals, weights, alpha = 0.025, graph)
 
 ## observe graphical procedure in detail
-graphTest(pvals, weights, alpha=0.025, graph, verbose = TRUE)
+graphTest(pvals, weights, alpha = 0.025, graph, verbose = TRUE)
 
 ## now use many p-values (useful for power simulations)
 pvals <- matrix(rbeta(6e4, 1, 30), ncol = 6)
-out <- graphTest(pvals, weights, alpha=0.025, graph)
+out <- graphTest(pvals, weights, alpha = 0.025, graph)
 head(out)
 
 ## example using multiple graphs (instead of 1)
-G1 <- rbind(c(0,0.5,0.5,0,0), c(0,0,1,0,0),
-            c(0, 0, 0, 1-0.01, 0.01), c(0, 1, 0, 0, 0),
-            c(0, 0, 0, 0, 0))
-G2 <- rbind(c(0,0,1,0,0), c(0.5,0,0.5,0,0),
-            c(0, 0, 0, 0.01, 1-0.01), c(0, 0, 0, 0, 0),
-            c(1, 0, 0, 0, 0))
+G1 <- rbind(
+    c(0, 0.5, 0.5, 0, 0), c(0, 0, 1, 0, 0),
+    c(0, 0, 0, 1 - 0.01, 0.01), c(0, 1, 0, 0, 0),
+    c(0, 0, 0, 0, 0)
+)
+G2 <- rbind(
+    c(0, 0, 1, 0, 0), c(0.5, 0, 0.5, 0, 0),
+    c(0, 0, 0, 0.01, 1 - 0.01), c(0, 0, 0, 0, 0),
+    c(1, 0, 0, 0, 0)
+)
 weights <- rbind(c(1, 0, 0, 0, 0), c(0, 1, 0, 0, 0))
 pvals <- c(0.012, 0.025, 0.005, 0.0015, 0.0045)
-out <- graphTest(pvals, weights, alpha=c(0.0125, 0.0125), G=list(G1, G2), verbose = TRUE)
+out <- graphTest(pvals, weights, alpha = c(0.0125, 0.0125), G = list(G1, G2), verbose = TRUE)
 
 ## now again with many p-values
 pvals <- matrix(rbeta(5e4, 1, 30), ncol = 5)
-out <- graphTest(pvals, weights, alpha=c(0.0125, 0.0125), G=list(G1, G2))
+out <- graphTest(pvals, weights, alpha = c(0.0125, 0.0125), G = list(G1, G2))
 head(out)
 
 }

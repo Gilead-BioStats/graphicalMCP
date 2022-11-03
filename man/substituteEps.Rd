@@ -26,8 +26,7 @@ For details see the given references.
 
 graph <- improvedParallelGatekeeping()
 graph
-substituteEps(graph, eps=0.01)
-
+substituteEps(graph, eps = 0.01)
 
 }
 \seealso{

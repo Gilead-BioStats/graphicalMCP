@@ -4,12 +4,26 @@
 \alias{graph2latex}
 \title{Graph2LaTeX}
 \usage{
-graph2latex(graph, package = "TikZ", scale = 1, showAlpha = FALSE,
-  alpha = 0.05, pvalues, fontsize, nodeTikZ,
-  labelTikZ = "near start,above,fill=blue!20", tikzEnv = TRUE,
-  offset = c(0, 0), fill = list(reject = "red!80", retain = "green!80"),
-  fig = FALSE, fig.label = NULL, fig.caption = NULL,
-  fig.caption.short = NULL, nodeR = 25, scaleText = TRUE)
+graph2latex(
+  graph,
+  package = "TikZ",
+  scale = 1,
+  showAlpha = FALSE,
+  alpha = 0.05,
+  pvalues,
+  fontsize,
+  nodeTikZ,
+  labelTikZ = "near start,above,fill=blue!20",
+  tikzEnv = TRUE,
+  offset = c(0, 0),
+  fill = list(reject = "red!80", retain = "green!80"),
+  fig = FALSE,
+  fig.label = NULL,
+  fig.caption = NULL,
+  fig.caption.short = NULL,
+  nodeR = 25,
+  scaleText = TRUE
+)
 }
 \arguments{
 \item{graph}{A graph of class \code{\link{graphMCP}}.}
@@ -60,10 +74,10 @@ nodes.}
 
 \item{nodeR}{Radius of nodes (pixel in Java, bp in LaTeX).}
 
-\item{scaleText}{Only used if scale is unequal 1 and \code{tikzEnv==TRUE}. 
+\item{scaleText}{Only used if scale is unequal 1 and \code{tikzEnv==TRUE}.
 If \code{scaleText} is \code{TRUE} (the default) a scalebox environment is used.
 If it is \code{FALSE} the optional parameter \code{scale} from the
-tikzpicture environment is used and font size will not change. 
+tikzpicture environment is used and font size will not change.
 Note that while you easily can change the scale in the scalebox environment,
 it is more problematic to adjust the scale in the tikzpicture environment
 afterwards in the LaTeX document, since for curved edges the parameters
@@ -86,7 +100,6 @@ For details see the given references.
 g <- BonferroniHolm(5)
 
 graph2latex(g)
-
 
 }
 \references{
