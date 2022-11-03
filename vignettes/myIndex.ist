@@ -1,0 +1,12 @@
+preamble "\\begin{theindex}\n\\footnotesize"
+postamble "\n\n\\end{theindex}\n"
+
+headings_flag 1
+heading_prefix "\\centerline{\\bfseries "
+heading_suffix "}\\nopagebreak\n"
+symhead_positive "Symbols"
+numhead_positive "Numbers"
+
+delim_0 "\\dotfill "
+delim_1 "\\dotfill "
+delim_2 "\\dotfill "
