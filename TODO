@@ -1,3 +1,8 @@
+- Simplify class-based logic
+  - Supporting a "graph" object argument as well as a g+w argument in generateWeights and elsewhere
+- Explicitly identify C++ functions with a suffix of Cpp
+- Replace `new('graphMCP', m, w)` with `MakeGraph(g, w)`
+
 Why doesn't the glasspane show up during power calculations?
 
 Could be better: graph with variables, press start, close dialog -> test nevertheless

@@ -44,6 +44,15 @@ matrix2graph <- function(m, weights = rep(1 / dim(m)[1], dim(m)[1])) {
     if (is.null(hnodes)) hnodes <- paste("H", 1:(dim(m)[1]), sep = "")
     rownames(m) <- colnames(m) <- hnodes
     graph <- new("graphMCP", m = m, weights = weights)
+    # TODO: alternative call
+    #   - graph <- MakeGraph(g, w)
+    #   - entangledGraph <- MakeEntangledGraph(
+    #       list(graph1, graph2, graph3),
+    #       list(
+    #       graphs,
+    #       weights,
+    #       graphWeights
+    #     )
     return(graph)
 }
 
