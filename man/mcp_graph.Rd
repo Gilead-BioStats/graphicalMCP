@@ -3,31 +3,46 @@
 \name{mcp_graph}
 \alias{mcp_graph}
 \alias{is_mcp_graph}
-\title{\code{mcp_graph} vector}
+\title{\code{mcp_graph} object}
 \usage{
-mcp_graph(hyp_names = NULL, n_hyps = NULL)
+mcp_graph(trns_wgts, hyp_wgts, names = NULL)
 
-is_mcp_graph(g)
+is_mcp_graph(graph)
 }
 \arguments{
-\item{hyp_names}{A vector of hypothesis names for nodes in the multiple
-comparison procedure graph. Defaults to hypothesis numbers if no names are
-provided}
+\item{trns_wgts}{A numeric matrix of transition weights between hypotheses in
+the multiple comparison procedure graph. Must be a square matrix of values
+between 0 & 1 (inclusive) with row and column lengths matching the length
+of \code{hyp_wgts}. Each row (Transition weights leaving a hypothesis) can sum
+to no more than 1, and the diagonal (Transition weights from a hypothesis
+to itself) must be all 0s}
 
-\item{n_hyps}{(Optional) An integer specifying the number of nodes in the
-multiple comparison procedure graph}
+\item{hyp_wgts}{A numeric vector of hypothesis weights in the multiple
+comparison procedure graph. Must be a vector of values between 0 & 1
+(inclusive) with length matching the row and column lengths of \code{trns_wgts}.
+The sum of hypothesis weights cannot exceed 1}
 
-\item{g}{An object to test}
+\item{names}{(Optional) A character vector of hypothesis names. If not
+provided, names from the weights arguments will be used. If the weights
+arguments are unnamed, hypotheses will be named sequentially}
+
+\item{graph}{An object to test}
 }
 \value{
-An S3 vector of class \code{mcp_graph}.
+An S3 object of class \code{mcp_graph}
 }
 \description{
-This creates an integer vector that represents the hypotheses of a multiple
-comparison procedure graph.
+This creates a list that represents a multiple comparison procedure graph.
 }
 \examples{
-mcp_graph(c("doseA", "doseB"))
+mcp_graph(rbind(c(0, 1), c(1, 0)), c(.5, .5), c("doseA", "doseB"))
 
-mcp_graph(n_hyps = 5)
+# Explicit names override names in the weights arguments (with a warning)
+mcp_graph(rbind(c(0, 1), c(1, 0)), c(d1 = .5, d2 = .5), c("doseA", "doseB"))
+
+# When names are not specified, hypotheses are numbered
+mcp_graph(
+  matrix(c(0, .5, .5, .5, 0, .5, .5, .5, 0), nrow = 3, byrow = TRUE),
+  c(.333333, .333333, .333333)
+)
 }

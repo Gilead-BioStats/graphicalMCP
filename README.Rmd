@@ -1,0 +1,32 @@
+---
+output: github_document
+---
+
+<!-- README.md is generated from README.Rmd. Please edit that file -->
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.path = "man/figures/README-",
+  out.width = "100%"
+)
+```
+
+Establishes a basic MCP graph S3 class, `mcp_graph`. Here is an example usage
+
+```{r}
+library(graphicalMCP)
+
+g <- rbind(
+  c( 0, .5, .5),
+  c(.5,  0, .5),
+  c(.5, .5,  0)
+)
+w <- rep(.333333, 3)
+
+g_dose <- mcp_graph(g, w, paste("dose", letters[1:3]))
+
+g_dose
+```
+
