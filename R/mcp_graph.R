@@ -104,7 +104,7 @@ mcp_graph <- function(trns_wgts, hyp_wgts, names = NULL) { # TODO: Make it an op
           colnames(trns_wgts) != rownames(trns_wgts)
         )
       ) {
-        error("names provided in w & g must match")
+        stop("names provided in w & g must match")
       }
       names <- paste0("H", 1:length(hyp_wgts))
     }

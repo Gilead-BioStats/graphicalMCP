@@ -47,6 +47,10 @@ test_that("create a trivial graph", {
   expect_true(is_mcp_graph(new_mcp_graph(g_1, w_1)))
 })
 
+test_that("size of w & g differ", {
+  expect_error(validate_mcp_graph(new_mcp_graph(g_1, w_2)))
+})
+
 test_that("transition/hypothesis weights must be numeric", {
   expect_error(new_mcp_graph(g_1, "1"))
   expect_error(new_mcp_graph(matrix("0"), w_1))
@@ -68,6 +72,9 @@ test_that("transition weights range, sum, and diagonal", {
 test_that("names validation", {
   expect_true(is_mcp_graph(mcp_graph(g_1, w_1, "node")))
   expect_warning(mcp_graph(g_1, w_1_nm, "node"))
-  expect_error(mcp_graph(g_1_nm, w_1))
+  expect_error(mcp_graph(g_1_rnm, w_1_nm))
   expect_equal(names(mcp_graph(g_1, w_1)$hyp_wgts), "H1")
+  expect_equal(names(mcp_graph(g_1_cnm, w_1)$hyp_wgts), "col_node")
+  expect_equal(names(mcp_graph(g_1_rnm, w_1)$hyp_wgts), "row_node")
+  expect_equal(names(mcp_graph(g_1, w_1_nm)$hyp_wgts), "my_node")
 })
