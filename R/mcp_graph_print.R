@@ -3,12 +3,12 @@ print_title <- function() {
 }
 
 print_hyps <- function(graph) {
-  max_h_length <- nchar(length(graph$hyp_wgts))
+  max_h_length <- nchar(length(graph$hypotheses))
   h_nums <- formatC(
-    paste0("H", seq_along(graph$hyp_wgts)),
+    paste0("H", seq_along(graph$hypotheses)),
     width = max_h_length + 1
   )
-  h_names <- names(graph$hyp_wgts)
+  h_names <- names(graph$hypotheses)
 
   hyps_text <- paste(
     h_nums,
@@ -24,14 +24,14 @@ print_hyps <- function(graph) {
   )
 }
 
-print_hyp_weights <- function(graph) {
-  hyp_weights_text <- paste(
+print_hypotheses <- function(graph) {
+  hypotheses_text <- paste(
     formatC(
-      names(graph$hyp_wgts),
-      width = max(nchar(names(graph$hyp_wgts)))
+      names(graph$hypotheses),
+      width = max(nchar(names(graph$hypotheses)))
     ),
     ": (",
-    formatC(graph$hyp_wgts, digits = 4, format = "f"),
+    formatC(graph$hypotheses, digits = 4, format = "f"),
     ")",
     sep = "",
     collapse = "\n"
@@ -39,22 +39,22 @@ print_hyp_weights <- function(graph) {
 
   paste(
     "--- Hypothesis weights ---",
-    hyp_weights_text,
+    hypotheses_text,
     sep = "\n"
   )
 }
 
-print_trns_weights <- function(graph) {
-  trns_weights <- formatC(
-    graph$trns_wgts,
+print_transitions <- function(graph) {
+  transitions <- formatC(
+    graph$transitions,
     digits = 4,
     format = "f"
   )
-  diag(trns_weights) <- rep("  --  ", ncol(trns_weights))
+  diag(transitions) <- rep("  --  ", ncol(transitions))
 
-  trns_weights_text <- data.frame(trns_weights, check.names = FALSE)
+  transitions_text <- data.frame(transitions, check.names = FALSE)
 
-  trns_weights_text
+  transitions_text
 }
 
 #' @export
@@ -62,12 +62,12 @@ print.mcp_graph <- function(graph) {
   print_graph <- paste(
     print_title(),
     print_hyps(graph),
-    print_hyp_weights(graph),
+    print_hypotheses(graph),
     sep = "\n\n"
   )
 
   cat(print_graph, "", sep = "\n")
 
   cat("--- Transition weights ---\n")
-  print(print_trns_weights(graph))
+  print(print_transitions(graph))
 }

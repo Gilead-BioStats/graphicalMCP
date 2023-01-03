@@ -1,4 +1,4 @@
-# graph examples ---------------------------------------------------------------
+# graph example inputs ---------------------------------------------------------
 
 # trivial graph
 g_1 <- matrix(0, nrow = 1)
@@ -44,37 +44,37 @@ g_sum_over[1, ] <- c(0, .75, .75)
 # tests ------------------------------------------------------------------------
 
 test_that("create a trivial graph", {
-  expect_true(is_mcp_graph(new_mcp_graph(g_1, w_1)))
+  expect_true(inherits(graph(w_1, g_1), "mcp_graph"))
 })
 
 test_that("size of w & g differ", {
-  expect_error(validate_mcp_graph(new_mcp_graph(g_1, w_2)))
+  expect_error(graph(w_2, g_1))
 })
 
 test_that("transition/hypothesis weights must be numeric", {
-  expect_error(new_mcp_graph(g_1, "1"))
-  expect_error(new_mcp_graph(matrix("0"), w_1))
+  expect_error(graph("1", g_1))
+  expect_error(graph(w_1, matrix("0")))
 })
 
 test_that("hypothesis weights range and sum", {
-  expect_error(mcp_graph(g_2, w_under))
-  expect_error(mcp_graph(g_2, w_over))
-  expect_error(mcp_graph(g_2, w_sum_over))
+  expect_error(graph(w_under, g_2))
+  expect_error(graph(w_over, g_2))
+  expect_error(graph(w_sum_over, g_2))
 })
 
 test_that("transition weights range, sum, and diagonal", {
-  expect_error(mcp_graph(g_under, w_3))
-  expect_error(mcp_graph(g_over, w_3))
-  expect_error(mcp_graph(g_diag, w_3))
-  expect_error(mcp_graph(g_sum_over, w_3))
+  expect_error(graph(w_3, g_under))
+  expect_error(graph(w_3, g_over))
+  expect_error(graph(w_3, g_diag))
+  expect_error(graph(w_3, g_sum_over))
 })
 
 test_that("names validation", {
-  expect_true(is_mcp_graph(mcp_graph(g_1, w_1, "node")))
-  expect_warning(mcp_graph(g_1, w_1_nm, "node"))
-  expect_error(mcp_graph(g_1_rnm, w_1_nm))
-  expect_equal(names(mcp_graph(g_1, w_1)$hyp_wgts), "H1")
-  expect_equal(names(mcp_graph(g_1_cnm, w_1)$hyp_wgts), "col_node")
-  expect_equal(names(mcp_graph(g_1_rnm, w_1)$hyp_wgts), "row_node")
-  expect_equal(names(mcp_graph(g_1, w_1_nm)$hyp_wgts), "my_node")
+  expect_true(inherits(graph(w_1, g_1, "node"), "mcp_graph"))
+  expect_warning(graph(w_1_nm, g_1, "node"))
+  expect_error(graph(w_1_nm, g_1_rnm))
+  expect_equal(names(graph(w_1, g_1)$hypotheses), "H1")
+  expect_equal(names(graph(w_1, g_1_cnm)$hypotheses), "col_node")
+  expect_equal(names(graph(w_1, g_1_rnm)$hypotheses), "row_node")
+  expect_equal(names(graph(w_1_nm, g_1)$hypotheses), "my_node")
 })
