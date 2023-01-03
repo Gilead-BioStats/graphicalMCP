@@ -32,7 +32,7 @@ arguments are unnamed, hypotheses will be named sequentially}
 An S3 object of class \code{mcp_graph}
 }
 \description{
-This creates a list that represents a multiple comparison procedure graph.
+Creates a list that represents a multiple comparison procedure graph
 }
 \examples{
 mcp_graph(rbind(c(0, 1), c(1, 0)), c(.5, .5), c("doseA", "doseB"))
