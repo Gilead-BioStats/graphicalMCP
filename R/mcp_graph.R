@@ -31,8 +31,8 @@
 #' )
 graph <- function(hypotheses, transitions, names = NULL) { # TODO: Make it an option to provide just a vector and coerce to the appropriate square matrix?
 	stopifnot(
-		"transition weights must be numeric" = is.numeric(transitions),
-		"hypothesis weights must be numeric" = is.numeric(hypotheses)
+		"hypothesis weights must be numeric" = is.numeric(hypotheses),
+		"transition weights must be numeric" = is.numeric(transitions)
 	)
 
 	# Name validation ------------------------------------------------------------
@@ -66,11 +66,6 @@ graph <- function(hypotheses, transitions, names = NULL) { # TODO: Make it an op
     }
   }
 
-  colnames(transitions) <- names
-  rownames(transitions) <- names
-  names(hypotheses) <- names
-
-  # Values validation ----------------------------------------------------------
   if (
   	any(
   		nrow(transitions) != ncol(transitions),
@@ -81,6 +76,11 @@ graph <- function(hypotheses, transitions, names = NULL) { # TODO: Make it an op
   	stop("length of hypothesis weights, rows of transition weights, and columns of transition weights must all match")
   }
 
+  colnames(transitions) <- names
+  rownames(transitions) <- names
+  names(hypotheses) <- names
+
+  # Values validation ----------------------------------------------------------
   if (any(hypotheses < 0 | hypotheses > 1)) {
   	stop("hypothesis weights must be between 0 and 1")
   }
@@ -102,7 +102,7 @@ graph <- function(hypotheses, transitions, names = NULL) { # TODO: Make it an op
   }
 
   # Create graph object
-  new_mcp_graph <- list(transitions = transitions, hypotheses = hypotheses)
+  new_mcp_graph <- list(hypotheses = hypotheses, transitions = transitions)
   class(new_mcp_graph) <- "mcp_graph"
 
   new_mcp_graph
