@@ -1,27 +1,5 @@
 print_title <- function() {
-  "An mcp_graph" # TODO: Explore {crayon} for using bold or colored text
-}
-
-print_hyps <- function(graph) {
-  max_h_length <- nchar(length(graph$hypotheses))
-  h_nums <- formatC(
-    paste0("H", seq_along(graph$hypotheses)),
-    width = max_h_length + 1
-  )
-  h_names <- names(graph$hypotheses)
-
-  hyps_text <- paste(
-    h_nums,
-    ": ",
-    h_names,
-    sep = "",
-    collapse = "\n"
-  )
-
-  paste0(
-    "--- Hypothesis names ---\n",
-    hyps_text
-  )
+  "An MCP graph" # TODO: Explore {crayon} for using bold or colored text
 }
 
 print_hypotheses <- function(graph) {
@@ -61,7 +39,6 @@ print_transitions <- function(graph) {
 print.mcp_graph <- function(graph) {
   print_graph <- paste(
     print_title(),
-    print_hyps(graph),
     print_hypotheses(graph),
     sep = "\n\n"
   )
