@@ -20,60 +20,76 @@
 #' @examples
 #' # A graphical multiple comparison procedure with two primary hypotheses (H1
 #' # and H2) and two secondary hypotheses (H3 and H4)
+#' # See Figure 1 in Bretz, F., Posch, M., Glimm, E., Klinglmueller, F., Maurer,
+#' # W., & Rohmeyer, K. (2011). Graphical approaches for multiple comparison
+#' # procedures using weighted Bonferroni, Simes, or parametric tests. Biometrical
+#' # Journal, 53(6), 894-913.
 #' hypotheses <- c(0.5, 0.5, 0, 0)
-#' transitions <- rbind(c(0, 0, 1, 0),
-#'   c(0, 0, 0, 1),
-#'   c(0, 1, 0, 0),
-#'   c(1, 0, 0, 0))
+#' transitions <- rbind(
+#'     c(0, 0, 1, 0),
+#'     c(0, 0, 0, 1),
+#'     c(0, 1, 0, 0),
+#'     c(1, 0, 0, 0)
+#' )
 #' names <- c("H1", "H2", "H3", "H4")
 #' g <- graph(hypotheses, transitions, names)
 #' g
 #'
 #' # Explicit names override names in `hypotheses` (with a warning)
 #' hypotheses <- c(h1 = 0.5, h2 = 0.5, h3 = 0, h4 = 0)
-#' transitions <- rbind(c(0, 0, 1, 0),
-#'   c(0, 0, 0, 1),
-#'   c(0, 1, 0, 0),
-#'   c(1, 0, 0, 0))
+#' transitions <- rbind(
+#'     c(0, 0, 1, 0),
+#'     c(0, 0, 0, 1),
+#'     c(0, 1, 0, 0),
+#'     c(1, 0, 0, 0)
+#' )
 #' names <- c("H1", "H2", "H3", "H4")
 #' g <- graph(hypotheses, transitions, names)
 #' g
 #'
 #' # Explicit names override names in `transitions` (with a warning)
 #' hypotheses <- c(0.5, 0.5, 0, 0)
-#' transitions <- rbind(h1 = c(0, 0, 1, 0),
-#'   h2 = c(0, 0, 0, 1),
-#'   h3 = c(0, 1, 0, 0),
-#'   h4 = c(1, 0, 0, 0))
+#' transitions <- rbind(
+#'     h1 = c(0, 0, 1, 0),
+#'     h2 = c(0, 0, 0, 1),
+#'     h3 = c(0, 1, 0, 0),
+#'     h4 = c(1, 0, 0, 0)
+#' )
 #' names <- c("H1", "H2", "H3", "H4")
 #' g <- graph(hypotheses, transitions, names)
 #' g
 #'
 #' # Use names in `hypotheses`
 #' hypotheses <- c(H1 = 0.5, H2 = 0.5, H3 = 0, H4 = 0)
-#' transitions <- rbind(c(0, 0, 1, 0),
-#'   c(0, 0, 0, 1),
-#'   c(0, 1, 0, 0),
-#'   c(1, 0, 0, 0))
+#' transitions <- rbind(
+#'     c(0, 0, 1, 0),
+#'     c(0, 0, 0, 1),
+#'     c(0, 1, 0, 0),
+#'     c(1, 0, 0, 0)
+#' )
 #' g <- graph(hypotheses, transitions)
 #' g
 #'
 #' # Use names in `transitions`
 #' hypotheses <- c(0.5, 0.5, 0, 0)
-#' transitions <- rbind(H1 = c(0, 0, 1, 0),
-#'   H2 = c(0, 0, 0, 1),
-#'   H3 = c(0, 1, 0, 0),
-#'   H4 = c(1, 0, 0, 0))
+#' transitions <- rbind(
+#'     H1 = c(0, 0, 1, 0),
+#'     H2 = c(0, 0, 0, 1),
+#'     H3 = c(0, 1, 0, 0),
+#'     H4 = c(1, 0, 0, 0)
+#' )
 #' g <- graph(hypotheses, transitions)
 #' g
 #'
 #' # When names are not specified, hypotheses are numbered sequentially as
 #' # H1, H2, ...
 #' hypotheses <- c(0.5, 0.5, 0, 0)
-#' transitions <- rbind(c(0, 0, 1, 0),
-#'   c(0, 0, 0, 1),
-#'   c(0, 1, 0, 0),
-#'   c(1, 0, 0, 0))
+#' transitions <- rbind(
+#'     c(0, 0, 1, 0),
+#'     c(0, 0, 0, 1),
+#'     c(0, 1, 0, 0),
+#'     c(1, 0, 0, 0)
+#' )
 #' g <- graph(hypotheses, transitions)
 #' g
 graph <- function(hypotheses, transitions, names = NULL) { # TODO: Make it an option to provide just a vector and coerce to the appropriate square matrix?
@@ -83,7 +99,7 @@ graph <- function(hypotheses, transitions, names = NULL) { # TODO: Make it an op
     "transition weights must be numeric" = is.numeric(transitions)
   )
 
-  # Name validation ----------------------------------------------------------
+  # Validation of names of hypotheses ----------------------------------------
   names_provided <- !is.null(names)
   hyps_named <- !is.null(names(hypotheses))
   trns_col_named <- !is.null(colnames(transitions))
@@ -102,21 +118,30 @@ graph <- function(hypotheses, transitions, names = NULL) { # TODO: Make it an op
     } else if (!hyps_named && !trns_col_named && trns_row_named) {
       names <- rownames(transitions)
     } else {
-      if (
-        any(
-          names(hypotheses) != colnames(transitions),
-          names(hypotheses) != rownames(transitions),
-          colnames(transitions) != rownames(transitions)
-        )
-      ) {
-        stop("names provided in 'hypotheses' and 'transitions' should
-                     match")
+      if (hyps_named && !trns_col_named && !trns_row_named) {
+        names <- names(hypotheses)
+      } else if (!hyps_named && trns_col_named && !trns_row_named) {
+        names <- colnames(transitions)
+      } else if (!hyps_named && !trns_col_named && trns_row_named) {
+        names <- rownames(transitions)
+      } else {
+        if (
+          any(
+            names(hypotheses) != colnames(transitions),
+            names(hypotheses) != rownames(transitions),
+            colnames(transitions) != rownames(transitions)
+          )
+        ) {
+          stop("names provided in 'hypotheses' and 'transitions' should
+               match")
+        }
+        names <- paste0("H", 1:length(hypotheses))
       }
-      names <- paste0("H", 1:length(hypotheses))
     }
   }
 
-  # Values validation --------------------------------------------------------
+  # Validation of numerical conditions for a valid graphical multiple
+  # comparison procedure -----------------------------------------------------
   if (
     any(
       nrow(transitions) != ncol(transitions),
@@ -128,6 +153,7 @@ graph <- function(hypotheses, transitions, names = NULL) { # TODO: Make it an op
              'transitions' must all match")
   }
 
+  # Must come after length checks to avoid an error
   colnames(transitions) <- names
   rownames(transitions) <- names
   names(hypotheses) <- names
@@ -152,7 +178,7 @@ graph <- function(hypotheses, transitions, names = NULL) { # TODO: Make it an op
     stop("transition weights from each row must sum to no more than 1")
   }
 
-  # Create graph object
+  # Create graph object --------------------------------------------------------
   new_mcp_graph <- list(hypotheses = hypotheses, transitions = transitions)
   class(new_mcp_graph) <- "mcp_graph"
 

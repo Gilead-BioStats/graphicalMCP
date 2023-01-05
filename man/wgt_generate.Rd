@@ -25,26 +25,26 @@ Generate weights for the full closure tree of a graph
 
 # Example taken from gMCP::generateWeights documentation
 g <- matrix(
-  c(
-    0,
-    0,
-    1,
-    0,
-    0,
-    0,
-    0,
-    1,
-    0,
-    1,
-    0,
-    0,
-    1,
-    0,
-    0,
-    0
-  ),
-  nrow = 4,
-  byrow = TRUE
+	c(
+		0,
+		0,
+		1,
+		0,
+		0,
+		0,
+		0,
+		1,
+		0,
+		1,
+		0,
+		0,
+		1,
+		0,
+		0,
+		0
+	),
+	nrow = 4,
+	byrow = TRUE
 )
 
 ## Choose weights
