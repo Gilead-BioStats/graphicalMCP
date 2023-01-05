@@ -42,14 +42,14 @@ a vector of hypothesis (vertex) weights.
 ``` r
 library(graphicalMCP)
 
-g <- rbind(
+transitions <- rbind(
   c(0, .5, .5),
   c(.5, 0, .5),
   c(.5, .5, 0)
 )
-w <- rep(.333333, 3)
+hypotheses <- rep(.333333, 3)
 
-g_dose <- mcp_graph(g, w, paste("dose", letters[1:3]))
+g_dose <- graph(hypotheses, transitions, paste("dose", letters[1:3]))
 
 g_dose
 #> An mcp_graph
