@@ -1,72 +1,26 @@
-Package: graphicalMCP
 Type: Package
-Title: Graph Based Multiple Comparison Procedures
-Version: 0.8-15
-Authors@R: c(person("Kornelius", "Rohmeyer", role = c("aut", "cre"),  email = "rohmeyer@small-projects.de"),
-	      person("Florian", "Klinglmueller", role = "aut", email = "float@lefant.net"))
-Maintainer: Kornelius Rohmeyer <rohmeyer@small-projects.de>
-Description: Functions and a graphical user interface for graphical described
-    multiple test procedures.
-Depends:
-    R (>= 3.0.0),
-    methods
-Imports:
-    MASS,
-    PolynomF,
-    multcomp (>= 1.1),
-    mvtnorm,
-    Matrix,
-    CommonJavaJars (>= 1.0.5),
-    rJava (>= 0.6-3),
-    Rcpp (>= 1.0.9),
-    JavaGD,
-    xlsxjars (>= 0.6.1),
-    stats4
-LinkingTo: Rcpp
-Suggests:
-    RUnit,
-    Deducer,
-    knitr,
-    graph (>= 1.20),
-    mutoss,
-    boot,
-    coin
-VignetteBuilder: knitr
-SystemRequirements: Java (>= 5.0)
-License: GPL (>= 2)
-URL: http://gsrmtp.r-forge.r-project.org/
-BugReports: https://github.com/kornl/gMCP/issues
-RoxygenNote: 6.0.1
-Collate: 
-    'analysis.R'
-    'calcPower.R'
-    'graphMCP.R'
-    'ci.R'
-    'closure.R'
-    'convertFromOldClassDefinition.R'
-    'doRUnitTests.R'
-    'exampleGraphs.R'
-    'gACT-internal.R'
-    'gMCP.R'
-    'gMCP.extended.R'
-    'gPAD.R'
-    'generateBounds.R'
-    'generatePvals.R'
-    'generateTest.R'
-    'generateWeights.R'
-    'GetPowerMatrix.R'
-    'graph2latex.R'
-    'graphTest.R'
-    'helperGUI.R'
-    'initJava.R'
-    'matrix2graph.R'
-    'misc.R'
-    'modifyGraphs.R'
-    'onLoad.R'
-    'plotCI.R'
-    'powerPlot.R'
-    'RcppExports.R'
-    'rqmvnorm.R'
-    'sampSize.R'
-    'startGUIs.R'
-    'subVariables.R'
+Package: graphicalMCP
+Title: Graphical Approach for Multiple Comparison Procedures
+Version: 0.1.0
+Authors@R: c(
+    person("Dong", "Xi", , "dong.xi@gilead.com", role = c("aut", "cre")),
+    person("Ethan", "Brockmann", , "ethan.brockmann@atorusresearch.com", role = "aut"),
+    person("Gilead Biostatistics", role = c("cph", "fnd")),
+    person("Atorus Research LLC", role = "cph")
+  )
+Description: A multiple comparison procedure (or multiple test procedure)
+    is a a statistical analysis method for determining efficacy of
+    multiple drugs, or multiple doses of the same drug, in a single
+    clinical trial. Bretz, et al (2011) laid out a graph-based approach to
+    these multiple comparison procedures, in which the weights of the
+    vertices and edges of the graph are determined independently of the
+    particular statistical test used to assess results. This package is a
+    low-dependency implementation of the methods described in that paper.
+License: GPL (>= 3)
+Suggests: 
+    testthat (>= 3.0.0)
+Encoding: UTF-8
+LazyData: true
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.2.2
+Config/testthat/edition: 3
