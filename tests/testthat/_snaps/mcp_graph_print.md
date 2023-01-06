@@ -3,11 +3,7 @@
     Code
       graph(c(0.5, 0.5), matrix(c(0, 1, 1, 0), nrow = 2))
     Output
-      An mcp_graph
-      
-      --- Hypothesis names ---
-      H1: H1
-      H2: H2
+      An MCP graph
       
       --- Hypothesis weights ---
       H1: (0.5000)
