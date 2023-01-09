@@ -1,4 +1,4 @@
-#' `mcp_graph` object
+#' `initial_graph` object
 #'
 #' Creates a list that represents a graphical multiple comparison procedure
 #'
@@ -15,7 +15,7 @@
 #' @param names (Optional) A character vector of hypothesis names. If not
 #'   provided, names from `hypotheses` and `transitions` will be used. If names
 #'   are not specified, hypotheses will be named sequentially as H1, H2, ...
-#' @return An S3 object of class `mcp_graph`
+#' @return An S3 object of class `initial_graph`
 #' @export
 #' @examples
 #' # A graphical multiple comparison procedure with two primary hypotheses (H1
@@ -180,7 +180,7 @@ graph <- function(hypotheses, transitions, names = NULL) { # TODO: Make it an op
 
   # Create graph object --------------------------------------------------------
   new_mcp_graph <- list(hypotheses = hypotheses, transitions = transitions)
-  class(new_mcp_graph) <- "mcp_graph"
+  class(new_mcp_graph) <- "initial_graph"
 
   new_mcp_graph
 }

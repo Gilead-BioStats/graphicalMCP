@@ -2,7 +2,7 @@
 % Please edit documentation in R/graph.R
 \name{graph}
 \alias{graph}
-\title{\code{mcp_graph} object}
+\title{\code{initial_graph} object}
 \usage{
 graph(hypotheses, transitions, names = NULL)
 }
@@ -24,7 +24,7 @@ provided, names from \code{hypotheses} and \code{transitions} will be used. If n
 are not specified, hypotheses will be named sequentially as H1, H2, ...}
 }
 \value{
-An S3 object of class \code{mcp_graph}
+An S3 object of class \code{initial_graph}
 }
 \description{
 Creates a list that represents a graphical multiple comparison procedure

@@ -44,7 +44,7 @@ g_sum_over[1, ] <- c(0, .75, .75)
 # tests ------------------------------------------------------------------------
 
 test_that("create a trivial graph", {
-  expect_true(inherits(graph(w_1, g_1), "mcp_graph"))
+  expect_true(inherits(graph(w_1, g_1), "initial_graph"))
 })
 
 test_that("size of w & g differ", {
@@ -70,7 +70,7 @@ test_that("transition weights range, sum, and diagonal", {
 })
 
 test_that("names validation", {
-  expect_true(inherits(graph(w_1, g_1, "node"), "mcp_graph"))
+  expect_true(inherits(graph(w_1, g_1, "node"), "initial_graph"))
   expect_warning(graph(w_1_nm, g_1, "node"))
   expect_error(graph(w_1_nm, g_1_rnm))
   expect_equal(names(graph(w_1, g_1)$hypotheses), "H1")
