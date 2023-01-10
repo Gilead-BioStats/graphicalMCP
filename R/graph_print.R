@@ -46,14 +46,18 @@ print_transitions <- function(graph) {
 #'
 #' @export
 print.initial_graph <- function(x, ...) {
-  print_graph <- paste(
-    print_title(),
-    print_hypotheses(x),
-    sep = "\n\n"
-  )
+  if (length(x$hypotheses) == 0) {
+    cat("An empty graph\n")
+  } else {
+    print_graph <- paste(
+      print_title(),
+      print_hypotheses(x),
+      sep = "\n\n"
+    )
 
-  cat(print_graph, "", sep = "\n")
+    cat(print_graph, "", sep = "\n")
 
-  cat("--- Transition weights ---\n")
-  print(print_transitions(x))
+    cat("--- Transition weights ---\n")
+    print(print_transitions(x))
+  }
 }

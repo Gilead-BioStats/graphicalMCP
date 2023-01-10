@@ -14,7 +14,7 @@ test_that("basic creation", {
           dimnames = list(c("H1", "H2", "H3"), c("H1", "H2", "H3"))
         )
       ),
-      class = "mcp_graph"
+      class = "initial_graph"
     )
   )
 })

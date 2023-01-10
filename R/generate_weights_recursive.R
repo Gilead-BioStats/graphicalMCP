@@ -140,6 +140,6 @@ delete_node_fast <- function(graph, delete_num) {
     hypotheses = hypotheses[-delete_num],
     transitions = as.matrix(transitions[-delete_num, -delete_num])
   )
-  class(updated_graph) <- "mcp_graph"
+  class(updated_graph) <- "initial_graph"
   updated_graph
 }

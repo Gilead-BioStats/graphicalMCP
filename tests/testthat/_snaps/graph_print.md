@@ -19,5 +19,12 @@
     Code
       update_graph(graph(1, matrix(0, nrow = 1)), FALSE)$updated_graph
     Output
-      An empty MCP graph
+      $hypotheses
+      named numeric(0)
+      
+      $transitions
+      <0 x 0 matrix>
+      
+      attr(,"class")
+      [1] "mcp_graph"
 
