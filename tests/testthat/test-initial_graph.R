@@ -44,37 +44,37 @@ g_sum_over[1, ] <- c(0, .75, .75)
 # tests ------------------------------------------------------------------------
 
 test_that("create a trivial graph", {
-  expect_true(inherits(graph(w_1, g_1), "initial_graph"))
+  expect_true(inherits(create_graph(w_1, g_1), "initial_graph"))
 })
 
 test_that("size of w & g differ", {
-  expect_error(graph(w_2, g_1))
+  expect_error(create_graph(w_2, g_1))
 })
 
 test_that("transition/hypothesis weights must be numeric", {
-  expect_error(graph("1", g_1))
-  expect_error(graph(w_1, matrix("0")))
+  expect_error(create_graph("1", g_1))
+  expect_error(create_graph(w_1, matrix("0")))
 })
 
 test_that("hypothesis weights range and sum", {
-  expect_error(graph(w_under, g_2))
-  expect_error(graph(w_over, g_2))
-  expect_error(graph(w_sum_over, g_2))
+  expect_error(create_graph(w_under, g_2))
+  expect_error(create_graph(w_over, g_2))
+  expect_error(create_graph(w_sum_over, g_2))
 })
 
 test_that("transition weights range, sum, and diagonal", {
-  expect_error(graph(w_3, g_under))
-  expect_error(graph(w_3, g_over))
-  expect_error(graph(w_3, g_diag))
-  expect_error(graph(w_3, g_sum_over))
+  expect_error(create_graph(w_3, g_under))
+  expect_error(create_graph(w_3, g_over))
+  expect_error(create_graph(w_3, g_diag))
+  expect_error(create_graph(w_3, g_sum_over))
 })
 
 test_that("names validation", {
-  expect_true(inherits(graph(w_1, g_1, "node"), "initial_graph"))
-  expect_warning(graph(w_1_nm, g_1, "node"))
-  expect_error(graph(w_1_nm, g_1_rnm))
-  expect_equal(names(graph(w_1, g_1)$hypotheses), "H1")
-  expect_equal(names(graph(w_1, g_1_cnm)$hypotheses), "col_node")
-  expect_equal(names(graph(w_1, g_1_rnm)$hypotheses), "row_node")
-  expect_equal(names(graph(w_1_nm, g_1)$hypotheses), "my_node")
+  expect_true(inherits(create_graph(w_1, g_1, "node"), "initial_graph"))
+  expect_warning(create_graph(w_1_nm, g_1, "node"))
+  expect_error(create_graph(w_1_nm, g_1_rnm))
+  expect_equal(names(create_graph(w_1, g_1)$hypotheses), "H1")
+  expect_equal(names(create_graph(w_1, g_1_cnm)$hypotheses), "col_node")
+  expect_equal(names(create_graph(w_1, g_1_rnm)$hypotheses), "row_node")
+  expect_equal(names(create_graph(w_1_nm, g_1)$hypotheses), "my_node")
 })
