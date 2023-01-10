@@ -28,10 +28,11 @@ print_transitions <- function(graph) {
     digits = 4,
     format = "f"
   )
+  diag(transitions) <- rep("  --  ", ncol(transitions))
 
   transitions_text <- data.frame(transitions, check.names = FALSE)
 
-  print(transitions_text)
+  transitions_text
 }
 
 #' S3 print method for class 'initial_graph'
@@ -54,6 +55,5 @@ print.initial_graph <- function(x, ...) {
   cat(print_graph, "", sep = "\n")
 
   cat("--- Transition weights ---\n")
-
-  print_transitions(x)
+  print(print_transitions(x))
 }

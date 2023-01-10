@@ -3,3 +3,8 @@
 S3method(print,initial_graph)
 export(create_graph)
 export(is_optimal)
+export(analyze_graph)
+export(bonferroni_holm)
+export(generate_weights)
+export(graph)
+export(update_graph)
