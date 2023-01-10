@@ -14,17 +14,3 @@
       H1   --   1.0000
       H2 1.0000   --  
 
----
-
-    Code
-      update_graph(create_graph(1, matrix(0, nrow = 1)), FALSE)$updated_graph
-    Output
-      $hypotheses
-      named numeric(0)
-      
-      $transitions
-      <0 x 0 matrix>
-      
-      attr(,"class")
-      [1] "mcp_graph"
-

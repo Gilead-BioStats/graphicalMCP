@@ -22,5 +22,5 @@ bonferroni_holm <- function(n, names = NULL) {
 
   w <- rep(1 / n, n)
 
-  graph(w, g, names = names)
+  create_graph(w, g, names = names)
 }
