@@ -27,10 +27,10 @@
 #' # Journal, 53(6), 894-913.
 #' hypotheses <- c(0.5, 0.5, 0, 0)
 #' transitions <- rbind(
-#'     c(0, 0, 1, 0),
-#'     c(0, 0, 0, 1),
-#'     c(0, 1, 0, 0),
-#'     c(1, 0, 0, 0)
+#'   c(0, 0, 1, 0),
+#'   c(0, 0, 0, 1),
+#'   c(0, 1, 0, 0),
+#'   c(1, 0, 0, 0)
 #' )
 #' names <- c("H1", "H2", "H3", "H4")
 #' g <- create_graph(hypotheses, transitions, names)
@@ -39,10 +39,10 @@
 #' # Explicit names override names in `hypotheses` (with a warning)
 #' hypotheses <- c(h1 = 0.5, h2 = 0.5, h3 = 0, h4 = 0)
 #' transitions <- rbind(
-#'     c(0, 0, 1, 0),
-#'     c(0, 0, 0, 1),
-#'     c(0, 1, 0, 0),
-#'     c(1, 0, 0, 0)
+#'   c(0, 0, 1, 0),
+#'   c(0, 0, 0, 1),
+#'   c(0, 1, 0, 0),
+#'   c(1, 0, 0, 0)
 #' )
 #' names <- c("H1", "H2", "H3", "H4")
 #' g <- create_graph(hypotheses, transitions, names)
@@ -51,10 +51,10 @@
 #' # Explicit names override names in `transitions` (with a warning)
 #' hypotheses <- c(0.5, 0.5, 0, 0)
 #' transitions <- rbind(
-#'     h1 = c(0, 0, 1, 0),
-#'     h2 = c(0, 0, 0, 1),
-#'     h3 = c(0, 1, 0, 0),
-#'     h4 = c(1, 0, 0, 0)
+#'   h1 = c(0, 0, 1, 0),
+#'   h2 = c(0, 0, 0, 1),
+#'   h3 = c(0, 1, 0, 0),
+#'   h4 = c(1, 0, 0, 0)
 #' )
 #' names <- c("H1", "H2", "H3", "H4")
 #' g <- create_graph(hypotheses, transitions, names)
@@ -63,10 +63,10 @@
 #' # Use names in `hypotheses`
 #' hypotheses <- c(H1 = 0.5, H2 = 0.5, H3 = 0, H4 = 0)
 #' transitions <- rbind(
-#'     c(0, 0, 1, 0),
-#'     c(0, 0, 0, 1),
-#'     c(0, 1, 0, 0),
-#'     c(1, 0, 0, 0)
+#'   c(0, 0, 1, 0),
+#'   c(0, 0, 0, 1),
+#'   c(0, 1, 0, 0),
+#'   c(1, 0, 0, 0)
 #' )
 #' g <- create_graph(hypotheses, transitions)
 #' g
@@ -74,25 +74,25 @@
 #' # Use names in `transitions`
 #' hypotheses <- c(0.5, 0.5, 0, 0)
 #' transitions <- rbind(
-#'     H1 = c(0, 0, 1, 0),
-#'     H2 = c(0, 0, 0, 1),
-#'     H3 = c(0, 1, 0, 0),
-#'     H4 = c(1, 0, 0, 0)
+#'   H1 = c(0, 0, 1, 0),
+#'   H2 = c(0, 0, 0, 1),
+#'   H3 = c(0, 1, 0, 0),
+#'   H4 = c(1, 0, 0, 0)
 #' )
 #' g <- create_graph(hypotheses, transitions)
 #' g
 #'
 #' # When names are not specified, hypotheses are numbered sequentially as
 #' # H1, H2, ...
-# hypotheses <- c(0.5, 0.5, 0, 0)
-# transitions <- rbind(
-#     c(0, 0, 1, 0),
-#     c(0, 0, 0, 1),
-#     c(0, 1, 0, 0),
-#     c(1, 0, 0, 0)
-# )
-# g <- create_graph(hypotheses, transitions)
-# g
+#' hypotheses <- c(0.5, 0.5, 0, 0)
+#' transitions <- rbind(
+#'   c(0, 0, 1, 0),
+#'   c(0, 0, 0, 1),
+#'   c(0, 1, 0, 0),
+#'   c(1, 0, 0, 0)
+#' )
+#' g <- create_graph(hypotheses, transitions)
+#' g
 create_graph <- function(hypotheses, transitions, names = NULL) {
 
   stopifnot(
@@ -136,7 +136,7 @@ create_graph <- function(hypotheses, transitions, names = NULL) {
           stop("names provided in 'hypotheses' and 'transitions' should
                match")
         }
-        names <- paste0("H", 1:length(hypotheses))
+        names <- paste0("H", seq_along(hypotheses))
       }
     }
   }

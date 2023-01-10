@@ -37,10 +37,10 @@
 #' generate_weights_recursive(ex_graph)
 #'
 generate_weights_recursive <- function(graph, compact = TRUE) {
-	orig_names <- names(graph$hypotheses)
-	names(graph$hypotheses) <- seq_along(graph$hypotheses)
-	colnames(graph$transitions) <- names(graph$hypotheses)
-	rownames(graph$transitions) <- names(graph$hypotheses)
+  orig_names <- names(graph$hypotheses)
+  names(graph$hypotheses) <- seq_along(graph$hypotheses)
+  colnames(graph$transitions) <- names(graph$hypotheses)
+  rownames(graph$transitions) <- names(graph$hypotheses)
 
   list_subgraphs <- delete_nodes_recursive(graph)
 
@@ -70,7 +70,6 @@ generate_weights_recursive <- function(graph, compact = TRUE) {
 
 delete_nodes_recursive <- function(graph, last = 0) {
   hypotheses <- graph$hypotheses
-  transitions <- graph$transitions
 
   # base case
   is_single_node <- length(hypotheses) == 1
@@ -118,7 +117,7 @@ delete_node_fast <- function(graph, delete_num) {
       zero_condition <- any(
         hyp_num == trn_num,
         (init_transitions[[hyp_num, delete_num]] *
-           init_transitions[[delete_num, hyp_num]]) >= 1
+          init_transitions[[delete_num, hyp_num]]) >= 1
       )
 
       if (zero_condition) {
@@ -127,11 +126,11 @@ delete_node_fast <- function(graph, delete_num) {
         transitions[[hyp_num, trn_num]] <- (
           init_transitions[[hyp_num, trn_num]] +
             init_transitions[[hyp_num, delete_num]] *
-            init_transitions[[delete_num, trn_num]]
-          ) / (
-            1 - init_transitions[[hyp_num, trn_num]] *
-              init_transitions[[trn_num, hyp_num]]
-          )
+              init_transitions[[delete_num, trn_num]]
+        ) / (
+          1 - init_transitions[[hyp_num, trn_num]] *
+            init_transitions[[trn_num, hyp_num]]
+        )
       }
     }
   }

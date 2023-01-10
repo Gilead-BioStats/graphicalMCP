@@ -12,25 +12,19 @@ bh20 <- bonferroni_holm(20)
 
 vroom_write(print(mark(
   generateWeights(bh2$transitions, bh2$hypotheses),
-  generate_weights(bh2),
   generate_weights_recursive(bh2),
-  generate_weights_recursive(bh2, compact = FALSE),
   check = FALSE
 )), "./perf-tests/log/bh2.tsv")
 
 vroom_write(print(mark(
   generateWeights(bh4$transitions, bh4$hypotheses),
-  generate_weights(bh4),
   generate_weights_recursive(bh4),
-  generate_weights_recursive(bh4, compact = FALSE),
   check = FALSE
 )), "./perf-tests/log/bh4.tsv")
 
 vroom_write(print(mark(
   generateWeights(bh8$transitions, bh8$hypotheses),
-  generate_weights(bh8),
   generate_weights_recursive(bh8),
-  generate_weights_recursive(bh8, compact = FALSE),
   check = FALSE
 )), "./perf-tests/log/bh8.tsv")
 
@@ -42,9 +36,7 @@ vroom_write(print(mark(
 
 vroom_write(print(mark(
   generateWeights(bh10$transitions, bh10$hypotheses),
-  generate_weights(bh10),
   generate_weights_recursive(bh10),
-  generate_weights_recursive(bh10, compact = FALSE),
   check = FALSE
 )), "./perf-tests/log/bh10.tsv")
 
@@ -53,10 +45,8 @@ vroom_write(print(mark(
 # RAM before I just cancelled it. Recursive version takes about 12 seconds each
 # run
 vroom_write(print(mark(
-  generateWeights(bh16$transitions, bh16$hypotheses),
-  # generate_weights(bh16),
+  # generateWeights(bh16$transitions, bh16$hypotheses),
   generate_weights_recursive(bh16),
-  generate_weights_recursive(bh16, compact = FALSE),
   check = FALSE
 )), "./perf-tests/log/bh16.tsv")
 

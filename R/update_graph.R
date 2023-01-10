@@ -14,9 +14,9 @@
 #' @examples
 #' hypotheses <- c(0.5, 0.5, 0, 0)
 #' transitions <- rbind(c(0, 0, 1, 0),
-#'                      c(0, 0, 0, 1),
-#'                      c(0, 1, 0, 0),
-#'                      c(1, 0, 0, 0))
+#'   c(0, 0, 0, 1),
+#'   c(0, 1, 0, 0),
+#'   c(1, 0, 0, 0))
 #' g <- create_graph(hypotheses, transitions)
 #'
 #' # Delete the third hypothesis
@@ -25,11 +25,11 @@
 #' #
 #'
 update_graph <- function(graph, keep_hypotheses) {
-  # stopifnot(
-  #   "keep_hypotheses must be logical" = is.logical(keep_hypotheses),
-  #   "keep_hypotheses length must match number of hypotheses in graph" =
-  #     length(graph$hypotheses) == length(keep_hypotheses)
-  # )
+  stopifnot(
+    "keep_hypotheses must be logical" = is.logical(keep_hypotheses),
+    "keep_hypotheses length must match number of hypotheses in graph" =
+      length(graph$hypotheses) == length(keep_hypotheses)
+  )
 
   names(keep_hypotheses) <- names(graph$hypotheses)
 
