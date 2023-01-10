@@ -1,17 +1,18 @@
 #' `initial_graph` object
 #'
-#' Creates a list that represents a graphical multiple comparison procedure
+#' Creates a list that represents an initial graphical multiple comparison
+#' procedure.
 #'
-#' @param hypotheses A numeric vector of hypothesis weights in the graphical
-#'   multiple comparison procedure. Must be a vector of values between 0 & 1
-#'   (inclusive). The length should match the row and column lengths of
+#' @param hypotheses A numeric vector of hypothesis weights in an initial
+#'   graphical multiple comparison procedure. Must be a vector of values between
+#'   0 & 1 (inclusive). The length should match the row and column lengths of
 #'   `transitions`. The sum of hypothesis weights cannot exceed 1
 #' @param transitions A numeric matrix of transition weights between hypotheses
-#'   in the graphical multiple comparison procedure. Must be a square matrix of
-#'   values between 0 & 1 (inclusive). The row and column lengths should match
-#'   the length of `hypotheses`. Each row (Transition weights leaving a
-#'   hypothesis) can sum to no more than 1. The diagonal (Transition weights
-#'   from a hypothesis to itself) must be all 0s
+#'   in an initial graphical multiple comparison procedure. Must be a square
+#'   matrix of values between 0 & 1 (inclusive). The row and column lengths
+#'   should match the length of `hypotheses`. Each row (Transition weights
+#'   leaving a hypothesis) can sum to no more than 1. The diagonal (Transition
+#'   weights from a hypothesis to itself) must be all 0s
 #' @param names (Optional) A character vector of hypothesis names. If not
 #'   provided, names from `hypotheses` and `transitions` will be used. If names
 #'   are not specified, hypotheses will be named sequentially as H1, H2, ...
@@ -32,7 +33,7 @@
 #'     c(1, 0, 0, 0)
 #' )
 #' names <- c("H1", "H2", "H3", "H4")
-#' g <- graph(hypotheses, transitions, names)
+#' g <- create_graph(hypotheses, transitions, names)
 #' g
 #'
 #' # Explicit names override names in `hypotheses` (with a warning)
@@ -44,7 +45,7 @@
 #'     c(1, 0, 0, 0)
 #' )
 #' names <- c("H1", "H2", "H3", "H4")
-#' g <- graph(hypotheses, transitions, names)
+#' g <- create_graph(hypotheses, transitions, names)
 #' g
 #'
 #' # Explicit names override names in `transitions` (with a warning)
@@ -56,7 +57,7 @@
 #'     h4 = c(1, 0, 0, 0)
 #' )
 #' names <- c("H1", "H2", "H3", "H4")
-#' g <- graph(hypotheses, transitions, names)
+#' g <- create_graph(hypotheses, transitions, names)
 #' g
 #'
 #' # Use names in `hypotheses`
@@ -67,7 +68,7 @@
 #'     c(0, 1, 0, 0),
 #'     c(1, 0, 0, 0)
 #' )
-#' g <- graph(hypotheses, transitions)
+#' g <- create_graph(hypotheses, transitions)
 #' g
 #'
 #' # Use names in `transitions`
@@ -78,21 +79,21 @@
 #'     H3 = c(0, 1, 0, 0),
 #'     H4 = c(1, 0, 0, 0)
 #' )
-#' g <- graph(hypotheses, transitions)
+#' g <- create_graph(hypotheses, transitions)
 #' g
 #'
 #' # When names are not specified, hypotheses are numbered sequentially as
 #' # H1, H2, ...
-#' hypotheses <- c(0.5, 0.5, 0, 0)
-#' transitions <- rbind(
-#'     c(0, 0, 1, 0),
-#'     c(0, 0, 0, 1),
-#'     c(0, 1, 0, 0),
-#'     c(1, 0, 0, 0)
-#' )
-#' g <- graph(hypotheses, transitions)
-#' g
-graph <- function(hypotheses, transitions, names = NULL) { # TODO: Make it an option to provide just a vector and coerce to the appropriate square matrix?
+# hypotheses <- c(0.5, 0.5, 0, 0)
+# transitions <- rbind(
+#     c(0, 0, 1, 0),
+#     c(0, 0, 0, 1),
+#     c(0, 1, 0, 0),
+#     c(1, 0, 0, 0)
+# )
+# g <- create_graph(hypotheses, transitions)
+# g
+create_graph <- function(hypotheses, transitions, names = NULL) {
 
   stopifnot(
     "hypothesis weights must be numeric" = is.numeric(hypotheses),
@@ -154,9 +155,9 @@ graph <- function(hypotheses, transitions, names = NULL) { # TODO: Make it an op
   }
 
   # Must come after length checks to avoid an error
+  names(hypotheses) <- names
   colnames(transitions) <- names
   rownames(transitions) <- names
-  names(hypotheses) <- names
 
   if (any(hypotheses < 0 | hypotheses > 1)) {
     stop("hypothesis weights must be between 0 and 1")
@@ -179,8 +180,8 @@ graph <- function(hypotheses, transitions, names = NULL) { # TODO: Make it an op
   }
 
   # Create graph object --------------------------------------------------------
-  new_mcp_graph <- list(hypotheses = hypotheses, transitions = transitions)
-  class(new_mcp_graph) <- "initial_graph"
+  new_graph <- list(hypotheses = hypotheses, transitions = transitions)
+  class(new_graph) <- "initial_graph"
 
-  new_mcp_graph
+  new_graph
 }
