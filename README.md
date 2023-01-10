@@ -49,7 +49,7 @@ transitions <- rbind(
 )
 hypotheses <- rep(.333333, 3)
 
-g_dose <- graph(hypotheses, transitions, paste("dose", letters[1:3]))
+g_dose <- create_graph(hypotheses, transitions, paste("dose", letters[1:3]))
 
 g_dose
 #> An mcp_graph

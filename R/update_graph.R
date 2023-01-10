@@ -17,7 +17,7 @@
 #'                      c(0, 0, 0, 1),
 #'                      c(0, 1, 0, 0),
 #'                      c(1, 0, 0, 0))
-#' g <- graph(hypotheses, transitions)
+#' g <- create_graph(hypotheses, transitions)
 #'
 #' # Delete the third hypothesis
 #' update_graph(g, c(TRUE, TRUE, FALSE, TRUE))

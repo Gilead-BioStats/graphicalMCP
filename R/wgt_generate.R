@@ -10,7 +10,7 @@
 #'
 #' @examples
 #'
-#' ex_graph <- graph(
+#' ex_graph <- create_graph(
 #'   hypotheses = c(.5, .5, 0, 0),
 #'   transitions = rbind(
 #'     c(0,0,1,0),
