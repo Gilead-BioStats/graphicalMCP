@@ -1,3 +1,41 @@
+#' Generate weights for the full closure tree of an MCP graph
+#'
+#' @param graph An MCP graph as created by `graph()`
+#'
+#' @param compact Determines whether to return a dataframe of weights or a list
+#'   of full graph objects. Defaults to `TRUE`
+#'
+#' @return The compact return form is a dataframe of weights, where each row
+#'   corresponds to one subgraph. Hypotheses missing from a given subgraph get
+#'   `NA` for their weight.
+#'
+#'   The more verbose return form is a list, where each element is a subgraph in
+#'   the form of an `mcp_graph` object
+#'
+#' @section Performance:
+
+#' An evaluation of a few different methods to generate the weights of all
+#' subgraphs according to Bretz et al. 2011 can be found in the perf-tests
+#' directory. On a Workbench session with sufficient RAM (Not sure how much
+#' CPU), the `gMCP::generateWeights()` method runs significantly faster for the
+#' size 2 case, but it grows quickly
+#'
+#' @export
+#'
+#' @examples
+#'
+#' ex_graph <- graph(
+#'   hypotheses = c(.5, .5, 0, 0),
+#'   transitions = rbind(
+#'     c(0,0,1,0),
+#'     c(0,0,0,1),
+#'     c(0,1,0,0),
+#'     c(1,0,0,0)
+#'   )
+#' )
+#'
+#' generate_weights_recursive(ex_graph)
+#'
 generate_weights_recursive <- function(graph, compact = TRUE) {
 	orig_names <- names(graph$hypotheses)
 	names(graph$hypotheses) <- seq_along(graph$hypotheses)
@@ -11,17 +49,22 @@ generate_weights_recursive <- function(graph, compact = TRUE) {
     function(graph) {
       names <- orig_names[as.integer(names(graph$hypotheses))]
       names(graph$hypotheses) <- names
-      colnames(graph$transitions) <- names
-      rownames(graph$transitions) <- names
 
-      graph
+      if (!compact) {
+        colnames(graph$transitions) <- names
+        rownames(graph$transitions) <- names
+
+        return(graph)
+      } else {
+        return(graph$hypotheses)
+      }
     }
   )
 
   if (!compact) {
-    subgraphs_restore_names
+    return(subgraphs_restore_names)
   } else {
-    subgraphs_restore_names
+    return(vctrs::vec_rbind(!!!subgraphs_restore_names))
   }
 }
 
@@ -58,6 +101,7 @@ delete_nodes_recursive <- function(graph, last = 0) {
 }
 
 # good for now - could convert to cpp at some point
+# prior solution by Dong/Spencer is faster as well
 delete_node_fast <- function(graph, delete_num) {
   init_hypotheses <- graph$hypotheses
   init_transitions <- graph$transitions

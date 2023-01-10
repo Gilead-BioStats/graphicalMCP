@@ -1,0 +1,5 @@
+expression	min	median	itr/sec	mem_alloc	gc/sec	n_itr	n_gc	total_time	result	memory	time	gc
+generateWeights(bh2$transitions, bh2$hypotheses)	606µs	856µs	1115.4851496307558	193.5KB	6.314066884702392	530	3	475ms				
+generate_weights(bh2)	118µs	186µs	4356.949534883634	 91.4KB	6.293138471184836	2077	3	477ms				
+generate_weights_recursive(bh2)	201µs	293µs	3019.599310111791	197.4KB	4.13077881000245	1462	2	484ms				
+generate_weights_recursive(bh2, compact = FALSE)	163µs	239µs	3496.508754520485	182.8KB	6.3075924615522885	1663	3	476ms				
