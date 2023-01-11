@@ -24,21 +24,21 @@
 #'
 #' #
 #'
-update_graph <- function(graph, keep_hypotheses) {
+update_graph <- function(graph, keep) {
   stopifnot(
-    "keep_hypotheses must be logical" = is.logical(keep_hypotheses),
+    "keep_hypotheses must be logical" = is.logical(keep),
     "keep_hypotheses length must match number of hypotheses in graph" =
-      length(graph$hypotheses) == length(keep_hypotheses)
+      length(graph$hypotheses) == length(keep)
   )
 
-  names(keep_hypotheses) <- names(graph$hypotheses)
+  names(keep) <- names(graph$hypotheses)
 
   initial_graph <- graph
 
   cume_delete <- 0
 
-  for (hyp_num in seq_along(keep_hypotheses)) {
-    if (!keep_hypotheses[[hyp_num]]) {
+  for (hyp_num in seq_along(keep)) {
+    if (!keep[[hyp_num]]) {
       graph <- delete_node_fast(graph, hyp_num - cume_delete)
       cume_delete <- cume_delete + 1
     }
@@ -47,7 +47,41 @@ update_graph <- function(graph, keep_hypotheses) {
   structure(
     list(
       initial_graph = initial_graph,
-      kept_hypotheses = keep_hypotheses,
+      kept_hypotheses = keep,
+      updated_graph = graph
+    ),
+    class = "updated_graph"
+  )
+}
+
+
+update_graph_single <- function(graph, keep) {
+  stopifnot(
+    "keep_hypotheses must be logical" = is.logical(keep),
+    "keep_hypotheses length must match number of hypotheses in graph" =
+      length(graph$hypotheses) == length(keep)
+  )
+
+  hypotheses <- graph$hypotheses
+  transitions <- graph$transitions
+
+  names(keep) <- names(hypotheses)
+
+  initial_graph <- graph
+
+  for (del_hyp in hypotheses[!keep]) {
+    if (!keep[[hyp_num]]) {
+      delete_num <- hyp_num - cume_delete
+
+      graph <- delete_node_fast(graph, hyp_num - cume_delete)
+      cume_delete <- cume_delete + 1
+    }
+  }
+
+  structure(
+    list(
+      initial_graph = initial_graph,
+      kept_hypotheses = keep,
       updated_graph = graph
     ),
     class = "updated_graph"
