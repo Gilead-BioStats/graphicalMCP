@@ -4,7 +4,7 @@
 \alias{update_graph}
 \title{Delete multiple hypotheses from a graph}
 \usage{
-update_graph(graph, keep_hypotheses)
+update_graph(graph, keep)
 }
 \arguments{
 \item{graph}{An MCP graph as created by \code{graph()}}
@@ -27,9 +27,9 @@ Delete multiple hypotheses from a graph
 \examples{
 hypotheses <- c(0.5, 0.5, 0, 0)
 transitions <- rbind(c(0, 0, 1, 0),
-                     c(0, 0, 0, 1),
-                     c(0, 1, 0, 0),
-                     c(1, 0, 0, 0))
+  c(0, 0, 0, 1),
+  c(0, 1, 0, 0),
+  c(1, 0, 0, 0))
 g <- create_graph(hypotheses, transitions)
 
 # Delete the third hypothesis

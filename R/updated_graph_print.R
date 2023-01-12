@@ -13,6 +13,8 @@ print.updated_graph <- function(x, ...) {
 
   cat("\n--------------------------------------\n\n")
 
+  cat("--- Hypotheses kept ---\n")
+
   print(as.data.frame(rbind(x$kept_hypotheses), row.names = ""))
 
   cat("\n--------------------------------------\n\n")

@@ -63,5 +63,5 @@ delete_nodes_vec <- function (h, g, w)
     g1[gg2 >= 1] <- 0
     g <- g1
   }
-  return(structure(list(hypotheses = w, transitions = g), class = "mcp_graph"))
+  return(structure(list(hypotheses = w, transitions = g), class = "initial_graph"))
 }

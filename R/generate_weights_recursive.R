@@ -36,7 +36,7 @@
 #'
 #' generate_weights_recursive(ex_graph)
 #'
-generate_weights_recursive <- function(graph, compact = TRUE) {
+generate_weights_recursive <- function(graph) {
   orig_names <- names(graph$hypotheses)
   names(graph$hypotheses) <- seq_along(graph$hypotheses)
   colnames(graph$transitions) <- names(graph$hypotheses)
@@ -44,28 +44,21 @@ generate_weights_recursive <- function(graph, compact = TRUE) {
 
   list_subgraphs <- delete_nodes_recursive(graph)
 
-  subgraphs_restore_names <- lapply(
-    list_subgraphs,
-    function(graph) {
-      names <- orig_names[as.integer(names(graph$hypotheses))]
-      names(graph$hypotheses) <- names
-
-      if (!compact) {
-        colnames(graph$transitions) <- names
-        rownames(graph$transitions) <- names
-
-        return(graph)
-      } else {
-        return(graph$hypotheses)
-      }
-    }
+  wgts_mat <- structure(
+    do.call(
+      rbind,
+      lapply(
+        list_subgraphs,
+        function(graph) graph$hypotheses[as.character(1:length(orig_names))]
+      )
+    ),
+    dimnames = list(1:(2 ^ length(orig_names) - 1), orig_names)
   )
 
-  if (!compact) {
-    return(subgraphs_restore_names)
-  } else {
-    return(vctrs::vec_rbind(!!!subgraphs_restore_names))
-  }
+  wgts_mat_h <- is.na(wgts_mat)
+  wgts_mat[is.na(wgts_mat)] <- 0
+
+  cbind(wgts_mat_h, wgts_mat)
 }
 
 delete_nodes_recursive <- function(graph, last = 0) {
@@ -100,7 +93,7 @@ delete_nodes_recursive <- function(graph, last = 0) {
 }
 
 # good for now - could convert to cpp at some point
-# prior solution by Dong/Spencer is faster as well
+# prior solution by Dong/Spencer is faster as well, but uses more memory
 delete_node_fast <- function(graph, delete_num) {
   init_hypotheses <- graph$hypotheses
   init_transitions <- graph$transitions
@@ -108,7 +101,7 @@ delete_node_fast <- function(graph, delete_num) {
   hypotheses <- graph$hypotheses
   transitions <- graph$transitions
 
-  for (hyp_num in seq_along(graph$hypotheses)) {
+  for (hyp_num in seq_along(init_hypotheses)) {
     hypotheses[[hyp_num]] <-
       init_hypotheses[[hyp_num]] +
       init_hypotheses[[delete_num]] * init_transitions[[delete_num, hyp_num]]
@@ -135,10 +128,12 @@ delete_node_fast <- function(graph, delete_num) {
     }
   }
 
-  updated_graph <- list(
-    hypotheses = hypotheses[-delete_num],
-    transitions = as.matrix(transitions[-delete_num, -delete_num])
+  structure(
+    list(
+      hypotheses = hypotheses[-delete_num],
+      transitions = as.matrix(transitions[-delete_num, -delete_num])
+    ),
+    class = "initial_graph"
   )
-  class(updated_graph) <- "initial_graph"
-  updated_graph
 }
+

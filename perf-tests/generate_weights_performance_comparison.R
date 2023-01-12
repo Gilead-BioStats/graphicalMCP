@@ -3,56 +3,38 @@ library(bench)
 library(gMCP)
 library(vroom)
 
-bh2 <- bonferroni_holm(2)
-bh4 <- bonferroni_holm(4)
-bh8 <- bonferroni_holm(8)
-bh10 <- bonferroni_holm(10)
-bh16 <- bonferroni_holm(16)
-bh20 <- bonferroni_holm(20)
+bench_gen_wgt <- function(sizes = 2:8, gmcp = FALSE, min = 5) {
+  purrr::walk(
+    sizes,
+    function(size) {
+      bh <- bonferroni_holm(size)
 
-vroom_write(print(mark(
-  generateWeights(bh2$transitions, bh2$hypotheses),
-  generate_weights_recursive(bh2),
-  check = FALSE
-)), "./perf-tests/log/bh2.tsv")
+      if (gmcp) {
+        vroom_write(print(dplyr::mutate(
+          mark(
+            generateWeights(bh$t, bh$h),
+            generate_weights_recursive(bh),
+            generate_weights_recursive_vec(bh),
+            check = FALSE,
+            min_iterations = min,
+            time_unit = "ms"
+          ),
+          expression = size
+        )), paste0("./perf-tests/log/bh", size, "_gmcp_", Sys.time(), ".tsv"))
+      } else {
+        vroom_write(print(dplyr::mutate(
+          mark(
+            generate_weights_recursive(bh),
+            generate_weights_recursive_vec(bh),
+            check = FALSE,
+            min_iterations = min,
+            time_unit = "ms"
+          ),
+          expression = size
+        )), paste0("./perf-tests/log/bh", size, "_no-gmcp_", Sys.time(), ".tsv"))
+      }
+    }
+  )
+}
 
-vroom_write(print(mark(
-  generateWeights(bh4$transitions, bh4$hypotheses),
-  generate_weights_recursive(bh4),
-  check = FALSE
-)), "./perf-tests/log/bh4.tsv")
-
-vroom_write(print(mark(
-  generateWeights(bh8$transitions, bh8$hypotheses),
-  generate_weights_recursive(bh8),
-  check = FALSE
-)), "./perf-tests/log/bh8.tsv")
-
-# mark(
-#   generate_weights_recursive(bh8),
-#   generate_weights_recursive(bh8, compact = FALSE),
-#   check = FALSE
-# )
-
-vroom_write(print(mark(
-  generateWeights(bh10$transitions, bh10$hypotheses),
-  generate_weights_recursive(bh10),
-  check = FALSE
-)), "./perf-tests/log/bh10.tsv")
-
-# Takes a loooong time for original task version & gMCP version - I left it
-# running for an hour on Workbench, and it ate up probably a good 12-15 GB of
-# RAM before I just cancelled it. Recursive version takes about 12 seconds each
-# run
-vroom_write(print(mark(
-  # generateWeights(bh16$transitions, bh16$hypotheses),
-  generate_weights_recursive(bh16),
-  check = FALSE
-)), "./perf-tests/log/bh16.tsv")
-
-# Takes at least a few minutes and uses upwards of 3 GB of RAM. I don't
-# recommend running this one
-# vroom_write(print(mark(
-#   generate_weights_recursive(bh20),
-#   check = FALSE
-# )), "./perf-tests/log/bh2.tsv")
+bench_gen_wgt(sizes = 2:18)

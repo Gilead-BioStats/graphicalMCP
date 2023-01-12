@@ -4,7 +4,7 @@
 \alias{generate_weights_recursive}
 \title{Generate weights for the full closure tree of an MCP graph}
 \usage{
-generate_weights_recursive(graph, compact = TRUE)
+generate_weights_recursive(graph)
 }
 \arguments{
 \item{graph}{An MCP graph as created by \code{graph()}}

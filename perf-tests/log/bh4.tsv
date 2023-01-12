@@ -1,5 +1,0 @@
-expression	min	median	itr/sec	mem_alloc	gc/sec	n_itr	n_gc	total_time	result	memory	time	gc
-generateWeights(bh4$transitions, bh4$hypotheses)	  3.58ms	4.61ms	203.69551864091733	  5.02KB	7.023983401410942	87	3	427ms				
-generate_weights(bh4)	  2.06ms	2.98ms	328.04888955786345	  1.78KB	11.234551012255599	146	5	445ms				
-generate_weights_recursive(bh4)	960.9µs	1.36ms	685.3363278100264	264B	6.345706738981725	324	3	473ms				
-generate_weights_recursive(bh4, compact = FALSE)	880.7µs	1.29ms	687.6518582251549	  0B	6.347555614386046	325	3	473ms				
