@@ -1,16 +1,10 @@
 #' Generate weights for the full closure tree of an MCP graph
 #'
-#' @param graph An MCP graph as created by `graph()`
+#' @param graph An MCP graph as created by `create_graph()`
 #'
-#' @param compact Determines whether to return a dataframe of weights or a list
-#'   of full graph objects. Defaults to `TRUE`
-#'
-#' @return The compact return form is a dataframe of weights, where each row
-#'   corresponds to one subgraph. Hypotheses missing from a given subgraph get
-#'   `NA` for their weight.
-#'
-#'   The more verbose return form is a list, where each element is a subgraph in
-#'   the form of an `mcp_graph` object
+#' @return A numeric matrix of all subgraph weights. The first half of columns
+#'   indicate which hypotheses are included in the given subgraph, and the
+#'   second half of columns are the weights
 #'
 #' @section Performance:
 
@@ -18,7 +12,7 @@
 #' subgraphs according to Bretz et al. 2011 can be found in the perf-tests
 #' directory. On a Workbench session with sufficient RAM (Not sure how much
 #' CPU), the `gMCP::generateWeights()` method runs significantly faster for the
-#' size 2 case, but it grows quickly
+#' size 2 case, but it grows quickly in both computing time and memory
 #'
 #' @export
 #'
@@ -55,7 +49,7 @@ generate_weights_recursive <- function(graph) {
     dimnames = list(1:(2 ^ length(orig_names) - 1), orig_names)
   )
 
-  wgts_mat_h <- is.na(wgts_mat)
+  wgts_mat_h <- !is.na(wgts_mat)
   wgts_mat[is.na(wgts_mat)] <- 0
 
   cbind(wgts_mat_h, wgts_mat)

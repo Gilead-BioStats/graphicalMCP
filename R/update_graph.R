@@ -22,43 +22,11 @@
 #' # Delete the third hypothesis
 #' update_graph(g, c(TRUE, TRUE, FALSE, TRUE))
 #'
-#' #
-#'
 update_graph <- function(graph, keep) {
   stopifnot(
-    "keep_hypotheses must be logical" = is.logical(keep),
-    "keep_hypotheses length must match number of hypotheses in graph" =
-      length(graph$hypotheses) == length(keep)
-  )
-
-  names(keep) <- names(graph$hypotheses)
-
-  initial_graph <- graph
-
-  cume_delete <- 0
-
-  for (hyp_num in seq_along(keep)) {
-    if (!keep[[hyp_num]]) {
-      graph <- delete_node_fast(graph, hyp_num - cume_delete)
-      cume_delete <- cume_delete + 1
-    }
-  }
-
-  structure(
-    list(
-      initial_graph = initial_graph,
-      kept_hypotheses = keep,
-      updated_graph = graph
-    ),
-    class = "updated_graph"
-  )
-}
-
-
-update_graph_single <- function(graph, keep) {
-  stopifnot(
-    "keep_hypotheses must be logical" = is.logical(keep),
-    "keep_hypotheses length must match number of hypotheses in graph" =
+    "keep must be a logical or integer vector" =
+      is.logical(keep) || is.integer(keep),
+    "keep length must match number of hypotheses in graph" =
       length(graph$hypotheses) == length(keep)
   )
 

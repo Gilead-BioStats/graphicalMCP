@@ -18,7 +18,7 @@ generate_weights_recursive_vec <- function(graph) {
     dimnames = list(1:(2 ^ length(orig_names) - 1), orig_names)
   )
 
-  wgts_mat_h <- is.na(wgts_mat)
+  wgts_mat_h <- !is.na(wgts_mat)
   wgts_mat[is.na(wgts_mat)] <- 0
 
   cbind(wgts_mat_h, wgts_mat)
