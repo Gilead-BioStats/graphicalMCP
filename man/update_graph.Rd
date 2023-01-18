@@ -7,9 +7,9 @@
 update_graph(graph, keep)
 }
 \arguments{
-\item{graph}{An MCP graph as created by \code{graph()}}
+\item{graph}{An MCP graph as created by \code{create_graph()}}
 
-\item{keep}{A vector coercible to Boolean denoting which hypotheses to
+\item{keep}{A vector coercible to Boolean, denoting which hypotheses to
 delete. An entry of \code{FALSE} (or 0) corresponds to a deletion, and \code{TRUE}
 (or 1) corresponds to keeping a hypothesis}
 }
@@ -26,10 +26,12 @@ Delete multiple hypotheses from a graph
 }
 \examples{
 hypotheses <- c(0.5, 0.5, 0, 0)
-transitions <- rbind(c(0, 0, 1, 0),
+transitions <- rbind(
+  c(0, 0, 1, 0),
   c(0, 0, 0, 1),
   c(0, 1, 0, 0),
-  c(1, 0, 0, 0))
+  c(1, 0, 0, 0)
+)
 g <- create_graph(hypotheses, transitions)
 
 # Delete the third hypothesis

@@ -70,33 +70,6 @@ Hypotheses can be rejected from the MCP using `update_graph()`. Updated weights 
 update_graph(g_dose, c(TRUE, FALSE, FALSE, TRUE))
 ```
 
-### Generate weights
-
-The weights of all subgraphs can be calculated with `generate_weights_recursive()`. This uses some more efficient code under the hood than `update_graph()` in order to be performant for larger graphs.
-
-```{r generate-weights}
-generate_weights_recursive(g_dose)
-```
-
-### Test hypotheses
-
-A mixture of statistical tests are (or will be) supported in graphicalMCP. A graph can be tested against a given alpha with `test_all_subgraphs()`. A report is then generated, showing the graph & test results.
-
-In this example, a weighted Bonferroni test is applied to all hypotheses, with a threshold of 0.05. We can reject a given intersection hypothesis if any of the individual hypotheses within that subgraph passes the test assigned to it. We can then reject a hypothesis globally if all intersection hypotheses containing that hypothesis are rejected. For instance, in this example we can reject every intersection hypothesis except the one containing only B1 & B2 (Row 3 of `test_results`). Thus, we can reject the null hypotheses for A1 & A2, but we cannot reject the null hypotheses for B1 & B2.
-
-```{r test-graph}
-test_all_subgraphs(
-  g_dose,
-  p_values = c(.01, .02, .03, .05),
-  alpha = .05,
-  tests = list(
-    bonferroni = list(1:4),
-    simes = list(),
-    parametric = list()
-  )
-)
-```
-
 ## Related work
 
 These methods were originally implemented in R after the 2011 paper in the gMCP package, which is still available on CRAN today:

@@ -1,7 +1,7 @@
 #' Delete multiple hypotheses from a graph
 #'
-#' @param graph An MCP graph as created by `graph()`
-#' @param keep A vector coercible to Boolean denoting which hypotheses to
+#' @param graph An MCP graph as created by `create_graph()`
+#' @param keep A vector coercible to Boolean, denoting which hypotheses to
 #'   delete. An entry of `FALSE` (or 0) corresponds to a deletion, and `TRUE`
 #'   (or 1) corresponds to keeping a hypothesis
 #'
