@@ -13,10 +13,12 @@
 #'
 #' @examples
 #' hypotheses <- c(0.5, 0.5, 0, 0)
-#' transitions <- rbind(c(0, 0, 1, 0),
+#' transitions <- rbind(
+#'   c(0, 0, 1, 0),
 #'   c(0, 0, 0, 1),
 #'   c(0, 1, 0, 0),
-#'   c(1, 0, 0, 0))
+#'   c(1, 0, 0, 0)
+#' )
 #' g <- create_graph(hypotheses, transitions)
 #'
 #' # Delete the third hypothesis
@@ -63,7 +65,7 @@ update_graph <- function(graph, keep) {
           transitions[[hyp_num, end_num]] <- (
             init_transitions[[hyp_num, end_num]] +
               init_transitions[[hyp_num, delete_num]] *
-              init_transitions[[delete_num, end_num]]
+                init_transitions[[delete_num, end_num]]
           ) / denom
         }
       }

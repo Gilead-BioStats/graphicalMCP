@@ -12,7 +12,7 @@ bonferroni_holm(n, names = NULL)
 \item{names}{Optional names for the hypotheses (Must have length \code{n})}
 }
 \value{
-An S3 object of class \code{mcp_graph}, following the structure of
+An S3 object of class \code{initial_graph}, following the structure of
 Bonferroni & Holm: A complete graph with equal weight on each hypothesis
 and equal weight on each transition
 }

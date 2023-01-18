@@ -9,9 +9,9 @@ update_graph(graph, keep)
 \arguments{
 \item{graph}{An MCP graph as created by \code{graph()}}
 
-\item{keep_hypotheses}{A Boolean vector denoting which hypotheses to delete.
-An entry of \code{FALSE} corresponds to a deletion, and \code{TRUE} corresponds to
-keeping a hypothesis}
+\item{keep}{A vector coercible to Boolean denoting which hypotheses to
+delete. An entry of \code{FALSE} (or 0) corresponds to a deletion, and \code{TRUE}
+(or 1) corresponds to keeping a hypothesis}
 }
 \value{
 An object of class \code{updated_graph} with 3 elements
@@ -34,7 +34,5 @@ g <- create_graph(hypotheses, transitions)
 
 # Delete the third hypothesis
 update_graph(g, c(TRUE, TRUE, FALSE, TRUE))
-
-#
 
 }

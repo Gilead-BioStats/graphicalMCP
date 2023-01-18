@@ -10,7 +10,7 @@ g <- create_graph(hypotheses, transitions, names)
 
 test_that("basic updating & structure", {
   expect_s3_class(update_graph(g, c(0, 0, 0, 1)), "updated_graph")
-  expect_equal(update_graph(g, c(F, F, F, T))$initial_graph, g)
+  expect_equal(update_graph(g, c(FALSE, FALSE, FALSE, TRUE))$initial_graph, g)
 })
 
 test_that("invalid input", {

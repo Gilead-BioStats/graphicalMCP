@@ -23,8 +23,8 @@
 #' # and H2) and two secondary hypotheses (H3 and H4)
 #' # See Figure 1 in Bretz, F., Posch, M., Glimm, E., Klinglmueller, F., Maurer,
 #' # W., & Rohmeyer, K. (2011). Graphical approaches for multiple comparison
-#' # procedures using weighted Bonferroni, Simes, or parametric tests. Biometrical
-#' # Journal, 53(6), 894-913.
+#' # procedures using weighted Bonferroni, Simes, or parametric tests.
+#' # Biometrical Journal, 53(6), 894-913.
 #' hypotheses <- c(0.5, 0.5, 0, 0)
 #' transitions <- rbind(
 #'   c(0, 0, 1, 0),
@@ -94,7 +94,6 @@
 #' g <- create_graph(hypotheses, transitions)
 #' g
 create_graph <- function(hypotheses, transitions, names = NULL) {
-
   stopifnot(
     "hypothesis weights must be numeric" = is.numeric(hypotheses),
     "transition weights must be numeric" = is.numeric(transitions)

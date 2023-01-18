@@ -17,7 +17,7 @@ bonferroni_holm <- function(n, names = NULL) {
       (n == length(names) || is.null(names))
   )
 
-  g <- matrix(rep(1 / (n - 1), n ^ 2), nrow = n)
+  g <- matrix(rep(1 / (n - 1), n^2), nrow = n)
   diag(g) <- rep(0, n)
 
   w <- rep(1 / n, n)

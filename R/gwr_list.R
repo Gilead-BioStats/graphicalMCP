@@ -2,15 +2,15 @@ gwr_list <- function(graph, calc_ps = FALSE) {
   if (calc_ps) {
     subgraphs <- powerset_parents(seq_along(graph$hypotheses))
   } else {
-    subgraphs <- readRDS(paste0("./perf-tests/data/", length(graph$hypotheses), ".rds"))
+    subgraphs <- readRDS(
+      paste0("./perf-tests/data/", length(graph$hypotheses), ".rds")
+    )
   }
 
   for (i in seq_along(subgraphs)) {
-    # cat(i, "\n")
     if (is.null(subgraphs[[i]])) {
       subgraphs[[i]] <- graph
     } else {
-      # if (i == 2) browser()
       subgraphs[[i]] <- delete_node_fast(
         subgraphs[[paste0(subgraphs[[i]], collapse = "_")]],
         match(
@@ -68,7 +68,7 @@ powerset_parents <- function(hyp_nums, last = 0, parent = NULL) {
 # There's probably some way to sequentially build up these index lists too, but
 # I can't think of it right now
 save_powerset_parents <- function(n_start, n_end) {
-  list_ps_p <- lapply(
+  lapply(
     n_start:n_end,
     function(n) {
       ps_p <- powerset_parents(seq_len(n))
