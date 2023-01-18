@@ -1,5 +1,5 @@
 # ------------------------------------------------------------------------------
-generate_weights_recursive_vec <- function(graph) {
+generate_weights_vec <- function(graph) {
   orig_names <- names(graph$hypotheses)
   names(graph$hypotheses) <- seq_along(graph$hypotheses)
   colnames(graph$transitions) <- names(graph$hypotheses)

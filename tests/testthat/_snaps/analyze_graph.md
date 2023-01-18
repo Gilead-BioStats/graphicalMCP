@@ -2,17 +2,21 @@
 
     Code
       analyze_graph(g)
-    Output
+    Message <simpleMessage>
       graph is optimal
+      
+    Output
       [1] TRUE
 
 ---
 
     Code
       analyze_graph(g2)
-    Output
+    Message <simpleMessage>
       graph is sub-optimal:
       
+      
+    Output
          H1 H2 H3 H4   H1 H2   H3   H4
       3   0  0  1  1 0.00  0 0.50 0.45
       4   0  0  0  1 0.00  0 0.00 0.90

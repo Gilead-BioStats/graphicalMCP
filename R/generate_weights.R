@@ -28,9 +28,9 @@
 #'   )
 #' )
 #'
-#' generate_weights_recursive(ex_graph)
+#' generate_weights(ex_graph)
 #'
-generate_weights_recursive <- function(graph) {
+generate_weights <- function(graph) {
   orig_names <- names(graph$hypotheses)
   names(graph$hypotheses) <- seq_along(graph$hypotheses)
   colnames(graph$transitions) <- names(graph$hypotheses)

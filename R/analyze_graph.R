@@ -33,20 +33,28 @@
 #' #> 11  1  0  0  0 0.95  0 0.00 0.00
 #' #> 12  1  0  1  0 0.95  0 0.00 0.00
 analyze_graph <- function(graph) {
-  subgraphs <- generate_weights_recursive(graph)
+  subgraphs <- generate_weights(graph)
 
   sub_weights <- subgraphs[, (ncol(subgraphs) / 2 + 1):ncol(subgraphs)]
 
-  weight_sums <- rowSums(sub_weights)
+  wgt_sums <- rowSums(sub_weights)
 
-  if (all(weight_sums == 1)) {
-    cat("graph is optimal\n")
+  is_optimal <- isTRUE(
+    all.equal(
+      wgt_sums,
+      rep(1, length(wgt_sums)),
+      check.attributes = FALSE
+    )
+  )
+
+  if (is_optimal) {
+    message("graph is optimal\n")
 
     return(TRUE)
   } else {
-    cat("graph is sub-optimal:\n\n")
+    message("graph is sub-optimal:\n\n")
 
-    print(subgraphs[weight_sums != 1, ])
+    print(subgraphs[wgt_sums != 1, ])
 
     return(FALSE)
   }

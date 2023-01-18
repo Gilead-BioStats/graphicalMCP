@@ -15,3 +15,7 @@ test_that("2 basic endpoints", {
   expect_snapshot(analyze_graph(g))
   expect_snapshot(analyze_graph(g2))
 })
+
+test_that("floating point arithmetic for Bonferroni-Holm above n = 6", {
+  expect_true(analyze_graph(bonferroni_holm(6)))
+})

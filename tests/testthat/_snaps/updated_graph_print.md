@@ -1,7 +1,7 @@
 # snapshot print method
 
     Code
-      update_graph(g, c(T, T, T, F))
+      update_graph(g, c(TRUE, TRUE, TRUE, FALSE))
     Output
       An MCP graph
       

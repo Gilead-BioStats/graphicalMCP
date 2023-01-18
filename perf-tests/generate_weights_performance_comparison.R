@@ -15,8 +15,8 @@ bench_gen_wgt <- function(sizes = 2:8, gmcp = FALSE, min = 5) {
             generateWeights(bh$t, bh$h),
             gwr_list(bh),
             gwr_list(bh, calc_ps = TRUE),
-            generate_weights_recursive(bh),
-            generate_weights_recursive_vec(bh),
+            generate_weights(bh),
+            generate_weight_vec(bh),
             check = FALSE,
             min_iterations = min,
             time_unit = "ms"
@@ -29,8 +29,8 @@ bench_gen_wgt <- function(sizes = 2:8, gmcp = FALSE, min = 5) {
           mark(
             gwr_list(bh),
             gwr_list(bh, calc_ps = TRUE),
-            generate_weights_recursive(bh),
-            generate_weights_recursive_vec(bh),
+            generate_weights(bh),
+            generate_weights_vec(bh),
             check = FALSE,
             min_iterations = min,
             time_unit = "ms"
@@ -43,4 +43,4 @@ bench_gen_wgt <- function(sizes = 2:8, gmcp = FALSE, min = 5) {
   )
 }
 
-bench_gen_wgt(sizes = 2:12)
+bench_gen_wgt(sizes = 13:16)
