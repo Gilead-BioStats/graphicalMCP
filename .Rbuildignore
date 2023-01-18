@@ -3,4 +3,4 @@
 ^README\.Rmd$
 ^LICENSE\.md$
 ^LICENSE$
-^perf-tests$
+^\.github$

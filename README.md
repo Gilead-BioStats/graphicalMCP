@@ -7,6 +7,7 @@ status](https://www.r-pkg.org/badges/version/graphicalMCP)](https://cran.r-proje
 [![R-CMD-check](https://github.com/Gilead-BioStats/graphicalMCP/workflows/R-CMD-check-main/badge.svg)](https://github.com/Gilead-BioStats/graphicalMCP/actions)
 [![Codecov test
 coverage](https://codecov.io/gh/Gilead-BioStats/graphicalMCP/branch/s3-graph_mcp/graph/badge.svg)](https://app.codecov.io/gh/Gilead-BioStats/graphicalMCP?branch=s3-graph_mcp)
+[![R-CMD-check](https://github.com/Gilead-BioStats/graphicalMCP/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/Gilead-BioStats/graphicalMCP/actions/workflows/R-CMD-check.yaml)
 <!-- badges: end -->
 
 ## Introduction
@@ -52,12 +53,12 @@ hypotheses <- rep(.333333, 3)
 g_dose <- create_graph(hypotheses, transitions, paste("dose", letters[1:3]))
 
 g_dose
-#> An MCP graph
+#> An initial graph
 #> 
 #> --- Hypothesis weights ---
-#> dose a: (0.3333)
-#> dose b: (0.3333)
-#> dose c: (0.3333)
+#> dose a: 0.3333
+#> dose b: 0.3333
+#> dose c: 0.3333
 #> 
 #> --- Transition weights ---
 #>        dose a dose b dose c
