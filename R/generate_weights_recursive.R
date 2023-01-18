@@ -96,7 +96,7 @@ delete_node_fast <- function(graph, delete_num) {
   hypotheses <- graph$hypotheses
   transitions <- graph$transitions
 
-  hyp_nums <- seq_along(init_hypotheses)[seq_along(init_hypotheses) != delete_num]
+  hyp_nums <- seq_along(hypotheses)[seq_along(hypotheses) != delete_num]
 
   for (hyp_num in hyp_nums) {
     hypotheses[[hyp_num]] <-
@@ -106,14 +106,14 @@ delete_node_fast <- function(graph, delete_num) {
     denom <- 1 - init_transitions[[hyp_num, delete_num]] *
       init_transitions[[delete_num, hyp_num]]
 
-    for (trn_num in hyp_nums) {
-      if (hyp_num == trn_num || denom <= 0) {
-        transitions[[hyp_num, trn_num]] <- 0
+    for (end_num in hyp_nums) {
+      if (hyp_num == end_num || denom <= 0) {
+        transitions[[hyp_num, end_num]] <- 0
       } else {
-        transitions[[hyp_num, trn_num]] <- (
-          init_transitions[[hyp_num, trn_num]] +
+        transitions[[hyp_num, end_num]] <- (
+          init_transitions[[hyp_num, end_num]] +
             init_transitions[[hyp_num, delete_num]] *
-              init_transitions[[delete_num, trn_num]]
+              init_transitions[[delete_num, end_num]]
         ) / denom
       }
     }

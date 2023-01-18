@@ -1,9 +1,9 @@
 #' Delete multiple hypotheses from a graph
 #'
 #' @param graph An MCP graph as created by `graph()`
-#' @param keep_hypotheses A Boolean vector denoting which hypotheses to delete.
-#'   An entry of `FALSE` corresponds to a deletion, and `TRUE` corresponds to
-#'   keeping a hypothesis
+#' @param keep A vector coercible to Boolean denoting which hypotheses to
+#'   delete. An entry of `FALSE` (or 0) corresponds to a deletion, and `TRUE`
+#'   (or 1) corresponds to keeping a hypothesis
 #'
 #' @return An object of class `updated_graph` with 3 elements
 #'   * The initial graph object
@@ -25,7 +25,7 @@
 update_graph <- function(graph, keep) {
   stopifnot(
     "keep must be a logical or integer vector" =
-      is.logical(keep) || is.integer(keep),
+      is.logical(keep) || (is.numeric(keep) && all(keep == as.integer(keep))),
     "keep length must match number of hypotheses in graph" =
       length(graph$hypotheses) == length(keep)
   )
@@ -40,35 +40,31 @@ update_graph <- function(graph, keep) {
     init_hypotheses <- hypotheses <- graph$hypotheses
     init_transitions <- transitions <- graph$transitions
 
+    hyp_nums <- seq_along(hypotheses)[seq_along(hypotheses) != delete_num]
+
     # Loop over hypotheses, calculating new weights based on initial hypothesis
     # weights and storing in `hypotheses`
-    for (hyp_num in seq_along(init_hypotheses)) {
+    for (hyp_num in hyp_nums) {
       hypotheses[[hyp_num]] <-
         init_hypotheses[[hyp_num]] +
         init_hypotheses[[delete_num]] * init_transitions[[delete_num, hyp_num]]
 
+      denom <- 1 - init_transitions[[hyp_num, delete_num]] *
+        init_transitions[[delete_num, hyp_num]]
+
       # In this loop, hyp_num is the starting node of the transition, and
-      # trn_num is the ending node
+      # end_num is the ending node
       # Calculate new transition weights based on original transition weights,
       # and store in `transitions`
-      for (trn_num in seq_along(graph$hypotheses)) {
-        zero_condition <- any(
-          hyp_num == trn_num,
-          (init_transitions[[hyp_num, delete_num]] *
-             init_transitions[[delete_num, hyp_num]]) >= 1
-        )
-
-        if (zero_condition) {
-          0
+      for (end_num in hyp_nums) {
+        if (hyp_num == end_num || denom <= 0) {
+          transitions[[hyp_num, end_num]] <- 0
         } else {
-          transitions[[hyp_num, trn_num]] <- (
-            init_transitions[[hyp_num, trn_num]] +
+          transitions[[hyp_num, end_num]] <- (
+            init_transitions[[hyp_num, end_num]] +
               init_transitions[[hyp_num, delete_num]] *
-              init_transitions[[delete_num, trn_num]]
-          ) / (
-            1 - init_transitions[[hyp_num, trn_num]] *
-              init_transitions[[trn_num, hyp_num]]
-          )
+              init_transitions[[delete_num, end_num]]
+          ) / denom
         }
       }
     }
@@ -78,9 +74,9 @@ update_graph <- function(graph, keep) {
     transitions[delete_num, ] <- 0
     transitions[, delete_num] <- 0
 
-    # At this point, a single node has been removed from the graph
-    # Assign the newly calculate hypotheses and transitions to `graph`, and loop
-    # to the next node to delete
+    # At this point, a single node has been removed from the graph Assign the
+    # newly calculated hypotheses and transitions to `graph`, and loop to the
+    # next node to delete
     graph <- structure(
       list(
         hypotheses = hypotheses,
