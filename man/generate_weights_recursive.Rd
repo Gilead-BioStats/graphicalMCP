@@ -7,18 +7,12 @@
 generate_weights_recursive(graph)
 }
 \arguments{
-\item{graph}{An MCP graph as created by \code{graph()}}
-
-\item{compact}{Determines whether to return a dataframe of weights or a list
-of full graph objects. Defaults to \code{TRUE}}
+\item{graph}{An MCP graph as created by \code{create_graph()}}
 }
 \value{
-The compact return form is a dataframe of weights, where each row
-corresponds to one subgraph. Hypotheses missing from a given subgraph get
-\code{NA} for their weight.
-
-The more verbose return form is a list, where each element is a subgraph in
-the form of an \code{mcp_graph} object
+A numeric matrix of all subgraph weights. The first half of columns
+indicate which hypotheses are included in the given subgraph, and the
+second half of columns are the weights
 }
 \description{
 Generate weights for the full closure tree of an MCP graph
@@ -29,7 +23,7 @@ An evaluation of a few different methods to generate the weights of all
 subgraphs according to Bretz et al. 2011 can be found in the perf-tests
 directory. On a Workbench session with sufficient RAM (Not sure how much
 CPU), the \code{gMCP::generateWeights()} method runs significantly faster for the
-size 2 case, but it grows quickly
+size 2 case, but it grows quickly in both computing time and memory
 }
 
 \examples{

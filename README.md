@@ -35,40 +35,193 @@ pak::pak("Gilead-BioStats/graphicalMCP")
 
 ## Basic usage
 
-The base object in graphicalMCP is an `mcp_graph`, which is a weighted,
-directed graph represented by a matrix of transition (edge) weights, and
-a vector of hypothesis (vertex) weights.
+### Initial graph
+
+The base object in graphicalMCP is an `initial_graph`, which is a
+weighted, directed graph represented by a matrix of transition (edge)
+weights, and a vector of hypothesis (vertex) weights.
 
 ``` r
 library(graphicalMCP)
 
+# A graphical multiple comparison procedure with two primary hypotheses (H1
+# and H2) and two secondary hypotheses (H3 and H4)
+# See Figure 1 in Bretz, F., Posch, M., Glimm, E., Klinglmueller, F., Maurer,
+# W., & Rohmeyer, K. (2011). Graphical approaches for multiple comparison
+# procedures using weighted Bonferroni, Simes, or parametric tests. Biometrical
+# Journal, 53(6), 894-913.
+hypotheses <- c(0.5, 0.5, 0, 0)
 transitions <- rbind(
-  c(0, .5, .5),
-  c(.5, 0, .5),
-  c(.5, .5, 0)
+  c(0, 0, 1, 0),
+  c(0, 0, 0, 1),
+  c(0, 1, 0, 0),
+  c(1, 0, 0, 0)
 )
-hypotheses <- rep(.333333, 3)
-
-g_dose <- create_graph(hypotheses, transitions, paste("dose", letters[1:3]))
+names <- c("A1", "A2", "B1", "B2")
+g_dose <- create_graph(hypotheses, transitions, names)
 
 g_dose
-#> An mcp_graph
-#> 
-#> --- Hypothesis names ---
-#> H1: dose a
-#> H2: dose b
-#> H3: dose c
+#> An MCP graph
 #> 
 #> --- Hypothesis weights ---
-#> dose a: (0.3333)
-#> dose b: (0.3333)
-#> dose c: (0.3333)
+#> A1: (0.5000)
+#> A2: (0.5000)
+#> B1: (0.0000)
+#> B2: (0.0000)
 #> 
 #> --- Transition weights ---
-#>        dose a dose b dose c
-#> dose a   --   0.5000 0.5000
-#> dose b 0.5000   --   0.5000
-#> dose c 0.5000 0.5000   --
+#>        A1     A2     B1     B2
+#> A1 0.0000 0.0000 1.0000 0.0000
+#> A2 0.0000 0.0000 0.0000 1.0000
+#> B1 0.0000 1.0000 0.0000 0.0000
+#> B2 1.0000 0.0000 0.0000 0.0000
+```
+
+### Update graph
+
+Hypotheses can be rejected from the MCP using `update_graph()`. Updated
+weights and transitions are calculated according to the weighting
+strategy in [Bretz et al
+(2011)](https://onlinelibrary.wiley.com/doi/10.1002/bimj.201000239)
+
+``` r
+update_graph(g_dose, c(TRUE, FALSE, FALSE, TRUE))
+#> An MCP graph
+#> 
+#> --- Hypothesis weights ---
+#> A1: (0.5000)
+#> A2: (0.5000)
+#> B1: (0.0000)
+#> B2: (0.0000)
+#> 
+#> --- Transition weights ---
+#>        A1     A2     B1     B2
+#> A1 0.0000 0.0000 1.0000 0.0000
+#> A2 0.0000 0.0000 0.0000 1.0000
+#> B1 0.0000 1.0000 0.0000 0.0000
+#> B2 1.0000 0.0000 0.0000 0.0000
+#> 
+#> --------------------------------------
+#> 
+#> --- Hypotheses kept ---
+#>    A1    A2    B1   B2
+#>  TRUE FALSE FALSE TRUE
+#> 
+#> --------------------------------------
+#> 
+#> An MCP graph
+#> 
+#> --- Hypothesis weights ---
+#> A1: (0.5000)
+#> A2: (0.0000)
+#> B1: (0.0000)
+#> B2: (0.5000)
+#> 
+#> --- Transition weights ---
+#>        A1     A2     B1     B2
+#> A1 0.0000 0.0000 0.0000 1.0000
+#> A2 0.0000 0.0000 0.0000 0.0000
+#> B1 0.0000 0.0000 0.0000 0.0000
+#> B2 1.0000 0.0000 0.0000 0.0000
+```
+
+### Generate weights
+
+The weights of all subgraphs can be calculated with
+`generate_weights_recursive()`. This uses some more efficient code under
+the hood than `update_graph()` in order to be performant for larger
+graphs.
+
+``` r
+generate_weights_recursive(g_dose)
+#>    A1 A2 B1 B2  A1  A2  B1  B2
+#> 1   1  1  1  1 0.5 0.5 0.0 0.0
+#> 2   0  1  1  1 0.0 0.5 0.5 0.0
+#> 3   0  0  1  1 0.0 0.0 0.5 0.5
+#> 4   0  0  0  1 0.0 0.0 0.0 1.0
+#> 5   0  0  1  0 0.0 0.0 1.0 0.0
+#> 6   0  1  0  1 0.0 1.0 0.0 0.0
+#> 7   0  1  0  0 0.0 1.0 0.0 0.0
+#> 8   0  1  1  0 0.0 0.5 0.5 0.0
+#> 9   1  0  1  1 0.5 0.0 0.0 0.5
+#> 10  1  0  0  1 0.5 0.0 0.0 0.5
+#> 11  1  0  0  0 1.0 0.0 0.0 0.0
+#> 12  1  0  1  0 1.0 0.0 0.0 0.0
+#> 13  1  1  0  1 0.5 0.5 0.0 0.0
+#> 14  1  1  0  0 0.5 0.5 0.0 0.0
+#> 15  1  1  1  0 0.5 0.5 0.0 0.0
+```
+
+### Test hypotheses
+
+A mixture of statistical tests are (or will be) supported in
+graphicalMCP. A graph can be tested against a given alpha with
+`test_all_subgraphs()`. A report is then generated, showing the graph &
+test results.
+
+In this example, a weighted Bonferroni test is applied to all
+hypotheses, with a threshold of 0.05. We can reject a given intersection
+hypothesis if any of the individual hypotheses within that subgraph
+passes the test assigned to it. We can then reject a hypothesis globally
+if all intersection hypotheses containing that hypothesis are rejected.
+For instance, in this example we can reject every intersection
+hypothesis except the one containing only B1 & B2 (Row 3 of
+`test_results`). Thus, we can reject the null hypotheses for A1 & A2,
+but we cannot reject the null hypotheses for B1 & B2.
+
+``` r
+test_all_subgraphs(
+  g_dose,
+  p_values = c(.01, .02, .03, .05),
+  alpha = .05,
+  tests = list(
+    bonferroni = list(1:4),
+    simes = list(),
+    parametric = list()
+  )
+)
+#> $initial_graph
+#> An MCP graph
+#> 
+#> --- Hypothesis weights ---
+#> A1: (0.5000)
+#> A2: (0.5000)
+#> B1: (0.0000)
+#> B2: (0.0000)
+#> 
+#> --- Transition weights ---
+#>        A1     A2     B1     B2
+#> A1 0.0000 0.0000 1.0000 0.0000
+#> A2 0.0000 0.0000 0.0000 1.0000
+#> B1 0.0000 1.0000 0.0000 0.0000
+#> B2 1.0000 0.0000 0.0000 0.0000
+#> 
+#> $p_values
+#> [1] 0.01 0.02 0.03 0.05
+#> 
+#> $alpha
+#> [1] 0.05
+#> 
+#> $test_results
+#>    A1 A2 B1 B2  A1  A2  B1  B2 A1 A2 B1 B2
+#> 1   1  1  1  1 0.5 0.5 0.0 0.0  1  1  0  0
+#> 2   0  1  1  1 0.0 0.5 0.5 0.0  0  1  0  0
+#> 3   0  0  1  1 0.0 0.0 0.5 0.5  0  0  0  0
+#> 4   0  0  0  1 0.0 0.0 0.0 1.0  0  0  0  1
+#> 5   0  0  1  0 0.0 0.0 1.0 0.0  0  0  1  0
+#> 6   0  1  0  1 0.0 1.0 0.0 0.0  0  1  0  0
+#> 7   0  1  0  0 0.0 1.0 0.0 0.0  0  1  0  0
+#> 8   0  1  1  0 0.0 0.5 0.5 0.0  0  1  0  0
+#> 9   1  0  1  1 0.5 0.0 0.0 0.5  1  0  0  0
+#> 10  1  0  0  1 0.5 0.0 0.0 0.5  1  0  0  0
+#> 11  1  0  0  0 1.0 0.0 0.0 0.0  1  0  0  0
+#> 12  1  0  1  0 1.0 0.0 0.0 0.0  1  0  0  0
+#> 13  1  1  0  1 0.5 0.5 0.0 0.0  1  1  0  0
+#> 14  1  1  0  0 0.5 0.5 0.0 0.0  1  1  0  0
+#> 15  1  1  1  0 0.5 0.5 0.0 0.0  1  1  0  0
+#> 
+#> attr(,"class")
+#> [1] "graph_report"
 ```
 
 ## Related work

@@ -62,6 +62,7 @@ test_graph <- function(graph, p_values, alpha,
   )
 }
 
+#' @export
 test_all_subgraphs <- function(graph, p_values, alpha = .05,
                        tests = list(
                          bonferroni = list(seq_along(graph$hypotheses)),

@@ -35,6 +35,4 @@ g <- create_graph(hypotheses, transitions)
 # Delete the third hypothesis
 update_graph(g, c(TRUE, TRUE, FALSE, TRUE))
 
-#
-
 }

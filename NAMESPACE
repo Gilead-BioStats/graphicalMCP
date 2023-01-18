@@ -2,8 +2,10 @@
 
 S3method(print,initial_graph)
 S3method(print,updated_graph)
+export(analyze_graph)
 export(bonferroni_holm)
 export(create_graph)
 export(generate_weights_recursive)
+export(test_all_subgraphs)
 export(update_graph)
 export(update_graph_plain)
