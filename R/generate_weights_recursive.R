@@ -59,8 +59,10 @@ delete_nodes_recursive <- function(graph, last = 0) {
   hypotheses <- graph$hypotheses
 
   # base case
+  int_hyp <- as.integer(names(hypotheses))
+
   is_single_node <- length(hypotheses) == 1
-  last_is_bigger <- last > max(as.integer(names(hypotheses)))
+  last_is_bigger <- last > max(int_hyp)
 
   if (is_single_node || last_is_bigger) {
     return(list(graph))
@@ -68,10 +70,9 @@ delete_nodes_recursive <- function(graph, last = 0) {
 
   # recursive step
   children <- list()
-  int_hyp <- as.integer(names(hypotheses))
 
   for (orig_hyp_num in int_hyp[int_hyp > last]) {
-    del_index <- match(orig_hyp_num, names(hypotheses))
+    del_index <- match(orig_hyp_num, int_hyp)
     smaller_graph <- delete_node_fast(graph, del_index)
 
     children[[del_index]] <- delete_nodes_recursive(
@@ -87,7 +88,7 @@ delete_nodes_recursive <- function(graph, last = 0) {
 }
 
 # good for now - could convert to cpp at some point
-# prior solution by Dong/Spencer is faster as well, but uses more memory
+# prior solution by Dong/Spencer is faster as well, but uses more memory?
 delete_node_fast <- function(graph, delete_num) {
   init_hypotheses <- graph$hypotheses
   init_transitions <- graph$transitions
@@ -95,29 +96,25 @@ delete_node_fast <- function(graph, delete_num) {
   hypotheses <- graph$hypotheses
   transitions <- graph$transitions
 
-  for (hyp_num in seq_along(init_hypotheses)) {
+  hyp_nums <- seq_along(init_hypotheses)[seq_along(init_hypotheses) != delete_num]
+
+  for (hyp_num in hyp_nums) {
     hypotheses[[hyp_num]] <-
       init_hypotheses[[hyp_num]] +
       init_hypotheses[[delete_num]] * init_transitions[[delete_num, hyp_num]]
 
-    for (trn_num in seq_along(graph$hypotheses)) {
-      zero_condition <- any(
-        hyp_num == trn_num,
-        (init_transitions[[hyp_num, delete_num]] *
-          init_transitions[[delete_num, hyp_num]]) >= 1
-      )
+    denom <- 1 - init_transitions[[hyp_num, delete_num]] *
+      init_transitions[[delete_num, hyp_num]]
 
-      if (zero_condition) {
-        0
+    for (trn_num in hyp_nums) {
+      if (hyp_num == trn_num || denom <= 0) {
+        transitions[[hyp_num, trn_num]] <- 0
       } else {
         transitions[[hyp_num, trn_num]] <- (
           init_transitions[[hyp_num, trn_num]] +
             init_transitions[[hyp_num, delete_num]] *
               init_transitions[[delete_num, trn_num]]
-        ) / (
-          1 - init_transitions[[hyp_num, trn_num]] *
-            init_transitions[[trn_num, hyp_num]]
-        )
+        ) / denom
       }
     }
   }
