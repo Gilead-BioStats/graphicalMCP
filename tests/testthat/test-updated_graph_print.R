@@ -8,10 +8,6 @@ transitions <- rbind(
 names <- c("H1", "H2", "H3", "H4")
 g <- create_graph(hypotheses, transitions, names)
 
-g2 <- g
-g2$transitions["H2", "H4"] <- .9
-
-test_that("2 basic endpoints", {
-  expect_snapshot(analyze_graph(g))
-  expect_snapshot(analyze_graph(g2))
+test_that("snapshot print method", {
+  expect_snapshot(update_graph(g, c(T, T, T, F)))
 })
