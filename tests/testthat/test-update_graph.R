@@ -15,5 +15,5 @@ test_that("basic updating & structure", {
 
 test_that("invalid input", {
   expect_error(update_graph(g, c(0, 1, 1)))
-  expect_error(update_graph(g, c(0, 1, 1, 1.1)))
+  expect_error(update_graph(g, c(0, 1, 1, "1")))
 })
