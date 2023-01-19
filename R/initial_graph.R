@@ -178,9 +178,13 @@ create_graph <- function(hypotheses, transitions, names = NULL) {
     stop("transition weights from each row must sum to no more than 1")
   }
 
-  # Create graph object --------------------------------------------------------
-  new_graph <- list(hypotheses = hypotheses, transitions = transitions)
-  class(new_graph) <- "initial_graph"
-
+  # Create an initial graph object ---------------------------------------------
+  new_graph <- structure(
+    list(
+      hypotheses = hypotheses,
+      transitions = transitions
+    ),
+    class = "initial_graph"
+  )
   new_graph
 }
