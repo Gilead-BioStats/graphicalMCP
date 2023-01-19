@@ -66,7 +66,7 @@ update_graph <- function(graph, keep) {
       # Calculate new transition weights based on original transition weights,
       # and store in `transitions`
       for (end_num in hyp_nums) {
-        if (hyp_num == end_num || denom <= 0) {
+        if (hyp_num == end_num || denominator <= 0) {
           transitions[[hyp_num, end_num]] <- 0
         } else {
           transitions[[hyp_num, end_num]] <- (
