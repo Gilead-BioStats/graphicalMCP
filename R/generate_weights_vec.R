@@ -1,4 +1,6 @@
-# ------------------------------------------------------------------------------
+# Vectorized version of the recursive generate_weights()
+# I don't totally understand why vectorizing makes it so much slower, but it
+# does!
 generate_weights_vec <- function(graph) {
   orig_names <- names(graph$hypotheses)
   names(graph$hypotheses) <- seq_along(graph$hypotheses)

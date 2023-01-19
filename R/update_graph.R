@@ -1,9 +1,10 @@
 #' Delete multiple hypotheses from a graph
 #'
-#' @param graph An MCP graph as created by `graph()`
-#' @param keep A vector coercible to Boolean denoting which hypotheses to
+#' @param graph An MCP graph as created by `create_graph()`
+#' @param keep A vector coercible to Boolean, denoting which hypotheses to
 #'   delete. An entry of `FALSE` (or 0) corresponds to a deletion, and `TRUE`
-#'   (or 1) corresponds to keeping a hypothesis
+#'   (or any number other than 0) corresponds to keeping a hypothesis. We
+#'   recommend using only either a 0/1 vector or a TRUE/FALSE vector for clarity
 #'
 #' @return An object of class `updated_graph` with 3 elements
 #'   * The initial graph object
@@ -27,11 +28,12 @@
 update_graph <- function(graph, keep) {
   stopifnot(
     "keep must be a logical or integer vector" =
-      is.logical(keep) || (is.numeric(keep) && all(keep == as.integer(keep))),
+      (is.logical(keep) || is.numeric(keep)),
     "keep length must match number of hypotheses in graph" =
       length(graph$hypotheses) == length(keep)
   )
 
+  keep <- as.logical(keep)
   initial_graph <- graph
   names(keep) <- names(graph$hypotheses)
 
@@ -42,7 +44,7 @@ update_graph <- function(graph, keep) {
     init_hypotheses <- hypotheses <- graph$hypotheses
     init_transitions <- transitions <- graph$transitions
 
-    hyp_nums <- seq_along(hypotheses)[seq_along(hypotheses) != delete_num]
+    hyp_nums <- seq_along(hypotheses)
 
     # Loop over hypotheses, calculating new weights based on initial hypothesis
     # weights and storing in `hypotheses`

@@ -2,7 +2,8 @@
 % Please edit documentation in R/generate_weights.R
 \name{generate_weights}
 \alias{generate_weights}
-\title{Generate weights for the full closure tree of an MCP graph}
+\title{Generate weights for each intersections hypothesis in the full closure tree
+of an MCP graph}
 \usage{
 generate_weights(graph)
 }
@@ -10,20 +11,22 @@ generate_weights(graph)
 \item{graph}{An MCP graph as created by \code{create_graph()}}
 }
 \value{
-A numeric matrix of all subgraph weights. The first half of columns
-indicate which hypotheses are included in the given subgraph, and the
-second half of columns are the weights
+A numeric matrix of all intersection hypothesis weights. Each row
+corresponds to a single intersection hypothesis. The first half of the
+columns indicate which hypotheses are included in the given intersection
+hypothesis, and the second half of columns are the weights
 }
 \description{
-Generate weights for the full closure tree of an MCP graph
+Generate weights for each intersections hypothesis in the full closure tree
+of an MCP graph
 }
 \section{Performance}{
 
-An evaluation of a few different methods to generate the weights of all
-subgraphs according to Bretz et al. 2011 can be found in the perf-tests
-directory. On a Workbench session with sufficient RAM (Not sure how much
-CPU), the \code{gMCP::generateWeights()} method runs significantly faster for the
-size 2 case, but it grows quickly in both computing time and memory
+Much thought was given to the performance of this code, as the memory and
+time usage can grow quickly as graph size grows. On the systems used for
+testing, a size 10 graph had a median run time of 20-60 ms. Run time
+increases at a rate of O(2 ^ n), so e.g. a size 5 graph takes approximately
+twice as long to run as a size 4 graph
 }
 
 \examples{

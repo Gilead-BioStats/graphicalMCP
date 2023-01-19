@@ -7,11 +7,12 @@
 update_graph(graph, keep)
 }
 \arguments{
-\item{graph}{An MCP graph as created by \code{graph()}}
+\item{graph}{An MCP graph as created by \code{create_graph()}}
 
-\item{keep}{A vector coercible to Boolean denoting which hypotheses to
+\item{keep}{A vector coercible to Boolean, denoting which hypotheses to
 delete. An entry of \code{FALSE} (or 0) corresponds to a deletion, and \code{TRUE}
-(or 1) corresponds to keeping a hypothesis}
+(or any number other than 0) corresponds to keeping a hypothesis. We
+recommend using only either a 0/1 vector or a TRUE/FALSE vector for clarity}
 }
 \value{
 An object of class \code{updated_graph} with 3 elements

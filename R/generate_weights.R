@@ -1,18 +1,20 @@
-#' Generate weights for the full closure tree of an MCP graph
+#' Generate weights for each intersections hypothesis in the full closure tree
+#' of an MCP graph
 #'
 #' @param graph An MCP graph as created by `create_graph()`
 #'
-#' @return A numeric matrix of all subgraph weights. The first half of columns
-#'   indicate which hypotheses are included in the given subgraph, and the
-#'   second half of columns are the weights
+#' @return A numeric matrix of all intersection hypothesis weights. Each row
+#'   corresponds to a single intersection hypothesis. The first half of the
+#'   columns indicate which hypotheses are included in the given intersection
+#'   hypothesis, and the second half of columns are the weights
 #'
 #' @section Performance:
 
-#' An evaluation of a few different methods to generate the weights of all
-#' subgraphs according to Bretz et al. 2011 can be found in the perf-tests
-#' directory. On a Workbench session with sufficient RAM (Not sure how much
-#' CPU), the `gMCP::generateWeights()` method runs significantly faster for the
-#' size 2 case, but it grows quickly in both computing time and memory
+#' Much thought was given to the performance of this code, as the memory and
+#' time usage can grow quickly as graph size grows. On the systems used for
+#' testing, a size 10 graph had a median run time of 20-60 ms. Run time
+#' increases at a rate of O(2 ^ n), so e.g. a size 5 graph takes approximately
+#' twice as long to run as a size 4 graph
 #'
 #' @export
 #'
@@ -55,6 +57,44 @@ generate_weights <- function(graph) {
   cbind(wgts_mat_h, wgts_mat)
 }
 
+#' Delete a single hypothesis from a graph
+#'
+#' @param graph An MCP graph as created by `create_graph()`, with integer names.
+#'   The names are relied upon down into the recursion to remember where each
+#'   node occurred in the original graph
+#' @param last The numeric position of the last node deleted. All nodes larger
+#'   than 'last' will be recursively deleted and resulting graphs returned
+#'
+#' @return A list of `initial_graph` objects
+#' * If 'graph' is a single vertex, it will be returned as the only element of
+#'   the list
+#' * If 'last' is larger than the largest hypothesis __name__ in 'graph', then
+#'   'graph' will again be returned as the only element of the list. These two
+#'   make up the base case of the recursion
+#' * If neither of the prior conditions is met, each node larger than 'last'
+#'   will be deleted, and `delete_nodes_recursive()` will be called on each of
+#'   the resulting sub-graphs. The original graph, as well as the results of the
+#'   recursive calls, will be returned in a list
+#'
+#' @noRd
+#'
+#' @examples
+#'
+#' hypotheses <- c(0.5, 0.5, 0, 0)
+#' transitions <- rbind(
+#'   c(0, 0, 1, 0),
+#'   c(0, 0, 0, 1),
+#'   c(0, 1, 0, 0),
+#'   c(1, 0, 0, 0)
+#' )
+#' names <- 1:4
+#' g <- create_graph(hypotheses, transitions, names)
+#'
+#' # Returns a list of all subgraphs of 'g'
+#' delete_nodes_recursive(g)
+#'
+#' # Simulate the step right after deleting node 2 from `bonferroni_holm(4)`
+#' delete_nodes_recursive(bonferroni_holm(3, names = c(1, 3:4)), last = 2)
 delete_nodes_recursive <- function(graph, last = 0) {
   init_hypotheses <- hypotheses <- graph$hypotheses
   init_transitions <- transitions <- graph$transitions
