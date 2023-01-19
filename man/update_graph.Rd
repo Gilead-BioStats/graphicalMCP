@@ -2,27 +2,29 @@
 % Please edit documentation in R/update_graph.R
 \name{update_graph}
 \alias{update_graph}
-\title{Delete multiple hypotheses from a graph}
+\title{\code{updated_graph} object}
 \usage{
 update_graph(graph, keep)
 }
 \arguments{
-\item{graph}{An MCP graph as created by \code{create_graph()}}
+\item{graph}{An initial graph as created by \code{create_graph()}}
 
 \item{keep}{A vector coercible to Boolean, denoting which hypotheses to
-delete. An entry of \code{FALSE} (or 0) corresponds to a deletion, and \code{TRUE}
-(or 1) corresponds to keeping a hypothesis}
+keep/delete. An entry of \code{FALSE} (or 0) corresponds to a deletion, and
+\code{TRUE} (or any number other than 0) corresponds to keeping a hypothesis. We
+recommend using either a 1/0 vector or a TRUE/FALSE vector for clarity}
 }
 \value{
 An object of class \code{updated_graph} with 3 elements
 \itemize{
 \item The initial graph object
-\item The Boolean vector of keep/delete indicators
-\item The updated graph object with appropriate hypotheses removed
+\item The Boolean vector indicating which hypotheses are kept/deleted
+\item The updated graph object with specific hypotheses deleted
 }
 }
 \description{
-Delete multiple hypotheses from a graph
+Creates a list that represents an updated graph with specific hypotheses
+deleted.
 }
 \examples{
 hypotheses <- c(0.5, 0.5, 0, 0)
@@ -34,7 +36,9 @@ transitions <- rbind(
 )
 g <- create_graph(hypotheses, transitions)
 
-# Delete the third hypothesis
-update_graph(g, c(TRUE, TRUE, FALSE, TRUE))
+# Delete the second hypothesis
+update_graph(g, c(TRUE, FALSE, TRUE, TRUE))
+# Equivalent call
+# update_graph(g, c(1, 0, 1, 1))
 
 }
