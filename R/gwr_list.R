@@ -1,24 +1,26 @@
 gwr_list <- function(graph, calc_ps = FALSE) {
   if (calc_ps) {
-    subgraphs <- powerset_parents(seq_along(graph$hypotheses))
+    ps_p <- powerset_parents(seq_along(graph$hypotheses))
   } else {
-    subgraphs <- readRDS(
+    ps_p <- readRDS(
       paste0("./perf-tests/data/", length(graph$hypotheses), ".rds")
     )
   }
 
-  for (i in seq_along(subgraphs)) {
-    if (is.null(subgraphs[[i]])) {
+  subgraphs <- ps_p
+
+  for (i in seq_along(ps_p)) {
+    if (is.null(ps_p[[i]])) {
       subgraphs[[i]] <- graph
     } else {
       subgraphs[[i]] <- delete_node_fast(
-        subgraphs[[paste0(subgraphs[[i]], collapse = "_")]],
+        subgraphs[[paste0(ps_p[[i]], collapse = "_")]],
         match(
           setdiff(
-            subgraphs[[i]],
-            as.integer(strsplit(names(subgraphs)[[i]], "_")[[1]])
+            ps_p[[i]],
+            as.integer(strsplit(names(ps_p)[[i]], "_")[[1]])
           ),
-          subgraphs[[i]]
+          ps_p[[i]]
         )
       )
     }
@@ -74,5 +76,46 @@ save_powerset_parents <- function(n_start, n_end) {
       ps_p <- powerset_parents(seq_len(n))
       saveRDS(ps_p, paste0("./perf-tests/data/", n, ".rds"))
     }
+  )
+}
+
+# good for now - could convert to cpp at some point
+# prior solution by Dong/Spencer is faster as well, but uses more memory?
+delete_node_fast <- function(graph, del_index) {
+  init_hypotheses <- graph$hypotheses
+  init_transitions <- graph$transitions
+
+  hypotheses <- graph$hypotheses
+  transitions <- graph$transitions
+
+  hyp_nums <- seq_along(hypotheses)[seq_along(hypotheses) != del_index]
+
+  for (hyp_num in hyp_nums) {
+    hypotheses[[hyp_num]] <-
+      init_hypotheses[[hyp_num]] +
+      init_hypotheses[[del_index]] * init_transitions[[del_index, hyp_num]]
+
+    denominator <- 1 - init_transitions[[hyp_num, del_index]] *
+      init_transitions[[del_index, hyp_num]]
+
+    for (end_num in hyp_nums) {
+      if (hyp_num == end_num || denominator <= 0) {
+        transitions[[hyp_num, end_num]] <- 0
+      } else {
+        transitions[[hyp_num, end_num]] <- (
+          init_transitions[[hyp_num, end_num]] +
+            init_transitions[[hyp_num, del_index]] *
+            init_transitions[[del_index, end_num]]
+        ) / denominator
+      }
+    }
+  }
+
+  structure(
+    list(
+      hypotheses = hypotheses[-del_index],
+      transitions = as.matrix(transitions[-del_index, -del_index])
+    ),
+    class = "initial_graph"
   )
 }
