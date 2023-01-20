@@ -12,6 +12,6 @@
 \item{...}{Other values passed on to other methods (currently unused)}
 }
 \description{
-A printed \code{updated_graph} displays the original graph, the vector of
+A printed \code{updated_graph} displays the initial graph, the vector of
 keep/delete hypotheses, and the updated graph
 }

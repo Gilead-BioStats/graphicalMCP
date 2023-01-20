@@ -200,9 +200,13 @@ create_graph <- function(hypotheses, transitions, names = NULL) {
     }
   }
 
-  # Create graph object --------------------------------------------------------
-  new_graph <- list(hypotheses = hypotheses, transitions = transitions)
-  class(new_graph) <- "initial_graph"
-
+  # Create an initial graph object ---------------------------------------------
+  new_graph <- structure(
+    list(
+      hypotheses = hypotheses,
+      transitions = transitions
+    ),
+    class = "initial_graph"
+  )
   new_graph
 }
