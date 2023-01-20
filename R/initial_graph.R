@@ -159,23 +159,45 @@ create_graph <- function(hypotheses, transitions, names = NULL) {
   rownames(transitions) <- names
 
   if (any(hypotheses < 0 | hypotheses > 1)) {
-    stop("hypothesis weights must be between 0 and 1")
+    not_zero_float <- sapply(hypotheses, function(x) !isTRUE(all.equal(0, x)))
+    not_one_float <- sapply(hypotheses, function(x) !isTRUE(all.equal(1, x)))
+
+    if (any(not_zero_float & not_one_float)) {
+      stop("hypothesis weights must be between 0 and 1")
+    }
   }
 
-  if (sum(hypotheses) > 1) {
+  if (sum(hypotheses) > 1 && !isTRUE(all.equal(sum(hypotheses), 1))) {
     stop("hypothesis weights must sum to no more than 1")
   }
 
   if (any(transitions < 0 | transitions > 1)) {
-    stop("transition weights must be between 0 and 1")
+    not_zero_float <- sapply(transitions, function(x) !isTRUE(all.equal(0, x)))
+    not_one_float <- sapply(transitions, function(x) !isTRUE(all.equal(1, x)))
+
+    if (any(not_zero_float & not_one_float)) {
+      stop("transition weights must be between 0 and 1")
+    }
   }
 
-  if (any(diag(transitions) != 0)) {
+  not_zero_float <- sapply(
+    diag(transitions),
+    function(x) !isTRUE(all.equal(0, x))
+  )
+
+  if (any(not_zero_float)) {
     stop("diagonal of transition weights must be all 0s")
   }
 
   if (any(rowSums(transitions) > 1)) {
-    stop("transition weights from each row must sum to no more than 1")
+    not_one_float <- sapply(
+      rowSums(transitions[rowSums(transitions) > 1, ]),
+      function(x) !isTRUE(all.equal(1, x))
+    )
+
+    if (any(not_one_float)) {
+      stop("transition weights from each row must sum to no more than 1")
+    }
   }
 
   # Create graph object --------------------------------------------------------
