@@ -17,5 +17,5 @@ test_that("2 basic endpoints", {
 })
 
 test_that("floating point arithmetic for Bonferroni-Holm above n = 6", {
-  expect_true(analyze_graph(bonferroni_holm(6)))
+  expect_true(analyze_graph(bonferroni_holm(6))$is_optimal)
 })

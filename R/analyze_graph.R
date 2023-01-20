@@ -1,8 +1,10 @@
-#' Check if all subgraphs have weights summing to 1
+#' Check if all sub-graphs have weights summing to 1
 #'
 #' @param graph An `initial_graph` as created by `create_graph()`
 #'
-#' @return TRUE if the graph is optimal, and FALSE otherwise
+#' @return A list with elements `is_optimal` and `offending`. If `is_optimal` is
+#'   TRUE, `offending` should be an empty matrix. Otherwise, it's a matrix of
+#'   intersection hypotheses whose weights do not sum to 1
 #' @export
 #'
 #' @examples
@@ -16,14 +18,16 @@
 #' names <- c("H1", "H2", "H3", "H4")
 #' g <- create_graph(hypotheses, transitions, names)
 #'
-#' analyze_graph(g)
-#' #> graph is optimal
+#' analyze_graph(g)$is_optimal
+#' #> [1] TRUE
 #'
 #' g$transitions["H2", "H4"] <- .9
 #'
 #' analyze_graph(g)
-#' #> graph is sub-optimal:
+#' #> $is_optimal
+#' #> [1] FALSE
 #' #>
+#' #> $offending
 #' #>    H1 H2 H3 H4   H1 H2   H3   H4
 #' #> 3   0  0  1  1 0.00  0 0.50 0.45
 #' #> 4   0  0  0  1 0.00  0 0.00 0.90
@@ -47,15 +51,8 @@ analyze_graph <- function(graph) {
     )
   )
 
-  if (is_optimal) {
-    message("graph is optimal\n")
-
-    return(TRUE)
-  } else {
-    message("graph is sub-optimal:\n\n")
-
-    print(subgraphs[wgt_sums != 1, ])
-
-    return(FALSE)
-  }
+  list(
+    is_optimal = is_optimal,
+    offending = subgraphs[wgt_sums != 1, ]
+  )
 }
