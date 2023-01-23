@@ -7,6 +7,7 @@ status](https://www.r-pkg.org/badges/version/graphicalMCP)](https://cran.r-proje
 [![R-CMD-check](https://github.com/Gilead-BioStats/graphicalMCP/workflows/R-CMD-check-main/badge.svg)](https://github.com/Gilead-BioStats/graphicalMCP/actions)
 [![Codecov test
 coverage](https://codecov.io/gh/Gilead-BioStats/graphicalMCP/branch/s3-graph_mcp/graph/badge.svg)](https://app.codecov.io/gh/Gilead-BioStats/graphicalMCP?branch=s3-graph_mcp)
+[![R-CMD-check](https://github.com/Gilead-BioStats/graphicalMCP/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/Gilead-BioStats/graphicalMCP/actions/workflows/R-CMD-check.yaml)
 <!-- badges: end -->
 
 ## Introduction
@@ -160,7 +161,7 @@ test results.
 
 In this example, a weighted Bonferroni test is applied to all
 hypotheses, with a threshold of 0.05. We can reject a given intersection
-hypothesis if any of the individual hypotheses within that subgraph
+hypothesis if any of the individual hypotheses within that sub-graph
 passes the test assigned to it. We can then reject a hypothesis globally
 if all intersection hypotheses containing that hypothesis are rejected.
 For instance, in this example we can reject every intersection

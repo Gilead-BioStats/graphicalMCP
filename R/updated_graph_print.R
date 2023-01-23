@@ -1,6 +1,6 @@
 #' S3 print method for class 'updated_graph'
 #'
-#' A printed `updated_graph` displays the original graph, the vector of
+#' A printed `updated_graph` displays the initial graph, the vector of
 #' keep/delete hypotheses, and the updated graph
 #'
 #' @param x An object of class `updated_graph` to print
