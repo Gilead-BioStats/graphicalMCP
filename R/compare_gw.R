@@ -1,13 +1,20 @@
 # Sort the results of generate_weights() the way gMCP::generateWeights sorts
 # them. Then set the row & columns names equal and compare
-compare_gw <- function(gw, gw_gmcp) {
-  h_vecs <- data.frame(gw[, seq_len(ncol(gw) / 2)])
+as_gmcp_graph <- function(graph) {
+  gMCP::matrix2graph(graph$transitions, graph$hypotheses)
+}
 
-  h_vecs$sort_order <- apply(h_vecs, 1, paste0, collapse = "")
+as_graph <- function(gmcp_graph) {
+  create_graph(gmcp_graph@weights, gmcp_graph@m)
+}
 
-  gw_sorted <- gw[order(h_vecs$sort_order), ]
+compare_gw <- function(graph) {
+  gw <- generate_weights(graph)
+  gw_gmcp <- generateWeights(graph$transitions, graph$hypotheses)
 
-  dimnames(gw_sorted) <- dimnames(gw_gmcp)
+  all.equal(unname(gw), unname(gw_gmcp))
+}
 
-  isTRUE(all.equal(gw_sorted, gw_gmcp))
+compare_rpt <- function(graph) {
+
 }
