@@ -19,7 +19,7 @@ bonferroni_holm <- function(n, names = NULL) {
       (n == length(names) || is.null(names))
   )
 
-  g <- matrix(rep(1 / (n - 1), n ^ 2), nrow = n)
+  g <- matrix(rep(1 / (n - 1), n^2), nrow = n)
   diag(g) <- rep(0, n)
 
   w <- rep(1 / n, n)
@@ -43,3 +43,17 @@ huque_alosh_bhore_2011 <- function() {
   )
 }
 
+wiens_dmitrienko_2005 <- function() {
+  create_graph(
+    c(1/3, 1/3, 1/3),
+    matrix(
+      c(
+         0,  1,  0,
+         0,  0,  1,
+        .5, .5,  0
+      ),
+      nrow = 3,
+      byrow = TRUE
+    )
+  )
+}

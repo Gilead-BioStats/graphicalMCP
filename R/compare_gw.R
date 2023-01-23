@@ -7,8 +7,6 @@ compare_gw <- function(gw, gw_gmcp) {
 
   gw_sorted <- gw[order(h_vecs$sort_order), ]
 
-  sort_gw_like_gmcp(gw)
-
   dimnames(gw_sorted) <- dimnames(gw_gmcp)
 
   isTRUE(all.equal(gw_sorted, gw_gmcp))
