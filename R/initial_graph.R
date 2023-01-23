@@ -1,3 +1,11 @@
+# Function to check if each element of x is equal to target within the floating
+# tolerance
+# x is a vector and target is a scalar
+# Return a logical vector of the same length as x
+equal_float <- function (x, target) {
+  sapply(x, function(y) isTRUE(all.equal(target, y)))
+}
+
 #' `initial_graph` object
 #'
 #' Creates a list that represents an initial graphical multiple comparison
@@ -160,44 +168,37 @@ create_graph <- function(hypotheses, transitions, names = NULL) {
 
   if (any(hypotheses < 0 | hypotheses > 1)) {
     offending <- hypotheses[hypotheses < 0 | hypotheses > 1]
-    not_zero_float <- sapply(offending, function(x) !isTRUE(all.equal(0, x)))
-    not_one_float <- sapply(offending, function(x) !isTRUE(all.equal(1, x)))
+    zero_float <- equal_float(offending, 0)
+    one_float <- equal_float(offending, 1)
 
-    if (any(not_zero_float & not_one_float)) {
+    if (!all(zero_float | one_float)) {
       stop("hypothesis weights must be between 0 and 1")
     }
   }
 
-  if (sum(hypotheses) > 1 && !isTRUE(all.equal(sum(hypotheses), 1))) {
+  if (sum(hypotheses) > 1 && !equal_float(sum(hypotheses), 1)) {
     stop("hypothesis weights must sum to no more than 1")
   }
 
   if (any(transitions < 0 | transitions > 1)) {
     offending <- transitions[transitions < 0 | transitions > 1]
-    not_zero_float <- sapply(offending, function(x) !isTRUE(all.equal(0, x)))
-    not_one_float <- sapply(offending, function(x) !isTRUE(all.equal(1, x)))
+    zero_float <- equal_float(offending, 0)
+    one_float <- equal_float(offending, 1)
 
-    if (any(not_zero_float & not_one_float)) {
+    if (!all(zero_float | one_float)) {
       stop("transition weights must be between 0 and 1")
     }
   }
 
-  not_zero_float <- sapply(
-    diag(transitions),
-    function(x) !isTRUE(all.equal(0, x))
-  )
-
-  if (any(not_zero_float)) {
+  if (!all(equal_float(diag(transitions), 0))) {
     stop("diagonal of transition weights must be all 0s")
   }
 
   if (any(rowSums(transitions) > 1)) {
-    not_one_float <- sapply(
-      rowSums(transitions[rowSums(transitions) > 1, , drop = FALSE]),
-      function(x) !isTRUE(all.equal(1, x))
-    )
+    offending <- rowSums(transitions)[rowSums(transitions) > 1]
+    one_float <- equal_float(offending, 1)
 
-    if (any(not_one_float)) {
+    if (!all(one_float)) {
       stop("transition weights from each row must sum to no more than 1")
     }
   }
