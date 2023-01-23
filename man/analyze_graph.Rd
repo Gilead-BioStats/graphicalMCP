@@ -2,7 +2,7 @@
 % Please edit documentation in R/analyze_graph.R
 \name{analyze_graph}
 \alias{analyze_graph}
-\title{Check if all subgraphs have weights summing to 1}
+\title{Check if all sub-graphs have weights summing to 1}
 \usage{
 analyze_graph(graph)
 }
@@ -10,10 +10,12 @@ analyze_graph(graph)
 \item{graph}{An \code{initial_graph} as created by \code{create_graph()}}
 }
 \value{
-TRUE if the graph is optimal, and FALSE otherwise
+A list with elements \code{is_optimal} and \code{offending}. If \code{is_optimal} is
+TRUE, \code{offending} should be an empty matrix. Otherwise, it's a matrix of
+intersection hypotheses whose weights do not sum to 1
 }
 \description{
-Check if all subgraphs have weights summing to 1
+Check if all sub-graphs have weights summing to 1
 }
 \examples{
 hypotheses <- c(0.5, 0.5, 0, 0)
@@ -26,14 +28,16 @@ transitions <- rbind(
 names <- c("H1", "H2", "H3", "H4")
 g <- create_graph(hypotheses, transitions, names)
 
-analyze_graph(g)
-#> graph is optimal
+analyze_graph(g)$is_optimal
+#> [1] TRUE
 
 g$transitions["H2", "H4"] <- .9
 
 analyze_graph(g)
-#> graph is sub-optimal:
+#> $is_optimal
+#> [1] FALSE
 #>
+#> $offending
 #>    H1 H2 H3 H4   H1 H2   H3   H4
 #> 3   0  0  1  1 0.00  0 0.50 0.45
 #> 4   0  0  0  1 0.00  0 0.00 0.90
