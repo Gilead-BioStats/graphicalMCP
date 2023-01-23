@@ -4,3 +4,4 @@
 ^LICENSE\.md$
 ^LICENSE$
 ^perf-tests$
+^cache$

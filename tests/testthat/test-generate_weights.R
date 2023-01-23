@@ -31,7 +31,7 @@ graph <- create_graph(w, m)
 gw_2011 <- generate_weights(graph)
 
 test_that("compare to gMCP", {
-  expect_true(compare_gw(gw4, gw4_gmcp))
-  expect_true(compare_gw(gw10, gw10_gmcp))
-  expect_true(compare_gw(gw_2011, gw_2011_gmcp))
+  expect_true(all.equal(unname(gw4), unname(gw4_gmcp)))
+  expect_true(all.equal(unname(gw10), unname(gw10_gmcp)))
+  expect_true(all.equal(unname(gw_2011), unname(gw_2011_gmcp)))
 })

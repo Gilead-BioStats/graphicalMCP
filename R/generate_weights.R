@@ -152,7 +152,7 @@ delete_nodes_recursive <- function(graph, last = 0) {
   }
 
   c(
-    list(graph),
-    unlist(children, recursive = FALSE)
+    unlist(children, recursive = FALSE),
+    list(graph)
   )
 }
