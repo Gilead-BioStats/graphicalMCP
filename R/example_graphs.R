@@ -43,7 +43,7 @@ huque_alosh_bhore_2011 <- function() {
   )
 }
 
-wiens_dmitrienko_2005 <- function() {
+wiens_dmitrienko_2005 <- function(names = NULL) {
   create_graph(
     c(1/3, 1/3, 1/3),
     matrix(
@@ -54,6 +54,7 @@ wiens_dmitrienko_2005 <- function() {
       ),
       nrow = 3,
       byrow = TRUE
-    )
+    ),
+    names
   )
 }
