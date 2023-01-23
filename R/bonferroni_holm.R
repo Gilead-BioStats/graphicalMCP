@@ -3,7 +3,7 @@
 #' @param n Number of vertices in the Bonferroni-Holm graph
 #' @param names Optional names for the hypotheses (Must have length `n`)
 #'
-#' @return An S3 object of class `mcp_graph`, following the structure of
+#' @return An S3 object of class `initial_graph`, following the structure of
 #'   Bonferroni & Holm: A complete graph with equal weight on each hypothesis
 #'   and equal weight on each transition
 #' @export
@@ -17,7 +17,7 @@ bonferroni_holm <- function(n, names = NULL) {
       (n == length(names) || is.null(names))
   )
 
-  g <- matrix(rep(1 / (n - 1), n ^ 2), nrow = n)
+  g <- matrix(rep(1 / (n - 1), n^2), nrow = n)
   diag(g) <- rep(0, n)
 
   w <- rep(1 / n, n)

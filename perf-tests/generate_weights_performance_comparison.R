@@ -13,28 +13,34 @@ bench_gen_wgt <- function(sizes = 2:8, gmcp = FALSE, min = 5) {
         vroom_write(print(dplyr::mutate(
           mark(
             generateWeights(bh$t, bh$h),
-            generate_weights_recursive(bh),
-            generate_weights_recursive_vec(bh),
+            gwr_list(bh),
+            gwr_list(bh, calc_ps = TRUE),
+            generate_weights(bh),
+            generate_weights_vec(bh),
             check = FALSE,
             min_iterations = min,
             time_unit = "ms"
           ),
-          expression = size
+          size = size,
+          .before = expression
         )), paste0("./perf-tests/log/bh", size, "_gmcp_", Sys.time(), ".tsv"))
       } else {
         vroom_write(print(dplyr::mutate(
           mark(
-            generate_weights_recursive(bh),
-            generate_weights_recursive_vec(bh),
+            # gwr_list(bh),
+            # gwr_list(bh, calc_ps = TRUE),
+            generate_weights(bh),
+            generate_weights_vec(bh),
             check = FALSE,
             min_iterations = min,
             time_unit = "ms"
           ),
-          expression = size
+          size = size,
+          .before = expression
         )), paste0("./perf-tests/log/bh", size, "_no-gmcp_", Sys.time(), ".tsv"))
       }
     }
   )
 }
 
-bench_gen_wgt(sizes = 2:18)
+bench_gen_wgt(sizes = 10:16)

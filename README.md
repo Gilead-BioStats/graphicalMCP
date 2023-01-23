@@ -127,13 +127,12 @@ update_graph(g_dose, c(TRUE, FALSE, FALSE, TRUE))
 
 ### Generate weights
 
-The weights of all subgraphs can be calculated with
-`generate_weights_recursive()`. This uses some more efficient code under
-the hood than `update_graph()` in order to be performant for larger
-graphs.
+The weights of all sub-graphs can be calculated with
+`generate_weights()`. This uses more efficient code under the hood than
+`update_graph()` in order to be performant for larger graphs.
 
 ``` r
-generate_weights_recursive(g_dose)
+generate_weights(g_dose)
 #>    A1 A2 B1 B2  A1  A2  B1  B2
 #> 1   1  1  1  1 0.5 0.5 0.0 0.0
 #> 2   0  1  1  1 0.0 0.5 0.5 0.0

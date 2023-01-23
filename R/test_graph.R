@@ -76,7 +76,7 @@ test_all_subgraphs <- function(graph, p_values, alpha = .05,
 
   hypothesis_names <- names(graph$hypotheses)
 
-  subgraphs <- generate_weights_recursive(graph)
+  subgraphs <- generate_weights(graph)
   subgraphs_weights <- subgraphs[, (ncol(subgraphs) / 2 + 1):ncol(subgraphs)]
 
   res_list <- apply(
