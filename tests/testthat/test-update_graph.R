@@ -8,9 +8,9 @@ transitions <- rbind(
 names <- c("H1", "H2", "H3", "H4")
 g <- create_graph(hypotheses, transitions, names)
 
-m6 <- matrix(1/5, nrow = 6, ncol = 6)
+m6 <- matrix(1 / 5, nrow = 6, ncol = 6)
 diag(m6) <- 0
-bh6 <- create_graph(rep(1/6, 6), m6)
+bh6 <- create_graph(rep(1 / 6, 6), m6)
 
 test_that("basic updating & structure", {
   expect_s3_class(update_graph(g, c(0, 0, 0, 1)), "updated_graph")

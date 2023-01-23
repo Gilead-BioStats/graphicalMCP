@@ -159,8 +159,9 @@ create_graph <- function(hypotheses, transitions, names = NULL) {
   rownames(transitions) <- names
 
   if (any(hypotheses < 0 | hypotheses > 1)) {
-    not_zero_float <- sapply(hypotheses, function(x) !isTRUE(all.equal(0, x)))
-    not_one_float <- sapply(hypotheses, function(x) !isTRUE(all.equal(1, x)))
+    offending <- hypotheses[hypotheses < 0 | hypotheses > 1]
+    not_zero_float <- sapply(offending, function(x) !isTRUE(all.equal(0, x)))
+    not_one_float <- sapply(offending, function(x) !isTRUE(all.equal(1, x)))
 
     if (any(not_zero_float & not_one_float)) {
       stop("hypothesis weights must be between 0 and 1")
@@ -172,8 +173,9 @@ create_graph <- function(hypotheses, transitions, names = NULL) {
   }
 
   if (any(transitions < 0 | transitions > 1)) {
-    not_zero_float <- sapply(transitions, function(x) !isTRUE(all.equal(0, x)))
-    not_one_float <- sapply(transitions, function(x) !isTRUE(all.equal(1, x)))
+    offending <- transitions[transitions < 0 | transitions > 1]
+    not_zero_float <- sapply(offending, function(x) !isTRUE(all.equal(0, x)))
+    not_one_float <- sapply(offending, function(x) !isTRUE(all.equal(1, x)))
 
     if (any(not_zero_float & not_one_float)) {
       stop("transition weights must be between 0 and 1")
@@ -191,7 +193,7 @@ create_graph <- function(hypotheses, transitions, names = NULL) {
 
   if (any(rowSums(transitions) > 1)) {
     not_one_float <- sapply(
-      rowSums(transitions[rowSums(transitions) > 1, ]),
+      rowSums(transitions[rowSums(transitions) > 1, , drop = FALSE]),
       function(x) !isTRUE(all.equal(1, x))
     )
 
