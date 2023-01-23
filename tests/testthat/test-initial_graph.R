@@ -6,9 +6,12 @@ w_1 <- 1
 
 g_1_cnm <- g_1
 g_1_rnm <- g_1
+g_1_nm <- g_1
 w_1_nm <- w_1
 colnames(g_1_cnm) <- "col_node"
 rownames(g_1_rnm) <- "row_node"
+colnames(g_1_nm) <- "my_node"
+rownames(g_1_nm) <- "my_node"
 names(w_1_nm) <- "my_node"
 
 # Bonferroni-Holm: 2
@@ -87,6 +90,7 @@ test_that("names validation", {
   expect_equal(names(create_graph(w_1, g_1_cnm)$hypotheses), "col_node")
   expect_equal(names(create_graph(w_1, g_1_rnm)$hypotheses), "row_node")
   expect_equal(names(create_graph(w_1_nm, g_1)$hypotheses), "my_node")
+  expect_equal(names(create_graph(w_1_nm, g_1_nm)$hypotheses), "my_node")
 })
 
 test_that("floating point accuracy - errors", {

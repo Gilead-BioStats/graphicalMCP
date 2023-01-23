@@ -94,54 +94,13 @@
 #' g <- create_graph(hypotheses, transitions)
 #' g
 create_graph <- function(hypotheses, transitions, names = NULL) {
+
+  # Basic input validation -----------------------------------------------------
   stopifnot(
     "hypothesis weights must be numeric" = is.numeric(hypotheses),
     "transition weights must be numeric" = is.numeric(transitions)
   )
 
-  # Validation of names of hypotheses ----------------------------------------
-  names_provided <- !is.null(names)
-  hyps_named <- !is.null(names(hypotheses))
-  trns_col_named <- !is.null(colnames(transitions))
-  trns_row_named <- !is.null(rownames(transitions))
-
-  if (names_provided) {
-    if (hyps_named || trns_col_named || trns_row_named) {
-      warning("hypothesis names specified - overriding names in
-                    'hypotheses' and 'transitions'")
-    }
-  } else {
-    if (hyps_named && !trns_col_named && !trns_row_named) {
-      names <- names(hypotheses)
-    } else if (!hyps_named && trns_col_named && !trns_row_named) {
-      names <- colnames(transitions)
-    } else if (!hyps_named && !trns_col_named && trns_row_named) {
-      names <- rownames(transitions)
-    } else {
-      if (hyps_named && !trns_col_named && !trns_row_named) {
-        names <- names(hypotheses)
-      } else if (!hyps_named && trns_col_named && !trns_row_named) {
-        names <- colnames(transitions)
-      } else if (!hyps_named && !trns_col_named && trns_row_named) {
-        names <- rownames(transitions)
-      } else {
-        if (
-          any(
-            names(hypotheses) != colnames(transitions),
-            names(hypotheses) != rownames(transitions),
-            colnames(transitions) != rownames(transitions)
-          )
-        ) {
-          stop("names provided in 'hypotheses' and 'transitions' should
-               match")
-        }
-        names <- paste0("H", seq_along(hypotheses))
-      }
-    }
-  }
-
-  # Validation of numerical conditions for a valid graphical multiple
-  # comparison procedure -----------------------------------------------------
   if (
     any(
       nrow(transitions) != ncol(transitions),
@@ -153,11 +112,38 @@ create_graph <- function(hypotheses, transitions, names = NULL) {
              'transitions' must all match")
   }
 
-  # Must come after length checks to avoid an error
-  names(hypotheses) <- names
-  colnames(transitions) <- names
-  rownames(transitions) <- names
+  # Validation of names of hypotheses ----------------------------------------
+  explicit_names <- !is.null(names)
 
+  implicit_names <- any(
+    !is.null(names(hypotheses)),
+    !is.null(colnames(transitions)),
+    !is.null(rownames(transitions))
+  )
+
+  names_diff <- any(
+    names(hypotheses) != colnames(transitions),
+    names(hypotheses) != rownames(transitions),
+    colnames(transitions) != rownames(transitions)
+  )
+
+  if (implicit_names && explicit_names) {
+    warning("hypothesis names specified - overriding names in
+                    'hypotheses' and 'transitions'")
+  } else if (implicit_names && names_diff) {
+    stop("names provided in 'hypotheses' and 'transitions' should match")
+  } else if (implicit_names) {
+    names <- unique(
+      c(names(hypotheses), colnames(transitions), rownames(transitions))
+    )
+  } else if (!explicit_names) {
+    names <- paste0("H", seq_along(hypotheses))
+  }
+
+  names(hypotheses) <- colnames(transitions) <- rownames(transitions) <- names
+
+  # Validation of numerical conditions for a valid graphical multiple
+  # comparison procedure -----------------------------------------------------
   if (any(hypotheses < 0 | hypotheses > 1)) {
     offending <- hypotheses[hypotheses < 0 | hypotheses > 1]
     not_zero_float <- sapply(offending, function(x) !isTRUE(all.equal(0, x)))
