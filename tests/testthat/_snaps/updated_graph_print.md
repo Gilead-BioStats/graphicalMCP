@@ -3,13 +3,13 @@
     Code
       update_graph(g, c(TRUE, TRUE, TRUE, FALSE))
     Output
-      An MCP graph
+      An initial graph
       
       --- Hypothesis weights ---
-      H1: (0.5000)
-      H2: (0.5000)
-      H3: (0.0000)
-      H4: (0.0000)
+      H1: 0.5000
+      H2: 0.5000
+      H3: 0.0000
+      H4: 0.0000
       
       --- Transition weights ---
              H1     H2     H3     H4
@@ -26,13 +26,13 @@
       
       --------------------------------------
       
-      An MCP graph
+      An initial graph
       
       --- Hypothesis weights ---
-      H1: (0.5000)
-      H2: (0.5000)
-      H3: (0.0000)
-      H4: (0.0000)
+      H1: 0.5000
+      H2: 0.5000
+      H3: 0.0000
+      H4: 0.0000
       
       --- Transition weights ---
              H1     H2     H3     H4
