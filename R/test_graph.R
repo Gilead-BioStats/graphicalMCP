@@ -1,3 +1,7 @@
+myfct <- function(x, a, w, sig) {
+  1 - a - mvtnorm::pmvnorm(lower = -Inf, upper = qnorm(1 - x * w * a), sigma = sig)
+}
+
 #' Apply weighted Bonferroni, parametric, and Simes tests
 #'
 #' @param graph An initial graph as created by `create_graph()`
@@ -40,7 +44,7 @@
 #'     parametric = list(c(3, 4))
 #'   )
 #' )
-test_graph <- function(graph, p_values, alpha = .05,
+test_graph <- function(graph, p_values, alpha = .05, corr = NULL,
                        tests = list(
                          bonferroni = list(seq_along(graph$hypotheses)),
                          simes = NULL,
@@ -74,15 +78,27 @@ test_graph <- function(graph, p_values, alpha = .05,
       res_simes <- lapply(
         tests$simes,
         function(simes_group) {
+
           weights[simes_group] == weights[simes_group]
         }
       )
 
-      # TODO: Parametric test will go here
+      # This is a good start, but definitely not quite right
       res_parametric <- lapply(
         tests$parametric,
         function(para_group) {
-          weights[para_group] == weights[para_group]
+          sub_corr <- corr[para_group, para_group]
+
+          cJ <- uniroot(
+            myfct,
+            lower = 1,
+            upper = 9,
+            a = alpha,
+            w = weights[para_group],
+            sig = sub_corr
+          )$root
+
+          p_values[para_group] <= cJ * weights[para_group] * alpha
         }
       )
 
@@ -97,7 +113,7 @@ test_graph <- function(graph, p_values, alpha = .05,
     2 ^ graph_size / 2
 
 
-  # This is kind of print-y stuff ---
+  # This is kind of print-y stuff that may not belong here ---
   res_names <- c(
     hyp_names,
     "|",
@@ -108,9 +124,17 @@ test_graph <- function(graph, p_values, alpha = .05,
     "rej_Hj"
   )
 
+  names_mat <- matrix(
+    rep(colnames(subgraphs_h_vecs), nrow(subgraphs_h_vecs)),
+    nrow = nrow(subgraphs_h_vecs),
+    byrow = TRUE
+  )
+
+  format_names <- ifelse(subgraphs_h_vecs, names_mat, "")
+
   weight_res_matrix <- structure(
     cbind(
-      as.data.frame(subgraphs_h_vecs),
+      as.data.frame(format_names),
       data.frame("|" = "|"),
       as.data.frame(subgraphs_weights),
       data.frame("|" = "|"),

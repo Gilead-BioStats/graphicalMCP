@@ -5,4 +5,4 @@ print_tests <- function(tests) {
 }
 
 # Possibly print p-values and test results together?
-rbind(p_value = as.character(res$p_values), rejected = as.character(res$hypotheses_rejected))
+# rbind(p_value = as.character(res$p_values), rejected = as.character(res$hypotheses_rejected))
