@@ -36,9 +36,9 @@ pak::pak("Gilead-BioStats/graphicalMCP")
 
 ## Basic usage
 
-The base object in graphicalMCP is an `mcp_graph`, which is a weighted,
-directed graph represented by a matrix of transition (edge) weights, and
-a vector of hypothesis (vertex) weights.
+The base object in graphicalMCP is an `initial_graph`, which is a
+weighted, directed graph represented by a matrix of transition (edge)
+weights, and a vector of hypothesis (vertex) weights.
 
 ``` r
 library(graphicalMCP)
