@@ -35,3 +35,45 @@ simConfint(
 ## [1,] 0.000000 0.8604 Inf
 ## [2,] -0.007581 0.9161 Inf
 ## [3,] 0.000000 0.9733 Inf
+
+
+hypotheses <- c(ni_lo = 0.5, ni_hi = 0.5, su_lo = 0, su_hi = 0)
+transitions <- rbind(
+  c(0, 0, 1, 0),
+  c(0, 0, 0, 1),
+  c(0, 1, 0, 0),
+  c(1, 0, 0, 0)
+)
+g <- create_graph(hypotheses, transitions)
+G <- matrix2graph(transitions, hypotheses)
+
+p_vals <- c(.001, .02, .05, .1)
+corr1 <- rbind(
+  c(1, NA, NA, NA),
+  c(NA, 1, NA, NA),
+  c(NA, NA, 1, NA),
+  c(NA, NA, NA, 1)
+)
+corr2 <- rbind(
+  c(1, .5, NA, NA),
+  c(.5, 1, NA, NA),
+  c(NA, NA, 1, .5),
+  c(NA, NA, .5, 1)
+)
+corr2_ <- rbind(
+  c(1, .5, 0, 0),
+  c(.5, 1, 0, 0),
+  c(0, 0, 1, .5),
+  c(0, 0, .5, 1)
+)
+dimnames(corr1) <- dimnames(corr2) <- list(names(hypotheses), names(hypotheses))
+alpha <- .025
+
+p <- 1-pnorm(c(2.24,2.24,2.24,2.3))
+
+gMCP(G, p)
+test_graph(g, p)
+
+gMCP(G, p, corr = corr2, test = "parametric")
+test_graph(g, p, corr = corr2_, alpha = .05,
+           tests = list(parametric = list(1:4)))

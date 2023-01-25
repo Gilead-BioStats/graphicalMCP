@@ -78,17 +78,26 @@ test_graph <- function(graph, p_values, alpha = .05, corr = NULL,
       res_simes <- lapply(
         tests$simes,
         function(simes_group) {
+          res <- vector(length = length(simes_group))
+          simes_weights <- weights[simes_group]
+          simes_p <- p_values[simes_group]
+
+          for (i in simes_group) {
+            w_sum <- sum(simes_weights[simes_p <= simes_p[[i]]])
+            res[[i]] <- p_values[[i]] <= alpha * w_sum
+          }
 
           weights[simes_group] == weights[simes_group]
         }
       )
 
       # This is a good start, but definitely not quite right
+      # uniroot() breaks when corr has NAs
       res_parametric <- lapply(
         tests$parametric,
         function(para_group) {
           sub_corr <- corr[para_group, para_group]
-
+          browser()
           cJ <- uniroot(
             myfct,
             lower = 1,
