@@ -4,3 +4,5 @@
 .Ruserdata
 /perf-tests/log
 /cache
+*.html
+/docs

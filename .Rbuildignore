@@ -3,5 +3,6 @@
 ^README\.Rmd$
 ^LICENSE\.md$
 ^LICENSE$
+^docs$
 ^perf-tests$
 ^cache$
