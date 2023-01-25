@@ -17,6 +17,7 @@ knitr::opts_chunk$set(
 [![CRAN status](https://www.r-pkg.org/badges/version/graphicalMCP)](https://cran.r-project.org/package=graphicalMCP)
 [![R-CMD-check](https://github.com/Gilead-BioStats/graphicalMCP/workflows/R-CMD-check-main/badge.svg)](https://github.com/Gilead-BioStats/graphicalMCP/actions)
 [![Codecov test coverage](https://codecov.io/gh/Gilead-BioStats/graphicalMCP/branch/s3-graph_mcp/graph/badge.svg)](https://app.codecov.io/gh/Gilead-BioStats/graphicalMCP?branch=s3-graph_mcp)
+[![R-CMD-check](https://github.com/Gilead-BioStats/graphicalMCP/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/Gilead-BioStats/graphicalMCP/actions/workflows/R-CMD-check.yaml)
 <!-- badges: end -->
 
 ## Introduction
@@ -36,21 +37,38 @@ pak::pak("Gilead-BioStats/graphicalMCP")
 
 ## Basic usage
 
-The base object in graphicalMCP is an `mcp_graph`, which is a weighted, directed graph represented by a matrix of transition (edge) weights, and a vector of hypothesis (vertex) weights.
+### Initial graph
 
-```{r}
+The base object in graphicalMCP is an `initial_graph`, which is a weighted, directed graph represented by a matrix of transition (edge) weights, and a vector of hypothesis (vertex) weights.
+
+```{r create-graph}
 library(graphicalMCP)
 
+# A graphical multiple comparison procedure with two primary hypotheses (H1
+# and H2) and two secondary hypotheses (H3 and H4)
+# See Figure 1 in Bretz, F., Posch, M., Glimm, E., Klinglmueller, F., Maurer,
+# W., & Rohmeyer, K. (2011). Graphical approaches for multiple comparison
+# procedures using weighted Bonferroni, Simes, or parametric tests. Biometrical
+# Journal, 53(6), 894-913.
+hypotheses <- c(0.5, 0.5, 0, 0)
 transitions <- rbind(
-  c(0, .5, .5),
-  c(.5, 0, .5),
-  c(.5, .5, 0)
+  c(0, 0, 1, 0),
+  c(0, 0, 0, 1),
+  c(0, 1, 0, 0),
+  c(1, 0, 0, 0)
 )
-hypotheses <- rep(.333333, 3)
-
-g_dose <- create_graph(hypotheses, transitions, paste("dose", letters[1:3]))
+names <- c("A1", "A2", "B1", "B2")
+g_dose <- create_graph(hypotheses, transitions, names)
 
 g_dose
+```
+
+### Update graph
+
+Hypotheses can be rejected from the MCP using `update_graph()`. Updated weights and transitions are calculated according to the weighting strategy in [Bretz et al (2011)](https://onlinelibrary.wiley.com/doi/10.1002/bimj.201000239)
+
+```{r update-graph}
+update_graph(g_dose, c(TRUE, FALSE, FALSE, TRUE))
 ```
 
 ## Related work

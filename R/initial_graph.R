@@ -1,3 +1,11 @@
+# Function to check if each element of x is equal to target within the floating
+# tolerance
+# x is a vector and target is a scalar
+# Return a logical vector of the same length as x
+equal_float <- function (x, target) {
+  sapply(x, function(y) isTRUE(all.equal(target, y)))
+}
+
 #' `initial_graph` object
 #'
 #' Creates a list that represents an initial graphical multiple comparison
@@ -23,14 +31,14 @@
 #' # and H2) and two secondary hypotheses (H3 and H4)
 #' # See Figure 1 in Bretz, F., Posch, M., Glimm, E., Klinglmueller, F., Maurer,
 #' # W., & Rohmeyer, K. (2011). Graphical approaches for multiple comparison
-#' # procedures using weighted Bonferroni, Simes, or parametric tests. Biometrical
-#' # Journal, 53(6), 894-913.
+#' # procedures using weighted Bonferroni, Simes, or parametric tests.
+#' # Biometrical Journal, 53(6), 894-913.
 #' hypotheses <- c(0.5, 0.5, 0, 0)
 #' transitions <- rbind(
-#'     c(0, 0, 1, 0),
-#'     c(0, 0, 0, 1),
-#'     c(0, 1, 0, 0),
-#'     c(1, 0, 0, 0)
+#'   c(0, 0, 1, 0),
+#'   c(0, 0, 0, 1),
+#'   c(0, 1, 0, 0),
+#'   c(1, 0, 0, 0)
 #' )
 #' names <- c("H1", "H2", "H3", "H4")
 #' g <- create_graph(hypotheses, transitions, names)
@@ -39,10 +47,10 @@
 #' # Explicit names override names in `hypotheses` (with a warning)
 #' hypotheses <- c(h1 = 0.5, h2 = 0.5, h3 = 0, h4 = 0)
 #' transitions <- rbind(
-#'     c(0, 0, 1, 0),
-#'     c(0, 0, 0, 1),
-#'     c(0, 1, 0, 0),
-#'     c(1, 0, 0, 0)
+#'   c(0, 0, 1, 0),
+#'   c(0, 0, 0, 1),
+#'   c(0, 1, 0, 0),
+#'   c(1, 0, 0, 0)
 #' )
 #' names <- c("H1", "H2", "H3", "H4")
 #' g <- create_graph(hypotheses, transitions, names)
@@ -51,10 +59,10 @@
 #' # Explicit names override names in `transitions` (with a warning)
 #' hypotheses <- c(0.5, 0.5, 0, 0)
 #' transitions <- rbind(
-#'     h1 = c(0, 0, 1, 0),
-#'     h2 = c(0, 0, 0, 1),
-#'     h3 = c(0, 1, 0, 0),
-#'     h4 = c(1, 0, 0, 0)
+#'   h1 = c(0, 0, 1, 0),
+#'   h2 = c(0, 0, 0, 1),
+#'   h3 = c(0, 1, 0, 0),
+#'   h4 = c(1, 0, 0, 0)
 #' )
 #' names <- c("H1", "H2", "H3", "H4")
 #' g <- create_graph(hypotheses, transitions, names)
@@ -63,10 +71,10 @@
 #' # Use names in `hypotheses`
 #' hypotheses <- c(H1 = 0.5, H2 = 0.5, H3 = 0, H4 = 0)
 #' transitions <- rbind(
-#'     c(0, 0, 1, 0),
-#'     c(0, 0, 0, 1),
-#'     c(0, 1, 0, 0),
-#'     c(1, 0, 0, 0)
+#'   c(0, 0, 1, 0),
+#'   c(0, 0, 0, 1),
+#'   c(0, 1, 0, 0),
+#'   c(1, 0, 0, 0)
 #' )
 #' g <- create_graph(hypotheses, transitions)
 #' g
@@ -74,27 +82,26 @@
 #' # Use names in `transitions`
 #' hypotheses <- c(0.5, 0.5, 0, 0)
 #' transitions <- rbind(
-#'     H1 = c(0, 0, 1, 0),
-#'     H2 = c(0, 0, 0, 1),
-#'     H3 = c(0, 1, 0, 0),
-#'     H4 = c(1, 0, 0, 0)
+#'   H1 = c(0, 0, 1, 0),
+#'   H2 = c(0, 0, 0, 1),
+#'   H3 = c(0, 1, 0, 0),
+#'   H4 = c(1, 0, 0, 0)
 #' )
 #' g <- create_graph(hypotheses, transitions)
 #' g
 #'
 #' # When names are not specified, hypotheses are numbered sequentially as
 #' # H1, H2, ...
-# hypotheses <- c(0.5, 0.5, 0, 0)
-# transitions <- rbind(
-#     c(0, 0, 1, 0),
-#     c(0, 0, 0, 1),
-#     c(0, 1, 0, 0),
-#     c(1, 0, 0, 0)
-# )
-# g <- create_graph(hypotheses, transitions)
-# g
+#' hypotheses <- c(0.5, 0.5, 0, 0)
+#' transitions <- rbind(
+#'   c(0, 0, 1, 0),
+#'   c(0, 0, 0, 1),
+#'   c(0, 1, 0, 0),
+#'   c(1, 0, 0, 0)
+#' )
+#' g <- create_graph(hypotheses, transitions)
+#' g
 create_graph <- function(hypotheses, transitions, names = NULL) {
-
   stopifnot(
     "hypothesis weights must be numeric" = is.numeric(hypotheses),
     "transition weights must be numeric" = is.numeric(transitions)
@@ -136,7 +143,7 @@ create_graph <- function(hypotheses, transitions, names = NULL) {
           stop("names provided in 'hypotheses' and 'transitions' should
                match")
         }
-        names <- paste0("H", 1:length(hypotheses))
+        names <- paste0("H", seq_along(hypotheses))
       }
     }
   }
@@ -160,28 +167,49 @@ create_graph <- function(hypotheses, transitions, names = NULL) {
   rownames(transitions) <- names
 
   if (any(hypotheses < 0 | hypotheses > 1)) {
-    stop("hypothesis weights must be between 0 and 1")
+    offending <- hypotheses[hypotheses < 0 | hypotheses > 1]
+    zero_float <- equal_float(offending, 0)
+    one_float <- equal_float(offending, 1)
+
+    if (!all(zero_float | one_float)) {
+      stop("hypothesis weights must be between 0 and 1")
+    }
   }
 
-  if (sum(hypotheses) > 1) {
+  if (sum(hypotheses) > 1 && !equal_float(sum(hypotheses), 1)) {
     stop("hypothesis weights must sum to no more than 1")
   }
 
   if (any(transitions < 0 | transitions > 1)) {
-    stop("transition weights must be between 0 and 1")
+    offending <- transitions[transitions < 0 | transitions > 1]
+    zero_float <- equal_float(offending, 0)
+    one_float <- equal_float(offending, 1)
+
+    if (!all(zero_float | one_float)) {
+      stop("transition weights must be between 0 and 1")
+    }
   }
 
-  if (any(diag(transitions) != 0)) {
+  if (!all(equal_float(diag(transitions), 0))) {
     stop("diagonal of transition weights must be all 0s")
   }
 
   if (any(rowSums(transitions) > 1)) {
-    stop("transition weights from each row must sum to no more than 1")
+    offending <- rowSums(transitions)[rowSums(transitions) > 1]
+    one_float <- equal_float(offending, 1)
+
+    if (!all(one_float)) {
+      stop("transition weights from each row must sum to no more than 1")
+    }
   }
 
-  # Create graph object --------------------------------------------------------
-  new_graph <- list(hypotheses = hypotheses, transitions = transitions)
-  class(new_graph) <- "initial_graph"
-
+  # Create an initial graph object ---------------------------------------------
+  new_graph <- structure(
+    list(
+      hypotheses = hypotheses,
+      transitions = transitions
+    ),
+    class = "initial_graph"
+  )
   new_graph
 }

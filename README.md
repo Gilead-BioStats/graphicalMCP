@@ -7,6 +7,7 @@ status](https://www.r-pkg.org/badges/version/graphicalMCP)](https://cran.r-proje
 [![R-CMD-check](https://github.com/Gilead-BioStats/graphicalMCP/workflows/R-CMD-check-main/badge.svg)](https://github.com/Gilead-BioStats/graphicalMCP/actions)
 [![Codecov test
 coverage](https://codecov.io/gh/Gilead-BioStats/graphicalMCP/branch/s3-graph_mcp/graph/badge.svg)](https://app.codecov.io/gh/Gilead-BioStats/graphicalMCP?branch=s3-graph_mcp)
+[![R-CMD-check](https://github.com/Gilead-BioStats/graphicalMCP/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/Gilead-BioStats/graphicalMCP/actions/workflows/R-CMD-check.yaml)
 <!-- badges: end -->
 
 ## Introduction
@@ -35,9 +36,9 @@ pak::pak("Gilead-BioStats/graphicalMCP")
 
 ## Basic usage
 
-The base object in graphicalMCP is an `mcp_graph`, which is a weighted,
-directed graph represented by a matrix of transition (edge) weights, and
-a vector of hypothesis (vertex) weights.
+The base object in graphicalMCP is an `initial_graph`, which is a
+weighted, directed graph represented by a matrix of transition (edge)
+weights, and a vector of hypothesis (vertex) weights.
 
 ``` r
 library(graphicalMCP)
@@ -49,26 +50,21 @@ transitions <- rbind(
 )
 hypotheses <- rep(.333333, 3)
 
-g_dose <- graph(hypotheses, transitions, paste("dose", letters[1:3]))
+g_dose <- create_graph(hypotheses, transitions, paste("dose", letters[1:3]))
 
 g_dose
-#> An mcp_graph
-#> 
-#> --- Hypothesis names ---
-#> H1: dose a
-#> H2: dose b
-#> H3: dose c
+#> An initial graph
 #> 
 #> --- Hypothesis weights ---
-#> dose a: (0.3333)
-#> dose b: (0.3333)
-#> dose c: (0.3333)
+#> dose a: 0.3333
+#> dose b: 0.3333
+#> dose c: 0.3333
 #> 
 #> --- Transition weights ---
 #>        dose a dose b dose c
-#> dose a   --   0.5000 0.5000
-#> dose b 0.5000   --   0.5000
-#> dose c 0.5000 0.5000   --
+#> dose a 0.0000 0.5000 0.5000
+#> dose b 0.5000 0.0000 0.5000
+#> dose c 0.5000 0.5000 0.0000
 ```
 
 ## Related work
