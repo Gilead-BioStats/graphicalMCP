@@ -1,0 +1,13 @@
+url: https://urban-sniffle-p11zlpj.pages.github.io/
+template:
+  bootstrap: 5
+reference:
+- title: Creating an initial graph
+  desc: Functions for creating a multiple comparison procedure graph
+  contents:
+  - matches("create_graph")
+  - matches("initial_graph")
+- title: Analyzing a graph
+  desc: Functions for analyzing a graph's connectedness and weights retention
+  contents: matches("is_optimal")
+
