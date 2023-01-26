@@ -33,7 +33,7 @@ corr <- rbind(
 gw <- generate_weights(g)
 gw_weights <- gw[, 5:8]
 
-# I thought this was the way gMCP calculated cJ in a doc (parametric vignette
+# I thought this was the way gMCP calculated cJ in a doc (gMCP vignette
 # maybe?) But it's different than what it says in the paper. The paper says it
 # should be 1.078... when J == 1/2, 1/4, 2/3, and [or?] 3/4 (All the .5 rhos).
 # But it equals 1.078... when J *contains* any of those pairs according to this
@@ -72,7 +72,7 @@ test_graph(g, p_vals, alpha = alpha, corr = corr,
 # nstari <= ni is PP sample size for group i
 # Ti is the test statistic for Hi, rho(Ti, Tj) is the correlation
 part2 <- function(n0 = 1000, n1 = n0, n2 = n0, p_vals = c(.01, .02, .005, .05),
-                  sim_rho = FALSE) {
+                  sim_rho = FALSE, print = TRUE) {
   # n0 <- 1000
   # n1 <- 1000
   # n2 <- 1000
@@ -108,8 +108,8 @@ part2 <- function(n0 = 1000, n1 = n0, n2 = n0, p_vals = c(.01, .02, .005, .05),
     rho[2, 3] <- rho[3, 2] <- rho[2, 4] * rho [4, 3]
   }
 
-  cat("\nrho ---------------------------------------------------------------\n")
-  print(rho)
+  if (print) cat("\nrho ---------------------------------------------------------------\n")
+  if (print) print(rho)
 
   gw <- generate_weights(g)
   gw_weights <- gw[, 5:8]
@@ -126,21 +126,21 @@ part2 <- function(n0 = 1000, n1 = n0, n2 = n0, p_vals = c(.01, .02, .005, .05),
   }
 
   # So for part 2, this uniroot() example function matches what's in the paper
-  cat("\ncJ ----------------------------------------------------------------\n")
-  print(cbind(gw, cJ))
+  if (print) cat("\ncJ ----------------------------------------------------------------\n")
+  if (print) print(cbind(gw, cJ))
 
   # So how do the tests look? They match, but they also don't show different
   # results than the last ones, or even differ from Bonferroni. So it's not that
   # interesting, I think
-  cat("\ngMCP --------------------------------------------------------------\n")
-  print(gMCP(as_gmcp_graph(g), p_vals, alpha = alpha, correlation = rho,
+  if (print) cat("\ngMCP --------------------------------------------------------------\n")
+  if (print) print(gMCP(as_gmcp_graph(g), p_vals, alpha = alpha, correlation = rho,
        test = "parametric")@rejected)
 
-  cat("\ngraphicalMCP ------------------------------------------------------\n")
+  if (print) cat("\ngraphicalMCP ------------------------------------------------------\n")
   graphical <- test_graph(g, p_vals, alpha = alpha, corr = rho,
                           tests = list(parametric = list(1:4)))$hypotheses_rejected
 
-  print(graphical)
+  if (print) print(graphical)
 
   invisible(graphical)
 }
@@ -155,7 +155,7 @@ part2(n1 = 2000, n2 = 2000)
 part2(n1 = 500, n2 = 500)
 
 # Moving them in opposite directions has little impact
-part2(n1 = n0 * .5, n2 = n0 / .5)
+part2(n1 = 1000 * .5, n2 = 1000 / .5)
 
 # Moving just one has more than half the effect of moving both
 part2(n1 = 2000)
@@ -178,7 +178,8 @@ part2(n1 = 500, n2 = 500, p_vals = c(.01, p, p, .5))
 # This whole sensitivity testing makes me feel like parametric is not
 # particularly powerful. But probably a movement of .001 in your p-values can be
 # significant in the real world. I suppose this is somewhat re-inventing a power
-# simulation, huh?
+# simulation, huh? Wait, is a power simulation just simulating p-values from a
+# known distribution and testing each one?
 #
 # Also, how cool is it that gMCP and test_graph always match for all these?
 # Pretty baller! ⛹️
@@ -191,9 +192,9 @@ part2(n1 = 500, n2 = 500, p_vals = c(.01, p, p, .5))
 # on (*gestures wildly*) stuff
 part2(p_vals = c(.01, .027 / 2, .027 / 2, .05), sim_rho = TRUE) # Illustrates parallel gatekeeping well
 
-# Also illustrates the parallel gatekeeping well
+# Also illustrates the parallel gate-keeping well
 # Should be uniform results with something like Bonferroni-Holm
-res <- matrix(nrow = 10000, ncol = 4)
-for (i in 1:10000) {
-  res[i, ] <- part2(p_vals = rep(.027 / 2, 4), sim_rho = TRUE)
+res <- matrix(nrow = 1000, ncol = 4)
+for (i in 1:1000) {
+  res[i, ] <- part2(p_vals = rep(.027 / 2, 4), sim_rho = TRUE, print = FALSE)
 }
