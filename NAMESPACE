@@ -2,5 +2,5 @@
 
 S3method(print,initial_graph)
 S3method(print,updated_graph)
-
+export(create_graph)
 export(update_graph)
