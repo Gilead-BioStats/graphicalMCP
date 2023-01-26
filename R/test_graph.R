@@ -1,5 +1,7 @@
 myfct <- function(x, a, w, sig) {
-  1 - a - mvtnorm::pmvnorm(lower = -Inf, upper = qnorm(1 - x * w * a), sigma = sig)
+  1 -
+    a -
+    mvtnorm::pmvnorm(lower = -Inf, upper = qnorm(1 - x * w * a), sigma = sig)
 }
 
 #' Apply weighted Bonferroni, parametric, and Simes tests
@@ -74,20 +76,22 @@ test_graph <- function(graph, p_values, alpha = .05, corr = NULL,
         }
       )
 
-      # TODO: Simes test will go here
+      # This is at a semi-reasonable point
       res_simes <- lapply(
         tests$simes,
         function(simes_group) {
+          # browser()
           res <- vector(length = length(simes_group))
           simes_weights <- weights[simes_group]
           simes_p <- p_values[simes_group]
 
-          for (i in simes_group) {
+          for (i in seq_along(simes_group)) {
             w_sum <- sum(simes_weights[simes_p <= simes_p[[i]]])
-            res[[i]] <- p_values[[i]] <= alpha * w_sum
+            res[[i]] <- simes_p[[i]] <= alpha * w_sum
           }
 
-          weights[simes_group] == weights[simes_group]
+          names(res) <- names(simes_weights)
+          res
         }
       )
 
@@ -97,7 +101,7 @@ test_graph <- function(graph, p_values, alpha = .05, corr = NULL,
         tests$parametric,
         function(para_group) {
           sub_corr <- corr[para_group, para_group]
-          browser()
+          # browser()
           cJ <- uniroot(
             myfct,
             lower = 1,
@@ -110,7 +114,7 @@ test_graph <- function(graph, p_values, alpha = .05, corr = NULL,
           p_values[para_group] <= cJ * weights[para_group] * alpha
         }
       )
-
+      # browser()
       unlist(c(res_bonferroni, res_simes, res_parametric))[hyp_names]
     },
     simplify = FALSE
