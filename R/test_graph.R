@@ -1,9 +1,3 @@
-myfct <- function(x, a, w, sig) {
-  1 -
-    a -
-    mvtnorm::pmvnorm(lower = -Inf, upper = qnorm(1 - x * w * a), sigma = sig)
-}
-
 #' Apply weighted Bonferroni, parametric, and Simes tests
 #'
 #' @param graph An initial graph as created by `create_graph()`
@@ -38,7 +32,7 @@ myfct <- function(x, a, w, sig) {
 #'
 #' test_graph(
 #'   g,
-#'   p_vals = c(.01, .02, .05, .1),
+#'   p_values = c(.01, .02, .05, .1),
 #'   alpha = .05,
 #'   tests = list(
 #'     bonferroni = 1,
@@ -46,33 +40,61 @@ myfct <- function(x, a, w, sig) {
 #'     parametric = list(c(3, 4))
 #'   )
 #' )
-test_graph <- function(graph, p_values, alpha = .05, corr = NULL,
+test_graph <- function(graph,
+                       p_values,
+                       alpha = .05,
+                       corr = NULL,
+                       use_cJ = FALSE,
                        tests = list(
                          bonferroni = list(seq_along(graph$hypotheses)),
-                         simes = NULL,
-                         parametric = NULL
+                         parametric = NULL,
+                         simes = NULL
                        )) {
+  test_names <- c("bonferroni", "parametric", "simes")
   stopifnot(
     "please choose exactly one test per hypothesis" =
-      setequal(seq_along(graph$hypotheses), unlist(tests))
+      setequal(seq_along(graph$hypotheses), unlist(tests)),
+    "'tests' can only be bonferroni, parametric, and simes" =
+      setequal(union(names(tests), test_names), test_names)
   )
 
   graph_size <- length(graph$hypotheses)
   hyp_names <- names(graph$hypotheses)
 
   subgraphs <- generate_weights(graph)
-  subgraphs_h_vecs <- subgraphs[, seq_len(graph_size)]
-  subgraphs_weights <- subgraphs[, seq_len(graph_size) + graph_size]
+  subgraphs_h_vecs <- subgraphs[seq_len(graph_size), , drop = FALSE]
+  subgraphs_weights <- subgraphs[seq_len(graph_size) + graph_size, , drop = FALSE]
 
   res_list <- apply(
     X = subgraphs_weights,
     MARGIN = 1,
     FUN = function(weights) {
+      print(weights)
       # Weighted Bonferroni test
       res_bonferroni <- lapply(
         tests$bonferroni,
         function(bonf_group) {
-          p_values[bonf_group] <= weights[bonf_group] * alpha
+          bonferroni(p_values[bonf_group], weights[bonf_group], alpha)
+        }
+      )
+
+      # Possibly correct at this point? Needs more testing
+      # Also probably needs an option to do an overall c value
+      cJ <- if (use_cJ) {
+        cJ <- solve_c(weights, corr, alpha)
+      } else {
+        cJ <- NULL
+      }
+      res_parametric <- lapply(
+        tests$parametric,
+        function(para_group) {
+          parametric(
+            p_values[para_group],
+            weights[para_group],
+            alpha,
+            corr[para_group, para_group],
+            cJ
+          )
         }
       )
 
@@ -80,38 +102,7 @@ test_graph <- function(graph, p_values, alpha = .05, corr = NULL,
       res_simes <- lapply(
         tests$simes,
         function(simes_group) {
-          # browser()
-          res <- vector(length = length(simes_group))
-          simes_weights <- weights[simes_group]
-          simes_p <- p_values[simes_group]
-
-          for (i in seq_along(simes_group)) {
-            w_sum <- sum(simes_weights[simes_p <= simes_p[[i]]])
-            res[[i]] <- simes_p[[i]] <= alpha * w_sum
-          }
-
-          names(res) <- names(simes_weights)
-          res
-        }
-      )
-
-      # This is a good start, but definitely not quite right
-      # uniroot() breaks when corr has NAs
-      res_parametric <- lapply(
-        tests$parametric,
-        function(para_group) {
-          sub_corr <- corr[para_group, para_group]
-          # browser()
-          cJ <- uniroot(
-            myfct,
-            lower = 1,
-            upper = 9,
-            a = alpha,
-            w = weights[para_group],
-            sig = sub_corr
-          )$root
-
-          p_values[para_group] <= cJ * weights[para_group] * alpha
+          simes(p_values[simes_group], weights[simes_group], alpha)
         }
       )
       # browser()
@@ -123,7 +114,7 @@ test_graph <- function(graph, p_values, alpha = .05, corr = NULL,
   test_results <- do.call(rbind, res_list)
   reject_intersection <- rowSums(test_results) > 0
   reject_hypotheses <- (reject_intersection %*% subgraphs_h_vecs) ==
-    2 ^ graph_size / 2
+    2^graph_size / 2
 
 
   # This is kind of print-y stuff that may not belong here ---
@@ -137,8 +128,7 @@ test_graph <- function(graph, p_values, alpha = .05, corr = NULL,
     "rej_Hj"
   )
 
-  names_mat <- matrix(
-    rep(colnames(subgraphs_h_vecs), nrow(subgraphs_h_vecs)),
+  names_mat <- matrix(rep(colnames(subgraphs_h_vecs), nrow(subgraphs_h_vecs)),
     nrow = nrow(subgraphs_h_vecs),
     byrow = TRUE
   )
