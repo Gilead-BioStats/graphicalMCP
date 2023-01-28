@@ -1,3 +1,52 @@
+powerset_parents_ <- function(n) {
+  ps <- expand.grid(rep(list(1:0), n))[-2 ^ n,]
+
+  ps_children <- apply(ps, 1, paste, collapse = "", simplify = TRUE)
+
+  ps_parents <- sub("0", "1", ps_children)
+
+  to_delete <- apply(ps, 1, \(h) which(h == 0)[1])
+
+  parent_indices <- vapply(
+    ps_parents,
+    function(x) which(x == ps_children),
+    integer(1)
+  )
+  parent_indices[[1]] <- NA_integer_
+
+  child_parent <- cbind(ps, parent_indices)
+
+  list(ps = ps, parent_indices = parent_indices, to_delete = to_delete)
+}
+
+gwr_list_ <- function(graph) {
+  names <- names(graph$hypotheses)
+
+  ps <- powerset_parents_(length(graph$hypotheses))
+
+  graphs <- vector("list", nrow(ps$ps))
+  graphs[[1]] <- graph
+
+  for (i in seq_len(nrow(ps$ps) - 1) + 1) {
+    parent <- graphs[[ps$parent_indices[[i]]]]
+
+    graphs[[i]] <- delete_node_fast(parent, ps$to_delete[[i]])
+  }
+
+  wgts_mat <- structure(
+    do.call(
+      rbind,
+      lapply(graphs, function(graph) graph$hypotheses[names])
+    ),
+    dimnames = list(1:(2^length(names) - 1), names)
+  )
+
+  wgts_mat_h <- !is.na(wgts_mat)
+  wgts_mat[is.na(wgts_mat)] <- 0
+
+  cbind(wgts_mat_h, wgts_mat)
+}
+
 gwr_list <- function(graph, calc_ps = FALSE) {
   if (calc_ps) {
     ps_p <- powerset_parents(seq_along(graph$hypotheses))
