@@ -7,3 +7,4 @@ docs
 /cache
 *.html
 /docs
+inst/doc

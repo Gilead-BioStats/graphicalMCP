@@ -58,18 +58,17 @@ test_graph <- function(graph,
       setequal(union(names(tests), test_names), test_names)
   )
 
-  graph_size <- length(graph$hypotheses)
+  g_size <- length(graph$hypotheses)
   hyp_names <- names(graph$hypotheses)
 
   subgraphs <- generate_weights(graph)
-  subgraphs_h_vecs <- subgraphs[seq_len(graph_size), , drop = FALSE]
-  subgraphs_weights <- subgraphs[seq_len(graph_size) + graph_size, , drop = FALSE]
+  subgraphs_h_vecs <- subgraphs[, seq_len(g_size), drop = FALSE]
+  subgraphs_weights <- subgraphs[, seq_len(g_size) + g_size, drop = FALSE]
 
   res_list <- apply(
     X = subgraphs_weights,
     MARGIN = 1,
     FUN = function(weights) {
-      print(weights)
       # Weighted Bonferroni test
       res_bonferroni <- lapply(
         tests$bonferroni,
@@ -85,6 +84,7 @@ test_graph <- function(graph,
       } else {
         cJ <- NULL
       }
+
       res_parametric <- lapply(
         tests$parametric,
         function(para_group) {
@@ -105,7 +105,7 @@ test_graph <- function(graph,
           simes(p_values[simes_group], weights[simes_group], alpha)
         }
       )
-      # browser()
+
       unlist(c(res_bonferroni, res_simes, res_parametric))[hyp_names]
     },
     simplify = FALSE
@@ -113,8 +113,7 @@ test_graph <- function(graph,
 
   test_results <- do.call(rbind, res_list)
   reject_intersection <- rowSums(test_results) > 0
-  reject_hypotheses <- (reject_intersection %*% subgraphs_h_vecs) ==
-    2^graph_size / 2
+  reject_hyps <- (reject_intersection %*% subgraphs_h_vecs) == 2^g_size / 2
 
 
   # This is kind of print-y stuff that may not belong here ---
@@ -155,7 +154,7 @@ test_graph <- function(graph,
       alpha = alpha,
       test_used = tests,
       p_values = structure(p_values, names = hyp_names),
-      hypotheses_rejected = reject_hypotheses[1, ],
+      hypotheses_rejected = reject_hyps[1, ],
       test_results = weight_res_matrix
     ),
     class = "graph_report"
