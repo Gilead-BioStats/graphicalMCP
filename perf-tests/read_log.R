@@ -7,7 +7,7 @@ library(rlang)
 marks_list <-
   fs::dir_ls(
     "./perf-tests/log/",
-    regexp = ".*_gmcp.*"
+    regexp = "bh.*_no-gmcp_2023-01-31.*"
   ) |>
   map(\(x) vroom(x, "\t", col_types = "ncnnnnnnnnllll"))
 
