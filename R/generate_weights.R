@@ -33,7 +33,7 @@
 #' generate_weights(par_gate)
 #'
 generate_weights <- function(graph) {
-  names <- names(graph$hypotheses)
+  g_names <- names(graph$hypotheses)
   n <- length(graph$hypotheses)
 
   parents <- c(NA, do.call(c, lapply(2^(seq_len(n) - 1), seq_len)))[-2^n]
@@ -44,7 +44,7 @@ generate_weights <- function(graph) {
 
   for (i in seq_len(length(parents) - 1) + 1) {
     parent <- graphs[[parents[[i]]]]
-    del_index <- which(names[[delete[[i]]]] == names(parent$hypotheses))
+    del_index <- which(g_names[[delete[[i]]]] == names(parent$hypotheses))
 
     init_hypotheses <- parent$hypotheses
     init_transitions <- parent$transitions
@@ -87,10 +87,10 @@ generate_weights <- function(graph) {
     do.call(
       rbind,
       lapply(graphs, function(graph) {
-        graph$hypotheses[names]
+        graph$hypotheses[g_names]
       })
     ),
-    dimnames = list(1:(2^length(names) - 1), names)
+    dimnames = list(1:(2^length(g_names) - 1), g_names)
   )
 
   wgts_mat_h <- !is.na(wgts_mat)
