@@ -6,9 +6,6 @@ export(analyze_graph)
 export(bonferroni_holm)
 export(create_graph)
 export(generate_weights)
-<<<<<<< HEAD
-export(test_graph)
-=======
 export(generate_weights_recursive)
->>>>>>> fast-gen-wgts
+export(test_graph)
 export(update_graph)

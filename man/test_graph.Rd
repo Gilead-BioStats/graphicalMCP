@@ -8,7 +8,9 @@ test_graph(
   graph,
   p_values,
   alpha = 0.05,
-  tests = list(bonferroni = list(seq_along(graph$hypotheses)), simes = NULL, parametric =
+  corr = NULL,
+  use_cJ = FALSE,
+  tests = list(bonferroni = list(seq_along(graph$hypotheses)), parametric = NULL, simes =
     NULL)
 )
 }
@@ -53,7 +55,7 @@ g <- create_graph(hypotheses, transitions)
 
 test_graph(
   g,
-  p_vals = c(.01, .02, .05, .1),
+  p_values = c(.01, .02, .05, .1),
   alpha = .05,
   tests = list(
     bonferroni = 1,
