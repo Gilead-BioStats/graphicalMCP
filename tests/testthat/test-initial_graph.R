@@ -148,3 +148,59 @@ test_that("floating point accuracy - passing", {
 test_that("rowSums() endpoint - mixed floating point and less than 1", {
   expect_s3_class(create_graph(w_eps, g_eps), "initial_graph")
 })
+
+test_that("floating point accuracy - errors", {
+  expect_error(create_graph(c(1 + 2 * epsilon), g_1))
+  expect_error(create_graph(rep(.5 + epsilon, 2), g_2))
+  expect_error(
+    create_graph(
+      w_2,
+      matrix(c(0, 1, 1 + 2 * epsilon, 0), nrow = 2)
+    )
+  )
+  expect_error(
+    create_graph(
+      w_3,
+      matrix(
+        c(
+          0, .5, .5,
+          .5 + 2 * epsilon, 0, .5 + 2 * epsilon,
+          .5, .5, 0
+        ),
+        nrow = 3
+      )
+    )
+  )
+  expect_error(create_graph(w_1, matrix(0 + 2 * epsilon)))
+})
+
+test_that("floating point accuracy - passing", {
+  expect_s3_class(create_graph(c(1 + epsilon^2 / 2), g_1), "initial_graph")
+  expect_s3_class(create_graph(rep(.5 + epsilon / 2, 2), g_2), "initial_graph")
+  expect_s3_class(
+    create_graph(
+      w_2,
+      matrix(c(0, 1, 1 + epsilon^2 / 2, 0), nrow = 2)
+    ),
+    "initial_graph"
+  )
+  expect_s3_class(
+    create_graph(
+      w_3,
+      matrix(
+        c(
+          0, .5, .5,
+          .5 + epsilon / 2, 0, .5 + epsilon / 2,
+          .5, .5, 0
+        ),
+        nrow = 3
+      )
+    ),
+    "initial_graph"
+  )
+  expect_s3_class(create_graph(w_1, matrix(0 + epsilon / 2)), "initial_graph")
+})
+
+test_that("rowSums() endpoint - mixed floating point and less than 1", {
+  expect_s3_class(create_graph(w_eps, g_eps), "initial_graph")
+})
