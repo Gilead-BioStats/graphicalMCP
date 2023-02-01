@@ -36,8 +36,8 @@ generate_weights <- function(graph) {
   names <- names(graph$hypotheses)
   n <- length(graph$hypotheses)
 
-  parents <- c(NA, do.call(c, lapply(2 ^ (seq_len(n) - 1), seq_len)))[-2 ^ n]
-  delete <- c(NA, rep(rev(seq_len(n)), 2 ^ (seq_len(n) - 1)))[-2 ^ n]
+  parents <- c(NA, do.call(c, lapply(2^(seq_len(n) - 1), seq_len)))[-2^n]
+  delete <- c(NA, rep(rev(seq_len(n)), 2^(seq_len(n) - 1)))[-2^n]
 
   graphs <- vector("list", length(parents))
   graphs[[1]] <- graph
@@ -68,8 +68,8 @@ generate_weights <- function(graph) {
         } else {
           transitions[[hyp_num, end_num]] <-
             (init_transitions[[hyp_num, end_num]] +
-            init_transitions[[hyp_num, del_index]] *
-              init_transitions[[del_index, end_num]]) / denominator
+              init_transitions[[hyp_num, del_index]] *
+                init_transitions[[del_index, end_num]]) / denominator
         }
       }
     }
@@ -81,7 +81,6 @@ generate_weights <- function(graph) {
       ),
       class = "initial_graph"
     )
-
   }
 
   wgts_mat <- structure(

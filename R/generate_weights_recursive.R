@@ -131,7 +131,7 @@ delete_nodes_recursive <- function(graph, last = 0) {
           transitions[[hyp_num, end_num]] <- (
             init_transitions[[hyp_num, end_num]] +
               init_transitions[[hyp_num, del_index]] *
-              init_transitions[[del_index, end_num]]
+                init_transitions[[del_index, end_num]]
           ) / denominator
         }
       }

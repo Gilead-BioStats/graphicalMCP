@@ -18,7 +18,7 @@ gw_original <- function(graph) {
 }
 
 powerset <- function(s) {
-  l <- vector("list", 2 ^ length(s))
+  l <- vector("list", 2^length(s))
   counter <- 1
 
   for (x in seq_along(s)) {

@@ -15,12 +15,14 @@ gw10 <- generate_weights(bh10)
 gw10_gmcp <- gMCP::generateWeights(bh10$transitions, bh10$hypotheses)
 
 # 2.1 from the gMCP vignette
-m <- rbind(H11 = c(0, 0.5, 0, 0.5, 0, 0),
-           H21 = c(1 / 3, 0, 1 / 3, 0, 1 / 3, 0),
-           H31 = c(0, 0.5, 0, 0, 0, 0.5),
-           H12 = c(0, 1, 0, 0, 0, 0),
-           H22 = c(0.5, 0, 0.5, 0, 0, 0),
-           H32 = c(0, 1, 0, 0, 0, 0))
+m <- rbind(
+  H11 = c(0, 0.5, 0, 0.5, 0, 0),
+  H21 = c(1 / 3, 0, 1 / 3, 0, 1 / 3, 0),
+  H31 = c(0, 0.5, 0, 0, 0, 0.5),
+  H12 = c(0, 1, 0, 0, 0, 0),
+  H22 = c(0.5, 0, 0.5, 0, 0, 0),
+  H32 = c(0, 1, 0, 0, 0, 0)
+)
 w <- c(1 / 3, 1 / 3, 1 / 3, 0, 0, 0)
 gmcp_graph <- gMCP::matrix2graph(m)
 gmcp_graph@weights <- structure(w, names = rownames(m))
