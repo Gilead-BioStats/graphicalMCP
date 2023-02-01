@@ -7,3 +7,5 @@
 ^cache$
 ^docs$
 ^\.github$
+^doc$
+^Meta$

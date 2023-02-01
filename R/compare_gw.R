@@ -10,7 +10,7 @@ as_graph <- function(gmcp_graph) {
 # sorts them. Then set the row & columns names equal and compare
 compare_gw <- function(graph) {
   gw <- generate_weights(graph)
-  gw_gmcp <- generateWeights(graph$transitions, graph$hypotheses)
+  gw_gmcp <- gMCP::generateWeights(graph$transitions, graph$hypotheses)
 
   all.equal(unname(gw[nrow(gw):1, ]), unname(gw_gmcp))
 }

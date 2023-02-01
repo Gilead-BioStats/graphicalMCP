@@ -8,10 +8,10 @@ test_graph(
   graph,
   p_values,
   alpha = 0.05,
-  corr = NULL,
-  use_cJ = FALSE,
   tests = list(bonferroni = list(seq_along(graph$hypotheses)), parametric = NULL, simes =
-    NULL)
+    NULL),
+  corr = NULL,
+  use_cj = FALSE
 )
 }
 \arguments{
@@ -28,6 +28,19 @@ level at which to test each hypothesis}
 given test to. Each hypothesis must be specified exactly once, so that the
 length of all elements of the list equals the number of hypotheses. The
 default is to apply the weighted Bonferroni test to all hypotheses}
+
+\item{corr}{(Optional) A correlation matrix for the test statistics of
+\code{graph}. Diagonal entries should be 1. A known absence of correlation
+should be entered as 0, and unknown correlation should be entered as NA.
+This argument is only used for the parametric test. For each element of a
+parametric testing group, the correlation matrix for that group's sub-graph
+must be fully known if \code{use_cj} is FALSE. If \code{use_cj} is TRUE, the whole
+correlation matrix must be known}
+
+\item{use_cj}{A logical vector of length one. If FALSE (the default), then
+the critical value \code{c} is re-calculated for each parametric testing group
+within each sub-graph. If TRUE, then \code{c} is calculated once for each
+intersection hypothesis}
 }
 \value{
 A \code{graph_report} object, consisting of
@@ -51,7 +64,12 @@ transitions <- rbind(
   c(0, 1, 0, 0),
   c(1, 0, 0, 0)
 )
+
 g <- create_graph(hypotheses, transitions)
+
+corr <- matrix(nrow = 4, ncol = 4)
+corr[3:4, 3:4] <- .5
+diag(corr) <- 1
 
 test_graph(
   g,
@@ -61,6 +79,7 @@ test_graph(
     bonferroni = 1,
     simes = list(c(2)),
     parametric = list(c(3, 4))
-  )
+  ),
+  corr = corr
 )
 }
