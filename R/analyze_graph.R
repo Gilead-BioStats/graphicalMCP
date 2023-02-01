@@ -38,7 +38,7 @@
 #' #> 12  1  0  1  0 0.95  0 0.00 0.00
 analyze_graph <- function(graph) {
   # Check sums of all intersection hypothesis weights --------------------------
-  subgraphs <- generate_weights(graph)
+  subgraphs <- generate_weights_recursive(graph)
   sub_weights <- subgraphs[, (ncol(subgraphs) / 2 + 1):ncol(subgraphs)]
   wgt_sums <- rowSums(sub_weights)
   sub_wgts_optimal <- all(sapply(wgt_sums, function(x) isTRUE(all.equal(x, 1))))

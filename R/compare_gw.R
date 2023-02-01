@@ -1,5 +1,6 @@
-# Sort the results of generate_weights() the way gMCP::generateWeights sorts
-# them. Then set the row & columns names equal and compare
+# Sort the results of generate_weights() the way gMCP::generateWeights
+# sorts them. Then set the row & columns names equal and compare
+# Currently not needed, as generate_weights() just sorts the reverse of gMCP
 compare_gw <- function(gw, gw_gmcp) {
   h_vecs <- data.frame(gw[, seq_len(ncol(gw) / 2)])
 

@@ -31,7 +31,7 @@ twice as long to run as a size 4 graph
 
 \examples{
 
-ex_graph <- create_graph(
+par_gate <- create_graph(
   hypotheses = c(.5, .5, 0, 0),
   transitions = rbind(
     c(0, 0, 1, 0),
@@ -41,6 +41,6 @@ ex_graph <- create_graph(
   )
 )
 
-generate_weights(ex_graph)
+generate_weights(par_gate)
 
 }

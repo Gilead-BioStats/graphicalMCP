@@ -13,10 +13,9 @@ bench_gen_wgt <- function(sizes = 2:8, gmcp = FALSE, min = 5) {
         vroom_write(print(dplyr::mutate(
           mark(
             generateWeights(bh$t, bh$h),
-            gwr_list(bh),
-            gwr_list(bh, calc_ps = TRUE),
             generate_weights(bh),
-            # generate_weights_vec(bh),
+            generate_weights_recursive(bh),
+            # generate_weights_recursive_vec(bh),
             check = FALSE,
             min_iterations = min,
             time_unit = "ms"
@@ -28,10 +27,9 @@ bench_gen_wgt <- function(sizes = 2:8, gmcp = FALSE, min = 5) {
       } else {
         vroom_write(print(dplyr::mutate(
           mark(
-            gwr_list(bh),
-            gwr_list(bh, calc_ps = TRUE),
             generate_weights(bh),
-            # generate_weights_vec(bh),
+            generate_weights_recursive(bh),
+            # generate_weights_recursive_vec(bh),
             check = FALSE,
             min_iterations = min,
             time_unit = "ms"
@@ -45,4 +43,4 @@ bench_gen_wgt <- function(sizes = 2:8, gmcp = FALSE, min = 5) {
   )
 }
 
-bench_gen_wgt(sizes = 16:18)
+bench_gen_wgt(sizes = 2:16)
