@@ -2,19 +2,17 @@
 # update_graph() and is as simple as possible. It is rather slow, but may be
 # useful for testing, since it will be easier to make sure it is correct
 gw_original <- function(graph) {
-  ps <- powerset(seq_along(graph$hypotheses))
-  ps_indices <- lapply(
-    ps,
-    function(h) !is.na(h[seq_along(graph$hypotheses)])
-  )
+  n <- length(graph$hypotheses)
+  ps_indices <- rev(expand.grid(rep(list(1:0), n))[-2^n, ])
 
   weights <- apply(
     ps_indices,
     1,
-    function(h) update_graph(graph, h)$updated_graph$hypotheses
+    function(h) update_graph(graph, h)$updated_graph$hypotheses,
+    simplify = FALSE
   )
 
-  cbind(do.call(rbind, ps_indices), do.call(rbind, weights))
+  cbind(ps_indices, do.call(rbind, weights))
 }
 
 powerset <- function(s) {
