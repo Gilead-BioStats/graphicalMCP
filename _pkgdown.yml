@@ -1,0 +1,15 @@
+url: https://urban-sniffle-p11zlpj.pages.github.io/
+template:
+  bootstrap: 5
+reference:
+- title: Creating an initial graph
+  desc: Functions for creating a multiple comparison procedure graph
+  contents:
+  - matches("create_graph")
+  - matches("initial_graph")
+- title: Updating a graph
+  desc: Functions for removing hypotheses from a graph
+  contents:
+  - matches("update_graph")
+  - matches("updated_graph")
+
