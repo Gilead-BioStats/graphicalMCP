@@ -7,7 +7,9 @@ reference:
   contents:
   - matches("create_graph")
   - matches("initial_graph")
-- title: Analyzing a graph
-  desc: Functions for analyzing a graph's connectedness and weights retention
-  contents: matches("is_optimal")
+- title: Updating a graph
+  desc: Functions for removing hypotheses from a graph
+  contents:
+  - matches("update_graph")
+  - matches("updated_graph")
 
