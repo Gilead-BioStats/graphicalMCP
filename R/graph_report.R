@@ -15,8 +15,8 @@
 #'   should be entered as 0, and unknown correlation should be entered as NA.
 #'   This argument is only used for the parametric test. For each element of a
 #'   parametric testing group, the correlation matrix for that group's sub-graph
-#'   must be fully known if `use_cj` is FALSE. If `use_cj` is TRUE, the whole
-#'   correlation matrix must be known
+#'   must be fully known if `use_cj` is FALSE. If `use_cj` is TRUE, the
+#'   correlation matrix for the whole parametric testing list must be known
 #' @param use_cj A logical vector of length one. If FALSE (the default), then
 #'   the critical value `c` is re-calculated for each parametric testing group
 #'   within each sub-graph. If TRUE, then `c` is calculated once for each
@@ -55,7 +55,8 @@
 #'     simes = list(c(2)),
 #'     parametric = list(c(3, 4))
 #'   ),
-#'   corr = corr
+#'   corr = corr,
+#'   use_cj = FALSE
 #' )
 test_graph <- function(graph,
                        p_values,
@@ -67,12 +68,25 @@ test_graph <- function(graph,
                        ),
                        corr = NULL,
                        use_cj = FALSE) {
+  if (use_cj) {
+    valid_corr <- corr_has_missing(corr, unlist(tests$parametric))
+  } else {
+    valid_corr <- !any(
+      vapply(
+        tests$parametric,
+        function(x) corr_has_missing(corr, x),
+        logical(1)
+      )
+    )
+  }
+
   test_names <- c("bonferroni", "parametric", "simes")
   stopifnot(
     "please choose exactly one test per hypothesis" =
       setequal(seq_along(graph$hypotheses), unlist(tests)),
     "'tests' can only be bonferroni, parametric, and simes" =
-      setequal(union(names(tests), test_names), test_names)
+      setequal(union(names(tests), test_names), test_names),
+    "correlation sub-matrix for parametric tests must be complete" = valid_corr
   )
 
   g_size <- length(graph$hypotheses)
@@ -82,53 +96,55 @@ test_graph <- function(graph,
   subgraphs_h_vecs <- subgraphs[, seq_len(g_size), drop = FALSE]
   subgraphs_weights <- subgraphs[, seq_len(g_size) + g_size, drop = FALSE]
 
-  res_list <- apply(
-    X = subgraphs_weights,
-    MARGIN = 1,
-    FUN = function(weights) {
-      # Weighted Bonferroni test
-      res_bonferroni <- lapply(
-        tests$bonferroni,
-        function(bonf_group) {
-          bonferroni(p_values[bonf_group], weights[bonf_group], alpha)
-        }
-      )
-
-      # Possibly correct at this point? Needs more testing
-      # Also probably needs an option to do an overall c value
-      cJ <- if (use_cj) {
-        cJ <- solve_c(weights, corr, alpha)
-      } else {
-        cJ <- NULL
-      }
-
-      res_parametric <- lapply(
-        tests$parametric,
-        function(para_group) {
-          parametric(
-            p_values[para_group],
-            weights[para_group],
-            alpha,
-            corr[para_group, para_group],
-            cJ
-          )
-        }
-      )
-
-      # This is at a semi-reasonable point
-      res_simes <- lapply(
-        tests$simes,
-        function(simes_group) {
-          simes(p_values[simes_group], weights[simes_group], alpha)
-        }
-      )
-
-      unlist(c(res_bonferroni, res_simes, res_parametric))[hyp_names]
-    },
-    simplify = FALSE
+  test_results <- matrix(
+    nrow = nrow(subgraphs_weights),
+    ncol = ncol(subgraphs_weights)
   )
 
-  test_results <- do.call(rbind, res_list)
+  for (row in seq_len(nrow(subgraphs_weights))) {
+    weights <- subgraphs_weights[row, ]
+
+    # Weighted Bonferroni test
+    res_bonferroni <- lapply(
+      tests$bonferroni,
+      function(bonf_group) {
+        bonferroni(p_values[bonf_group], weights[bonf_group], alpha)
+      }
+    )
+
+    # Possibly correct at this point? Needs more testing
+    cj <- if (use_cj) {
+      cj <- solve_c(weights[unlist(tests$parametric)], corr, alpha)
+    } else {
+      cj <- NULL
+    }
+
+    res_parametric <- lapply(
+      tests$parametric,
+      function(para_group) {
+        parametric(
+          p_values[para_group],
+          weights[para_group],
+          alpha,
+          corr[para_group, para_group],
+          cj
+        )
+      }
+    )
+
+    # This is at a semi-reasonable point
+    res_simes <- lapply(
+      tests$simes,
+      function(simes_group) {
+        simes(p_values[simes_group], weights[simes_group], alpha)
+      }
+    )
+
+    test_results[row, ] <- unlist(
+      c(res_bonferroni, res_simes, res_parametric)
+    )[hyp_names]
+  }
+
   reject_intersection <- rowSums(test_results) > 0
   reject_hyps <- (reject_intersection %*% subgraphs_h_vecs) == 2^g_size / 2
 
@@ -136,11 +152,8 @@ test_graph <- function(graph,
   # This is kind of print-y stuff that may not belong here ---
   res_names <- c(
     hyp_names,
-    "|",
     paste(hyp_names, "wgt", sep = "_"),
-    "|",
     paste(hyp_names, "test", sep = "_"),
-    "|",
     "rej_Hj"
   )
 
@@ -153,12 +166,9 @@ test_graph <- function(graph,
 
   weight_res_matrix <- structure(
     cbind(
-      as.data.frame(format_names),
-      data.frame("|" = "|"),
+      as.data.frame(subgraphs_h_vecs),
       as.data.frame(subgraphs_weights),
-      data.frame("|" = "|"),
       as.data.frame(test_results),
-      data.frame("|" = "|"),
       data.frame(rej_Hj = reject_intersection)
     ),
     names = res_names
@@ -168,9 +178,10 @@ test_graph <- function(graph,
   structure(
     list(
       initial_graph = graph,
+      p_values = structure(p_values, names = hyp_names),
       alpha = alpha,
       test_used = tests,
-      p_values = structure(p_values, names = hyp_names),
+      corr = corr,
       hypotheses_rejected = reject_hyps[1, ],
       test_results = weight_res_matrix
     ),

@@ -11,13 +11,13 @@
 print.updated_graph <- function(x, ...) {
   print(x$initial_graph)
 
-  cat("\n--------------------------------------\n\n")
+  cat("\n", paste(rep("-", 80), collapse = ""), "\n\n", sep = "")
 
   cat("--- Hypotheses kept ---\n")
 
   print(as.data.frame(rbind(x$kept_hypotheses), row.names = ""))
 
-  cat("\n--------------------------------------\n\n")
+  cat("\n", paste(rep("-", 80), collapse = ""), "\n\n", sep = "")
 
   print(x$updated_graph)
 }

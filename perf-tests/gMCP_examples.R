@@ -1,4 +1,6 @@
-hypotheses <- c(ni_lo = 0.5, ni_hi = 0.5, su_lo = 0, su_hi = 0)
+library(gMCP)
+
+hypotheses <- c("ni_lo" = 0.5, ni_hi = 0.5, su_lo = 0, su_hi = 0)
 transitions <- rbind(
   c(0, 0, 1, 0),
   c(0, 0, 0, 1),
