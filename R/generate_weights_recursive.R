@@ -1,37 +1,5 @@
-#' Generate weights for each intersections hypothesis in the full closure tree
-#' of an MCP graph
-#'
-#' @param graph An MCP graph as created by `create_graph()`
-#'
-#' @return A numeric matrix of all intersection hypothesis weights. Each row
-#'   corresponds to a single intersection hypothesis. The first half of the
-#'   columns indicate which hypotheses are included in the given intersection
-#'   hypothesis, and the second half of columns are the weights
-#'
-#' @section Performance:
-
-#' Much thought was given to the performance of this code, as the memory and
-#' time usage can grow quickly as graph size grows. On the systems used for
-#' testing, a size 10 graph had a median run time of 20-60 ms. Run time
-#' increases at a rate of O(2 ^ n), so e.g. a size 5 graph takes approximately
-#' twice as long to run as a size 4 graph
-#'
 #' @export
-#'
-#' @examples
-#'
-#' ex_graph <- create_graph(
-#'   hypotheses = c(.5, .5, 0, 0),
-#'   transitions = rbind(
-#'     c(0, 0, 1, 0),
-#'     c(0, 0, 0, 1),
-#'     c(0, 1, 0, 0),
-#'     c(1, 0, 0, 0)
-#'   )
-#' )
-#'
-#' generate_weights_recursive(ex_graph)
-#'
+#' @rdname generate_weights
 generate_weights_recursive <- function(graph) {
   orig_names <- names(graph$hypotheses)
   names(graph$hypotheses) <- seq_along(graph$hypotheses)

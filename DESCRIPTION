@@ -18,6 +18,8 @@ Description: A multiple comparison procedure (or multiple test procedure)
     low-dependency implementation of the methods described in that paper.
 License: GPL (>= 3)
 Suggests: 
+    bench,
+    ggplot2,
     gMCP,
     knitr,
     rmarkdown,

@@ -36,13 +36,13 @@ generate_weights <- function(graph) {
   g_names <- names(graph$hypotheses)
   n <- length(graph$hypotheses)
 
-  parents <- c(NA, do.call(c, lapply(2^(seq_len(n) - 1), seq_len)))[-2^n]
-  delete <- c(NA, rep(rev(seq_len(n)), 2^(seq_len(n) - 1)))[-2^n]
+  parents <- do.call(c, lapply(2^(seq_len(n) - 1), seq_len))[-(2^n - 1)]
+  delete <- rep(rev(seq_len(n)), 2^(seq_len(n) - 1))[-(2^n - 1)]
 
   graphs <- vector("list", length(parents))
   graphs[[1]] <- graph
 
-  for (i in seq_len(length(parents) - 1) + 1) {
+  for (i in seq_along(parents)) {
     parent <- graphs[[parents[[i]]]]
     del_index <- which(g_names[[delete[[i]]]] == names(parent$hypotheses))
 
@@ -74,7 +74,7 @@ generate_weights <- function(graph) {
       }
     }
 
-    graphs[[i]] <- structure(
+    graphs[[i + 1]] <- structure(
       list(
         hypotheses = hypotheses[-del_index],
         transitions = as.matrix(transitions[-del_index, -del_index])
