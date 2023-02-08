@@ -6,6 +6,8 @@
 ^perf-tests$
 ^cache$
 ^docs$
+^_pkgdown\.yml$
+^pkgdown$
 ^\.github$
 ^doc$
 ^Meta$
