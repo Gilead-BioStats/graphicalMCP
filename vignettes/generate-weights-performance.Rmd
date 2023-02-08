@@ -75,34 +75,36 @@ QED?
 
 We analyzed performance of the various methods using the bench package.
 
-```{r df-benchmarks, cache = TRUE}
-sizes <- 2:12
-
-list_benchmarks <- lapply(
-  sizes,
-  function(size) {
-    bh <- bonferroni_holm(size)
-    trn <- bh$transitions
-    hyp <- bh$hypotheses
-    
-    b_mark <- mark(
-      gw_original(bh),
-      generateWeights(trn, hyp),
-      generate_weights_recursive(bh),
-      generate_weights(bh),
-      check = FALSE,
-      min_iterations = 5,
-      time_unit = "ms"
-    )
-    
-    b_mark$size <- size
-    b_mark$mem_alloc <- as.integer(b_mark$mem_alloc)
-    
-    b_mark
-  }
-)
-
-df_benchmarks <- do.call(rbind, list_benchmarks)
+```{r df-benchmarks}
+df_benchmarks <- xfun::cache_rds({
+  sizes <- 2:12
+  
+  list_benchmarks <- lapply(
+    sizes,
+    function(size) {
+      bh <- bonferroni_holm(size)
+      trn <- bh$transitions
+      hyp <- bh$hypotheses
+      
+      b_mark <- mark(
+        gw_original(bh),
+        generateWeights(trn, hyp),
+        generate_weights_recursive(bh),
+        generate_weights(bh),
+        check = FALSE,
+        min_iterations = 5,
+        time_unit = "ms"
+      )
+      
+      b_mark$size <- size
+      b_mark$mem_alloc <- as.integer(b_mark$mem_alloc)
+      
+      b_mark
+    }
+  )
+  
+  do.call(rbind, list_benchmarks)
+}, clean = FALSE)
 ```
 
 All methods increase in time by `O(2^n)`, but the starting point is lowest for `generate_weights()`.
@@ -113,7 +115,7 @@ gg_benchmarks <- ggplot(df_benchmarks) +
   theme_minimal()
 
 gg_benchmarks +
-  geom_point(aes(size, median, colour = expression)) +
+  geom_point(aes(as.factor(size), median, colour = expression)) +
   labs(
     title = "Log of median runtime in milliseconds",
     x = "Graph size",
@@ -125,13 +127,38 @@ Memory also increases at about `O(2^n)`, but here the recursive solution shows a
 
 ```{r gg-benchmarks-memory, fig.width = 7}
 gg_benchmarks +
-  geom_point(aes(size, mem_alloc, colour = expression)) +
+  geom_point(aes(as.factor(size), mem_alloc, colour = expression)) +
   labs(
     title = "Log of bytes used",
     x = "Graph size",
     y = NULL
   )
 
+```
+
+## Performance example
+
+In order to further demonstrate the performance improvement, we will simulate a size 12 graph and generate weights in 2 different ways. You can see the time difference by running these yourself.
+
+```{r generate-weights-example}
+set.seed(1212)
+
+m <- 12
+
+w <- sample(1:m, replace = T)
+w <- w / sum(w)
+
+g <- replicate(m, sample(1:m, replace = T), simplify = T)
+diag(g) <- 0
+g <- g / rowSums(g)
+
+graph <- new("graphMCP", m = g, weights = w)
+graph2 <- create_graph(w, g)
+
+# Order of results is slightly different between packages, but values are the
+# same
+head(generateWeights(graph))
+head(generate_weights(graph2))
 ```
 
 
