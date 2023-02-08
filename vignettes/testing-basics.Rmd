@@ -79,14 +79,14 @@ test_graph(
 ```{r parametric-2}
 corr2 <- diag(4)
 
-test_graph(
+print(test_graph(
   g_dose,
   p_values = c(.024, .01, .026, .027),
   alpha = .05,
   corr = corr2,
   use_cj = FALSE,
   tests = list(parametric = list(1:4))
-)
+), detailed = TRUE)
 ```
 
 The null case of this is when a parametric group is size 1
