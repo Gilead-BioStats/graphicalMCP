@@ -2,6 +2,7 @@
 .Rhistory
 .RData
 .Ruserdata
+docs
 /perf-tests/log
 /cache
 /docs
