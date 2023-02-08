@@ -5,8 +5,8 @@
 ^LICENSE$
 ^perf-tests$
 ^cache$
-^_pkgdown\.yml$
 ^docs$
+^_pkgdown\.yml$
 ^pkgdown$
 ^\.github$
 ^doc$
