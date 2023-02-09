@@ -1,0 +1,140 @@
+---
+title: "Testing basics"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Testing basics}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup}
+library(graphicalMCP)
+```
+
+Start testing with the example graph from the README, a parallel gatekeeping procedure graph.
+
+```{r create-graph-1}
+# A graphical multiple comparison procedure with two primary hypotheses (H1
+# and H2) and two secondary hypotheses (H3 and H4)
+# See Figure 1 in Bretz, F., Posch, M., Glimm, E., Klinglmueller, F., Maurer,
+# W., & Rohmeyer, K. (2011). Graphical approaches for multiple comparison
+# procedures using weighted Bonferroni, Simes, or parametric tests. Biometrical
+# Journal, 53(6), 894-913.
+hypotheses <- c(0.5, 0.5, 0, 0)
+transitions <- rbind(
+  c(0, 0, 1, 0),
+  c(0, 0, 0, 1),
+  c(0, 1, 0, 0),
+  c(1, 0, 0, 0)
+)
+names <- c("A1", "A2", "B1", "B2")
+g_dose <- create_graph(hypotheses, transitions, names)
+
+g_dose
+```
+
+This graph can be tested most simply with the default weighted Bonferroni test. When testing at the global alpha level 0.05, we can reject hypotheses A1, A2, and B1, but not B2.
+
+```{r bonferroni-mix-1}
+test_graph(g_dose, p_values = c(.024, .01, .026, .027), alpha = .05)
+```
+
+The results of the weighted Simes test are equivalent to weighted Bonferroni in some situations. The power of the Simes test becomes apparent when multiple p-values fall below the global alpha level, but above their local alpha in some intersection(s). In the following case, B1 & B2 are rejected in the Bonferroni testing procedure for intersection `B1 ∩ B2` because the p-value is greater than `α * w` for each hypothesis in that case. However, the Simes test rejects `B1 ∩ B2` because the weight from B1 is added to the weight for B2.
+
+```{r simes-all-1}
+test_graph(
+  g_dose,
+  p_values = c(.024, .01, .026, .027),
+  alpha = .05,
+  tests = list(simes = list(1:4))
+)
+```
+
+If a correlation matrix for the test statistics is partially or fully known, a parametric test can be used for any subsets whose correlation matrix is fully known. Here B1 & B2 get a `c` value calculated that boosts their testing threshold slightly higher. 
+
+```{r parametric-1}
+corr1 <- matrix(nrow = 4, ncol = 4)
+corr1[3:4, 3:4] <- .5
+diag(corr1) <- 1
+
+test_graph(
+  g_dose,
+  p_values = c(.024, .01, .026, .027),
+  alpha = .05,
+  corr = corr1,
+  use_cj = FALSE,
+  tests = list(parametric = list(1, 2, 3:4))
+)
+```
+
+(I think) the parametric test reduces to Bonferroni when there is no correlation between any test statistics.
+
+```{r parametric-2}
+corr2 <- diag(4)
+
+test_graph(
+  g_dose,
+  p_values = c(.024, .01, .026, .027),
+  alpha = .05,
+  corr = corr2,
+  use_cj = FALSE,
+  tests = list(parametric = list(1:4))
+)
+```
+
+The null case of this is when a parametric group is size 1
+
+```{r parametric-3}
+corr3 <- matrix(nrow = 4, ncol = 4)
+diag(corr3) <- 1
+
+test_graph(
+  g_dose,
+  p_values = c(.024, .01, .026, .027),
+  alpha = .05,
+  corr = corr3, # Which correlation matrix doesn't matter when each group is 1
+  use_cj = FALSE,
+  tests = list(parametric = list(1, 2, 3, 4))
+)
+```
+
+If `use_cj` is TRUE, the critical value `c` is calculated once for each intersection, rather than for each parametric test group. Therefore, the whole correlation matrix must be known
+
+```{r parametric-4}
+corr4 <- matrix(.5, nrow = 4, ncol = 4)
+diag(corr4) <- 1
+
+test_graph(
+  g_dose,
+  p_values = c(.024, .01, .026, .027),
+  alpha = .05,
+  corr = corr4,
+  use_cj = TRUE,
+  tests = list(parametric = list(1:4))
+)
+```
+
+Setting `use_cj` TRUE with a correlation matrix that is only partially known causes an error
+
+```{r parametric-5, eval=FALSE}
+test_graph(
+  g_dose,
+  p_values = c(.024, .01, .026, .027),
+  alpha = .05,
+  corr = corr1,
+  use_cj = TRUE,
+  tests = list(parametric = list(1:4))
+)
+```
+
+
+
+
+
