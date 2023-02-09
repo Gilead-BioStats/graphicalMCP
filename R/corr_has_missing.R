@@ -4,7 +4,8 @@
 #' @param indices A numeric vector indicating which rows and columns to check in
 #'   for missing values
 #'
-#' @return
+#' @return A logical value indicating whether the correlation matrix has missing
+#'   values within the given indices
 #'
 #' @examples
 #' corr <- matrix(nrow = 4, ncol = 4)

@@ -25,3 +25,9 @@ reference:
   desc: Functions for analyzing properties of a graph
   contents:
   - matches("analyze_graph")
+- title: Test a graph
+  desc: Functions for running Bonferroni, parametric, and Simes tests
+  contents:
+  - matches("test_graph")
+  - matches("graph_report")
+  - matches("corr_has_missing")

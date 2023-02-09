@@ -16,6 +16,9 @@
     <loc>https://urban-sniffle-p11zlpj.pages.github.io/articles/index.html</loc>
   </url>
   <url>
+    <loc>https://urban-sniffle-p11zlpj.pages.github.io/articles/testing-basics.html</loc>
+  </url>
+  <url>
     <loc>https://urban-sniffle-p11zlpj.pages.github.io/authors.html</loc>
   </url>
   <url>
@@ -26,6 +29,9 @@
   </url>
   <url>
     <loc>https://urban-sniffle-p11zlpj.pages.github.io/reference/bonferroni_holm.html</loc>
+  </url>
+  <url>
+    <loc>https://urban-sniffle-p11zlpj.pages.github.io/reference/corr_has_missing.html</loc>
   </url>
   <url>
     <loc>https://urban-sniffle-p11zlpj.pages.github.io/reference/create_graph.html</loc>
@@ -40,10 +46,16 @@
     <loc>https://urban-sniffle-p11zlpj.pages.github.io/reference/is_optimal.html</loc>
   </url>
   <url>
+    <loc>https://urban-sniffle-p11zlpj.pages.github.io/reference/print.graph_report.html</loc>
+  </url>
+  <url>
     <loc>https://urban-sniffle-p11zlpj.pages.github.io/reference/print.initial_graph.html</loc>
   </url>
   <url>
     <loc>https://urban-sniffle-p11zlpj.pages.github.io/reference/print.updated_graph.html</loc>
+  </url>
+  <url>
+    <loc>https://urban-sniffle-p11zlpj.pages.github.io/reference/test_graph.html</loc>
   </url>
   <url>
     <loc>https://urban-sniffle-p11zlpj.pages.github.io/reference/update_graph.html</loc>

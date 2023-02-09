@@ -4,7 +4,7 @@
 \alias{print.graph_report}
 \title{S3 print method for class \code{graph_report}}
 \usage{
-\method{print}{graph_report}(x, ...)
+\method{print}{graph_report}(x, ..., detailed = FALSE)
 }
 \arguments{
 \item{x}{An object of class \code{graph_report} to print}

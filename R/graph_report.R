@@ -69,7 +69,8 @@ test_graph <- function(graph,
                        corr = NULL,
                        use_cj = FALSE) {
   if (use_cj) {
-    valid_corr <- corr_has_missing(corr, unlist(tests$parametric))
+    valid_corr <- !
+      corr_has_missing(corr, unlist(tests$parametric))
   } else {
     valid_corr <- !any(
       vapply(
