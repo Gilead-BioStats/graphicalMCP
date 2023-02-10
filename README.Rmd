@@ -85,7 +85,7 @@ A mixture of statistical tests are (or will be) supported in graphicalMCP. A gra
 In this example, a weighted Bonferroni test is applied to all hypotheses, with a threshold of 0.05. We can reject a given intersection hypothesis if any of the individual hypotheses within that sub-graph passes the test assigned to it. We can then reject a hypothesis globally if all intersection hypotheses containing that hypothesis are rejected. For instance, in this example we can reject every intersection hypothesis except the one containing only B1 & B2 (Row 3 of `test_results`). Thus, we can reject the null hypotheses for A1 & A2, but we cannot reject the null hypotheses for B1 & B2.
 
 ```{r test-graph}
-test_all_subgraphs(
+test_graph(
   g_dose,
   p_values = c(.01, .02, .03, .05),
   alpha = .05,

@@ -4,6 +4,46 @@ print_tests <- function(tests) {
     lapply(tests[[index]], \(group) cat(paste0("(", paste(group, collapse = ", "), ")\n")))})
 }
 
+# Possible printing for formula information ------------------------------------
+# Input must be appropriate vectors for a *single* Bonferroni test group
+bonferroni <- function(p_values, weights, alpha) {
+  data.frame(
+    res = p_values <= weights * alpha,
+    formula = paste(
+      sprintf("%f", p_values),
+      "<=",
+      paste(rep(" ", 8), collapse = ""), # Fill 'c' location with spaces
+      " ",                               # Fill 'c' location with spaces
+      sprintf("%f", weights),
+      "*",
+      alpha
+    )
+  )
+}
+
+# Input must be appropriate vectors for a *single* parametric test group
+# Calculates the critical value for each parametric test group distinctly
+parametric <- function(p_values, weights, alpha, corr) {
+  c <- solve_c(weights, corr, alpha)
+
+  data.frame(
+    res = p_values <= c * weights * alpha,
+    formula = paste(
+      sprintf("%f", p_values),
+      "<=",
+      sprintf("%f", c),
+      "*",
+      sprintf("%f", weights),
+      "*",
+      alpha
+    )
+  )
+
+}
+
+# ------------------------------------------------------------------------------
+
+
 # Possibly print p-values and test results together?
 # rbind(p_value = as.character(res$p_values), rejected = as.character(res$hypotheses_rejected))
 

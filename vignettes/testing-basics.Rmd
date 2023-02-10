@@ -69,12 +69,11 @@ test_graph(
   p_values = c(.024, .01, .026, .027),
   alpha = .05,
   corr = corr1,
-  use_cj = FALSE,
   tests = list(parametric = list(1, 2, 3:4))
 )
 ```
 
-(I think) the parametric test reduces to Bonferroni when there is no correlation between any test statistics.
+The parametric test reduces to Bonferroni when there is no correlation between any test statistics.
 
 ```{r parametric-2}
 corr2 <- diag(4)
@@ -84,12 +83,11 @@ print(test_graph(
   p_values = c(.024, .01, .026, .027),
   alpha = .05,
   corr = corr2,
-  use_cj = FALSE,
   tests = list(parametric = list(1:4))
 ), detailed = TRUE)
 ```
 
-The null case of this is when a parametric group is size 1
+The null case of this is when a parametric group is size 1 (Each correlation matrix is a 1x1 with value 1)
 
 ```{r parametric-3}
 corr3 <- matrix(nrow = 4, ncol = 4)
@@ -99,42 +97,7 @@ test_graph(
   g_dose,
   p_values = c(.024, .01, .026, .027),
   alpha = .05,
-  corr = corr3, # Which correlation matrix doesn't matter when each group is 1
-  use_cj = FALSE,
+  corr = corr3, # Correlation matrix doesn't matter when each group is size 1
   tests = list(parametric = list(1, 2, 3, 4))
 )
 ```
-
-If `use_cj` is TRUE, the critical value `c` is calculated once for each intersection, rather than for each parametric test group. Therefore, the whole correlation matrix must be known
-
-```{r parametric-4}
-corr4 <- matrix(.5, nrow = 4, ncol = 4)
-diag(corr4) <- 1
-
-test_graph(
-  g_dose,
-  p_values = c(.024, .01, .026, .027),
-  alpha = .05,
-  corr = corr4,
-  use_cj = TRUE,
-  tests = list(parametric = list(1:4))
-)
-```
-
-Setting `use_cj` TRUE with a correlation matrix that is only partially known causes an error
-
-```{r parametric-5, eval=FALSE}
-test_graph(
-  g_dose,
-  p_values = c(.024, .01, .026, .027),
-  alpha = .05,
-  corr = corr1,
-  use_cj = TRUE,
-  tests = list(parametric = list(1:4))
-)
-```
-
-
-
-
-

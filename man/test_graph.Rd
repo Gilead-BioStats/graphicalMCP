@@ -10,8 +10,7 @@ test_graph(
   alpha = 0.05,
   tests = list(bonferroni = list(seq_along(graph$hypotheses)), parametric = NULL, simes =
     NULL),
-  corr = NULL,
-  use_cj = FALSE
+  corr = NULL
 )
 }
 \arguments{
@@ -34,13 +33,7 @@ default is to apply the weighted Bonferroni test to all hypotheses}
 should be entered as 0, and unknown correlation should be entered as NA.
 This argument is only used for the parametric test. For each element of a
 parametric testing group, the correlation matrix for that group's sub-graph
-must be fully known if \code{use_cj} is FALSE. If \code{use_cj} is TRUE, the
-correlation matrix for the whole parametric testing list must be known}
-
-\item{use_cj}{A logical vector of length one. If FALSE (the default), then
-the critical value \code{c} is re-calculated for each parametric testing group
-within each sub-graph. If TRUE, then \code{c} is calculated once for each
-intersection hypothesis}
+must be fully known}
 }
 \value{
 A \code{graph_report} object, consisting of
@@ -48,7 +41,7 @@ A \code{graph_report} object, consisting of
 \item The initial graph being tested,
 \item p-values & alpha used for tests,
 \item Which hypotheses can be rejected, and
-\item Detailed test results matrix, including the results of
+\item (Optionally) Detailed test results matrix, including the results of
 \code{generate_weights()} & test results for each intersection hypothesis
 }
 }
@@ -66,21 +59,32 @@ transitions <- rbind(
 )
 
 g <- create_graph(hypotheses, transitions)
+p <- c(.01, .02, .05, .1)
 
 corr <- matrix(nrow = 4, ncol = 4)
 corr[3:4, 3:4] <- .5
 diag(corr) <- 1
 
+corr2 <- matrix(.5, nrow = 4, ncol = 4)
+diag(corr2) <- 1
+
+# The default is all Bonferroni with alpha = .05
+test_graph(g, p)
+
+# But tests can be specified at the hypothesis-level
 test_graph(
-  g,
-  p_values = c(.01, .02, .05, .1),
+  graph = g,
+  p_values = p,
   alpha = .05,
   tests = list(
     bonferroni = 1,
     simes = list(c(2)),
     parametric = list(c(3, 4))
   ),
-  corr = corr,
-  use_cj = FALSE
+  corr = corr
 )
+
+# Note that these two are NOT equivalent
+test_graph(g, p, tests = list(parametric = list(1:4)), corr = corr2)
+test_graph(g, p, tests = list(parametric = list(1, 2, 3, 4)), corr = corr2)
 }

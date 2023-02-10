@@ -55,7 +55,7 @@
 <li class="nav-item dropdown">
   <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" id="dropdown-articles">Articles</a>
   <div class="dropdown-menu" aria-labelledby="dropdown-articles">
-    <a class="dropdown-item" href="articles/generate-weights-performance.html">Generating the closure tree</a>
+    <a class="dropdown-item" href="articles/gen-weights.html">Generating the closure tree</a>
     <a class="dropdown-item" href="articles/testing-basics.html">Testing basics</a>
   </div>
 </li>
@@ -149,13 +149,13 @@
 <span><span class="co">#&gt; B1 0.0000 1.0000 0.0000 0.0000</span></span>
 <span><span class="co">#&gt; B2 1.0000 0.0000 0.0000 0.0000</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; --------------------------------------</span></span>
+<span><span class="co">#&gt; --------------------------------------------------------------------------------</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; --- Hypotheses kept ---</span></span>
 <span><span class="co">#&gt;    A1    A2    B1   B2</span></span>
 <span><span class="co">#&gt;  TRUE FALSE FALSE TRUE</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; --------------------------------------</span></span>
+<span><span class="co">#&gt; --------------------------------------------------------------------------------</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; An MCP graph</span></span>
 <span><span class="co">#&gt; </span></span>
@@ -180,20 +180,20 @@
 <code class="sourceCode R"><span><span class="fu"><a href="reference/generate_weights.html">generate_weights</a></span><span class="op">(</span><span class="va">g_dose</span><span class="op">)</span></span>
 <span><span class="co">#&gt;    A1 A2 B1 B2  A1  A2  B1  B2</span></span>
 <span><span class="co">#&gt; 1   1  1  1  1 0.5 0.5 0.0 0.0</span></span>
-<span><span class="co">#&gt; 2   0  1  1  1 0.0 0.5 0.5 0.0</span></span>
-<span><span class="co">#&gt; 3   0  0  1  1 0.0 0.0 0.5 0.5</span></span>
-<span><span class="co">#&gt; 4   0  0  0  1 0.0 0.0 0.0 1.0</span></span>
-<span><span class="co">#&gt; 5   0  0  1  0 0.0 0.0 1.0 0.0</span></span>
-<span><span class="co">#&gt; 6   0  1  0  1 0.0 1.0 0.0 0.0</span></span>
-<span><span class="co">#&gt; 7   0  1  0  0 0.0 1.0 0.0 0.0</span></span>
-<span><span class="co">#&gt; 8   0  1  1  0 0.0 0.5 0.5 0.0</span></span>
-<span><span class="co">#&gt; 9   1  0  1  1 0.5 0.0 0.0 0.5</span></span>
-<span><span class="co">#&gt; 10  1  0  0  1 0.5 0.0 0.0 0.5</span></span>
-<span><span class="co">#&gt; 11  1  0  0  0 1.0 0.0 0.0 0.0</span></span>
-<span><span class="co">#&gt; 12  1  0  1  0 1.0 0.0 0.0 0.0</span></span>
-<span><span class="co">#&gt; 13  1  1  0  1 0.5 0.5 0.0 0.0</span></span>
-<span><span class="co">#&gt; 14  1  1  0  0 0.5 0.5 0.0 0.0</span></span>
-<span><span class="co">#&gt; 15  1  1  1  0 0.5 0.5 0.0 0.0</span></span></code></pre></div>
+<span><span class="co">#&gt; 2   1  1  1  0 0.5 0.5 0.0 0.0</span></span>
+<span><span class="co">#&gt; 3   1  1  0  1 0.5 0.5 0.0 0.0</span></span>
+<span><span class="co">#&gt; 4   1  1  0  0 0.5 0.5 0.0 0.0</span></span>
+<span><span class="co">#&gt; 5   1  0  1  1 0.5 0.0 0.0 0.5</span></span>
+<span><span class="co">#&gt; 6   1  0  1  0 1.0 0.0 0.0 0.0</span></span>
+<span><span class="co">#&gt; 7   1  0  0  1 0.5 0.0 0.0 0.5</span></span>
+<span><span class="co">#&gt; 8   1  0  0  0 1.0 0.0 0.0 0.0</span></span>
+<span><span class="co">#&gt; 9   0  1  1  1 0.0 0.5 0.5 0.0</span></span>
+<span><span class="co">#&gt; 10  0  1  1  0 0.0 0.5 0.5 0.0</span></span>
+<span><span class="co">#&gt; 11  0  1  0  1 0.0 1.0 0.0 0.0</span></span>
+<span><span class="co">#&gt; 12  0  1  0  0 0.0 1.0 0.0 0.0</span></span>
+<span><span class="co">#&gt; 13  0  0  1  1 0.0 0.0 0.5 0.5</span></span>
+<span><span class="co">#&gt; 14  0  0  1  0 0.0 0.0 1.0 0.0</span></span>
+<span><span class="co">#&gt; 15  0  0  0  1 0.0 0.0 0.0 1.0</span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="test-hypotheses">Test hypotheses<a class="anchor" aria-label="anchor" href="#test-hypotheses"></a>
@@ -201,7 +201,7 @@
 <p>A mixture of statistical tests are (or will be) supported in graphicalMCP. A graph can be tested against a given alpha with <code>test_all_subgraphs()</code>. A report is then generated, showing the graph &amp; test results.</p>
 <p>In this example, a weighted Bonferroni test is applied to all hypotheses, with a threshold of 0.05. We can reject a given intersection hypothesis if any of the individual hypotheses within that sub-graph passes the test assigned to it. We can then reject a hypothesis globally if all intersection hypotheses containing that hypothesis are rejected. For instance, in this example we can reject every intersection hypothesis except the one containing only B1 &amp; B2 (Row 3 of <code>test_results</code>). Thus, we can reject the null hypotheses for A1 &amp; A2, but we cannot reject the null hypotheses for B1 &amp; B2.</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu">test_all_subgraphs</span><span class="op">(</span></span>
+<code class="sourceCode R"><span><span class="fu"><a href="reference/test_graph.html">test_graph</a></span><span class="op">(</span></span>
 <span>  <span class="va">g_dose</span>,</span>
 <span>  p_values <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">.01</span>, <span class="fl">.02</span>, <span class="fl">.03</span>, <span class="fl">.05</span><span class="op">)</span>,</span>
 <span>  alpha <span class="op">=</span> <span class="fl">.05</span>,</span>
@@ -211,7 +211,6 @@
 <span>    parametric <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="op">)</span></span>
 <span>  <span class="op">)</span></span>
 <span><span class="op">)</span></span>
-<span><span class="co">#&gt; $initial_graph</span></span>
 <span><span class="co">#&gt; An MCP graph</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; --- Hypothesis weights ---</span></span>
@@ -227,32 +226,15 @@
 <span><span class="co">#&gt; B1 0.0000 1.0000 0.0000 0.0000</span></span>
 <span><span class="co">#&gt; B2 1.0000 0.0000 0.0000 0.0000</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; $p_values</span></span>
-<span><span class="co">#&gt; [1] 0.01 0.02 0.03 0.05</span></span>
+<span><span class="co">#&gt; --------------------------------------------------------------------------------</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; $alpha</span></span>
-<span><span class="co">#&gt; [1] 0.05</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; $test_results</span></span>
-<span><span class="co">#&gt;    A1 A2 B1 B2  A1  A2  B1  B2 A1 A2 B1 B2</span></span>
-<span><span class="co">#&gt; 1   1  1  1  1 0.5 0.5 0.0 0.0  1  1  0  0</span></span>
-<span><span class="co">#&gt; 2   0  1  1  1 0.0 0.5 0.5 0.0  0  1  0  0</span></span>
-<span><span class="co">#&gt; 3   0  0  1  1 0.0 0.0 0.5 0.5  0  0  0  0</span></span>
-<span><span class="co">#&gt; 4   0  0  0  1 0.0 0.0 0.0 1.0  0  0  0  1</span></span>
-<span><span class="co">#&gt; 5   0  0  1  0 0.0 0.0 1.0 0.0  0  0  1  0</span></span>
-<span><span class="co">#&gt; 6   0  1  0  1 0.0 1.0 0.0 0.0  0  1  0  0</span></span>
-<span><span class="co">#&gt; 7   0  1  0  0 0.0 1.0 0.0 0.0  0  1  0  0</span></span>
-<span><span class="co">#&gt; 8   0  1  1  0 0.0 0.5 0.5 0.0  0  1  0  0</span></span>
-<span><span class="co">#&gt; 9   1  0  1  1 0.5 0.0 0.0 0.5  1  0  0  0</span></span>
-<span><span class="co">#&gt; 10  1  0  0  1 0.5 0.0 0.0 0.5  1  0  0  0</span></span>
-<span><span class="co">#&gt; 11  1  0  0  0 1.0 0.0 0.0 0.0  1  0  0  0</span></span>
-<span><span class="co">#&gt; 12  1  0  1  0 1.0 0.0 0.0 0.0  1  0  0  0</span></span>
-<span><span class="co">#&gt; 13  1  1  0  1 0.5 0.5 0.0 0.0  1  1  0  0</span></span>
-<span><span class="co">#&gt; 14  1  1  0  0 0.5 0.5 0.0 0.0  1  1  0  0</span></span>
-<span><span class="co">#&gt; 15  1  1  1  0 0.5 0.5 0.0 0.0  1  1  0  0</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; attr(,"class")</span></span>
-<span><span class="co">#&gt; [1] "graph_report"</span></span></code></pre></div>
+<span><span class="co">#&gt; --- Test summary ---</span></span>
+<span><span class="co">#&gt; Global α = 0.05</span></span>
+<span><span class="co">#&gt;  Hypothesis       Test Reject Null? P-value</span></span>
+<span><span class="co">#&gt;          A1 bonferroni         TRUE    0.01</span></span>
+<span><span class="co">#&gt;          A2 bonferroni         TRUE    0.02</span></span>
+<span><span class="co">#&gt;          B1 bonferroni        FALSE    0.03</span></span>
+<span><span class="co">#&gt;          B2 bonferroni        FALSE    0.05</span></span></code></pre></div>
 </div>
 </div>
 <div class="section level2">

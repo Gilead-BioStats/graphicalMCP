@@ -33,7 +33,9 @@ Much thought was given to the performance of this code, as the memory and
 time usage can grow quickly as graph size grows. On the systems used for
 testing, a size 10 graph had a median run time of 20-60 ms. Run time
 increases at a rate of O(2 ^ n), so e.g. a size 5 graph takes approximately
-twice as long to run as a size 4 graph
+twice as long to run as a size 4 graph. See
+\code{vignette("generate-weights-performance")} for a detailed analysis and
+explanation
 }
 
 \examples{

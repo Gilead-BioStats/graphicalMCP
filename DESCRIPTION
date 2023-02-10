@@ -19,11 +19,13 @@ Description: A multiple comparison procedure (or multiple test procedure)
 License: GPL (>= 3)
 Suggests: 
     bench,
+    forcats,
     ggplot2,
     gMCP,
     knitr,
     rmarkdown,
     testthat (>= 3.0.0),
+    tictoc,
     xfun
 Encoding: UTF-8
 LazyData: true
