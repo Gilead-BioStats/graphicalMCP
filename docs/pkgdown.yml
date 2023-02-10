@@ -2,8 +2,8 @@ pandoc: 2.19.2
 pkgdown: 2.0.7
 pkgdown_sha: ~
 articles:
-  generate-weights-performance: generate-weights-performance.html
-last_built: 2023-02-08T22:20Z
+  gen-weights: gen-weights.html
+last_built: 2023-02-10T18:23Z
 urls:
   reference: https://urban-sniffle-p11zlpj.pages.github.io/reference
   article: https://urban-sniffle-p11zlpj.pages.github.io/articles
