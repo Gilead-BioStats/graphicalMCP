@@ -12,6 +12,10 @@ corr_has_missing(corr, indices)
 \item{indices}{A numeric vector indicating which rows and columns to check in
 for missing values}
 }
+\value{
+A logical value indicating whether the correlation matrix has missing
+values within the given indices
+}
 \description{
 Check if a correlation matrix has any missing values in a given subset
 }

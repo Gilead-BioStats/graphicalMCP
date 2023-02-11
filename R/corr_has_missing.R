@@ -7,6 +7,8 @@
 #' @return A logical value indicating whether the correlation matrix has missing
 #'   values within the given indices
 #'
+#' @export
+#' 
 #' @examples
 #' corr <- matrix(nrow = 4, ncol = 4)
 #' corr[3:4, 3:4] <- .5

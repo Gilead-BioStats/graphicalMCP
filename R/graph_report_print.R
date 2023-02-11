@@ -20,6 +20,8 @@ print_tests <- function(tests) {
 #'
 #' @param ... Other values passed on to other methods (currently unused)
 #'
+#' @param detailed A logical value indicating whether or not test results should print for each intersection hypothesis
+#'
 #' @export
 print.graph_report <- function(x, ..., detailed = FALSE) {
   print(x$initial_graph)
@@ -27,7 +29,7 @@ print.graph_report <- function(x, ..., detailed = FALSE) {
   cat("\n", paste(rep("-", 80), collapse = ""), "\n\n", sep = "")
 
   cat("--- Test summary ---\n")
-  cat("Global α = ", x$alpha, "\n", sep = "")
+  cat("Global alpha = ", x$alpha, "\n", sep = "")
   if (!is.null(x$corr)) {
     dimnames(x$corr) <- dimnames(x$initial_graph$transitions)
     df_corr <- cbind(

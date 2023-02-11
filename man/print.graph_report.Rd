@@ -10,6 +10,8 @@
 \item{x}{An object of class \code{graph_report} to print}
 
 \item{...}{Other values passed on to other methods (currently unused)}
+
+\item{detailed}{A logical value indicating whether or not test results should print for each intersection hypothesis}
 }
 \description{
 A graph report displays
