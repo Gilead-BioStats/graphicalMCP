@@ -15,18 +15,13 @@
 #'   should be entered as 0, and unknown correlation should be entered as NA.
 #'   This argument is only used for the parametric test. For each element of a
 #'   parametric testing group, the correlation matrix for that group's sub-graph
-#'   must be fully known if `use_cj` is FALSE. If `use_cj` is TRUE, the
-#'   correlation matrix for the whole parametric testing list must be known
-#' @param use_cj A logical vector of length one. If FALSE (the default), then
-#'   the critical value `c` is re-calculated for each parametric testing group
-#'   within each sub-graph. If TRUE, then `c` is calculated once for each
-#'   intersection hypothesis
+#'   must be fully known
 #'
 #' @return A `graph_report` object, consisting of
 #'   * The initial graph being tested,
 #'   * p-values & alpha used for tests,
 #'   * Which hypotheses can be rejected, and
-#'   * Detailed test results matrix, including the results of
+#'   * (Optionally) Detailed test results matrix, including the results of
 #'   `generate_weights()` & test results for each intersection hypothesis
 #' @export
 #'
@@ -41,23 +36,34 @@
 #' )
 #'
 #' g <- create_graph(hypotheses, transitions)
+#' p <- c(.01, .02, .05, .1)
 #'
 #' corr <- matrix(nrow = 4, ncol = 4)
 #' corr[3:4, 3:4] <- .5
 #' diag(corr) <- 1
 #'
+#' corr2 <- matrix(.5, nrow = 4, ncol = 4)
+#' diag(corr2) <- 1
+#'
+#' # The default is all Bonferroni with alpha = .05
+#' test_graph(g, p)
+#'
+#' # But tests can be specified at the hypothesis-level
 #' test_graph(
-#'   g,
-#'   p_values = c(.01, .02, .05, .1),
+#'   graph = g,
+#'   p_values = p,
 #'   alpha = .05,
 #'   tests = list(
 #'     bonferroni = 1,
 #'     simes = list(c(2)),
 #'     parametric = list(c(3, 4))
 #'   ),
-#'   corr = corr,
-#'   use_cj = FALSE
+#'   corr = corr
 #' )
+#'
+#' # Note that these two are NOT equivalent
+#' test_graph(g, p, tests = list(parametric = list(1:4)), corr = corr2)
+#' test_graph(g, p, tests = list(parametric = list(1, 2, 3, 4)), corr = corr2)
 test_graph <- function(graph,
                        p_values,
                        alpha = .05,
@@ -66,20 +72,14 @@ test_graph <- function(graph,
                          parametric = NULL,
                          simes = NULL
                        ),
-                       corr = NULL,
-                       use_cj = FALSE) {
-  if (use_cj) {
-    valid_corr <- !
-      corr_has_missing(corr, unlist(tests$parametric))
-  } else {
-    valid_corr <- !any(
-      vapply(
-        tests$parametric,
-        function(x) corr_has_missing(corr, x),
-        logical(1)
-      )
+                       corr = NULL) {
+  valid_corr <- !any(
+    vapply(
+      tests$parametric,
+      function(x) corr_has_missing(corr, x),
+      logical(1)
     )
-  }
+  )
 
   test_names <- c("bonferroni", "parametric", "simes")
   stopifnot(
@@ -113,13 +113,6 @@ test_graph <- function(graph,
       }
     )
 
-    # Possibly correct at this point? Needs more testing
-    cj <- if (use_cj) {
-      cj <- solve_c(weights[unlist(tests$parametric)], corr, alpha)
-    } else {
-      cj <- NULL
-    }
-
     res_parametric <- lapply(
       tests$parametric,
       function(para_group) {
@@ -127,8 +120,7 @@ test_graph <- function(graph,
           p_values[para_group],
           weights[para_group],
           alpha,
-          corr[para_group, para_group],
-          cj
+          corr[para_group, para_group]
         )
       }
     )
@@ -149,21 +141,12 @@ test_graph <- function(graph,
   reject_intersection <- rowSums(test_results) > 0
   reject_hyps <- (reject_intersection %*% subgraphs_h_vecs) == 2^g_size / 2
 
-
-  # This is kind of print-y stuff that may not belong here ---
   res_names <- c(
     hyp_names,
     paste(hyp_names, "wgt", sep = "_"),
     paste(hyp_names, "test", sep = "_"),
     "rej_Hj"
   )
-
-  names_mat <- matrix(rep(colnames(subgraphs_h_vecs), nrow(subgraphs_h_vecs)),
-    nrow = nrow(subgraphs_h_vecs),
-    byrow = TRUE
-  )
-
-  format_names <- ifelse(subgraphs_h_vecs, names_mat, "")
 
   weight_res_matrix <- structure(
     cbind(
@@ -174,7 +157,6 @@ test_graph <- function(graph,
     ),
     names = res_names
   )
-  # ---
 
   structure(
     list(

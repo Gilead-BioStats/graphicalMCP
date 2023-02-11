@@ -45,18 +45,35 @@ solve_c <- function(w, cr, alpha) {
 
 # Input must be appropriate vectors for a *single* Bonferroni test group
 bonferroni <- function(p_values, weights, alpha) {
-  p_values <= weights * alpha
+  data.frame(
+    p = p_values,
+    "<=" = "<=",
+    c = "",
+    "*" = "*",
+    w = weights,
+    "*" = "*",
+    alpha = alpha,
+    test = p_values <= weights * alpha,
+    check.names = FALSE
+  )
 }
 
 # Input must be appropriate vectors for a *single* parametric test group
 # Calculates the critical value for each parametric test group distinctly
-# To use a global c for a given intersection hypothesis, set use_cj = TRUE in
-# `test_graph()`
-parametric <- function(p_values, weights, alpha, corr, cj = NULL) {
-  c <- cj
-  if (is.null(cj)) c <- solve_c(weights, corr, alpha)
+parametric <- function(p_values, weights, alpha, corr) {
+  c <- solve_c(weights, corr, alpha)
 
-  p_values <= c * weights * alpha
+  data.frame(
+    p = p_values,
+    "<=" = "<=",
+    c = c,
+    "*" = "*",
+    w = weights,
+    "*" = "*",
+    alpha = alpha,
+    test = p_values <= c * weights * alpha,
+    check.names = FALSE
+  )
 }
 
 # Input must be appropriate vectors for a *single* Simes test group
