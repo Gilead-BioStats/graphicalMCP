@@ -44,48 +44,79 @@ solve_c <- function(w, cr, alpha) {
 }
 
 # Input must be appropriate vectors for a *single* Bonferroni test group
-bonferroni <- function(p_values, weights, alpha) {
-  data.frame(
-    p = p_values,
-    "<=" = "<=",
-    c = "",
-    "*" = "*",
-    w = weights,
-    "*" = "*",
-    alpha = alpha,
-    test = p_values <= weights * alpha,
-    check.names = FALSE
-  )
+bonferroni <- function(p_values, weights, alpha, detailed = TRUE) {
+  if (detailed) {
+    res <- data.frame(
+      p = p_values,
+      "<=" = "<=",
+      c = "",
+      "*" = "",
+      w = weights,
+      "*" = "*",
+      alpha = alpha,
+      test = p_values <= weights * alpha,
+      check.names = FALSE
+    )
+  } else {
+    res <- p_values <= weights * alpha
+  }
+
+  res
 }
 
 # Input must be appropriate vectors for a *single* parametric test group
 # Calculates the critical value for each parametric test group distinctly
-parametric <- function(p_values, weights, alpha, corr) {
+parametric <- function(p_values, weights, alpha, corr, detailed = TRUE) {
   c <- solve_c(weights, corr, alpha)
 
-  data.frame(
-    p = p_values,
-    "<=" = "<=",
-    c = c,
-    "*" = "*",
-    w = weights,
-    "*" = "*",
-    alpha = alpha,
-    test = p_values <= c * weights * alpha,
-    check.names = FALSE
-  )
+  if (detailed) {
+    res <- data.frame(
+      p = p_values,
+      "<=" = "<=",
+      c = c,
+      "*" = "*",
+      w = weights,
+      "*" = "*",
+      alpha = alpha,
+      test = p_values <= c * weights * alpha,
+      check.names = FALSE
+    )
+  } else {
+    res <- p_values <= c * weights * alpha
+  }
+
+  res
 }
 
 # Input must be appropriate vectors for a *single* Simes test group
-simes <- function(p_values, weights, alpha) {
-  # browser()
-  res <- vector(length = length(weights))
+simes <- function(p_values, weights, alpha, detailed = TRUE) {
+  vec_res <- vector(length = length(weights))
+  w_sum <- vector(length = length(weights))
 
   for (i in seq_along(weights)) {
-    w_sum <- sum(weights[p_values <= p_values[[i]]])
-    res[[i]] <- p_values[[i]] <= alpha * w_sum
+    w_sum[[i]] <- sum(weights[p_values <= p_values[[i]]])
+    vec_res[[i]] <- p_values[[i]] <= alpha * w_sum[[i]]
   }
 
-  names(res) <- names(weights)
+  if (detailed) {
+    res <- data.frame(
+      p = p_values,
+      "<=" = "<=",
+      c = "",
+      "*" = "",
+      w = w_sum,
+      "*" = "*",
+      alpha = alpha,
+      test = vec_res,
+      check.names = FALSE
+    )
+
+    rownames(res) <- names(weights)
+  } else {
+    res <- vec_res
+
+    names(res) <- names(weights)
+  }
+
   res
 }

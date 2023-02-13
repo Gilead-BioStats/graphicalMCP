@@ -63,7 +63,7 @@ parametric <- function(p_values, weights, alpha, corr) {
 #' @param detailed A logical value indicating whether or not test results should print for each intersection hypothesis
 #'
 #' @export
-print.graph_report <- function(x, ..., detailed = FALSE) {
+print.graph_report <- function(x, ...) {
   print(x$initial_graph)
 
   cat("\n", paste(rep("-", 80), collapse = ""), "\n\n", sep = "")
@@ -106,11 +106,13 @@ print.graph_report <- function(x, ..., detailed = FALSE) {
 
   print(global_test, row.names = FALSE)
 
-  if (detailed) {
+  if (!is.null(x$test_details)) {
     cat("\n", paste(rep("-", 80), collapse = ""), "\n\n", sep = "")
 
     cat("--- Detailed test results ---\n")
     print(x$test_results)
+    cat("\n")
+    print(x$test_details, row.names = FALSE)
   }
 
   invisible(x)

@@ -10,7 +10,8 @@ test_graph(
   alpha = 0.05,
   tests = list(bonferroni = list(seq_along(graph$hypotheses)), parametric = NULL, simes =
     NULL),
-  corr = NULL
+  corr = NULL,
+  detailed = TRUE
 )
 }
 \arguments{
@@ -34,6 +35,9 @@ should be entered as 0, and unknown correlation should be entered as NA.
 This argument is only used for the parametric test. For each element of a
 parametric testing group, the correlation matrix for that group's sub-graph
 must be fully known}
+
+\item{detailed}{(Optional) A logical value specifying whether to report
+intersection/hypothesis-level testing details}
 }
 \value{
 A \code{graph_report} object, consisting of

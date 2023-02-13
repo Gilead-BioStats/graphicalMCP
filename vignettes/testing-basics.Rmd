@@ -73,7 +73,7 @@ test_graph(
 )
 ```
 
-The parametric test reduces to Bonferroni when there is no correlation between any test statistics.
+ ~~The parametric test reduces to Bonferroni when there is no correlation between any test statistics.~~ (This doesn't look like it's true, actually)
 
 ```{r parametric-2}
 corr2 <- diag(4)
@@ -99,5 +99,21 @@ test_graph(
   alpha = .05,
   corr = corr3, # Correlation matrix doesn't matter when each group is size 1
   tests = list(parametric = list(1, 2, 3, 4))
+)
+```
+
+Using different test types on different parts of a graph is supported.
+
+```{r mixed-1}
+test_graph(
+  g_dose,
+  p_values = c(.024, .01, .026, .027),
+  alpha = .05,
+  corr = corr1,
+  tests = list(
+    bonferroni = list(2),
+    simes = list(1),
+    parametric = list(3:4)
+  )
 )
 ```
