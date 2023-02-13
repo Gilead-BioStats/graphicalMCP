@@ -58,3 +58,25 @@ wiens_dmitrienko_2005 <- function(names = NULL) {
     names
   )
 }
+
+fixed_sequence <- function(n = 3, names = NULL) {
+  w <- c(1, rep(0, n - 1))
+
+  g <- matrix(0, nrow = n, ncol = n)
+
+  for (i in seq_len(n - 1)) g[i, i + 1] <- 1
+
+  create_graph(w, g, names)
+}
+
+fallback <- function(w = c(1, 0, 0), names = NULL) {
+  r <- w[[2]] / (w[[1]] + w[[2]])
+
+  g <- rbind(
+    c(0,     1, 0),
+    c(0,     0, 1),
+    c(1 - r, r, 0)
+  )
+
+  create_graph(w, g, names)
+}

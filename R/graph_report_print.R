@@ -103,6 +103,7 @@ print.graph_report <- function(x, ...) {
     row.names = seq_along(x$initial_graph$hypotheses),
     check.names = FALSE
   )
+  global_test$`Adjusted P-value` <- x$adj_p_values
 
   print(global_test, row.names = FALSE)
 
