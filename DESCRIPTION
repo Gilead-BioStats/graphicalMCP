@@ -18,10 +18,19 @@ Description: A multiple comparison procedure (or multiple test procedure)
     low-dependency implementation of the methods described in that paper.
 License: GPL (>= 3)
 Suggests: 
-    testthat (>= 3.0.0)
+    bench,
+    forcats,
+    ggplot2,
+    gMCP,
+    knitr,
+    rmarkdown,
+    testthat (>= 3.0.0),
+    tictoc,
+    xfun
 Encoding: UTF-8
 LazyData: true
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.2.3
 Config/testthat/edition: 3
+VignetteBuilder: knitr
 URL: https://urban-sniffle-p11zlpj.pages.github.io/

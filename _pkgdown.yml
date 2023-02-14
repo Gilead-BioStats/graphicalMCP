@@ -12,4 +12,11 @@ reference:
   contents:
   - matches("update_graph")
   - matches("updated_graph")
-
+- title: Calculating sub-graph weights
+  desc: Functions for generating the weights of the closure
+  contents:
+  - matches("generate_weights")
+- title: Example graphs
+  desc: Functions for creating example graphs from a variety of papers
+  contents:
+  - matches("bonferroni_holm")

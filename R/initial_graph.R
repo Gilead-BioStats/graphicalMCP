@@ -2,7 +2,7 @@
 # tolerance
 # x is a vector and target is a scalar
 # Return a logical vector of the same length as x
-equal_float <- function (x, target) {
+equal_float <- function(x, target) {
   sapply(x, function(y) isTRUE(all.equal(target, y)))
 }
 

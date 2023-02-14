@@ -4,3 +4,9 @@
 .Ruserdata
 docs
 /perf-tests/log
+/cache
+/docs
+inst/doc
+/doc/
+/Meta/
+docs

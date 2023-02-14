@@ -2,5 +2,7 @@
 
 S3method(print,initial_graph)
 S3method(print,updated_graph)
+export(bonferroni_holm)
 export(create_graph)
+export(generate_weights)
 export(update_graph)

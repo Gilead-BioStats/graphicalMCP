@@ -15,7 +15,6 @@ knitr::opts_chunk$set(
 
 <!-- badges: start -->
 [![CRAN status](https://www.r-pkg.org/badges/version/graphicalMCP)](https://cran.r-project.org/package=graphicalMCP)
-[![R-CMD-check](https://github.com/Gilead-BioStats/graphicalMCP/workflows/R-CMD-check-main/badge.svg)](https://github.com/Gilead-BioStats/graphicalMCP/actions)
 [![Codecov test coverage](https://codecov.io/gh/Gilead-BioStats/graphicalMCP/branch/s3-graph_mcp/graph/badge.svg)](https://app.codecov.io/gh/Gilead-BioStats/graphicalMCP?branch=s3-graph_mcp)
 [![R-CMD-check](https://github.com/Gilead-BioStats/graphicalMCP/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/Gilead-BioStats/graphicalMCP/actions/workflows/R-CMD-check.yaml)
 <!-- badges: end -->
@@ -69,6 +68,14 @@ Hypotheses can be rejected from the MCP using `update_graph()`. Updated weights 
 
 ```{r update-graph}
 update_graph(g_dose, c(TRUE, FALSE, FALSE, TRUE))
+```
+
+### Generate weights
+
+The weights of all subgraphs can be calculated with `generate_weights()`. This uses some more efficient code under the hood than `update_graph()` in order to be performant for larger graphs.
+
+```{r generate-weights}
+generate_weights(g_dose)
 ```
 
 ## Related work

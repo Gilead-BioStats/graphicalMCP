@@ -3,8 +3,11 @@
 ^README\.Rmd$
 ^LICENSE\.md$
 ^LICENSE$
-^_pkgdown\.yml$
+^perf-tests$
+^cache$
 ^docs$
+^_pkgdown\.yml$
 ^pkgdown$
 ^\.github$
-perf-tests/*
+^doc$
+^Meta$
