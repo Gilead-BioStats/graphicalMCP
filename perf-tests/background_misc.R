@@ -1,1 +1,1 @@
-devtools::document()
+devtools::build_site()
