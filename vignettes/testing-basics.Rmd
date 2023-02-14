@@ -84,7 +84,7 @@ print(test_graph(
   alpha = .05,
   corr = corr2,
   tests = list(parametric = list(1:4))
-), detailed = TRUE)
+), verbose = TRUE)
 ```
 
 The null case of this is when a parametric group is size 1 (Each correlation matrix is a 1x1 with value 1)

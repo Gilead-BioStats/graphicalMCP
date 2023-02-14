@@ -60,7 +60,7 @@ parametric <- function(p_values, weights, alpha, corr) {
 #'
 #' @param ... Other values passed on to other methods (currently unused)
 #'
-#' @param detailed A logical value indicating whether or not test results should print for each intersection hypothesis
+#' @param verbose A logical value indicating whether or not test results should print for each intersection hypothesis
 #'
 #' @export
 print.graph_report <- function(x, ...) {

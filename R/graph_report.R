@@ -10,7 +10,7 @@
 #'   given test to. Each hypothesis must be specified exactly once, so that the
 #'   length of all elements of the list equals the number of hypotheses. The
 #'   default is to apply the weighted Bonferroni test to all hypotheses
-#' @param detailed (Optional) A logical value specifying whether to report
+#' @param verbose (Optional) A logical value specifying whether to report
 #'   intersection/hypothesis-level testing details
 #' @param corr (Optional) A correlation matrix for the test statistics of
 #'   `graph`. Diagonal entries should be 1. A known absence of correlation
@@ -23,7 +23,7 @@
 #'   * The initial graph being tested,
 #'   * p-values & alpha used for tests,
 #'   * Which hypotheses can be rejected, and
-#'   * (Optionally) Detailed test results matrix, including the results of
+#'   * (Optionally) verbose test results matrix, including the results of
 #'   `generate_weights()` & test results for each intersection hypothesis
 #' @export
 #'
@@ -75,7 +75,7 @@ test_graph <- function(graph,
                          simes = NULL
                        ),
                        corr = NULL,
-                       detailed = TRUE) {
+                       verbose = TRUE) {
   valid_corr <- !any(
     vapply(
       tests$parametric,
@@ -126,7 +126,7 @@ test_graph <- function(graph,
     res_bonferroni <- lapply(
       tests$bonferroni,
       function(bonf_group) {
-        bonferroni(p_values[bonf_group], weights[bonf_group], alpha, detailed)
+        bonferroni(p_values[bonf_group], weights[bonf_group], alpha, verbose)
       }
     )
 
@@ -138,7 +138,7 @@ test_graph <- function(graph,
           weights[para_group],
           alpha,
           corr[para_group, para_group],
-          detailed
+          verbose
         )
       }
     )
@@ -146,11 +146,11 @@ test_graph <- function(graph,
     res_simes <- lapply(
       tests$simes,
       function(simes_group) {
-        simes(p_values[simes_group], weights[simes_group], alpha, detailed)
+        simes(p_values[simes_group], weights[simes_group], alpha, verbose)
       }
     )
 
-    if (detailed) {
+    if (verbose) {
       test_inter <- do.call(rbind, c(res_bonferroni, res_parametric, res_simes))
 
       test_inter$hypothesis <- rownames(test_inter)
@@ -177,7 +177,7 @@ test_graph <- function(graph,
   # globally
   reject_hyps <- (reject_intersection %*% subgraphs_h_vecs) == 2^g_size / 2
 
-  if (detailed) {
+  if (verbose) {
     # Removes the "c *" columns from the detail dataframe when using only Simes &
     # Bonferroni
     if (length(tests$parametric) == 0) test_details[, 3:4] <- NULL
@@ -209,8 +209,8 @@ test_graph <- function(graph,
       test_used = tests,
       corr = corr,
       hypotheses_rejected = reject_hyps[1, ],
-      test_results = if (detailed) weight_res_matrix,
-      test_details = if (detailed) test_details
+      test_results = if (verbose) weight_res_matrix,
+      test_details = if (verbose) test_details
     ),
     class = "graph_report"
   )

@@ -11,7 +11,7 @@
 
 \item{...}{Other values passed on to other methods (currently unused)}
 
-\item{detailed}{A logical value indicating whether or not test results should print for each intersection hypothesis}
+\item{verbose}{A logical value indicating whether or not test results should print for each intersection hypothesis}
 }
 \description{
 A graph report displays

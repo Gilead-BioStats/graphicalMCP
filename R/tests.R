@@ -44,8 +44,8 @@ solve_c <- function(w, cr, alpha) {
 }
 
 # Input must be appropriate vectors for a *single* Bonferroni test group
-bonferroni <- function(p_values, weights, alpha, detailed = TRUE) {
-  if (detailed) {
+bonferroni <- function(p_values, weights, alpha, verbose = TRUE) {
+  if (verbose) {
     res <- data.frame(
       p = p_values,
       "<=" = "<=",
@@ -66,10 +66,10 @@ bonferroni <- function(p_values, weights, alpha, detailed = TRUE) {
 
 # Input must be appropriate vectors for a *single* parametric test group
 # Calculates the critical value for each parametric test group distinctly
-parametric <- function(p_values, weights, alpha, corr, detailed = TRUE) {
+parametric <- function(p_values, weights, alpha, corr, verbose = TRUE) {
   c <- solve_c(weights, corr, alpha)
 
-  if (detailed) {
+  if (verbose) {
     res <- data.frame(
       p = p_values,
       "<=" = "<=",
@@ -89,7 +89,7 @@ parametric <- function(p_values, weights, alpha, corr, detailed = TRUE) {
 }
 
 # Input must be appropriate vectors for a *single* Simes test group
-simes <- function(p_values, weights, alpha, detailed = TRUE) {
+simes <- function(p_values, weights, alpha, verbose = TRUE) {
   vec_res <- vector(length = length(weights))
   w_sum <- vector(length = length(weights))
 
@@ -98,7 +98,7 @@ simes <- function(p_values, weights, alpha, detailed = TRUE) {
     vec_res[[i]] <- p_values[[i]] <= alpha * w_sum[[i]]
   }
 
-  if (detailed) {
+  if (verbose) {
     res <- data.frame(
       p = p_values,
       "<=" = "<=",
