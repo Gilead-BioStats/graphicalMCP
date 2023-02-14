@@ -6,7 +6,8 @@ test_sequential <- function(graph, p_values, alpha, tests = "bonferroni", corr =
   adj_p_values <- vector("numeric", length(graph$hypotheses))
 
   for (i in seq_along(graph$hypotheses)) {
-    min_index <- which.min(p_values / graph$hypotheses)
+    adj_p_vec <- adjust_p(p_values, graph$hypotheses, tests)
+    min_index <- which.min(adj_p_vec)
     adj_p_j <- max(
       p_values[[min_index]] / graph$hypotheses[[min_index]],
       p_max

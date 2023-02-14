@@ -113,6 +113,9 @@ print.graph_report <- function(x, ...) {
     cat("--- Detailed test results ---\n")
     print(x$test_results)
     cat("\n")
+
+
+
     print(x$test_details, row.names = FALSE)
   }
 
