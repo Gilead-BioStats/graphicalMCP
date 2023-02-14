@@ -52,6 +52,12 @@
 <li class="nav-item">
   <a class="nav-link" href="reference/index.html">Reference</a>
 </li>
+<li class="nav-item dropdown">
+  <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" id="dropdown-articles">Articles</a>
+  <div class="dropdown-menu" aria-labelledby="dropdown-articles">
+    <a class="dropdown-item" href="articles/gen-weights.html">Generating the closure tree</a>
+  </div>
+</li>
       </ul>
 <form class="form-inline my-2 my-lg-0" role="search">
         <input type="search" class="form-control me-sm-2" aria-label="Toggle navigation" name="search-input" data-search-index="search.json" id="search-input" placeholder="Search for" autocomplete="off">
@@ -82,32 +88,112 @@
 <div class="section level2">
 <h2 id="basic-usage">Basic usage<a class="anchor" aria-label="anchor" href="#basic-usage"></a>
 </h2>
+<div class="section level3">
+<h3 id="initial-graph">Initial graph<a class="anchor" aria-label="anchor" href="#initial-graph"></a>
+</h3>
 <p>The base object in graphicalMCP is an <code>initial_graph</code>, which is a weighted, directed graph represented by a matrix of transition (edge) weights, and a vector of hypothesis (vertex) weights.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://urban-sniffle-p11zlpj.pages.github.io/">graphicalMCP</a></span><span class="op">)</span></span>
 <span></span>
+<span><span class="co"># A graphical multiple comparison procedure with two primary hypotheses (H1</span></span>
+<span><span class="co"># and H2) and two secondary hypotheses (H3 and H4)</span></span>
+<span><span class="co"># See Figure 1 in Bretz, F., Posch, M., Glimm, E., Klinglmueller, F., Maurer,</span></span>
+<span><span class="co"># W., &amp; Rohmeyer, K. (2011). Graphical approaches for multiple comparison</span></span>
+<span><span class="co"># procedures using weighted Bonferroni, Simes, or parametric tests. Biometrical</span></span>
+<span><span class="co"># Journal, 53(6), 894-913.</span></span>
+<span><span class="va">hypotheses</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.5</span>, <span class="fl">0.5</span>, <span class="fl">0</span>, <span class="fl">0</span><span class="op">)</span></span>
 <span><span class="va">transitions</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/cbind.html" class="external-link">rbind</a></span><span class="op">(</span></span>
-<span>  <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">.5</span>, <span class="fl">.5</span><span class="op">)</span>,</span>
-<span>  <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">.5</span>, <span class="fl">0</span>, <span class="fl">.5</span><span class="op">)</span>,</span>
-<span>  <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">.5</span>, <span class="fl">.5</span>, <span class="fl">0</span><span class="op">)</span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">0</span>, <span class="fl">1</span>, <span class="fl">0</span><span class="op">)</span>,</span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">0</span>, <span class="fl">0</span>, <span class="fl">1</span><span class="op">)</span>,</span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">1</span>, <span class="fl">0</span>, <span class="fl">0</span><span class="op">)</span>,</span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">0</span>, <span class="fl">0</span>, <span class="fl">0</span><span class="op">)</span></span>
 <span><span class="op">)</span></span>
-<span><span class="va">hypotheses</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="fl">.333333</span>, <span class="fl">3</span><span class="op">)</span></span>
-<span></span>
-<span><span class="va">g_dose</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/create_graph.html">create_graph</a></span><span class="op">(</span><span class="va">hypotheses</span>, <span class="va">transitions</span>, <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste</a></span><span class="op">(</span><span class="st">"dose"</span>, <span class="va">letters</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">3</span><span class="op">]</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="va">names</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"A1"</span>, <span class="st">"A2"</span>, <span class="st">"B1"</span>, <span class="st">"B2"</span><span class="op">)</span></span>
+<span><span class="va">g_dose</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/create_graph.html">create_graph</a></span><span class="op">(</span><span class="va">hypotheses</span>, <span class="va">transitions</span>, <span class="va">names</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">g_dose</span></span>
-<span><span class="co">#&gt; An initial graph</span></span>
+<span><span class="co">#&gt; An MCP graph</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; --- Hypothesis weights ---</span></span>
-<span><span class="co">#&gt; dose a: 0.3333</span></span>
-<span><span class="co">#&gt; dose b: 0.3333</span></span>
-<span><span class="co">#&gt; dose c: 0.3333</span></span>
+<span><span class="co">#&gt; A1: (0.5000)</span></span>
+<span><span class="co">#&gt; A2: (0.5000)</span></span>
+<span><span class="co">#&gt; B1: (0.0000)</span></span>
+<span><span class="co">#&gt; B2: (0.0000)</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; --- Transition weights ---</span></span>
-<span><span class="co">#&gt;        dose a dose b dose c</span></span>
-<span><span class="co">#&gt; dose a 0.0000 0.5000 0.5000</span></span>
-<span><span class="co">#&gt; dose b 0.5000 0.0000 0.5000</span></span>
-<span><span class="co">#&gt; dose c 0.5000 0.5000 0.0000</span></span></code></pre></div>
+<span><span class="co">#&gt;        A1     A2     B1     B2</span></span>
+<span><span class="co">#&gt; A1 0.0000 0.0000 1.0000 0.0000</span></span>
+<span><span class="co">#&gt; A2 0.0000 0.0000 0.0000 1.0000</span></span>
+<span><span class="co">#&gt; B1 0.0000 1.0000 0.0000 0.0000</span></span>
+<span><span class="co">#&gt; B2 1.0000 0.0000 0.0000 0.0000</span></span></code></pre></div>
+</div>
+<div class="section level3">
+<h3 id="update-graph">Update graph<a class="anchor" aria-label="anchor" href="#update-graph"></a>
+</h3>
+<p>Hypotheses can be rejected from the MCP using <code><a href="reference/update_graph.html">update_graph()</a></code>. Updated weights and transitions are calculated according to the weighting strategy in <a href="https://onlinelibrary.wiley.com/doi/10.1002/bimj.201000239" class="external-link">Bretz et al (2011)</a></p>
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="reference/update_graph.html">update_graph</a></span><span class="op">(</span><span class="va">g_dose</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="cn">TRUE</span>, <span class="cn">FALSE</span>, <span class="cn">FALSE</span>, <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="co">#&gt; An MCP graph</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; --- Hypothesis weights ---</span></span>
+<span><span class="co">#&gt; A1: (0.5000)</span></span>
+<span><span class="co">#&gt; A2: (0.5000)</span></span>
+<span><span class="co">#&gt; B1: (0.0000)</span></span>
+<span><span class="co">#&gt; B2: (0.0000)</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; --- Transition weights ---</span></span>
+<span><span class="co">#&gt;        A1     A2     B1     B2</span></span>
+<span><span class="co">#&gt; A1 0.0000 0.0000 1.0000 0.0000</span></span>
+<span><span class="co">#&gt; A2 0.0000 0.0000 0.0000 1.0000</span></span>
+<span><span class="co">#&gt; B1 0.0000 1.0000 0.0000 0.0000</span></span>
+<span><span class="co">#&gt; B2 1.0000 0.0000 0.0000 0.0000</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; --------------------------------------</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; --- Hypotheses kept ---</span></span>
+<span><span class="co">#&gt;    A1    A2    B1   B2</span></span>
+<span><span class="co">#&gt;  TRUE FALSE FALSE TRUE</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; --------------------------------------</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; An MCP graph</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; --- Hypothesis weights ---</span></span>
+<span><span class="co">#&gt; A1: (0.5000)</span></span>
+<span><span class="co">#&gt; A2: (0.0000)</span></span>
+<span><span class="co">#&gt; B1: (0.0000)</span></span>
+<span><span class="co">#&gt; B2: (0.5000)</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; --- Transition weights ---</span></span>
+<span><span class="co">#&gt;        A1     A2     B1     B2</span></span>
+<span><span class="co">#&gt; A1 0.0000 0.0000 0.0000 1.0000</span></span>
+<span><span class="co">#&gt; A2 0.0000 0.0000 0.0000 0.0000</span></span>
+<span><span class="co">#&gt; B1 0.0000 0.0000 0.0000 0.0000</span></span>
+<span><span class="co">#&gt; B2 1.0000 0.0000 0.0000 0.0000</span></span></code></pre></div>
+</div>
+<div class="section level3">
+<h3 id="generate-weights">Generate weights<a class="anchor" aria-label="anchor" href="#generate-weights"></a>
+</h3>
+<p>The weights of all subgraphs can be calculated with <code><a href="reference/generate_weights.html">generate_weights()</a></code>. This uses some more efficient code under the hood than <code><a href="reference/update_graph.html">update_graph()</a></code> in order to be performant for larger graphs.</p>
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="reference/generate_weights.html">generate_weights</a></span><span class="op">(</span><span class="va">g_dose</span><span class="op">)</span></span>
+<span><span class="co">#&gt;    A1 A2 B1 B2  A1  A2  B1  B2</span></span>
+<span><span class="co">#&gt; 1   1  1  1  1 0.5 0.5 0.0 0.0</span></span>
+<span><span class="co">#&gt; 2   0  1  1  1 0.0 0.5 0.5 0.0</span></span>
+<span><span class="co">#&gt; 3   0  0  1  1 0.0 0.0 0.5 0.5</span></span>
+<span><span class="co">#&gt; 4   0  0  0  1 0.0 0.0 0.0 1.0</span></span>
+<span><span class="co">#&gt; 5   0  0  1  0 0.0 0.0 1.0 0.0</span></span>
+<span><span class="co">#&gt; 6   0  1  0  1 0.0 1.0 0.0 0.0</span></span>
+<span><span class="co">#&gt; 7   0  1  0  0 0.0 1.0 0.0 0.0</span></span>
+<span><span class="co">#&gt; 8   0  1  1  0 0.0 0.5 0.5 0.0</span></span>
+<span><span class="co">#&gt; 9   1  0  1  1 0.5 0.0 0.0 0.5</span></span>
+<span><span class="co">#&gt; 10  1  0  0  1 0.5 0.0 0.0 0.5</span></span>
+<span><span class="co">#&gt; 11  1  0  0  0 1.0 0.0 0.0 0.0</span></span>
+<span><span class="co">#&gt; 12  1  0  1  0 1.0 0.0 0.0 0.0</span></span>
+<span><span class="co">#&gt; 13  1  1  0  1 0.5 0.5 0.0 0.0</span></span>
+<span><span class="co">#&gt; 14  1  1  0  0 0.5 0.5 0.0 0.0</span></span>
+<span><span class="co">#&gt; 15  1  1  1  0 0.5 0.5 0.0 0.0</span></span></code></pre></div>
+</div>
 </div>
 <div class="section level2">
 <h2 id="related-work">Related work<a class="anchor" aria-label="anchor" href="#related-work"></a>
@@ -150,7 +236,6 @@
 <h2 data-toc-skip>Dev status</h2>
 <ul class="list-unstyled">
 <li><a href="https://cran.r-project.org/package=graphicalMCP" class="external-link"><img src="https://www.r-pkg.org/badges/version/graphicalMCP" alt="CRAN status"></a></li>
-<li><a href="https://github.com/Gilead-BioStats/graphicalMCP/actions" class="external-link"><img src="https://github.com/Gilead-BioStats/graphicalMCP/workflows/R-CMD-check-main/badge.svg" alt="R-CMD-check"></a></li>
 <li><a href="https://app.codecov.io/gh/Gilead-BioStats/graphicalMCP?branch=s3-graph_mcp" class="external-link"><img src="https://codecov.io/gh/Gilead-BioStats/graphicalMCP/branch/s3-graph_mcp/graph/badge.svg" alt="Codecov test coverage"></a></li>
 <li><a href="https://github.com/Gilead-BioStats/graphicalMCP/actions/workflows/R-CMD-check.yaml" class="external-link"><img src="https://github.com/Gilead-BioStats/graphicalMCP/actions/workflows/R-CMD-check.yaml/badge.svg" alt="R-CMD-check"></a></li>
 </ul>
