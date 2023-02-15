@@ -103,11 +103,12 @@ print.graph_report <- function(x, ...) {
     row.names = seq_along(x$initial_graph$hypotheses),
     check.names = FALSE
   )
-  global_test$`Adjusted P-value` <- x$adj_p_values
+  global_test$`Adj. P-value` <- x$adj_p_values
+  global_test$`Adj. P-value1` <- x$adj_p_values1
 
   print(global_test, row.names = FALSE)
 
-  if (!is.null(x$test_details)) {
+  if (!is.null(x$test_results)) {
     cat("\n", paste(rep("-", 80), collapse = ""), "\n\n", sep = "")
 
     cat("--- Detailed test results ---\n")
