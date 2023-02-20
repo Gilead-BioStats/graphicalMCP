@@ -72,7 +72,7 @@ p_adjust_parametric <- function(p_values, weights, corr) {
   z <- stats::qnorm(q, lower.tail = FALSE)
   prob_lt_z <- ifelse(
     length(z) == 1,
-    1 - stats::pnorm(z, lower.tail = FALSE)[[1]], # Are these two the same?
+    stats::pnorm(z, lower.tail = FALSE)[[1]], # Are these two the same? Why should this one not do "1 - "
     1 - mvtnorm::pmvnorm( # Are these two the same?
       lower = -Inf,
       upper = z,

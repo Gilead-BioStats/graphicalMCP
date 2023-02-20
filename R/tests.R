@@ -47,6 +47,9 @@ solve_c <- function(w, cr, alpha) {
 bonferroni <- function(p_values, weights, alpha, verbose = TRUE) {
   if (verbose) {
     res <- data.frame(
+      intersection = NA,
+      hypothesis = NA,
+      test = "bonferroni",
       p = p_values,
       "<=" = "<=",
       c = "",
@@ -54,7 +57,7 @@ bonferroni <- function(p_values, weights, alpha, verbose = TRUE) {
       w = weights,
       "*" = "*",
       alpha = alpha,
-      test = p_values <= weights * alpha,
+      res = p_values <= weights * alpha,
       check.names = FALSE
     )
   } else {
@@ -71,6 +74,9 @@ parametric <- function(p_values, weights, alpha, corr, verbose = TRUE) {
 
   if (verbose) {
     res <- data.frame(
+      intersection = NA,
+      hypothesis = NA,
+      test = "parametric",
       p = p_values,
       "<=" = "<=",
       c = c,
@@ -78,7 +84,7 @@ parametric <- function(p_values, weights, alpha, corr, verbose = TRUE) {
       w = weights,
       "*" = "*",
       alpha = alpha,
-      test = p_values <= c * weights * alpha,
+      res = p_values <= c * weights * alpha,
       check.names = FALSE
     )
   } else {
@@ -100,6 +106,9 @@ simes <- function(p_values, weights, alpha, verbose = TRUE) {
 
   if (verbose) {
     res <- data.frame(
+      intersection = NA,
+      hypothesis = NA,
+      test = "simes",
       p = p_values,
       "<=" = "<=",
       c = "",
@@ -107,7 +116,7 @@ simes <- function(p_values, weights, alpha, verbose = TRUE) {
       w = w_sum,
       "*" = "*",
       alpha = alpha,
-      test = vec_res,
+      res = vec_res,
       check.names = FALSE
     )
 

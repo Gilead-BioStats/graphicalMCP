@@ -108,6 +108,8 @@ test_graph <- function(graph,
 
   test_details <- data.frame(
     intersection = c(),
+    hypothesis = c(),
+    test = c(),
     p = c(),
     "<=" = c(),
     c = c(),
@@ -157,10 +159,10 @@ test_graph <- function(graph,
       test_inter$intersection <- row
       test_inter <- test_inter[order(match(test_inter$hypothesis, hyp_names)), ]
 
-      test_vec <- test_inter$test
-      names(test_vec) <- test_inter$hypothesis
+      res_vec <- test_inter$res
+      names(res_vec) <- test_inter$hypothesis
 
-      test_results[row, ] <- test_vec[hyp_names]
+      test_results[row, ] <- res_vec[hyp_names]
 
       test_details <- rbind(test_details, test_inter)
       rownames(test_details) <- NULL
