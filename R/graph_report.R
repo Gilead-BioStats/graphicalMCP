@@ -75,7 +75,8 @@ test_graph <- function(graph,
                          simes = NULL
                        ),
                        corr = NULL,
-                       verbose = TRUE) {
+                       verbose = FALSE) {
+  # Input validation -----------------------------------------------------------
   valid_corr <- !any(
     vapply(
       tests$parametric,
@@ -94,6 +95,7 @@ test_graph <- function(graph,
     "correlation sub-matrix for parametric tests must be complete" = valid_corr
   )
 
+  # Generate closure -----------------------------------------------------------
   g_size <- length(graph$hypotheses)
   hyp_names <- names(graph$hypotheses)
 
@@ -121,34 +123,64 @@ test_graph <- function(graph,
     check.names = FALSE
   )
 
+  # Perform tests --------------------------------------------------------------
   for (row in seq_len(nrow(subgraphs_weights))) {
     weights <- subgraphs_weights[row, ]
+    hyps_in <- which(!!subgraphs_h_vecs[row, ])
 
     # Weighted Bonferroni test
     res_bonferroni <- lapply(
       tests$bonferroni,
       function(bonf_group) {
-        bonferroni(p_values[bonf_group], weights[bonf_group], alpha, verbose)
+        bonf_group_in <- intersect(hyps_in, bonf_group)
+
+        if (length(bonf_group_in) == 0) {
+          NULL
+        } else {
+          bonferroni(
+            p_values[bonf_group_in],
+            weights[bonf_group_in],
+            alpha,
+            verbose
+          )
+        }
       }
     )
 
     res_parametric <- lapply(
       tests$parametric,
       function(para_group) {
-        parametric(
-          p_values[para_group],
-          weights[para_group],
-          alpha,
-          corr[para_group, para_group],
-          verbose
-        )
+        para_group_in <- intersect(hyps_in, para_group)
+
+        if (length(para_group_in) == 0) {
+          NULL
+        } else {
+          parametric(
+            p_values[para_group_in],
+            weights[para_group_in],
+            alpha,
+            corr[para_group_in, para_group_in],
+            verbose
+          )
+        }
       }
     )
 
     res_simes <- lapply(
       tests$simes,
       function(simes_group) {
-        simes(p_values[simes_group], weights[simes_group], alpha, verbose)
+        simes_group_in <- intersect(hyps_in, simes_group)
+
+        if (length(simes_group_in) == 0) {
+          NULL
+        } else {
+          simes(
+            p_values[simes_group_in],
+            weights[simes_group_in],
+            alpha,
+            verbose
+          )
+        }
       }
     )
 
@@ -173,7 +205,7 @@ test_graph <- function(graph,
     }
   }
 
-  reject_intersection <- rowSums(test_results) > 0
+  reject_intersection <- rowSums(test_results, na.rm = TRUE) > 0
   # Each hypothesis appears in half of the 2^n intersections hypotheses. Each
   # intersection a hypothesis is in must be rejected to reject the hypothesis
   # globally
@@ -182,7 +214,7 @@ test_graph <- function(graph,
   if (verbose) {
     # Removes the "c *" columns from the detail dataframe when using only Simes &
     # Bonferroni
-    if (length(tests$parametric) == 0) test_details[, 3:4] <- NULL
+    if (length(tests$parametric) == 0) test_details[, 6:7] <- NULL
 
     res_names <- c(
       hyp_names,

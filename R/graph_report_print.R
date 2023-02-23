@@ -1,52 +1,3 @@
-print_tests <- function(tests) {
-  lapply(1:3, \(index) {
-    cat(names(tests)[[index]], "\n")
-    lapply(tests[[index]], \(group) cat(paste0("(", paste(group, collapse = ", "), ")\n")))})
-}
-
-# Possible printing for formula information ------------------------------------
-# Input must be appropriate vectors for a *single* Bonferroni test group
-bonferroni <- function(p_values, weights, alpha) {
-  data.frame(
-    res = p_values <= weights * alpha,
-    formula = paste(
-      sprintf("%f", p_values),
-      "<=",
-      paste(rep(" ", 8), collapse = ""), # Fill 'c' location with spaces
-      " ",                               # Fill 'c' location with spaces
-      sprintf("%f", weights),
-      "*",
-      alpha
-    )
-  )
-}
-
-# Input must be appropriate vectors for a *single* parametric test group
-# Calculates the critical value for each parametric test group distinctly
-parametric <- function(p_values, weights, alpha, corr) {
-  c <- solve_c(weights, corr, alpha)
-
-  data.frame(
-    res = p_values <= c * weights * alpha,
-    formula = paste(
-      sprintf("%f", p_values),
-      "<=",
-      sprintf("%f", c),
-      "*",
-      sprintf("%f", weights),
-      "*",
-      alpha
-    )
-  )
-
-}
-
-# ------------------------------------------------------------------------------
-
-
-# Possibly print p-values and test results together?
-# rbind(p_value = as.character(res$p_values), rejected = as.character(res$hypotheses_rejected))
-
 #' S3 print method for class `graph_report`
 #'
 #' A graph report displays
@@ -115,9 +66,14 @@ print.graph_report <- function(x, ...) {
     print(x$test_results)
     cat("\n")
 
+    if (!is.null(x$test_details)) {
+      details_round <- x$test_details
+      round_c <- as.character(round(as.numeric(details_round$c), 6))
+      round_c[is.na(round_c)] <- ""
+      details_round$c <- round_c
 
-
-    print(x$test_details, row.names = FALSE)
+      print(details_round, row.names = FALSE)
+    }
   }
 
   invisible(x)

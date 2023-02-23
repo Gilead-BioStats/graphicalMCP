@@ -16,9 +16,10 @@ knitr::opts_chunk$set(
 
 ```{r setup}
 library(graphicalMCP)
+library(gMCP)
 ```
 
-Start testing with the example graph from the README, a parallel gatekeeping procedure graph.
+Start testing with the example graph from the README, a parallel gate-keeping procedure graph.
 
 ```{r create-graph-1}
 # A graphical multiple comparison procedure with two primary hypotheses (H1
@@ -35,22 +36,22 @@ transitions <- rbind(
   c(1, 0, 0, 0)
 )
 names <- c("A1", "A2", "B1", "B2")
-g_dose <- create_graph(hypotheses, transitions, names)
+par_gate <- create_graph(hypotheses, transitions, names)
 
-g_dose
+par_gate
 ```
 
 This graph can be tested most simply with the default weighted Bonferroni test. When testing at the global alpha level 0.05, we can reject hypotheses A1, A2, and B1, but not B2.
 
 ```{r bonferroni-mix-1}
-test_graph(g_dose, p_values = c(.024, .01, .026, .027), alpha = .05)
+test_graph(par_gate, p_values = c(.024, .01, .026, .027), alpha = .05)
 ```
 
 The results of the weighted Simes test are equivalent to weighted Bonferroni in some situations. The power of the Simes test becomes apparent when multiple p-values fall below the global alpha level, but above their local alpha in some intersection(s). In the following case, B1 & B2 are rejected in the Bonferroni testing procedure for intersection `B1 ∩ B2` because the p-value is greater than `α * w` for each hypothesis in that case. However, the Simes test rejects `B1 ∩ B2` because the weight from B1 is added to the weight for B2.
 
 ```{r simes-all-1}
 test_graph(
-  g_dose,
+  par_gate,
   p_values = c(.024, .01, .026, .027),
   alpha = .05,
   tests = list(simes = list(1:4))
@@ -65,7 +66,7 @@ corr1[3:4, 3:4] <- .5
 diag(corr1) <- 1
 
 test_graph(
-  g_dose,
+  par_gate,
   p_values = c(.024, .01, .026, .027),
   alpha = .05,
   corr = corr1,
@@ -79,7 +80,7 @@ test_graph(
 corr2 <- diag(4)
 
 print(test_graph(
-  g_dose,
+  par_gate,
   p_values = c(.024, .01, .026, .027),
   alpha = .05,
   corr = corr2,
@@ -94,7 +95,7 @@ corr3 <- matrix(nrow = 4, ncol = 4)
 diag(corr3) <- 1
 
 test_graph(
-  g_dose,
+  par_gate,
   p_values = c(.024, .01, .026, .027),
   alpha = .05,
   corr = corr3, # Correlation matrix doesn't matter when each group is size 1
@@ -106,7 +107,7 @@ Using different test types on different parts of a graph is supported.
 
 ```{r mixed-1}
 test_graph(
-  g_dose,
+  par_gate,
   p_values = c(.024, .01, .026, .027),
   alpha = .05,
   corr = corr1,
@@ -117,3 +118,76 @@ test_graph(
   )
 )
 ```
+
+There are two different testing functions - one which tests each hypothesis with the `p <= (c *) w * α` method, and another which calculates adjusted p-values. Currently the adjusted p-values method is more efficient. Using the `verbose = TRUE` option demonstrates the difference in information between the methods
+
+```{r methods}
+test_graph(
+  par_gate,
+  p_values = c(.024, .01, .026, .027),
+  alpha = .05,
+  corr = corr1,
+  tests = list(
+    bonferroni = list(2),
+    simes = list(1),
+    parametric = list(3:4)
+  ),
+  verbose = TRUE
+)
+
+test_graph2(
+  par_gate,
+  p_values = c(.024, .01, .026, .027),
+  alpha = .05,
+  corr = corr1,
+  tests = c("bonferroni", "simes", "parametric"),
+  groups = list(2, 1, 3:4),
+  verbose = TRUE
+)
+```
+
+
+
+```{r benchmark}
+set.seed(1234)
+# Randomly generate a graph
+m <- 10
+w <- sample(1:m, replace = T)
+w <- w / sum(w)
+g <- replicate(m, sample(1:m, replace = T), simplify = T)
+diag(g) <- 0
+g <- g / rowSums(g)
+graph <- new("graphMCP", m = g, weights = w)
+graph2 <- create_graph(w, g)
+
+p <- runif(m, .0001, .05)
+corr <- diag(m)
+
+# Does timing & checks results are equal
+# Bonferroni
+bench::mark(
+  test_graph(graph2, p)$hypotheses_rejected,
+  test_graph2(graph2, p)$hypotheses_rejected,
+  gMCP(graph, p)@rejected
+)
+
+# Simes
+bench::mark(
+  test_graph(graph2, p, tests = list(simes = list(1:10)))$hypotheses_rejected,
+  test_graph2(graph2, p, tests = "simes", groups = list(1:10))$hypotheses_rejected,
+  gMCP(graph, p, test = "Simes")@rejected
+)
+
+# Parametric
+bench::mark(
+  test_graph(graph2, p, tests = list(parametric = list(1:10)), corr = corr)$hypotheses_rejected,
+  test_graph2(graph2, p, tests = "parametric", groups = list(1:10), corr = corr)$hypotheses_rejected,
+  gMCP(graph, p, test = "parametric", correlation = corr)@rejected
+)
+```
+
+
+
+
+
+

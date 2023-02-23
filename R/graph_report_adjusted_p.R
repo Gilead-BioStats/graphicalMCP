@@ -49,7 +49,7 @@ test_graph2 <- function(graph,
                         groups = list(seq_along(graph$hypotheses)),
                         tests = c("bonferroni"),
                         corr = NULL,
-                        verbose = TRUE) {
+                        verbose = FALSE) {
   g_size <- length(graph$hypotheses)
   hyp_names <- names(graph$hypotheses)
 
@@ -73,7 +73,7 @@ test_graph2 <- function(graph,
     # if (row == 3) browser()
     h <- as.logical(subgraphs_h_vecs[row, ])
     weights <- subgraphs_weights[row, ]
-if (any(weights == 1)) browser()
+
     # Need to remove indices from groups that aren't in this intersection
     # Furthermore, need to pass them in as names rather than positions to
     # account for some indices being removed

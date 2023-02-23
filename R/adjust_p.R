@@ -45,6 +45,8 @@ p_adjust <- function(p_values, weights, groups, tests, corr = NULL) {
       } else {
         stop(paste(test, "test is not supported yet"))
       }
+    } else {
+      adj_p_group[[i]] <- Inf
     }
   }
 

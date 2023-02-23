@@ -11,7 +11,7 @@ test_graph(
   tests = list(bonferroni = list(seq_along(graph$hypotheses)), parametric = NULL, simes =
     NULL),
   corr = NULL,
-  verbose = TRUE
+  verbose = FALSE
 )
 }
 \arguments{
@@ -45,7 +45,7 @@ A \code{graph_report} object, consisting of
 \item The initial graph being tested,
 \item p-values & alpha used for tests,
 \item Which hypotheses can be rejected, and
-\item (Optionally) Detailed test results matrix, including the results of
+\item (Optionally) verbose test results matrix, including the results of
 \code{generate_weights()} & test results for each intersection hypothesis
 }
 }
