@@ -63,7 +63,7 @@ test_graph(
   p_values = .05 / 1:10,
   alpha = .05,
   groups = list(1:3, c(4, 6, 8), c(5, 7), 9:10),
-  tests = "bpsp",
+  tests = c("b", "p", "s", "p"),
   corr = corr
 )
 

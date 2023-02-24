@@ -48,10 +48,10 @@
 #' diag(corr2) <- 1
 #'
 #' # The default is all Bonferroni with alpha = .05
-#' test_graph(g, p)
+#' test_graph_critical(g, p)
 #'
 #' # But tests can be specified at the hypothesis-level
-#' test_graph(
+#' test_graph_critical(
 #'   graph = g,
 #'   p_values = p,
 #'   alpha = .05,
@@ -64,9 +64,9 @@
 #' )
 #'
 #' # Note that these two are NOT equivalent
-#' test_graph(g, p, tests = list(parametric = list(1:4)), corr = corr2)
-#' test_graph(g, p, tests = list(parametric = list(1, 2, 3, 4)), corr = corr2)
-test_graph <- function(graph,
+#' test_graph_critical(g, p, tests = list(parametric = list(1:4)), corr = corr2)
+#' test_graph_critical(g, p, tests = list(parametric = list(1, 2, 3, 4)), corr = corr2)
+test_graph_critical <- function(graph,
                        p_values,
                        alpha = .05,
                        tests = list(

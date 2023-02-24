@@ -173,15 +173,21 @@ bench::mark(
 
 # Simes
 bench::mark(
-  test_graph(graph2, p, tests = list(simes = list(1:10)))$hypotheses_rejected,
-  test_graph2(graph2, p, tests = "simes", groups = list(1:10))$hypotheses_rejected,
+  test_graph(graph2, p,
+             tests = list(simes = list(1:10)))$hypotheses_rejected,
+  test_graph2(graph2, p,
+              tests = "simes", groups = list(1:10))$hypotheses_rejected,
   gMCP(graph, p, test = "Simes")@rejected
 )
 
 # Parametric
 bench::mark(
-  test_graph(graph2, p, tests = list(parametric = list(1:10)), corr = corr)$hypotheses_rejected,
-  test_graph2(graph2, p, tests = "parametric", groups = list(1:10), corr = corr)$hypotheses_rejected,
+  test_graph(graph2, p,
+             tests = list(parametric = list(1:10)),
+             corr = corr)$hypotheses_rejected,
+  test_graph2(graph2, p,
+              tests = "parametric", groups = list(1:10),
+              corr = corr)$hypotheses_rejected,
   gMCP(graph, p, test = "parametric", correlation = corr)@rejected
 )
 ```
