@@ -29,6 +29,6 @@ bonferroni_fast <- function(graph, p_values, alpha = .05) {
       test_used = "bonferroni",
       hypotheses_rejected = reject_hyps
     ),
-    class = "graph_report"
+    class = "graph_report2"
   )
 }

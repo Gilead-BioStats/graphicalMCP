@@ -1,14 +1,17 @@
-#' Title
+#' Test a graph using the adjusted p-values method
 #'
-#' @param graph
-#' @param p_values
-#' @param alpha
-#' @param groups
-#' @param tests
-#' @param corr
-#' @param verbose
+#' @param graph An initial graph as returned by `create_graph()`
+#' @param p_values A numeric vector of p-values
+#' @param alpha A numeric scalar specifying the global level to test at
+#' @param groups A list of numeric vectors specifying hypotheses to test
+#'   together
+#' @param tests A character vector of tests to apply to the given groups
+#' @param corr (Optional) A numeric matrix of correlations between hypotheses'
+#'   test statistics
+#' @param verbose A logical scalar specifying how detailed the output should be
 #'
-#' @return
+#' @return A `graph_report2` object, specifying which null hypotheses can be
+#'   rejected
 #' @export
 #'
 #' @examples
@@ -148,7 +151,7 @@ test_graph2 <- function(graph,
       hypotheses_rejected = reject_hyps,
       test_results = if (verbose) weight_res_matrix
     ),
-    class = "graph_report"
+    class = "graph_report2"
   )
 
 }

@@ -70,6 +70,6 @@ test_graph_example <- function(graph,
         )
       }
     ),
-    class = "graph_report2"
+    class = "graph_report"
   )
 }

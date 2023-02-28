@@ -1,3 +1,7 @@
+section_break <- function(text) {
+  cat("\n", text, " ", rep("-", 79 - nchar(text)), "\n", sep = "")
+}
+
 #' S3 print method for class `graph_report`
 #'
 #' A graph report displays
@@ -11,69 +15,94 @@
 #'
 #' @param ... Other values passed on to other methods (currently unused)
 #'
-#' @param verbose A logical value indicating whether or not test results should print for each intersection hypothesis
+#' @param indent An integer value indicating how many spaces to indent results
 #'
 #' @export
-print.graph_report <- function(x, ...) {
-  print(x$initial_graph)
+print.graph_report <- function(x, ..., precision = 6, indent = 2) {
+  pad <- paste(rep(" ", indent), collapse = "")
+  pad_less_1 <- paste(rep(" ", max(indent - 1, 0)), collapse = "")
+  hyp_names <- names(x$inputs$graph$hypotheses)
 
-  cat("\n", paste(rep("-", 80), collapse = ""), "\n\n", sep = "")
-
-  cat("--- Test summary ---\n")
-  cat("Global alpha = ", x$alpha, "\n", sep = "")
-  if (!is.null(x$corr)) {
-    dimnames(x$corr) <- dimnames(x$initial_graph$transitions)
-    df_corr <- cbind(
-      data.frame(
-        "Correlation matrix:   " = rownames(x$corr),
-        check.names = FALSE
-      ),
-      as.data.frame(x$corr)
+  section_break("Test parameters")
+  in_calcs <- within(x$inputs, {
+    # Input calcs
+    graph_out <- capture.output(print(graph))
+    hyp_groups <- lapply(groups, function(group) hyp_names[group])
+    pad_tests <- formatC(tests, width = max(nchar(tests)) + indent)
+    test_spec <- paste0(
+      pad_tests,
+      ": (",
+      lapply(hyp_groups, paste, collapse = "-"),
+      ")",
+      collapse = "\n"
     )
-    print(df_corr, row.names = FALSE)
+    p_mat <- matrix(
+      p,
+      nrow = 1,
+      dimnames = list(
+        paste0(pad, "Unadjusted p-values:"),
+        hyp_names
+      ),
+    )
+
+    if (!is.null(corr)) {
+      dimnames(corr) <- dimnames(graph$transitions)
+      colname_pad <- format(
+        "Correlation matrix:   ",
+        width = max(nchar(rownames(corr)))
+      )
+      label <- paste0(pad_less_1, colname_pad)
+      df_corr <- data.frame(
+        paste0(pad_less_1, rownames(corr)),
+        corr,
+        check.names = FALSE
+      )
+      names(df_corr)[[1]] <- label
+    }
+
+    # Input print
+    cat(paste0(pad, graph_out), sep = "\n")
     cat("\n")
+    cat(pad, "Global alpha = ", alpha, sep = "")
+    cat("\n\n")
+    print(round(p_mat, precision))
+    cat("\n")
+    if (!is.null(corr)) {
+      print(df_corr, row.names = FALSE)
+      cat("\n")
+    }
+    cat(pad, "Test groups", "\n", test_spec, sep = "")
+    cat("\n")
+  })
+
+  section_break("Global test summary")
+  out_calcs <- within(c(in_calcs, x$outputs), {
+    hyp_width <- max(nchar(c("Hypothesis", hyp_names))) + indent - 1
+
+    df_summary <- data.frame(
+      Hypothesis = formatC(hyp_names, width = hyp_width),
+      `Adj. P-value` = round(p_adj, precision),
+      Reject = rejected,
+      check.names = FALSE
+    )
+    names(df_summary)[[1]] <- formatC("Hypothesis", width = hyp_width)
+
+    print(df_summary, row.names = FALSE)
+  })
+
+
+  if (!is.null(x$details)) {
+    section_break("Test details - Adjusted p")
+    detail_results_out <- capture.output(
+      print(round(x$details$results, precision))
+    )
+    cat(paste0(pad, detail_results_out), sep = "\n")
   }
 
-  names_padded <- formatC(
-    names(x$initial_graph$hypotheses),
-    width = max(nchar(names(x$initial_graph$hypotheses)))
-  )
-
-  test_names <- gsub(
-    "[^(bonferroni|simes|parametric)]",
-    "",
-    names(unlist(x$test_used))
-  )
-  test_names_ordered <- test_names[unlist(x$test_used)]
-
-  global_test <- data.frame(
-    Hypothesis = names_padded,
-    Test = test_names_ordered,
-    "Reject Null?" = x$hypotheses_rejected,
-    "P-value" = x$p_values,
-    row.names = seq_along(x$initial_graph$hypotheses),
-    check.names = FALSE
-  )
-  global_test$`Adj. P-value` <- x$adj_p_values
-  global_test$`Adj. P-value1` <- x$adj_p_values1
-
-  print(global_test, row.names = FALSE)
-
-  if (!is.null(x$test_results)) {
-    cat("\n", paste(rep("-", 80), collapse = ""), "\n\n", sep = "")
-
-    cat("--- Detailed test results ---\n")
-    print(x$test_results)
-    cat("\n")
-
-    if (!is.null(x$test_details)) {
-      details_round <- x$test_details
-      round_c <- as.character(round(as.numeric(details_round$c), 6))
-      round_c[is.na(round_c)] <- ""
-      details_round$c <- round_c
-
-      print(details_round, row.names = FALSE)
-    }
+  if (!is.null(x$critical)) {
+    section_break("Test details - Critical values")
+    critical_results_out <- capture.output(print(x$critical$results))
+    cat(paste0(pad, critical_results_out), sep = "\n")
   }
 
   invisible(x)

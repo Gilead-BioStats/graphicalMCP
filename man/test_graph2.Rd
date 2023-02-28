@@ -2,7 +2,7 @@
 % Please edit documentation in R/graph_report_adjusted_p.R
 \name{test_graph2}
 \alias{test_graph2}
-\title{Title}
+\title{Test a graph using the adjusted p-values method}
 \usage{
 test_graph2(
   graph,
@@ -15,10 +15,28 @@ test_graph2(
 )
 }
 \arguments{
-\item{verbose}{}
+\item{graph}{An initial graph as returned by \code{create_graph()}}
+
+\item{p_values}{A numeric vector of p-values}
+
+\item{alpha}{A numeric scalar specifying the global level to test at}
+
+\item{groups}{A list of numeric vectors specifying hypotheses to test
+together}
+
+\item{tests}{A character vector of tests to apply to the given groups}
+
+\item{corr}{(Optional) A numeric matrix of correlations between hypotheses'
+test statistics}
+
+\item{verbose}{A logical scalar specifying how detailed the output should be}
+}
+\value{
+A \code{graph_report2} object, specifying which null hypotheses can be
+rejected
 }
 \description{
-Title
+Test a graph using the adjusted p-values method
 }
 \examples{
 

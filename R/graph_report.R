@@ -1,250 +1,121 @@
-#' Apply weighted Bonferroni, parametric, and Simes tests
-#'
-#' @param graph An initial graph as created by `create_graph()`
-#' @param p_values A numeric vector of p-values, one for each hypothesis in the
-#'   graph
-#' @param alpha A numeric vector of length 1 specifying the un-weighted alpha
-#'   level at which to test each hypothesis
-#' @param tests A list with three elements, `bonferroni`, `simes`, and
-#'   `parametric`. Each element is a list of hypothesis groups to apply the
-#'   given test to. Each hypothesis must be specified exactly once, so that the
-#'   length of all elements of the list equals the number of hypotheses. The
-#'   default is to apply the weighted Bonferroni test to all hypotheses
-#' @param verbose (Optional) A logical value specifying whether to report
-#'   intersection/hypothesis-level testing details
-#' @param corr (Optional) A correlation matrix for the test statistics of
-#'   `graph`. Diagonal entries should be 1. A known absence of correlation
-#'   should be entered as 0, and unknown correlation should be entered as NA.
-#'   This argument is only used for the parametric test. For each element of a
-#'   parametric testing group, the correlation matrix for that group's sub-graph
-#'   must be fully known
-#'
-#' @return A `graph_report` object, consisting of
-#'   * The initial graph being tested,
-#'   * p-values & alpha used for tests,
-#'   * Which hypotheses can be rejected, and
-#'   * (Optionally) verbose test results matrix, including the results of
-#'   `generate_weights()` & test results for each intersection hypothesis
 #' @export
-#'
-#' @examples
-#'
-#' hypotheses <- c(0.5, 0.5, 0, 0)
-#' transitions <- rbind(
-#'   c(0, 0, 1, 0),
-#'   c(0, 0, 0, 1),
-#'   c(0, 1, 0, 0),
-#'   c(1, 0, 0, 0)
-#' )
-#'
-#' g <- create_graph(hypotheses, transitions)
-#' p <- c(.01, .02, .05, .1)
-#'
-#' corr <- matrix(nrow = 4, ncol = 4)
-#' corr[3:4, 3:4] <- .5
-#' diag(corr) <- 1
-#'
-#' corr2 <- matrix(.5, nrow = 4, ncol = 4)
-#' diag(corr2) <- 1
-#'
-#' # The default is all Bonferroni with alpha = .05
-#' test_graph_critical(g, p)
-#'
-#' # But tests can be specified at the hypothesis-level
-#' test_graph_critical(
-#'   graph = g,
-#'   p_values = p,
-#'   alpha = .05,
-#'   tests = list(
-#'     bonferroni = 1,
-#'     simes = list(c(2)),
-#'     parametric = list(c(3, 4))
-#'   ),
-#'   corr = corr
-#' )
-#'
-#' # Note that these two are NOT equivalent
-#' test_graph_critical(g, p, tests = list(parametric = list(1:4)), corr = corr2)
-#' test_graph_critical(g, p, tests = list(parametric = list(1, 2, 3, 4)), corr = corr2)
-test_graph_critical <- function(graph,
-                       p_values,
-                       alpha = .05,
-                       tests = list(
-                         bonferroni = list(seq_along(graph$hypotheses)),
-                         parametric = NULL,
-                         simes = NULL
-                       ),
-                       corr = NULL,
-                       verbose = FALSE) {
-  # Input validation -----------------------------------------------------------
-  valid_corr <- !any(
-    vapply(
-      tests$parametric,
-      function(x) corr_has_missing(corr, x),
-      logical(1)
-    )
+test_graph <- function(graph,
+                        p,
+                        alpha = .05,
+                        groups = list(seq_along(graph$hypotheses)),
+                        tests = c("bonferroni"),
+                        corr = NULL,
+                        verbose = FALSE,
+                        critical = FALSE) {
+  partial_match_replacements <- c(
+    bonferroni = "bonferroni",
+    parametric = "parametric",
+    simes = "simes",
+    b = "bonferroni",
+    p = "parametric",
+    s = "simes"
   )
+  tests <- partial_match_replacements[tests]
 
-  test_names <- c("bonferroni", "parametric", "simes")
-  stopifnot(
-    "please choose exactly one test per hypothesis" =
-      setequal(seq_along(graph$hypotheses), unlist(tests)) &&
-      length(graph$hypotheses) == length(unlist(tests)),
-    "'tests' can only be bonferroni, parametric, and simes" =
-      setequal(union(names(tests), test_names), test_names),
-    "correlation sub-matrix for parametric tests must be complete" = valid_corr
-  )
-
-  # Generate closure -----------------------------------------------------------
-  g_size <- length(graph$hypotheses)
+  graph_size <- length(graph$hypotheses)
+  gw_size <- 2 ^ graph_size - 1
+  num_groups <- length(groups)
   hyp_names <- names(graph$hypotheses)
+  names(p) <- hyp_names
+  if (!is.null(corr)) dimnames(corr) <- list(hyp_names, hyp_names)
 
-  subgraphs <- generate_weights(graph)
-  subgraphs_h_vecs <- subgraphs[, seq_len(g_size), drop = FALSE]
-  subgraphs_weights <- subgraphs[, seq_len(g_size) + g_size, drop = FALSE]
-
-  test_results <- matrix(
-    nrow = nrow(subgraphs_weights),
-    ncol = ncol(subgraphs_weights)
+  intersections <- generate_weights(graph)
+  inter_h_vecs <- intersections[, seq_len(graph_size), drop = FALSE]
+  # inter_weights <-
+  #   intersections[, seq_len(graph_size) + graph_size, drop = FALSE]
+  inter_small <- ifelse(
+    intersections[, seq_len(graph_size)],
+    intersections[, seq_len(graph_size) + graph_size],
+    NA_real_
   )
 
-  test_details <- data.frame(
-    intersection = c(),
-    hypothesis = c(),
-    test = c(),
-    p = c(),
-    "<=" = c(),
-    c = c(),
-    "*" = c(),
-    w = c(),
-    "*" = c(),
-    alpha = c(),
-    test = c(),
-    check.names = FALSE
+  # Create group list
+  # groups_x_inters <- vector("list", length(groups) * gw_size)
+  # rep_groups <- rep(groups, gw_size)
+  # groups_list <- rep_groups
+  # groups_list_name <- rep(
+  #   lapply(groups, function(group) hyp_names[group]),
+  #   gw_size
+  # )
+
+  # Turns e.g. list(1, 2:3, 4) into list(1, 2:3, 4, 5, 6:7, 8,...57, 58:59, 60)
+  # for (i in seq_along(rep_groups)) {
+  #   groups_list[[i]] <- rep_groups[[i]] + ((i - 1) %/% num_groups) * graph_size
+  # }
+
+  # Initialize adj-p matrix
+  p_adj <- matrix(
+    NA_real_,
+    nrow = gw_size,
+    ncol = num_groups,
+    dimnames = list(
+      NULL,
+      paste0("padj_", vapply(groups, paste, character(1), collapse = "-"))
+    )
   )
 
-  # Perform tests --------------------------------------------------------------
-  for (row in seq_len(nrow(subgraphs_weights))) {
-    weights <- subgraphs_weights[row, ]
-    hyps_in <- which(!!subgraphs_h_vecs[row, ])
+  # Loop
+  for (i in seq_len(gw_size * num_groups)) {
+    # You still have to index into gw at some point
+    row <- (i - 1) %/% num_groups + 1
+    h <- inter_h_vecs[row, ]
+    weights <- inter_small[row, ]
 
-    # Weighted Bonferroni test
-    res_bonferroni <- lapply(
-      tests$bonferroni,
-      function(bonf_group) {
-        bonf_group_in <- intersect(hyps_in, bonf_group)
+    # This index is periodic over the number of groups
+    group_index <- (i - 1) %% num_groups + 1
+    group <- groups[[group_index]]
+    test <- tests[[group_index]]
 
-        if (length(bonf_group_in) == 0) {
-          NULL
-        } else {
-          bonferroni(
-            p_values[bonf_group_in],
-            weights[bonf_group_in],
-            alpha,
-            verbose
-          )
-        }
-      }
+    group_in_subgraph <- group[as.logical(h[group])]
+    # Test each group - Adj-p with optional c
+    # Stick results into matrix
+    p_adj[row, group_index] <- do.call(
+      paste0("p_adjust_", test),
+      list(
+        p_values = p[group_in_subgraph],
+        weights = weights[group_in_subgraph],
+        corr = corr[group_in_subgraph, group_in_subgraph]
+      )
     )
 
-    res_parametric <- lapply(
-      tests$parametric,
-      function(para_group) {
-        para_group_in <- intersect(hyps_in, para_group)
-
-        if (length(para_group_in) == 0) {
-          NULL
-        } else {
-          parametric(
-            p_values[para_group_in],
-            weights[para_group_in],
-            alpha,
-            corr[para_group_in, para_group_in],
-            verbose
-          )
-        }
-      }
-    )
-
-    res_simes <- lapply(
-      tests$simes,
-      function(simes_group) {
-        simes_group_in <- intersect(hyps_in, simes_group)
-
-        if (length(simes_group_in) == 0) {
-          NULL
-        } else {
-          simes(
-            p_values[simes_group_in],
-            weights[simes_group_in],
-            alpha,
-            verbose
-          )
-        }
-      }
-    )
-
-    if (verbose) {
-      test_inter <- do.call(rbind, c(res_bonferroni, res_parametric, res_simes))
-
-      test_inter$hypothesis <- rownames(test_inter)
-      test_inter$intersection <- row
-      test_inter <- test_inter[order(match(test_inter$hypothesis, hyp_names)), ]
-
-      res_vec <- test_inter$res
-      names(res_vec) <- test_inter$hypothesis
-
-      test_results[row, ] <- res_vec[hyp_names]
-
-      test_details <- rbind(test_details, test_inter)
-      rownames(test_details) <- NULL
-    } else {
-      test_results[row, ] <- unlist(
-        c(res_bonferroni, res_simes, res_parametric)
-      )[hyp_names]
-    }
+  # End loop
   }
-
-  reject_intersection <- rowSums(test_results, na.rm = TRUE) > 0
-  # Each hypothesis appears in half of the 2^n intersections hypotheses. Each
-  # intersection a hypothesis is in must be rejected to reject the hypothesis
-  # globally
-  reject_hyps <- (reject_intersection %*% subgraphs_h_vecs) == 2^g_size / 2
-
-  if (verbose) {
-    # Removes the "c *" columns from the detail dataframe when using only Simes &
-    # Bonferroni
-    if (length(tests$parametric) == 0) test_details[, 6:7] <- NULL
-
-    res_names <- c(
-      hyp_names,
-      paste(hyp_names, "wgt", sep = "_"),
-      paste(hyp_names, "test", sep = "_"),
-      "rej_Hj"
-    )
-
-    weight_res_matrix <- structure(
-      cbind(
-        as.data.frame(subgraphs_h_vecs),
-        as.data.frame(subgraphs_weights),
-        as.data.frame(test_results),
-        data.frame(rej_Hj = reject_intersection)
-      ),
-      names = res_names
-    )
-
-  }
+  # rowMin for inter adj-p
+  p_adj_inter <- apply(p_adj, 1, min) # NA should never exist, so leave them in
+  test_inter <- p_adj_inter <= alpha
+  p_adj_global <- apply(p_adj_inter * inter_h_vecs, 2, max)
+  test_global <- p_adj_global <= alpha
 
   structure(
     list(
-      initial_graph = graph,
-      p_values = structure(p_values, names = hyp_names),
-      alpha = alpha,
-      test_used = tests,
-      corr = corr,
-      hypotheses_rejected = reject_hyps[1, ],
-      test_results = if (verbose) weight_res_matrix,
-      test_details = if (verbose) test_details
+      inputs = list(
+        graph = graph,
+        p = p,
+        alpha = alpha,
+        groups = groups,
+        tests = tests,
+        corr = corr
+      ),
+      outputs = list(
+        p_adj = p_adj_global,
+        rejected = test_global
+      ),
+      details = if (verbose) {
+        list(
+          results = cbind(
+            inter_small,
+            p_adj_grp = p_adj,
+            p_adj = p_adj_inter,
+            res = test_inter
+          )
+        )
+      },
+      critical = if (critical) list()
     ),
     class = "graph_report"
   )
