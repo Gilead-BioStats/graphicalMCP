@@ -131,7 +131,7 @@ test_graph <- function(graph,
       if (length(group_in_inter) == 0) {
         critical_list[[i]] <- NULL
       } else {
-        critical_list[[i]] <- do.call(
+        df_critical <- do.call(
           paste0(test, "_test_vals"),
           list(
             p_values = p[group_in_inter],
@@ -140,6 +140,9 @@ test_graph <- function(graph,
             corr = corr[group_in_inter, group_in_inter]
           )
         )
+        df_critical$intersection <- inter_index
+
+        critical_list[[i]] <- df_critical
       }
     }
   }
@@ -154,7 +157,7 @@ test_graph <- function(graph,
     list(results = cbind(inter_small, p_adj, p_adj_inter, res = test_inter))
   }
 
-  critical_results <- if (critical) list(do.call(rbind, critical_list))
+  critical_results <- if (critical) list(results = do.call(rbind, critical_list))
 
   structure(
     list(

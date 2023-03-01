@@ -58,7 +58,7 @@ solve_c <- function(w, corr, alpha) {
 bonferroni_test_vals <- function(p_values, weights, alpha, corr = NULL) {
   data.frame(
     intersection = NA,
-    hypothesis = NA,
+    hypothesis = names(weights),
     test = "bonferroni",
     p = p_values,
     "<=" = "<=",
@@ -78,7 +78,7 @@ parametric_test_vals <- function(p_values, weights, alpha, corr = NULL) {
 
   data.frame(
     intersection = NA,
-    hypothesis = NA,
+    hypothesis = names(weights),
     test = "parametric",
     p = p_values,
     "<=" = "<=",
@@ -104,7 +104,7 @@ simes_test_vals <- function(p_values, weights, alpha, corr = NULL) {
 
   data.frame(
     intersection = NA,
-    hypothesis = NA,
+    hypothesis = names(weights),
     test = "simes",
     p = p_values,
     "<=" = "<=",

@@ -10,8 +10,7 @@ test_graph_critical(
   alpha = 0.05,
   tests = list(bonferroni = list(seq_along(graph$hypotheses)), parametric = NULL, simes =
     NULL),
-  corr = NULL,
-  verbose = FALSE
+  corr = NULL
 )
 }
 \arguments{

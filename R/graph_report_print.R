@@ -101,7 +101,7 @@ print.graph_report <- function(x, ..., precision = 6, indent = 2) {
 
   if (!is.null(x$critical)) {
     section_break("Test details - Critical values")
-    critical_results_out <- capture.output(print(x$critical$results))
+    critical_results_out <- capture.output(print(x$critical$results, row.names = FALSE))
     cat(paste0(pad, critical_results_out), sep = "\n")
   }
 
