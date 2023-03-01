@@ -46,7 +46,7 @@ par_gate
 This graph can be tested most simply with the default weighted Bonferroni test. When testing at the global alpha level 0.05, we can reject hypotheses A1, A2, and B1, but not B2.
 
 ```{r bonferroni-mix-1}
-test_graph(par_gate, p = pvals, alpha = .05)
+test_graph(par_gate, p = pvals, alpha = .05, critical = TRUE)
 ```
 
 The results of the weighted Simes test are equivalent to weighted Bonferroni in some situations. The power of the Simes test becomes apparent when multiple p-values fall below the global alpha level, but above their local alpha in some intersection(s). In the following case, B1 & B2 are rejected in the Bonferroni testing procedure for intersection `B1 ∩ B2` because the p-value is greater than `α * w` for each hypothesis in that case. However, the Simes test rejects `B1 ∩ B2` because the weight from B1 is added to the weight for B2.
@@ -76,13 +76,13 @@ test_graph(par_gate,
 ```{r parametric-2}
 corr2 <- diag(4)
 
-print(test_graph(
+test_graph(
   par_gate,
   p = pvals,
   alpha = .05,
-  corr = corr2,
-  tests = list(parametric = list(1:4))
-), verbose = TRUE)
+  corr = NULL,
+  tests = "p"
+)
 ```
 
 The null case of this is when a parametric group is size 1 (Each correlation matrix is a 1x1 with value 1)
@@ -96,7 +96,8 @@ test_graph(
   p = pvals,
   alpha = .05,
   corr = corr3, # Correlation matrix doesn't matter when each group is size 1
-  tests = list(parametric = list(1, 2, 3, 4))
+  groups = list(1, 2, 3, 4),
+  tests = rep("p", 4)
 )
 ```
 
@@ -108,45 +109,42 @@ test_graph(
   p = pvals,
   alpha = .05,
   corr = corr1,
-  tests = list(
-    bonferroni = list(2),
-    simes = list(1),
-    parametric = list(3:4)
-  )
+  groups = list(1, 2, 3:4),
+  tests = c("s", "b", "p")
 )
 ```
 
-There are two different testing functions - one which tests each hypothesis with the `p <= (c *) w * α` method, and another which calculates adjusted p-values. Currently the adjusted p-values method is more efficient. Using the `verbose = TRUE` option demonstrates the difference in information between the methods
+There are two different testing methods - one which tests each hypothesis with the `p <= (c *) w * α` method, and another which calculates adjusted p-values. The adjusted p-values method is much more efficient, so it is the standard method. Additional details about the adjusted p-values calculation can be seen by setting `verbose = TRUE`.
 
-```{r methods}
+```{r verbose}
 test_graph(
   par_gate,
   p = pvals,
   alpha = .05,
   corr = corr1,
-  tests = list(
-    bonferroni = list(2),
-    simes = list(1),
-    parametric = list(3:4)
-  ),
-  verbose = TRUE
-)
-
-test_graph2(
-  par_gate,
-  p = pvals,
-  alpha = .05,
-  corr = corr1,
-  tests = c("bonferroni", "simes", "parametric"),
-  groups = list(2, 1, 3:4),
+  groups = list(1, 2, 3:4),
+  tests = c("s", "b", "p"),
   verbose = TRUE
 )
 ```
 
+The critical value method tests every hypothesis in the closure. Setting `critical = TRUE` displays the values used in each of these tests. This can provide more detailed information about what caused a hypothesis to fail than the adjusted p-values. However, it comes at a significant cost in computation time.
 
+```{r critical}
+test_graph(
+  par_gate,
+  p = pvals,
+  alpha = .05,
+  corr = corr1,
+  groups = list(1, 2, 3:4),
+  tests = c("s", "b", "p"),
+  verbose = TRUE,
+  critical = TRUE
+)
+```
 
 ```{r benchmark}
-set.seed(1234)
+set.seed(3123)
 # Randomly generate a graph
 m <- 10
 w <- sample(1:m, replace = T)
@@ -160,31 +158,30 @@ graph2 <- create_graph(w, g)
 p <- runif(m, .0001, .05)
 corr <- diag(m)
 
-# Does timing & checks results are equal
+# Does timing, and also checks results are equal
 # Bonferroni
 bench::mark(
-  test_graph(graph2, p)$hypotheses_rejected,
-  test_graph2(graph2, p)$hypotheses_rejected,
-  gMCP(graph, p)@rejected
+  bonferroni_sequential(graph2, p)$rejected,
+  test_graph(graph2, p)$outputs$rejected,
+  test_graph(graph2, p, verbose = TRUE)$outputs$rejected,
+  test_graph(graph2, p, critical = TRUE)$outputs$rejected,
+  gMCP(graph, p)@rejected,
+  check = FALSE
 )
 
 # Simes
 bench::mark(
-  test_graph(graph2, p,
-             tests = list(simes = list(1:10)))$hypotheses_rejected,
-  test_graph2(graph2, p,
-              tests = "simes", groups = list(1:10))$hypotheses_rejected,
+  test_graph(graph2, p, tests = "s")$outputs$rejected,
+  test_graph(graph2, p, tests = "s", verbose = TRUE)$outputs$rejected,
+  test_graph(graph2, p, tests = "s", critical = TRUE)$outputs$rejected,
   gMCP(graph, p, test = "Simes")@rejected
 )
 
 # Parametric
 bench::mark(
-  test_graph(graph2, p,
-             tests = list(parametric = list(1:10)),
-             corr = corr)$hypotheses_rejected,
-  test_graph2(graph2, p,
-              tests = "parametric", groups = list(1:10),
-              corr = corr)$hypotheses_rejected,
+  test_graph(graph2, p, tests = "p", corr = corr)$outputs$rejected,
+  test_graph(graph2, p, tests = "p", corr = corr, verbose = TRUE)$outputs$rejected,
+  test_graph(graph2, p, tests = "p", corr = corr, critical = TRUE)$outputs$rejected,
   gMCP(graph, p, test = "parametric", correlation = corr)@rejected
 )
 ```

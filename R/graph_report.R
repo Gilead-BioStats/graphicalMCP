@@ -157,7 +157,12 @@ test_graph <- function(graph,
     list(results = cbind(inter_small, p_adj, p_adj_inter, res = test_inter))
   }
 
-  critical_results <- if (critical) list(results = do.call(rbind, critical_list))
+  critical_results <- if (critical) {
+    df_crit_res <- do.call(rbind, critical_list)
+    if (!any(tests == "parametric")) df_crit_res[6:7] <- NULL
+
+    list(results = df_crit_res)
+  }
 
   structure(
     list(

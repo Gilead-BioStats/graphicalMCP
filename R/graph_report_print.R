@@ -77,15 +77,27 @@ print.graph_report <- function(x, ..., precision = 6, indent = 2) {
 
   section_break("Global test summary")
   out_calcs <- within(c(in_calcs, x$outputs), {
-    hyp_width <- max(nchar(c("Hypothesis", hyp_names))) + indent - 1
+    if (is.logical(rejected)) {
+      hyp_width <- max(nchar(c("Hypothesis", hyp_names))) + indent - 1
 
-    df_summary <- data.frame(
-      Hypothesis = formatC(hyp_names, width = hyp_width),
-      `Adj. P-value` = round(p_adj, precision),
-      Reject = rejected,
-      check.names = FALSE
-    )
-    names(df_summary)[[1]] <- formatC("Hypothesis", width = hyp_width)
+      df_summary <- data.frame(
+        Hypothesis = formatC(hyp_names, width = hyp_width),
+        `Adj. P-value` = round(p_adj, precision),
+        Reject = rejected,
+        check.names = FALSE
+      )
+      names(df_summary)[[1]] <- formatC("Hypothesis", width = hyp_width)
+    } else {
+      hyp_width <- max(nchar(c("Step", seq_along(p_adj)))) + indent - 1
+
+      df_summary <- data.frame(
+        Step = formatC(seq_along(p_adj), width = hyp_width),
+        `Adj. P-value` = round(p_adj, precision),
+        Reject = rejected,
+        check.names = FALSE
+      )
+      names(df_summary)[[1]] <- formatC("Step", width = hyp_width)
+    }
 
     print(df_summary, row.names = FALSE)
   })
@@ -101,7 +113,24 @@ print.graph_report <- function(x, ..., precision = 6, indent = 2) {
 
   if (!is.null(x$critical)) {
     section_break("Test details - Critical values")
-    critical_results_out <- capture.output(print(x$critical$results, row.names = FALSE))
+
+    if (!any(x$inputs$tests == "parametric")) {
+      num_cols <- c("p", "w", "alpha")
+    } else {
+      num_cols <- c("p", "c", "w", "alpha")
+    }
+
+    crit_res <- x$critical$results
+    crit_res[num_cols] <- apply(
+      crit_res[num_cols],
+      2,
+      function(num_col) {
+        fmt_num <- round(as.numeric(num_col), precision)
+      }
+    )
+    crit_res$c <- ifelse(is.na(crit_res$c), "", crit_res$c)
+
+    critical_results_out <- capture.output(print(crit_res, row.names = FALSE))
     cat(paste0(pad, critical_results_out), sep = "\n")
   }
 
