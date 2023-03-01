@@ -74,8 +74,7 @@ test_graph_critical <- function(graph,
                          parametric = NULL,
                          simes = NULL
                        ),
-                       corr = NULL,
-                       verbose = FALSE) {
+                       corr = NULL) {
   # Input validation -----------------------------------------------------------
   valid_corr <- !any(
     vapply(
@@ -137,11 +136,10 @@ test_graph_critical <- function(graph,
         if (length(bonf_group_in) == 0) {
           NULL
         } else {
-          test_bonferroni(
+          bonferroni_critical(
             p_values[bonf_group_in],
             weights[bonf_group_in],
-            alpha,
-            verbose
+            alpha
           )
         }
       }
@@ -155,12 +153,11 @@ test_graph_critical <- function(graph,
         if (length(para_group_in) == 0) {
           NULL
         } else {
-          test_parametric(
+          parametric_critical(
             p_values[para_group_in],
             weights[para_group_in],
             alpha,
-            corr[para_group_in, para_group_in],
-            verbose
+            corr[para_group_in, para_group_in]
           )
         }
       }
@@ -174,35 +171,28 @@ test_graph_critical <- function(graph,
         if (length(simes_group_in) == 0) {
           NULL
         } else {
-          test_simes(
+          simes_critical(
             p_values[simes_group_in],
             weights[simes_group_in],
-            alpha,
-            verbose
+            alpha
           )
         }
       }
     )
 
-    if (verbose) {
-      test_inter <- do.call(rbind, c(res_bonferroni, res_parametric, res_simes))
+    test_inter <- do.call(rbind, c(res_bonferroni, res_parametric, res_simes))
 
-      test_inter$hypothesis <- rownames(test_inter)
-      test_inter$intersection <- row
-      test_inter <- test_inter[order(match(test_inter$hypothesis, hyp_names)), ]
+    test_inter$hypothesis <- rownames(test_inter)
+    test_inter$intersection <- row
+    test_inter <- test_inter[order(match(test_inter$hypothesis, hyp_names)), ]
 
-      res_vec <- test_inter$res
-      names(res_vec) <- test_inter$hypothesis
+    res_vec <- test_inter$res
+    names(res_vec) <- test_inter$hypothesis
 
-      test_results[row, ] <- res_vec[hyp_names]
+    test_results[row, ] <- res_vec[hyp_names]
 
-      test_details <- rbind(test_details, test_inter)
-      rownames(test_details) <- NULL
-    } else {
-      test_results[row, ] <- unlist(
-        c(res_bonferroni, res_simes, res_parametric)
-      )[hyp_names]
-    }
+    test_details <- rbind(test_details, test_inter)
+    rownames(test_details) <- NULL
   }
 
   reject_intersection <- rowSums(test_results, na.rm = TRUE) > 0
@@ -211,29 +201,26 @@ test_graph_critical <- function(graph,
   # globally
   reject_hyps <- (reject_intersection %*% subgraphs_h_vecs) == 2^g_size / 2
 
-  if (verbose) {
-    # Removes the "c *" columns from the detail dataframe when using only Simes &
-    # Bonferroni
-    if (length(tests$parametric) == 0) test_details[, 6:7] <- NULL
+  # Removes the "c *" columns from the detail dataframe when using only Simes &
+  # Bonferroni
+  if (length(tests$parametric) == 0) test_details[, 6:7] <- NULL
 
-    res_names <- c(
-      hyp_names,
-      paste(hyp_names, "wgt", sep = "_"),
-      paste(hyp_names, "test", sep = "_"),
-      "rej_Hj"
-    )
+  res_names <- c(
+    hyp_names,
+    paste(hyp_names, "wgt", sep = "_"),
+    paste(hyp_names, "test", sep = "_"),
+    "rej_Hj"
+  )
 
-    weight_res_matrix <- structure(
-      cbind(
-        as.data.frame(subgraphs_h_vecs),
-        as.data.frame(subgraphs_weights),
-        as.data.frame(test_results),
-        data.frame(rej_Hj = reject_intersection)
-      ),
-      names = res_names
-    )
-
-  }
+  weight_res_matrix <- structure(
+    cbind(
+      as.data.frame(subgraphs_h_vecs),
+      as.data.frame(subgraphs_weights),
+      as.data.frame(test_results),
+      data.frame(rej_Hj = reject_intersection)
+    ),
+    names = res_names
+  )
 
   structure(
     list(
@@ -243,8 +230,8 @@ test_graph_critical <- function(graph,
       test_used = tests,
       corr = corr,
       hypotheses_rejected = reject_hyps[1, ],
-      test_results = if (verbose) weight_res_matrix,
-      test_details = if (verbose) test_details
+      test_results = weight_res_matrix,
+      test_details = test_details
     ),
     class = "graph_report2"
   )

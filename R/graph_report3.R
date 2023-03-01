@@ -50,7 +50,7 @@
 #'   tests = c("bonferroni", "simes", "parametric"),
 #'   corr = corr
 #' )
-test_graph <- function(graph,
+test_graph3 <- function(graph,
                         p,
                         alpha = .05,
                         groups = list(seq_along(graph$hypotheses)),
@@ -98,54 +98,38 @@ test_graph <- function(graph,
     )
   )
 
-  critical_list <- if (critical) vector("list", gw_size * num_groups)
-
   # Calculate adjusted p-values ------------------------------------------------
-  for (i in seq_len(gw_size * num_groups)) {
+  for (inter_index in seq_len(gw_size)) {
     # This index is periodic over the number of intersection hypotheses
-    inter_index <- (i - 1) %/% num_groups + 1
+    # inter_index <- (i - 1) %/% num_groups + 1
     h <- inter_h_vecs[inter_index, ]
     weights <- inter_small[inter_index, ]
 
-    # This index is periodic over the number of groups as i progresses
-    group_index <- (i - 1) %% num_groups + 1
-    group <- groups[[group_index]]
-    test <- tests[[group_index]]
+    for (group_index in seq_along(groups)) {
+      # This index is periodic over the number of groups as i progresses
+      # group_index <- (i - 1) %% num_groups + 1
+      group <- groups[[group_index]]
+      test <- tests[[group_index]]
 
-    # Hypotheses to test must be in both the current group and the current
-    # intersection
-    group_in_inter <- group[as.logical(h[group])]
+      # Hypotheses to test must be in both the current group and the current
+      # intersection
+      group_in_inter <- group[as.logical(h[group])]
 
-    p_adj[inter_index, group_index] <- do.call(
-      paste0("p_adjust_", test),
-      list(
-        p_values = p[group_in_inter],
-        weights = weights[group_in_inter],
-        corr = corr[group_in_inter, group_in_inter]
+      p_adj[inter_index, group_index] <- do.call(
+        paste0("p_adjust_", test),
+        list(
+          p_values = p[group_in_inter],
+          weights = weights[group_in_inter],
+          corr = corr[group_in_inter, group_in_inter]
+        )
       )
-    )
+    }
 
     # Calculate critical values
-    # At this point, we have a group like 1-2-5-7,
-    if (critical) {
-      if (length(group_in_inter) == 0) {
-        critical_list[[i]] <- NULL
-      } else {
-        critical_list[[i]] <- do.call(
-          paste0(test, "_test_vals"),
-          list(
-            p_values = p[group_in_inter],
-            weights = weights[group_in_inter],
-            alpha = alpha,
-            corr = corr[group_in_inter, group_in_inter]
-          )
-        )
-      }
-    }
   }
 
   # Adjusted p-values at higher levels -----------------------------------------
-  p_adj_inter <- do.call(pmin, as.data.frame(p_adj))
+  p_adj_inter <- apply(p_adj, 1, min) # NA should never exist, so leave them in
   test_inter <- p_adj_inter <= alpha
   p_adj_global <- apply(p_adj_inter * inter_h_vecs, 2, max)
   test_global <- p_adj_global <= alpha
@@ -154,7 +138,9 @@ test_graph <- function(graph,
     list(results = cbind(inter_small, p_adj, p_adj_inter, res = test_inter))
   }
 
-  critical_results <- if (critical) list(do.call(rbind, critical_list))
+  critical_results <- if (critical) {
+    list()
+  }
 
   structure(
     list(

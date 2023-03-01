@@ -59,9 +59,14 @@ p_adjust_parametric <- function(p_values, weights, corr = NULL) {
 p_adjust_simes <- function(p_values, weights, corr = NULL) {
   if (sum(weights) == 0) return(Inf)
 
-  p_ord <- order(p_values)
-  adj_p <- (p_values[p_ord] / cumsum(weights[p_ord]))[names(weights)]
-  min(adj_p)
+  adj_p <- Inf
+  for (i in seq_along(weights)) {
+    adj_p <- min(
+      adj_p,
+      p_values[[i]] / sum(weights[p_values <= p_values[[i]]])
+    )
+  }
+  adj_p
 }
 
 #' Adjust p-values

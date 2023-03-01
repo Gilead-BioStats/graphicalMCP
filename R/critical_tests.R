@@ -30,7 +30,7 @@ solve_c <- function(w, corr, alpha) {
     1,
     stats::uniroot( # This seems to use a bit of randomness, making the results change by .001
       c_function,
-      lower = 0.9, # Why is this not -Inf?
+      lower = 0.9, # Why is this not -Inf? Ohhhh because c >= 1
       upper = 1 / min(w[w > 0]),
       w = w,
       corr = corr,
@@ -53,89 +53,67 @@ solve_c <- function(w, corr, alpha) {
 #'   frame with detailed test values and results
 #' @export
 #'
-#' @rdname test-critical
+#' @rdname calc-test_vals
 #' @examples
-test_bonferroni <- function(p_values, weights, alpha, verbose = TRUE) {
-  if (verbose) {
-    res <- data.frame(
-      intersection = NA,
-      hypothesis = NA,
-      test = "bonferroni",
-      p = p_values,
-      "<=" = "<=",
-      c = "",
-      "*" = "",
-      w = weights,
-      "*" = "*",
-      alpha = alpha,
-      res = p_values <= weights * alpha,
-      check.names = FALSE
-    )
-  } else {
-    res <- p_values <= weights * alpha
-  }
-
-  res
+bonferroni_test_vals <- function(p_values, weights, alpha, corr = NULL) {
+  data.frame(
+    intersection = NA,
+    hypothesis = NA,
+    test = "bonferroni",
+    p = p_values,
+    "<=" = "<=",
+    c = "",
+    "*" = "",
+    w = weights,
+    "*" = "*",
+    alpha = alpha,
+    res = p_values <= weights * alpha,
+    check.names = FALSE
+  )
 }
 
-#' @rdname test-critical
-test_parametric <- function(p_values, weights, alpha, corr, verbose = TRUE) {
+#' @rdname calc-test_vals
+parametric_test_vals <- function(p_values, weights, alpha, corr = NULL) {
   c <- solve_c(weights, corr, alpha)
 
-  if (verbose) {
-    res <- data.frame(
-      intersection = NA,
-      hypothesis = NA,
-      test = "parametric",
-      p = p_values,
-      "<=" = "<=",
-      c = c,
-      "*" = "*",
-      w = weights,
-      "*" = "*",
-      alpha = alpha,
-      res = p_values <= c * weights * alpha,
-      check.names = FALSE
-    )
-  } else {
-    res <- p_values <= c * weights * alpha
-  }
-
-  res
+  data.frame(
+    intersection = NA,
+    hypothesis = NA,
+    test = "parametric",
+    p = p_values,
+    "<=" = "<=",
+    c = c,
+    "*" = "*",
+    w = weights,
+    "*" = "*",
+    alpha = alpha,
+    res = p_values <= c * weights * alpha,
+    check.names = FALSE
+  )
 }
 
-#' @rdname test-critical
-test_simes <- function(p_values, weights, alpha, verbose = TRUE) {
+#' @rdname calc-test_vals
+simes_test_vals <- function(p_values, weights, alpha, corr = NULL) {
   vec_res <- vector(length = length(weights))
-  w_sum <- vector(length = length(weights))
+  w_sum <- vector("numeric", length = length(weights))
 
   for (i in seq_along(weights)) {
     w_sum[[i]] <- sum(weights[p_values <= p_values[[i]]])
     vec_res[[i]] <- p_values[[i]] <= alpha * w_sum[[i]]
   }
 
-  if (verbose) {
-    res <- data.frame(
-      intersection = NA,
-      hypothesis = NA,
-      test = "simes",
-      p = p_values,
-      "<=" = "<=",
-      c = "",
-      "*" = "",
-      w = w_sum,
-      "*" = "*",
-      alpha = alpha,
-      res = vec_res,
-      check.names = FALSE
-    )
-
-    rownames(res) <- names(weights)
-  } else {
-    res <- vec_res
-
-    names(res) <- names(weights)
-  }
-
-  res
+  data.frame(
+    intersection = NA,
+    hypothesis = NA,
+    test = "simes",
+    p = p_values,
+    "<=" = "<=",
+    c = "",
+    "*" = "",
+    w = w_sum,
+    "*" = "*",
+    alpha = alpha,
+    res = vec_res,
+    check.names = FALSE
+  )
 }
