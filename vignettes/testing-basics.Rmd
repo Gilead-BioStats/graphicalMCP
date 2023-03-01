@@ -38,24 +38,21 @@ transitions <- rbind(
 names <- c("A1", "A2", "B1", "B2")
 par_gate <- create_graph(hypotheses, transitions, names)
 
+pvals <- c(.024, .01, .026, .027)
+
 par_gate
 ```
 
 This graph can be tested most simply with the default weighted Bonferroni test. When testing at the global alpha level 0.05, we can reject hypotheses A1, A2, and B1, but not B2.
 
 ```{r bonferroni-mix-1}
-test_graph(par_gate, p_values = c(.024, .01, .026, .027), alpha = .05)
+test_graph(par_gate, p = pvals, alpha = .05)
 ```
 
 The results of the weighted Simes test are equivalent to weighted Bonferroni in some situations. The power of the Simes test becomes apparent when multiple p-values fall below the global alpha level, but above their local alpha in some intersection(s). In the following case, B1 & B2 are rejected in the Bonferroni testing procedure for intersection `B1 ∩ B2` because the p-value is greater than `α * w` for each hypothesis in that case. However, the Simes test rejects `B1 ∩ B2` because the weight from B1 is added to the weight for B2.
 
 ```{r simes-all-1}
-test_graph(
-  par_gate,
-  p_values = c(.024, .01, .026, .027),
-  alpha = .05,
-  tests = list(simes = list(1:4))
-)
+test_graph(par_gate, p = pvals, alpha = .05, tests = "s")
 ```
 
 If a correlation matrix for the test statistics is partially or fully known, a parametric test can be used for any subsets whose correlation matrix is fully known. Here B1 & B2 get a `c` value calculated that boosts their testing threshold slightly higher. 
@@ -65,12 +62,12 @@ corr1 <- matrix(nrow = 4, ncol = 4)
 corr1[3:4, 3:4] <- .5
 diag(corr1) <- 1
 
-test_graph(
-  par_gate,
-  p_values = c(.024, .01, .026, .027),
+test_graph(par_gate,
+  p = pvals,
   alpha = .05,
-  corr = corr1,
-  tests = list(parametric = list(1, 2, 3:4))
+  groups = list(1, 2, 3:4),
+  tests = c("p", "p", "p"),
+  corr = corr1
 )
 ```
 
@@ -81,7 +78,7 @@ corr2 <- diag(4)
 
 print(test_graph(
   par_gate,
-  p_values = c(.024, .01, .026, .027),
+  p = pvals,
   alpha = .05,
   corr = corr2,
   tests = list(parametric = list(1:4))
@@ -96,7 +93,7 @@ diag(corr3) <- 1
 
 test_graph(
   par_gate,
-  p_values = c(.024, .01, .026, .027),
+  p = pvals,
   alpha = .05,
   corr = corr3, # Correlation matrix doesn't matter when each group is size 1
   tests = list(parametric = list(1, 2, 3, 4))
@@ -108,7 +105,7 @@ Using different test types on different parts of a graph is supported.
 ```{r mixed-1}
 test_graph(
   par_gate,
-  p_values = c(.024, .01, .026, .027),
+  p = pvals,
   alpha = .05,
   corr = corr1,
   tests = list(
@@ -124,7 +121,7 @@ There are two different testing functions - one which tests each hypothesis with
 ```{r methods}
 test_graph(
   par_gate,
-  p_values = c(.024, .01, .026, .027),
+  p = pvals,
   alpha = .05,
   corr = corr1,
   tests = list(
@@ -137,7 +134,7 @@ test_graph(
 
 test_graph2(
   par_gate,
-  p_values = c(.024, .01, .026, .027),
+  p = pvals,
   alpha = .05,
   corr = corr1,
   tests = c("bonferroni", "simes", "parametric"),
