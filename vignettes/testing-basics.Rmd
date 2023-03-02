@@ -19,6 +19,8 @@ library(graphicalMCP)
 library(gMCP)
 ```
 
+## Testing parameters
+
 Start testing with the example graph from the README, a parallel gate-keeping procedure graph.
 
 ```{r create-graph-1}
@@ -46,7 +48,7 @@ par_gate
 This graph can be tested most simply with the default weighted Bonferroni test. When testing at the global alpha level 0.05, we can reject hypotheses A1, A2, and B1, but not B2.
 
 ```{r bonferroni-mix-1}
-test_graph(par_gate, p = pvals, alpha = .05, critical = TRUE)
+test_graph(par_gate, p = pvals, alpha = .05)
 ```
 
 The results of the weighted Simes test are equivalent to weighted Bonferroni in some situations. The power of the Simes test becomes apparent when multiple p-values fall below the global alpha level, but above their local alpha in some intersection(s). In the following case, B1 & B2 are rejected in the Bonferroni testing procedure for intersection `B1 ∩ B2` because the p-value is greater than `α * w` for each hypothesis in that case. However, the Simes test rejects `B1 ∩ B2` because the weight from B1 is added to the weight for B2.
@@ -80,7 +82,7 @@ test_graph(
   par_gate,
   p = pvals,
   alpha = .05,
-  corr = NULL,
+  corr = diag(4),
   tests = "p"
 )
 ```
@@ -109,8 +111,8 @@ test_graph(
   p = pvals,
   alpha = .05,
   corr = corr1,
-  groups = list(1, 2, 3:4),
-  tests = c("s", "b", "p")
+  groups = list(1:2, 3:4),
+  tests = c("s", "p")
 )
 ```
 
@@ -122,8 +124,8 @@ test_graph(
   p = pvals,
   alpha = .05,
   corr = corr1,
-  groups = list(1, 2, 3:4),
-  tests = c("s", "b", "p"),
+  groups = list(1:2, 3:4),
+  tests = c("s", "p"),
   verbose = TRUE
 )
 ```
@@ -136,14 +138,18 @@ test_graph(
   p = pvals,
   alpha = .05,
   corr = corr1,
-  groups = list(1, 2, 3:4),
-  tests = c("s", "b", "p"),
+  groups = list(1:2, 3:4),
+  tests = c("s", "p"),
   verbose = TRUE,
   critical = TRUE
 )
 ```
 
-```{r benchmark}
+## Performance
+
+`test_graph()` automatically chooses the sequentially rejective test if all tests are Bonferroni, and if the verbose and critical flags are not selected. This shortcut significantly reduces computation time. If optimal performance is needed, `bonferroni_sequential()` can be used directly. However, input validation is not present, so errors may be more cryptic. Note that the structure returned by the sequentially rejective test is slightly different than the other tests.
+
+```{r benchmark-bonf}
 set.seed(3123)
 # Randomly generate a graph
 m <- 10
@@ -156,19 +162,22 @@ graph <- new("graphMCP", m = g, weights = w)
 graph2 <- create_graph(w, g)
 
 p <- runif(m, .0001, .05)
-corr <- diag(m)
+sim_corr <- diag(m)
 
-# Does timing, and also checks results are equal
 # Bonferroni
 bench::mark(
-  bonferroni_sequential(graph2, p)$rejected,
+  bonferroni_sequential(graph2, p)$outputs$rejected,
   test_graph(graph2, p)$outputs$rejected,
   test_graph(graph2, p, verbose = TRUE)$outputs$rejected,
   test_graph(graph2, p, critical = TRUE)$outputs$rejected,
   gMCP(graph, p)@rejected,
   check = FALSE
 )
+```
 
+Simes testing is a bit slower than Bonferroni because the adjusted p-value calculation is more complicated. However, graphicalMCP performance is still >100x faster than gMCP.
+
+```{r benchmark-simes}
 # Simes
 bench::mark(
   test_graph(graph2, p, tests = "s")$outputs$rejected,
@@ -176,18 +185,51 @@ bench::mark(
   test_graph(graph2, p, tests = "s", critical = TRUE)$outputs$rejected,
   gMCP(graph, p, test = "Simes")@rejected
 )
+```
 
+Parametric testing is the slowest test, especially when `critical = TRUE`. Parametric testing in graphicalMCP is only 8-9x faster than gMCP, because the time is dominated by the multivariate normal calculation.
+
+```{r benchmark-para}
 # Parametric
 bench::mark(
-  test_graph(graph2, p, tests = "p", corr = corr)$outputs$rejected,
-  test_graph(graph2, p, tests = "p", corr = corr, verbose = TRUE)$outputs$rejected,
-  test_graph(graph2, p, tests = "p", corr = corr, critical = TRUE)$outputs$rejected,
-  gMCP(graph, p, test = "parametric", correlation = corr)@rejected
+  test_graph(graph2, p, tests = "p", corr = sim_corr)$outputs$rejected,
+  test_graph(graph2, p, tests = "p", corr = sim_corr, verbose = TRUE)$outputs$rejected,
+  test_graph(graph2, p, tests = "p", corr = sim_corr, critical = TRUE)$outputs$rejected,
+  gMCP(graph, p, test = "parametric", correlation = sim_corr)@rejected
 )
 ```
 
+## Print options
 
+The print generic for test results includes a couple of additional options. Each section within results is indented 2 spaces by default, but this can be adjusted with `indent`. Numeric values are rounded to 6 decimals to control the amount of space used, but this can be set using the `precision` argument. This only affects the printing format, not the underlying values.
 
+```{r print-indent}
+set.seed(3123)
+# Randomly generate a graph
+m <- 5
+w <- sample(1:m, replace = T)
+w <- w / sum(w)
+g <- replicate(m, sample(1:m, replace = T), simplify = T)
+diag(g) <- 0
+g <- g / rowSums(g)
+graph <- new("graphMCP", m = g, weights = w)
+graph2 <- create_graph(w, g)
 
+p <- runif(m, .0001, .05)
+sim_corr <- diag(m)
 
+mix_test <- test_graph(
+  graph2,
+  p = p,
+  alpha = .05,
+  corr = sim_corr,
+  groups = list(1, 2:3, 4:5),
+  tests = c("b", "s", "p"),
+  verbose = TRUE,
+  critical = TRUE
+)
 
+print(mix_test)
+
+print(mix_test, indent = 6, precision = 10)
+```

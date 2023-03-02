@@ -114,10 +114,10 @@ print.graph_report <- function(x, ..., precision = 6, indent = 2) {
   if (!is.null(x$critical)) {
     section_break("Test details - Critical values")
 
-    if (!any(x$inputs$tests == "parametric")) {
-      num_cols <- c("p", "w", "alpha")
-    } else {
+    if (any(x$inputs$tests == "parametric")) {
       num_cols <- c("p", "c", "w", "alpha")
+    } else {
+      num_cols <- c("p", "w", "alpha")
     }
 
     crit_res <- x$critical$results
@@ -128,7 +128,9 @@ print.graph_report <- function(x, ..., precision = 6, indent = 2) {
         fmt_num <- round(as.numeric(num_col), precision)
       }
     )
-    crit_res$c <- ifelse(is.na(crit_res$c), "", crit_res$c)
+    if (any(x$inputs$tests == "parametric")) {
+      crit_res$c <- ifelse(is.na(crit_res$c), "", crit_res$c)
+    }
 
     critical_results_out <- capture.output(print(crit_res, row.names = FALSE))
     cat(paste0(pad, critical_results_out), sep = "\n")

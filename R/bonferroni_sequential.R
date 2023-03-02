@@ -1,3 +1,4 @@
+#' @export
 bonferroni_sequential <- function(graph, p, alpha = .05) {
   initial_graph <- graph
   hyp_names <- names(graph$hypotheses)

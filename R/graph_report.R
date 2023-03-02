@@ -51,17 +51,15 @@
 #'   corr = corr
 #' )
 test_graph <- function(graph,
-                        p,
-                        alpha = .05,
-                        groups = list(seq_along(graph$hypotheses)),
-                        tests = c("bonferroni"),
-                        corr = NULL,
-                        verbose = FALSE,
-                        critical = FALSE) {
-  # TODO: Input val ------------------------------------------------------------
-
-  # Some useful values ---------------------------------------------------------
-  partial_match_replacements <- c(
+                       p,
+                       alpha = .05,
+                       groups = list(seq_along(graph$hypotheses)),
+                       tests = c("bonferroni"),
+                       corr = NULL,
+                       verbose = FALSE,
+                       critical = FALSE) {
+  # Input validation -----------------------------------------------------------
+  test_opts <- c(
     bonferroni = "bonferroni",
     parametric = "parametric",
     simes = "simes",
@@ -69,8 +67,52 @@ test_graph <- function(graph,
     p = "parametric",
     s = "simes"
   )
-  tests <- partial_match_replacements[tolower(tests)]
+  tests <- test_opts[tolower(tests)]
+  if (length(tests) == 1) tests <- rep(tests, length(groups))
 
+  stopifnot(
+    "P-values must be numeric" = is.numeric(p),
+    "P-values must be between 0 & 1" = all(p >= 0 | p <= 1),
+    "Alpha must be numeric" = is.numeric(alpha),
+    "Please choose a single alpha level for testing" = length(alpha) == 1,
+    "Only Bonferroni, parametric, and Simes tests are currently supported" =
+      all(tests %in% test_opts),
+    "Please include each hypothesis in exactly one group" =
+      setequal(seq_along(graph$hypotheses), unlist(groups)) &&
+      length(graph$hypotheses) == length(unlist(groups)),
+    "Length of p-values & groups must match size of graph" =
+      unique(length(p), length(unlist(groups))) == length(graph$hypotheses),
+    "Verbose flag must be a length one logical" =
+      is.logical(verbose) && length(verbose) == 1,
+    "Critical flag must be a length one logical" =
+      is.logical(critical) && length(critical) == 1
+  )
+
+  valid_corr <- !any(
+    vapply(
+      seq_along(tests),
+      function(i) {
+        if (tests[[i]] == "parametric") {
+          return(corr_has_missing(corr, groups[[i]]))
+        } else {
+          return(FALSE)
+        }
+      },
+      logical(1)
+    )
+  )
+
+  stopifnot(
+    "Correlation sub-matrix for each parametric test group must be complete" =
+      valid_corr
+  )
+
+  # Use fast Bonferroni method if possible -------------------------------------
+  if (all(tests == "bonferroni") && !verbose && !critical) {
+    return(bonferroni_sequential(graph, p, alpha))
+  }
+
+  # Some useful values ---------------------------------------------------------
   graph_size <- length(graph$hypotheses)
   gw_size <- 2 ^ graph_size - 1
   num_groups <- length(groups)

@@ -20,5 +20,5 @@
 #' corr_has_missing(corr, 3:4)
 #' # FALSE
 corr_has_missing <- function(corr, indices) {
-  any(is.na(corr[indices, indices]))
+  any(is.na(corr[indices, indices])) || is.null(corr)
 }
