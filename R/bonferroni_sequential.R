@@ -34,7 +34,7 @@ bonferroni_sequential <- function(graph, p, alpha = .05) {
         p = p,
         alpha = alpha,
         groups = list(seq_along(initial_graph$hypotheses)),
-        tests = "bonferroni",
+        test_types = "bonferroni",
         corr = NULL
       ),
       outputs = list(p_adj = adj_p_short, rejected = reject_hyps),

@@ -54,7 +54,7 @@ test_graph(par_gate, p = pvals, alpha = .05)
 The results of the weighted Simes test are equivalent to weighted Bonferroni in some situations. The power of the Simes test becomes apparent when multiple p-values fall below the global alpha level, but above their local alpha in some intersection(s). In the following case, B1 & B2 are rejected in the Bonferroni testing procedure for intersection `B1 ∩ B2` because the p-value is greater than `α * w` for each hypothesis in that case. However, the Simes test rejects `B1 ∩ B2` because the weight from B1 is added to the weight for B2.
 
 ```{r simes-all-1}
-test_graph(par_gate, p = pvals, alpha = .05, tests = "s")
+test_graph(par_gate, p = pvals, alpha = .05, test_types = "s")
 ```
 
 If a correlation matrix for the test statistics is partially or fully known, a parametric test can be used for any subsets whose correlation matrix is fully known. Here B1 & B2 get a `c` value calculated that boosts their testing threshold slightly higher. 
@@ -68,7 +68,7 @@ test_graph(par_gate,
   p = pvals,
   alpha = .05,
   groups = list(1, 2, 3:4),
-  tests = c("p", "p", "p"),
+  test_types = c("b", "b", "p"),
   corr = corr1
 )
 ```
@@ -83,7 +83,7 @@ test_graph(
   p = pvals,
   alpha = .05,
   corr = diag(4),
-  tests = "p"
+  test_types = "p"
 )
 ```
 
@@ -99,7 +99,7 @@ test_graph(
   alpha = .05,
   corr = corr3, # Correlation matrix doesn't matter when each group is size 1
   groups = list(1, 2, 3, 4),
-  tests = rep("p", 4)
+  test_types = rep("p", 4)
 )
 ```
 
@@ -112,7 +112,7 @@ test_graph(
   alpha = .05,
   corr = corr1,
   groups = list(1:2, 3:4),
-  tests = c("s", "p")
+  test_types = c("s", "p")
 )
 ```
 
@@ -125,7 +125,7 @@ test_graph(
   alpha = .05,
   corr = corr1,
   groups = list(1:2, 3:4),
-  tests = c("s", "p"),
+  test_types = c("s", "p"),
   verbose = TRUE
 )
 ```
@@ -139,7 +139,7 @@ test_graph(
   alpha = .05,
   corr = corr1,
   groups = list(1:2, 3:4),
-  tests = c("s", "p"),
+  test_types = c("s", "p"),
   verbose = TRUE,
   critical = TRUE
 )
@@ -152,7 +152,7 @@ test_graph(
 ```{r benchmark-bonf}
 set.seed(3123)
 # Randomly generate a graph
-m <- 10
+m <- 5
 w <- sample(1:m, replace = T)
 w <- w / sum(w)
 g <- replicate(m, sample(1:m, replace = T), simplify = T)
@@ -180,9 +180,9 @@ Simes testing is a bit slower than Bonferroni because the adjusted p-value calcu
 ```{r benchmark-simes}
 # Simes
 bench::mark(
-  test_graph(graph2, p, tests = "s")$outputs$rejected,
-  test_graph(graph2, p, tests = "s", verbose = TRUE)$outputs$rejected,
-  test_graph(graph2, p, tests = "s", critical = TRUE)$outputs$rejected,
+  test_graph(graph2, p, test_types = "s")$outputs$rejected,
+  test_graph(graph2, p, test_types = "s", verbose = TRUE)$outputs$rejected,
+  test_graph(graph2, p, test_types = "s", critical = TRUE)$outputs$rejected,
   gMCP(graph, p, test = "Simes")@rejected
 )
 ```
@@ -192,9 +192,9 @@ Parametric testing is the slowest test, especially when `critical = TRUE`. Param
 ```{r benchmark-para}
 # Parametric
 bench::mark(
-  test_graph(graph2, p, tests = "p", corr = sim_corr)$outputs$rejected,
-  test_graph(graph2, p, tests = "p", corr = sim_corr, verbose = TRUE)$outputs$rejected,
-  test_graph(graph2, p, tests = "p", corr = sim_corr, critical = TRUE)$outputs$rejected,
+  test_graph(graph2, p, test_types = "p", corr = sim_corr)$outputs$rejected,
+  test_graph(graph2, p, test_types = "p", corr = sim_corr, verbose = TRUE)$outputs$rejected,
+  test_graph(graph2, p, test_types = "p", corr = sim_corr, critical = TRUE)$outputs$rejected,
   gMCP(graph, p, test = "parametric", correlation = sim_corr)@rejected
 )
 ```
@@ -224,7 +224,7 @@ mix_test <- test_graph(
   alpha = .05,
   corr = sim_corr,
   groups = list(1, 2:3, 4:5),
-  tests = c("b", "s", "p"),
+  test_types = c("b", "s", "p"),
   verbose = TRUE,
   critical = TRUE
 )

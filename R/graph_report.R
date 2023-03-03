@@ -5,7 +5,7 @@
 #' @param alpha A numeric scalar specifying the global level to test at
 #' @param groups A list of numeric vectors specifying hypotheses to test
 #'   together
-#' @param tests A character vector of tests to apply to the given groups
+#' @param test_typess A character vector of tests to apply to the given groups
 #' @param corr (Optional) A numeric matrix of correlations between hypotheses'
 #'   test statistics
 #' @param verbose A logical scalar specifying whether the results for each
@@ -47,14 +47,14 @@
 #'   p = p,
 #'   alpha = .025,
 #'   groups = list(1, 2, 3:4),
-#'   tests = c("bonferroni", "simes", "parametric"),
+#'   test_types = c("bonferroni", "simes", "parametric"),
 #'   corr = corr
 #' )
 test_graph <- function(graph,
                        p,
                        alpha = .05,
                        groups = list(seq_along(graph$hypotheses)),
-                       tests = c("bonferroni"),
+                       test_types = c("bonferroni"),
                        corr = NULL,
                        verbose = FALSE,
                        critical = FALSE) {
@@ -67,8 +67,8 @@ test_graph <- function(graph,
     p = "parametric",
     s = "simes"
   )
-  tests <- test_opts[tolower(tests)]
-  if (length(tests) == 1) tests <- rep(tests, length(groups))
+  test_types <- test_opts[tolower(test_types)]
+  if (length(test_types) == 1) test_types <- rep(test_types, length(groups))
 
   stopifnot(
     "P-values must be numeric" = is.numeric(p),
@@ -76,7 +76,7 @@ test_graph <- function(graph,
     "Alpha must be numeric" = is.numeric(alpha),
     "Please choose a single alpha level for testing" = length(alpha) == 1,
     "Only Bonferroni, parametric, and Simes tests are currently supported" =
-      all(tests %in% test_opts),
+      all(test_types %in% test_opts),
     "Please include each hypothesis in exactly one group" =
       setequal(seq_along(graph$hypotheses), unlist(groups)) &&
       length(graph$hypotheses) == length(unlist(groups)),
@@ -90,9 +90,9 @@ test_graph <- function(graph,
 
   valid_corr <- !any(
     vapply(
-      seq_along(tests),
+      seq_along(test_types),
       function(i) {
-        if (tests[[i]] == "parametric") {
+        if (test_types[[i]] == "parametric") {
           return(corr_has_missing(corr, groups[[i]]))
         } else {
           return(FALSE)
@@ -108,7 +108,7 @@ test_graph <- function(graph,
   )
 
   # Use fast Bonferroni method if possible -------------------------------------
-  if (all(tests == "bonferroni") && !verbose && !critical) {
+  if (all(test_types == "bonferroni") && !verbose && !critical) {
     return(bonferroni_sequential(graph, p, alpha))
   }
 
@@ -134,10 +134,7 @@ test_graph <- function(graph,
     NA_real_,
     nrow = gw_size,
     ncol = num_groups,
-    dimnames = list(
-      NULL,
-      paste0("padj_", vapply(groups, paste, character(1), collapse = "-"))
-    )
+    dimnames = list(NULL, paste0("padj_grp", seq_along(groups)))
   )
 
   critical_list <- if (critical) vector("list", gw_size * num_groups)
@@ -152,7 +149,7 @@ test_graph <- function(graph,
     # This index is periodic over the number of groups as i progresses
     group_index <- (i - 1) %% num_groups + 1
     group <- groups[[group_index]]
-    test <- tests[[group_index]]
+    test <- test_types[[group_index]]
 
     # Hypotheses to test must be in both the current group and the current
     # intersection
@@ -201,7 +198,7 @@ test_graph <- function(graph,
 
   critical_results <- if (critical) {
     df_crit_res <- do.call(rbind, critical_list)
-    if (!any(tests == "parametric")) df_crit_res[6:7] <- NULL
+    if (!any(test_types == "parametric")) df_crit_res[6:7] <- NULL
 
     list(results = df_crit_res)
   }
@@ -213,7 +210,7 @@ test_graph <- function(graph,
         p = p,
         alpha = alpha,
         groups = groups,
-        tests = tests,
+        test_types = test_types,
         corr = corr
       ),
       outputs = list(p_adj = p_adj_global, rejected = test_global),

@@ -28,7 +28,7 @@ print.graph_report <- function(x, ..., precision = 6, indent = 2) {
     # Input calcs
     graph_out <- capture.output(print(graph))
     hyp_groups <- lapply(groups, function(group) hyp_names[group])
-    pad_tests <- formatC(tests, width = max(nchar(tests)) + indent)
+    pad_tests <- formatC(test_types, width = max(nchar(test_types)) + indent)
     test_spec <- paste0(
       pad_tests,
       ": (",
@@ -71,7 +71,7 @@ print.graph_report <- function(x, ..., precision = 6, indent = 2) {
       print(df_corr, row.names = FALSE)
       cat("\n")
     }
-    cat(pad, "Test groups", "\n", test_spec, sep = "")
+    cat(pad, "Test types", "\n", test_spec, sep = "")
     cat("\n")
   })
 
@@ -114,7 +114,7 @@ print.graph_report <- function(x, ..., precision = 6, indent = 2) {
   if (!is.null(x$critical)) {
     section_break("Test details - Critical values")
 
-    if (any(x$inputs$tests == "parametric")) {
+    if (any(x$inputs$test_types == "parametric")) {
       num_cols <- c("p", "c", "w", "alpha")
     } else {
       num_cols <- c("p", "w", "alpha")
@@ -128,7 +128,7 @@ print.graph_report <- function(x, ..., precision = 6, indent = 2) {
         fmt_num <- round(as.numeric(num_col), precision)
       }
     )
-    if (any(x$inputs$tests == "parametric")) {
+    if (any(x$inputs$test_types == "parametric")) {
       crit_res$c <- ifelse(is.na(crit_res$c), "", crit_res$c)
     }
 

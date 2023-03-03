@@ -9,7 +9,7 @@ test_graph(
   p,
   alpha = 0.05,
   groups = list(seq_along(graph$hypotheses)),
-  tests = c("bonferroni"),
+  test_types = c("bonferroni"),
   corr = NULL,
   verbose = FALSE,
   critical = FALSE
@@ -25,8 +25,6 @@ test_graph(
 \item{groups}{A list of numeric vectors specifying hypotheses to test
 together}
 
-\item{tests}{A character vector of tests to apply to the given groups}
-
 \item{corr}{(Optional) A numeric matrix of correlations between hypotheses'
 test statistics}
 
@@ -36,6 +34,8 @@ intersection hypothesis should be included}
 \item{critical}{A logical scalar specifying whether hypothesis-level detail
 should be included in the results, including calculating critical values
 for parametric tests}
+
+\item{test_typess}{A character vector of tests to apply to the given groups}
 }
 \value{
 A \code{graph_report} object, specifying which null hypotheses can be
@@ -73,7 +73,7 @@ test_graph(
   p = p,
   alpha = .025,
   groups = list(1, 2, 3:4),
-  tests = c("bonferroni", "simes", "parametric"),
+  test_types = c("bonferroni", "simes", "parametric"),
   corr = corr
 )
 }
