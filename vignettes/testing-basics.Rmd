@@ -166,12 +166,11 @@ sim_corr <- diag(m)
 
 # Bonferroni
 bench::mark(
-  bonferroni_sequential(graph2, p)$outputs$rejected,
-  test_graph(graph2, p)$outputs$rejected,
-  test_graph(graph2, p, verbose = TRUE)$outputs$rejected,
-  test_graph(graph2, p, critical = TRUE)$outputs$rejected,
-  gMCP(graph, p)@rejected,
-  check = FALSE
+  bonferroni_sequential2(graph2, p)$outputs$p_adj,
+  test_graph(graph2, p)$outputs$p_adj,
+  test_graph(graph2, p, verbose = TRUE)$outputs$p_adj,
+  test_graph(graph2, p, critical = TRUE)$outputs$p_adj,
+  gMCP(graph, p)@adjPValues
 )
 ```
 
@@ -180,10 +179,11 @@ Simes testing is a bit slower than Bonferroni because the adjusted p-value calcu
 ```{r benchmark-simes}
 # Simes
 bench::mark(
-  test_graph(graph2, p, test_types = "s")$outputs$rejected,
-  test_graph(graph2, p, test_types = "s", verbose = TRUE)$outputs$rejected,
-  test_graph(graph2, p, test_types = "s", critical = TRUE)$outputs$rejected,
-  gMCP(graph, p, test = "Simes")@rejected
+  test_graph(graph2, p, test_types = "s")$outputs$p_adj,
+  test_graph(graph2, p, test_types = "s", verbose = TRUE)$outputs$p_adj,
+  test_graph(graph2, p, test_types = "s", critical = TRUE)$outputs$p_adj,
+  gMCP(graph, p, test = "Simes")@adjPValues,
+  check = FALSE # gMCP result is not named
 )
 ```
 
@@ -192,10 +192,10 @@ Parametric testing is the slowest test, especially when `critical = TRUE`. Param
 ```{r benchmark-para}
 # Parametric
 bench::mark(
-  test_graph(graph2, p, test_types = "p", corr = sim_corr)$outputs$rejected,
-  test_graph(graph2, p, test_types = "p", corr = sim_corr, verbose = TRUE)$outputs$rejected,
-  test_graph(graph2, p, test_types = "p", corr = sim_corr, critical = TRUE)$outputs$rejected,
-  gMCP(graph, p, test = "parametric", correlation = sim_corr)@rejected
+  test_graph(graph2, p, test_types = "p", corr = sim_corr)$outputs$p_adj,
+  test_graph(graph2, p, test_types = "p", corr = sim_corr, verbose = TRUE)$outputs$p_adj,
+  test_graph(graph2, p, test_types = "p", corr = sim_corr, critical = TRUE)$outputs$p_adj,
+  gMCP(graph, p, test = "parametric", correlation = sim_corr)@adjPValues
 )
 ```
 

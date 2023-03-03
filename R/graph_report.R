@@ -109,7 +109,7 @@ test_graph <- function(graph,
 
   # Use fast Bonferroni method if possible -------------------------------------
   if (all(test_types == "bonferroni") && !verbose && !critical) {
-    return(bonferroni_sequential(graph, p, alpha))
+    return(bonferroni_sequential2(graph, p, alpha))
   }
 
   # Some useful values ---------------------------------------------------------
