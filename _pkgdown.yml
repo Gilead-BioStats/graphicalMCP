@@ -31,3 +31,6 @@ reference:
   - matches("test_graph")
   - matches("graph_report")
   - matches("corr_has_missing")
+  - matches("test_vals")
+  - matches("bonferroni_sequential")
+  - matches("p_adjust")

@@ -12,7 +12,6 @@
 #'
 #' @return A `graph_report2` object, specifying which null hypotheses can be
 #'   rejected
-#' @export
 #'
 #' @examples
 #'

@@ -25,7 +25,6 @@
 #'   * Which hypotheses can be rejected, and
 #'   * (Optionally) verbose test results matrix, including the results of
 #'   `generate_weights()` & test results for each intersection hypothesis
-#' @export
 #'
 #' @examples
 #'
