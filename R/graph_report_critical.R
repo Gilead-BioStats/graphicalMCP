@@ -5,13 +5,9 @@
 #'   graph
 #' @param alpha A numeric vector of length 1 specifying the un-weighted alpha
 #'   level at which to test each hypothesis
-#' @param tests A list with three elements, `bonferroni`, `simes`, and
-#'   `parametric`. Each element is a list of hypothesis groups to apply the
-#'   given test to. Each hypothesis must be specified exactly once, so that the
-#'   length of all elements of the list equals the number of hypotheses. The
-#'   default is to apply the weighted Bonferroni test to all hypotheses
-#' @param verbose (Optional) A logical value specifying whether to report
-#'   intersection/hypothesis-level testing details
+#' @param groups A list of numeric vectors specifying hypotheses to test
+#'   together
+#' @param tests A character vector of tests to apply to the given groups
 #' @param corr (Optional) A correlation matrix for the test statistics of
 #'   `graph`. Diagonal entries should be 1. A known absence of correlation
 #'   should be entered as 0, and unknown correlation should be entered as NA.
@@ -47,33 +43,31 @@
 #' diag(corr2) <- 1
 #'
 #' # The default is all Bonferroni with alpha = .05
-#' test_graph_critical(g, p)
+#' graphicalMCP:::test_graph_critical(g, p)
 #'
 #' # But tests can be specified at the hypothesis-level
-#' test_graph_critical(
+#' graphicalMCP:::test_graph_critical(
 #'   graph = g,
 #'   p_values = p,
-#'   alpha = .05,
-#'   tests = list(
-#'     bonferroni = 1,
-#'     simes = list(c(2)),
-#'     parametric = list(c(3, 4))
-#'   ),
+#'   alpha = .025,
+#'   groups = list(1, 2, 3:4),
+#'   tests = c("bonferroni", "simes", "parametric"),
 #'   corr = corr
 #' )
 #'
-#' # Note that these two are NOT equivalent
-#' test_graph_critical(g, p, tests = list(parametric = list(1:4)), corr = corr2)
-#' test_graph_critical(g, p, tests = list(parametric = list(1, 2, 3, 4)), corr = corr2)
 test_graph_critical <- function(graph,
-                       p_values,
-                       alpha = .05,
-                       tests = list(
-                         bonferroni = list(seq_along(graph$hypotheses)),
-                         parametric = NULL,
-                         simes = NULL
-                       ),
-                       corr = NULL) {
+                                p_values,
+                                alpha = .05,
+                                groups = list(seq_along(graph$hypotheses)),
+                                tests = c("bonferroni"),
+                                corr = NULL) {
+  # Change to old test/group format
+  tests <- list(
+    bonferroni = groups[tests == "bonferroni"],
+    parametric = groups[tests == "parametric"],
+    simes = groups[tests == "simes"]
+  )
+
   # Input validation -----------------------------------------------------------
   valid_corr <- !any(
     vapply(
@@ -87,7 +81,7 @@ test_graph_critical <- function(graph,
   stopifnot(
     "please choose exactly one test per hypothesis" =
       setequal(seq_along(graph$hypotheses), unlist(tests)) &&
-      length(graph$hypotheses) == length(unlist(tests)),
+        length(graph$hypotheses) == length(unlist(tests)),
     "'tests' can only be bonferroni, parametric, and simes" =
       setequal(union(names(tests), test_names), test_names),
     "correlation sub-matrix for parametric tests must be complete" = valid_corr
@@ -135,7 +129,7 @@ test_graph_critical <- function(graph,
         if (length(bonf_group_in) == 0) {
           NULL
         } else {
-          bonferroni_critical(
+          bonferroni_test_vals(
             p_values[bonf_group_in],
             weights[bonf_group_in],
             alpha
@@ -152,7 +146,7 @@ test_graph_critical <- function(graph,
         if (length(para_group_in) == 0) {
           NULL
         } else {
-          parametric_critical(
+          parametric_test_vals(
             p_values[para_group_in],
             weights[para_group_in],
             alpha,
@@ -170,7 +164,7 @@ test_graph_critical <- function(graph,
         if (length(simes_group_in) == 0) {
           NULL
         } else {
-          simes_critical(
+          simes_test_vals(
             p_values[simes_group_in],
             weights[simes_group_in],
             alpha
@@ -181,7 +175,6 @@ test_graph_critical <- function(graph,
 
     test_inter <- do.call(rbind, c(res_bonferroni, res_parametric, res_simes))
 
-    test_inter$hypothesis <- rownames(test_inter)
     test_inter$intersection <- row
     test_inter <- test_inter[order(match(test_inter$hypothesis, hyp_names)), ]
 

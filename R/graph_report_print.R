@@ -9,12 +9,12 @@ section_break <- function(text) {
 #'   * p-values & alpha used for tests,
 #'   * Which hypotheses can be rejected, and
 #'   * Detailed test results matrix, including the results of
-#'   `generate_weights()` & test results for each intersection hypothesis
+#' `generate_weights()` & test results for each intersection hypothesis
 #'
 #' @param x An object of class `graph_report` to print
-#'
 #' @param ... Other values passed on to other methods (currently unused)
-#'
+#' @param precision An integer value indicating the maximum number of decimals
+#'   to include in numeric values
 #' @param indent An integer value indicating how many spaces to indent results
 #'
 #' @export
@@ -26,7 +26,7 @@ print.graph_report <- function(x, ..., precision = 6, indent = 2) {
   section_break("Test parameters")
   in_calcs <- within(x$inputs, {
     # Input calcs
-    graph_out <- capture.output(print(graph))
+    graph_out <- utils::capture.output(print(graph))
     hyp_groups <- lapply(groups, function(group) hyp_names[group])
     pad_tests <- formatC(test_types, width = max(nchar(test_types)) + indent)
     test_spec <- paste0(
@@ -105,7 +105,7 @@ print.graph_report <- function(x, ..., precision = 6, indent = 2) {
 
   if (!is.null(x$details)) {
     section_break("Test details - Adjusted p")
-    detail_results_out <- capture.output(
+    detail_results_out <- utils::capture.output(
       print(round(x$details$results, precision))
     )
     cat(paste0(pad, detail_results_out), sep = "\n")
@@ -125,14 +125,14 @@ print.graph_report <- function(x, ..., precision = 6, indent = 2) {
       crit_res[num_cols],
       2,
       function(num_col) {
-        fmt_num <- round(as.numeric(num_col), precision)
+        round(as.numeric(num_col), precision)
       }
     )
     if (any(x$inputs$test_types == "parametric")) {
       crit_res$c <- ifelse(is.na(crit_res$c), "", crit_res$c)
     }
 
-    critical_results_out <- capture.output(print(crit_res, row.names = FALSE))
+    critical_results_out <- utils::capture.output(print(crit_res, row.names = FALSE))
     cat(paste0(pad, critical_results_out), sep = "\n")
   }
 

@@ -162,34 +162,34 @@ In order to further demonstrate the performance improvement, we will simulate a 
 check_methods <- xfun::cache_rds(
   {
     set.seed(1818)
-    
+
     m <- 18
-    
+
     w <- sample(1:m, replace = TRUE)
     w <- w / sum(w)
-    
+
     g <- replicate(m, sample(1:m, replace = TRUE), simplify = TRUE)
     diag(g) <- 0
     g <- g / rowSums(g)
-    
+
     graph <- new("graphMCP", m = g, weights = w)
     graph2 <- create_graph(w, g)
-    
+
     tic("gMCP::generateWeights()")
-    gMCP_weights <- generateWeights(graph)
+    gmcp_weights <- generateWeights(graph)
     tictoc_gmcp <- toc(quiet = TRUE)$callback_msg
-    
+
     tic("graphicalMCP::generate_weights()")
-    graphicalMCP_weights <- generate_weights(graph2)
+    graphicalmcp_weights <- generate_weights(graph2)
     tictoc_graphicalmcp <- toc(quiet = TRUE)$callback_msg
-    
+
     # Order of results is reversed between packages, and column names differ,
     # but values are the same
     res_equal <- all.equal(
-      unname(gMCP_weights[rev(seq_len(nrow(gMCP_weights))), ]),
-      unname(graphicalMCP_weights)
+      unname(gmcp_weights[rev(seq_len(nrow(gmcp_weights))), ]),
+      unname(graphicalmcp_weights)
     )
-    
+
     list(tictoc_gmcp, tictoc_graphicalmcp, res_equal)
   },
   clean = FALSE

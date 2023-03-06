@@ -61,8 +61,8 @@ zero_node_fast <- function(graph, del_index) {
       } else {
         transitions[[hyp_num, end_num]] <-
           (init_transitions[[hyp_num, end_num]] +
-             init_transitions[[hyp_num, del_index]] *
-             init_transitions[[del_index, end_num]]) / denominator
+            init_transitions[[hyp_num, del_index]] *
+              init_transitions[[del_index, end_num]]) / denominator
       }
     }
   }

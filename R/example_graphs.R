@@ -45,12 +45,12 @@ huque_alosh_bhore_2011 <- function() {
 
 wiens_dmitrienko_2005 <- function(names = NULL) {
   create_graph(
-    c(1/3, 1/3, 1/3),
+    c(1 / 3, 1 / 3, 1 / 3),
     matrix(
       c(
-         0,  1,  0,
-         0,  0,  1,
-        .5, .5,  0
+        0, 1, 0,
+        0, 0, 1,
+        .5, .5, 0
       ),
       nrow = 3,
       byrow = TRUE
@@ -73,8 +73,8 @@ fallback <- function(w = c(1, 0, 0), names = NULL) {
   r <- w[[2]] / (w[[1]] + w[[2]])
 
   g <- rbind(
-    c(0,     1, 0),
-    c(0,     0, 1),
+    c(0, 1, 0),
+    c(0, 0, 1),
     c(1 - r, r, 0)
   )
 

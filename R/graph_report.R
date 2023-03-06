@@ -5,7 +5,7 @@
 #' @param alpha A numeric scalar specifying the global level to test at
 #' @param groups A list of numeric vectors specifying hypotheses to test
 #'   together
-#' @param test_typess A character vector of tests to apply to the given groups
+#' @param test_types A character vector of tests to apply to the given groups
 #' @param corr (Optional) A numeric matrix of correlations between hypotheses'
 #'   test statistics
 #' @param verbose A logical scalar specifying whether the results for each
@@ -16,6 +16,8 @@
 #'
 #' @return A `graph_report` object, specifying which null hypotheses can be
 #'   rejected
+#'
+#' @rdname testing
 #' @export
 #'
 #' @examples
@@ -79,7 +81,7 @@ test_graph <- function(graph,
       all(test_types %in% test_opts),
     "Please include each hypothesis in exactly one group" =
       setequal(seq_along(graph$hypotheses), unlist(groups)) &&
-      length(graph$hypotheses) == length(unlist(groups)),
+        length(graph$hypotheses) == length(unlist(groups)),
     "Length of p-values & groups must match size of graph" =
       unique(length(p), length(unlist(groups))) == length(graph$hypotheses),
     "Verbose flag must be a length one logical" =
@@ -109,12 +111,12 @@ test_graph <- function(graph,
 
   # Use fast Bonferroni method if possible -------------------------------------
   if (all(test_types == "bonferroni") && !verbose && !critical) {
-    return(bonferroni_sequential2(graph, p, alpha))
+    return(bonferroni_sequential(graph, p, alpha))
   }
 
   # Some useful values ---------------------------------------------------------
   graph_size <- length(graph$hypotheses)
-  gw_size <- 2 ^ graph_size - 1
+  gw_size <- 2^graph_size - 1
   num_groups <- length(groups)
 
   hyp_names <- names(graph$hypotheses)

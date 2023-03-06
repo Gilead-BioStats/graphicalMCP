@@ -11,6 +11,9 @@
 
 \item{...}{Other values passed on to other methods (currently unused)}
 
+\item{precision}{An integer value indicating the maximum number of decimals
+to include in numeric values}
+
 \item{indent}{An integer value indicating how many spaces to indent results}
 }
 \description{

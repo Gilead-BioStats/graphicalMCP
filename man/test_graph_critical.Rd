@@ -8,8 +8,8 @@ test_graph_critical(
   graph,
   p_values,
   alpha = 0.05,
-  tests = list(bonferroni = list(seq_along(graph$hypotheses)), parametric = NULL, simes =
-    NULL),
+  groups = list(seq_along(graph$hypotheses)),
+  tests = c("bonferroni"),
   corr = NULL
 )
 }
@@ -22,11 +22,10 @@ graph}
 \item{alpha}{A numeric vector of length 1 specifying the un-weighted alpha
 level at which to test each hypothesis}
 
-\item{tests}{A list with three elements, \code{bonferroni}, \code{simes}, and
-\code{parametric}. Each element is a list of hypothesis groups to apply the
-given test to. Each hypothesis must be specified exactly once, so that the
-length of all elements of the list equals the number of hypotheses. The
-default is to apply the weighted Bonferroni test to all hypotheses}
+\item{groups}{A list of numeric vectors specifying hypotheses to test
+together}
+
+\item{tests}{A character vector of tests to apply to the given groups}
 
 \item{corr}{(Optional) A correlation matrix for the test statistics of
 \code{graph}. Diagonal entries should be 1. A known absence of correlation
@@ -34,9 +33,6 @@ should be entered as 0, and unknown correlation should be entered as NA.
 This argument is only used for the parametric test. For each element of a
 parametric testing group, the correlation matrix for that group's sub-graph
 must be fully known}
-
-\item{verbose}{(Optional) A logical value specifying whether to report
-intersection/hypothesis-level testing details}
 }
 \value{
 A \code{graph_report} object, consisting of
@@ -72,22 +68,16 @@ corr2 <- matrix(.5, nrow = 4, ncol = 4)
 diag(corr2) <- 1
 
 # The default is all Bonferroni with alpha = .05
-test_graph_critical(g, p)
+graphicalMCP:::test_graph_critical(g, p)
 
 # But tests can be specified at the hypothesis-level
-test_graph_critical(
+graphicalMCP:::test_graph_critical(
   graph = g,
   p_values = p,
-  alpha = .05,
-  tests = list(
-    bonferroni = 1,
-    simes = list(c(2)),
-    parametric = list(c(3, 4))
-  ),
+  alpha = .025,
+  groups = list(1, 2, 3:4),
+  tests = c("bonferroni", "simes", "parametric"),
   corr = corr
 )
 
-# Note that these two are NOT equivalent
-test_graph_critical(g, p, tests = list(parametric = list(1:4)), corr = corr2)
-test_graph_critical(g, p, tests = list(parametric = list(1, 2, 3, 4)), corr = corr2)
 }

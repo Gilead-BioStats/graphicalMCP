@@ -22,13 +22,13 @@ c_function <- function(x, w, corr, alpha) {
 # alpha is overall alpha
 # Everything coming in here must be for a single parametric group, with no
 # missing values in corr
-# solve_c(w[group], corr[group, group], alpha)
+# Usage: solve_c(w[group], corr[group, group], alpha)
 solve_c <- function(w, corr, alpha) {
   n_hyps <- seq_along(w)
   c <- ifelse(
     length(n_hyps) == 1 || sum(w) == 0,
     1,
-    stats::uniroot( # This seems to use a bit of randomness, making the results change by .001
+    stats::uniroot(
       c_function,
       lower = 0.9, # Why is this not -Inf? Ohhhh because c >= 1
       upper = 1 / min(w[w > 0]),
@@ -47,14 +47,16 @@ solve_c <- function(w, corr, alpha) {
 #' @param weights A numeric vector of hypothesis weights
 #' @param alpha A numeric scalar specifying the level to test weighted p-values
 #'   against
-#' @param verbose A logical scalar specifying how detailed the results should be
+#' @param corr (Optional) A numeric matrix indicating the correlation between
+#'   the test statistics which generated the p-values. For parametric testing,
+#'   `corr` must be a square matrix with side length equal to the length of `p`
+#'   and `weights`. Ignored for Simes and Bonferroni testing
 #'
-#' @return A vector of test results if `verbose` is FALSE, otherwise a data
-#'   frame with detailed test values and results
-#' @export
+#' @return A data frame with columns specifying the values used to calculate
+#'   each hypothesis test
 #'
 #' @rdname calc-test_vals
-#' @examples
+#'
 bonferroni_test_vals <- function(p_values, weights, alpha, corr = NULL) {
   data.frame(
     intersection = NA,

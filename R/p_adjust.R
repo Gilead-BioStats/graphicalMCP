@@ -16,27 +16,31 @@
 #' w <- c("H1" = .75, "H2" = .25, "H3" = 0)
 #' p <- c("H1" = .019, "H2" = .025, "H3" = .05)
 #'
-#' p_adjust_bonferroni(p, w)
-#' p_adjust_simes(p, w)
+#' graphicalMCP:::p_adjust_bonferroni(p, w)
+#' graphicalMCP:::p_adjust_simes(p, w)
 #'
 #' corr1 <- diag(3)
 #' corr2 <- corr1
 #' corr2[lower.tri(corr2)] <- corr2[upper.tri(corr2)] <- runif(3, -1, 1)
 #'
 #' # No correlation
-#' p_adjust_parametric(p, w, corr1)
+#' graphicalMCP:::p_adjust_parametric(p, w, corr1)
 #'
 #' # Uniform random pairwise correlations
-#' p_adjust_parametric(p, w, corr2)
+#' graphicalMCP:::p_adjust_parametric(p, w, corr2)
 p_adjust_bonferroni <- function(p_values, weights, corr = NULL) {
-  if (sum(weights) == 0) return(Inf)
+  if (sum(weights) == 0) {
+    return(Inf)
+  }
 
   min(p_values / weights)
 }
 
 #' @rdname p_adjust
 p_adjust_parametric <- function(p_values, weights, corr = NULL) {
-  if (sum(weights) == 0) return(Inf)
+  if (sum(weights) == 0) {
+    return(Inf)
+  }
 
   w_nonzero <- weights > 0
   q <- min(p_values[w_nonzero] / weights[w_nonzero])
@@ -57,7 +61,9 @@ p_adjust_parametric <- function(p_values, weights, corr = NULL) {
 
 #' @rdname p_adjust
 p_adjust_simes <- function(p_values, weights, corr = NULL) {
-  if (sum(weights) == 0) return(Inf)
+  if (sum(weights) == 0) {
+    return(Inf)
+  }
 
   adj_p <- Inf
   for (i in seq_along(weights)) {
@@ -82,16 +88,13 @@ p_adjust_simes <- function(p_values, weights, corr = NULL) {
 #' @param corr (Optional) A correlation matrix to use in parametric testing
 #'
 #' @return A vector of adjusted p-values, one for each group
-#'
-#' @examples
 p_adjust <- function(p_values, weights, groups, tests, corr = NULL) {
   names(p_values) <- names(weights)
   if (!is.null(corr)) dimnames(corr) <- list(names(weights), names(weights))
-  # browser()
+
   adj_p_group <- vector("numeric", length(groups))
 
   for (i in seq_along(groups)) {
-
     if (length(groups[[i]]) > 0) {
       test <- tests[[i]]
       group <- groups[[i]]

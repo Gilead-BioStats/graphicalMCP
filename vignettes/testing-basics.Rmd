@@ -153,9 +153,9 @@ test_graph(
 set.seed(3123)
 # Randomly generate a graph
 m <- 5
-w <- sample(1:m, replace = T)
+w <- sample(1:m, replace = TRUE)
 w <- w / sum(w)
-g <- replicate(m, sample(1:m, replace = T), simplify = T)
+g <- replicate(m, sample(1:m, replace = TRUE), simplify = TRUE)
 diag(g) <- 0
 g <- g / rowSums(g)
 graph <- new("graphMCP", m = g, weights = w)
@@ -166,7 +166,7 @@ sim_corr <- diag(m)
 
 # Bonferroni
 bench::mark(
-  bonferroni_sequential2(graph2, p)$outputs$p_adj,
+  bonferroni_sequential(graph2, p)$outputs$p_adj,
   test_graph(graph2, p)$outputs$p_adj,
   test_graph(graph2, p, verbose = TRUE)$outputs$p_adj,
   test_graph(graph2, p, critical = TRUE)$outputs$p_adj,
@@ -207,9 +207,9 @@ The print generic for test results includes a couple of additional options. Each
 set.seed(3123)
 # Randomly generate a graph
 m <- 5
-w <- sample(1:m, replace = T)
+w <- sample(1:m, replace = TRUE)
 w <- w / sum(w)
-g <- replicate(m, sample(1:m, replace = T), simplify = T)
+g <- replicate(m, sample(1:m, replace = TRUE), simplify = TRUE)
 diag(g) <- 0
 g <- g / rowSums(g)
 graph <- new("graphMCP", m = g, weights = w)

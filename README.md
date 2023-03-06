@@ -9,6 +9,8 @@ coverage](https://codecov.io/gh/Gilead-BioStats/graphicalMCP/branch/s3-graph_mcp
 [![R-CMD-check](https://github.com/Gilead-BioStats/graphicalMCP/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/Gilead-BioStats/graphicalMCP/actions/workflows/R-CMD-check.yaml)
 <!-- badges: end -->
 
+# graphicalMCP <img src="man/figures/logo.png" align="right" height="350" />
+
 ## Introduction
 
 A multiple comparison procedure (MCP) is a statistical analysis method
@@ -61,13 +63,13 @@ names <- c("A1", "A2", "B1", "B2")
 g_dose <- create_graph(hypotheses, transitions, names)
 
 g_dose
-#> An MCP graph
+#> An initial graph
 #> 
 #> --- Hypothesis weights ---
-#> A1: (0.5000)
-#> A2: (0.5000)
-#> B1: (0.0000)
-#> B2: (0.0000)
+#> A1: 0.5000
+#> A2: 0.5000
+#> B1: 0.0000
+#> B2: 0.0000
 #> 
 #> --- Transition weights ---
 #>        A1     A2     B1     B2
@@ -86,13 +88,13 @@ strategy in [Bretz et al
 
 ``` r
 update_graph(g_dose, c(TRUE, FALSE, FALSE, TRUE))
-#> An MCP graph
+#> An initial graph
 #> 
 #> --- Hypothesis weights ---
-#> A1: (0.5000)
-#> A2: (0.5000)
-#> B1: (0.0000)
-#> B2: (0.0000)
+#> A1: 0.5000
+#> A2: 0.5000
+#> B1: 0.0000
+#> B2: 0.0000
 #> 
 #> --- Transition weights ---
 #>        A1     A2     B1     B2
@@ -109,13 +111,13 @@ update_graph(g_dose, c(TRUE, FALSE, FALSE, TRUE))
 #> 
 #> --------------------------------------------------------------------------------
 #> 
-#> An MCP graph
+#> An initial graph
 #> 
 #> --- Hypothesis weights ---
-#> A1: (0.5000)
-#> A2: (0.0000)
-#> B1: (0.0000)
-#> B2: (0.5000)
+#> A1: 0.5000
+#> A2: 0.0000
+#> B1: 0.0000
+#> B2: 0.5000
 #> 
 #> --- Transition weights ---
 #>        A1     A2     B1     B2
@@ -171,38 +173,42 @@ but we cannot reject the null hypotheses for B1 & B2.
 ``` r
 test_graph(
   g_dose,
-  p_values = c(.01, .02, .03, .05),
+  p = c(.01, .02, .03, .05),
   alpha = .05,
-  tests = list(
-    bonferroni = list(1:4),
-    simes = list(),
-    parametric = list()
-  )
+  test_types = "b",
+  groups = list(1:4)
 )
-#> An MCP graph
 #> 
-#> --- Hypothesis weights ---
-#> A1: (0.5000)
-#> A2: (0.5000)
-#> B1: (0.0000)
-#> B2: (0.0000)
+#> Test parameters ----------------------------------------------------------------
+#>   An initial graph
+#>   
+#>   --- Hypothesis weights ---
+#>   A1: 0.5000
+#>   A2: 0.5000
+#>   B1: 0.0000
+#>   B2: 0.0000
+#>   
+#>   --- Transition weights ---
+#>          A1     A2     B1     B2
+#>   A1 0.0000 0.0000 1.0000 0.0000
+#>   A2 0.0000 0.0000 0.0000 1.0000
+#>   B1 0.0000 1.0000 0.0000 0.0000
+#>   B2 1.0000 0.0000 0.0000 0.0000
 #> 
-#> --- Transition weights ---
-#>        A1     A2     B1     B2
-#> A1 0.0000 0.0000 1.0000 0.0000
-#> A2 0.0000 0.0000 0.0000 1.0000
-#> B1 0.0000 1.0000 0.0000 0.0000
-#> B2 1.0000 0.0000 0.0000 0.0000
+#>   Global alpha = 0.05
 #> 
-#> --------------------------------------------------------------------------------
+#>                          A1   A2   B1   B2
+#>   Unadjusted p-values: 0.01 0.02 0.03 0.05
 #> 
-#> --- Test summary ---
-#> Global α = 0.05
-#>  Hypothesis       Test Reject Null? P-value
-#>          A1 bonferroni         TRUE    0.01
-#>          A2 bonferroni         TRUE    0.02
-#>          B1 bonferroni        FALSE    0.03
-#>          B2 bonferroni        FALSE    0.05
+#>   Test types
+#>   bonferroni: (A1-A2-B1-B2)
+#> 
+#> Global test summary ------------------------------------------------------------
+#>   Hypothesis Adj. P-value Reject
+#>           A1         0.02   TRUE
+#>           A2         0.04   TRUE
+#>           B1         0.06  FALSE
+#>           B2         0.06  FALSE
 ```
 
 ## Related work

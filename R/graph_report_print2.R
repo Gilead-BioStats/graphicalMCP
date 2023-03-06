@@ -12,9 +12,6 @@
 #'
 #' @param ... Other values passed on to other methods (currently unused)
 #'
-#' @param verbose A logical value indicating whether or not test results should
-#'   print for each intersection hypothesis
-#'
 #' @export
 print.graph_report2 <- function(x, ...) {
   print(x$initial_graph)
@@ -46,7 +43,7 @@ print.graph_report2 <- function(x, ...) {
     "",
     names(unlist(x$test_used))
   )
-  test_names_ordered <- test_names[unlist(x$test_used)]
+  test_names_ordered <- test_names[order(unlist(x$test_used))]
 
   global_test <- data.frame(
     Hypothesis = names_padded,
@@ -70,9 +67,11 @@ print.graph_report2 <- function(x, ...) {
 
     if (!is.null(x$test_details)) {
       details_round <- x$test_details
-      round_c <- as.character(round(as.numeric(details_round$c), 6))
-      round_c[is.na(round_c)] <- ""
-      details_round$c <- round_c
+      if (!is.null(details_round$c)) {
+        round_c <- as.character(round(as.numeric(details_round$c), 6))
+        round_c[is.na(round_c)] <- ""
+        details_round$c <- round_c
+      }
 
       print(details_round, row.names = FALSE)
     }

@@ -94,7 +94,6 @@
 #' g <- create_graph(hypotheses, transitions)
 #' g
 create_graph <- function(hypotheses, transitions, names = NULL) {
-
   # Basic input validation -----------------------------------------------------
   stopifnot(
     "hypothesis weights must be numeric" = is.numeric(hypotheses),

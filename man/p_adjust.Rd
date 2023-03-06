@@ -42,16 +42,16 @@ set.seed(22723)
 w <- c("H1" = .75, "H2" = .25, "H3" = 0)
 p <- c("H1" = .019, "H2" = .025, "H3" = .05)
 
-p_adjust_bonferroni(p, w)
-p_adjust_simes(p, w)
+graphicalMCP:::p_adjust_bonferroni(p, w)
+graphicalMCP:::p_adjust_simes(p, w)
 
 corr1 <- diag(3)
 corr2 <- corr1
 corr2[lower.tri(corr2)] <- corr2[upper.tri(corr2)] <- runif(3, -1, 1)
 
 # No correlation
-p_adjust_parametric(p, w, corr1)
+graphicalMCP:::p_adjust_parametric(p, w, corr1)
 
 # Uniform random pairwise correlations
-p_adjust_parametric(p, w, corr2)
+graphicalMCP:::p_adjust_parametric(p, w, corr2)
 }

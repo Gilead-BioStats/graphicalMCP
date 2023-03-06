@@ -19,6 +19,8 @@ knitr::opts_chunk$set(
 [![R-CMD-check](https://github.com/Gilead-BioStats/graphicalMCP/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/Gilead-BioStats/graphicalMCP/actions/workflows/R-CMD-check.yaml)
 <!-- badges: end -->
 
+# graphicalMCP <img src="man/figures/logo.png" align="right" height="350" />
+
 ## Introduction
 
 A multiple comparison procedure (MCP) is a statistical analysis method that allows for assessing the efficacy of multiple endpoints, some of which are dependent on each other, in a single clinical trial. Endpoints can be different doses, treatment of different conditions, or combined superiority & non-inferiority testing.
@@ -87,13 +89,10 @@ In this example, a weighted Bonferroni test is applied to all hypotheses, with a
 ```{r test-graph}
 test_graph(
   g_dose,
-  p_values = c(.01, .02, .03, .05),
+  p = c(.01, .02, .03, .05),
   alpha = .05,
-  tests = list(
-    bonferroni = list(1:4),
-    simes = list(),
-    parametric = list()
-  )
+  test_types = "b",
+  groups = list(1:4)
 )
 ```
 

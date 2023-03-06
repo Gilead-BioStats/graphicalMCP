@@ -59,10 +59,10 @@ corr2 <- matrix(.5, nrow = 4, ncol = 4)
 diag(corr2) <- 1
 
 # The default is all Bonferroni with alpha = .05
-test_graph2(g, p)
+graphicalMCP:::test_graph2(g, p)
 
 # But tests can be specified at the hypothesis-level
-test_graph2(
+graphicalMCP:::test_graph2(
   graph = g,
   p_values = p,
   alpha = .025,

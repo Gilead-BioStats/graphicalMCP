@@ -20,11 +20,14 @@ simes_test_vals(p_values, weights, alpha, corr = NULL)
 \item{alpha}{A numeric scalar specifying the level to test weighted p-values
 against}
 
-\item{verbose}{A logical scalar specifying how detailed the results should be}
+\item{corr}{(Optional) A numeric matrix indicating the correlation between
+the test statistics which generated the p-values. For parametric testing,
+\code{corr} must be a square matrix with side length equal to the length of \code{p}
+and \code{weights}. Ignored for Simes and Bonferroni testing}
 }
 \value{
-A vector of test results if \code{verbose} is FALSE, otherwise a data
-frame with detailed test values and results
+A data frame with columns specifying the values used to calculate
+each hypothesis test
 }
 \description{
 Test hypotheses with the \verb{p <= (c * ) w * a} method
