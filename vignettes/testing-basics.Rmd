@@ -45,7 +45,7 @@ pvals <- c(.024, .01, .026, .027)
 par_gate
 ```
 
-This graph can be tested most simply with the default weighted Bonferroni test. When testing at the global alpha level 0.05, we can reject hypotheses A1, A2, and B1, but not B2.
+This graph can be tested most simply with the default weighted Bonferroni test. When testing at the global alpha level 0.05, we can reject hypotheses A1 and A2, but not B1 or B2.
 
 ```{r bonferroni-mix-1}
 test_graph(par_gate, p = pvals, alpha = .05)
@@ -165,38 +165,47 @@ p <- runif(m, .0001, .05)
 sim_corr <- diag(m)
 
 # Bonferroni
-bench::mark(
+bonf_bench <- bench::mark(
   bonferroni_sequential(graph2, p)$outputs$p_adj,
   test_graph(graph2, p)$outputs$p_adj,
   test_graph(graph2, p, verbose = TRUE)$outputs$p_adj,
   test_graph(graph2, p, critical = TRUE)$outputs$p_adj,
   gMCP(graph, p)@adjPValues
 )
+
+bonf_bench$expression <- as.character(bonf_bench$expression)
+rmarkdown::paged_table(bonf_bench)
 ```
 
 Simes testing is a bit slower than Bonferroni because the adjusted p-value calculation is more complicated. However, graphicalMCP performance is still >100x faster than gMCP.
 
 ```{r benchmark-simes}
 # Simes
-bench::mark(
+simes_bench <- bench::mark(
   test_graph(graph2, p, test_types = "s")$outputs$p_adj,
   test_graph(graph2, p, test_types = "s", verbose = TRUE)$outputs$p_adj,
   test_graph(graph2, p, test_types = "s", critical = TRUE)$outputs$p_adj,
   gMCP(graph, p, test = "Simes")@adjPValues,
   check = FALSE # gMCP result is not named
 )
+
+simes_bench$expression <- as.character(simes_bench$expression)
+rmarkdown::paged_table(simes_bench)
 ```
 
 Parametric testing is the slowest test, especially when `critical = TRUE`. Parametric testing in graphicalMCP is only 8-9x faster than gMCP, because the time is dominated by the multivariate normal calculation.
 
 ```{r benchmark-para}
 # Parametric
-bench::mark(
+para_bench <- bench::mark(
   test_graph(graph2, p, test_types = "p", corr = sim_corr)$outputs$p_adj,
   test_graph(graph2, p, test_types = "p", corr = sim_corr, verbose = TRUE)$outputs$p_adj,
   test_graph(graph2, p, test_types = "p", corr = sim_corr, critical = TRUE)$outputs$p_adj,
   gMCP(graph, p, test = "parametric", correlation = sim_corr)@adjPValues
 )
+
+para_bench$expression <- as.character(para_bench$expression)
+rmarkdown::paged_table(para_bench)
 ```
 
 ## Print options

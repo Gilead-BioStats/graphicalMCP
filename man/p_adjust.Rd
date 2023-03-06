@@ -4,7 +4,6 @@
 \alias{p_adjust_bonferroni}
 \alias{p_adjust_parametric}
 \alias{p_adjust_simes}
-\alias{p_adjust}
 \title{Calculate adjusted p-values}
 \usage{
 p_adjust_bonferroni(p_values, weights, corr = NULL)
@@ -12,29 +11,22 @@ p_adjust_bonferroni(p_values, weights, corr = NULL)
 p_adjust_parametric(p_values, weights, corr = NULL)
 
 p_adjust_simes(p_values, weights, corr = NULL)
-
-p_adjust(p_values, weights, groups, tests, corr = NULL)
 }
 \arguments{
-\item{p_values}{A numeric vector of p-values}
+\item{p_values}{A named numeric vector of p-values to adjust}
 
-\item{weights}{A named numeric vector of weights}
+\item{weights}{A named numeric vector of weights to adjust the p-values by}
 
-\item{corr}{(Optional) A correlation matrix to use in parametric testing}
-
-\item{groups}{A list of groups of hypotheses to test together}
-
-\item{tests}{A character vector of test names}
+\item{corr}{(Optional) A numeric matrix indicating the correlation between
+the test statistics which generated the p-values. For parametric testing,
+\code{corr} must be a square matrix with side length equal to the length of \code{p}
+and \code{weights}. Ignored for Simes and Bonferroni testing}
 }
 \value{
 A single adjusted p-value for the given group
-
-A vector of adjusted p-values, one for each group
 }
 \description{
-This basically does the \verb{do.call(p_adjust_<test name>, ...)} portion of
-\code{test_graph()}. The scope of each function is a little fuzzier in this older
-version
+Calculate adjusted p-values
 }
 \examples{
 set.seed(22723)
