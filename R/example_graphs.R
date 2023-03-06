@@ -7,8 +7,7 @@
 #'   Bonferroni & Holm: A complete graph with equal weight on each hypothesis
 #'   and equal weight on each transition
 #' @export
-#'
-#' @family example-graphs
+#' @rdname example-graphs
 #'
 #' @examples
 #' bonferroni_holm(3, names = paste("dose", letters[1:3]))
@@ -27,6 +26,8 @@ bonferroni_holm <- function(n, names = NULL) {
   create_graph(w, g, names = names)
 }
 
+#' @export
+#' @rdname example-graphs
 huque_alosh_bhore_2011 <- function() {
   create_graph(
     c(1, 0, 0, 0),
@@ -43,6 +44,8 @@ huque_alosh_bhore_2011 <- function() {
   )
 }
 
+#' @export
+#' @rdname example-graphs
 wiens_dmitrienko_2005 <- function(names = NULL) {
   create_graph(
     c(1 / 3, 1 / 3, 1 / 3),
@@ -59,6 +62,8 @@ wiens_dmitrienko_2005 <- function(names = NULL) {
   )
 }
 
+#' @export
+#' @rdname example-graphs
 fixed_sequence <- function(n = 3, names = NULL) {
   w <- c(1, rep(0, n - 1))
 
@@ -69,6 +74,8 @@ fixed_sequence <- function(n = 3, names = NULL) {
   create_graph(w, g, names)
 }
 
+#' @export
+#' @rdname example-graphs
 fallback <- function(w = c(1, 0, 0), names = NULL) {
   r <- w[[2]] / (w[[1]] + w[[2]])
 

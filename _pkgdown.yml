@@ -13,10 +13,9 @@ reference:
   - matches("update_graph")
   - matches("updated_graph")
 - title: Calculating sub-graph weights
-  desc: Functions for generating the weights of all intersection hypotheses
+  desc: Functions for generating the weights of the closure
   contents:
   - matches("generate_weights")
-  - matches("gw_original")
 - title: Example graphs
   desc: Functions for creating example graphs from a variety of papers
   contents:
@@ -30,5 +29,7 @@ reference:
   contents:
   - matches("test_graph")
   - matches("graph_report")
-  - matches("corr_has_missing")
   - matches("bonferroni_sequential")
+  - matches("p_adjust")
+  - matches("test_vals")
+  - matches("corr_has_missing")

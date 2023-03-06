@@ -86,7 +86,7 @@
       </dl></div><div class="section level2">
       <h2 id="calculating-sub-graph-weights">Calculating sub-graph weights<a class="anchor" aria-label="anchor" href="#calculating-sub-graph-weights"></a></h2>
       
-      <p class="section-desc"></p><p>Functions for generating the weights of all intersection hypotheses</p>
+      <p class="section-desc"></p><p>Functions for generating the weights of the closure</p>
 
       
     </div><div id="" class="section level2">
@@ -96,7 +96,7 @@
 
       <dl><dt>
           
-          <code><a href="generate_weights.html">generate_weights()</a></code> <code><a href="generate_weights.html">generate_weights_recursive()</a></code> <code><a href="generate_weights.html">gw_original()</a></code> 
+          <code><a href="generate_weights.html">generate_weights()</a></code> 
         </dt>
         <dd>Generate weights for each intersections hypothesis in the full closure tree
 of an MCP graph</dd>
@@ -113,7 +113,7 @@ of an MCP graph</dd>
 
       <dl><dt>
           
-          <code><a href="bonferroni_holm.html">bonferroni_holm()</a></code> 
+          <code><a href="example-graphs.html">bonferroni_holm()</a></code> <code><a href="example-graphs.html">huque_alosh_bhore_2011()</a></code> <code><a href="example-graphs.html">wiens_dmitrienko_2005()</a></code> <code><a href="example-graphs.html">fixed_sequence()</a></code> <code><a href="example-graphs.html">fallback()</a></code> 
         </dt>
         <dd>Example graphs from a variety of papers</dd>
       </dl></div><div class="section level2">
@@ -127,12 +127,8 @@ of an MCP graph</dd>
       
       
 
-      <dl><dt>
-          
-          <code><a href="analyze_graph.html">analyze_graph()</a></code> 
-        </dt>
-        <dd>Check if all sub-graphs have weights summing to 1</dd>
-      </dl></div><div class="section level2">
+      
+    </div><div class="section level2">
       <h2 id="test-a-graph">Test a graph<a class="anchor" aria-label="anchor" href="#test-a-graph"></a></h2>
       
       <p class="section-desc"></p><p>Functions for running Bonferroni, parametric, and Simes tests</p>
@@ -155,9 +151,9 @@ of an MCP graph</dd>
         <dd>S3 print method for class <code>graph_report</code></dd>
       </dl><dl><dt>
           
-          <code><a href="corr_has_missing.html">corr_has_missing()</a></code> 
+          <code><a href="p_adjust.html">p_adjust_bonferroni()</a></code> <code><a href="p_adjust.html">p_adjust_parametric()</a></code> <code><a href="p_adjust.html">p_adjust_simes()</a></code> 
         </dt>
-        <dd>Check if a correlation matrix has any missing values in a given subset</dd>
+        <dd>Calculate adjusted p-values</dd>
       </dl><dl><dt>
           
           <code><a href="calc-test_vals.html">bonferroni_test_vals()</a></code> <code><a href="calc-test_vals.html">parametric_test_vals()</a></code> <code><a href="calc-test_vals.html">simes_test_vals()</a></code> 
@@ -165,9 +161,9 @@ of an MCP graph</dd>
         <dd>Test hypotheses with the <code>p &lt;= (c * ) w * a</code> method</dd>
       </dl><dl><dt>
           
-          <code><a href="p_adjust.html">p_adjust_bonferroni()</a></code> <code><a href="p_adjust.html">p_adjust_parametric()</a></code> <code><a href="p_adjust.html">p_adjust_simes()</a></code> 
+          <code><a href="corr_has_missing.html">corr_has_missing()</a></code> 
         </dt>
-        <dd>Calculate adjusted p-values</dd>
+        <dd>Check if a correlation matrix has any missing values in a given subset</dd>
       </dl></div>
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
     </nav></aside></div>

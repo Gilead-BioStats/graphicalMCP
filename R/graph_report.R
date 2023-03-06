@@ -14,8 +14,13 @@
 #'   should be included in the results, including calculating critical values
 #'   for parametric tests
 #'
-#' @return A `graph_report` object, specifying which null hypotheses can be
-#'   rejected
+#' @return A `graph_report` object, a list of 4 elements: `inputs`, `outputs`,
+#'   `verbose`, and `critical`
+#'   * Inputs - A list of the input parameters used to run the test
+#'   * Outputs - A list of global test results
+#'   * Verbose - A matrix with detailed adjusted p-value results
+#'   * Critical - A data frame with hypothesis-level test details for each
+#'   intersection
 #'
 #' @rdname testing
 #' @export

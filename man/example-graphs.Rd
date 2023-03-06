@@ -2,9 +2,21 @@
 % Please edit documentation in R/example_graphs.R
 \name{bonferroni_holm}
 \alias{bonferroni_holm}
+\alias{huque_alosh_bhore_2011}
+\alias{wiens_dmitrienko_2005}
+\alias{fixed_sequence}
+\alias{fallback}
 \title{Example graphs from a variety of papers}
 \usage{
 bonferroni_holm(n, names = NULL)
+
+huque_alosh_bhore_2011()
+
+wiens_dmitrienko_2005(names = NULL)
+
+fixed_sequence(n = 3, names = NULL)
+
+fallback(w = c(1, 0, 0), names = NULL)
 }
 \arguments{
 \item{n}{Number of vertices in the Bonferroni-Holm graph}
@@ -22,4 +34,3 @@ Example graphs from a variety of papers
 \examples{
 bonferroni_holm(3, names = paste("dose", letters[1:3]))
 }
-\concept{example-graphs}
