@@ -37,17 +37,23 @@ gamma_graph <- function(graph, gamma_props) {
   stopifnot(
     "Gamma proportions matrix dimensions must match graph size" =
       nrow(gamma_props) == graph_size &&
-      ncol(gamma_props) == graph_size &&
-      length(gamma) == graph_size,
+      ncol(gamma_props) == graph_size,
     "Gamma proportions matrix rows must sum to 0" =
       all(rowSums(gamma_props) == 0)
   )
 
-  function(gamma) {
-    gamma_add <- gamma * gamma_props
+  dimnames(gamma_props) <- dimnames(transitions)
 
-    gamma_transitions <- transitions + gamma_add
+  structure(
+    function(gamma) {
+      gamma_add <- gamma * gamma_props
 
-    create_graph(hypotheses, gamma_transitions)
-  }
+      gamma_transitions <- transitions + gamma_add
+
+      create_graph(hypotheses, gamma_transitions)
+    },
+    base_graph = graph,
+    gamma_props = gamma_props,
+    class = "gamma_graph"
+  )
 }

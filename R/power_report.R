@@ -12,20 +12,30 @@
 # calcPower(graph=graph, alpha=0.025, mean=theta, corr.sim=corMat, n.sim=100000)
 
 run_power <- function(graph,
+                      success = 1:2,
                       alpha = .05,
                       groups = list(seq_along(graph$hypotheses)),
                       test_types = c("bonferroni"),
-                      corr = NULL,
+                      test_corr = NULL,
+                      sim_corr = diag(length(graph$hypotheses)),
                       n_sim = 100,
                       gamma = NULL,
-                      gamma_props = NULL,
                       theta = rep(0, length(graph$hypotheses))) {
+  if (!is.null(gamma)) {
+    graph <- graph(gamma)
+  }
+
   p_sim <- pnorm(
-    mvtnorm::rmvnorm(n_sim, theta),
+    mvtnorm::rmvnorm(n_sim, theta, sigma = sim_corr),
     lower.tail = FALSE
   )
 
-  test_res_mat <- matrix(FALSE, nrow = nrow(p_sim), ncol = ncol(p_sim))
+  test_res_mat <- matrix(
+    NA,
+    nrow = n_sim,
+    ncol = length(theta),
+    dimnames = list(seq_len(n_sim), names(graph$hypotheses))
+  )
 
   for (row in seq_len(n_sim)) {
     test_res_mat[row, ] <- test_graph(
@@ -34,11 +44,23 @@ run_power <- function(graph,
       alpha,
       groups,
       test_types,
-      corr
+      test_corr
     )$outputs$rejected
   }
 
-  test_res_mat
+  power_all <- colMeans(test_res_mat)
+  power_expected <- sum(test_res_mat) / n_sim
+  power_at_least_1 <- mean(rowSums(test_res_mat) > 0)
+  reject_all <- mean(rowSums(test_res_mat) == length(theta))
+  power_success <- mean(rowSums(test_res_mat[, success]) > 0)
+
+  list(
+    power_all = power_all,
+    power_expected = power_expected,
+    power_at_least_1 = power_at_least_1,
+    reject_all = reject_all,
+    power_success = power_success
+  )
 }
 
 
