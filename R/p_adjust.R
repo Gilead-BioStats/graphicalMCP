@@ -28,12 +28,17 @@
 #'
 #' # Uniform random pairwise correlations
 #' graphicalMCP:::p_adjust_parametric(p, w, corr2)
-p_adjust_bonferroni <- function(p_values, weights, corr = NULL) {
+p_adjust_bonferroni <- function(p_values, weights) {
   if (sum(weights) == 0) {
     return(Inf)
   }
 
-  min(p_values / weights)
+  # We need na.rm = TRUE to handle the 0 / 0 case. This may be too blunt a way
+  # to handle it, but I suspect it's the fastest. Another option is to reduce
+  # p_values and weights by keeping only indices where `!(p_values == 0 &
+  # weights == 0)`. Considering that p-values are validated in the test
+  # function, this should be safe
+  min(p_values / weights, na.rm = TRUE)
 }
 
 #' @rdname p_adjust
@@ -60,16 +65,18 @@ p_adjust_parametric <- function(p_values, weights, corr = NULL) {
 }
 
 #' @rdname p_adjust
-p_adjust_simes <- function(p_values, weights, corr = NULL) {
+p_adjust_simes <- function(p_values, weights) {
   if (sum(weights) == 0) {
     return(Inf)
   }
 
   adj_p <- Inf
   for (i in seq_along(weights)) {
+    # See Bonferroni for na.rm reasoning
     adj_p <- min(
       adj_p,
-      p_values[[i]] / sum(weights[p_values <= p_values[[i]]])
+      p_values[[i]] / sum(weights[p_values <= p_values[[i]]]),
+      na.rm = TRUE
     )
   }
   adj_p

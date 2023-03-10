@@ -57,7 +57,7 @@ solve_c <- function(w, corr, alpha) {
 #'
 #' @rdname calc-test_vals
 #'
-bonferroni_test_vals <- function(p_values, weights, alpha, corr = NULL) {
+bonferroni_test_vals <- function(p_values, weights, alpha) {
   data.frame(
     intersection = NA,
     hypothesis = names(weights),
@@ -69,7 +69,11 @@ bonferroni_test_vals <- function(p_values, weights, alpha, corr = NULL) {
     w = weights,
     "*" = "*",
     alpha = alpha,
-    res = p_values <= weights * alpha,
+    res = ifelse(
+      p_values == 0 & weights == 0,
+      NA,
+      p_values <= weights * alpha
+    ),
     check.names = FALSE
   )
 }
@@ -89,13 +93,17 @@ parametric_test_vals <- function(p_values, weights, alpha, corr = NULL) {
     w = weights,
     "*" = "*",
     alpha = alpha,
-    res = p_values <= c * weights * alpha,
+    res = ifelse(
+      p_values == 0 & weights == 0,
+      NA,
+      p_values <= c * weights * alpha
+    ),
     check.names = FALSE
   )
 }
 
 #' @rdname calc-test_vals
-simes_test_vals <- function(p_values, weights, alpha, corr = NULL) {
+simes_test_vals <- function(p_values, weights, alpha) {
   vec_res <- vector(length = length(weights))
   w_sum <- vector("numeric", length = length(weights))
 
@@ -115,7 +123,11 @@ simes_test_vals <- function(p_values, weights, alpha, corr = NULL) {
     w = w_sum,
     "*" = "*",
     alpha = alpha,
-    res = vec_res,
+    res = ifelse(
+      p_values == 0 & w_sum == 0,
+      NA,
+      vec_res
+    ),
     check.names = FALSE
   )
 }

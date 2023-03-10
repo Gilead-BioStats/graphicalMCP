@@ -6,11 +6,11 @@
 \alias{p_adjust_simes}
 \title{Calculate adjusted p-values}
 \usage{
-p_adjust_bonferroni(p_values, weights, corr = NULL)
+p_adjust_bonferroni(p_values, weights)
 
 p_adjust_parametric(p_values, weights, corr = NULL)
 
-p_adjust_simes(p_values, weights, corr = NULL)
+p_adjust_simes(p_values, weights)
 }
 \arguments{
 \item{p_values}{A named numeric vector of p-values to adjust}

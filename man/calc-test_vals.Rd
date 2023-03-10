@@ -6,11 +6,11 @@
 \alias{simes_test_vals}
 \title{Test hypotheses with the \verb{p <= (c * ) w * a} method}
 \usage{
-bonferroni_test_vals(p_values, weights, alpha, corr = NULL)
+bonferroni_test_vals(p_values, weights, alpha)
 
 parametric_test_vals(p_values, weights, alpha, corr = NULL)
 
-simes_test_vals(p_values, weights, alpha, corr = NULL)
+simes_test_vals(p_values, weights, alpha)
 }
 \arguments{
 \item{p_values}{A numeric vector of p-values}

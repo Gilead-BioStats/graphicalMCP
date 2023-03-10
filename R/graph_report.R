@@ -65,7 +65,6 @@ test_graph <- function(graph,
                        corr = NULL,
                        verbose = FALSE,
                        critical = FALSE) {
-  # Input validation -----------------------------------------------------------
   test_opts <- c(
     bonferroni = "bonferroni",
     parametric = "parametric",
@@ -77,47 +76,7 @@ test_graph <- function(graph,
   test_types <- test_opts[tolower(test_types)]
   if (length(test_types) == 1) test_types <- rep(test_types, length(groups))
 
-  stopifnot(
-    "P-values must be numeric" = is.numeric(p),
-    "P-values must be between 0 & 1" = all(p >= 0 | p <= 1),
-    "Alpha must be numeric" = is.numeric(alpha),
-    "Please choose a single alpha level for testing" = length(alpha) == 1,
-    "Only Bonferroni, parametric, and Simes tests are currently supported" =
-      all(test_types %in% test_opts),
-    "Please include each hypothesis in exactly one group" =
-      setequal(seq_along(graph$hypotheses), unlist(groups)) &&
-        length(graph$hypotheses) == length(unlist(groups)),
-    "Length of p-values & groups must match size of graph" =
-      unique(length(p), length(unlist(groups))) == length(graph$hypotheses),
-    "Verbose flag must be a length one logical" =
-      is.logical(verbose) && length(verbose) == 1,
-    "Critical flag must be a length one logical" =
-      is.logical(critical) && length(critical) == 1
-  )
-
-  valid_corr <- !any(
-    vapply(
-      seq_along(test_types),
-      function(i) {
-        if (test_types[[i]] == "parametric") {
-          return(corr_has_missing(corr, groups[[i]]))
-        } else {
-          return(FALSE)
-        }
-      },
-      logical(1)
-    )
-  )
-
-  stopifnot(
-    "Correlation sub-matrix for each parametric test group must be complete" =
-      valid_corr
-  )
-
-  # Use fast Bonferroni method if possible -------------------------------------
-  if (all(test_types == "bonferroni") && !verbose && !critical) {
-    return(bonferroni_sequential(graph, p, alpha))
-  }
+  test_input_val(graph, p, alpha, groups, test_types, corr, verbose, critical)
 
   # Some useful values ---------------------------------------------------------
   graph_size <- length(graph$hypotheses)
@@ -162,29 +121,31 @@ test_graph <- function(graph,
     # intersection
     group_in_inter <- group[as.logical(h[group])]
 
-    p_adj[inter_index, group_index] <- do.call(
-      paste0("p_adjust_", test),
-      list(
-        p_values = p[group_in_inter],
-        weights = weights[group_in_inter],
-        corr = corr[group_in_inter, group_in_inter]
-      )
-    )
+    p_adjust_fun <- paste0("p_adjust_", test)
+    p_adjust_args <- list(
+      p_values = p[group_in_inter],
+      weights = weights[group_in_inter],
+      corr = corr[group_in_inter, group_in_inter]
+    )[formalArgs(p_adjust_fun)]
+
+    p_adj[inter_index, group_index] <- do.call(p_adjust_fun, p_adjust_args)
 
     # Calculate critical values
-    # At this point, we have a group like 1-2-5-7,
     if (critical) {
       if (length(group_in_inter) == 0) {
         critical_list[[i]] <- NULL
       } else {
+        critical_fun <- paste0(test, "_test_vals")
+        critical_args <- list(
+          p_values = p[group_in_inter],
+          weights = weights[group_in_inter],
+          alpha = alpha,
+          corr = corr[group_in_inter, group_in_inter]
+        )[formalArgs(critical_fun)]
+
         df_critical <- do.call(
-          paste0(test, "_test_vals"),
-          list(
-            p_values = p[group_in_inter],
-            weights = weights[group_in_inter],
-            alpha = alpha,
-            corr = corr[group_in_inter, group_in_inter]
-          )
+          critical_fun,
+          critical_args
         )
         df_critical$intersection <- inter_index
 
@@ -194,13 +155,14 @@ test_graph <- function(graph,
   }
 
   # Adjusted p-values at higher levels -----------------------------------------
-  p_adj_inter <- do.call(pmin, as.data.frame(p_adj))
+  p_adj_cap <- ifelse(p_adj > 1, 1, p_adj)
+  p_adj_inter <- do.call(pmin, as.data.frame(p_adj_cap))
   test_inter <- p_adj_inter <= alpha
   p_adj_global <- apply(p_adj_inter * inter_h_vecs, 2, max)
   test_global <- p_adj_global <= alpha
 
   detail_results <- if (verbose) {
-    list(results = cbind(inter_small, p_adj, p_adj_inter, res = test_inter))
+    list(results = cbind(inter_small, p_adj_cap, p_adj_inter, res = test_inter))
   }
 
   critical_results <- if (critical) {
