@@ -147,7 +147,7 @@ test_graph(
 
 ## Performance
 
-`test_graph()` automatically chooses the sequentially rejective test if all tests are Bonferroni, and if the verbose and critical flags are not selected. This shortcut significantly reduces computation time. If optimal performance is needed, `bonferroni_sequential()` can be used directly. However, input validation is not present, so errors may be more cryptic. Note that the structure returned by the sequentially rejective test is slightly different than the other tests.
+`test_graph()` always calculates the full closure, even for Bonferroni testing. If optimal performance is needed, `bonferroni_sequential()` can be used, which uses the sequential testing shortcut. This causes a significant improvement in speed, and either method is faster than `gMCP::gMCP()`. However, using `gMCP::graphTest()` is the fastest option, as it's written primarily in C directly.
 
 ```{r benchmark-bonf}
 set.seed(3123)
@@ -166,46 +166,69 @@ sim_corr <- diag(m)
 
 # Bonferroni
 bonf_bench <- bench::mark(
-  bonferroni_sequential(graph2, p)$outputs$p_adj,
-  test_graph(graph2, p)$outputs$p_adj,
-  test_graph(graph2, p, verbose = TRUE)$outputs$p_adj,
-  test_graph(graph2, p, critical = TRUE)$outputs$p_adj,
-  gMCP(graph, p)@adjPValues
+  `Bonferroni sequential` =
+    bonferroni_sequential(graph2, p)$outputs$rejected,
+  `Bonferroni sequential, critical` =
+    bonferroni_sequential(graph2, p, critical = TRUE)$outputs$rejected,
+  `Bonferroni closure` =
+    test_graph(graph2, p)$outputs$rejected,
+  `Bonferroni closure, verbose` =
+    test_graph(graph2, p, verbose = TRUE)$outputs$rejected,
+  `Bonferroni closure, critical` =
+    test_graph(graph2, p, critical = TRUE)$outputs$rejected,
+  `Bonferroni sequential - graphTest (C)` =
+    !!graphTest(p, graph = graph),
+  `Bonferroni sequential - gMCP (R)` =
+    gMCP(graph, p)@rejected
 )
 
 bonf_bench$expression <- as.character(bonf_bench$expression)
-rmarkdown::paged_table(bonf_bench)
+gt::gt(bonf_bench[1:7])
 ```
 
-Simes testing is a bit slower than Bonferroni because the adjusted p-value calculation is more complicated. However, graphicalMCP performance is still >100x faster than gMCP.
+Simes testing is a bit slower than Bonferroni because the adjusted p-value calculation is more complicated. However, graphicalMCP performance is only 6-7x faster than gMCP for a size 5 graph. This improvement factor grows with the size of the graph.
+
+Somewhat confusingly, `gMCP::graphTest()` allows a test type of "Simes", and it's much faster than the other options shown below. However, this is because it just does Bonferroni sequential testing. In fact, the `test` parameter is not used anywhere, it relies on the presence or absence of a correlation matrix to decide between Bonferroni or parametric testing.
 
 ```{r benchmark-simes}
 # Simes
 simes_bench <- bench::mark(
-  test_graph(graph2, p, test_types = "s")$outputs$p_adj,
-  test_graph(graph2, p, test_types = "s", verbose = TRUE)$outputs$p_adj,
-  test_graph(graph2, p, test_types = "s", critical = TRUE)$outputs$p_adj,
-  gMCP(graph, p, test = "Simes")@adjPValues,
-  check = FALSE # gMCP result is not named
+  `Simes` =
+    test_graph(graph2, p, test_types = "s")$outputs$rejected,
+  `Simes, verbose` =
+    test_graph(graph2, p, test_types = "s", verbose = TRUE)$outputs$rejected,
+  `Simes, critical` =
+    test_graph(graph2, p, test_types = "s", critical = TRUE)$outputs$rejected,
+  # graphTest just does Bonferroni testing without warning in this case
+  # !!graphTest(p, graph = graph, test = "Simes"),
+  `Simes - gMCP` =
+    gMCP(graph, p, test = "Simes")@rejected
 )
 
 simes_bench$expression <- as.character(simes_bench$expression)
-rmarkdown::paged_table(simes_bench)
+gt::gt(simes_bench[1:7])
 ```
 
-Parametric testing is the slowest test, especially when `critical = TRUE`. Parametric testing in graphicalMCP is only 8-9x faster than gMCP, because the time is dominated by the multivariate normal calculation.
+Parametric testing is the slowest test, especially when `critical = TRUE`. Parametric testing in graphicalMCP is only 5-6x faster than gMCP for a size 5 graph, because the time is dominated by the multivariate normal calculation. Primary points of improvement in this method would be parallelization in the power simulation, or looking into writing our own version of `pmvnorm()` (Large effort).
 
 ```{r benchmark-para}
-# Parametric
+p_mat <- rbind(p)
+
 para_bench <- bench::mark(
-  test_graph(graph2, p, test_types = "p", corr = sim_corr)$outputs$p_adj,
-  test_graph(graph2, p, test_types = "p", corr = sim_corr, verbose = TRUE)$outputs$p_adj,
-  test_graph(graph2, p, test_types = "p", corr = sim_corr, critical = TRUE)$outputs$p_adj,
-  gMCP(graph, p, test = "parametric", correlation = sim_corr)@adjPValues
+  `Parametric` =
+    test_graph(graph2, p, test_types = "p", corr = sim_corr)$outputs$rejected,
+  `Parametric, verbose` =
+    test_graph(graph2, p, test_types = "p", corr = sim_corr, verbose = TRUE)$outputs$rejected,
+  `Parametric, critical` =
+    test_graph(graph2, p, test_types = "p", corr = sim_corr, critical = TRUE)$outputs$rejected,
+  `Parametric - testGraph` =
+    !!graphTest(p_mat, graph = graph, test = "parametric", cr = sim_corr)[1,],
+  `Parametric - gMCP` =
+    gMCP(graph, p, test = "parametric", correlation = sim_corr)@rejected
 )
 
 para_bench$expression <- as.character(para_bench$expression)
-rmarkdown::paged_table(para_bench)
+gt::gt(para_bench[1:7])
 ```
 
 ## Print options
