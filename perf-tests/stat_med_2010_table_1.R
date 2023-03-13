@@ -1,3 +1,6 @@
+library(gMCP)
+devtools::load_all()
+
 # gMCP version (from calcPower examples) ---------------------------------------
 ## now reproduce all 14 simulation scenarios
 ## different graphs

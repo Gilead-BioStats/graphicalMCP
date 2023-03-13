@@ -38,14 +38,22 @@ run_power <- function(graph,
   )
 
   for (row in seq_len(n_sim)) {
-    test_res_mat[row, ] <- test_graph(
-      graph,
-      p_sim[row, ],
-      alpha,
-      groups,
-      test_types,
-      test_corr
-    )$outputs$rejected
+    if (all(test_types == "bonferroni" | test_types == "b")) {
+      test_res_mat[row, ] <- bonferroni_sequential(
+        graph,
+        p_sim[row, ],
+        alpha
+      )$outputs$rejected
+    } else {
+      test_res_mat[row, ] <- test_graph(
+        graph,
+        p_sim[row, ],
+        alpha,
+        groups,
+        test_types,
+        test_corr
+      )$outputs$rejected
+    }
   }
 
   power_all <- colMeans(test_res_mat)
