@@ -98,3 +98,8 @@ update_graph <- function(graph, keep) {
     class = "updated_graph"
   )
 }
+
+#' @export
+update_graph2 <- function(graph, remove) {
+  update_graph_cpp(graph, remove)
+}

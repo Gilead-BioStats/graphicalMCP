@@ -168,6 +168,8 @@ sim_corr <- diag(m)
 bonf_bench <- bench::mark(
   `Bonferroni sequential` =
     bonferroni_sequential(graph2, p)$outputs$rejected,
+  `Bonferroni sequential (C++)` =
+    bonferroni_sequential2(graph2, p)$outputs$rejected, # currently wrong
   `Bonferroni sequential, critical` =
     bonferroni_sequential(graph2, p, critical = TRUE)$outputs$rejected,
   `Bonferroni closure` =
