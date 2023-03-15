@@ -141,3 +141,53 @@ bonferroni_sequential2 <- function(graph,
     class = "graph_report"
   )
 }
+
+#' @rdname testing
+#' @export
+bonferroni_sequential3 <- function(graph,
+                                   p,
+                                   alpha = .05,
+                                   verbose = FALSE,
+                                   critical = FALSE) {
+  test_input_val(
+    graph,
+    p,
+    alpha,
+    groups = list(seq_along(graph$hypotheses)),
+    test_types = "bonferroni",
+    corr = NULL,
+    verbose = verbose,
+    critical = critical
+  )
+
+  initial_graph <- graph
+
+  adj_p_max <- 0
+  adj_p <- vector("numeric", length(graph$hypotheses))
+  rejected <- vector("logical", length(graph$hypotheses))
+  critical_vals <- if (critical) vector("list", length(graph$hypotheses))
+
+  adj_p <- bonferroni_sequential_cpp(graph, p, alpha)$p_adj
+  rejected <- adj_p <= alpha
+  names(adj_p) <- names(initial_graph$hypotheses)
+  names(rejected) <- names(initial_graph$hypotheses)
+
+  critical_vals <- if (critical) list(results = do.call(rbind, critical_vals))
+
+  structure(
+    list(
+      inputs = list(
+        graph = initial_graph,
+        p = p,
+        alpha = alpha,
+        groups = list(seq_along(initial_graph$hypotheses)),
+        test_types = "bonferroni",
+        corr = NULL
+      ),
+      outputs = list(p_adj = adj_p, rejected = rejected),
+      details = NULL,
+      critical = critical_vals
+    ),
+    class = "graph_report"
+  )
+}

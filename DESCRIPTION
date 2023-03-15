@@ -19,8 +19,7 @@ Description: A multiple comparison procedure (or multiple test procedure)
 License: GPL (>= 3)
 URL: https://urban-sniffle-p11zlpj.pages.github.io/
 Imports: 
-    mvtnorm,
-    Rcpp
+    mvtnorm
 Suggests: 
     bench,
     forcats,
@@ -39,6 +38,5 @@ LazyData: true
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.2.3
 LinkingTo: 
-    cpp11,
-    Rcpp
+    cpp11
 SystemRequirements: C++11
