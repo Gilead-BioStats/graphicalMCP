@@ -4,6 +4,7 @@
 \name{bonferroni_sequential}
 \alias{bonferroni_sequential}
 \alias{bonferroni_sequential2}
+\alias{bonferroni_sequential3}
 \alias{test_graph}
 \alias{test_input_val}
 \title{Test a graph}
@@ -17,6 +18,14 @@ bonferroni_sequential(
 )
 
 bonferroni_sequential2(
+  graph,
+  p,
+  alpha = 0.05,
+  verbose = FALSE,
+  critical = FALSE
+)
+
+bonferroni_sequential3(
   graph,
   p,
   alpha = 0.05,

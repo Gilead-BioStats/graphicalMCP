@@ -158,10 +158,12 @@ w <- w / sum(w)
 g <- replicate(m, sample(1:m, replace = TRUE), simplify = TRUE)
 diag(g) <- 0
 g <- g / rowSums(g)
-graph <- new("graphMCP", m = g, weights = w)
+# graph <- new("graphMCP", m = g, weights = w)
 graph2 <- create_graph(w, g)
 
 p <- runif(m, .0001, .05)
+p1 <- runif(m, .0001, .0005) # Reject all
+p2 <- runif(m, .4, .9) # Reject none - These don't seem to matter
 sim_corr <- diag(m)
 
 # Bonferroni
@@ -183,8 +185,7 @@ bonf_bench <- bench::mark(
   `Bonferroni sequential - graphTest (C)` =
     !!graphTest(p, graph = graph),
   `Bonferroni sequential - gMCP (R)` =
-    gMCP(graph, p)@rejected,
-  check = FALSE
+    gMCP(graph, p)@rejected
 )
 
 bonf_bench$expression <- as.character(bonf_bench$expression)

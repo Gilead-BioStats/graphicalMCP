@@ -6,18 +6,10 @@
 #include <R_ext/Visibility.h>
 
 // bonferroni_sequential.cpp
-list bonferroni_sequential_cpp(list graph, doubles p, double alpha);
-extern "C" SEXP _graphicalMCP_bonferroni_sequential_cpp(SEXP graph, SEXP p, SEXP alpha) {
+doubles bonferroni_sequential_cpp(doubles hyps, doubles trns, doubles p, double alpha);
+extern "C" SEXP _graphicalMCP_bonferroni_sequential_cpp(SEXP hyps, SEXP trns, SEXP p, SEXP alpha) {
   BEGIN_CPP11
-    return cpp11::as_sexp(bonferroni_sequential_cpp(cpp11::as_cpp<cpp11::decay_t<list>>(graph), cpp11::as_cpp<cpp11::decay_t<doubles>>(p), cpp11::as_cpp<cpp11::decay_t<double>>(alpha)));
-  END_CPP11
-}
-// temp.cpp
-void my_fn(list graph);
-extern "C" SEXP _graphicalMCP_my_fn(SEXP graph) {
-  BEGIN_CPP11
-    my_fn(cpp11::as_cpp<cpp11::decay_t<list>>(graph));
-    return R_NilValue;
+    return cpp11::as_sexp(bonferroni_sequential_cpp(cpp11::as_cpp<cpp11::decay_t<doubles>>(hyps), cpp11::as_cpp<cpp11::decay_t<doubles>>(trns), cpp11::as_cpp<cpp11::decay_t<doubles>>(p), cpp11::as_cpp<cpp11::decay_t<double>>(alpha)));
   END_CPP11
 }
 // zero_node.cpp
@@ -30,8 +22,7 @@ extern "C" SEXP _graphicalMCP_zero_node_cpp(SEXP graph, SEXP remove) {
 
 extern "C" {
 static const R_CallMethodDef CallEntries[] = {
-    {"_graphicalMCP_bonferroni_sequential_cpp", (DL_FUNC) &_graphicalMCP_bonferroni_sequential_cpp, 3},
-    {"_graphicalMCP_my_fn",                     (DL_FUNC) &_graphicalMCP_my_fn,                     1},
+    {"_graphicalMCP_bonferroni_sequential_cpp", (DL_FUNC) &_graphicalMCP_bonferroni_sequential_cpp, 4},
     {"_graphicalMCP_zero_node_cpp",             (DL_FUNC) &_graphicalMCP_zero_node_cpp,             2},
     {NULL, NULL, 0}
 };

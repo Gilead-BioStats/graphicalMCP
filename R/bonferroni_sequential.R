@@ -167,24 +167,24 @@ bonferroni_sequential3 <- function(graph,
   rejected <- vector("logical", length(graph$hypotheses))
   critical_vals <- if (critical) vector("list", length(graph$hypotheses))
 
-  adj_p <- bonferroni_sequential_cpp(graph, p, alpha)$p_adj
-  rejected <- adj_p <= alpha
-  names(adj_p) <- names(initial_graph$hypotheses)
-  names(rejected) <- names(initial_graph$hypotheses)
+  p_adj <- bonferroni_sequential_cpp(graph$hypotheses, graph$transitions, p, alpha)
+  rejected <- p_adj <= alpha
+  names(p_adj) <- names(graph$hypotheses)
+  names(rejected) <- names(graph$hypotheses)
 
   critical_vals <- if (critical) list(results = do.call(rbind, critical_vals))
 
   structure(
     list(
       inputs = list(
-        graph = initial_graph,
+        graph = graph,
         p = p,
         alpha = alpha,
         groups = list(seq_along(initial_graph$hypotheses)),
         test_types = "bonferroni",
         corr = NULL
       ),
-      outputs = list(p_adj = adj_p, rejected = rejected),
+      outputs = list(p_adj = p_adj, rejected = rejected),
       details = NULL,
       critical = critical_vals
     ),
