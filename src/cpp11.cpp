@@ -6,10 +6,17 @@
 #include <R_ext/Visibility.h>
 
 // bonferroni_sequential.cpp
-doubles bonferroni_sequential_cpp(doubles hyps, doubles trns, doubles p, double alpha);
-extern "C" SEXP _graphicalMCP_bonferroni_sequential_cpp(SEXP hyps, SEXP trns, SEXP p, SEXP alpha) {
+std::vector<double> bonferroni_sequential_cpp(std::vector<double> hypotheses, std::vector<double> transitions, std::vector<double> p, double alpha);
+extern "C" SEXP _graphicalMCP_bonferroni_sequential_cpp(SEXP hypotheses, SEXP transitions, SEXP p, SEXP alpha) {
   BEGIN_CPP11
-    return cpp11::as_sexp(bonferroni_sequential_cpp(cpp11::as_cpp<cpp11::decay_t<doubles>>(hyps), cpp11::as_cpp<cpp11::decay_t<doubles>>(trns), cpp11::as_cpp<cpp11::decay_t<doubles>>(p), cpp11::as_cpp<cpp11::decay_t<double>>(alpha)));
+    return cpp11::as_sexp(bonferroni_sequential_cpp(cpp11::as_cpp<cpp11::decay_t<std::vector<double>>>(hypotheses), cpp11::as_cpp<cpp11::decay_t<std::vector<double>>>(transitions), cpp11::as_cpp<cpp11::decay_t<std::vector<double>>>(p), cpp11::as_cpp<cpp11::decay_t<double>>(alpha)));
+  END_CPP11
+}
+// bonferroni_sequential.cpp
+std::vector<int> bs_fast(std::vector<double> hypotheses, std::vector<double> transitions, std::vector<double> p, double alpha, int graph_size);
+extern "C" SEXP _graphicalMCP_bs_fast(SEXP hypotheses, SEXP transitions, SEXP p, SEXP alpha, SEXP graph_size) {
+  BEGIN_CPP11
+    return cpp11::as_sexp(bs_fast(cpp11::as_cpp<cpp11::decay_t<std::vector<double>>>(hypotheses), cpp11::as_cpp<cpp11::decay_t<std::vector<double>>>(transitions), cpp11::as_cpp<cpp11::decay_t<std::vector<double>>>(p), cpp11::as_cpp<cpp11::decay_t<double>>(alpha), cpp11::as_cpp<cpp11::decay_t<int>>(graph_size)));
   END_CPP11
 }
 // zero_node.cpp
@@ -23,6 +30,7 @@ extern "C" SEXP _graphicalMCP_zero_node_cpp(SEXP graph, SEXP remove) {
 extern "C" {
 static const R_CallMethodDef CallEntries[] = {
     {"_graphicalMCP_bonferroni_sequential_cpp", (DL_FUNC) &_graphicalMCP_bonferroni_sequential_cpp, 4},
+    {"_graphicalMCP_bs_fast",                   (DL_FUNC) &_graphicalMCP_bs_fast,                   5},
     {"_graphicalMCP_zero_node_cpp",             (DL_FUNC) &_graphicalMCP_zero_node_cpp,             2},
     {NULL, NULL, 0}
 };

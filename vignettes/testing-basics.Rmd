@@ -152,18 +152,18 @@ test_graph(
 ```{r benchmark-bonf}
 set.seed(3123)
 # Randomly generate a graph
-m <- 5
+m <- 10
 w <- sample(1:m, replace = TRUE)
 w <- w / sum(w)
 g <- replicate(m, sample(1:m, replace = TRUE), simplify = TRUE)
 diag(g) <- 0
 g <- g / rowSums(g)
-# graph <- new("graphMCP", m = g, weights = w)
+graph <- new("graphMCP", m = g, weights = w)
 graph2 <- create_graph(w, g)
 
 p <- runif(m, .0001, .05)
 p1 <- runif(m, .0001, .0005) # Reject all
-p2 <- runif(m, .4, .9) # Reject none - These don't seem to matter
+p2 <- runif(m, .4, .9) # Reject none - These don't seem to matter for speed
 sim_corr <- diag(m)
 
 # Bonferroni

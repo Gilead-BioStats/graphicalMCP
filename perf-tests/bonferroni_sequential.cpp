@@ -1,16 +1,11 @@
 #include <cpp11.hpp>
-#include <vector>
-#include <functional> // std::divides
-#include <algorithm> // std::transform
 #include <iostream>
 using namespace cpp11;
 
 [[cpp11::register]]
-list bonferroni_sequential_cpp(list graph, doubles p, double alpha) {
-  writable::list new_graph(graph);
-
-  writable::doubles hypotheses = graph["hypotheses"];
-  writable::doubles_matrix<> transitions = graph["transitions"];
+doubles bonferroni_sequential_cpp(doubles hyps, doubles trns, doubles p, double alpha) {
+  writable::doubles hypotheses = hyps;
+  writable::doubles transitions = trns;
 
   double adj_p_global_max = 0;
   double adj_p_subgraph_min;
@@ -21,22 +16,7 @@ list bonferroni_sequential_cpp(list graph, doubles p, double alpha) {
   writable::integers rejected(graph_size);
 
   for (int i = 0; i < graph_size; i++) {
-    std::cout << "Hyps: ";
-    for (int print = 0; print < graph_size; print++) {
-      double hyp = hypotheses[print];
-      std::printf("%f, ", hyp);
-    }
-    std::cout << '\n';
-    std::cout << "Transitions\n";
-    for (int print1 = 0; print1 < graph_size; print1++) {
-      for (int print2 = 0; print2 < graph_size; print2++) {
-        double trn = transitions(print1, print2);
-        std::printf("%f, ", trn);
-      }
-      std::cout << '\n';
-    }
-
-    // initialize subgraph p at 1
+    // initialize sub-graph p at 1
     adj_p_subgraph_min = 1.0;
 
     // loop through the graph, replacing the min each time a smaller is found
@@ -48,7 +28,6 @@ list bonferroni_sequential_cpp(list graph, doubles p, double alpha) {
         min_index = j;
         adj_p_subgraph_min = p[j] / hypotheses[j];
       }
-      std::cout << "step " << i << ", " << j << "\n    min_index: " << min_index << '\n';
     }
 
     // update the global max if this sub-graph's min is larger than prior
@@ -56,16 +35,15 @@ list bonferroni_sequential_cpp(list graph, doubles p, double alpha) {
       adj_p_global_max = adj_p_subgraph_min;
     }
 
-    // hypothesis @ min_index gets largest adj-p seen so far
+    // hypothesis at min_index gets largest adj-p seen so far
     adjusted_p[min_index] = adj_p_global_max;
     rejected[min_index] = (adj_p_global_max <= alpha);
-    // std::cout << i << " | " << adj_p_subgraph_min << '\n';
 
     // update hypotheses & transitions -----------------------------------------
 
     // init storage for new graph elts
     writable::doubles new_weights(graph_size);
-    writable::doubles_matrix<> new_transitions(graph_size, graph_size);
+    writable::doubles new_transitions(graph_size);
 
     // calculate new weights & transitions
     for (int hyp_num = 0; hyp_num < graph_size; ++hyp_num) {
@@ -73,38 +51,31 @@ list bonferroni_sequential_cpp(list graph, doubles p, double alpha) {
         new_weights[hyp_num] = 0;
       } else {
         new_weights[hyp_num] =
-          hypotheses[hyp_num] + hypotheses[min_index] * transitions(min_index, hyp_num);
+          hypotheses[hyp_num] +
+          hypotheses[min_index] * transitions[hyp_num * graph_size + min_index];
       }
       for (int end_num = 0; end_num < graph_size; ++end_num) {
         if (hyp_num == end_num || hyp_num == min_index || end_num == min_index) {
-          new_transitions(hyp_num, end_num) = 0;
+          new_transitions[end_num * graph_size + hyp_num] = 0;
         } else {
           double numerator =
-            transitions(hyp_num, end_num) +
-            transitions(hyp_num, min_index) * transitions(min_index, end_num);
+            transitions[end_num * graph_size + hyp_num] +
+            transitions[min_index * graph_size + hyp_num] *
+            transitions[end_num * graph_size + min_index];
           double denominator =
-            1 - transitions(hyp_num, min_index) * transitions(min_index, hyp_num);
+            1 - transitions[min_index * graph_size + hyp_num] *
+            transitions[hyp_num * graph_size + min_index];
 
-          new_transitions(hyp_num, end_num) = numerator / denominator;
+          new_transitions[end_num * graph_size + hyp_num] =
+            numerator / denominator;
         }
       }
     }
 
     hypotheses = new_weights;
-    // for (int trn1 = 0; trn1 < graph_size; trn1++) {
-    //   for (int trn2 = 0; trn2 < graph_size; trn2++) {
-    //     transitions(trn1, trn2) = new_transitions(trn1, trn2);
-    //   }
-    // }
-    writable::doubles_matrix<> transitions = new_transitions;
-
-    // update graph end --------------------------------------------------------
+    transitions = new_transitions;
+    // update hypotheses & transitions end -------------------------------------
   }
 
-  return list({
-    "p_adj"_nm = adjusted_p,
-    "rejected"_nm = rejected
-  });
-
-  // return new_weights;
+  return adjusted_p;
 }
