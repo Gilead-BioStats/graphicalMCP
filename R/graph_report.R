@@ -189,3 +189,66 @@ test_graph <- function(graph,
     class = "graph_report"
   )
 }
+
+test_graph_fast <- function(graph,
+                       p,
+                       alpha = .05,
+                       groups = list(seq_along(graph$hypotheses)),
+                       test_types = c("bonferroni"),
+                       corr = NULL,
+                       intersections = generate_weights(graph),
+                       graph_size = length(graph$hypotheses),
+                       gw_size = 2 ^ graph_size - 1,
+                       num_groups = length(groups)) {
+  # Some useful values ---------------------------------------------------------
+  # graph_size <- length(graph$hypotheses)
+  # gw_size <- 2^graph_size - 1
+  # num_groups <- length(groups)
+
+  # hyp_names <- names(graph$hypotheses)
+  # names(p) <- hyp_names
+  # if (!is.null(corr)) dimnames(corr) <- list(hyp_names, hyp_names)
+
+  # Generate weights -----------------------------------------------------------
+  inter_h_vecs <- intersections[, seq_len(graph_size), drop = FALSE]
+  inter_small <- intersections[, seq_len(graph_size) + graph_size]
+
+  p_adj <- matrix(
+    NA_real_,
+    nrow = gw_size,
+    ncol = num_groups,
+    dimnames = list(NULL, paste0("padj_grp", seq_along(groups)))
+  )
+
+  # Calculate adjusted p-values ------------------------------------------------
+  for (i in seq_len(gw_size * num_groups)) {
+    # This index is periodic over the number of intersection hypotheses
+    inter_index <- (i - 1) %/% num_groups + 1
+    h <- inter_h_vecs[inter_index, ]
+    weights <- inter_small[inter_index, ]
+
+    # This index is periodic over the number of groups as i progresses
+    group_index <- (i - 1) %% num_groups + 1
+    group <- groups[[group_index]]
+
+    # Hypotheses to test must be in both the current group and the current
+    # intersection
+    group_in_inter <- group[as.logical(h[group])]
+
+    p_adjust_fun <- paste0("p_adjust_", test_types[[group_index]])
+    p_adjust_args <- list(
+      p_values = p[group_in_inter],
+      weights = weights[group_in_inter],
+      corr = corr[group_in_inter, group_in_inter]
+    )[formalArgs(p_adjust_fun)]
+
+    p_adj[inter_index, group_index] <- do.call(p_adjust_fun, p_adjust_args)
+  }
+
+  # Adjusted p-values at higher levels -----------------------------------------
+  p_adj_inter <- do.call(pmin, as.data.frame(p_adj))
+  p_adj_global <- apply(p_adj_inter * inter_h_vecs, 2, max)
+  test_global <- p_adj_global <= alpha
+
+  test_global
+}

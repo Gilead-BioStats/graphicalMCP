@@ -1,150 +1,143 @@
 #include <cpp11.hpp>
-#include <algorithm>
 #include <iostream>
-#include <vector>
+
 using namespace cpp11;
 
+// p a vector, not a matrix
 [[cpp11::register]]
-std::vector<double> bonferroni_sequential_cpp(std::vector<double> hypotheses,
-                                              std::vector<double> transitions,
-                                              std::vector<double> p,
-                                              double alpha) {
-  double adj_p_global_max = 0, numerator, denominator;
-  std::vector<double>::iterator adj_p_subgraph_min;
-  int min_index = 0, graph_size = hypotheses.size();
-  std::vector<double> adj_p_subgraph, adjusted_p(graph_size);
-  std::vector<int> rejected(graph_size);
+writable::integers bonferroni_sequential_cpp(
+  writable::doubles hypotheses,
+  writable::doubles_matrix<> transitions,
+  doubles p,
+  double alpha
+)
+{
+  writable::doubles_matrix<> new_transitions = transitions;
+  int rej_num, hyp_num, end_num, reject, hyp_match, cum_rej = 0,
+    graph_size = hypotheses.size();
+  double numerator, denominator, intermediate;
 
-  std::vector<double> new_weights(hypotheses), new_transitions(transitions);
+  writable::integers rejected(graph_size);
 
+  // init rejected to all 0
   for (int i = 0; i < graph_size; i++) {
-    // divide p by hypotheses and store in adj_p_subgraph
-    std::transform(
-      p.begin(), p.end(),
-      hypotheses.begin(),
-      std::back_inserter(adj_p_subgraph),
-      std::divides<double>()
-    );
-
-    // get pointer to smallest element - bare variable is iterator, * gets value
-    adj_p_subgraph_min = std::min_element(
-      adj_p_subgraph.begin(),
-      adj_p_subgraph.end()
-    );
-
-    min_index = std::distance(adj_p_subgraph.begin(), adj_p_subgraph_min);
-
-    // reset adj_p_subgraph, as it's not needed any more this loop
-    adj_p_subgraph.clear();
-
-    // update the global max if this sub-graph's min is larger than prior
-    adj_p_global_max = std::max(adj_p_global_max, *adj_p_subgraph_min);
-
-    // hypothesis at min_index gets largest adj-p seen so far
-    adjusted_p[min_index] = adj_p_global_max;
-    rejected[min_index] = (adj_p_global_max <= alpha);
-
-    // delete min_index & update hypotheses & transitions ----------------------
-    for (int hyp_num = 0; hyp_num < graph_size; ++hyp_num) {
-      if (hyp_num == min_index) {
-        new_weights[hyp_num] = 0;
-      } else {
-        new_weights[hyp_num] =
-          hypotheses[hyp_num] +
-          hypotheses[min_index] * transitions[hyp_num * graph_size + min_index];
-      }
-      for (int end_num = 0; end_num < graph_size; ++end_num) {
-        if (hyp_num == end_num || hyp_num == min_index || end_num == min_index) {
-          new_transitions[end_num * graph_size + hyp_num] = 0;
-        } else {
-          numerator =
-            transitions[end_num * graph_size + hyp_num] +
-            transitions[min_index * graph_size + hyp_num] *
-            transitions[end_num * graph_size + min_index];
-          denominator =
-            1 - transitions[min_index * graph_size + hyp_num] *
-            transitions[hyp_num * graph_size + min_index];
-
-          new_transitions[end_num * graph_size + hyp_num] =
-            numerator / denominator;
-        }
-      }
-    }
-
-    hypotheses = new_weights;
-    transitions = new_transitions;
-    // update hypotheses & transitions end -------------------------------------
+    rejected[i] = 0;
   }
 
-  return adjusted_p;
-}
-
-[[cpp11::register]]
-std::vector<int> bs_fast(
-    std::vector<double> hypotheses,
-    std::vector<double> transitions,
-    std::vector<double> p,
-    double alpha,
-    int graph_size
-) {
-  // init vars -----------------------------------------------------------------
-  int reject, hyp_num, end_num, i;
-  double numerator, denominator;
-
-  std::vector<int> rejected(graph_size);
-  std::vector<double> new_weights;
-  std::vector<double> new_transitions;
-
-  // number of rejections unknown ----------------------------------------------
   while (1) {
-    // find a rejection --------------------------------------------------------
-    for (i = 0; i < graph_size; i++) {
-      reject = (p[i] <= hypotheses[i] * alpha);
-      // std::cout << i << reject << '\n';
+
+    reject = 0;
+
+    // find a hypothesis that can be rejected
+    // reject ends as 0 if none are rejected
+    for (rej_num = 0; rej_num < graph_size; rej_num++) {
+      // this line has the actual test
+      reject = p[rej_num] < hypotheses[rej_num] * alpha;
+      // increase count of rejections and break for loop
       if (reject) {
-        rejected[i * reject] = 1;
+        rejected[rej_num] = 1;
+        cum_rej++;
         break;
       }
     }
 
-    if (reject) {
-      reject *= i;
-      // update hypotheses & transitions
-      for (hyp_num = 0; hyp_num < graph_size; ++hyp_num) {
+    // check for no rejections, or all rejected
+    if (!reject | (cum_rej == graph_size)) {
+      break;
+    } else {
 
-        // update hypotheses
-        if (hyp_num == reject) {
-          new_weights[hyp_num] = 0;
+      for (hyp_num = 0; hyp_num < graph_size; hyp_num++) {
+
+        if (hyp_num == rej_num) {
+          hypotheses[hyp_num] = 0;
         } else {
-          new_weights[hyp_num] =
-            hypotheses[hyp_num] +
-            hypotheses[reject] * transitions[hyp_num * graph_size + reject];
+          hypotheses[hyp_num] +=
+            hypotheses[rej_num] * transitions(rej_num, hyp_num);
         }
 
-        // update transitions
-        for (end_num = 0; end_num < graph_size; ++end_num) {
-          if (hyp_num == end_num || hyp_num == reject || end_num == reject) {
-            new_transitions[end_num * graph_size + hyp_num] = 0.0;
+        for (end_num = 0; end_num < graph_size; end_num++) {
+
+          if (hyp_num == end_num) {
+            new_transitions(hyp_num, end_num) = 0;
           } else {
-            numerator =
-              transitions[end_num * graph_size + hyp_num] +
-              transitions[reject * graph_size + hyp_num] *
-              transitions[end_num * graph_size + reject];
-            denominator =
-              1 - transitions[reject * graph_size + hyp_num] *
-              transitions[hyp_num * graph_size + reject];
-            new_transitions[end_num * graph_size + hyp_num] =
-              numerator / denominator;
+            numerator = transitions(hyp_num, end_num) +
+              transitions(hyp_num, rej_num) *
+              transitions(rej_num, end_num);
+
+            denominator = 1 -
+              transitions(hyp_num, rej_num) * transitions(rej_num, hyp_num);
+
+            hyp_match = (hyp_num == end_num) |
+              (hyp_num == rej_num) |
+              (end_num == rej_num);
+
+            if ((denominator <= 0) | hyp_match) {
+              new_transitions(hyp_num, end_num) = 0;
+            } else {
+              new_transitions(hyp_num, end_num) = numerator / denominator;
+            }
           }
         }
       }
 
-      hypotheses = new_weights;
-      transitions = new_transitions;
-    } else {
-      break;
+      for (hyp_num = 0; hyp_num < graph_size * graph_size; hyp_num++) {
+        intermediate = new_transitions(hyp_num, 0);
+        transitions(hyp_num, 0) = intermediate;
+        // transitions(hyp_num, 0) *= 0;
+        // transitions(hyp_num, 0) += new_transitions(hyp_num, 0);
+      }
+
     }
+
   }
 
   return rejected;
 }
+
+[[cpp11::register]]
+integers_matrix<> bonferroni_sequential_power(
+    writable::doubles hypotheses,
+    writable::doubles_matrix<> transitions,
+    doubles_matrix<> p_mat,
+    double alpha
+)
+{
+  int g_size = hypotheses.size();
+  int p_mat_rows = p_mat.nrow();
+  int col;
+  int row;
+  int int_intermediate;
+  double dbl_intermediate;
+
+  writable::integers rejected(g_size);
+  writable::doubles p(g_size);
+
+  writable::integers_matrix<> rejected_mat(p_mat_rows, g_size);
+
+  // std::cout << "initialized rejected matrix" << '\n';
+
+  for (row = 0; row < p_mat_rows; row++) {
+
+    // get a single row of p-values
+    for (col = 0; col < g_size; col++) {
+      dbl_intermediate = p_mat(row, col);
+      p[col] = dbl_intermediate;
+      // p[col] *=0;
+      // p[col] += p_mat(1, col);
+      // std::cout << "moving p-values: " << p[col] << '\n';
+    }
+
+    // test that row
+    rejected = bonferroni_sequential_cpp(hypotheses, transitions, p, alpha);
+
+    // insert results into results matrix
+    for (col = 0; col < g_size; col++) {
+      int_intermediate = rejected[col];
+      rejected_mat(row, col) = int_intermediate;
+    }
+
+  }
+
+  return rejected_mat;
+}
+

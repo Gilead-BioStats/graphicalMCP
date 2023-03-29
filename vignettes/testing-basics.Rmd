@@ -152,7 +152,7 @@ test_graph(
 ```{r benchmark-bonf}
 set.seed(3123)
 # Randomly generate a graph
-m <- 10
+m <- 5
 w <- sample(1:m, replace = TRUE)
 w <- w / sum(w)
 g <- replicate(m, sample(1:m, replace = TRUE), simplify = TRUE)
@@ -161,31 +161,53 @@ g <- g / rowSums(g)
 graph <- new("graphMCP", m = g, weights = w)
 graph2 <- create_graph(w, g)
 
-p <- runif(m, .0001, .05)
+# gw <- generate_weights(graph2)
+
+p <- runif(m, .0001, .03)
 p1 <- runif(m, .0001, .0005) # Reject all
 p2 <- runif(m, .4, .9) # Reject none - These don't seem to matter for speed
 sim_corr <- diag(m)
 
+h = as.integer(rep(0, m))
+a = .05 * w
+G = as.double(g)
+nH = m
+
 # Bonferroni
 bonf_bench <- bench::mark(
-  `Bonferroni sequential` =
-    bonferroni_sequential(graph2, p)$outputs$rejected,
-  `Bonferroni sequential2 (C++)` =
-    bonferroni_sequential2(graph2, p)$outputs$rejected,
-  `Bonferroni sequential3 (C++)` =
-    bonferroni_sequential3(graph2, p)$outputs$rejected, # currently wrong
-  `Bonferroni sequential, critical` =
-    bonferroni_sequential(graph2, p, critical = TRUE)$outputs$rejected,
-  `Bonferroni closure` =
-    test_graph(graph2, p)$outputs$rejected,
-  `Bonferroni closure, verbose` =
-    test_graph(graph2, p, verbose = TRUE)$outputs$rejected,
-  `Bonferroni closure, critical` =
-    test_graph(graph2, p, critical = TRUE)$outputs$rejected,
+  # `Bonferroni sequential` =
+  #   bonferroni_sequential(graph2, p)$outputs$rejected,
+  # `Bonferroni sequential2 (C++)` =
+  #   bonferroni_sequential2(graph2, p)$outputs$rejected,
+  # `Bonferroni sequential3 (C++)` =
+  #   bonferroni_sequential3(graph2, p)$outputs$rejected, # currently wrong
+  # `Bonferroni sequential, critical` =
+  #   bonferroni_sequential(graph2, p, critical = TRUE)$outputs$rejected,
+  # `Bonferroni sequential, C-like` =
+  #   graphproc(
+  #     h = h,
+  #     a = a,
+  #     G = G,
+  #     p = p,
+  #     nH = nH,
+  #     G1 = G,
+  #     nGraphs = 1,
+  #     print = 0,
+  #     upscale = 0
+  #   ),
+  `Bonferroni sequential, C-like wrapped` =
+    bonferroni_sequential4(graph2, p),
+  # `Bonferroni closure` =
+  #   test_graph(graph2, p)$outputs$rejected,
+  # `Bonferroni closure, verbose` =
+  #   test_graph(graph2, p, verbose = TRUE)$outputs$rejected,
+  # `Bonferroni closure, critical` =
+  #   test_graph(graph2, p, critical = TRUE)$outputs$rejected,
   `Bonferroni sequential - graphTest (C)` =
     !!graphTest(p, graph = graph),
-  `Bonferroni sequential - gMCP (R)` =
-    gMCP(graph, p)@rejected
+  # `Bonferroni sequential - gMCP (R)` =
+  #   gMCP(graph, p)@rejected
+  check = FALSE
 )
 
 bonf_bench$expression <- as.character(bonf_bench$expression)
@@ -201,10 +223,11 @@ Somewhat confusingly, `gMCP::graphTest()` allows a test type of "Simes", and it'
 simes_bench <- bench::mark(
   `Simes` =
     test_graph(graph2, p, test_types = "s")$outputs$rejected,
-  `Simes, verbose` =
-    test_graph(graph2, p, test_types = "s", verbose = TRUE)$outputs$rejected,
-  `Simes, critical` =
-    test_graph(graph2, p, test_types = "s", critical = TRUE)$outputs$rejected,
+  `Simes 2` = test_graph_fast(graph2, p, .05, list(1:5), "simes", intersections = gw, graph_size = 5, gw_size = 31, num_groups = 1),
+  # `Simes, verbose` =
+  #   test_graph(graph2, p, test_types = "s", verbose = TRUE)$outputs$rejected,
+  # `Simes, critical` =
+  #   test_graph(graph2, p, test_types = "s", critical = TRUE)$outputs$rejected,
   # graphTest just does Bonferroni testing without warning in this case
   # !!graphTest(p, graph = graph, test = "Simes"),
   `Simes - gMCP` =
@@ -223,10 +246,11 @@ p_mat <- rbind(p)
 para_bench <- bench::mark(
   `Parametric` =
     test_graph(graph2, p, test_types = "p", corr = sim_corr)$outputs$rejected,
-  `Parametric, verbose` =
-    test_graph(graph2, p, test_types = "p", corr = sim_corr, verbose = TRUE)$outputs$rejected,
-  `Parametric, critical` =
-    test_graph(graph2, p, test_types = "p", corr = sim_corr, critical = TRUE)$outputs$rejected,
+  `Parametric 2` = test_graph_fast(graph2, p, .05, list(1:5), "parametric", intersections = gw, graph_size = 5, gw_size = 31, num_groups = 1),
+  # `Parametric, verbose` =
+  #   test_graph(graph2, p, test_types = "p", corr = sim_corr, verbose = TRUE)$outputs$rejected,
+  # `Parametric, critical` =
+  #   test_graph(graph2, p, test_types = "p", corr = sim_corr, critical = TRUE)$outputs$rejected,
   `Parametric - testGraph` =
     !!graphTest(p_mat, graph = graph, test = "parametric", cr = sim_corr)[1,],
   `Parametric - gMCP` =
@@ -236,6 +260,53 @@ para_bench <- bench::mark(
 para_bench$expression <- as.character(para_bench$expression)
 gt::gt(para_bench[1:7])
 ```
+
+```{r power}
+m <- 10
+w <- sample(1:m, replace = TRUE)
+w <- w / sum(w)
+g <- replicate(m, sample(1:m, replace = TRUE), simplify = TRUE)
+diag(g) <- 0
+g <- g / rowSums(g)
+graph <- new("graphMCP", m = g, weights = w)
+graph2 <- create_graph(w, g)
+
+# gw <- generate_weights(graph2)
+
+p <- runif(m, .0001, .03)
+p1 <- runif(m, .0001, .0005) # Reject all
+p2 <- runif(m, .4, .9) # Reject none - These don't seem to matter for speed
+sim_corr <- diag(m)
+
+h = as.integer(rep(0, m))
+a = .05 * w
+G = as.double(g)
+nH = m
+
+bench::mark(
+  `gMCP` = calcPower(graph = graph, alpha = .05, n.sim = 100000, corr.sim = diag(m)),
+  # `graphicalMCP 4` = run_power4(graph2, n_sim = 1000),
+  `graphicalMCP 5` = run_power5(graph2, n_sim = 100000),
+  min_iterations = 5,
+  check = FALSE
+)
+
+bench::mark(
+  # `gMCP` = calcPower(graph = graph, alpha = .05, n.sim = 100000, corr.sim = diag(m)),
+  `graphicalMCP` = run_power(graph2, n_sim = 100, test_types = "simes"),
+  `graphicalMCP 2` = run_power2(graph2, n_sim = 100, test_types = "simes"),
+  min_iterations = 5,
+  check = FALSE
+)
+
+bench::mark(
+  `gMCP` = calcPower(graph = graph, alpha = .05, n.sim = 100, corr.sim = diag(m), test.sim = diag(m)),
+  `graphicalMCP` = run_power(graph2, n_sim = 100, test_types = "parametric", test_corr = diag(m)),
+  min_iterations = 5,
+  check = FALSE
+)
+```
+
 
 ## Print options
 

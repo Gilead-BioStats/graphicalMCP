@@ -76,17 +76,20 @@ bonferroni_sequential2 <- function(graph,
                                   p,
                                   alpha = .05,
                                   verbose = FALSE,
-                                  critical = FALSE) {
-  test_input_val(
-    graph,
-    p,
-    alpha,
-    groups = list(seq_along(graph$hypotheses)),
-    test_types = "bonferroni",
-    corr = NULL,
-    verbose = verbose,
-    critical = critical
-  )
+                                  critical = FALSE,
+                                  check_input = TRUE) {
+  if (check_input) {
+    test_input_val(
+      graph,
+      p,
+      alpha,
+      groups = list(seq_along(graph$hypotheses)),
+      test_types = "bonferroni",
+      corr = NULL,
+      verbose = verbose,
+      critical = critical
+    )
+  }
 
   initial_graph <- graph
 
@@ -148,17 +151,20 @@ bonferroni_sequential3 <- function(graph,
                                    p,
                                    alpha = .05,
                                    verbose = FALSE,
-                                   critical = FALSE) {
-  test_input_val(
-    graph,
-    p,
-    alpha,
-    groups = list(seq_along(graph$hypotheses)),
-    test_types = "bonferroni",
-    corr = NULL,
-    verbose = verbose,
-    critical = critical
-  )
+                                   critical = FALSE,
+                                   check_input = TRUE) {
+  if (check_input) {
+    test_input_val(
+      graph,
+      p,
+      alpha,
+      groups = list(seq_along(graph$hypotheses)),
+      test_types = "bonferroni",
+      corr = NULL,
+      verbose = verbose,
+      critical = critical
+    )
+  }
 
   initial_graph <- graph
 
@@ -190,4 +196,13 @@ bonferroni_sequential3 <- function(graph,
     ),
     class = "graph_report"
   )
+}
+
+bonferroni_sequential4 <- function(graph,
+                                   p,
+                                   alpha = .05,
+                                   verbose = FALSE,
+                                   critical = FALSE,
+                                   check_input = TRUE) {
+  bonferroni_sequential_cpp(graph$hypotheses, graph$transitions, p, alpha)
 }

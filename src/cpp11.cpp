@@ -5,18 +5,39 @@
 #include "cpp11/declarations.hpp"
 #include <R_ext/Visibility.h>
 
-// bonferroni_sequential.cpp
-std::vector<double> bonferroni_sequential_cpp(std::vector<double> hypotheses, std::vector<double> transitions, std::vector<double> p, double alpha);
-extern "C" SEXP _graphicalMCP_bonferroni_sequential_cpp(SEXP hypotheses, SEXP transitions, SEXP p, SEXP alpha) {
+// bonferroni_sequential_c.cpp
+integers graphproc(writable::integers h, writable::doubles a, writable::doubles G, writable::doubles p, int nH, writable::doubles G1, int nGraphs, int print, int upscale);
+extern "C" SEXP _graphicalMCP_graphproc(SEXP h, SEXP a, SEXP G, SEXP p, SEXP nH, SEXP G1, SEXP nGraphs, SEXP print, SEXP upscale) {
   BEGIN_CPP11
-    return cpp11::as_sexp(bonferroni_sequential_cpp(cpp11::as_cpp<cpp11::decay_t<std::vector<double>>>(hypotheses), cpp11::as_cpp<cpp11::decay_t<std::vector<double>>>(transitions), cpp11::as_cpp<cpp11::decay_t<std::vector<double>>>(p), cpp11::as_cpp<cpp11::decay_t<double>>(alpha)));
+    return cpp11::as_sexp(graphproc(cpp11::as_cpp<cpp11::decay_t<writable::integers>>(h), cpp11::as_cpp<cpp11::decay_t<writable::doubles>>(a), cpp11::as_cpp<cpp11::decay_t<writable::doubles>>(G), cpp11::as_cpp<cpp11::decay_t<writable::doubles>>(p), cpp11::as_cpp<cpp11::decay_t<int>>(nH), cpp11::as_cpp<cpp11::decay_t<writable::doubles>>(G1), cpp11::as_cpp<cpp11::decay_t<int>>(nGraphs), cpp11::as_cpp<cpp11::decay_t<int>>(print), cpp11::as_cpp<cpp11::decay_t<int>>(upscale)));
   END_CPP11
 }
 // bonferroni_sequential.cpp
-std::vector<int> bs_fast(std::vector<double> hypotheses, std::vector<double> transitions, std::vector<double> p, double alpha, int graph_size);
-extern "C" SEXP _graphicalMCP_bs_fast(SEXP hypotheses, SEXP transitions, SEXP p, SEXP alpha, SEXP graph_size) {
+writable::integers bonferroni_sequential_cpp(writable::doubles hypotheses, writable::doubles_matrix<> transitions, doubles p, double alpha);
+extern "C" SEXP _graphicalMCP_bonferroni_sequential_cpp(SEXP hypotheses, SEXP transitions, SEXP p, SEXP alpha) {
   BEGIN_CPP11
-    return cpp11::as_sexp(bs_fast(cpp11::as_cpp<cpp11::decay_t<std::vector<double>>>(hypotheses), cpp11::as_cpp<cpp11::decay_t<std::vector<double>>>(transitions), cpp11::as_cpp<cpp11::decay_t<std::vector<double>>>(p), cpp11::as_cpp<cpp11::decay_t<double>>(alpha), cpp11::as_cpp<cpp11::decay_t<int>>(graph_size)));
+    return cpp11::as_sexp(bonferroni_sequential_cpp(cpp11::as_cpp<cpp11::decay_t<writable::doubles>>(hypotheses), cpp11::as_cpp<cpp11::decay_t<writable::doubles_matrix<>>>(transitions), cpp11::as_cpp<cpp11::decay_t<doubles>>(p), cpp11::as_cpp<cpp11::decay_t<double>>(alpha)));
+  END_CPP11
+}
+// bonferroni_sequential.cpp
+integers_matrix<> bonferroni_sequential_power(writable::doubles hypotheses, writable::doubles_matrix<> transitions, doubles_matrix<> p_mat, double alpha);
+extern "C" SEXP _graphicalMCP_bonferroni_sequential_power(SEXP hypotheses, SEXP transitions, SEXP p_mat, SEXP alpha) {
+  BEGIN_CPP11
+    return cpp11::as_sexp(bonferroni_sequential_power(cpp11::as_cpp<cpp11::decay_t<writable::doubles>>(hypotheses), cpp11::as_cpp<cpp11::decay_t<writable::doubles_matrix<>>>(transitions), cpp11::as_cpp<cpp11::decay_t<doubles_matrix<>>>(p_mat), cpp11::as_cpp<cpp11::decay_t<double>>(alpha)));
+  END_CPP11
+}
+// temp.cpp
+doubles temp1(writable::doubles h, int index);
+extern "C" SEXP _graphicalMCP_temp1(SEXP h, SEXP index) {
+  BEGIN_CPP11
+    return cpp11::as_sexp(temp1(cpp11::as_cpp<cpp11::decay_t<writable::doubles>>(h), cpp11::as_cpp<cpp11::decay_t<int>>(index)));
+  END_CPP11
+}
+// temp.cpp
+doubles graphproc_temp2(writable::doubles h, writable::doubles vals);
+extern "C" SEXP _graphicalMCP_graphproc_temp2(SEXP h, SEXP vals) {
+  BEGIN_CPP11
+    return cpp11::as_sexp(graphproc_temp2(cpp11::as_cpp<cpp11::decay_t<writable::doubles>>(h), cpp11::as_cpp<cpp11::decay_t<writable::doubles>>(vals)));
   END_CPP11
 }
 // zero_node.cpp
@@ -29,9 +50,12 @@ extern "C" SEXP _graphicalMCP_zero_node_cpp(SEXP graph, SEXP remove) {
 
 extern "C" {
 static const R_CallMethodDef CallEntries[] = {
-    {"_graphicalMCP_bonferroni_sequential_cpp", (DL_FUNC) &_graphicalMCP_bonferroni_sequential_cpp, 4},
-    {"_graphicalMCP_bs_fast",                   (DL_FUNC) &_graphicalMCP_bs_fast,                   5},
-    {"_graphicalMCP_zero_node_cpp",             (DL_FUNC) &_graphicalMCP_zero_node_cpp,             2},
+    {"_graphicalMCP_bonferroni_sequential_cpp",   (DL_FUNC) &_graphicalMCP_bonferroni_sequential_cpp,   4},
+    {"_graphicalMCP_bonferroni_sequential_power", (DL_FUNC) &_graphicalMCP_bonferroni_sequential_power, 4},
+    {"_graphicalMCP_graphproc",                   (DL_FUNC) &_graphicalMCP_graphproc,                   9},
+    {"_graphicalMCP_graphproc_temp2",             (DL_FUNC) &_graphicalMCP_graphproc_temp2,             2},
+    {"_graphicalMCP_temp1",                       (DL_FUNC) &_graphicalMCP_temp1,                       2},
+    {"_graphicalMCP_zero_node_cpp",               (DL_FUNC) &_graphicalMCP_zero_node_cpp,               2},
     {NULL, NULL, 0}
 };
 }
