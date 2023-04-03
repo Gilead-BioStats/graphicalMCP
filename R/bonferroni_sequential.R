@@ -1,5 +1,6 @@
 #' @rdname testing
 #' @export
+# full function
 bonferroni_sequential <- function(graph,
                                   p,
                                   alpha = .05,
@@ -72,7 +73,8 @@ bonferroni_sequential <- function(graph,
 
 #' @rdname testing
 #' @export
-bonferroni_sequential2 <- function(graph,
+# full function with optional input val; delete node with C++
+bs_r_del_node_cpp <- function(graph,
                                   p,
                                   alpha = .05,
                                   verbose = FALSE,
@@ -147,7 +149,8 @@ bonferroni_sequential2 <- function(graph,
 
 #' @rdname testing
 #' @export
-bonferroni_sequential3 <- function(graph,
+# full function with optional input val; adjusted p with C++
+bs_r_del_node_cpp <- function(graph,
                                    p,
                                    alpha = .05,
                                    verbose = FALSE,
@@ -198,7 +201,10 @@ bonferroni_sequential3 <- function(graph,
   )
 }
 
-bonferroni_sequential4 <- function(graph,
+#' @rdname testing
+#' @export
+# C++ only, pass/fail only
+bs_cpp <- function(graph,
                                    p,
                                    alpha = .05,
                                    verbose = FALSE,

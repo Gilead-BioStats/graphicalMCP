@@ -11,6 +11,8 @@
 #
 # calcPower(graph=graph, alpha=0.025, mean=theta, corr.sim=corMat, n.sim=100000)
 
+# basic function, not doing any "outside work" like generating weights
+#' @export
 run_power <- function(graph,
                       success = 1:2,
                       alpha = .05,
@@ -71,6 +73,8 @@ run_power <- function(graph,
   )
 }
 
+#' @export
+# generates weights only once
 run_power2 <- function(graph,
                       success = 1:2,
                       alpha = .05,
@@ -153,6 +157,7 @@ run_power2 <- function(graph,
   )
 }
 
+#' @export
 run_power3 <- function(graph,
                       success = 1:2,
                       alpha = .05,
@@ -225,7 +230,7 @@ run_power3 <- function(graph,
   )
 }
 
-
+#' @export
 run_power4 <- function(graph,
                        success = 1:2,
                        alpha = .05,
@@ -239,6 +244,17 @@ run_power4 <- function(graph,
   if (!is.null(gamma)) {
     graph <- graph(gamma)
   }
+
+  test_input_val(
+    graph,
+    rep(0, length(graph$hypotheses)),
+    alpha,
+    groups,
+    test_types,
+    test_corr,
+    FALSE,
+    FALSE
+  )
 
   p_sim <- pnorm(
     mvtnorm::rmvnorm(n_sim, theta, sigma = sim_corr),
@@ -259,6 +275,27 @@ run_power4 <- function(graph,
         graph$transitions,
         p_sim[row, ],
         alpha
+      )
+    }
+  } else if (all(test_types == "simes" | test_types == "s")) {
+    # some values for testing
+    gw <- generate_weights(graph)
+    graph_size <- length(graph$hypotheses)
+    gw_size <- 2 ^ graph_size - 1
+    num_groups <- length(groups)
+
+    for (row in seq_len(n_sim)) {
+      test_res_mat[row, ] <- test_graph_fast_simes(
+        graph,
+        p_sim[row, ],
+        alpha,
+        groups,
+        test_types,
+        test_corr,
+        gw,
+        graph_size,
+        gw_size,
+        num_groups
       )
     }
   } else {
@@ -289,7 +326,7 @@ run_power4 <- function(graph,
   )
 }
 
-
+#' @export
 run_power5 <- function(graph,
                        success = 1:2,
                        alpha = .05,

@@ -17,6 +17,7 @@ knitr::opts_chunk$set(
 ```{r setup}
 library(graphicalMCP)
 library(gMCP)
+message(as.character(Sys.time()))
 ```
 
 ## Testing parameters
@@ -149,8 +150,34 @@ test_graph(
 
 `test_graph()` always calculates the full closure, even for Bonferroni testing. If optimal performance is needed, `bonferroni_sequential()` can be used, which uses the sequential testing shortcut. This causes a significant improvement in speed, and either method is faster than `gMCP::gMCP()`. However, using `gMCP::graphTest()` is the fastest option, as it's written primarily in C directly.
 
+The gMCP suite of testing and power functions is a little confusing, so I'm going to document here to remember for future me:
+
+- gMCP() does a lot, and I haven't dug in line by line to all of it. But it's somewhat of a nicer front end for doing different types of tests a single time, not optimized for speed. Though the `useC` parameter may allow for a pretty fast run still?
+- Using graphTest() directly is a much faster option, with some drawbacks. **graphTest() has a parameter `test`, which is never used. It uses the presence or absence of a correlation matrix to decide between parametric & Bonferroni testing. It does not do Simes testing.** Bonferroni testing then uses the very fast C-based sequential method. Parametric testing is quite slow, and it's all in R.
+- The C code for sequential Bonferroni testing has a couple options - graphproc, which handles a single p-value vector, and graphmult, which handles a matrix of multiple p-value vectors (calling graphproc on each row). They are both made to handle multiple graphs in a list. These two are incredibly fast, and I'd like to learn more about how they can run so fast. Even copying them over and getting them to run with C++ the speed is nowhere close.
+
+I think it would be valuable to build a similar structure, but I'm hoping to have a more organized structure in the end.
+
+- **R-based functions** - To be as fast as possible in R, but without sacrificing transparency. These will be exported, and they're meant to be used sequentially
+  - create_graph()
+  - update_graph()
+  - generate_weights()
+  - bonferroni_sequential()
+  - test_graph()
+    - Possibly separate versions for Simes vs parametric?
+- **C++ functions** - To be as fast as possible. Transparency is less important, except to the extent it impacts maintainability. These are all in support of power simulations primarily
+  - generate_weights()? Optimizing the testing for Simes & parametric will gain much more speed than re-doing generate_weights() in C++
+  - bonferroni_sequential()
+  - bonferroni_sequential_power()? May get folded into a general power function eventually
+  - test_graph()
+    - Still not sure how this will work with parametric testing, or if it will be much faster anyway
+  - calculate_power()
+    - There's already a pretty fast version for Bonferroni
+    - Simes has a huge run time increase, I think because of sorting so many times
+    - Parametric is bound to take quite some time, unless we can re-write rmvnorm() to be faster somehow
+
 ```{r benchmark-bonf}
-set.seed(3123)
+# set.seed(3123)
 # Randomly generate a graph
 m <- 5
 w <- sample(1:m, replace = TRUE)
@@ -161,7 +188,7 @@ g <- g / rowSums(g)
 graph <- new("graphMCP", m = g, weights = w)
 graph2 <- create_graph(w, g)
 
-# gw <- generate_weights(graph2)
+gw <- generate_weights(graph2)
 
 p <- runif(m, .0001, .03)
 p1 <- runif(m, .0001, .0005) # Reject all
@@ -175,43 +202,20 @@ nH = m
 
 # Bonferroni
 bonf_bench <- bench::mark(
-  # `Bonferroni sequential` =
-  #   bonferroni_sequential(graph2, p)$outputs$rejected,
-  # `Bonferroni sequential2 (C++)` =
-  #   bonferroni_sequential2(graph2, p)$outputs$rejected,
-  # `Bonferroni sequential3 (C++)` =
-  #   bonferroni_sequential3(graph2, p)$outputs$rejected, # currently wrong
-  # `Bonferroni sequential, critical` =
-  #   bonferroni_sequential(graph2, p, critical = TRUE)$outputs$rejected,
-  # `Bonferroni sequential, C-like` =
-  #   graphproc(
-  #     h = h,
-  #     a = a,
-  #     G = G,
-  #     p = p,
-  #     nH = nH,
-  #     G1 = G,
-  #     nGraphs = 1,
-  #     print = 0,
-  #     upscale = 0
-  #   ),
-  `Bonferroni sequential, C-like wrapped` =
-    bonferroni_sequential4(graph2, p),
-  # `Bonferroni closure` =
-  #   test_graph(graph2, p)$outputs$rejected,
-  # `Bonferroni closure, verbose` =
-  #   test_graph(graph2, p, verbose = TRUE)$outputs$rejected,
-  # `Bonferroni closure, critical` =
-  #   test_graph(graph2, p, critical = TRUE)$outputs$rejected,
-  `Bonferroni sequential - graphTest (C)` =
+  `graphicalMCP, C-like wrapped` =
+    bs_cpp(graph2, p),
+  `gMCP - graphTest (C)` =
     !!graphTest(p, graph = graph),
+  `gMCP - C` =
+    .C("graphproc", h = h, a = a, G = G, p, m, G, 1, 0, 0),
   # `Bonferroni sequential - gMCP (R)` =
   #   gMCP(graph, p)@rejected
   check = FALSE
 )
 
+message(as.character(Sys.time()))
 bonf_bench$expression <- as.character(bonf_bench$expression)
-gt::gt(bonf_bench[1:7])
+gt::gt(bonf_bench[1:9])
 ```
 
 Simes testing is a bit slower than Bonferroni because the adjusted p-value calculation is more complicated. However, graphicalMCP performance is only 6-7x faster than gMCP for a size 5 graph. This improvement factor grows with the size of the graph.
@@ -224,18 +228,14 @@ simes_bench <- bench::mark(
   `Simes` =
     test_graph(graph2, p, test_types = "s")$outputs$rejected,
   `Simes 2` = test_graph_fast(graph2, p, .05, list(1:5), "simes", intersections = gw, graph_size = 5, gw_size = 31, num_groups = 1),
-  # `Simes, verbose` =
-  #   test_graph(graph2, p, test_types = "s", verbose = TRUE)$outputs$rejected,
-  # `Simes, critical` =
-  #   test_graph(graph2, p, test_types = "s", critical = TRUE)$outputs$rejected,
-  # graphTest just does Bonferroni testing without warning in this case
-  # !!graphTest(p, graph = graph, test = "Simes"),
+  `Simes 3` = test_graph_fast_simes(graph2, p, .05, list(1:5), "simes", intersections = gw, graph_size = 5, gw_size = 31, num_groups = 1),
   `Simes - gMCP` =
     gMCP(graph, p, test = "Simes")@rejected
 )
 
+message(as.character(Sys.time()))
 simes_bench$expression <- as.character(simes_bench$expression)
-gt::gt(simes_bench[1:7])
+gt::gt(simes_bench[1:9])
 ```
 
 Parametric testing is the slowest test, especially when `critical = TRUE`. Parametric testing in graphicalMCP is only 5-6x faster than gMCP for a size 5 graph, because the time is dominated by the multivariate normal calculation. Primary points of improvement in this method would be parallelization in the power simulation, or looking into writing our own version of `pmvnorm()` (Large effort).
@@ -247,64 +247,96 @@ para_bench <- bench::mark(
   `Parametric` =
     test_graph(graph2, p, test_types = "p", corr = sim_corr)$outputs$rejected,
   `Parametric 2` = test_graph_fast(graph2, p, .05, list(1:5), "parametric", intersections = gw, graph_size = 5, gw_size = 31, num_groups = 1),
-  # `Parametric, verbose` =
-  #   test_graph(graph2, p, test_types = "p", corr = sim_corr, verbose = TRUE)$outputs$rejected,
-  # `Parametric, critical` =
-  #   test_graph(graph2, p, test_types = "p", corr = sim_corr, critical = TRUE)$outputs$rejected,
   `Parametric - testGraph` =
     !!graphTest(p_mat, graph = graph, test = "parametric", cr = sim_corr)[1,],
   `Parametric - gMCP` =
     gMCP(graph, p, test = "parametric", correlation = sim_corr)@rejected
 )
 
+message(as.character(Sys.time()))
 para_bench$expression <- as.character(para_bench$expression)
-gt::gt(para_bench[1:7])
+gt::gt(para_bench[1:9])
 ```
 
-```{r power}
-m <- 10
-w <- sample(1:m, replace = TRUE)
-w <- w / sum(w)
-g <- replicate(m, sample(1:m, replace = TRUE), simplify = TRUE)
-diag(g) <- 0
-g <- g / rowSums(g)
-graph <- new("graphMCP", m = g, weights = w)
-graph2 <- create_graph(w, g)
+```{r power-bonf}
+sims <- 100000
 
-# gw <- generate_weights(graph2)
+# m <- 10
+# w <- sample(1:m, replace = TRUE)
+# w <- w / sum(w)
+# g <- replicate(m, sample(1:m, replace = TRUE), simplify = TRUE)
+# diag(g) <- 0
+# g <- g / rowSums(g)
+# graph <- new("graphMCP", m = g, weights = w)
+# graph2 <- create_graph(w, g)
+# 
+# p <- runif(m, .0001, .03)
+# p1 <- runif(m, .0001, .0005) # Reject all
+# p2 <- runif(m, .4, .9) # Reject none - These don't seem to matter for speed
+# sim_corr <- diag(m)
+# 
+# h = as.integer(rep(0, m))
+# a = .05 * w
+# G = as.double(g)
+# nH = m
 
-p <- runif(m, .0001, .03)
-p1 <- runif(m, .0001, .0005) # Reject all
-p2 <- runif(m, .4, .9) # Reject none - These don't seem to matter for speed
-sim_corr <- diag(m)
-
-h = as.integer(rep(0, m))
-a = .05 * w
-G = as.double(g)
-nH = m
-
-bench::mark(
-  `gMCP` = calcPower(graph = graph, alpha = .05, n.sim = 100000, corr.sim = diag(m)),
+power_bench <- bench::mark(
+  `gMCP` = calcPower(graph = graph, alpha = .05, n.sim = sims, corr.sim = diag(m)),
   # `graphicalMCP 4` = run_power4(graph2, n_sim = 1000),
-  `graphicalMCP 5` = run_power5(graph2, n_sim = 100000),
+  `graphicalMCP 5` = run_power5(graph2, n_sim = sims),
   min_iterations = 5,
   check = FALSE
 )
 
-bench::mark(
-  # `gMCP` = calcPower(graph = graph, alpha = .05, n.sim = 100000, corr.sim = diag(m)),
-  `graphicalMCP` = run_power(graph2, n_sim = 100, test_types = "simes"),
-  `graphicalMCP 2` = run_power2(graph2, n_sim = 100, test_types = "simes"),
+message(as.character(Sys.time()))
+power_bench$expression <- as.character(power_bench$expression)
+gt::gt(power_bench[1:9])
+```
+
+```{r power-simes}
+# Lower number of sims just to compare methods
+power_bench <- bench::mark(
+  `graphicalMCP 1` = run_power2(graph2, n_sim = sims / 10, test_types = "simes"),
+  `graphicalMCP 2` = run_power2(graph2, n_sim = sims / 10, test_types = "simes"),
+  `graphicalMCP 4` = run_power4(graph2, n_sim = sims / 10, test_types = "simes"),
   min_iterations = 5,
   check = FALSE
 )
 
-bench::mark(
-  `gMCP` = calcPower(graph = graph, alpha = .05, n.sim = 100, corr.sim = diag(m), test.sim = diag(m)),
-  `graphicalMCP` = run_power(graph2, n_sim = 100, test_types = "parametric", test_corr = diag(m)),
+message(as.character(Sys.time()))
+power_bench$expression <- as.character(power_bench$expression)
+gt::gt(power_bench[1:9])
+```
+
+```{r power-para}
+# Lower number of sims just to compare methods
+power_bench <- bench::mark(
+  `gMCP (n.sim = 1000)` = calcPower(graph = graph, alpha = .05, n.sim = 1, corr.sim = diag(m), corr.test = diag(m)), # n.sim = 10 took > 1 minute to run once
+  `graphicalMCP 1` = run_power(graph2, n_sim = sims / 100, test_types = "parametric", test_corr = diag(m)),
+  `graphicalMCP 2` = run_power2(graph2, n_sim = sims / 100, test_types = "parametric", test_corr = diag(m)),
   min_iterations = 5,
   check = FALSE
 )
+
+message(as.character(Sys.time()))
+power_bench$expression <- as.character(power_bench$expression)
+gt::gt(power_bench[1:9])
+```
+
+```{r power-blend}
+# fastest of each test type, all run with n_sim = 100K - takes a loooong time
+power_bench <- bench::mark(
+  `Bonferroni sequential - C++` = run_power5(graph2, n_sim = sims),
+  `Simes - mixed language` = run_power4(graph2, n_sim = sims, test_types = "simes"),
+  `Parametric - R` = run_power2(graph2, n_sim = sims, test_types = "parametric", test_corr = diag(m)),
+  `Multi-group, p/s` = run_power2(graph2, n_sim = sims, groups = list(1:2, 3:5), test_types = c("parametric", "simes"), test_corr = diag(m)),
+  min_iterations = 5,
+  check = FALSE
+)
+
+message(as.character(Sys.time()))
+power_bench$expression <- as.character(power_bench$expression)
+gt::gt(power_bench[1:9])
 ```
 
 

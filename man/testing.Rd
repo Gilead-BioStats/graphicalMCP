@@ -3,9 +3,11 @@
 %   R/test_input_val.R
 \name{bonferroni_sequential}
 \alias{bonferroni_sequential}
-\alias{bonferroni_sequential2}
-\alias{bonferroni_sequential3}
+\alias{bs_r_del_node_cpp}
+\alias{bs_cpp}
 \alias{test_graph}
+\alias{test_graph_fast}
+\alias{test_graph_fast_simes}
 \alias{test_input_val}
 \title{Test a graph}
 \usage{
@@ -17,20 +19,31 @@ bonferroni_sequential(
   critical = FALSE
 )
 
-bonferroni_sequential2(
+bs_r_del_node_cpp(
   graph,
   p,
   alpha = 0.05,
   verbose = FALSE,
-  critical = FALSE
+  critical = FALSE,
+  check_input = TRUE
 )
 
-bonferroni_sequential3(
+bs_r_del_node_cpp(
   graph,
   p,
   alpha = 0.05,
   verbose = FALSE,
-  critical = FALSE
+  critical = FALSE,
+  check_input = TRUE
+)
+
+bs_cpp(
+  graph,
+  p,
+  alpha = 0.05,
+  verbose = FALSE,
+  critical = FALSE,
+  check_input = TRUE
 )
 
 test_graph(
@@ -42,6 +55,32 @@ test_graph(
   corr = NULL,
   verbose = FALSE,
   critical = FALSE
+)
+
+test_graph_fast(
+  graph,
+  p,
+  alpha = 0.05,
+  groups = list(seq_along(graph$hypotheses)),
+  test_types = c("bonferroni"),
+  corr = NULL,
+  intersections = generate_weights(graph),
+  graph_size = length(graph$hypotheses),
+  gw_size = 2^graph_size - 1,
+  num_groups = length(groups)
+)
+
+test_graph_fast_simes(
+  graph,
+  p,
+  alpha = 0.05,
+  groups = list(seq_along(graph$hypotheses)),
+  test_types = c("bonferroni"),
+  corr = NULL,
+  intersections = generate_weights(graph),
+  graph_size = length(graph$hypotheses),
+  gw_size = 2^graph_size - 1,
+  num_groups = length(groups)
 )
 
 test_input_val(

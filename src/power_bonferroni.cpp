@@ -83,8 +83,6 @@ writable::integers bonferroni_sequential_cpp(
       for (hyp_num = 0; hyp_num < graph_size * graph_size; hyp_num++) {
         intermediate = new_transitions(hyp_num, 0);
         transitions(hyp_num, 0) = intermediate;
-        // transitions(hyp_num, 0) *= 0;
-        // transitions(hyp_num, 0) += new_transitions(hyp_num, 0);
       }
 
     }
@@ -114,17 +112,12 @@ integers_matrix<> bonferroni_sequential_power(
 
   writable::integers_matrix<> rejected_mat(p_mat_rows, g_size);
 
-  // std::cout << "initialized rejected matrix" << '\n';
-
   for (row = 0; row < p_mat_rows; row++) {
 
     // get a single row of p-values
     for (col = 0; col < g_size; col++) {
       dbl_intermediate = p_mat(row, col);
       p[col] = dbl_intermediate;
-      // p[col] *=0;
-      // p[col] += p_mat(1, col);
-      // std::cout << "moving p-values: " << p[col] << '\n';
     }
 
     // test that row

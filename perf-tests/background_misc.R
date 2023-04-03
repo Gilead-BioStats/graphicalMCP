@@ -1,4 +1,4 @@
-pkgdown::build_site()
+rmarkdown::render(here::here("vignettes/testing-basics.Rmd"))
 # devtools::load_all("..")
 #
 # test_m <- function(m, groups = list(seq_len(m)), test_types = "b", verbose = FALSE, critical = FALSE) {
