@@ -12,8 +12,24 @@ p_adjust_simes_cpp <- function(p, weights) {
   .Call(`_graphicalMCP_p_adjust_simes_cpp`, p, weights)
 }
 
+p_adjust_simes_ord_simple_cpp <- function(weights, p) {
+  .Call(`_graphicalMCP_p_adjust_simes_ord_simple_cpp`, weights, p)
+}
+
 test_graph_fast_simes_cpp <- function(hypotheses, transitions, p) {
   .Call(`_graphicalMCP_test_graph_fast_simes_cpp`, hypotheses, transitions, p)
+}
+
+p_adjust_simes_ordered_cpp <- function(weights, p) {
+  .Call(`_graphicalMCP_p_adjust_simes_ordered_cpp`, weights, p)
+}
+
+p_adjust_simes_ordered_cpp2 <- function(weights, p) {
+  .Call(`_graphicalMCP_p_adjust_simes_ordered_cpp2`, weights, p)
+}
+
+my_cumsum <- function(x, p) {
+  .Call(`_graphicalMCP_my_cumsum`, x, p)
 }
 
 zero_node_cpp <- function(graph, remove) {

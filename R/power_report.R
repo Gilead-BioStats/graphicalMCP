@@ -360,6 +360,27 @@ run_power5 <- function(graph,
       p_sim,
       alpha
     )
+  } else if (all(test_types == "simes" | test_types == "s")) {
+    # some values for testing
+    gw <- generate_weights(graph)
+    graph_size <- length(graph$hypotheses)
+    gw_size <- 2 ^ graph_size - 1
+    num_groups <- length(groups)
+
+    for (row in seq_len(n_sim)) {
+      test_res_mat[row, ] <- test_graph_fast_simes_ordered_r(
+        graph,
+        p_sim[row, ],
+        alpha,
+        groups,
+        test_types,
+        test_corr,
+        gw,
+        graph_size,
+        gw_size,
+        num_groups
+      )
+    }
   } else {
     for (row in seq_len(n_sim)) {
       test_res_mat[row, ] <- test_graph(

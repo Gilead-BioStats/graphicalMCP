@@ -195,6 +195,9 @@ p1 <- runif(m, .0001, .0005) # Reject all
 p2 <- runif(m, .4, .9) # Reject none - These don't seem to matter for speed
 sim_corr <- diag(m)
 
+p_ord <- sort(p)
+w_ord <- w[order(p)]
+
 h = as.integer(rep(0, m))
 a = .05 * w
 G = as.double(g)
@@ -227,10 +230,16 @@ Somewhat confusingly, `gMCP::graphTest()` allows a test type of "Simes", and it'
 simes_bench <- bench::mark(
   `Simes` =
     test_graph(graph2, p, test_types = "s")$outputs$rejected,
-  `Simes 2` = test_graph_fast(graph2, p, .05, list(1:5), "simes", intersections = gw, graph_size = 5, gw_size = 31, num_groups = 1),
-  `Simes 3` = test_graph_fast_simes(graph2, p, .05, list(1:5), "simes", intersections = gw, graph_size = 5, gw_size = 31, num_groups = 1),
-  `Simes - gMCP` =
-    gMCP(graph, p, test = "Simes")@rejected
+  `Simes 2` =
+    test_graph_fast(graph2, p, .05, list(1:m), "simes", intersections = gw, graph_size = m, gw_size = 2 ^ m - 1, num_groups = 1),
+  `Simes 3` =
+    test_graph_fast_simes(graph2, p, .05, list(1:m), "simes", intersections = gw, graph_size = m, gw_size = 2 ^ m - 1, num_groups = 1),
+  `Simes 4` =
+    test_graph_fast_simes_ordered_cpp(graph2, p, .05, list(1:m), "simes", intersections = gw, graph_size = m, gw_size = 2 ^ m - 1, num_groups = 1),
+  `Simes 5` =
+    test_graph_fast_simes_ordered_r(graph2, p, .05, list(1:m), "simes", intersections = gw, graph_size = m, gw_size = 2 ^ m - 1, num_groups = 1),
+  # `Simes - gMCP` =
+  #   gMCP(graph, p, test = "Simes")@rejected
 )
 
 message(as.character(Sys.time()))
@@ -296,9 +305,9 @@ gt::gt(power_bench[1:9])
 ```{r power-simes}
 # Lower number of sims just to compare methods
 power_bench <- bench::mark(
-  `graphicalMCP 1` = run_power2(graph2, n_sim = sims / 10, test_types = "simes"),
-  `graphicalMCP 2` = run_power2(graph2, n_sim = sims / 10, test_types = "simes"),
-  `graphicalMCP 4` = run_power4(graph2, n_sim = sims / 10, test_types = "simes"),
+  `graphicalMCP 2` = run_power2(graph2, n_sim = sims / 1000, test_types = "simes"),
+  `graphicalMCP 4` = run_power4(graph2, n_sim = sims / 1000, test_types = "simes"),
+  `graphicalMCP 5` = run_power5(graph2, n_sim = sims / 1000, test_types = "simes"),
   min_iterations = 5,
   check = FALSE
 )
@@ -311,7 +320,7 @@ gt::gt(power_bench[1:9])
 ```{r power-para}
 # Lower number of sims just to compare methods
 power_bench <- bench::mark(
-  `gMCP (n.sim = 1000)` = calcPower(graph = graph, alpha = .05, n.sim = 1, corr.sim = diag(m), corr.test = diag(m)), # n.sim = 10 took > 1 minute to run once
+  `gMCP (n.sim = 1)` = calcPower(graph = graph, alpha = .05, n.sim = 1, corr.sim = diag(m), corr.test = diag(m)), # n.sim = 10 took > 1 minute to run once
   `graphicalMCP 1` = run_power(graph2, n_sim = sims / 100, test_types = "parametric", test_corr = diag(m)),
   `graphicalMCP 2` = run_power2(graph2, n_sim = sims / 100, test_types = "parametric", test_corr = diag(m)),
   min_iterations = 5,
@@ -328,9 +337,10 @@ gt::gt(power_bench[1:9])
 power_bench <- bench::mark(
   `Bonferroni sequential - C++` = run_power5(graph2, n_sim = sims),
   `Simes - mixed language` = run_power4(graph2, n_sim = sims, test_types = "simes"),
-  `Parametric - R` = run_power2(graph2, n_sim = sims, test_types = "parametric", test_corr = diag(m)),
-  `Multi-group, p/s` = run_power2(graph2, n_sim = sims, groups = list(1:2, 3:5), test_types = c("parametric", "simes"), test_corr = diag(m)),
-  min_iterations = 5,
+  `Simes - mixed language (R ordered)` = run_power5(graph2, n_sim = sims, test_types = "simes"),
+  # `Parametric - R` = run_power2(graph2, n_sim = sims, test_types = "parametric", test_corr = diag(m)),
+  # `Multi-group, p/s` = run_power2(graph2, n_sim = sims, groups = list(1:2, 3:5), test_types = c("parametric", "simes"), test_corr = diag(m)),
+  min_iterations = 3,
   check = FALSE
 )
 

@@ -81,3 +81,13 @@ p_adjust_simes <- function(p_values, weights) {
   }
   adj_p
 }
+
+#' @rdname p_adjust
+# requires pre-ordered p-values/weights
+p_adjust_simes_ordered <- function(p_values, weights) {
+  if (sum(weights) == 0) {
+    return(Inf)
+  }
+
+  min(p_values / cumsum(weights), na.rm = TRUE)
+}
