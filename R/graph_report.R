@@ -261,6 +261,51 @@ test_graph_fast <- function(graph,
 
 #' @rdname testing
 #' @export
+# testing optimized for parametric; does not validate
+# inputs, generate weights, or return any extra details (just hypothesis
+# rejections) - also assumes pre-calculated critical values
+test_graph_fast_parametric <- function(graph,
+                            p,
+                            alpha = .05,
+                            groups = list(seq_along(graph$hypotheses)),
+                            test_types = c("bonferroni"),
+                            corr = NULL,
+                            intersections = generate_weights(graph),
+                            inter_list = add_critical_list(intersections, corr, alpha, groups),
+                            graph_size = length(graph$hypotheses),
+                            gw_size = 2 ^ graph_size - 1,
+                            num_groups = length(groups)) {
+
+  test_res <- vector("list", length(groups))
+
+  # Calculate adjusted p-values ------------------------------------------------
+  for (group_num in seq_along(groups)) {
+    group <- groups[[group_num]]
+    group_size <- length(group)
+
+    test_res[[group_num]] <- apply(
+      inter_list[[group_num]],
+      1,
+      function(inter_row) {
+        h <- inter_row[seq_len(group_size)]
+        w <- inter_row[seq_len(group_size) + group_size]
+        c <- inter_row[2 * group_size + 1]
+
+        parametric_test_fast(p[group], c, w, alpha)
+      }
+    )
+  }
+
+  # results come out transposed from how inputs were...because apply??
+  rej_inter <- colSums(do.call(rbind, test_res)) > 0
+
+  rej_local <- colSums(intersections[, seq_along(graph$hypotheses)] * rej_inter)
+
+  rej_local == 2 ^ (graph_size - 1)
+}
+
+#' @rdname testing
+#' @export
 # uses a C++ version of the adjusted p-value calculation
 test_graph_fast_simes <- function(graph,
                             p,
