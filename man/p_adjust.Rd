@@ -4,6 +4,7 @@
 \alias{p_adjust_bonferroni}
 \alias{p_adjust_parametric}
 \alias{p_adjust_simes}
+\alias{p_adjust_simes_ordered}
 \title{Calculate adjusted p-values}
 \usage{
 p_adjust_bonferroni(p_values, weights)
@@ -11,16 +12,20 @@ p_adjust_bonferroni(p_values, weights)
 p_adjust_parametric(p_values, weights, corr = NULL)
 
 p_adjust_simes(p_values, weights)
+
+p_adjust_simes_ordered(p_values, weights)
 }
 \arguments{
-\item{p_values}{A named numeric vector of p-values to adjust}
+\item{p_values}{A named numeric vector of p-values to adjust. For
+\code{p_adjust_simes_ordered()}, p-values must be sorted in ascending order}
 
-\item{weights}{A named numeric vector of weights to adjust the p-values by}
+\item{weights}{A named numeric vector of weights to adjust the p-values by.
+For \code{p_adjust_simes_ordered()}, weights must be sorted according to the
+p-value order.}
 
 \item{corr}{(Optional) A numeric matrix indicating the correlation between
-the test statistics which generated the p-values. For parametric testing,
-\code{corr} must be a square matrix with side length equal to the length of \code{p}
-and \code{weights}. Ignored for Simes and Bonferroni testing}
+the test statistics which generated the p-values. Must be a square matrix
+with side length equal to the length of \code{p} and \code{weights}}
 }
 \value{
 A single adjusted p-value for the given group
@@ -34,8 +39,13 @@ set.seed(22723)
 w <- c("H1" = .75, "H2" = .25, "H3" = 0)
 p <- c("H1" = .019, "H2" = .025, "H3" = .05)
 
+ord <- order(p)
+p_ord <- p[ord]
+w_ord <- w[ord]
+
 graphicalMCP:::p_adjust_bonferroni(p, w)
 graphicalMCP:::p_adjust_simes(p, w)
+graphicalMCP:::p_adjust_simes_ordered(p_ord, w_ord)
 
 corr1 <- diag(3)
 corr2 <- corr1

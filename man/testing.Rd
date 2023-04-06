@@ -3,39 +3,17 @@
 %   R/test_input_val.R
 \name{bonferroni_sequential}
 \alias{bonferroni_sequential}
-\alias{bs_r_del_node_cpp}
 \alias{bs_cpp}
 \alias{test_graph}
 \alias{test_graph_fast}
+\alias{test_graph_fast_parametric}
 \alias{test_graph_fast_simes}
+\alias{test_graph_fast_simes_ordered_cpp}
+\alias{test_graph_fast_simes_ordered_r}
 \alias{test_input_val}
 \title{Test a graph}
 \usage{
-bonferroni_sequential(
-  graph,
-  p,
-  alpha = 0.05,
-  verbose = FALSE,
-  critical = FALSE
-)
-
-bs_r_del_node_cpp(
-  graph,
-  p,
-  alpha = 0.05,
-  verbose = FALSE,
-  critical = FALSE,
-  check_input = TRUE
-)
-
-bs_r_del_node_cpp(
-  graph,
-  p,
-  alpha = 0.05,
-  verbose = FALSE,
-  critical = FALSE,
-  check_input = TRUE
-)
+bonferroni_sequential(graph, p, alpha = 0.05, critical = FALSE)
 
 bs_cpp(
   graph,
@@ -70,7 +48,47 @@ test_graph_fast(
   num_groups = length(groups)
 )
 
+test_graph_fast_parametric(
+  graph,
+  p,
+  alpha = 0.05,
+  groups = list(seq_along(graph$hypotheses)),
+  test_types = c("bonferroni"),
+  corr = NULL,
+  intersections = generate_weights(graph),
+  inter_list = add_critical(intersections, corr, alpha, groups),
+  graph_size = length(graph$hypotheses),
+  gw_size = 2^graph_size - 1,
+  num_groups = length(groups)
+)
+
 test_graph_fast_simes(
+  graph,
+  p,
+  alpha = 0.05,
+  groups = list(seq_along(graph$hypotheses)),
+  test_types = c("bonferroni"),
+  corr = NULL,
+  intersections = generate_weights(graph),
+  graph_size = length(graph$hypotheses),
+  gw_size = 2^graph_size - 1,
+  num_groups = length(groups)
+)
+
+test_graph_fast_simes_ordered_cpp(
+  graph,
+  p,
+  alpha = 0.05,
+  groups = list(seq_along(graph$hypotheses)),
+  test_types = c("bonferroni"),
+  corr = NULL,
+  intersections = generate_weights(graph),
+  graph_size = length(graph$hypotheses),
+  gw_size = 2^graph_size - 1,
+  num_groups = length(groups)
+)
+
+test_graph_fast_simes_ordered_r(
   graph,
   p,
   alpha = 0.05,
@@ -101,12 +119,12 @@ test_input_val(
 
 \item{alpha}{A numeric scalar specifying the global level to test at}
 
-\item{verbose}{A logical scalar specifying whether the results for each
-intersection hypothesis should be included}
-
 \item{critical}{A logical scalar specifying whether hypothesis-level detail
 should be included in the results, including calculating critical values
 for parametric tests}
+
+\item{verbose}{A logical scalar specifying whether the results for each
+intersection hypothesis should be included}
 
 \item{groups}{A list of numeric vectors specifying hypotheses to test
 together}

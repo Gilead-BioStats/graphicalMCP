@@ -3,12 +3,15 @@
 \name{bonferroni_test_vals}
 \alias{bonferroni_test_vals}
 \alias{parametric_test_vals}
+\alias{parametric_test_fast}
 \alias{simes_test_vals}
 \title{Test hypotheses with the \verb{p <= (c * ) w * a} method}
 \usage{
 bonferroni_test_vals(p_values, weights, alpha)
 
 parametric_test_vals(p_values, weights, alpha, corr = NULL)
+
+parametric_test_fast(p_values, critical, weights, alpha)
 
 simes_test_vals(p_values, weights, alpha)
 }
@@ -21,9 +24,8 @@ simes_test_vals(p_values, weights, alpha)
 against}
 
 \item{corr}{(Optional) A numeric matrix indicating the correlation between
-the test statistics which generated the p-values. For parametric testing,
-\code{corr} must be a square matrix with side length equal to the length of \code{p}
-and \code{weights}. Ignored for Simes and Bonferroni testing}
+the test statistics which generated the p-values. Must be a square matrix
+with side length equal to the length of \code{p} and \code{weights}}
 }
 \value{
 A data frame with columns specifying the values used to calculate

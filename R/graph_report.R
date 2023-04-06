@@ -194,6 +194,7 @@ test_graph <- function(graph,
 
 #' @rdname testing
 #' @export
+
 # slightly faster all-R version of testing; does not validate inputs, generate
 # weights, or return any extra details (just hypothesis rejections)
 test_graph_fast <- function(graph,
@@ -206,16 +207,6 @@ test_graph_fast <- function(graph,
                        graph_size = length(graph$hypotheses),
                        gw_size = 2 ^ graph_size - 1,
                        num_groups = length(groups)) {
-  # Some useful values ---------------------------------------------------------
-  # graph_size <- length(graph$hypotheses)
-  # gw_size <- 2^graph_size - 1
-  # num_groups <- length(groups)
-
-  # hyp_names <- names(graph$hypotheses)
-  # names(p) <- hyp_names
-  # if (!is.null(corr)) dimnames(corr) <- list(hyp_names, hyp_names)
-
-  # Generate weights -----------------------------------------------------------
   inter_h_vecs <- intersections[, seq_len(graph_size), drop = FALSE]
   inter_small <- intersections[, seq_len(graph_size) + graph_size]
 
@@ -261,6 +252,7 @@ test_graph_fast <- function(graph,
 
 #' @rdname testing
 #' @export
+
 # testing optimized for parametric; does not validate
 # inputs, generate weights, or return any extra details (just hypothesis
 # rejections) - also assumes pre-calculated critical values
@@ -271,7 +263,7 @@ test_graph_fast_parametric <- function(graph,
                             test_types = c("bonferroni"),
                             corr = NULL,
                             intersections = generate_weights(graph),
-                            inter_list = add_critical_list(intersections, corr, alpha, groups),
+                            inter_list = add_critical(intersections, corr, alpha, groups),
                             graph_size = length(graph$hypotheses),
                             gw_size = 2 ^ graph_size - 1,
                             num_groups = length(groups)) {
@@ -306,6 +298,7 @@ test_graph_fast_parametric <- function(graph,
 
 #' @rdname testing
 #' @export
+
 # uses a C++ version of the adjusted p-value calculation
 test_graph_fast_simes <- function(graph,
                             p,
@@ -317,15 +310,6 @@ test_graph_fast_simes <- function(graph,
                             graph_size = length(graph$hypotheses),
                             gw_size = 2 ^ graph_size - 1,
                             num_groups = length(groups)) {
-  # Some useful values ---------------------------------------------------------
-  # graph_size <- length(graph$hypotheses)
-  # gw_size <- 2^graph_size - 1
-  # num_groups <- length(groups)
-
-  # hyp_names <- names(graph$hypotheses)
-  # names(p) <- hyp_names
-  # if (!is.null(corr)) dimnames(corr) <- list(hyp_names, hyp_names)
-
   # Generate weights -----------------------------------------------------------
   inter_h_vecs <- intersections[, seq_len(graph_size), drop = FALSE]
   inter_small <- intersections[, seq_len(graph_size) + graph_size]
@@ -372,7 +356,9 @@ test_graph_fast_simes <- function(graph,
 
 #' @rdname testing
 #' @export
-# uses a C++ version of the adjusted p-value calculation
+
+# uses a C++ version of the adjusted p-value calculation which expects weights
+# and p-values to be ordered already
 test_graph_fast_simes_ordered_cpp <- function(graph,
                                   p,
                                   alpha = .05,
@@ -442,7 +428,9 @@ test_graph_fast_simes_ordered_cpp <- function(graph,
 
 #' @rdname testing
 #' @export
-# uses a C++ version of the adjusted p-value calculation
+
+# uses an R version of the adjusted p-value calculation which expects weights
+# and p-values to be ordered already
 test_graph_fast_simes_ordered_r <- function(graph,
                                    p,
                                    alpha = .05,
@@ -453,16 +441,6 @@ test_graph_fast_simes_ordered_r <- function(graph,
                                    graph_size = length(graph$hypotheses),
                                    gw_size = 2 ^ graph_size - 1,
                                    num_groups = length(groups)) {
-  # Some useful values ---------------------------------------------------------
-  # graph_size <- length(graph$hypotheses)
-  # gw_size <- 2^graph_size - 1
-  # num_groups <- length(groups)
-
-  # hyp_names <- names(graph$hypotheses)
-  # names(p) <- hyp_names
-  # if (!is.null(corr)) dimnames(corr) <- list(hyp_names, hyp_names)
-
-  # Generate weights -----------------------------------------------------------
   simes_ord <- order(p)
 
   p <- p[simes_ord]
