@@ -1,7 +1,11 @@
 #' Create a graph with gamma edges
 #'
-#' @param graph
-#' @param gamma_props
+#' @param graph An object of class `initial_graph`, for example as returned by
+#'   `create_graph()`
+#' @param gamma_props A numeric matrix indicating the proportions to spread each
+#'   gamma onto each edge. A single gamma value will be provided for each row
+#'   (Start hypothesis). This gamma value will be added to or subtracted from an
+#'   edge according to the proportions and signs in `gamma_props`
 #'
 #' @return A gamma graph function, which accepts a vector of gammas, with one
 #'   gamma value per hypothesis. The gamma value for each hypothesis is spread

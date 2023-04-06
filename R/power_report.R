@@ -151,7 +151,7 @@ calculate_power <- function(graph,
   )
 
   if (all(test_types == "bonferroni" | test_types == "b")) {
-    test_res_mat <- bonferroni_sequential_power(
+    test_res_mat <- bonferroni_sequential_power_cpp(
       graph$hypotheses,
       graph$transitions,
       p_sim,

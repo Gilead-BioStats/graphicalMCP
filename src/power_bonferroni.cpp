@@ -3,7 +3,6 @@
 
 using namespace cpp11;
 
-// p a vector, not a matrix
 [[cpp11::register]]
 writable::integers bonferroni_sequential_cpp(
   writable::doubles hypotheses,
@@ -93,7 +92,7 @@ writable::integers bonferroni_sequential_cpp(
 }
 
 [[cpp11::register]]
-integers_matrix<> bonferroni_sequential_power(
+integers_matrix<> bonferroni_sequential_power_cpp(
     writable::doubles hypotheses,
     writable::doubles_matrix<> transitions,
     doubles_matrix<> p_mat,

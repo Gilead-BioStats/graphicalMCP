@@ -170,7 +170,7 @@ I think it would be valuable to build a similar structure, but I'm hoping to hav
 - **C++ functions** - To be as fast as possible. Transparency is less important, except to the extent it impacts maintainability. These are all in support of power simulations primarily
   - generate_weights()? Optimizing the testing for Simes & parametric will gain much more speed than re-doing generate_weights() in C++
   - bonferroni_sequential()
-  - bonferroni_sequential_power()? May get folded into a general power function eventually
+  - bonferroni_sequential_power_cpp()? May get folded into a general power function eventually
   - test_graph()
     - Still not sure how this will work with parametric testing, or if it will be much faster anyway
   - calculate_power_slow()
@@ -181,7 +181,7 @@ I think it would be valuable to build a similar structure, but I'm hoping to hav
 ```{r benchmark-bonf}
 # set.seed(3123)
 # Randomly generate a graph
-m <- 10
+m <- 3
 w <- sample(1:m, replace = TRUE)
 w <- w / sum(w)
 g <- replicate(m, sample(1:m, replace = TRUE), simplify = TRUE)
@@ -274,8 +274,21 @@ gt::gt(para_bench[1:9]) |>
   tab_header("Parametric testing", paste(m, "hypotheses"))
 ```
 
+```{r benchmark-blend}
+p_mat <- rbind(p)
+
+para_bench <- bench::mark(
+  `para/Simes` = test_graph_fast(graph2, p, .05, list(1:2, 3:m), c("parametric", "simes"), intersections = gw, graph_size = m, gw_size = 2 ^ m - 1, num_groups = 2)
+)
+
+message(as.character(Sys.time()))
+para_bench$expression <- as.character(para_bench$expression)
+gt::gt(para_bench[1:9]) |> 
+  tab_header("Blended parametric & Simes testing", paste(m, "hypotheses"))
+```
+
 ```{r power-bonf}
-sims <- 10000
+sims <- 100
 
 power_bench <- bench::mark(
   `Bonferroni sequential, C++` =
@@ -311,7 +324,6 @@ gt::gt(power_bench[1:9]) |>
 Parametric really only has one viable method at this point, and it's not worth the runtime to compare to gMCP, which takes ages. But here's some code that could compare them.
 
 ```{r power-para, eval=FALSE}
-# Lower number of sims just to compare methods
 power_bench <- bench::mark(
   # `gMCP (n.sim = 1)` =
   #   calcPower(graph = graph, alpha = .05, n.sim = 1, corr.sim = diag(m), corr.test = diag(m)), # n.sim = 10 took > 1 minute to run once
@@ -330,12 +342,11 @@ gt::gt(power_bench[1:9]) |>
 ```
 
 ```{r power-blend}
-# fastest of each test type in graphicalMCP
 power_bench <- bench::mark(
   `Bonferroni sequential - C++` = calculate_power(graph2, sim_n = sims),
   `Simes - R, pre-sort` = calculate_power(graph2, sim_n = sims, test_types = "simes"),
   `Parametric - R, pre-calc crit` = calculate_power(graph2, sim_n = sims, test_types = "parametric", test_corr = diag(m)),
-  `Para/Simes - R, pre-calc gw only` = calculate_power(graph2, sim_n = sims, test_groups = list(1:2, 3:m), test_types = c("parametric", "simes"), test_corr = diag(m)),
+  # `Para/Simes - R, pre-calc gw only` = calculate_power(graph2, sim_n = sims, test_groups = list(1:2, 3:m), test_types = c("parametric", "simes"), test_corr = diag(m)), # blended power currently takes too long
   min_iterations = 3,
   check = FALSE
 )

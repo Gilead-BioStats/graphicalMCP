@@ -7,7 +7,13 @@
 gamma_graph(graph, gamma_props)
 }
 \arguments{
-\item{gamma_props}{}
+\item{graph}{An object of class \code{initial_graph}, for example as returned by
+\code{create_graph()}}
+
+\item{gamma_props}{A numeric matrix indicating the proportions to spread each
+gamma onto each edge. A single gamma value will be provided for each row
+(Start hypothesis). This gamma value will be added to or subtracted from an
+edge according to the proportions and signs in \code{gamma_props}}
 }
 \value{
 A gamma graph function, which accepts a vector of gammas, with one

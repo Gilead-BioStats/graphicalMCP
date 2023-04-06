@@ -283,7 +283,7 @@ test_graph_fast_parametric <- function(graph,
         w <- inter_row[seq_len(group_size) + group_size]
         c <- inter_row[2 * group_size + 1]
 
-        parametric_test_fast(p[group], c, w, alpha)
+        parametric_test_fast(p[group], w, alpha, c)
       }
     )
   }

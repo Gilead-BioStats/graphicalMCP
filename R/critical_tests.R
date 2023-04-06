@@ -7,9 +7,11 @@
 #' @param corr (Optional) A numeric matrix indicating the correlation between
 #'   the test statistics which generated the p-values. Must be a square matrix
 #'   with side length equal to the length of `p` and `weights`
+#' @param critical A numeric vector of critical values
 #'
 #' @return A data frame with columns specifying the values used to calculate
-#'   each hypothesis test
+#'   each hypothesis test. For `parametric_test_fast()`, just a Boolean vector
+#'   of test results
 #'
 #' @rdname calc-test_vals
 bonferroni_test_vals <- function(p_values, weights, alpha) {
@@ -58,7 +60,7 @@ parametric_test_vals <- function(p_values, weights, alpha, corr = NULL) {
 }
 
 #' @rdname calc-test_vals
-parametric_test_fast <- function(p_values, critical, weights, alpha) {
+parametric_test_fast <- function(p_values, weights, alpha, critical) {
   ifelse(
     p_values == 0 & weights == 0,
     NA,

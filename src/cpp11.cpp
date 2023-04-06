@@ -13,10 +13,10 @@ extern "C" SEXP _graphicalMCP_bonferroni_sequential_cpp(SEXP hypotheses, SEXP tr
   END_CPP11
 }
 // power_bonferroni.cpp
-integers_matrix<> bonferroni_sequential_power(writable::doubles hypotheses, writable::doubles_matrix<> transitions, doubles_matrix<> p_mat, double alpha);
-extern "C" SEXP _graphicalMCP_bonferroni_sequential_power(SEXP hypotheses, SEXP transitions, SEXP p_mat, SEXP alpha) {
+integers_matrix<> bonferroni_sequential_power_cpp(writable::doubles hypotheses, writable::doubles_matrix<> transitions, doubles_matrix<> p_mat, double alpha);
+extern "C" SEXP _graphicalMCP_bonferroni_sequential_power_cpp(SEXP hypotheses, SEXP transitions, SEXP p_mat, SEXP alpha) {
   BEGIN_CPP11
-    return cpp11::as_sexp(bonferroni_sequential_power(cpp11::as_cpp<cpp11::decay_t<writable::doubles>>(hypotheses), cpp11::as_cpp<cpp11::decay_t<writable::doubles_matrix<>>>(transitions), cpp11::as_cpp<cpp11::decay_t<doubles_matrix<>>>(p_mat), cpp11::as_cpp<cpp11::decay_t<double>>(alpha)));
+    return cpp11::as_sexp(bonferroni_sequential_power_cpp(cpp11::as_cpp<cpp11::decay_t<writable::doubles>>(hypotheses), cpp11::as_cpp<cpp11::decay_t<writable::doubles_matrix<>>>(transitions), cpp11::as_cpp<cpp11::decay_t<doubles_matrix<>>>(p_mat), cpp11::as_cpp<cpp11::decay_t<double>>(alpha)));
   END_CPP11
 }
 // power_simes.cpp
@@ -33,34 +33,6 @@ extern "C" SEXP _graphicalMCP_p_adjust_simes_ord_simple_cpp(SEXP weights, SEXP p
     return cpp11::as_sexp(p_adjust_simes_ord_simple_cpp(cpp11::as_cpp<cpp11::decay_t<writable::doubles>>(weights), cpp11::as_cpp<cpp11::decay_t<writable::doubles>>(p)));
   END_CPP11
 }
-// power_simes.cpp
-doubles test_graph_fast_simes_cpp(doubles hypotheses, doubles transitions, doubles p);
-extern "C" SEXP _graphicalMCP_test_graph_fast_simes_cpp(SEXP hypotheses, SEXP transitions, SEXP p) {
-  BEGIN_CPP11
-    return cpp11::as_sexp(test_graph_fast_simes_cpp(cpp11::as_cpp<cpp11::decay_t<doubles>>(hypotheses), cpp11::as_cpp<cpp11::decay_t<doubles>>(transitions), cpp11::as_cpp<cpp11::decay_t<doubles>>(p)));
-  END_CPP11
-}
-// temp.cpp
-double p_adjust_simes_ordered_cpp(doubles weights, doubles p);
-extern "C" SEXP _graphicalMCP_p_adjust_simes_ordered_cpp(SEXP weights, SEXP p) {
-  BEGIN_CPP11
-    return cpp11::as_sexp(p_adjust_simes_ordered_cpp(cpp11::as_cpp<cpp11::decay_t<doubles>>(weights), cpp11::as_cpp<cpp11::decay_t<doubles>>(p)));
-  END_CPP11
-}
-// temp.cpp
-double p_adjust_simes_ordered_cpp2(doubles weights, doubles p);
-extern "C" SEXP _graphicalMCP_p_adjust_simes_ordered_cpp2(SEXP weights, SEXP p) {
-  BEGIN_CPP11
-    return cpp11::as_sexp(p_adjust_simes_ordered_cpp2(cpp11::as_cpp<cpp11::decay_t<doubles>>(weights), cpp11::as_cpp<cpp11::decay_t<doubles>>(p)));
-  END_CPP11
-}
-// temp.cpp
-sexp my_cumsum(doubles x, doubles p);
-extern "C" SEXP _graphicalMCP_my_cumsum(SEXP x, SEXP p) {
-  BEGIN_CPP11
-    return cpp11::as_sexp(my_cumsum(cpp11::as_cpp<cpp11::decay_t<doubles>>(x), cpp11::as_cpp<cpp11::decay_t<doubles>>(p)));
-  END_CPP11
-}
 // zero_node.cpp
 list zero_node_cpp(list graph, int remove);
 extern "C" SEXP _graphicalMCP_zero_node_cpp(SEXP graph, SEXP remove) {
@@ -71,15 +43,11 @@ extern "C" SEXP _graphicalMCP_zero_node_cpp(SEXP graph, SEXP remove) {
 
 extern "C" {
 static const R_CallMethodDef CallEntries[] = {
-    {"_graphicalMCP_bonferroni_sequential_cpp",     (DL_FUNC) &_graphicalMCP_bonferroni_sequential_cpp,     4},
-    {"_graphicalMCP_bonferroni_sequential_power",   (DL_FUNC) &_graphicalMCP_bonferroni_sequential_power,   4},
-    {"_graphicalMCP_my_cumsum",                     (DL_FUNC) &_graphicalMCP_my_cumsum,                     2},
-    {"_graphicalMCP_p_adjust_simes_cpp",            (DL_FUNC) &_graphicalMCP_p_adjust_simes_cpp,            2},
-    {"_graphicalMCP_p_adjust_simes_ord_simple_cpp", (DL_FUNC) &_graphicalMCP_p_adjust_simes_ord_simple_cpp, 2},
-    {"_graphicalMCP_p_adjust_simes_ordered_cpp",    (DL_FUNC) &_graphicalMCP_p_adjust_simes_ordered_cpp,    2},
-    {"_graphicalMCP_p_adjust_simes_ordered_cpp2",   (DL_FUNC) &_graphicalMCP_p_adjust_simes_ordered_cpp2,   2},
-    {"_graphicalMCP_test_graph_fast_simes_cpp",     (DL_FUNC) &_graphicalMCP_test_graph_fast_simes_cpp,     3},
-    {"_graphicalMCP_zero_node_cpp",                 (DL_FUNC) &_graphicalMCP_zero_node_cpp,                 2},
+    {"_graphicalMCP_bonferroni_sequential_cpp",       (DL_FUNC) &_graphicalMCP_bonferroni_sequential_cpp,       4},
+    {"_graphicalMCP_bonferroni_sequential_power_cpp", (DL_FUNC) &_graphicalMCP_bonferroni_sequential_power_cpp, 4},
+    {"_graphicalMCP_p_adjust_simes_cpp",              (DL_FUNC) &_graphicalMCP_p_adjust_simes_cpp,              2},
+    {"_graphicalMCP_p_adjust_simes_ord_simple_cpp",   (DL_FUNC) &_graphicalMCP_p_adjust_simes_ord_simple_cpp,   2},
+    {"_graphicalMCP_zero_node_cpp",                   (DL_FUNC) &_graphicalMCP_zero_node_cpp,                   2},
     {NULL, NULL, 0}
 };
 }

@@ -15,14 +15,7 @@
 \usage{
 bonferroni_sequential(graph, p, alpha = 0.05, critical = FALSE)
 
-bs_cpp(
-  graph,
-  p,
-  alpha = 0.05,
-  verbose = FALSE,
-  critical = FALSE,
-  check_input = TRUE
-)
+bs_cpp(graph, p, alpha = 0.05)
 
 test_graph(
   graph,
@@ -123,9 +116,6 @@ test_input_val(
 should be included in the results, including calculating critical values
 for parametric tests}
 
-\item{verbose}{A logical scalar specifying whether the results for each
-intersection hypothesis should be included}
-
 \item{groups}{A list of numeric vectors specifying hypotheses to test
 together}
 
@@ -133,6 +123,9 @@ together}
 
 \item{corr}{(Optional) A numeric matrix of correlations between hypotheses'
 test statistics}
+
+\item{verbose}{A logical scalar specifying whether the results for each
+intersection hypothesis should be included}
 }
 \value{
 A \code{graph_report} object, a list of 4 elements: \code{inputs}, \code{outputs},

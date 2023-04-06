@@ -11,7 +11,7 @@ bonferroni_test_vals(p_values, weights, alpha)
 
 parametric_test_vals(p_values, weights, alpha, corr = NULL)
 
-parametric_test_fast(p_values, critical, weights, alpha)
+parametric_test_fast(p_values, weights, alpha, critical)
 
 simes_test_vals(p_values, weights, alpha)
 }
@@ -26,10 +26,13 @@ against}
 \item{corr}{(Optional) A numeric matrix indicating the correlation between
 the test statistics which generated the p-values. Must be a square matrix
 with side length equal to the length of \code{p} and \code{weights}}
+
+\item{critical}{A numeric vector of critical values}
 }
 \value{
 A data frame with columns specifying the values used to calculate
-each hypothesis test
+each hypothesis test. For \code{parametric_test_fast()}, just a Boolean vector
+of test results
 }
 \description{
 Test hypotheses with the \verb{p <= (c * ) w * a} method
