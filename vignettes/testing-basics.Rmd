@@ -181,7 +181,7 @@ I think it would be valuable to build a similar structure, but I'm hoping to hav
 ```{r benchmark-bonf}
 # set.seed(3123)
 # Randomly generate a graph
-m <- 3
+m <- 10
 w <- sample(1:m, replace = TRUE)
 w <- w / sum(w)
 g <- replicate(m, sample(1:m, replace = TRUE), simplify = TRUE)
@@ -288,7 +288,7 @@ gt::gt(para_bench[1:9]) |>
 ```
 
 ```{r power-bonf}
-sims <- 100
+sims <- 10
 
 power_bench <- bench::mark(
   `Bonferroni sequential, C++` =
@@ -346,7 +346,7 @@ power_bench <- bench::mark(
   `Bonferroni sequential - C++` = calculate_power(graph2, sim_n = sims),
   `Simes - R, pre-sort` = calculate_power(graph2, sim_n = sims, test_types = "simes"),
   `Parametric - R, pre-calc crit` = calculate_power(graph2, sim_n = sims, test_types = "parametric", test_corr = diag(m)),
-  # `Para/Simes - R, pre-calc gw only` = calculate_power(graph2, sim_n = sims, test_groups = list(1:2, 3:m), test_types = c("parametric", "simes"), test_corr = diag(m)), # blended power currently takes too long
+  `Para/Simes - R, pre-calc gw only` = calculate_power(graph2, sim_n = sims, test_groups = list(1:2, 3:m), test_types = c("parametric", "simes"), test_corr = diag(m)), 
   min_iterations = 3,
   check = FALSE
 )

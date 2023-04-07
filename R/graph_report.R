@@ -244,7 +244,8 @@ test_graph_fast <- function(graph,
 
   # Adjusted p-values at higher levels -----------------------------------------
   p_adj_inter <- do.call(pmin, as.data.frame(p_adj))
-  p_adj_global <- apply(p_adj_inter * inter_h_vecs, 2, max)
+  p_adj_inter[p_adj_inter == Inf] <- NA
+  p_adj_global <- apply(p_adj_inter * inter_h_vecs[, unlist(groups)], 2, max, na.rm = TRUE)
   test_global <- p_adj_global <= alpha
 
   test_global
@@ -274,7 +275,7 @@ test_graph_fast_parametric <- function(graph,
   for (group_num in seq_along(groups)) {
     group <- groups[[group_num]]
     group_size <- length(group)
-
+# browser()
     test_res[[group_num]] <- apply(
       inter_list[[group_num]],
       1,
@@ -291,7 +292,7 @@ test_graph_fast_parametric <- function(graph,
   # results come out transposed from how inputs were...because apply??
   rej_inter <- colSums(do.call(rbind, test_res)) > 0
 
-  rej_local <- colSums(intersections[, seq_along(graph$hypotheses)] * rej_inter)
+  rej_local <- colSums(intersections[, unlist(groups)] * rej_inter)
 
   rej_local == 2 ^ (graph_size - 1)
 }
@@ -348,7 +349,8 @@ test_graph_fast_simes <- function(graph,
 
   # Adjusted p-values at higher levels -----------------------------------------
   p_adj_inter <- do.call(pmin, as.data.frame(p_adj))
-  p_adj_global <- apply(p_adj_inter * inter_h_vecs, 2, max)
+  p_adj_inter[p_adj_inter == Inf] <- NA
+  p_adj_global <- apply(p_adj_inter * inter_h_vecs[, unlist(groups)], 2, max, na.rm = TRUE)
   test_global <- p_adj_global <= alpha
 
   test_global
@@ -420,7 +422,8 @@ test_graph_fast_simes_ordered_cpp <- function(graph,
 
   # Adjusted p-values at higher levels -----------------------------------------
   p_adj_inter <- do.call(pmin, as.data.frame(p_adj))
-  p_adj_global <- apply(p_adj_inter * inter_h_vecs, 2, max)
+  p_adj_inter[p_adj_inter == Inf] <- NA
+  p_adj_global <- apply(p_adj_inter * inter_h_vecs[, unlist(groups)], 2, max, na.rm = TRUE)
   test_global <- p_adj_global <= alpha
 
   test_global
@@ -482,7 +485,8 @@ test_graph_fast_simes_ordered_r <- function(graph,
 
   # Adjusted p-values at higher levels -----------------------------------------
   p_adj_inter <- do.call(pmin, as.data.frame(p_adj))
-  p_adj_global <- apply(p_adj_inter * inter_h_vecs, 2, max)
+  p_adj_inter[p_adj_inter == Inf] <- NA
+  p_adj_global <- apply(p_adj_inter * inter_h_vecs[, unlist(groups)], 2, max, na.rm = TRUE)
   test_global <- p_adj_global <= alpha
 
   test_global
