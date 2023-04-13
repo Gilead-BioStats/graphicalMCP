@@ -11,12 +11,14 @@ writable::integers bonferroni_sequential_cpp(
   double alpha
 )
 {
-  writable::doubles_matrix<> new_transitions = transitions;
   int rej_num, hyp_num, end_num, reject, hyp_match, cum_rej = 0,
     graph_size = hypotheses.size();
   double numerator, denominator, intermediate;
 
   writable::integers rejected(graph_size);
+  writable::doubles new_hypotheses = hypotheses;
+
+  writable::doubles_matrix<> new_transitions = transitions;
 
   // init rejected to all 0
   for (int i = 0; i < graph_size; i++) {
@@ -24,6 +26,16 @@ writable::integers bonferroni_sequential_cpp(
   }
 
   while (1) {
+
+    // for (int print1 = 0; print1 < graph_size; print1++) {
+      // std::cout << "H" << print1 << ": " << hypotheses[print1] << '\t' << "| ";
+
+      // for (int print2 = 0; print2 < graph_size; print2++) {
+        // std::cout << transitions(print1, print2) << " ";
+      // }
+
+      // std::cout << '\n';
+    // }
 
     reject = 0;
 
@@ -40,6 +52,8 @@ writable::integers bonferroni_sequential_cpp(
       }
     }
 
+    // std::cout << '\n' << '\n';
+
     // check for no rejections, or all rejected
     if (!reject | (cum_rej == graph_size)) {
       break;
@@ -47,10 +61,14 @@ writable::integers bonferroni_sequential_cpp(
 
       for (hyp_num = 0; hyp_num < graph_size; hyp_num++) {
 
+        // std::cout << "H" << hyp_num << ": " << hypotheses[hyp_num] << '\n';
         if (hyp_num == rej_num) {
-          hypotheses[hyp_num] = 0;
+          // std::cout << "new H" << hyp_num << ": 0" << '\n';
+          new_hypotheses[hyp_num] = 0;
         } else {
-          hypotheses[hyp_num] +=
+          // std::cout << "new H" << hyp_num << ": " << hypotheses[hyp_num] << "+" << hypotheses[rej_num] << "*" << transitions(rej_num, hyp_num) << '\n';
+          new_hypotheses[hyp_num] =
+            hypotheses[hyp_num] +
             hypotheses[rej_num] * transitions(rej_num, hyp_num);
         }
 
@@ -79,6 +97,7 @@ writable::integers bonferroni_sequential_cpp(
         }
       }
 
+      hypotheses = new_hypotheses;
       for (hyp_num = 0; hyp_num < graph_size * graph_size; hyp_num++) {
         intermediate = new_transitions(hyp_num, 0);
         transitions(hyp_num, 0) = intermediate;

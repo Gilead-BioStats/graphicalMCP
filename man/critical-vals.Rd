@@ -4,13 +4,16 @@
 \alias{c_function}
 \alias{solve_c}
 \alias{add_critical}
+\alias{parse_groups}
 \title{Calculate parametric testing critical values for the closure of a graph}
 \usage{
 c_function(x, w, corr, alpha)
 
 solve_c(w, corr, alpha)
 
-add_critical(graph, corr, alpha, groups)
+add_critical(gw, corr, alpha, groups)
+
+parse_groups(gw, corr, alpha, groups, test_types)
 }
 \arguments{
 \item{x}{The root to solve for with \code{uniroot()}}
@@ -23,8 +26,7 @@ statistics of hypotheses to be tested using parametric testing}
 \item{alpha}{A numeric scalar specifying the global significance level for
 parametric testing}
 
-\item{graph}{An object with class \code{initial_graph} as returned by
-\code{create_graph()}}
+\item{gw}{An numeric matrix as created by \code{generate_weights()}}
 
 \item{groups}{A list of numeric vectors specifying hypotheses to test
 together}

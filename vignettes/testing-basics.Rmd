@@ -1,6 +1,9 @@
 ---
 title: "Testing basics"
 output: rmarkdown::html_vignette
+params:
+  m: 7
+  sims: 100000
 vignette: >
   %\VignetteIndexEntry{Testing basics}
   %\VignetteEngine{knitr::rmarkdown}
@@ -170,7 +173,7 @@ I think it would be valuable to build a similar structure, but I'm hoping to hav
 - **C++ functions** - To be as fast as possible. Transparency is less important, except to the extent it impacts maintainability. These are all in support of power simulations primarily
   - generate_weights()? Optimizing the testing for Simes & parametric will gain much more speed than re-doing generate_weights() in C++
   - bonferroni_sequential()
-  - bonferroni_sequential_power_cpp()? May get folded into a general power function eventually
+  - bonferroni_sequential_power()? May get folded into a general power function eventually
   - test_graph()
     - Still not sure how this will work with parametric testing, or if it will be much faster anyway
   - calculate_power_slow()
@@ -181,7 +184,7 @@ I think it would be valuable to build a similar structure, but I'm hoping to hav
 ```{r benchmark-bonf}
 # set.seed(3123)
 # Randomly generate a graph
-m <- 10
+m <- params$m
 w <- sample(1:m, replace = TRUE)
 w <- w / sum(w)
 g <- replicate(m, sample(1:m, replace = TRUE), simplify = TRUE)
@@ -191,7 +194,7 @@ graph <- new("graphMCP", m = g, weights = w)
 graph2 <- create_graph(w, g)
 
 gw <- generate_weights(graph2)
-gwc <- graphicalMCP:::add_critical(graph2, diag(m), .05, list(1:m))
+gwc <- graphicalMCP:::add_critical(gw, diag(m), .05, list(1:m))
 
 p <- runif(m, .0001, .03)
 p1 <- runif(m, .0001, .0005) # Reject all
@@ -274,28 +277,18 @@ gt::gt(para_bench[1:9]) |>
   tab_header("Parametric testing", paste(m, "hypotheses"))
 ```
 
-```{r benchmark-blend}
-p_mat <- rbind(p)
-
-para_bench <- bench::mark(
-  `para/Simes` = test_graph_fast(graph2, p, .05, list(1:2, 3:m), c("parametric", "simes"), intersections = gw, graph_size = m, gw_size = 2 ^ m - 1, num_groups = 2)
-)
-
-message(as.character(Sys.time()))
-para_bench$expression <- as.character(para_bench$expression)
-gt::gt(para_bench[1:9]) |> 
-  tab_header("Blended parametric & Simes testing", paste(m, "hypotheses"))
-```
-
 ```{r power-bonf}
-sims <- 10
+sims <- params$sims
 
 power_bench <- bench::mark(
   `Bonferroni sequential, C++` =
     calculate_power(graph2, sim_n = sims),
+  `Bonferroni sequential, C++ (q)` =
+    calculate_power(graph2, sim_n = sims),
   `calcPower` =
     calcPower(graph = graph, alpha = .05, n.sim = sims, corr.sim = diag(m)),
-  min_iterations = 3,
+  min_iterations = 1,
+  filter_gc = FALSE,
   check = FALSE
 )
 
@@ -305,13 +298,14 @@ gt::gt(power_bench[1:9]) |>
   tab_header("Bonferroni power", paste(m, "hypotheses,", sims, "simulations"))
 ```
 
-```{r power-simes}
+```{r power-simes, eval=FALSE}
 power_bench <- bench::mark(
-  `R power/test loop, C++ test` =
-    run_power4(graph2, sim_n = sims, test_types = "simes"),
+  # `More general, less optimized` =
+  #   calculate_power_q(graph2, sim_n = sims, test_types = "simes"),
   `All R, pre-sort hypotheses` =
     calculate_power(graph2, sim_n = sims, test_types = "simes"),
-  min_iterations = 3,
+  min_iterations = 1,
+  filter_gc = FALSE,
   check = FALSE
 )
 
@@ -323,15 +317,19 @@ gt::gt(power_bench[1:9]) |>
 
 Parametric really only has one viable method at this point, and it's not worth the runtime to compare to gMCP, which takes ages. But here's some code that could compare them.
 
-```{r power-para, eval=FALSE}
+```{r power-para}
+# Lower number of sims just to compare methods
 power_bench <- bench::mark(
   # `gMCP (n.sim = 1)` =
   #   calcPower(graph = graph, alpha = .05, n.sim = 1, corr.sim = diag(m), corr.test = diag(m)), # n.sim = 10 took > 1 minute to run once
   # `gw & adj-p each time` =
   #   calculate_power_slow(graph2, sim_n = sims, test_types = "parametric", test_corr = diag(m)),
+  # `calculate_power_q` =
+  #   calculate_power_q(graph2, sim_n = sims, test_types = "parametric", test_corr = diag(m)),
   `calculate_power` =
     calculate_power(graph2, sim_n = sims, test_types = "parametric", test_corr = diag(m)),
-  min_iterations = 5,
+  min_iterations = 1,
+  filter_gc = FALSE,
   check = FALSE
 )
 
@@ -342,12 +340,18 @@ gt::gt(power_bench[1:9]) |>
 ```
 
 ```{r power-blend}
+# fastest of each test type in graphicalMCP
 power_bench <- bench::mark(
-  `Bonferroni sequential - C++` = calculate_power(graph2, sim_n = sims),
-  `Simes - R, pre-sort` = calculate_power(graph2, sim_n = sims, test_types = "simes"),
-  `Parametric - R, pre-calc crit` = calculate_power(graph2, sim_n = sims, test_types = "parametric", test_corr = diag(m)),
-  `Para/Simes - R, pre-calc gw only` = calculate_power(graph2, sim_n = sims, test_groups = list(1:2, 3:m), test_types = c("parametric", "simes"), test_corr = diag(m)), 
-  min_iterations = 3,
+  `Bonferroni sequential - C++` =
+    calculate_power(graph2, sim_n = sims),
+  `Simes - R, pre-sort` = 
+    calculate_power(graph2, sim_n = sims, test_types = "simes"),
+  `Parametric - R, pre-calc crit` = 
+    calculate_power(graph2, sim_n = sims, test_types = "parametric", test_corr = diag(m)),
+  `Para/Simes - R, pre-calc gw only` = 
+    calculate_power(graph2, sim_n = sims, test_groups = list(1:2, 3:m), test_types = c("parametric", "simes"), test_corr = diag(m)),
+  min_iterations = 1,
+  filter_gc = FALSE,
   check = FALSE
 )
 
@@ -355,6 +359,24 @@ message(as.character(Sys.time()))
 power_bench$expression <- as.character(power_bench$expression)
 gt::gt(power_bench[1:9]) |> 
   tab_header("All types of power", paste(m, "hypotheses,", sims, "simulations"))
+```
+
+```{r power-blend-2}
+# fastest of each test type in graphicalMCP
+# power_bench <- bench::mark(
+#   `calculate_power_q` = 
+#     calculate_power_q(graph2, sim_n = sims, test_groups = list(1:2, 3:m), test_types = c("parametric", "simes"), test_corr = diag(m)),
+#   `calculate_power` = 
+#     calculate_power(graph2, sim_n = sims, test_groups = list(1:2, 3:m), test_types = c("parametric", "simes"), test_corr = diag(m)),
+#   min_iterations = 1,
+#   filter_gc = FALSE,
+#   check = FALSE
+# )
+# 
+# message(as.character(Sys.time()))
+# power_bench$expression <- as.character(power_bench$expression)
+# gt::gt(power_bench[1:9]) |> 
+#   tab_header("All types of power", paste(m, "hypotheses,", sims, "simulations"))
 ```
 
 ## Print options

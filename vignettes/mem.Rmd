@@ -1,0 +1,98 @@
+---
+title: "Memory experiments"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Testing basics}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r fn}
+n_8meg <- function(n) {
+  rnorm(1e6 * n)
+}
+
+n_gig <- function(n) {
+  rnorm(1.25e8 * n)
+}
+
+n_gig2 <- function(n) {
+  temp <- rnorm(1.25e8 * n)
+  temp
+}
+
+mu <- function(pre = "") {
+  cat(paste(pre, as.double(lobstr::mem_used()) / 1e9, "GB"), "\n\n")
+}
+
+mu("Initial:")
+```
+
+<!-- ```{r mem1} -->
+<!-- biggie <- n_gig(1) -->
+<!-- mu("1_gig_save:") -->
+<!-- ``` -->
+
+<!-- ```{r mem2} -->
+<!-- rm(biggie) -->
+<!-- mu("1_gig_gone:") -->
+<!-- ``` -->
+
+<!-- ```{r mem3} -->
+<!-- n_gig(1) -->
+<!-- mu("1_gig_once:") -->
+<!-- ``` -->
+
+<!-- ```{r mem4} -->
+<!-- n_gig(2) -->
+<!-- mu("2_gig_once:") -->
+<!-- ``` -->
+
+<!-- ```{r mem5} -->
+<!-- for (i in 1) { -->
+<!--   n_gig(1) -->
+<!--   mu("  1_gig_loop_i") -->
+<!-- } -->
+<!-- mu("1_gig_1_loop:") -->
+<!-- ``` -->
+
+<!-- ```{r mem6} -->
+<!-- for (i in 1:3) { -->
+<!--   biggie <- n_gig(i) -->
+<!--   mu("  i_gig_loop_i") -->
+<!-- } -->
+<!-- mu("1_gig_3_loop:") -->
+<!-- rm(biggie) -->
+<!-- ``` -->
+
+```{r mem7}
+res <- bench::mark(
+  n_gig(1),
+  n_gig2(2),
+  check = FALSE,
+  min_iterations = 2
+)
+mu("after_bench:")
+```
+
+```{r mem8}
+res <- bench::mark(
+  for (i in 1:125) {
+    n_8meg(1)
+  },
+  n_gig(1),
+  min_iterations = 2,
+  check = FALSE
+)
+mu("after_bench:")
+```
+
+
+

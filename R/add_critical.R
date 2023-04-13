@@ -36,8 +36,7 @@ solve_c <- function(w, corr, alpha) {
 
 #' Calculate parametric testing critical values for the closure of a graph
 #'
-#' @param graph An object with class `initial_graph` as returned by
-#'   `create_graph()`
+#' @param gw An numeric matrix as created by `generate_weights()`
 #' @param corr A numeric matrix specifying the correlation between the test
 #'   statistics of hypotheses to be tested using parametric testing
 #' @param alpha A numeric scalar specifying the global significance level for
@@ -63,9 +62,7 @@ solve_c <- function(w, corr, alpha) {
 #'
 #' # Can handle groups only containing some hypotheses
 #' add_critical(gw, diag(6), .05, list(1:2, c(4, 6)))
-add_critical <- function(graph, corr, alpha, groups) {
-  gw <- generate_weights(graph)
-
+add_critical <- function(gw, corr, alpha, groups) {
   h_vecs <- gw[, seq_len(ncol(gw) / 2)]
   w_vecs <- gw[, seq_len(ncol(gw) / 2) + (ncol(gw) / 2)]
 
@@ -100,3 +97,46 @@ add_critical <- function(graph, corr, alpha, groups) {
 
   res_list
 }
+
+#' @rdname critical-vals
+parse_groups <- function(gw, corr, alpha, groups, test_types) {
+  # w/o para, can be as simple as lapply(groups, function(group) gw[, c(group, group + (ncol(gw) / 2))])
+
+  parsed <- vector("list", length(groups))
+
+  for (group_num in seq_along(groups)) {
+    group <- groups[[group_num]]
+    h_group <- gw[, group, drop = FALSE]
+    weight_group <- gw[, group + (ncol(gw) / 2), drop = FALSE]
+    gw_group <- ifelse(h_group == 0, NA, weight_group)
+    c_vals <- NULL
+
+    if (test_types[[group_num]] == "parametric") {
+      c_vals <- vector("numeric", nrow(gw_group))
+
+      for (i in seq_len(nrow(gw))) {
+        h <- !!h_group[i, , drop = TRUE]
+
+        if (all(h == 0)) {
+          c_vals[[i]] <- 1
+        } else {
+          weights <- weight_group[i, , drop = TRUE]
+
+          c_vals[[i]] <- solve_c(weights[h], corr[h, h], alpha)
+        }
+
+      }
+
+    }
+
+    parsed[[group_num]] <- list(
+      test = test_types[[group_num]],
+      gw = gw_group,
+      critical = c_vals
+    )
+
+  }
+
+  parsed
+}
+
