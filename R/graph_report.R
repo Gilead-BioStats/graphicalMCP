@@ -245,10 +245,71 @@ test_graph_fast <- function(graph,
   # Adjusted p-values at higher levels -----------------------------------------
   p_adj_inter <- do.call(pmin, as.data.frame(p_adj))
   p_adj_inter[p_adj_inter == Inf] <- NA
-  p_adj_global <- apply(p_adj_inter * inter_h_vecs[, unlist(groups)], 2, max, na.rm = TRUE)
+  p_adj_global <- apply(
+    p_adj_inter * inter_h_vecs[, unlist(groups), drop = FALSE],
+    2,
+    max,
+    na.rm = TRUE
+  )
   test_global <- p_adj_global <= alpha
 
   test_global
+}
+
+test_graph_fast_bonferroni <- function(graph,
+                                       p,
+                                       alpha = .05,
+                                       intersections = generate_weights(graph)) {
+  graph_size <- length(graph$hypotheses)
+  inter_h_vecs <- intersections[, seq_len(graph_size), drop = FALSE]
+  inter_small <- intersections[, seq_len(graph_size) + graph_size]
+
+  rej_hyps <- matrix(
+    NA_real_,
+    nrow = nrow(inter_small),
+    ncol = ncol(inter_small),
+    dimnames = dimnames(inter_small)
+  )
+
+  # Calculate test results -----------------------------------------------------
+  for (row in seq_len(2^graph_size - 1)) {
+    rej_hyps[row, ] <- p <= alpha * inter_small[row, ]
+  }
+
+  rej_hyps
+  colSums(gw_h * do.call(pmax, as.data.frame(rej_hyps))) == 2^(graph_size - 1)
+}
+
+test_graph_fast_bonferroni_v <- function(graph,
+                                         p,
+                                         alpha = .05,
+                                         intersections = generate_weights(graph)) {
+  graph_size <- length(graph$hypotheses)
+  inter_h <- intersections[, seq_len(graph_size), drop = FALSE]
+  inter_weight <- intersections[, seq_len(graph_size) + graph_size]
+
+  # Calculate test results -----------------------------------------------------
+  rej_hyps <- t(p <= alpha * t(inter_weights))
+
+  colSums(inter_h * do.call(pmax, as.data.frame(rej_hyps))) ==
+    2^(graph_size - 1)
+}
+
+test_graph_fast_parametric_v <- function(graph,
+                                         p,
+                                         alpha = .05,
+                                         intersections = add_critical2(generate_weights(graph))) {
+  graph_size <- length(graph$hypotheses)
+  inter_h <- intersections[, seq_len(graph_size), drop = FALSE]
+  inter_weight <- intersections[, seq_len(graph_size) + graph_size]
+  inter_critical <- intersections[, seq_len(graph_size) + 2 * graph_size]
+
+  # Calculate test results -----------------------------------------------------
+  rej_hyps <- t(p <= alpha * t(inter_weight * inter_critical))
+
+  rej_hyps
+  colSums(inter_h * do.call(pmax, as.data.frame(rej_hyps))) ==
+    2^(graph_size - 1)
 }
 
 #' @rdname testing
@@ -275,7 +336,7 @@ test_graph_fast_parametric <- function(graph,
   for (group_num in seq_along(groups)) {
     group <- groups[[group_num]]
     group_size <- length(group)
-# browser()
+
     test_res[[group_num]] <- apply(
       inter_list[[group_num]],
       1,
@@ -284,7 +345,12 @@ test_graph_fast_parametric <- function(graph,
         w <- inter_row[seq_len(group_size) + group_size]
         c <- inter_row[2 * group_size + 1]
 
-        parametric_test_fast(p[group], w, alpha, c)
+        # parametric_test_fast(p[group], w, alpha, c)
+        ifelse(
+          p[group] == 0 & w == 0,
+          NA,
+          p[group] <= c * w * alpha
+        )
       }
     )
   }
@@ -350,7 +416,12 @@ test_graph_fast_simes <- function(graph,
   # Adjusted p-values at higher levels -----------------------------------------
   p_adj_inter <- do.call(pmin, as.data.frame(p_adj))
   p_adj_inter[p_adj_inter == Inf] <- NA
-  p_adj_global <- apply(p_adj_inter * inter_h_vecs[, unlist(groups)], 2, max, na.rm = TRUE)
+  p_adj_global <- apply(
+    p_adj_inter * inter_h_vecs[, unlist(groups), drop = FALSE],
+    2,
+    max,
+    na.rm = TRUE
+  )
   test_global <- p_adj_global <= alpha
 
   test_global
@@ -473,20 +544,18 @@ test_graph_fast_simes_ordered_r <- function(graph,
     # intersection
     group_in_inter <- as.logical(h[group_ord])
 
-    # p_adjust_fun <- paste0("p_adjust_", test_types[[group_index]], "_cpp")
-    # p_adjust_args <- list(
-    #   p_values = p[group_in_inter],
-    #   weights = weights[group_in_inter],
-    #   corr = corr[group_in_inter, group_in_inter]
-    # )[formalArgs(p_adjust_fun)]
-
     p_adj[inter_index, group_index] <- p_adjust_simes_ordered(p[group_in_inter], weights[group_in_inter])
   }
 
   # Adjusted p-values at higher levels -----------------------------------------
   p_adj_inter <- do.call(pmin, as.data.frame(p_adj))
   p_adj_inter[p_adj_inter == Inf] <- NA
-  p_adj_global <- apply(p_adj_inter * inter_h_vecs[, unlist(groups)], 2, max, na.rm = TRUE)
+  p_adj_global <- apply(
+    p_adj_inter * inter_h_vecs[, unlist(groups), drop = FALSE],
+    2,
+    max,
+    na.rm = TRUE
+  )
   test_global <- p_adj_global <= alpha
 
   test_global

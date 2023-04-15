@@ -16,10 +16,12 @@ knitr::opts_chunk$set(
 
 ```{r fn}
 n_8meg <- function(n) {
+  set.seed(n)
   rnorm(1e6 * n)
 }
 
 n_gig <- function(n) {
+  set.seed(n)
   rnorm(1.25e8 * n)
 }
 
@@ -33,6 +35,37 @@ mu <- function(pre = "") {
 }
 
 mu("Initial:")
+
+
+loop_1_m <- function(m) {
+  vec <- vector("numeric", m)
+  for (i in 1:m) {
+    vec[[i]] <- sum(n_8meg(1))
+  }
+  vec
+}
+
+loop_1_m_script <- function(m) {
+  vec <- vector("numeric", m)
+  for (i in 1:m) {
+    vec[[i]] <-
+      system2(
+      "Rscript",
+      c(
+        "-e",
+        "'
+        n_8meg <- function(n) {
+          set.seed(n)
+          rnorm(1e6 * n)
+        };
+        sum(n_8meg(1))
+        '"
+      ),
+      stdout = TRUE
+    )[[2]]
+  }
+  vec
+}
 ```
 
 <!-- ```{r mem1} -->

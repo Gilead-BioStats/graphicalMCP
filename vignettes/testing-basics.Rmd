@@ -195,6 +195,7 @@ graph2 <- create_graph(w, g)
 
 gw <- generate_weights(graph2)
 gwc <- graphicalMCP:::add_critical(gw, diag(m), .05, list(1:m))
+df_gw <- graphicalMCP:::generate_weights2(graph2)
 
 p <- runif(m, .0001, .03)
 p1 <- runif(m, .0001, .0005) # Reject all
@@ -213,6 +214,14 @@ nH = m
 bonf_bench <- bench::mark(
   `graphicalMCP, C++ with R wrapper` =
     bs_cpp(graph2, p),
+  `graphicalMCP, closure` = 
+    test_graph_df(df_gw, p),
+  `graphicalMCP, test_graph_fast` = 
+    test_graph_fast(graph2, p, intersections = gw),
+  `graphicalMCP, test_graph_fast (Simes)` = 
+    test_graph_fast_simes_ordered_r(graph2, p, intersections = gw, test_types = "simes"),
+  `graphicalMCP, test_graph_fast (parametric)` = 
+    test_graph_fast(graph2, p, intersections = gw, test_types = "parametric", corr = diag(3)),
   `gMCP, graphTest (calls C)` =
     graphTest(p, graph = graph),
   `gMCP, raw C` =

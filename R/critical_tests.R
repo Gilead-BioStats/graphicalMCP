@@ -60,15 +60,6 @@ parametric_test_vals <- function(p_values, weights, alpha, corr = NULL) {
 }
 
 #' @rdname calc-test_vals
-parametric_test_fast <- function(p_values, weights, alpha, critical) {
-  ifelse(
-    p_values == 0 & weights == 0,
-    NA,
-    p_values <= critical * weights * alpha
-  )
-}
-
-#' @rdname calc-test_vals
 simes_test_vals <- function(p_values, weights, alpha) {
   vec_res <- vector(length = length(weights))
   w_sum <- vector("numeric", length = length(weights))

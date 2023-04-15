@@ -98,6 +98,30 @@ add_critical <- function(gw, corr, alpha, groups) {
   res_list
 }
 
+# has issues
+add_critical2 <- function(gw, corr, alpha, groups) {
+  h_vecs <- gw[, seq_len(ncol(gw) / 2)]
+  w_vecs <- gw[, seq_len(ncol(gw) / 2) + (ncol(gw) / 2)]
+
+  c_mat <- w_vecs # placeholder
+
+  for (group in groups) {
+    for (row in seq_len(nrow(w_vecs))) {
+      group_in_inter <- group[as.logical(h_vecs[row, ][group])]
+
+      c_val <- solve_c(
+        w_vecs[row, group_in_inter],
+        corr[group_in_inter, group_in_inter],
+        alpha
+      )
+
+      c_mat[row, group] <- c_val * h_vecs[row, group]
+    }
+  }
+
+  cbind(gw, c_mat)
+}
+
 #' @rdname critical-vals
 parse_groups <- function(gw, corr, alpha, groups, test_types) {
   # w/o para, can be as simple as lapply(groups, function(group) gw[, c(group, group + (ncol(gw) / 2))])

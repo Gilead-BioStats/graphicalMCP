@@ -91,7 +91,7 @@ p_adjust_simes <- function(p_values, weights) {
 
 #' @rdname p_adjust
 p_adjust_simes_ordered <- function(p_values, weights) {
-  if (sum(weights) == 0) {
+  if (max(weights) == 0) {
     return(Inf)
   }
 
