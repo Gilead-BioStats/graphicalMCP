@@ -98,7 +98,6 @@ add_critical <- function(gw, corr, alpha, groups) {
   res_list
 }
 
-# has issues
 add_critical2 <- function(gw, corr, alpha, groups) {
   h_vecs <- gw[, seq_len(ncol(gw) / 2)]
   w_vecs <- gw[, seq_len(ncol(gw) / 2) + (ncol(gw) / 2)]
@@ -119,7 +118,198 @@ add_critical2 <- function(gw, corr, alpha, groups) {
     }
   }
 
-  cbind(gw, c_mat)
+  ifelse(h_vecs, c_mat * w_vecs, NA)
+}
+
+bonf_small <- function(gw) {
+  ifelse(
+    gw[, seq_len(ncol(gw) / 2)],
+    gw[, seq_len(ncol(gw) / 2) + (ncol(gw) / 2)],
+    NA
+  )
+}
+
+simes_new_weights <- function(gw, p, groups) {
+  # may be more memory-efficient to not provision these ahead of time
+  h_vecs <- gw[, seq_len(ncol(gw) / 2)]
+  w_vecs <- gw[, seq_len(ncol(gw) / 2) + (ncol(gw) / 2)]
+
+  w_new <- w_vecs # placeholder
+
+  for (row in seq_len(nrow(w_vecs))) {
+    w_new_row <- w_vecs[row, ]
+
+    for (group in groups) {
+      group_in_inter <- group[as.logical(h_vecs[row, ][group])]
+
+      w_group <- w_vecs[row, group_in_inter]
+      p_group <- p[group_in_inter]
+
+      for (i in group_in_inter) {
+        w_new_row[[i]] <- sum(w_group[p_group <= p[[i]]])
+      }
+    }
+
+    w_new[row, ] <- w_new_row
+  }
+
+  cbind(h_vecs, w_new)
+}
+
+simes_new_weights2 <- function(gw, p, groups) {
+  graph_size <- ncol(gw) / 2
+  h_cols <- seq_len(graph_size)
+  weight_cols <- h_cols + graph_size
+
+  # may be more memory-efficient to not provision these ahead of time
+  # h_vecs <- gw[, h_cols]
+  # w_vecs <- gw[, weight_cols]
+
+  w_new <- matrix(
+    NA_real_,
+    nrow = 2^graph_size - 1,
+    ncol = graph_size,
+    dimnames = list(rownames(gw), colnames(gw)[h_cols])
+  ) # placeholder
+
+  for (row in seq_len(nrow(gw))) {
+    w_new_row <- gw[row, h_cols]
+
+    for (group in groups) {
+      group_in_inter <- group[as.logical(gw[row, h_cols][group])]
+
+      w_group <- gw[row, group_in_inter + graph_size]
+      p_group <- p[group_in_inter]
+
+      for (i in group_in_inter) {
+        w_new_row[[i]] <- sum(w_group[p_group <= p[[i]]])
+      }
+    }
+
+    w_new[row, ] <- w_new_row
+  }
+
+  cbind(gw[, h_cols], w_new)
+}
+
+simes_new_weights3 <- function(gw, p, groups) {
+  graph_size <- ncol(gw) / 2
+  h_cols <- seq_len(graph_size)
+  weight_cols <- h_cols + graph_size
+
+  # may be more memory-efficient to not provision these ahead of time
+  # h_vecs <- gw[, h_cols]
+  # w_vecs <- gw[, weight_cols]
+
+  # w_new <- matrix(NA_real_, nrow = 2^graph_size - 1, ncol = graph_size) # placeholder
+
+  for (row in seq_len(nrow(gw))) {
+    for (group in groups) {
+      group_in_inter <- group[as.logical(gw[row, h_cols][group])]
+
+      # w_group <- gw[row, group_in_inter + graph_size]
+      # p_group <- p[group_in_inter]
+
+      for (i in group_in_inter) {
+        gw[row, i + graph_size] <- sum(gw[row, group_in_inter + graph_size][p[group_in_inter] <= p[[i]]])
+      }
+    }
+  }
+
+  gw
+}
+
+simes_order <- function(gw_small, p, groups) {
+  graph_size <- ncol(gw_small) / 2
+  graph_names <- colnames(gw_small)
+
+  group_order <- lapply(groups, function(group) group[order(p[group])])
+
+  w_vecs <- lapply(
+    group_order,
+    function(group_ord) gw_small[, group_ord]
+  )
+
+  list_w_new <- lapply(
+    seq_along(groups),
+    function(group) {
+      w_new <- w_vecs[[group]]
+
+      for (row in seq_len(nrow(w_new))) {
+        w_new[row, !is.na(w_new[row, ])] <- cumsum(w_new[row, !is.na(w_new[row, ])])
+      }
+
+      w_new
+    }
+  )
+
+  do.call(cbind, list_w_new)[, graph_names]
+}
+
+simes_order2 <- function(gw_small, p, groups) {
+  graph_size <- ncol(gw) / 2
+  graph_names <- colnames(gw_small)
+
+  w_vecs <- lapply(
+    groups,
+    function(group) gw_small[, group[order(p[group])]]
+  )
+
+  list_w_new <- lapply(
+    seq_along(groups),
+    function(group) {
+      w_new <- w_vecs[[group]]
+
+      for (row in seq_len(nrow(w_new))) {
+        w_new[row, !is.na(w_new[row, ])] <- cumsum(w_new[row, !is.na(w_new[row, ])])
+      }
+
+      w_new
+    }
+  )
+
+  do.call(cbind, list_w_new)[, graph_names]
+}
+
+simes_order3 <- function(gw_small, p, groups) {
+  graph_size <- ncol(gw_small) / 2
+  graph_names <- colnames(gw_small)
+
+  list_w_new <- lapply(
+    groups,
+    function(group) {
+      w_new <- gw_small[, group[order(p[group])], drop = FALSE]
+
+      for (row in seq_len(nrow(w_new))) {
+        w_new[row, !is.na(w_new[row, ])] <- cumsum(w_new[row, !is.na(w_new[row, ])])
+      }
+
+      w_new
+    }
+  )
+
+  do.call(cbind, list_w_new)[, graph_names]
+}
+
+simes_order4 <- function(gw_small, p, groups) {
+  graph_size <- ncol(gw_small) / 2
+  graph_names <- colnames(gw_small)
+
+  list_w_new <- vector("list", length(groups))
+  i <- 1
+
+  for (group in groups) {
+    w_new <- gw_small[, group[order(p[group])], drop = FALSE]
+
+    for (row in seq_len(nrow(w_new))) {
+      w_new[row, !is.na(w_new[row, ])] <- cumsum(w_new[row, !is.na(w_new[row, ])])
+    }
+
+    list_w_new[[i]] <- w_new
+    i <- i + 1
+  }
+
+  do.call(cbind, list_w_new)[, graph_names]
 }
 
 #' @rdname critical-vals

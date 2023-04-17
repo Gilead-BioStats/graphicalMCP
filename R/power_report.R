@@ -653,104 +653,60 @@ calculate_power_v <- function(graph,
     dimnames = list(seq_len(sim_n), names(graph$hypotheses))
   )
 
-  if (all(test_types == "bonferroni")) {
-    test_res_mat <- bonferroni_sequential_power_cpp(
-      graph$hypotheses,
-      graph$transitions,
-      p_sim,
-      test_alpha
-    )
-  } else if (all(test_types == "simes")) {
-    gw <- generate_weights(graph)
-    graph_size <- length(graph$hypotheses)
-    gw_size <- 2 ^ graph_size - 1
-    num_groups <- length(test_groups)
-
-    for (row in seq_len(sim_n)) {
-      test_res_mat[row, ] <- test_graph_fast_simes_ordered_r(
-        graph,
-        p_sim[row, ],
-        test_alpha,
-        test_groups,
-        test_types,
-        test_corr,
-        gw,
-        graph_size,
-        gw_size,
-        num_groups
-      )
-    }
-  } else if (all(test_types == "parametric")) {
-    gw <- generate_weights(graph)
-    gwc <- add_critical(gw, test_corr, test_alpha, test_groups)
-    graph_size <- length(graph$hypotheses)
-    gw_size <- 2 ^ graph_size - 1
-    num_groups <- length(test_groups)
-
-    for (row in seq_len(sim_n)) {
-      test_res_mat[row, ] <- test_graph_fast_parametric(
-        graph,
-        p_sim[row, ],
-        test_alpha,
-        test_groups,
-        test_types,
-        test_corr,
-        gw,
-        gwc,
-        graph_size,
-        gw_size,
-        num_groups
-      )
-    }
-  } else {
-    gw <- generate_weights(graph)
-    gwc <- add_critical(gw, test_corr, test_alpha, test_groups)
-    graph_size <- length(graph$hypotheses)
-    gw_size <- 2 ^ graph_size - 1
+  # if (all(test_types == "bonferroni")) {
+  #   test_res_mat <- bonferroni_sequential_power_cpp(
+  #     graph$hypotheses,
+  #     graph$transitions,
+  #     p_sim,
+  #     test_alpha
+  #   )
+  # } else {
 
     bonf_groups <- test_groups[test_types == "bonferroni"]
     simes_groups <- test_groups[test_types == "simes"]
     para_groups <- test_groups[test_types == "parametric"]
 
+    gw <- generate_weights(graph)
+
+    if (length(bonf_groups) > 0 || length(simes_groups) > 0) {
+      gw_bonf <- bonf_small(gw)
+    }
+
+    if (length(para_groups) > 0) {
+      gw_para <- add_critical2(gw, test_corr, test_alpha, test_groups)
+    }
+
+    graph_size <- length(graph$hypotheses)
+    gw_size <- 2 ^ graph_size - 1
+
     for (row in seq_len(sim_n)) {
 
       bonf_res <- if (length(bonf_groups) > 0) {
-        test_graph_fast_bonferroni_v(
+        test_graph_fast_v(
           graph,
           p_sim[row, ],
           test_alpha,
-          gw
+          gw_bonf[, ]
         )
       }
 
       simes_res <- if (length(simes_groups) > 0) {
-        test_graph_fast_simes_ordered_r(
+        gw_simes <- simes_order4(gw_bonf, p_sim[row, ], test_groups) # possible bottleneck
+
+        test_graph_fast_v(
           graph,
           p_sim[row, ],
           test_alpha,
-          simes_groups,
-          test_types[test_types == "simes"],
-          test_corr,
-          gw,
-          graph_size,
-          gw_size,
-          length(simes_groups)
+          gw_simes
         )
       }
 
       para_res <- if (length(para_groups) > 0) {
-        test_graph_fast_parametric(
+        test_graph_fast_v(
           graph,
           p_sim[row, ],
           test_alpha,
-          para_groups,
-          test_types[test_types == "parametric"],
-          test_corr,
-          gw,
-          gwc[test_types == "parametric"],
-          graph_size,
-          gw_size,
-          length(para_groups)
+          gw_para
         )
       }
 
@@ -761,7 +717,7 @@ calculate_power_v <- function(graph,
 
       test_res_mat[row, ] <- test_res
     }
-  }
+  # }
   # browser()
   power_local <- colMeans(test_res_mat)
   power_expected <- sum(test_res_mat) / sim_n

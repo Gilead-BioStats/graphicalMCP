@@ -280,16 +280,16 @@ test_graph_fast_bonferroni <- function(graph,
   colSums(gw_h * do.call(pmax, as.data.frame(rej_hyps))) == 2^(graph_size - 1)
 }
 
-test_graph_fast_bonferroni_v <- function(graph,
-                                         p,
-                                         alpha = .05,
-                                         intersections = generate_weights(graph)) {
+test_graph_fast_v <- function(graph,
+                              p,
+                              alpha = .05,
+                              intersections = gw_small) {
   graph_size <- length(graph$hypotheses)
-  inter_h <- intersections[, seq_len(graph_size), drop = FALSE]
-  inter_weight <- intersections[, seq_len(graph_size) + graph_size]
+  inter_h <- !is.na(intersections) # extract h-matrix
+  intersections[is.na(intersections)] <- 0 # replace missing weights with 0
 
   # Calculate test results -----------------------------------------------------
-  rej_hyps <- t(p <= alpha * t(inter_weights))
+  rej_hyps <- t(p <= alpha * t(intersections))
 
   colSums(inter_h * do.call(pmax, as.data.frame(rej_hyps))) ==
     2^(graph_size - 1)
@@ -303,6 +303,22 @@ test_graph_fast_parametric_v <- function(graph,
   inter_h <- intersections[, seq_len(graph_size), drop = FALSE]
   inter_weight <- intersections[, seq_len(graph_size) + graph_size]
   inter_critical <- intersections[, seq_len(graph_size) + 2 * graph_size]
+
+  # Calculate test results -----------------------------------------------------
+  rej_hyps <- t(p <= alpha * t(inter_weight * inter_critical))
+
+  rej_hyps
+  colSums(inter_h * do.call(pmax, as.data.frame(rej_hyps))) ==
+    2^(graph_size - 1)
+}
+
+test_graph_fast_simes_v <- function(graph,
+                                    p,
+                                    alpha = .05,
+                                    intersections = generate_weights(graph)) {
+  graph_size <- length(graph$hypotheses)
+  inter_h <- intersections[, seq_len(graph_size), drop = FALSE]
+  inter_weight <- intersections[, seq_len(graph_size) + graph_size]
 
   # Calculate test results -----------------------------------------------------
   rej_hyps <- t(p <= alpha * t(inter_weight * inter_critical))

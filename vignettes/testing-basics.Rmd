@@ -2,7 +2,7 @@
 title: "Testing basics"
 output: rmarkdown::html_vignette
 params:
-  m: 7
+  m: 5
   sims: 100000
 vignette: >
   %\VignetteIndexEntry{Testing basics}
@@ -195,12 +195,15 @@ graph2 <- create_graph(w, g)
 
 gw <- generate_weights(graph2)
 gwc <- graphicalMCP:::add_critical(gw, diag(m), .05, list(1:m))
-df_gw <- graphicalMCP:::generate_weights2(graph2)
+gw_bonf <- graphicalMCP:::bonf_small(gw)
+gw_para <- graphicalMCP:::add_critical2(gw, diag(m), .05, list(1:m))
 
 p <- runif(m, .0001, .03)
 p1 <- runif(m, .0001, .0005) # Reject all
 p2 <- runif(m, .4, .9) # Reject none - These don't seem to matter for speed
 sim_corr <- diag(m)
+
+gw_simes <- graphicalMCP:::simes_order4(gw_bonf, p, list(1:m))
 
 p_ord <- sort(p)
 w_ord <- w[order(p)]
@@ -214,14 +217,18 @@ nH = m
 bonf_bench <- bench::mark(
   `graphicalMCP, C++ with R wrapper` =
     bs_cpp(graph2, p),
-  `graphicalMCP, closure` = 
-    test_graph_df(df_gw, p),
   `graphicalMCP, test_graph_fast` = 
     test_graph_fast(graph2, p, intersections = gw),
   `graphicalMCP, test_graph_fast (Simes)` = 
     test_graph_fast_simes_ordered_r(graph2, p, intersections = gw, test_types = "simes"),
   `graphicalMCP, test_graph_fast (parametric)` = 
-    test_graph_fast(graph2, p, intersections = gw, test_types = "parametric", corr = diag(3)),
+    test_graph_fast(graph2, p, intersections = gw, test_types = "parametric", corr = diag(m)),
+  `graphicalMCP, test_graph_fast_v (bonf)` = 
+    test_graph_fast_v(graph2, p, intersections = gw_bonf),
+  `graphicalMCP, test_graph_fast_v (para)` = 
+    test_graph_fast_v(graph2, p, intersections = gw_para),
+  `graphicalMCP, test_graph_fast_v (simes)` = 
+    test_graph_fast_v(graph2, p, intersections = gw_simes),
   `gMCP, graphTest (calls C)` =
     graphTest(p, graph = graph),
   `gMCP, raw C` =
@@ -252,6 +259,8 @@ simes_bench <- bench::mark(
     test_graph_fast_simes_ordered_cpp(graph2, p, .05, list(1:m), "simes", intersections = gw, graph_size = m, gw_size = 2 ^ m - 1, num_groups = 1),
   `R test, gw pre, sort once` =
     test_graph_fast_simes_ordered_r(graph2, p, .05, list(1:m), "simes", intersections = gw, graph_size = m, gw_size = 2 ^ m - 1, num_groups = 1),
+  `test_graph_fast_v (simes)` = 
+    test_graph_fast_v(graph2, p, intersections = gw_simes),
   `gMCP::gMCP` =
     gMCP(graph, p, test = "Simes")@rejected
 )
@@ -274,6 +283,8 @@ para_bench <- bench::mark(
     test_graph_fast(graph2, p, .05, list(1:m), "parametric", intersections = gw, graph_size = m, gw_size = 2 ^ m - 1, num_groups = 1),
   `gw pre, critical pre` =
     test_graph_fast_parametric(graph2, p, .05, list(1:m), "parametric", intersections = gw, inter_list = gwc, graph_size = m, gw_size = 2 ^ m - 1, num_groups = 1),
+  `test_graph_fast_v (para)` = 
+    test_graph_fast_v(graph2, p, intersections = gw_para),
   `testGraph` =
     !!graphTest(p_mat, graph = graph, test = "parametric", cr = sim_corr)[1,],
   `gMCP` =
@@ -292,8 +303,8 @@ sims <- params$sims
 power_bench <- bench::mark(
   `Bonferroni sequential, C++` =
     calculate_power(graph2, sim_n = sims),
-  `Bonferroni sequential, C++ (q)` =
-    calculate_power(graph2, sim_n = sims),
+  `calculate_power_v` =
+    calculate_power_v(graph2, sim_n = sims),
   `calcPower` =
     calcPower(graph = graph, alpha = .05, n.sim = sims, corr.sim = diag(m)),
   min_iterations = 1,
@@ -313,6 +324,8 @@ power_bench <- bench::mark(
   #   calculate_power_q(graph2, sim_n = sims, test_types = "simes"),
   `All R, pre-sort hypotheses` =
     calculate_power(graph2, sim_n = sims, test_types = "simes"),
+  `calculate_power_v` =
+    calculate_power_v(graph2, sim_n = sims, test_types = "s"),
   min_iterations = 1,
   filter_gc = FALSE,
   check = FALSE
@@ -337,6 +350,8 @@ power_bench <- bench::mark(
   #   calculate_power_q(graph2, sim_n = sims, test_types = "parametric", test_corr = diag(m)),
   `calculate_power` =
     calculate_power(graph2, sim_n = sims, test_types = "parametric", test_corr = diag(m)),
+  `calculate_power_v` =
+    calculate_power_v(graph2, sim_n = sims, test_types = "parametric", test_corr = diag(m)),
   min_iterations = 1,
   filter_gc = FALSE,
   check = FALSE
@@ -353,12 +368,16 @@ gt::gt(power_bench[1:9]) |>
 power_bench <- bench::mark(
   `Bonferroni sequential - C++` =
     calculate_power(graph2, sim_n = sims),
-  `Simes - R, pre-sort` = 
+  `Bonferroni closure - R` = 
+    calculate_power_v(graph2, sim_n = sims),
+  `Simes vectorized` = 
     calculate_power(graph2, sim_n = sims, test_types = "simes"),
-  `Parametric - R, pre-calc crit` = 
-    calculate_power(graph2, sim_n = sims, test_types = "parametric", test_corr = diag(m)),
+  `Parametric vectorized` = 
+    calculate_power_v(graph2, sim_n = sims, test_types = "parametric", test_corr = diag(m)),
   `Para/Simes - R, pre-calc gw only` = 
     calculate_power(graph2, sim_n = sims, test_groups = list(1:2, 3:m), test_types = c("parametric", "simes"), test_corr = diag(m)),
+  `Para/Simes vectorized` = 
+    calculate_power_v(graph2, sim_n = sims, test_groups = list(1:2, 3:m), test_types = c("p", "s"), test_corr = diag(m)),
   min_iterations = 1,
   filter_gc = FALSE,
   check = FALSE
