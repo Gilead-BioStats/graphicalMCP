@@ -19,6 +19,7 @@ Description: A multiple comparison procedure (or multiple test procedure)
 License: GPL (>= 3)
 URL: https://urban-sniffle-p11zlpj.pages.github.io/
 Imports: 
+    matrixStats,
     mvtnorm
 Suggests: 
     bench,

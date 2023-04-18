@@ -204,6 +204,7 @@ p2 <- runif(m, .4, .9) # Reject none - These don't seem to matter for speed
 sim_corr <- diag(m)
 
 gw_simes <- graphicalMCP:::simes_order4(gw_bonf, p, list(1:m))
+groups <- list(1:floor(m / 2), (floor(m / 2) + 1):m)
 
 p_ord <- sort(p)
 w_ord <- w[order(p)]
@@ -224,11 +225,11 @@ bonf_bench <- bench::mark(
   `graphicalMCP, test_graph_fast (parametric)` = 
     test_graph_fast(graph2, p, intersections = gw, test_types = "parametric", corr = diag(m)),
   `graphicalMCP, test_graph_fast_v (bonf)` = 
-    test_graph_fast_v(graph2, p, intersections = gw_bonf),
+    graphicalMCP:::test_graph_fast_v(p, intersections = gw_bonf),
   `graphicalMCP, test_graph_fast_v (para)` = 
-    test_graph_fast_v(graph2, p, intersections = gw_para),
+    graphicalMCP:::test_graph_fast_v(p, intersections = gw_para),
   `graphicalMCP, test_graph_fast_v (simes)` = 
-    test_graph_fast_v(graph2, p, intersections = gw_simes),
+    graphicalMCP:::test_graph_fast_v(p, intersections = gw_simes),
   `gMCP, graphTest (calls C)` =
     graphTest(p, graph = graph),
   `gMCP, raw C` =
@@ -238,7 +239,7 @@ bonf_bench <- bench::mark(
 
 message(as.character(Sys.time()))
 bonf_bench$expression <- as.character(bonf_bench$expression)
-gt(bonf_bench[1:9]) |> 
+gt(bonf_bench[1:9]) %>% 
   tab_header("Bonferroni testing", paste(m, "hypotheses"))
 ```
 
@@ -259,15 +260,21 @@ simes_bench <- bench::mark(
     test_graph_fast_simes_ordered_cpp(graph2, p, .05, list(1:m), "simes", intersections = gw, graph_size = m, gw_size = 2 ^ m - 1, num_groups = 1),
   `R test, gw pre, sort once` =
     test_graph_fast_simes_ordered_r(graph2, p, .05, list(1:m), "simes", intersections = gw, graph_size = m, gw_size = 2 ^ m - 1, num_groups = 1),
-  `test_graph_fast_v (simes)` = 
-    test_graph_fast_v(graph2, p, intersections = gw_simes),
+  `test_graph_fast_v (simes-1)` = 
+    graphicalMCP:::test_graph_fast_v(p, intersections = graphicalMCP:::simes_order4(gw_bonf, p, list(1:m))),
+  `test_graph_fast_v (simes-2)` = 
+    graphicalMCP:::test_graph_fast_v(p, intersections = graphicalMCP:::simes_order4(gw_bonf, p, groups)),
+  `test_graph_fast_vms (simes-1)` = 
+    graphicalMCP:::test_graph_fast_vms(p, intersections = graphicalMCP:::simes_order4(gw_bonf, p, list(1:m))),
+  `test_graph_fast_vms (simes-2)` = 
+    graphicalMCP:::test_graph_fast_vms(p, intersections = graphicalMCP:::simes_order4(gw_bonf, p, groups)),
   `gMCP::gMCP` =
     gMCP(graph, p, test = "Simes")@rejected
 )
 
 message(as.character(Sys.time()))
 simes_bench$expression <- as.character(simes_bench$expression)
-gt(simes_bench[1:9]) |> 
+gt(simes_bench[1:9]) %>% 
   tab_header("Simes testing", paste(m, "hypotheses"))
 ```
 
@@ -284,7 +291,9 @@ para_bench <- bench::mark(
   `gw pre, critical pre` =
     test_graph_fast_parametric(graph2, p, .05, list(1:m), "parametric", intersections = gw, inter_list = gwc, graph_size = m, gw_size = 2 ^ m - 1, num_groups = 1),
   `test_graph_fast_v (para)` = 
-    test_graph_fast_v(graph2, p, intersections = gw_para),
+    graphicalMCP:::test_graph_fast_v(p, intersections = gw_para),
+  `test_graph_fast_vms (para)` = 
+    graphicalMCP:::test_graph_fast_vms(p, intersections = gw_para),
   `testGraph` =
     !!graphTest(p_mat, graph = graph, test = "parametric", cr = sim_corr)[1,],
   `gMCP` =
@@ -293,7 +302,7 @@ para_bench <- bench::mark(
 
 message(as.character(Sys.time()))
 para_bench$expression <- as.character(para_bench$expression)
-gt::gt(para_bench[1:9]) |> 
+gt::gt(para_bench[1:9]) %>% 
   tab_header("Parametric testing", paste(m, "hypotheses"))
 ```
 
@@ -303,8 +312,8 @@ sims <- params$sims
 power_bench <- bench::mark(
   `Bonferroni sequential, C++` =
     calculate_power(graph2, sim_n = sims),
-  `calculate_power_v` =
-    calculate_power_v(graph2, sim_n = sims),
+  `calculate_power_vms` =
+    graphicalMCP:::calculate_power_vms(graph2, sim_n = sims),
   `calcPower` =
     calcPower(graph = graph, alpha = .05, n.sim = sims, corr.sim = diag(m)),
   min_iterations = 1,
@@ -314,18 +323,18 @@ power_bench <- bench::mark(
 
 message(as.character(Sys.time()))
 power_bench$expression <- as.character(power_bench$expression)
-gt::gt(power_bench[1:9]) |> 
+gt::gt(power_bench[1:9]) %>% 
   tab_header("Bonferroni power", paste(m, "hypotheses,", sims, "simulations"))
 ```
 
-```{r power-simes, eval=FALSE}
+```{r power-simes}
 power_bench <- bench::mark(
   # `More general, less optimized` =
   #   calculate_power_q(graph2, sim_n = sims, test_types = "simes"),
-  `All R, pre-sort hypotheses` =
-    calculate_power(graph2, sim_n = sims, test_types = "simes"),
-  `calculate_power_v` =
-    calculate_power_v(graph2, sim_n = sims, test_types = "s"),
+  # `All R, pre-sort hypotheses` =
+  #   calculate_power(graph2, sim_n = sims, test_types = "simes"),
+  `calculate_power_vms` =
+    graphicalMCP:::calculate_power_vms(graph2, sim_n = sims, test_types = "s"),
   min_iterations = 1,
   filter_gc = FALSE,
   check = FALSE
@@ -333,7 +342,7 @@ power_bench <- bench::mark(
 
 message(as.character(Sys.time()))
 power_bench$expression <- as.character(power_bench$expression)
-gt::gt(power_bench[1:9]) |> 
+gt::gt(power_bench[1:9]) %>% 
   tab_header("Simes power", paste(m, "hypotheses,", sims, "simulations"))
 ```
 
@@ -348,10 +357,10 @@ power_bench <- bench::mark(
   #   calculate_power_slow(graph2, sim_n = sims, test_types = "parametric", test_corr = diag(m)),
   # `calculate_power_q` =
   #   calculate_power_q(graph2, sim_n = sims, test_types = "parametric", test_corr = diag(m)),
-  `calculate_power` =
-    calculate_power(graph2, sim_n = sims, test_types = "parametric", test_corr = diag(m)),
-  `calculate_power_v` =
-    calculate_power_v(graph2, sim_n = sims, test_types = "parametric", test_corr = diag(m)),
+  # `calculate_power` =
+  #   calculate_power(graph2, sim_n = sims, test_types = "parametric", test_corr = diag(m)),
+  `calculate_power_vms` =
+    graphicalMCP:::calculate_power_vms(graph2, sim_n = sims, test_types = "p", test_corr = diag(m)),
   min_iterations = 1,
   filter_gc = FALSE,
   check = FALSE
@@ -359,25 +368,25 @@ power_bench <- bench::mark(
 
 message(as.character(Sys.time()))
 power_bench$expression <- as.character(power_bench$expression)
-gt::gt(power_bench[1:9]) |> 
+gt::gt(power_bench[1:9]) %>% 
   tab_header("Parametric power", paste(m, "hypotheses,", sims, "simulations"))
 ```
 
 ```{r power-blend}
 # fastest of each test type in graphicalMCP
 power_bench <- bench::mark(
-  `Bonferroni sequential - C++` =
-    calculate_power(graph2, sim_n = sims),
-  `Bonferroni closure - R` = 
-    calculate_power_v(graph2, sim_n = sims),
-  `Simes vectorized` = 
-    calculate_power(graph2, sim_n = sims, test_types = "simes"),
-  `Parametric vectorized` = 
-    calculate_power_v(graph2, sim_n = sims, test_types = "parametric", test_corr = diag(m)),
-  `Para/Simes - R, pre-calc gw only` = 
-    calculate_power(graph2, sim_n = sims, test_groups = list(1:2, 3:m), test_types = c("parametric", "simes"), test_corr = diag(m)),
+  # `Bonferroni sequential - C++` =
+  #   calculate_power(graph2, sim_n = sims),
+  # `Bonferroni closure - R` = 
+  #   graphicalMCP:::calculate_power_vms(graph2, sim_n = sims),
+  # `Simes vectorized` = 
+  #   graphicalMCP:::calculate_power_vms(graph2, sim_n = sims, test_types = "simes"),
+  # `Parametric vectorized` = 
+  #   graphicalMCP:::calculate_power_vms(graph2, sim_n = sims, test_types = "parametric", test_corr = diag(m)),
+  # `Para/Simes - R, pre-calc gw only` = 
+  #   calculate_power(graph2, sim_n = sims, test_groups = list(1:2, 3:m), test_types = c("parametric", "simes"), test_corr = diag(m)),
   `Para/Simes vectorized` = 
-    calculate_power_v(graph2, sim_n = sims, test_groups = list(1:2, 3:m), test_types = c("p", "s"), test_corr = diag(m)),
+    graphicalMCP:::calculate_power_vms(graph2, sim_n = sims, test_groups = list(1:floor(m / 2), (floor(m / 2) + 1):(m - 1), m), test_types = c("p", "s", "b"), test_corr = diag(m)),
   min_iterations = 1,
   filter_gc = FALSE,
   check = FALSE
@@ -385,26 +394,34 @@ power_bench <- bench::mark(
 
 message(as.character(Sys.time()))
 power_bench$expression <- as.character(power_bench$expression)
-gt::gt(power_bench[1:9]) |> 
-  tab_header("All types of power", paste(m, "hypotheses,", sims, "simulations"))
+gt::gt(power_bench[1:9]) %>% 
+  tab_header("Parametric/Simes/Bonferroni", paste(m, "hypotheses,", sims, "simulations"))
 ```
 
 ```{r power-blend-2}
 # fastest of each test type in graphicalMCP
-# power_bench <- bench::mark(
-#   `calculate_power_q` = 
-#     calculate_power_q(graph2, sim_n = sims, test_groups = list(1:2, 3:m), test_types = c("parametric", "simes"), test_corr = diag(m)),
-#   `calculate_power` = 
-#     calculate_power(graph2, sim_n = sims, test_groups = list(1:2, 3:m), test_types = c("parametric", "simes"), test_corr = diag(m)),
-#   min_iterations = 1,
-#   filter_gc = FALSE,
-#   check = FALSE
-# )
-# 
-# message(as.character(Sys.time()))
-# power_bench$expression <- as.character(power_bench$expression)
-# gt::gt(power_bench[1:9]) |> 
-#   tab_header("All types of power", paste(m, "hypotheses,", sims, "simulations"))
+power_bench <- bench::mark(
+  `para_groups` =
+    graphicalMCP:::calculate_power_vms(graph2, sim_n = sims, test_groups = list(1:floor(m / 2), (floor(m / 2) + 1):m), test_types = c("p", "p"), test_corr = diag(m))
+)
+
+message(as.character(Sys.time()))
+power_bench$expression <- as.character(power_bench$expression)
+gt::gt(power_bench[1:9]) %>%
+  tab_header("Parametric groups", paste(m, "hypotheses,", sims, "simulations"))
+```
+
+```{r power-blend-3}
+# fastest of each test type in graphicalMCP
+power_bench <- bench::mark(
+  `simes_groups` =
+    graphicalMCP:::calculate_power_vms(graph2, sim_n = sims, test_groups = list(1:2, 3:m), test_types = c("s", "s"), test_corr = diag(m))
+)
+
+message(as.character(Sys.time()))
+power_bench$expression <- as.character(power_bench$expression)
+gt::gt(power_bench[1:9]) %>%
+  tab_header("Simes groups", paste(m, "hypotheses,", sims, "simulations"))
 ```
 
 ## Print options

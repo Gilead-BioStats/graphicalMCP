@@ -280,11 +280,10 @@ test_graph_fast_bonferroni <- function(graph,
   colSums(gw_h * do.call(pmax, as.data.frame(rej_hyps))) == 2^(graph_size - 1)
 }
 
-test_graph_fast_v <- function(graph,
-                              p,
+test_graph_fast_v <- function(p,
                               alpha = .05,
                               intersections = gw_small) {
-  graph_size <- length(graph$hypotheses)
+  graph_size <- ncol(intersections)
   inter_h <- !is.na(intersections) # extract h-matrix
   intersections[is.na(intersections)] <- 0 # replace missing weights with 0
 
@@ -292,6 +291,23 @@ test_graph_fast_v <- function(graph,
   rej_hyps <- t(p <= alpha * t(intersections))
 
   colSums(inter_h * do.call(pmax, as.data.frame(rej_hyps))) ==
+    2^(graph_size - 1)
+}
+
+test_graph_fast_vms <- function(p,
+                               alpha = .05,
+                               intersections = gw_small) {
+  graph_size <- ncol(intersections)
+  inter_h <- !is.na(intersections) # extract h-matrix
+  intersections[is.na(intersections)] <- 0 # replace missing weights with 0
+
+  # Calculate test results -----------------------------------------------------
+  rej_hyps <- t(p <= alpha * t(intersections))
+
+  # could also be
+  # ...xStats::colCounts(...      matrixStats::rowAnys(rej_hyps)      ==
+  #   slightly slower but less (no?) memory allocated
+  matrixStats::colSums2(inter_h * matrixStats::rowMaxs(rej_hyps + 0)) ==
     2^(graph_size - 1)
 }
 

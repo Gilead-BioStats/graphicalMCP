@@ -293,7 +293,7 @@ simes_order3 <- function(gw_small, p, groups) {
 
 simes_order4 <- function(gw_small, p, groups) {
   graph_size <- ncol(gw_small) / 2
-  graph_names <- colnames(gw_small)
+  graph_names <- colnames(gw_small)[unlist(groups)]
 
   list_w_new <- vector("list", length(groups))
   i <- 1
@@ -310,6 +310,31 @@ simes_order4 <- function(gw_small, p, groups) {
   }
 
   do.call(cbind, list_w_new)[, graph_names]
+}
+
+simes_order_vms <- function(gw_small, p, groups) {
+  graph_size <- ncol(gw_small) / 2
+  graph_names <- colnames(gw_small)[unlist(groups)]
+  missing_ind <- is.na(gw_small[, unlist(groups), drop = FALSE])
+  gw_small[missing_ind] <- 0
+
+  list_w_new <- vector("list", length(groups))
+  i <- 1
+
+  for (group in groups) {
+    w_new <- matrixStats::rowCumsums(
+      gw_small[, group[order(p[group])], drop = FALSE],
+      useNames = TRUE
+    )
+
+    list_w_new[[i]] <- w_new
+    i <- i + 1
+  }
+
+  res <- do.call(cbind, list_w_new)[, graph_names, drop = FALSE]
+  res[missing_ind] <- NA
+
+  res
 }
 
 #' @rdname critical-vals

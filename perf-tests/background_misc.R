@@ -1,4 +1,4 @@
-rmarkdown::render(here::here("vignettes/testing-basics.Rmd"))
+source(here::here("vignettes/knitted/renderer.R"))
 # devtools::load_all("..")
 #
 # test_m <- function(m, groups = list(seq_len(m)), test_types = "b", verbose = FALSE, critical = FALSE) {
