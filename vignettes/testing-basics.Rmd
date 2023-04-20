@@ -2,7 +2,7 @@
 title: "Testing basics"
 output: rmarkdown::html_vignette
 params:
-  m: 5
+  m: 10
   sims: 100000
 vignette: >
   %\VignetteIndexEntry{Testing basics}
@@ -269,7 +269,8 @@ simes_bench <- bench::mark(
   `test_graph_fast_vms (simes-2)` = 
     graphicalMCP:::test_graph_fast_vms(p, intersections = graphicalMCP:::simes_order4(gw_bonf, p, groups)),
   `gMCP::gMCP` =
-    gMCP(graph, p, test = "Simes")@rejected
+    gMCP(graph, p, test = "Simes")@rejected,
+  check = FALSE
 )
 
 message(as.character(Sys.time()))
@@ -297,7 +298,8 @@ para_bench <- bench::mark(
   `testGraph` =
     !!graphTest(p_mat, graph = graph, test = "parametric", cr = sim_corr)[1,],
   `gMCP` =
-    gMCP(graph, p, test = "parametric", correlation = sim_corr)@rejected
+    gMCP(graph, p, test = "parametric", correlation = sim_corr)@rejected,
+  check = FALSE
 )
 
 message(as.character(Sys.time()))
