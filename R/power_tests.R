@@ -8,7 +8,7 @@ test_graph_fast <- function(graph,
                             corr = NULL,
                             intersections = generate_weights(graph),
                             graph_size = length(graph$hypotheses),
-                            gw_size = 2 ^ graph_size - 1,
+                            gw_size = 2^graph_size - 1,
                             num_groups = length(groups)) {
   inter_h_vecs <- intersections[, seq_len(graph_size), drop = FALSE]
   inter_small <- intersections[, seq_len(graph_size) + graph_size]
@@ -96,18 +96,20 @@ test_graph_fast_vms <- function(p,
 
 #' @rdname testing-fast
 #' @export
-test_graph_fast_parametric <- function(graph,
-                                       p,
-                                       alpha = .05,
-                                       groups = list(seq_along(graph$hypotheses)),
-                                       test_types = c("bonferroni"),
-                                       corr = NULL,
-                                       intersections = generate_weights(graph),
-                                       inter_list = add_critical(intersections, corr, alpha, groups),
-                                       graph_size = length(graph$hypotheses),
-                                       gw_size = 2 ^ graph_size - 1,
-                                       num_groups = length(groups)) {
-
+test_graph_fast_para <- function(graph,
+                                 p,
+                                 alpha = .05,
+                                 groups = list(seq_along(graph$hypotheses)),
+                                 test_types = c("bonferroni"),
+                                 corr = NULL,
+                                 intersections = generate_weights(graph),
+                                 inter_list = add_critical(
+                                   intersections, corr,
+                                   alpha, groups
+                                 ),
+                                 graph_size = length(graph$hypotheses),
+                                 gw_size = 2^graph_size - 1,
+                                 num_groups = length(groups)) {
   test_res <- vector("list", length(groups))
 
   # Calculate adjusted p-values ------------------------------------------------
@@ -119,7 +121,6 @@ test_graph_fast_parametric <- function(graph,
       inter_list[[group_num]],
       1,
       function(inter_row) {
-        h <- inter_row[seq_len(group_size)]
         w <- inter_row[seq_len(group_size) + group_size]
         c <- inter_row[2 * group_size + 1]
 
@@ -137,7 +138,7 @@ test_graph_fast_parametric <- function(graph,
 
   rej_local <- colSums(intersections[, unlist(groups)] * rej_inter)
 
-  rej_local == 2 ^ (graph_size - 1)
+  rej_local == 2^(graph_size - 1)
 }
 
 #' @rdname testing-fast
@@ -150,7 +151,7 @@ test_graph_fast_simes <- function(graph,
                                   corr = NULL,
                                   intersections = generate_weights(graph),
                                   graph_size = length(graph$hypotheses),
-                                  gw_size = 2 ^ graph_size - 1,
+                                  gw_size = 2^graph_size - 1,
                                   num_groups = length(groups)) {
   # Generate weights -----------------------------------------------------------
   inter_h_vecs <- intersections[, seq_len(graph_size), drop = FALSE]
@@ -178,7 +179,8 @@ test_graph_fast_simes <- function(graph,
     # intersection
     group_in_inter <- group[as.logical(h[group])]
 
-    p_adj[inter_index, group_index] <- p_adjust_simes_cpp(p[group_in_inter], weights[group_in_inter])
+    p_adj[inter_index, group_index] <-
+      p_adjust_simes_cpp(p[group_in_inter], weights[group_in_inter])
   }
 
   # Adjusted p-values at higher levels -----------------------------------------
@@ -197,16 +199,16 @@ test_graph_fast_simes <- function(graph,
 
 #' @rdname testing-fast
 #' @export
-test_graph_fast_simes_ordered_cpp <- function(graph,
-                                              p,
-                                              alpha = .05,
-                                              groups = list(seq_along(graph$hypotheses)),
-                                              test_types = c("bonferroni"),
-                                              corr = NULL,
-                                              intersections = generate_weights(graph),
-                                              graph_size = length(graph$hypotheses),
-                                              gw_size = 2 ^ graph_size - 1,
-                                              num_groups = length(groups)) {
+tg_fast_simes_ord_cpp <- function(graph,
+                                  p,
+                                  alpha = .05,
+                                  groups = list(seq_along(graph$hypotheses)),
+                                  test_types = c("bonferroni"),
+                                  corr = NULL,
+                                  intersections = generate_weights(graph),
+                                  graph_size = length(graph$hypotheses),
+                                  gw_size = 2^graph_size - 1,
+                                  num_groups = length(groups)) {
   # Parse generated weights ----------------------------------------------------
   simes_ord <- order(p)
 
@@ -237,13 +239,19 @@ test_graph_fast_simes_ordered_cpp <- function(graph,
     # intersection
     group_in_inter <- as.logical(h[group_ord])
 
-    p_adj[inter_index, group_index] <- p_adjust_simes_ord_simple_cpp(weights[group_in_inter], p[group_in_inter])
+    p_adj[inter_index, group_index] <-
+      p_adjust_simes_ord_simple_cpp(weights[group_in_inter], p[group_in_inter])
   }
 
   # Adjusted p-values at higher levels -----------------------------------------
   p_adj_inter <- do.call(pmin, as.data.frame(p_adj))
   p_adj_inter[p_adj_inter == Inf] <- NA
-  p_adj_global <- apply(p_adj_inter * inter_h_vecs[, unlist(groups)], 2, max, na.rm = TRUE)
+  p_adj_global <- apply(
+    p_adj_inter * inter_h_vecs[, unlist(groups)],
+    2,
+    max,
+    na.rm = TRUE
+  )
   test_global <- p_adj_global <= alpha
 
   test_global
@@ -251,16 +259,16 @@ test_graph_fast_simes_ordered_cpp <- function(graph,
 
 #' @rdname testing-fast
 #' @export
-test_graph_fast_simes_ordered_r <- function(graph,
-                                            p,
-                                            alpha = .05,
-                                            groups = list(seq_along(graph$hypotheses)),
-                                            test_types = c("bonferroni"),
-                                            corr = NULL,
-                                            intersections = generate_weights(graph),
-                                            graph_size = length(graph$hypotheses),
-                                            gw_size = 2 ^ graph_size - 1,
-                                            num_groups = length(groups)) {
+tg_fast_simes_ord_r <- function(graph,
+                                p,
+                                alpha = .05,
+                                groups = list(seq_along(graph$hypotheses)),
+                                test_types = c("bonferroni"),
+                                corr = NULL,
+                                intersections = generate_weights(graph),
+                                graph_size = length(graph$hypotheses),
+                                gw_size = 2^graph_size - 1,
+                                num_groups = length(groups)) {
   simes_ord <- order(p)
 
   p <- p[simes_ord]
@@ -290,7 +298,8 @@ test_graph_fast_simes_ordered_r <- function(graph,
     # intersection
     group_in_inter <- as.logical(h[group_ord])
 
-    p_adj[inter_index, group_index] <- p_adjust_simes_ordered(p[group_in_inter], weights[group_in_inter])
+    p_adj[inter_index, group_index] <-
+      p_adjust_simes_ordered(p[group_in_inter], weights[group_in_inter])
   }
 
   # Adjusted p-values at higher levels -----------------------------------------

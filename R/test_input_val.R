@@ -27,7 +27,7 @@ test_input_val <- function(graph,
       all(test_types %in% test_opts),
     "Please include each hypothesis in exactly one group" =
       setequal(seq_along(graph$hypotheses), unlist(groups)) &&
-      length(graph$hypotheses) == length(unlist(groups)),
+        length(graph$hypotheses) == length(unlist(groups)),
     "Please choose one test, or one test per group" =
       length(test_types) == length(groups),
     "Length of p-values & groups must match size of graph" =
@@ -59,7 +59,7 @@ test_input_val <- function(graph,
       isSymmetric.matrix(corr) || is.null(corr),
     "Dimensions of correlation matrix must match size of graph" =
       unique(nrow(corr), ncol(corr)) == length(graph$hypotheses) ||
-      is.null(corr)
+        is.null(corr)
   )
 
   invisible(graph)

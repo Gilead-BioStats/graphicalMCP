@@ -80,7 +80,10 @@ add_critical <- function(gw, corr, alpha, groups) {
       matrix(
         nrow = nrow(gw),
         ncol = length(group) * 2 + 1,
-        dimnames = list(rownames(gw), c(rep(colnames(gw)[group], 2), "critical"))
+        dimnames = list(
+          rownames(gw),
+          c(rep(colnames(gw)[group], 2), "critical")
+        )
       )
     }
   )
@@ -158,7 +161,6 @@ calculate_critical_parametric2 <- function(gw_small, corr, alpha, groups) {
 #' @rdname critical-vals
 #' @export
 calculate_critical_simes <- function(gw_small, p, groups) {
-  graph_size <- ncol(gw_small) / 2
   graph_names <- colnames(gw_small)[unlist(groups)]
 
   list_w_new <- vector("list", length(groups))
@@ -168,7 +170,8 @@ calculate_critical_simes <- function(gw_small, p, groups) {
     w_new <- gw_small[, group[order(p[group])], drop = FALSE]
 
     for (row in seq_len(nrow(w_new))) {
-      w_new[row, !is.na(w_new[row, ])] <- cumsum(w_new[row, !is.na(w_new[row, ])])
+      w_new[row, !is.na(w_new[row, ])] <-
+        cumsum(w_new[row, !is.na(w_new[row, ])])
     }
 
     list_w_new[[i]] <- w_new

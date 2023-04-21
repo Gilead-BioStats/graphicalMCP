@@ -133,7 +133,7 @@ sim_func <- function(n_sim,
     c(rho/2,rho,0.5,1)
   )
 
-  calculate_power_slow(
+  calc_power_slow(
     graph = graph,
     alpha=0.025,
     theta = theta,

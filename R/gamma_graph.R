@@ -35,13 +35,12 @@
 gamma_graph <- function(graph, gamma_props) {
   hypotheses <- graph$hypotheses
   transitions <- graph$transitions
-  graph_names <- names(graph$hypotheses)
   graph_size <- length(graph$hypotheses)
 
   stopifnot(
     "Gamma proportions matrix dimensions must match graph size" =
       nrow(gamma_props) == graph_size &&
-      ncol(gamma_props) == graph_size,
+        ncol(gamma_props) == graph_size,
     "Gamma proportions matrix rows must sum to 0" =
       all(rowSums(gamma_props) == 0)
   )

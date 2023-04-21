@@ -132,7 +132,9 @@ print.graph_report <- function(x, ..., precision = 6, indent = 2) {
       crit_res$c <- ifelse(is.na(crit_res$c), "", crit_res$c)
     }
 
-    critical_results_out <- utils::capture.output(print(crit_res, row.names = FALSE))
+    critical_results_out <- utils::capture.output(
+      print(crit_res, row.names = FALSE)
+    )
     cat(paste0(pad, critical_results_out), sep = "\n")
   }
 
