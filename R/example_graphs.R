@@ -1,6 +1,9 @@
 #' Example graphs from a variety of papers
 #'
 #' @param n Number of vertices in the Bonferroni-Holm graph
+#' @param w Weights in a fallback procedure
+#' @param gamma Values for edges (1, 2) & (2, 1) in a simple successive
+#'   procedure
 #' @param names Optional names for the hypotheses (Must have length `n`)
 #'
 #' @return An S3 object of class `mcp_graph`, following the structure of
@@ -88,6 +91,8 @@ fallback <- function(w = c(1, 0, 0), names = NULL) {
   create_graph(w, g, names)
 }
 
+#' @export
+#' @rdname example-graphs
 simple_successive_1 <- function(names = NULL) {
   hypotheses <- c(0.5, 0.5, 0, 0)
   transitions <- rbind(
@@ -100,6 +105,8 @@ simple_successive_1 <- function(names = NULL) {
   create_graph(hypotheses, transitions, names)
 }
 
+#' @export
+#' @rdname example-graphs
 simple_successive_2 <- function(names = NULL) {
   hypotheses <- c(0.5, 0.5, 0, 0)
   transitions <- rbind(
@@ -112,6 +119,8 @@ simple_successive_2 <- function(names = NULL) {
   create_graph(hypotheses, transitions, names)
 }
 
+#' @export
+#' @rdname example-graphs
 simple_successive_gamma <- function(gamma = c(.5, .5), names = NULL) {
   hypotheses <- c(0.5, 0.5, 0, 0)
   transitions <- rbind(

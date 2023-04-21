@@ -6,6 +6,9 @@
 \alias{wiens_dmitrienko_2005}
 \alias{fixed_sequence}
 \alias{fallback}
+\alias{simple_successive_1}
+\alias{simple_successive_2}
+\alias{simple_successive_gamma}
 \title{Example graphs from a variety of papers}
 \usage{
 bonferroni_holm(n, names = NULL)
@@ -17,11 +20,22 @@ wiens_dmitrienko_2005(names = NULL)
 fixed_sequence(n = 3, names = NULL)
 
 fallback(w = c(1, 0, 0), names = NULL)
+
+simple_successive_1(names = NULL)
+
+simple_successive_2(names = NULL)
+
+simple_successive_gamma(gamma = c(0.5, 0.5), names = NULL)
 }
 \arguments{
 \item{n}{Number of vertices in the Bonferroni-Holm graph}
 
 \item{names}{Optional names for the hypotheses (Must have length \code{n})}
+
+\item{w}{Weights in a fallback procedure}
+
+\item{gamma}{Values for edges (1, 2) & (2, 1) in a simple successive
+procedure}
 }
 \value{
 An S3 object of class \code{mcp_graph}, following the structure of

@@ -4,11 +4,11 @@
 \alias{bonferroni_test_vals}
 \alias{parametric_test_vals}
 \alias{simes_test_vals}
-\title{Test hypotheses with the \verb{p <= (c * ) w * a} method}
+\title{Test hypotheses with the critical values method}
 \usage{
 bonferroni_test_vals(p_values, weights, alpha)
 
-parametric_test_vals(p_values, weights, alpha, corr = NULL)
+parametric_test_vals(p_values, weights, alpha, corr)
 
 simes_test_vals(p_values, weights, alpha)
 }
@@ -20,17 +20,14 @@ simes_test_vals(p_values, weights, alpha)
 \item{alpha}{A numeric scalar specifying the level to test weighted p-values
 against}
 
-\item{corr}{(Optional) A numeric matrix indicating the correlation between
+\item{corr}{A numeric matrix indicating the correlation between
 the test statistics which generated the p-values. Must be a square matrix
 with side length equal to the length of \code{p} and \code{weights}}
-
-\item{critical}{A numeric vector of critical values}
 }
 \value{
 A data frame with columns specifying the values used to calculate
-each hypothesis test. For \code{parametric_test_fast()}, just a Boolean vector
-of test results
+each hypothesis test
 }
 \description{
-Test hypotheses with the \verb{p <= (c * ) w * a} method
+Test hypotheses with the critical values method
 }

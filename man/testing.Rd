@@ -5,11 +5,6 @@
 \alias{bonferroni_sequential}
 \alias{bs_cpp}
 \alias{test_graph}
-\alias{test_graph_fast}
-\alias{test_graph_fast_parametric}
-\alias{test_graph_fast_simes}
-\alias{test_graph_fast_simes_ordered_cpp}
-\alias{test_graph_fast_simes_ordered_r}
 \alias{test_input_val}
 \title{Test a graph}
 \usage{
@@ -26,72 +21,6 @@ test_graph(
   corr = NULL,
   verbose = FALSE,
   critical = FALSE
-)
-
-test_graph_fast(
-  graph,
-  p,
-  alpha = 0.05,
-  groups = list(seq_along(graph$hypotheses)),
-  test_types = c("bonferroni"),
-  corr = NULL,
-  intersections = generate_weights(graph),
-  graph_size = length(graph$hypotheses),
-  gw_size = 2^graph_size - 1,
-  num_groups = length(groups)
-)
-
-test_graph_fast_parametric(
-  graph,
-  p,
-  alpha = 0.05,
-  groups = list(seq_along(graph$hypotheses)),
-  test_types = c("bonferroni"),
-  corr = NULL,
-  intersections = generate_weights(graph),
-  inter_list = add_critical(intersections, corr, alpha, groups),
-  graph_size = length(graph$hypotheses),
-  gw_size = 2^graph_size - 1,
-  num_groups = length(groups)
-)
-
-test_graph_fast_simes(
-  graph,
-  p,
-  alpha = 0.05,
-  groups = list(seq_along(graph$hypotheses)),
-  test_types = c("bonferroni"),
-  corr = NULL,
-  intersections = generate_weights(graph),
-  graph_size = length(graph$hypotheses),
-  gw_size = 2^graph_size - 1,
-  num_groups = length(groups)
-)
-
-test_graph_fast_simes_ordered_cpp(
-  graph,
-  p,
-  alpha = 0.05,
-  groups = list(seq_along(graph$hypotheses)),
-  test_types = c("bonferroni"),
-  corr = NULL,
-  intersections = generate_weights(graph),
-  graph_size = length(graph$hypotheses),
-  gw_size = 2^graph_size - 1,
-  num_groups = length(groups)
-)
-
-test_graph_fast_simes_ordered_r(
-  graph,
-  p,
-  alpha = 0.05,
-  groups = list(seq_along(graph$hypotheses)),
-  test_types = c("bonferroni"),
-  corr = NULL,
-  intersections = generate_weights(graph),
-  graph_size = length(graph$hypotheses),
-  gw_size = 2^graph_size - 1,
-  num_groups = length(groups)
 )
 
 test_input_val(

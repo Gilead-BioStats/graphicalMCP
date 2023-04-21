@@ -1,17 +1,15 @@
-#' Test hypotheses with the `p <= (c * ) w * a` method
+#' Test hypotheses with the critical values method
 #'
 #' @param p_values A numeric vector of p-values
 #' @param weights A numeric vector of hypothesis weights
 #' @param alpha A numeric scalar specifying the level to test weighted p-values
 #'   against
-#' @param corr (Optional) A numeric matrix indicating the correlation between
+#' @param corr A numeric matrix indicating the correlation between
 #'   the test statistics which generated the p-values. Must be a square matrix
 #'   with side length equal to the length of `p` and `weights`
-#' @param critical A numeric vector of critical values
 #'
 #' @return A data frame with columns specifying the values used to calculate
-#'   each hypothesis test. For `parametric_test_fast()`, just a Boolean vector
-#'   of test results
+#'   each hypothesis test
 #'
 #' @rdname calc-test_vals
 bonferroni_test_vals <- function(p_values, weights, alpha) {
@@ -36,7 +34,7 @@ bonferroni_test_vals <- function(p_values, weights, alpha) {
 }
 
 #' @rdname calc-test_vals
-parametric_test_vals <- function(p_values, weights, alpha, corr = NULL) {
+parametric_test_vals <- function(p_values, weights, alpha, corr) {
   c <- solve_c(weights, corr, alpha)
 
   data.frame(

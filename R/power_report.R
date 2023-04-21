@@ -52,7 +52,7 @@ calculate_power_slow <- function(graph,
     FALSE
   )
 
-  p_sim <- pnorm(
+  p_sim <- stats::pnorm(
     mvtnorm::rmvnorm(sim_n, sim_theta, sigma = sim_corr),
     lower.tail = FALSE
   )
@@ -137,7 +137,7 @@ calc_power_orig <- function(graph,
     FALSE
   )
 
-  p_sim <- pnorm(
+  p_sim <- stats::pnorm(
     mvtnorm::rmvnorm(sim_n, sim_theta, sigma = sim_corr),
     lower.tail = FALSE
   )
@@ -150,7 +150,7 @@ calc_power_orig <- function(graph,
   )
 
   if (all(test_types == "bonferroni" | test_types == "b")) {
-    test_res_mat <- bonferroni_sequential_power(
+    test_res_mat <- bonferroni_sequential_power_cpp(
       graph$hypotheses,
       graph$transitions,
       p_sim,
@@ -277,7 +277,7 @@ calculate_power <- function(graph,
     FALSE
   )
 
-  p_sim <- pnorm(
+  p_sim <- stats::pnorm(
     mvtnorm::rmvnorm(sim_n, sim_theta, sigma = sim_corr),
     lower.tail = FALSE
   )
@@ -462,7 +462,7 @@ calculate_power_v <- function(graph,
     FALSE
   )
 
-  p_sim <- pnorm(
+  p_sim <- stats::pnorm(
     mvtnorm::rmvnorm(sim_n, sim_theta, sigma = sim_corr),
     lower.tail = FALSE
   )
@@ -601,7 +601,7 @@ calculate_power_vms <- function(graph,
     FALSE
   )
 
-  p_sim <- pnorm(
+  p_sim <- stats::pnorm(
     mvtnorm::rmvnorm(sim_n, sim_theta, sigma = sim_corr),
     lower.tail = FALSE
   )

@@ -5,6 +5,7 @@
 \alias{solve_c}
 \alias{add_critical}
 \alias{calculate_critical_parametric}
+\alias{calculate_critical_parametric2}
 \alias{calculate_critical_simes}
 \alias{calculate_critical_simes_vms}
 \title{Calculate testing critical values for the closure of a graph}
@@ -16,6 +17,8 @@ solve_c(w, corr, alpha)
 add_critical(gw, corr, alpha, groups)
 
 calculate_critical_parametric(gw, corr, alpha, groups)
+
+calculate_critical_parametric2(gw_small, corr, alpha, groups)
 
 calculate_critical_simes(gw_small, p, groups)
 
@@ -32,10 +35,16 @@ statistics of hypotheses to be tested using parametric testing}
 \item{alpha}{A numeric scalar specifying the global significance level for
 parametric testing}
 
-\item{gw}{An numeric matrix as created by \code{generate_weights()}}
+\item{gw}{A numeric matrix as created by \code{generate_weights()}}
 
 \item{groups}{A list of numeric vectors specifying hypotheses to test
 together}
+
+\item{gw_small}{A compact representation of \code{generate_weights()} output,
+where missing hypotheses get a missing value for weights, and h-vectors are
+dropped}
+
+\item{p}{A numeric vector of hypothesis p-values}
 }
 \value{
 Outputs:

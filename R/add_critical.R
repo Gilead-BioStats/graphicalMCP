@@ -36,9 +36,13 @@ solve_c <- function(w, corr, alpha) {
 
 #' Calculate testing critical values for the closure of a graph
 #'
-#' @param gw An numeric matrix as created by `generate_weights()`
+#' @param gw A numeric matrix as created by `generate_weights()`
+#' @param gw_small A compact representation of `generate_weights()` output,
+#'   where missing hypotheses get a missing value for weights, and h-vectors are
+#'   dropped
 #' @param corr A numeric matrix specifying the correlation between the test
 #'   statistics of hypotheses to be tested using parametric testing
+#' @param p A numeric vector of hypothesis p-values
 #' @param alpha A numeric scalar specifying the global significance level for
 #'   parametric testing
 #' @param groups A list of numeric vectors specifying hypotheses to test
@@ -124,12 +128,13 @@ calculate_critical_parametric <- function(gw, corr, alpha, groups) {
     }
   }
 
-  ifelse(h_vecs, c_mat * w_vecs, NA)
+  ifelse(h_vecs, c_mat * w_vecs, NA)[, unlist(groups), drop = FALSE]
 }
 
+#' @rdname critical-vals
+#' @export
 calculate_critical_parametric2 <- function(gw_small, corr, alpha, groups) {
   h_vecs <- !is.na(gw_small)
-  # gw_small[is.na(gw_small)] <- 0
 
   c_mat <- gw_small # placeholder
 
@@ -147,7 +152,7 @@ calculate_critical_parametric2 <- function(gw_small, corr, alpha, groups) {
     }
   }
 
-  c_mat * gw_small
+  (c_mat * gw_small)[, unlist(groups), drop = FALSE]
 }
 
 #' @rdname critical-vals
