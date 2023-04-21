@@ -3,15 +3,12 @@
 \name{bonferroni_test_vals}
 \alias{bonferroni_test_vals}
 \alias{parametric_test_vals}
-\alias{parametric_test_fast}
 \alias{simes_test_vals}
 \title{Test hypotheses with the \verb{p <= (c * ) w * a} method}
 \usage{
 bonferroni_test_vals(p_values, weights, alpha)
 
 parametric_test_vals(p_values, weights, alpha, corr = NULL)
-
-parametric_test_fast(p_values, weights, alpha, critical)
 
 simes_test_vals(p_values, weights, alpha)
 }

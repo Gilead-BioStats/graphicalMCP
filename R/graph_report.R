@@ -295,8 +295,8 @@ test_graph_fast_v <- function(p,
 }
 
 test_graph_fast_vms <- function(p,
-                               alpha = .05,
-                               intersections = gw_small) {
+                                alpha = .05,
+                                intersections = gw_small) {
   graph_size <- ncol(intersections)
   inter_h <- !is.na(intersections) # extract h-matrix
   intersections[is.na(intersections)] <- 0 # replace missing weights with 0
@@ -306,41 +306,8 @@ test_graph_fast_vms <- function(p,
 
   # could also be
   # ...xStats::colCounts(...      matrixStats::rowAnys(rej_hyps)      ==
-  #   slightly slower but less (no?) memory allocated
+  #   slightly slower but less memory allocated
   matrixStats::colSums2(inter_h * matrixStats::rowMaxs(rej_hyps + 0)) ==
-    2^(graph_size - 1)
-}
-
-test_graph_fast_parametric_v <- function(graph,
-                                         p,
-                                         alpha = .05,
-                                         intersections = add_critical2(generate_weights(graph))) {
-  graph_size <- length(graph$hypotheses)
-  inter_h <- intersections[, seq_len(graph_size), drop = FALSE]
-  inter_weight <- intersections[, seq_len(graph_size) + graph_size]
-  inter_critical <- intersections[, seq_len(graph_size) + 2 * graph_size]
-
-  # Calculate test results -----------------------------------------------------
-  rej_hyps <- t(p <= alpha * t(inter_weight * inter_critical))
-
-  rej_hyps
-  colSums(inter_h * do.call(pmax, as.data.frame(rej_hyps))) ==
-    2^(graph_size - 1)
-}
-
-test_graph_fast_simes_v <- function(graph,
-                                    p,
-                                    alpha = .05,
-                                    intersections = generate_weights(graph)) {
-  graph_size <- length(graph$hypotheses)
-  inter_h <- intersections[, seq_len(graph_size), drop = FALSE]
-  inter_weight <- intersections[, seq_len(graph_size) + graph_size]
-
-  # Calculate test results -----------------------------------------------------
-  rej_hyps <- t(p <= alpha * t(inter_weight * inter_critical))
-
-  rej_hyps
-  colSums(inter_h * do.call(pmax, as.data.frame(rej_hyps))) ==
     2^(graph_size - 1)
 }
 

@@ -2,7 +2,7 @@
 title: "Testing basics"
 output: rmarkdown::html_vignette
 params:
-  m: 10
+  m: 5
   sims: 100000
 vignette: >
   %\VignetteIndexEntry{Testing basics}
@@ -194,16 +194,18 @@ graph <- new("graphMCP", m = g, weights = w)
 graph2 <- create_graph(w, g)
 
 gw <- generate_weights(graph2)
-gwc <- graphicalMCP:::add_critical(gw, diag(m), .05, list(1:m))
-gw_bonf <- graphicalMCP:::bonf_small(gw)
-gw_para <- graphicalMCP:::add_critical2(gw, diag(m), .05, list(1:m))
+gwc <- add_critical(gw, diag(m), .05, list(1:m))
+gw_bonf <- ifelse(
+    gw[, seq_len(ncol(gw) / 2)],
+    gw[, seq_len(ncol(gw) / 2) + (ncol(gw) / 2)],
+    NA
+  )
+gw_para <- calculate_critical_parametric2(gw_bonf, diag(m), .05, list(1:m))
 
 p <- runif(m, .0001, .03)
-p1 <- runif(m, .0001, .0005) # Reject all
-p2 <- runif(m, .4, .9) # Reject none - These don't seem to matter for speed
 sim_corr <- diag(m)
 
-gw_simes <- graphicalMCP:::simes_order4(gw_bonf, p, list(1:m))
+gw_simes <- calculate_critical_simes_vms(gw_bonf, p, list(1:m))
 groups <- list(1:floor(m / 2), (floor(m / 2) + 1):m)
 
 p_ord <- sort(p)
@@ -331,8 +333,6 @@ gt::gt(power_bench[1:9]) %>%
 
 ```{r power-simes}
 power_bench <- bench::mark(
-  # `More general, less optimized` =
-  #   calculate_power_q(graph2, sim_n = sims, test_types = "simes"),
   # `All R, pre-sort hypotheses` =
   #   calculate_power(graph2, sim_n = sims, test_types = "simes"),
   `calculate_power_vms` =
@@ -357,8 +357,6 @@ power_bench <- bench::mark(
   #   calcPower(graph = graph, alpha = .05, n.sim = 1, corr.sim = diag(m), corr.test = diag(m)), # n.sim = 10 took > 1 minute to run once
   # `gw & adj-p each time` =
   #   calculate_power_slow(graph2, sim_n = sims, test_types = "parametric", test_corr = diag(m)),
-  # `calculate_power_q` =
-  #   calculate_power_q(graph2, sim_n = sims, test_types = "parametric", test_corr = diag(m)),
   # `calculate_power` =
   #   calculate_power(graph2, sim_n = sims, test_types = "parametric", test_corr = diag(m)),
   `calculate_power_vms` =

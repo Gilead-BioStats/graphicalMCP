@@ -4,8 +4,10 @@
 \alias{c_function}
 \alias{solve_c}
 \alias{add_critical}
-\alias{parse_groups}
-\title{Calculate parametric testing critical values for the closure of a graph}
+\alias{calculate_critical_parametric}
+\alias{calculate_critical_simes}
+\alias{calculate_critical_simes_vms}
+\title{Calculate testing critical values for the closure of a graph}
 \usage{
 c_function(x, w, corr, alpha)
 
@@ -13,7 +15,11 @@ solve_c(w, corr, alpha)
 
 add_critical(gw, corr, alpha, groups)
 
-parse_groups(gw, corr, alpha, groups, test_types)
+calculate_critical_parametric(gw, corr, alpha, groups)
+
+calculate_critical_simes(gw_small, p, groups)
+
+calculate_critical_simes_vms(gw_small, p, groups)
 }
 \arguments{
 \item{x}{The root to solve for with \code{uniroot()}}
@@ -37,11 +43,14 @@ Outputs:
 \item For \code{add_critical()}, a list of matrices. Each list element is the
 output of \code{generate_weights()} for a single group with the critical value
 for each intersection appended as an additional column.
+\item For \code{calculate_critical_parametric()}, a matrix with the same shape as gw,
+where the weights in the second half of columns have been multiplied by the
+parametric critical value for the group they are in
 \item For \code{c_function()}, the critical value for the given group
 }
 }
 \description{
-Calculate parametric testing critical values for the closure of a graph
+Calculate testing critical values for the closure of a graph
 }
 \examples{
 g <- bonferroni_holm(6)
