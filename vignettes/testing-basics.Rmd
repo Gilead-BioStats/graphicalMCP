@@ -226,11 +226,17 @@ bonf_bench <- bench::mark(
   `graphicalMCP, test_graph_fast (parametric)` =
     test_graph_fast(graph2, p, intersections = gw, test_types = "parametric", corr = diag(m)),
   `graphicalMCP, test_graph_fast_v (bonf)` =
-    graphicalMCP:::test_graph_fast_v(p, intersections = gw_bonf),
+    graphicalMCP:::test_graph_fast_v(p, alpha = .05, intersections = gw_bonf),
   `graphicalMCP, test_graph_fast_v (para)` =
-    graphicalMCP:::test_graph_fast_v(p, intersections = gw_para),
+    graphicalMCP:::test_graph_fast_v(p, alpha = .05, intersections = gw_para),
   `graphicalMCP, test_graph_fast_v (simes)` =
-    graphicalMCP:::test_graph_fast_v(p, intersections = gw_simes),
+    graphicalMCP:::test_graph_fast_v(p, alpha = .05, intersections = gw_simes),
+  `graphicalMCP, test_graph_fast_vms (bonf)` =
+    graphicalMCP:::test_graph_fast_vms(p, alpha = .05, intersections = gw_bonf),
+  `graphicalMCP, test_graph_fast_vms (para)` =
+    graphicalMCP:::test_graph_fast_vms(p, alpha = .05, intersections = gw_para),
+  `graphicalMCP, test_graph_fast_vms (simes)` =
+    graphicalMCP:::test_graph_fast_vms(p, alpha = .05, intersections = gw_simes),
   `gMCP, graphTest (calls C)` =
     graphTest(p, graph = graph),
   `gMCP, raw C` =
@@ -262,13 +268,13 @@ simes_bench <- bench::mark(
   `R test, gw pre, sort once` =
     tg_fast_simes_ord_r(graph2, p, .05, list(1:m), "simes", intersections = gw, graph_size = m, gw_size = 2^m - 1, num_groups = 1),
   `test_graph_fast_v (simes-1)` =
-    graphicalMCP:::test_graph_fast_v(p, intersections = graphicalMCP:::simes_order4(gw_bonf, p, list(1:m))),
+    graphicalMCP:::test_graph_fast_v(p, alpha = .05, intersections = graphicalMCP:::calculate_critical_simes(gw_bonf, p, list(1:m))),
   `test_graph_fast_v (simes-2)` =
-    graphicalMCP:::test_graph_fast_v(p, intersections = graphicalMCP:::simes_order4(gw_bonf, p, groups)),
+    graphicalMCP:::test_graph_fast_v(p, alpha = .05, intersections = graphicalMCP:::calculate_critical_simes(gw_bonf, p, groups)),
   `test_graph_fast_vms (simes-1)` =
-    graphicalMCP:::test_graph_fast_vms(p, intersections = graphicalMCP:::simes_order4(gw_bonf, p, list(1:m))),
+    graphicalMCP:::test_graph_fast_vms(p, alpha = .05, intersections = graphicalMCP:::calculate_critical_simes_vms(gw_bonf, p, list(1:m))),
   `test_graph_fast_vms (simes-2)` =
-    graphicalMCP:::test_graph_fast_vms(p, intersections = graphicalMCP:::simes_order4(gw_bonf, p, groups)),
+    graphicalMCP:::test_graph_fast_vms(p, alpha = .05, intersections = graphicalMCP:::calculate_critical_simes_vms(gw_bonf, p, groups)),
   `gMCP::gMCP` =
     gMCP(graph, p, test = "Simes")@rejected,
   check = FALSE
@@ -293,9 +299,9 @@ para_bench <- bench::mark(
   `gw pre, critical pre` =
     test_graph_fast_para(graph2, p, .05, list(1:m), "parametric", intersections = gw, inter_list = gwc, graph_size = m, gw_size = 2^m - 1, num_groups = 1),
   `test_graph_fast_v (para)` =
-    graphicalMCP:::test_graph_fast_v(p, intersections = gw_para),
+    graphicalMCP:::test_graph_fast_v(p, alpha = .05, intersections = gw_para),
   `test_graph_fast_vms (para)` =
-    graphicalMCP:::test_graph_fast_vms(p, intersections = gw_para),
+    graphicalMCP:::test_graph_fast_vms(p, alpha = .05, intersections = gw_para),
   `testGraph` =
     !!graphTest(p_mat, graph = graph, test = "parametric", cr = sim_corr)[1, ],
   `gMCP` =
