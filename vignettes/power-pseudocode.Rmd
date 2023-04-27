@@ -1,0 +1,126 @@
+---
+title: "Power pseudocode"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{power-pseudocode}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+The following describes the different part of power simulations at a high level
+
+```{power}
+
+1. convert gamma graph to initial graph
+
+2. process & check test inputs
+
+3. generate p-values from the MVTN distribution
+
+4. if only testing Bonferroni
+
+    a. use sequential testing in C++
+    
+5. otherwise
+
+    a. generate weights
+    
+    b. subset columns of generated weights by
+    
+        i. Bonferroni groups - no further processing
+        
+        ii. parametric groups - calculate critical values
+        
+        iii. Simes groups - calculate critical values inside loop
+        
+    c. for each simulated p-vector
+    
+        i. if there are Simes groups, calculate critical values for them
+        
+            A. details below
+        
+        ii. combine Bonferroni/parametric/Simes critical values together
+        
+        iii. test combined critical values matrix with a single vectorized function
+        
+            A. details below
+        
+    d. return relevant summary stats
+
+```
+
+```{critical-simes}
+1. input is generated weights, p-values, and groups specification
+
+2. non-vectorized version
+
+    a. for each group
+    
+        i. order gen weights according to p-vector
+        
+        ii. for each row
+        
+            A. replace weight with cumulative sum of (ordered) weights
+            
+        iii. insert new weights into list of weights
+        
+    b. column bind list of new weights together
+    
+    c. re-order weights in original, unsorted order (possibly not necessary?)
+
+3. vectorized version (matrixStats)
+
+    a. save locations of NA values (to replace later)
+    
+    b. replace NA values with 0 for matrixStats::rowCumsums()
+
+    c. for each group of weights
+    
+        i. calculate matrixStats::rowCumsums() on group weight subset, ordered by p-vector
+        
+            A. the zeroes in for NA values won't affect other weights, and the NA locations will be replaced
+            
+            B. now I'm realizing that the case with two identical p-values will be slightly wrong - only the second hypothesis with get the correct weight; while this will not impact the global rejection decision, it will slightly impact the power
+            
+            C. But I think it still works, because will sampling from a distribution ever result in two identical p-values? I know it can happen in real results, but it seems unlikely when sampling
+            
+    d. columnn bind list of new weights together
+    
+    e. re-order weights in original, unsorted order (necessary for restoring NAs)
+    
+    f. replace NA values at previous locations
+```
+
+```{fast-test}
+1. input is p-vector, alpha level, and a set of critical values
+
+2. all intersections can be calculated in a vectorized one-liner: transpose critical values, multiply by alpha, compare to p, and transpose back
+
+3. get row maxes to check intersection passing, multiply by h-vectors to split by hypothesis in/out, then sum columns to check how often a hypothesis passes - compare to max passes of (rows in closure) / 2
+
+4. the big difference in base R vs matrixStats is that matrixStats has an optimized `rowMaxs()` function, whereas base R requires a hacky conversion to data.frame method. matrixStats also has a function `colSums2()`, which is faster than `base::colSums()`
+
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
