@@ -1,5 +1,48 @@
-#' @rdname testing-fast
+#' Test a graph efficiently
+#'
+#' For insight and nice reporting, prefer `test_graph()` with all of its
+#' options. It is reasonably fast for interactive use. However in order to
+#' minimize power run time, more efficient testing functions have been written.
+#' The power simulation can be segmented so that certain parts, like generating
+#' weights and calculating critical values, can be done only a single time. The
+#' actual testing function can also be stripped down to just a few vectorized
+#' lines for efficiency
+#'
+#' @param graph An initial graph as returned by `create_graph()`
+#' @param p A numeric vector of p-values
+#' @param alpha A numeric scalar specifying the global level to test at
+#' @param groups A list of numeric vectors specifying hypotheses to test
+#'   together
+#' @param test_types A character vector of tests to apply to the given groups
+#' @param corr Optional if no `test_types` are parametric. A numeric matrix of
+#'   correlations between hypotheses' test statistics
+#' @param intersections A numeric matrix of h-vectors and weights as created by
+#'   `generate_weights()`. For `test_graph_fast_v()` and
+#'   `test_graph_fast_vms()`, the compact representation of the same
+#' @param inter_list A list of intersection weights with critical values, as
+#'   created by `add_critical()`
+#' @param graph_size Number of hypotheses in `graph`
+#' @param gw_size Number of rows in `intersections`
+#' @param num_groups Number of groups in `groups`
+#'
+#' @return A logical vector of results indicating whether each hypothesis can be
+#'   accepted or rejected globally
 #' @export
+#'
+#' @examples
+#' par_gate <- simple_successive_1()
+#' graph_size <- length(par_gate$hypotheses)
+#'
+#' p <- c(.001, .02, .002, .03)
+#'
+#' weights <- generate_weights(par_gate)
+#' compact_weights <- ifelse(
+#'   weights[, seq_len(graph_size), drop = FALSE],
+#'   weights[, seq_len(graph_size) + graph_size, drop = FALSE],
+#'   NA
+#' )
+#'
+#' test_graph_fast_vms(p, .025, compact_weights)
 test_graph_fast <- function(graph,
                             p,
                             alpha = .05,

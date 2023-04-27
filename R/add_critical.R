@@ -178,7 +178,7 @@ calculate_critical_simes <- function(gw_small, p, groups) {
     i <- i + 1
   }
 
-  do.call(cbind, list_w_new)[, graph_names]
+  do.call(cbind, list_w_new)[, graph_names, drop = FALSE]
 }
 
 #' @rdname critical-vals
