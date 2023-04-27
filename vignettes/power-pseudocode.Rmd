@@ -52,7 +52,7 @@ The following describes the different part of power simulations at a high level
         
             A. details below
         
-    d. return relevant summary stats
+6. return relevant summary stats
 
 ```
 

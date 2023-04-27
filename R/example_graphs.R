@@ -1,10 +1,11 @@
 #' Example graphs from a variety of papers
 #'
-#' @param n Number of vertices in the Bonferroni-Holm graph
-#' @param w Weights in a fallback procedure
+#' @param n Number of vertices in the graph
+#' @param hypotheses Weights in a fallback procedure
 #' @param gamma Values for edges (1, 2) & (2, 1) in a simple successive
 #'   procedure
-#' @param names Optional names for the hypotheses (Must have length `n`)
+#' @param names Optional names for the hypotheses (Must have length `n` or be
+#'   NULL)
 #'
 #' @return An S3 object of class `mcp_graph`, following the structure of
 #'   Bonferroni & Holm: A complete graph with equal weight on each hypothesis
@@ -21,12 +22,12 @@ bonferroni_holm <- function(n, names = NULL) {
       (n == length(names) || is.null(names))
   )
 
-  g <- matrix(rep(1 / (n - 1), n^2), nrow = n)
-  diag(g) <- rep(0, n)
+  transitions <- matrix(rep(1 / (n - 1), n^2), nrow = n)
+  diag(transitions) <- rep(0, n)
 
-  w <- rep(1 / n, n)
+  hypotheses <- rep(1 / n, n)
 
-  create_graph(w, g, names = names)
+  create_graph(hypotheses, transitions, names = names)
 }
 
 #' @export
@@ -68,27 +69,27 @@ wiens_dmitrienko_2005 <- function(names = NULL) {
 #' @export
 #' @rdname example-graphs
 fixed_sequence <- function(n = 3, names = NULL) {
-  w <- c(1, rep(0, n - 1))
+  hypotheses <- c(1, rep(0, n - 1))
 
-  g <- matrix(0, nrow = n, ncol = n)
+  transitions <- matrix(0, nrow = n, ncol = n)
 
-  for (i in seq_len(n - 1)) g[i, i + 1] <- 1
+  for (i in seq_len(n - 1)) transitions[i, i + 1] <- 1
 
-  create_graph(w, g, names)
+  create_graph(hypotheses, transitions, names)
 }
 
 #' @export
 #' @rdname example-graphs
-fallback <- function(w = c(1, 0, 0), names = NULL) {
-  r <- w[[2]] / (w[[1]] + w[[2]])
+fallback <- function(hypotheses = c(1, 0, 0), names = NULL) {
+  r <- hypotheses[[2]] / (hypotheses[[1]] + hypotheses[[2]])
 
-  g <- rbind(
+  transitions <- rbind(
     c(0, 1, 0),
     c(0, 0, 1),
     c(1 - r, r, 0)
   )
 
-  create_graph(w, g, names)
+  create_graph(hypotheses, transitions, names)
 }
 
 #' @export
@@ -129,6 +130,19 @@ simple_successive_gamma <- function(gamma = c(.5, .5), names = NULL) {
     c(0, 1, 0, 0),
     c(1, 0, 0, 0)
   )
+
+  create_graph(hypotheses, transitions, names)
+}
+
+#' @export
+#' @rdname example-graphs
+random_graph <- function(n, names = NULL) {
+  hypotheses <- sample(seq_len(n), replace = TRUE)
+  hypotheses <- hypotheses / sum(hypotheses)
+
+  transitions <- replicate(n, sample(seq_len(n), replace = TRUE), simplify = TRUE)
+  diag(transitions) <- 0
+  transitions <- transitions / rowSums(transitions)
 
   create_graph(hypotheses, transitions, names)
 }

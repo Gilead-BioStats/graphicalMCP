@@ -19,10 +19,10 @@ test_input_val <- function(graph,
   stopifnot(
     "Please test an `initial_graph` object" = class(graph) == "initial_graph",
     "P-values must be numeric" = is.numeric(p),
-    "P-values must be between 0 & 1" = all(p >= 0 | p <= 1),
+    "P-values must be between 0 & 1" = all(p >= 0 & p <= 1),
     "Alpha must be numeric" = is.numeric(alpha),
     "Please choose a single alpha level for testing" = length(alpha) == 1,
-    "Alpha must be between 0 & 1" = alpha >= 0 || alpha <= 1,
+    "Alpha must be between 0 & 1" = alpha >= 0 && alpha <= 1,
     "Only Bonferroni, parametric, and Simes tests are currently supported" =
       all(test_types %in% test_opts),
     "Please include each hypothesis in exactly one group" =
