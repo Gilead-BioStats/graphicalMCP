@@ -77,27 +77,15 @@ print.graph_report <- function(x, ..., precision = 6, indent = 2) {
 
   section_break("Global test summary")
   out_calcs <- within(c(in_calcs, x$outputs), {
-    if (is.logical(rejected)) {
-      hyp_width <- max(nchar(c("Hypothesis", hyp_names))) + indent - 1
+    hyp_width <- max(nchar(c("Hypothesis", hyp_names))) + indent - 1
 
-      df_summary <- data.frame(
-        Hypothesis = formatC(hyp_names, width = hyp_width),
-        `Adj. P-value` = round(p_adj, precision),
-        Reject = rejected,
-        check.names = FALSE
-      )
-      names(df_summary)[[1]] <- formatC("Hypothesis", width = hyp_width)
-    } else {
-      hyp_width <- max(nchar(c("Step", seq_along(p_adj)))) + indent - 1
-
-      df_summary <- data.frame(
-        Step = formatC(seq_along(p_adj), width = hyp_width),
-        `Adj. P-value` = round(p_adj, precision),
-        Reject = rejected,
-        check.names = FALSE
-      )
-      names(df_summary)[[1]] <- formatC("Step", width = hyp_width)
-    }
+    df_summary <- data.frame(
+      Hypothesis = formatC(hyp_names, width = hyp_width),
+      `Adj. P-value` = round(p_adj, precision),
+      Reject = rejected,
+      check.names = FALSE
+    )
+    names(df_summary)[[1]] <- formatC("Hypothesis", width = hyp_width)
 
     print(df_summary, row.names = FALSE)
   })
