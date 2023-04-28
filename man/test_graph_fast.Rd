@@ -45,6 +45,10 @@ correlations between hypotheses' test statistics}
 \item{inter_list}{A list of intersection weights with critical values, as
 created by \code{add_critical()}}
 }
+\value{
+A logical vector of results indicating whether each hypothesis can be
+accepted or rejected globally
+}
 \description{
 For insight and nice reporting, prefer \code{test_graph()} with all of its
 options. It is reasonably fast for interactive use. However in order to

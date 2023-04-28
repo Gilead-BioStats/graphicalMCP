@@ -15,7 +15,3 @@ p_adjust_simes_cpp <- function(p, weights) {
 p_adjust_simes_ord_simple_cpp <- function(weights, p) {
   .Call(`_graphicalMCP_p_adjust_simes_ord_simple_cpp`, weights, p)
 }
-
-zero_node_cpp <- function(graph, remove) {
-  .Call(`_graphicalMCP_zero_node_cpp`, graph, remove)
-}

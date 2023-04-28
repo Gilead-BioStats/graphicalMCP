@@ -9,6 +9,7 @@
 \alias{simple_successive_1}
 \alias{simple_successive_2}
 \alias{simple_successive_gamma}
+\alias{random_graph}
 \title{Example graphs from a variety of papers}
 \usage{
 bonferroni_holm(n, names = NULL)
@@ -19,20 +20,23 @@ wiens_dmitrienko_2005(names = NULL)
 
 fixed_sequence(n = 3, names = NULL)
 
-fallback(w = c(1, 0, 0), names = NULL)
+fallback(hypotheses = c(1, 0, 0), names = NULL)
 
 simple_successive_1(names = NULL)
 
 simple_successive_2(names = NULL)
 
 simple_successive_gamma(gamma = c(0.5, 0.5), names = NULL)
+
+random_graph(n, names = NULL)
 }
 \arguments{
-\item{n}{Number of vertices in the Bonferroni-Holm graph}
+\item{n}{Number of vertices in the graph}
 
-\item{names}{Optional names for the hypotheses (Must have length \code{n})}
+\item{names}{Optional names for the hypotheses (Must have length \code{n} or be
+NULL)}
 
-\item{w}{Weights in a fallback procedure}
+\item{hypotheses}{Weights in a fallback procedure}
 
 \item{gamma}{Values for edges (1, 2) & (2, 1) in a simple successive
 procedure}

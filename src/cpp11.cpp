@@ -33,13 +33,6 @@ extern "C" SEXP _graphicalMCP_p_adjust_simes_ord_simple_cpp(SEXP weights, SEXP p
     return cpp11::as_sexp(p_adjust_simes_ord_simple_cpp(cpp11::as_cpp<cpp11::decay_t<writable::doubles>>(weights), cpp11::as_cpp<cpp11::decay_t<writable::doubles>>(p)));
   END_CPP11
 }
-// zero_node.cpp
-list zero_node_cpp(list graph, int remove);
-extern "C" SEXP _graphicalMCP_zero_node_cpp(SEXP graph, SEXP remove) {
-  BEGIN_CPP11
-    return cpp11::as_sexp(zero_node_cpp(cpp11::as_cpp<cpp11::decay_t<list>>(graph), cpp11::as_cpp<cpp11::decay_t<int>>(remove)));
-  END_CPP11
-}
 
 extern "C" {
 static const R_CallMethodDef CallEntries[] = {
@@ -47,7 +40,6 @@ static const R_CallMethodDef CallEntries[] = {
     {"_graphicalMCP_bonferroni_sequential_power_cpp", (DL_FUNC) &_graphicalMCP_bonferroni_sequential_power_cpp, 4},
     {"_graphicalMCP_p_adjust_simes_cpp",              (DL_FUNC) &_graphicalMCP_p_adjust_simes_cpp,              2},
     {"_graphicalMCP_p_adjust_simes_ord_simple_cpp",   (DL_FUNC) &_graphicalMCP_p_adjust_simes_ord_simple_cpp,   2},
-    {"_graphicalMCP_zero_node_cpp",                   (DL_FUNC) &_graphicalMCP_zero_node_cpp,                   2},
     {NULL, NULL, 0}
 };
 }
