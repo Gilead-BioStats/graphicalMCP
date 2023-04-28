@@ -28,7 +28,7 @@ bonferroni_sequential <- function(graph,
 
     adj_p_max <- max(adj_p_max, adj_p_subgraph[[min_index]])
 
-    adj_p[[min_index]] <- adj_p_max
+    adj_p[[min_index]] <- min(adj_p_max, 1) # cap adjusted p-values at 1
     rejected[[min_index]] <- adj_p_max <= alpha
 
     if (critical) {

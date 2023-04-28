@@ -18,3 +18,11 @@ test_that("results match test_graph()", {
   )
 
 })
+
+test_that("adjusted p-values are capped at 1", {
+  expect_equal(
+    bonferroni_sequential(random_graph(2), c(1, 1))$outputs$p_adj,
+    c(1, 1),
+    ignore_attr = TRUE
+  )
+})
