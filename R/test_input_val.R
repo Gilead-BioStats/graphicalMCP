@@ -64,3 +64,32 @@ test_input_val <- function(graph,
 
   invisible(graph)
 }
+
+power_input_val <- function(graph, n, theta, corr, success) {
+  graph_size <- length(graph$hypotheses)
+
+  stopifnot(
+    "Number of simulations must be a length one integer" =
+      is.integer(n) && length(n) == 1,
+    "Mean and covariance parameters must be numeric" =
+      is.numeric(theta) && is.numeric(corr),
+    "Lengths of `sim_theta` and `sim_corr` must match graph size" =
+      unique(length(theta), nrow(corr), ncol(corr)) == graph_size,
+    "Covariance matrix for simulating p-values cannot have missing values" =
+      any(is.na(corr)),
+    "Covariance matrix for simulating p-values must be symmetric" =
+      isSymmetric.matrix(corr),
+    "'Success' hypotheses must be integers" = is.integer(success),
+    "'Success' hypotheses must be less than graph size, and be unique" =
+      length(unique(success)) == length(success) && max(success) <= graph_size
+  )
+
+  invisible(graph)
+}
+
+
+
+
+
+
+

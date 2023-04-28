@@ -19,15 +19,17 @@
 #'   hypothesis to all hypotheses in a graph
 #' @param gamma Optional if `graph` is an initial graph. A numeric gamma matrix
 #'   passed on to `gamma_graph()`
+#' @param seed (Optional) Random seed to set before simulating p-values. Set
+#'   this to use a consistent set of p simulations across power calculations
 #'
 #' @return A list with five elements
 #'   * power_local - rejection proportion for each hypothesis individually
 #'   * power_expected - average number of hypotheses rejected in a single
-#'       simulation
+#'   simulation
 #'   * power_at_least_1 - proportion of simulations which reject any hypothesis
 #'   * power_all - proportion of simulations which reject all hypotheses
 #'   * power_success - proportion of simulations which reject any of the
-#'       hypotheses specified in `sim_success`
+#'   hypotheses specified in `sim_success`
 #'
 #' @export
 #'
@@ -90,6 +92,7 @@ calc_power_slow <- function(graph,
     FALSE,
     FALSE
   )
+  power_input_val(graph, sim_n, sim_theta, sim_corr, sim_success)
 
   p_sim <- stats::pnorm(
     mvtnorm::rmvnorm(sim_n, sim_theta, sigma = sim_corr),
@@ -606,7 +609,8 @@ calculate_power_vms <- function(graph,
                                 sim_theta = rep(0, length(graph$hypotheses)),
                                 sim_corr = diag(length(graph$hypotheses)),
                                 sim_success = 1:2,
-                                gamma = NULL) {
+                                gamma = NULL,
+                                seed = NULL) {
   if (!is.null(gamma)) {
     graph <- graph(gamma)
   }
@@ -638,6 +642,7 @@ calculate_power_vms <- function(graph,
     FALSE
   )
 
+  if (!is.null(seed)) set.seed(seed)
   p_sim <- stats::pnorm(
     mvtnorm::rmvnorm(sim_n, sim_theta, sigma = sim_corr),
     lower.tail = FALSE
