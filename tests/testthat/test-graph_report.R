@@ -172,6 +172,9 @@ test_that("check assertions in testing vignette", {
     ignore_attr = TRUE
   )
 
+  corr3 <- matrix(nrow = 4, ncol = 4)
+  diag(corr3) <- 1
+
   expect_equal(
     test_graph(
       par_gate,
