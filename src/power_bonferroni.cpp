@@ -27,16 +27,6 @@ writable::integers bonferroni_sequential_cpp(
 
   while (1) {
 
-    // for (int print1 = 0; print1 < graph_size; print1++) {
-      // std::cout << "H" << print1 << ": " << hypotheses[print1] << '\t' << "| ";
-
-      // for (int print2 = 0; print2 < graph_size; print2++) {
-        // std::cout << transitions(print1, print2) << " ";
-      // }
-
-      // std::cout << '\n';
-    // }
-
     reject = 0;
 
     // find a hypothesis that can be rejected
@@ -52,8 +42,6 @@ writable::integers bonferroni_sequential_cpp(
       }
     }
 
-    // std::cout << '\n' << '\n';
-
     // check for no rejections, or all rejected
     if (!reject | (cum_rej == graph_size)) {
       break;
@@ -61,12 +49,9 @@ writable::integers bonferroni_sequential_cpp(
 
       for (hyp_num = 0; hyp_num < graph_size; hyp_num++) {
 
-        // std::cout << "H" << hyp_num << ": " << hypotheses[hyp_num] << '\n';
         if (hyp_num == rej_num) {
-          // std::cout << "new H" << hyp_num << ": 0" << '\n';
           new_hypotheses[hyp_num] = 0;
         } else {
-          // std::cout << "new H" << hyp_num << ": " << hypotheses[hyp_num] << "+" << hypotheses[rej_num] << "*" << transitions(rej_num, hyp_num) << '\n';
           new_hypotheses[hyp_num] =
             hypotheses[hyp_num] +
             hypotheses[rej_num] * transitions(rej_num, hyp_num);

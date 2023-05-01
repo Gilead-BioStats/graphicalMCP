@@ -600,6 +600,7 @@ calculate_power_v <- function(graph,
   )
 }
 
+#' @export
 calculate_power_vms <- function(graph,
                                 test_alpha = .05,
                                 test_groups = list(seq_along(graph$hypotheses)),

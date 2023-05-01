@@ -46,6 +46,9 @@ hypothesis to all hypotheses in a graph}
 
 \item{gamma}{Optional if \code{graph} is an initial graph. A numeric gamma matrix
 passed on to \code{gamma_graph()}}
+
+\item{seed}{(Optional) Random seed to set before simulating p-values. Set
+this to use a consistent set of p simulations across power calculations}
 }
 \value{
 A list with five elements

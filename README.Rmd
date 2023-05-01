@@ -82,7 +82,7 @@ generate_weights(g_dose)
 
 ### Test hypotheses
 
-A mixture of statistical tests are (or will be) supported in graphicalMCP. A graph can be tested against a given alpha with `test_all_subgraphs()`. A report is then generated, showing the graph & test results.
+A mixture of statistical tests are supported in graphicalMCP. A graph can be tested against a given alpha with `test_graph()`. A report is then generated, showing the graph & test results.
 
 In this example, a weighted Bonferroni test is applied to all hypotheses, with a threshold of 0.05. We can reject a given intersection hypothesis if any of the individual hypotheses within that sub-graph passes the test assigned to it. We can then reject a hypothesis globally if all intersection hypotheses containing that hypothesis are rejected. For instance, in this example we can reject every intersection hypothesis except the one containing only B1 & B2 (Row 3 of `test_results`). Thus, we can reject the null hypotheses for A1 & A2, but we cannot reject the null hypotheses for B1 & B2.
 
@@ -93,6 +93,88 @@ test_graph(
   alpha = .05,
   test_types = "b",
   groups = list(1:4)
+)
+```
+
+Simes and parametric testing methods are also supported, using the `test_types` argument. Try setting the `verbose` and `critical` flags for a more detailed report on testing.
+
+```{r test-graph-blend}
+test_graph(
+  g_dose,
+  p = c(.01, .02, .03, .05),
+  alpha = .05,
+  test_types = c("p", "s"),
+  groups = list(1:2, 3:4),
+  corr = rbind(
+    c( 1, .5, NA, NA),
+    c(.5,  1, NA, NA),
+    c(NA, NA, NA, NA),
+    c(NA, NA, NA, NA)
+  ),
+  verbose = TRUE,
+  critical = TRUE
+)
+```
+
+## Power simulations
+
+It's not always obvious from a given graph structure how easy or difficult it will be to reject each hypothesis. One way to understand this better is to run a power simulation. The essence of a power simulation is to generate many different p-values using some chosen distribution, then test the graph against each set of p-values to see how it performs.
+
+### Bonferroni
+
+```{r power-1}
+calculate_power_vms(
+  g_dose,
+  sim_n = 1e5,
+  sim_theta = c(1, 1, 1, 1),
+  sim_success = integer(0)
+)
+```
+
+The `simple_successive_2()` function creates a parallel gate-keeping graph, but some weight is transferred between the primary hypotheses, rather than each passing weight on to its respective secondary hypothesis. This causes the primary hypotheses to be rejected slightly more often, and the secondary hypotheses less often.
+
+```{r power-2}
+g_dose_2 <- simple_successive_2(names)
+
+calculate_power_vms(
+  g_dose_2,
+  sim_n = 1e5,
+  sim_theta = c(1, 1, 1, 1),
+  test_types = "s"
+)
+```
+
+### Other tests
+
+Bonferroni testing uses a shortcut to make testing, and therefore power, run very fast (<1s up to a 10-graph/100K-simulation). However, power simulations can be run with any test strategy. Note that other testing strategies will cause a substantial increase in the time a power simulation takes. In rough ascending order of time impact: parametric tests, multiple groups, Simes tests. Vignette to come detailing the typical impact of each.
+
+```{r power-3}
+calculate_power_vms(
+  g_dose_2,
+  sim_n = 1e5,
+  sim_theta = c(1, 1, 1, 1),
+  test_types = "p",
+  test_corr = diag(4)
+)
+```
+
+```{r power-5}
+calculate_power_vms(
+  g_dose_2,
+  sim_n = 1e5,
+  sim_theta = c(1, 1, 1, 1),
+  test_types = "s",
+  test_groups = c(1:4)
+)
+```
+
+```{r power-6}
+calculate_power_vms(
+  g_dose_2,
+  sim_n = 1e5,
+  sim_theta = c(1, 1, 1, 1),
+  test_types = "s",
+  test_groups = c(1:2, 3:4)
 )
 ```
 
