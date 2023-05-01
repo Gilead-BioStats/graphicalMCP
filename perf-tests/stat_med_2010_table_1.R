@@ -22,13 +22,14 @@ simfunc <- function(nSim, a1, a2, g1, g2, rh, t1, t2, t3, t4, Gr){
   G <- rbind(c(0, g1, 1-g1, 0), c(g2, 0, 0, 1-g2), c(0, 1, 0, 0), c(1, 0, 0, 0))
   corMat <- rbind(c(1, 0.5, rh, rh/2), c(0.5,1,rh/2,rh), c(rh,rh/2,1,0.5), c(rh/2,rh,0.5,1))
   mean <- c(t1, t2, t3, t4)
-  calcPower(weights=al, alpha=0.025, G=G, mean=mean, corr.sim=corMat, n.sim = nSim)
+  calcPower(weights=al, alpha=0.025, G=G, mean=mean, corr.sim=corMat, n.sim = nSim, type = "quasirandom")
 }
 
 ## calculate power for all 14 scenarios
 outList <- list()
 for(i in 1:14){
-  outList[[i]] <- simfunc(10000, weights1[i], weights2[i],
+  print(paste0("gMCP: ", i))
+  outList[[i]] <- simfunc(100000, weights1[i], weights2[i],
                           gam1[i], gam2[i], rho[i], th1[i], th2[i], th3[i], th4[i])
 }
 
@@ -115,7 +116,7 @@ thetas <- rbind(
   theta9
 )
 
-sim_func <- function(n_sim,
+sim_func <- function(sim_n,
                      hypotheses,
                      transitions,
                      gamma_props,
@@ -133,20 +134,22 @@ sim_func <- function(n_sim,
     c(rho/2,rho,0.5,1)
   )
 
-  calc_power_slow(
+  calculate_power_vms(
     graph = graph,
-    alpha=0.025,
-    theta = theta,
+    test_alpha = 0.025,
+    sim_theta = theta,
     sim_corr = sim_corr,
-    n_sim = n_sim
+    sim_n = sim_n,
+    sim_success = 1
   )
 }
 
 ## calculate power for all 14 scenarios
-outList <- list()
+out_list <- list()
 for (i in 1:14) {
-  outList[[i]] <- sim_func(
-    n_sim = 10000,
+  print(paste0("graphicalMCP: ", i))
+  out_list[[i]] <- sim_func(
+    sim_n = 100000,
     hypotheses = hyps[i, ], # Hyp scenario
     transitions = transitions, # Base edges
     gamma_props = gamma_props[[i]], # Gamma edge locations
@@ -157,8 +160,8 @@ for (i in 1:14) {
 }
 
 ## summarize data as in Stat Med paper Table I
-atlst1 <- as.numeric(lapply(outList, function(x) x$power_success))
-locpow <- do.call("rbind", lapply(outList, function(x) x$power_all))
+atlst1 <- as.numeric(lapply(out_list, function(x) x$power_success))
+locpow <- do.call("rbind", lapply(out_list, function(x) x$power_local))
 
 res_pi <- round(cbind(atlst1, locpow), 3)
 

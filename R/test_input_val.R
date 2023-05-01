@@ -25,6 +25,7 @@ test_input_val <- function(graph,
     "Alpha must be between 0 & 1" = alpha >= 0 && alpha <= 1,
     "Only Bonferroni, parametric, and Simes tests are currently supported" =
       all(test_types %in% test_opts),
+    "Groups specification must be a list" = is.list(groups),
     "Please include each hypothesis in exactly one group" =
       setequal(seq_along(graph$hypotheses), unlist(groups)) &&
         length(graph$hypotheses) == length(unlist(groups)),

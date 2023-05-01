@@ -47,6 +47,7 @@ test_that("invalid test inputs throw errors", {
 
   groups_inval1 <- list(1, 1, 3:4)
   groups_inval2 <- list(1, 3:4)
+  groups_inval3 <- c(1, 2, 3, 4)
 
   verbose_inval <- c(TRUE, FALSE)
 
@@ -78,6 +79,7 @@ test_that("invalid test inputs throw errors", {
       groups = groups_inval2
     )
   )
+  expect_error(meta_test_graph(groups = groups_inval3))
   expect_error(meta_test_graph(verbose = verbose_inval))
   expect_error(meta_test_graph(critical = critical_inval))
   expect_error(meta_test_graph(corr = corr_inval1))
