@@ -462,6 +462,7 @@ calculate_power <- function(graph,
 }
 
 # wrong when mixing simes/para
+#' @export
 calculate_power_v <- function(graph,
                               test_alpha = .05,
                               test_groups = list(seq_along(graph$hypotheses)),
