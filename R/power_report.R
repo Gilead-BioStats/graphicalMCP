@@ -709,11 +709,32 @@ calculate_power_vms <- function(graph,
     }
   }
 
-  list(
+  power <- list(
     power_local = colMeans(test_res_mat),
     power_expected = sum(test_res_mat) / sim_n,
     power_at_least_1 = mean(rowSums(test_res_mat) > 0),
     power_all = mean(rowSums(test_res_mat) == length(sim_theta)),
     power_success = mean(rowSums(test_res_mat[, sim_success, drop = FALSE]) > 0)
+  )
+
+  structure(
+    list(
+      inputs = list(
+        test_alpha = test_alpha,
+        test_groups = test_groups,
+        test_types = test_types,
+        test_corr = test_corr,
+        sim_n = sim_n,
+        sim_theta = sim_theta,
+        sim_corr = sim_corr,
+        sim_success = sim_success
+      ),
+      outputs = list(
+        p_sim = p_sim,
+        test_results = test_res_mat
+      ),
+      power = power
+    ),
+    class = "power_report"
   )
 }

@@ -185,4 +185,4 @@ These methods were originally implemented in R after the 2011 paper in the gMCP 
 - `install.packages("gMCP")`
 - https://github.com/kornl/gMCP
 
-However, because development has ceased on this original package, we hope to re-implement the methods with a clearer distinction between weighting procedures and test procedures; with fewer dependencies, in particular shedding the Java dependency; with the simpler, more transparent S3 class framework; and with improvements to the accuracy of the parametric tests method.
+However, because development has ceased on this original package, we hope to re-implement the methods with a clearer distinction between weighting procedures and test procedures; with fewer dependencies, in particular shedding the Java dependency; with the simpler, more transparent S3 class framework; and with improvements to the accuracy of the parametric and Simes test methods.

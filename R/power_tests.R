@@ -4,8 +4,8 @@
 #' options. It is reasonably fast for interactive use. However in order to
 #' minimize power run time, more efficient testing functions have been written.
 #' The power simulation can be segmented so that certain parts, like generating
-#' weights and calculating critical values, can be done only a single time. The
-#' actual testing function can also be stripped down to just a few vectorized
+#' weights and calculating some critical values, can be done only a single time.
+#' The actual testing function has been stripped down to just a few vectorized
 #' lines for efficiency
 #'
 #' @param graph An initial graph as returned by `create_graph()`
@@ -27,6 +27,8 @@
 #'
 #' @return A logical vector of results indicating whether each hypothesis can be
 #'   accepted or rejected globally
+#'
+#' @rdname testing-fast
 #' @export
 #'
 #' @examples
