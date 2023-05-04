@@ -24,7 +24,10 @@ solve_c <- function(w, corr, alpha) {
     stats::uniroot(
       c_function,
       lower = 0.9, # Why is this not -Inf? Ohhhh because c >= 1
-      upper = 1 / min(w[w > 0]),
+      # upper > 40 errors when w[i] ~= 1 && w[j] = epsilon
+      # furthermore, even under perfect correlation & with balanced weights, the
+      # c_function does not seem to exceed `length(w)`
+      upper = min(1 / min(w[w > 0]), length(w) + 1),
       w = w,
       corr = corr,
       alpha = alpha

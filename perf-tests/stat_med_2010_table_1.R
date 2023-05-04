@@ -22,7 +22,15 @@ simfunc <- function(nSim, a1, a2, g1, g2, rh, t1, t2, t3, t4, Gr){
   G <- rbind(c(0, g1, 1-g1, 0), c(g2, 0, 0, 1-g2), c(0, 1, 0, 0), c(1, 0, 0, 0))
   corMat <- rbind(c(1, 0.5, rh, rh/2), c(0.5,1,rh/2,rh), c(rh,rh/2,1,0.5), c(rh/2,rh,0.5,1))
   mean <- c(t1, t2, t3, t4)
-  calcPower(weights=al, alpha=0.025, G=G, mean=mean, corr.sim=corMat, n.sim = nSim, type = "quasirandom")
+  calcPower(
+    weights = al,
+    alpha = 0.025,
+    G = G,
+    mean = mean,
+    corr.sim = corMat,
+    n.sim = nSim,
+    type = "quasirandom"
+  )
 }
 
 ## calculate power for all 14 scenarios
@@ -134,13 +142,16 @@ sim_func <- function(sim_n,
     c(rho/2,rho,0.5,1)
   )
 
-  calculate_power_vms(
+  calculate_power_vms2(
     graph = graph,
     test_alpha = 0.025,
+    # test_types = "p",
+    # test_corr = diag(4),
     sim_theta = theta,
     sim_corr = sim_corr,
     sim_n = sim_n,
-    sim_success = 1
+    sim_success = 1,
+    force_closure = TRUE
   )
 }
 
@@ -160,8 +171,8 @@ for (i in 1:14) {
 }
 
 ## summarize data as in Stat Med paper Table I
-atlst1 <- as.numeric(lapply(out_list, function(x) x$power_success))
-locpow <- do.call("rbind", lapply(out_list, function(x) x$power_local))
+atlst1 <- as.numeric(lapply(out_list, function(x) x$power$power_success))
+locpow <- do.call("rbind", lapply(out_list, function(x) x$power$power_local))
 
 res_pi <- round(cbind(atlst1, locpow), 3)
 
