@@ -54,3 +54,13 @@ test_that("size one groups are turned into Bonferroni", {
     )
   )
 })
+
+test_that("parallel gatekeeping with 1-corr parametric runs without error", {
+  expect_no_error(
+    calculate_power_vms(
+      simple_successive_1(),
+      test_types = "p",
+
+    )
+  )
+})

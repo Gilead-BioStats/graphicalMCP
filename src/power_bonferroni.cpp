@@ -3,6 +3,34 @@
 
 using namespace cpp11;
 
+// void print_vec(doubles vec) {
+//   int size = vec.size();
+//
+//   std::cout << "[";
+//
+//   for (int iter = 0; iter < size; iter++) {
+//     std::cout << vec[iter] << ", ";
+//   }
+//
+//   std::cout << "]\n";
+// }
+//
+// void print_mat(doubles_matrix<> mat) {
+//   int size = mat.nrow();
+//
+//   std::cout << "[\n";
+//
+//   for (int iter1 = 0; iter1 < size; iter1++) {
+//     std::cout << "[";
+//     for (int iter2 = 0; iter2 < size; iter2++) {
+//       std::cout << mat(iter1, iter2) << ", ";
+//     }
+//     std::cout << "]\n";
+//   }
+//
+//   std::cout << "]\n";
+// }
+
 [[cpp11::register]]
 writable::integers bonferroni_sequential_cpp(
   writable::doubles hypotheses,
@@ -82,7 +110,11 @@ writable::integers bonferroni_sequential_cpp(
         }
       }
 
-      hypotheses = new_hypotheses;
+      for (hyp_num = 0; hyp_num < graph_size; hyp_num++) {
+        intermediate = new_hypotheses[hyp_num];
+        hypotheses[hyp_num] = intermediate;
+      }
+
       for (hyp_num = 0; hyp_num < graph_size * graph_size; hyp_num++) {
         intermediate = new_transitions(hyp_num, 0);
         transitions(hyp_num, 0) = intermediate;
@@ -136,4 +168,3 @@ integers_matrix<> bonferroni_sequential_power_cpp(
 
   return rejected_mat;
 }
-

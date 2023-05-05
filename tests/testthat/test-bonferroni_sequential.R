@@ -26,3 +26,14 @@ test_that("adjusted p-values are capped at 1", {
     ignore_attr = TRUE
   )
 })
+
+test_that("sequential results match test_graph - [bug name]", {
+  g <- simple_successive_2()
+  p <- c(3.51345772970616e-08, 7.35572350934915e-06, 3.31393509575894e-07,
+         1.23186608577966e-05)
+
+  expect_equal(
+    as.logical(bs_cpp(g, p)),
+    unname(test_graph(g, p)$outputs$rejected)
+  )
+})

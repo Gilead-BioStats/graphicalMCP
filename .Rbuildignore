@@ -12,3 +12,8 @@
 ^doc$
 ^Meta$
 ^src/calcWeight.cpp$
+^vignettes/.*cache$
+^vignettes/knitted$
+^vignettes/.*files$
+^vignettes/.*\.html$
+^vignettes/.*\.R$

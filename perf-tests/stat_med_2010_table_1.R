@@ -142,16 +142,17 @@ sim_func <- function(sim_n,
     c(rho/2,rho,0.5,1)
   )
 
-  calculate_power_vms2(
+  calculate_power_vms(
     graph = graph,
     test_alpha = 0.025,
-    # test_types = "p",
-    # test_corr = diag(4),
+    test_types = "p",
+    test_corr = matrix(1, 4, 4),
     sim_theta = theta,
     sim_corr = sim_corr,
     sim_n = sim_n,
     sim_success = 1,
-    force_closure = TRUE
+    force_closure = TRUE,
+    seed = 456
   )
 }
 
@@ -171,7 +172,7 @@ for (i in 1:14) {
 }
 
 ## summarize data as in Stat Med paper Table I
-atlst1 <- as.numeric(lapply(out_list, function(x) x$power$power_success))
+atlst1 <- as.numeric(lapply(out_list, function(x) x$power$power_at_least_1))
 locpow <- do.call("rbind", lapply(out_list, function(x) x$power$power_local))
 
 res_pi <- round(cbind(atlst1, locpow), 3)
@@ -198,5 +199,4 @@ rownames(table_1) <- 1:14
 table_1
 
 # Results are very similar to gMCP version
-# They would likely be closer together
 res_pi - gmcp_res_pi

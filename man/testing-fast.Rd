@@ -2,9 +2,72 @@
 % Please edit documentation in R/power_tests.R
 \name{test_graph_fast}
 \alias{test_graph_fast}
+\alias{test_graph_fast_v}
+\alias{test_graph_fast_vms}
+\alias{test_graph_fast_para}
+\alias{test_graph_fast_simes}
+\alias{tg_fast_simes_ord_cpp}
+\alias{tg_fast_simes_ord_r}
 \title{Test a graph efficiently}
 \usage{
 test_graph_fast(
+  graph,
+  p,
+  alpha = 0.05,
+  groups = list(seq_along(graph$hypotheses)),
+  test_types = c("bonferroni"),
+  corr = NULL,
+  intersections = generate_weights(graph),
+  graph_size = length(graph$hypotheses),
+  gw_size = 2^graph_size - 1,
+  num_groups = length(groups)
+)
+
+test_graph_fast_v(p, alpha, intersections)
+
+test_graph_fast_vms(p, alpha, intersections)
+
+test_graph_fast_para(
+  graph,
+  p,
+  alpha = 0.05,
+  groups = list(seq_along(graph$hypotheses)),
+  test_types = c("bonferroni"),
+  corr = NULL,
+  intersections = generate_weights(graph),
+  inter_list = add_critical(intersections, corr, alpha, groups),
+  graph_size = length(graph$hypotheses),
+  gw_size = 2^graph_size - 1,
+  num_groups = length(groups)
+)
+
+test_graph_fast_simes(
+  graph,
+  p,
+  alpha = 0.05,
+  groups = list(seq_along(graph$hypotheses)),
+  test_types = c("bonferroni"),
+  corr = NULL,
+  intersections = generate_weights(graph),
+  graph_size = length(graph$hypotheses),
+  gw_size = 2^graph_size - 1,
+  num_groups = length(groups)
+)
+
+tg_fast_simes_ord_cpp(
+  graph,
+  p,
+  alpha = 0.05,
+  groups = list(seq_along(graph$hypotheses)),
+  test_types = c("bonferroni"),
+  corr = NULL,
+  intersections = generate_weights(graph),
+  graph_size = length(graph$hypotheses),
+  gw_size = 2^graph_size - 1,
+  num_groups = length(groups)
+)
+
+tg_fast_simes_ord_r(
   graph,
   p,
   alpha = 0.05,
@@ -54,8 +117,8 @@ For insight and nice reporting, prefer \code{test_graph()} with all of its
 options. It is reasonably fast for interactive use. However in order to
 minimize power run time, more efficient testing functions have been written.
 The power simulation can be segmented so that certain parts, like generating
-weights and calculating critical values, can be done only a single time. The
-actual testing function can also be stripped down to just a few vectorized
+weights and calculating some critical values, can be done only a single time.
+The actual testing function has been stripped down to just a few vectorized
 lines for efficiency
 }
 \examples{
