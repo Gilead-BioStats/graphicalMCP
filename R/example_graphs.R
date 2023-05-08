@@ -140,7 +140,11 @@ random_graph <- function(n, names = NULL) {
   hypotheses <- sample(seq_len(n), replace = TRUE)
   hypotheses <- hypotheses / sum(hypotheses)
 
-  transitions <- replicate(n, sample(seq_len(n), replace = TRUE), simplify = TRUE)
+  transitions <- replicate(
+    n,
+    sample(seq_len(n), replace = TRUE),
+    simplify = TRUE
+  )
   diag(transitions) <- 0
   transitions <- transitions / rowSums(transitions)
 

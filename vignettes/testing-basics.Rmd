@@ -177,7 +177,6 @@ I think it would be valuable to build a similar structure, but I'm hoping to hav
   - calculate_power() is currently fastest using a blend of languages - C++ for sequential Bonferroni testing, and R for the more complex closure testing
 
 ```{r gen-graph}
-# set.seed(3123)
 # Randomly generate a graph
 m <- params$m
 w <- sample(1:m, replace = TRUE)

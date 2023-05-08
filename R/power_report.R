@@ -219,7 +219,7 @@ calculate_power <- function(graph,
     test_types <- rep(test_types, length(test_groups))
   }
   # groups of size 1 should always use Bonferroni testing
-  # test_types[lengths(test_groups) == 1] <- "bonferroni"
+  test_types[lengths(test_groups) == 1] <- "bonferroni"
 
   fake_p <- rep(0, length(graph$hypotheses))
   test_input_val(
