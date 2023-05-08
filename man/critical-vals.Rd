@@ -3,26 +3,17 @@
 \name{c_function}
 \alias{c_function}
 \alias{solve_c}
-\alias{add_critical}
 \alias{calculate_critical_parametric}
-\alias{calculate_critical_parametric2}
 \alias{calculate_critical_simes}
-\alias{calculate_critical_simes_vms}
 \title{Calculate testing critical values for the closure of a graph}
 \usage{
 c_function(x, w, corr, alpha)
 
 solve_c(w, corr, alpha)
 
-add_critical(gw, corr, alpha, groups)
-
-calculate_critical_parametric(gw, corr, alpha, groups)
-
-calculate_critical_parametric2(gw_small, corr, alpha, groups)
+calculate_critical_parametric(gw_small, corr, alpha, groups)
 
 calculate_critical_simes(gw_small, p, groups)
-
-calculate_critical_simes_vms(gw_small, p, groups)
 }
 \arguments{
 \item{x}{The root to solve for with \code{uniroot()}}
@@ -35,26 +26,21 @@ statistics of hypotheses to be tested using parametric testing}
 \item{alpha}{A numeric scalar specifying the global significance level for
 parametric testing}
 
-\item{gw}{A numeric matrix as created by \code{generate_weights()}}
-
-\item{groups}{A list of numeric vectors specifying hypotheses to test
-together}
-
 \item{gw_small}{A compact representation of \code{generate_weights()} output,
 where missing hypotheses get a missing value for weights, and h-vectors are
 dropped}
+
+\item{groups}{A list of numeric vectors specifying hypotheses to test
+together}
 
 \item{p}{A numeric vector of hypothesis p-values}
 }
 \value{
 Outputs:
 \itemize{
-\item For \code{add_critical()}, a list of matrices. Each list element is the
-output of \code{generate_weights()} for a single group with the critical value
-for each intersection appended as an additional column.
-\item For \code{calculate_critical_parametric()}, a matrix with the same shape as gw,
-where the weights in the second half of columns have been multiplied by the
-parametric critical value for the group they are in
+\item For \code{calculate_critical_parametric()}, a matrix with the same shape as
+gw_small, where the weights in the second half of columns have been
+multiplied by the parametric critical value for the group they are in
 \item For \code{c_function()}, the critical value for the given group
 }
 }
@@ -62,11 +48,13 @@ parametric critical value for the group they are in
 Calculate testing critical values for the closure of a graph
 }
 \examples{
+p <- 1:6 / 200
+
 g <- bonferroni_holm(6)
-gw <- generate_weights(g)
+gw_large <- generate_weights(g)
 
-add_critical(gw, diag(6), .05, list(1:3, 4:6))
+gw <- ifelse(gw_large[, 1:6], gw_large[, 7:12], NA)
 
-# Can handle groups only containing some hypotheses
-add_critical(gw, diag(6), .05, list(1:2, c(4, 6)))
+para_critical <- calculate_critical_parametric(gw, diag(6), .05, list(1:3))
+simes_critical <- calculate_critical_simes(gw, p, list(4:6))
 }

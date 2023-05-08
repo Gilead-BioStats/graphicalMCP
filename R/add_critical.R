@@ -40,7 +40,6 @@ solve_c <- function(w, corr, alpha) {
 
 #' Calculate testing critical values for the closure of a graph
 #'
-#' @param gw A numeric matrix as created by `generate_weights()`
 #' @param gw_small A compact representation of `generate_weights()` output,
 #'   where missing hypotheses get a missing value for weights, and h-vectors are
 #'   dropped
@@ -55,92 +54,25 @@ solve_c <- function(w, corr, alpha) {
 #' @param x The root to solve for with `uniroot()`
 #'
 #' @return Outputs:
-#' * For `add_critical()`, a list of matrices. Each list element is the
-#'   output of `generate_weights()` for a single group with the critical value
-#'   for each intersection appended as an additional column.
-#' * For `calculate_critical_parametric()`, a matrix with the same shape as gw,
-#'   where the weights in the second half of columns have been multiplied by the
-#'   parametric critical value for the group they are in
+#' * For `calculate_critical_parametric()`, a matrix with the same shape as
+#'   gw_small, where the weights in the second half of columns have been
+#'   multiplied by the parametric critical value for the group they are in
 #' * For `c_function()`, the critical value for the given group
 #'
 #' @rdname critical-vals
 #' @export
 #'
 #' @examples
+#' p <- 1:6 / 200
+#'
 #' g <- bonferroni_holm(6)
-#' gw <- generate_weights(g)
+#' gw_large <- generate_weights(g)
 #'
-#' add_critical(gw, diag(6), .05, list(1:3, 4:6))
+#' gw <- ifelse(gw_large[, 1:6], gw_large[, 7:12], NA)
 #'
-#' # Can handle groups only containing some hypotheses
-#' add_critical(gw, diag(6), .05, list(1:2, c(4, 6)))
-add_critical <- function(gw, corr, alpha, groups) {
-  h_vecs <- gw[, seq_len(ncol(gw) / 2)]
-  w_vecs <- gw[, seq_len(ncol(gw) / 2) + (ncol(gw) / 2)]
-
-  res_list <- lapply(
-    groups,
-    function(group) {
-      matrix(
-        nrow = nrow(gw),
-        ncol = length(group) * 2 + 1,
-        dimnames = list(
-          rownames(gw),
-          c(rep(colnames(gw)[group], 2), "critical")
-        )
-      )
-    }
-  )
-
-  for (row in seq_len(nrow(gw))) {
-    h <- h_vecs[row, ]
-    w <- w_vecs[row, ]
-
-    for (grp_index in seq_along(groups)) {
-      group <- groups[[grp_index]]
-      group_in_inter <- group[as.logical(h[group])]
-
-      c_val <- solve_c(
-        w[group_in_inter],
-        corr[group_in_inter, group_in_inter],
-        alpha
-      )
-
-      res_list[[grp_index]][row, ] <- c(h[group], w[group], c_val)
-    }
-  }
-
-  res_list
-}
-
-#' @rdname critical-vals
-#' @export
-calculate_critical_parametric <- function(gw, corr, alpha, groups) {
-  h_vecs <- gw[, seq_len(ncol(gw) / 2)]
-  w_vecs <- gw[, seq_len(ncol(gw) / 2) + (ncol(gw) / 2)]
-
-  c_mat <- w_vecs # placeholder
-
-  for (group in groups) {
-    for (row in seq_len(nrow(w_vecs))) {
-      group_in_inter <- group[as.logical(h_vecs[row, ][group])]
-
-      c_val <- solve_c(
-        w_vecs[row, group_in_inter],
-        corr[group_in_inter, group_in_inter],
-        alpha
-      )
-
-      c_mat[row, group] <- c_val * h_vecs[row, group]
-    }
-  }
-
-  ifelse(h_vecs, c_mat * w_vecs, NA)[, unlist(groups), drop = FALSE]
-}
-
-#' @rdname critical-vals
-#' @export
-calculate_critical_parametric2 <- function(gw_small, corr, alpha, groups) {
+#' para_critical <- calculate_critical_parametric(gw, diag(6), .05, list(1:3))
+#' simes_critical <- calculate_critical_simes(gw, p, list(4:6))
+calculate_critical_parametric <- function(gw_small, corr, alpha, groups) {
   h_vecs <- !is.na(gw_small)
 
   c_mat <- gw_small # placeholder
@@ -165,29 +97,6 @@ calculate_critical_parametric2 <- function(gw_small, corr, alpha, groups) {
 #' @rdname critical-vals
 #' @export
 calculate_critical_simes <- function(gw_small, p, groups) {
-  graph_names <- colnames(gw_small)[unlist(groups)]
-
-  list_w_new <- vector("list", length(groups))
-  i <- 1
-
-  for (group in groups) {
-    w_new <- gw_small[, group[order(p[group])], drop = FALSE]
-
-    for (row in seq_len(nrow(w_new))) {
-      w_new[row, !is.na(w_new[row, ])] <-
-        cumsum(w_new[row, !is.na(w_new[row, ])])
-    }
-
-    list_w_new[[i]] <- w_new
-    i <- i + 1
-  }
-
-  do.call(cbind, list_w_new)[, graph_names, drop = FALSE]
-}
-
-#' @rdname critical-vals
-#' @export
-calculate_critical_simes_vms <- function(gw_small, p, groups) {
   missing_index <- is.na(gw_small)
   gw_small[missing_index] <- 0
   graph_names <- colnames(gw_small)[unlist(groups)]

@@ -177,34 +177,24 @@ I think it would be valuable to build a similar structure, but I'm hoping to hav
 
 ```{r gen-graph}
 set.seed(5823)
-# Randomly generate a graph
-m <- params$m
-w <- sample(1:m, replace = TRUE)
-w <- w / sum(w)
-g <- replicate(m, sample(1:m, replace = TRUE), simplify = TRUE)
-diag(g) <- 0
-g <- g / rowSums(g)
-graph <- new("graphMCP", m = g, weights = w)
-graph2 <- create_graph(w, g)
+
+graph2 <- random_graph(m)
+graph <- as_gmcp_graph(graph2)
 
 # generate weights
 gw <- generate_weights(graph2)
-gwc <- add_critical(gw, diag(m), .05, list(1:m))
 gw_bonf <- ifelse(
   gw[, seq_len(ncol(gw) / 2)],
   gw[, seq_len(ncol(gw) / 2) + (ncol(gw) / 2)],
   NA
 )
-gw_para <- calculate_critical_parametric2(gw_bonf, diag(m), .05, list(1:m))
+gw_para <- calculate_critical_parametric(gw_bonf, diag(m), .05, list(1:m))
 
 p <- runif(m, .0001, .03)
 sim_corr <- diag(m)
 
-gw_simes <- calculate_critical_simes_vms(gw_bonf, p, list(1:m))
+gw_simes <- calculate_critical_simes(gw_bonf, p, list(1:m))
 groups <- list(1:floor(m / 2), (floor(m / 2) + 1):m)
-
-p_ord <- sort(p)
-w_ord <- w[order(p)]
 
 h <- as.integer(rep(0, m))
 a <- .05 * w
@@ -238,7 +228,7 @@ simes_bench <- bench::mark(
     test_graph_fast_vms(
       p,
       .05,
-      calculate_critical_simes_vms(gw_bonf, p, list(1:m))
+      calculate_critical_simes(gw_bonf, p, list(1:m))
     ),
   `gMCP::gMCP` =
     gMCP(graph, p, test = "Simes")@rejected,
@@ -273,10 +263,10 @@ sims <- params$sims
 
 power_bench <- bench::mark(
   `graphicalMCP` =
-    calculate_power_vms(graph2, sim_n = sims),
+    calculate_power(graph2, sim_n = sims),
   `gMCP` =
     calcPower(graph = graph, alpha = .05, n.sim = sims, corr.sim = diag(m)),
-  min_iterations = 5,
+  min_iterations = 3,
   filter_gc = FALSE,
   check = FALSE
 )
@@ -289,8 +279,8 @@ gt(power_bench[1:9]) %>%
 ```{r power-simes}
 power_bench <- bench::mark(
   `graphicalMCP (vec/matrixStats)` =
-    calculate_power_vms(graph2, sim_n = sims, test_types = "s"),
-  min_iterations = 5,
+    calculate_power(graph2, sim_n = sims, test_types = "s"),
+  min_iterations = 3,
   filter_gc = FALSE,
   check = FALSE
 )
@@ -307,8 +297,8 @@ power_bench <- bench::mark(
   # `gMCP (n.sim = 1)` =
   #   calcPower(graph = graph, alpha = .05, n.sim = 1, corr.sim = diag(m), corr.test = diag(m)),
   `graphicalMCP (vec/matrixStats)` =
-    calculate_power_vms(graph2, sim_n = sims, test_types = "p", test_corr = diag(m)),
-  min_iterations = 5,
+    calculate_power(graph2, sim_n = sims, test_types = "p", test_corr = diag(m)),
+  min_iterations = 3,
   filter_gc = FALSE,
   check = FALSE
 )
@@ -321,14 +311,14 @@ gt(power_bench[1:9]) %>%
 ```{r power-blend}
 power_bench <- bench::mark(
   `Para/Simes/Bonf vectorized (matrixStats)` =
-    calculate_power_vms(
+    calculate_power(
       graph2,
       sim_n = sims,
       test_groups = list(1:floor(m / 2), (floor(m / 2) + 1):(m - 1), m),
       test_types = c("p", "s", "b"),
       test_corr = diag(m)
     ),
-  min_iterations = 5,
+  min_iterations = 3,
   filter_gc = FALSE,
   check = FALSE
 )
@@ -341,7 +331,7 @@ gt(power_bench[1:9]) %>%
 ```{r power-blend-2}
 power_bench <- bench::mark(
   `2 parametric groups` =
-    calculate_power_vms(
+    calculate_power(
       graph2,
       sim_n = sims,
       test_groups = list(1:floor(m / 2), (floor(m / 2) + 1):m),
@@ -358,7 +348,7 @@ gt(power_bench[1:9]) %>%
 ```{r power-blend-3}
 power_bench <- bench::mark(
   `2 Simes groups` =
-    calculate_power_vms(
+    calculate_power(
       graph2,
       sim_n = sims,
       test_groups = list(1:floor(m / 2), (floor(m / 2) + 1):m),

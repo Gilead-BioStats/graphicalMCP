@@ -7,9 +7,9 @@ test_that("vectorized testing matches standard testing (single-group)", {
 
   groups1 <- list(seq_len(m))
 
-  gw_compact_simes <- calculate_critical_simes_vms(gw_compact_bonf, p, groups1)
+  gw_compact_simes <- calculate_critical_simes(gw_compact_bonf, p, groups1)
 
-  gw_compact_parametric <- calculate_critical_parametric2(
+  gw_compact_parametric <- calculate_critical_parametric(
     gw_compact_bonf,
     diag(m),
     .05,
@@ -47,13 +47,13 @@ test_that("vectorized testing matches standard testing (multi-group)", {
 
   gw_compact_bonf <- ifelse(gw[, seq_len(m)], gw[, seq_len(m) + m], NA)
 
-  gw_compact_simes <- calculate_critical_simes_vms(
+  gw_compact_simes <- calculate_critical_simes(
     gw_compact_bonf,
     p,
     simes_groups
   )
 
-  gw_compact_para <- calculate_critical_parametric2(
+  gw_compact_para <- calculate_critical_parametric(
     gw_compact_bonf,
     diag(m),
     .05,

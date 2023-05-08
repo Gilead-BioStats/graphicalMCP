@@ -142,7 +142,7 @@ sim_func <- function(sim_n,
     c(rho/2,rho,0.5,1)
   )
 
-  calculate_power_vms(
+  calculate_power(
     graph = graph,
     test_alpha = 0.025,
     test_types = "p",

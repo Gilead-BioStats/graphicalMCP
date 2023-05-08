@@ -335,7 +335,7 @@ how it performs.
 ### Bonferroni
 
 ``` r
-calculate_power_vms(
+calculate_power(
   g_dose,
   sim_n = 1e5,
   sim_theta = c(1, 1, 1, 1),
@@ -366,7 +366,7 @@ more often, and the secondary hypotheses less often.
 ``` r
 g_dose_2 <- simple_successive_2(names)
 
-calculate_power_vms(
+calculate_power(
   g_dose_2,
   sim_n = 1e5,
   sim_theta = c(1, 1, 1, 1),
@@ -400,7 +400,7 @@ tests, multiple groups, Simes tests. Vignette to come detailing the
 typical impact of each.
 
 ``` r
-calculate_power_vms(
+calculate_power(
   g_dose_2,
   sim_n = 1e5,
   sim_theta = c(1, 1, 1, 1),
@@ -425,7 +425,7 @@ calculate_power_vms(
 ```
 
 ``` r
-calculate_power_vms(
+calculate_power(
   g_dose_2,
   sim_n = 1e5,
   sim_theta = c(1, 1, 1, 1),
@@ -450,7 +450,7 @@ calculate_power_vms(
 ```
 
 ``` r
-calculate_power_vms(
+calculate_power(
   g_dose_2,
   sim_n = 1e5,
   sim_theta = c(1, 1, 1, 1),
@@ -474,7 +474,7 @@ calculate_power_vms(
 ```
 
 ``` r
-calculate_power_vms(
+calculate_power(
   g_dose_2,
   sim_n = 1e5,
   sim_theta = c(1, 1, 1, 1),
