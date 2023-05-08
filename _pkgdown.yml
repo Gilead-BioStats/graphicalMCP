@@ -33,4 +33,3 @@ reference:
   - matches("p_adjust")
   - matches("test_vals")
   - matches("corr_has_missing")
-  - matches("gamma_graph")

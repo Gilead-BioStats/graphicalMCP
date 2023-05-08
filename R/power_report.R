@@ -16,7 +16,7 @@
 #' @param sim_success A numeric vector indicating which hypotheses must be
 #'   rejected to consider an experiment a success. It can range from a single
 #'   hypothesis to all hypotheses in a graph
-#' @param seed (Optional) Random seed to set before simulating p-values. Set
+#' @param sim_seed (Optional) Random seed to set before simulating p-values. Set
 #'   this to use a consistent set of p simulations across power calculations
 #' @param force_closure A Boolean scalar used to determine whether the full
 #'   closure test should be used for Bonferroni testing. Ignored if any tests
