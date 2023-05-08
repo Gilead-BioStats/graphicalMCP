@@ -22,7 +22,6 @@ knitr::opts_chunk$set(
 library(graphicalMCP)
 library(gMCP)
 library(gt)
-message(as.character(Sys.time()))
 ```
 
 ## Testing parameters
@@ -177,6 +176,7 @@ I think it would be valuable to build a similar structure, but I'm hoping to hav
   - calculate_power() is currently fastest using a blend of languages - C++ for sequential Bonferroni testing, and R for the more complex closure testing
 
 ```{r gen-graph}
+set.seed(5823)
 # Randomly generate a graph
 m <- params$m
 w <- sample(1:m, replace = TRUE)
@@ -217,18 +217,15 @@ nH <- m
 bonf_bench <- bench::mark(
   `C++ sequential` =
     as.logical(bs_cpp(graph2, p)),
-  `closure` =
-    as.logical(test_graph_fast(graph2, p, intersections = gw)),
-  `closure (vectorized)` =
-    as.logical(test_graph_fast_v(p, alpha = .05, intersections = gw_bonf)),
   `closure (vec/matrixStats)` =
     as.logical(test_graph_fast_vms(p, alpha = .05, intersections = gw_bonf)),
   `gMCP, raw C` =
-    .C("graphproc", h = h, a = a, G = G, p, m, G, 1, 0, 0)$h, # different result?
+    .C("graphproc", h = h, a = a, G = G, p, m, G, 1, 0, 0)$h, # different val?
+  `gMCP::gMCP` =
+    gMCP(graph, p)@rejected,
   check = FALSE
 )
 
-message(as.character(Sys.time()))
 bonf_bench$expression <- as.character(bonf_bench$expression)
 gt(bonf_bench[1:9]) %>%
   tab_header("Bonferroni testing", paste(m, "hypotheses"))
@@ -237,24 +234,17 @@ gt(bonf_bench[1:9]) %>%
 ```{r benchmark-simes}
 # Simes
 simes_bench <- bench::mark(
-  `adj-p` =
-    test_graph_fast(graph2, p, .05, list(1:m), "simes", intersections = gw),
-  `adj-p, C++` =
-    test_graph_fast_simes(graph2, p, .05, list(1:m), intersections = gw),
-  `vectorized, 1 group` =
-    test_graph_fast_v(p, .05, calculate_critical_simes(gw_bonf, p, list(1:m))),
-  `vectorized, 2 groups` =
-    test_graph_fast_v(p, .05, calculate_critical_simes(gw_bonf, p, groups)),
-  `vec/matrixStats, 1 group` =
-    test_graph_fast_vms(p, .05, calculate_critical_simes_vms(gw_bonf, p, list(1:m))),
-  `vec/matrixStats, 2 groups` =
-    test_graph_fast_vms(p, .05, calculate_critical_simes_vms(gw_bonf, p, groups)),
+  `graphicalMCP` =
+    test_graph_fast_vms(
+      p,
+      .05,
+      calculate_critical_simes_vms(gw_bonf, p, list(1:m))
+    ),
   `gMCP::gMCP` =
     gMCP(graph, p, test = "Simes")@rejected,
   check = FALSE
 )
 
-message(as.character(Sys.time()))
 simes_bench$expression <- as.character(simes_bench$expression)
 gt(simes_bench[1:9]) %>%
   tab_header("Simes testing", paste(m, "hypotheses"))
@@ -264,12 +254,6 @@ gt(simes_bench[1:9]) %>%
 p_mat <- rbind(p)
 
 para_bench <- bench::mark(
-  `adj-p` =
-    test_graph_fast(graph2, p, .05, list(1:m), "parametric", intersections = gw),
-  `adj-p (no critical)` =
-    test_graph_fast_para(graph2, p, .05, list(1:m), intersections = gw, inter_list = gwc),
-  `vectorized (no critical)` =
-    test_graph_fast_v(p, alpha = .05, intersections = gw_para),
   `vec/matrixStats (no critical)` =
     test_graph_fast_vms(p, alpha = .05, intersections = gw_para),
   `gMCP::graphTest` =
@@ -279,13 +263,12 @@ para_bench <- bench::mark(
   check = FALSE
 )
 
-message(as.character(Sys.time()))
 para_bench$expression <- as.character(para_bench$expression)
 gt(para_bench[1:9]) %>%
   tab_header("Parametric testing", paste(m, "hypotheses"))
 ```
 
-```{r power-bonf, cache=TRUE}
+```{r power-bonf}
 sims <- params$sims
 
 power_bench <- bench::mark(
@@ -298,16 +281,13 @@ power_bench <- bench::mark(
   check = FALSE
 )
 
-message(as.character(Sys.time()))
 power_bench$expression <- as.character(power_bench$expression)
 gt(power_bench[1:9]) %>%
   tab_header("Bonferroni power", paste(m, "hypotheses,", sims, "simulations"))
 ```
 
-```{r power-simes, cache=TRUE}
+```{r power-simes}
 power_bench <- bench::mark(
-  `graphicalMCP (vectorized)` =
-    calculate_power_v(graph2, sim_n = sims, test_types = "s"),
   `graphicalMCP (vec/matrixStats)` =
     calculate_power_vms(graph2, sim_n = sims, test_types = "s"),
   min_iterations = 5,
@@ -315,7 +295,6 @@ power_bench <- bench::mark(
   check = FALSE
 )
 
-message(as.character(Sys.time()))
 power_bench$expression <- as.character(power_bench$expression)
 gt(power_bench[1:9]) %>%
   tab_header("Simes power", paste(m, "hypotheses,", sims, "simulations"))
@@ -323,12 +302,10 @@ gt(power_bench[1:9]) %>%
 
 Parametric really only has one viable method at this point, and it's not worth the runtime to compare to gMCP, which takes ages. But here's some code that could compare them.
 
-```{r power-para, cache=TRUE}
+```{r power-para}
 power_bench <- bench::mark(
   # `gMCP (n.sim = 1)` =
   #   calcPower(graph = graph, alpha = .05, n.sim = 1, corr.sim = diag(m), corr.test = diag(m)),
-  `graphicalMCP (vectorized)` =
-    calculate_power_v(graph2, sim_n = sims, test_types = "p", test_corr = diag(m)),
   `graphicalMCP (vec/matrixStats)` =
     calculate_power_vms(graph2, sim_n = sims, test_types = "p", test_corr = diag(m)),
   min_iterations = 5,
@@ -336,13 +313,12 @@ power_bench <- bench::mark(
   check = FALSE
 )
 
-message(as.character(Sys.time()))
 power_bench$expression <- as.character(power_bench$expression)
 gt(power_bench[1:9]) %>%
   tab_header("Parametric power", paste(m, "hypotheses,", sims, "simulations"))
 ```
 
-```{r power-blend, cache=TRUE}
+```{r power-blend}
 power_bench <- bench::mark(
   `Para/Simes/Bonf vectorized (matrixStats)` =
     calculate_power_vms(
@@ -357,13 +333,12 @@ power_bench <- bench::mark(
   check = FALSE
 )
 
-message(as.character(Sys.time()))
 power_bench$expression <- as.character(power_bench$expression)
 gt(power_bench[1:9]) %>%
   tab_header("Parametric/Simes/Bonferroni", paste(m, "hypotheses,", sims, "simulations"))
 ```
 
-```{r power-blend-2, cache=TRUE}
+```{r power-blend-2}
 power_bench <- bench::mark(
   `2 parametric groups` =
     calculate_power_vms(
@@ -375,14 +350,12 @@ power_bench <- bench::mark(
     )
 )
 
-message(as.character(Sys.time()))
 power_bench$expression <- as.character(power_bench$expression)
 gt(power_bench[1:9]) %>%
   tab_header("Parametric groups", paste(m, "hypotheses,", sims, "simulations"))
 ```
 
-```{r power-blend-3, cache=TRUE}
-# fastest of each test type in graphicalMCP
+```{r power-blend-3}
 power_bench <- bench::mark(
   `2 Simes groups` =
     calculate_power_vms(
@@ -394,7 +367,6 @@ power_bench <- bench::mark(
     )
 )
 
-message(as.character(Sys.time()))
 power_bench$expression <- as.character(power_bench$expression)
 gt(power_bench[1:9]) %>%
   tab_header("Simes groups", paste(m, "hypotheses,", sims, "simulations"))

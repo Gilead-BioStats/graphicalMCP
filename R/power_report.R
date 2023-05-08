@@ -558,6 +558,8 @@ calculate_power_vms <- function(graph,
     FALSE
   )
 
+  power_input_val(graph, sim_n, sim_theta, sim_corr, sim_success)
+
   if (!is.null(seed)) set.seed(seed)
   p_sim <- stats::pnorm(
     mvtnorm::rmvnorm(sim_n, sim_theta, sigma = sim_corr),
@@ -633,6 +635,7 @@ calculate_power_vms <- function(graph,
   structure(
     list(
       inputs = list(
+        graph = graph,
         test_alpha = test_alpha,
         test_groups = test_groups,
         test_types = test_types,
