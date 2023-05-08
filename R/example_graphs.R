@@ -2,12 +2,10 @@
 #'
 #' @param n Number of vertices in the graph
 #' @param hypotheses Weights in a fallback procedure
-#' @param gamma Values for edges (1, 2) & (2, 1) in a simple successive
-#'   procedure
 #' @param names Optional names for the hypotheses (Must have length `n` or be
 #'   NULL)
 #'
-#' @return An S3 object of class `mcp_graph`, following the structure of
+#' @return An S3 object of class `initial_graph`, following the structure of
 #'   Bonferroni & Holm: A complete graph with equal weight on each hypothesis
 #'   and equal weight on each transition
 #' @export
@@ -113,20 +111,6 @@ simple_successive_2 <- function(names = NULL) {
   transitions <- rbind(
     c(0, .5, .5, 0),
     c(.5, 0, 0, .5),
-    c(0, 1, 0, 0),
-    c(1, 0, 0, 0)
-  )
-
-  create_graph(hypotheses, transitions, names)
-}
-
-#' @export
-#' @rdname example-graphs
-simple_successive_gamma <- function(gamma = c(.5, .5), names = NULL) {
-  hypotheses <- c(0.5, 0.5, 0, 0)
-  transitions <- rbind(
-    c(0, gamma[[1]], 1 - gamma[[1]], 0),
-    c(gamma[[2]], 0, 0, 1 - gamma[[2]]),
     c(0, 1, 0, 0),
     c(1, 0, 0, 0)
   )

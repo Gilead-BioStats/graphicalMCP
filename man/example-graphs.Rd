@@ -8,7 +8,6 @@
 \alias{fallback}
 \alias{simple_successive_1}
 \alias{simple_successive_2}
-\alias{simple_successive_gamma}
 \alias{random_graph}
 \title{Example graphs from a variety of papers}
 \usage{
@@ -26,8 +25,6 @@ simple_successive_1(names = NULL)
 
 simple_successive_2(names = NULL)
 
-simple_successive_gamma(gamma = c(0.5, 0.5), names = NULL)
-
 random_graph(n, names = NULL)
 }
 \arguments{
@@ -37,12 +34,9 @@ random_graph(n, names = NULL)
 NULL)}
 
 \item{hypotheses}{Weights in a fallback procedure}
-
-\item{gamma}{Values for edges (1, 2) & (2, 1) in a simple successive
-procedure}
 }
 \value{
-An S3 object of class \code{mcp_graph}, following the structure of
+An S3 object of class \code{initial_graph}, following the structure of
 Bonferroni & Holm: A complete graph with equal weight on each hypothesis
 and equal weight on each transition
 }

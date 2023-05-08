@@ -44,12 +44,12 @@ sample from the multivariate normal distribution to generate p-values}
 rejected to consider an experiment a success. It can range from a single
 hypothesis to all hypotheses in a graph}
 
+\item{sim_seed}{(Optional) Random seed to set before simulating p-values. Set
+this to use a consistent set of p simulations across power calculations}
+
 \item{force_closure}{A Boolean scalar used to determine whether the full
 closure test should be used for Bonferroni testing. Ignored if any tests
 are non-Bonferroni}
-
-\item{seed}{(Optional) Random seed to set before simulating p-values. Set
-this to use a consistent set of p simulations across power calculations}
 }
 \value{
 A list with five elements

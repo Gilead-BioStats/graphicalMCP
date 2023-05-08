@@ -177,6 +177,7 @@ I think it would be valuable to build a similar structure, but I'm hoping to hav
 
 ```{r gen-graph}
 set.seed(5823)
+m <- params$m
 
 graph2 <- random_graph(m)
 graph <- as_gmcp_graph(graph2)
@@ -197,8 +198,8 @@ gw_simes <- calculate_critical_simes(gw_bonf, p, list(1:m))
 groups <- list(1:floor(m / 2), (floor(m / 2) + 1):m)
 
 h <- as.integer(rep(0, m))
-a <- .05 * w
-G <- as.double(g)
+a <- .05 * graph2$hypotheses
+G <- as.double(graph2$transitions)
 nH <- m
 ```
 

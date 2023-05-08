@@ -7,11 +7,3 @@ bonferroni_sequential_cpp <- function(hypotheses, transitions, p, alpha) {
 bonferroni_sequential_power_cpp <- function(hypotheses, transitions, p_mat, alpha) {
   .Call(`_graphicalMCP_bonferroni_sequential_power_cpp`, hypotheses, transitions, p_mat, alpha)
 }
-
-p_adjust_simes_cpp <- function(p, weights) {
-  .Call(`_graphicalMCP_p_adjust_simes_cpp`, p, weights)
-}
-
-p_adjust_simes_ord_simple_cpp <- function(weights, p) {
-  .Call(`_graphicalMCP_p_adjust_simes_ord_simple_cpp`, weights, p)
-}
