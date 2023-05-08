@@ -60,7 +60,6 @@ test_that("parallel gatekeeping with 1-corr parametric runs without error", {
     calculate_power_vms(
       simple_successive_1(),
       test_types = "p",
-
     )
   )
 })

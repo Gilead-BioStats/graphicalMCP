@@ -27,6 +27,7 @@ Suggests:
     forcats,
     ggplot2,
     gMCP,
+    gt,
     knitr,
     rmarkdown,
     testthat (>= 3.0.0),

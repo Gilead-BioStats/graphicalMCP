@@ -10,8 +10,8 @@ meta_test_graph <- function(...) {
     corr = rbind(
       c(NA, NA, NA, NA),
       c(NA, NA, NA, NA),
-      c(NA, NA, 1,  0),
-      c(NA, NA, 0,  1)
+      c(NA, NA, 1, 0),
+      c(NA, NA, 0, 1)
     ),
     verbose = TRUE,
     critical = TRUE
@@ -56,8 +56,8 @@ test_that("invalid test inputs throw errors", {
   corr_inval1 <- rbind(
     c(NA, NA, NA, NA),
     c(NA, NA, NA, NA),
-    c(NA, NA, 1,  0),
-    c(NA, NA, 0,  1)
+    c(NA, NA, 1, 0),
+    c(NA, NA, 0, 1)
   )
   corr_inval1[3, 4] <- .01
   corr_inval2 <- diag(2)
@@ -188,5 +188,4 @@ test_that("check assertions in testing vignette", {
     )$outputs,
     test_graph(par_gate, pvals, .05)$outputs
   )
-
 })

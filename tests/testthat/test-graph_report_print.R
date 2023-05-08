@@ -6,7 +6,6 @@ test_that("printing Bonferroni/Simes closure test", {
   expect_snapshot(test_graph(par_gate, rep(.01, 4), verbose = TRUE))
 
   expect_snapshot(test_graph(par_gate, rep(.01, 4), critical = TRUE))
-
 })
 
 test_that("printing parametric closure test", {
@@ -39,7 +38,6 @@ test_that("printing parametric closure test", {
       verbose = TRUE
     )
   )
-
 })
 
 test_that("printing Bonferroni sequential results", {

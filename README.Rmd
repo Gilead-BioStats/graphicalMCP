@@ -106,8 +106,8 @@ test_graph(
   test_types = c("p", "s"),
   groups = list(1:2, 3:4),
   corr = rbind(
-    c( 1, .5, NA, NA),
-    c(.5,  1, NA, NA),
+    c(1, .5, NA, NA),
+    c(.5, 1, NA, NA),
     c(NA, NA, NA, NA),
     c(NA, NA, NA, NA)
   ),

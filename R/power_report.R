@@ -438,7 +438,6 @@ calculate_power_v <- function(graph,
       test_alpha
     )
   } else {
-
     bonf_groups <- test_groups[test_types == "bonferroni"]
     simes_groups <- test_groups[test_types == "simes"]
     para_groups <- test_groups[test_types == "parametric"]
@@ -580,7 +579,6 @@ calculate_power_vms <- function(graph,
       test_alpha
     )
   } else {
-
     bonf_groups <- test_groups[test_types == "bonferroni"]
     simes_groups <- test_groups[test_types == "simes"]
     para_groups <- test_groups[test_types == "parametric"]

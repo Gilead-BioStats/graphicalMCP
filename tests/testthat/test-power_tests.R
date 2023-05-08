@@ -33,7 +33,6 @@ test_that("vectorized testing matches standard testing (single-group)", {
     test_graph(rando, p, test_types = "p", corr = diag(m))$outputs$rejected,
     ignore_attr = TRUE
   )
-
 })
 
 test_that("vectorized testing matches standard testing (multi-group)", {
@@ -78,5 +77,4 @@ test_that("vectorized testing matches standard testing (multi-group)", {
     )$outputs$rejected,
     ignore_attr = TRUE
   )
-
 })
