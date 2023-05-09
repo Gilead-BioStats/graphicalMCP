@@ -2,7 +2,7 @@
 % Please edit documentation in R/updated_graph_print.R
 \name{print.updated_graph}
 \alias{print.updated_graph}
-\title{S3 print method for class 'updated_graph'}
+\title{S3 print method for class \code{updated_graph}}
 \usage{
 \method{print}{updated_graph}(x, ...)
 }

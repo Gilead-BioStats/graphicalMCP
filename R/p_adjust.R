@@ -1,30 +1,22 @@
 #' Calculate adjusted p-values
 #'
-#' @param p_values A named numeric vector of p-values to adjust. For
-#'   `p_adjust_simes_ordered()`, p-values must be sorted in ascending order
-#' @param weights A named numeric vector of weights to adjust the p-values by.
-#'   For `p_adjust_simes_ordered()`, weights must be sorted according to the
-#'   p-value order.
-#' @param corr (Optional) A numeric matrix indicating the correlation between
-#'   the test statistics which generated the p-values. Must be a square matrix
-#'   with side length equal to the length of `p` and `weights`
+#' @param p A named numeric vector of p-values
+#' @param weights A named numeric vector of hypothesis weights
+#' @param corr (Optional) A numeric matrix of correlations between hypotheses'
+#'   test statistics
 #'
 #' @return A single adjusted p-value for the given group
 #'
 #' @rdname p_adjust
+#'
 #' @examples
 #' set.seed(22723)
 #'
 #' w <- c("H1" = .75, "H2" = .25, "H3" = 0)
 #' p <- c("H1" = .019, "H2" = .025, "H3" = .05)
 #'
-#' ord <- order(p)
-#' p_ord <- p[ord]
-#' w_ord <- w[ord]
-#'
 #' graphicalMCP:::p_adjust_bonferroni(p, w)
 #' graphicalMCP:::p_adjust_simes(p, w)
-#' graphicalMCP:::p_adjust_simes_ordered(p_ord, w_ord)
 #'
 #' corr1 <- diag(3)
 #' corr2 <- corr1
@@ -35,27 +27,27 @@
 #'
 #' # Uniform random pairwise correlations
 #' graphicalMCP:::p_adjust_parametric(p, w, corr2)
-p_adjust_bonferroni <- function(p_values, weights) {
+p_adjust_bonferroni <- function(p, weights) {
   if (sum(weights) == 0) {
     return(Inf)
   }
 
   # We need na.rm = TRUE to handle the 0 / 0 case. This may be too blunt a way
-  # to handle it, but I suspect it's the fastest. Another option is to reduce
-  # p_values and weights by keeping only indices where `!(p_values == 0 &
-  # weights == 0)`. Considering that p-values are validated in the test
-  # function, this should be safe
-  min(p_values / weights, na.rm = TRUE)
+  # to handle it, but I suspect it's the fastest. Another option is to reduce p
+  # and weights by keeping only indices where `!(p == 0 & weights == 0)`.
+  # Considering that p-values are validated in the test function, this should be
+  # safe
+  min(p / weights, na.rm = TRUE)
 }
 
 #' @rdname p_adjust
-p_adjust_parametric <- function(p_values, weights, corr = NULL) {
+p_adjust_parametric <- function(p, weights, corr = NULL) {
   if (sum(weights) == 0) {
     return(Inf)
   }
 
   w_nonzero <- weights > 0
-  q <- min(p_values[w_nonzero] / weights[w_nonzero])
+  q <- min(p[w_nonzero] / weights[w_nonzero])
   q <- q * weights[w_nonzero]
   z <- stats::qnorm(q, lower.tail = FALSE)
   prob_lt_z <- ifelse(
@@ -72,7 +64,7 @@ p_adjust_parametric <- function(p_values, weights, corr = NULL) {
 }
 
 #' @rdname p_adjust
-p_adjust_simes <- function(p_values, weights) {
+p_adjust_simes <- function(p, weights) {
   if (sum(weights) == 0) {
     return(Inf)
   }
@@ -82,18 +74,9 @@ p_adjust_simes <- function(p_values, weights) {
     # See Bonferroni for na.rm reasoning
     adj_p <- min(
       adj_p,
-      p_values[[i]] / sum(weights[p_values <= p_values[[i]]]),
+      p[[i]] / sum(weights[p <= p[[i]]]),
       na.rm = TRUE
     )
   }
   adj_p
-}
-
-#' @rdname p_adjust
-p_adjust_simes_ordered <- function(p_values, weights) {
-  if (max(weights) == 0) {
-    return(Inf)
-  }
-
-  min(p_values / cumsum(weights), na.rm = TRUE)
 }

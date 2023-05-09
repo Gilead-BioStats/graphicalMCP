@@ -1,6 +1,6 @@
 #' Convert between gMCP and graphicalMCP graph classes
 #'
-#' @param graph A graphicalMCP initial_graph
+#' @param graph An initial graph as returned by [create_graph()]
 #' @param gmcp_graph A gMCP graph
 #'
 #' @return For `as_gmcp_graph()`, a gMCP graph object, and for `as_graph()`, a
@@ -11,9 +11,11 @@
 #' @examples
 #' g1 <- random_graph(5)
 #'
-#' if (requireNamespace("gMCP", quietly = TRUE)) g2 <- as_gmcp_graph(g1)
+#' if (requireNamespace("gMCP", quietly = TRUE)) {
+#'   g2 <- as_gmcp_graph(g1)
 #'
-#' all.equal(g1, as_graph(g2))
+#'   all.equal(g1, as_graph(g2))
+#' }
 as_gmcp_graph <- function(graph) {
   if (requireNamespace("gMCP", quietly = TRUE)) {
     gMCP::matrix2graph(graph$transitions, graph$hypotheses)

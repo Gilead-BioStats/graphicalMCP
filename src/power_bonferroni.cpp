@@ -32,7 +32,7 @@ using namespace cpp11;
 // }
 
 [[cpp11::register]]
-writable::integers bonferroni_sequential_cpp(
+writable::integers bonferroni_sequential_cpp_(
   writable::doubles hypotheses,
   writable::doubles_matrix<> transitions,
   doubles p,
@@ -156,7 +156,7 @@ integers_matrix<> bonferroni_sequential_power_cpp(
     }
 
     // test that row
-    rejected = bonferroni_sequential_cpp(hypotheses, transitions, p, alpha);
+    rejected = bonferroni_sequential_cpp_(hypotheses, transitions, p, alpha);
 
     // insert results into results matrix
     for (col = 0; col < g_size; col++) {

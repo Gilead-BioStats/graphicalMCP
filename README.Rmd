@@ -126,8 +126,7 @@ It's not always obvious from a given graph structure how easy or difficult it wi
 calculate_power(
   g_dose,
   sim_n = 1e5,
-  sim_theta = c(1, 1, 1, 1),
-  sim_success = integer(0)
+  sim_theta = c(1, 1, 1, 1)
 )
 ```
 
@@ -146,7 +145,7 @@ calculate_power(
 
 ### Other tests
 
-Bonferroni testing uses a shortcut to make testing, and therefore power, run very fast (<1s up to a 10-graph/100K-simulation). However, power simulations can be run with any test strategy. Note that other testing strategies will cause a substantial increase in the time a power simulation takes. In rough ascending order of time impact: parametric tests, multiple groups, Simes tests. Vignette to come detailing the typical impact of each.
+Bonferroni testing uses a shortcut to make testing, and therefore power, run very fast (<1s up to a 10-graph/100K-simulation). However, power simulations can be run with any test strategy. Note that other testing strategies will cause a substantial increase in the time a power simulation takes. In rough ascending order of time impact: parametric tests, multiple groups, Simes tests.
 
 ```{r power-3}
 calculate_power(

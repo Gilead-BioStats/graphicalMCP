@@ -1,35 +1,47 @@
 url: https://urban-sniffle-p11zlpj.pages.github.io/
+
 template:
   bootstrap: 5
+
 reference:
 - title: Creating an initial graph
-  desc: Functions for creating a multiple comparison procedure graph
-  contents:
-  - matches("create_graph")
-  - matches("initial_graph")
+- desc: Functions for creating a multiple comparison procedure graph
+- contents:
+  - create_graph
+  - print.initial_graph
+  - as_graph
+  - as_gmcp_graph
 - title: Updating a graph
-  desc: Functions for removing hypotheses from a graph
-  contents:
-  - matches("update_graph")
-  - matches("updated_graph")
+- desc: Functions for removing hypotheses from a graph
+- contents:
+  - update_graph
+  - print.updated_graph
 - title: Calculating sub-graph weights
-  desc: Functions for generating the weights of the closure
-  contents:
-  - matches("generate_weights")
-- title: Example graphs
-  desc: Functions for creating example graphs from a variety of papers
-  contents:
-  - matches("bonferroni_holm")
-- title: Analyze a graph
-  desc: Functions for analyzing properties of a graph
-  contents:
-  - matches("analyze_graph")
+- desc: Functions for generating the weights of the closure
+- contents:
+  - generate_weights
 - title: Test a graph
-  desc: Functions for running Bonferroni, parametric, and Simes tests
-  contents:
-  - matches("test_graph")
-  - matches("graph_report")
-  - matches("bonferroni_sequential")
+- desc: Functions for running Bonferroni, parametric, and Simes tests
+- contents:
+  - test_graph
+  - print.graph_report
+  - bonferroni_sequential
   - matches("p_adjust")
   - matches("test_vals")
-  - matches("corr_has_missing")
+- title: Run a power simulation
+- desc: Functions for running power simulations
+- contents:
+  - calculate_power
+  - test_graph_fast
+  - matches("calculate_critical")
+- title: Example graphs
+- desc: Functions for creating example graphs from a variety of papers
+- contents:
+  - bonferroni_holm
+  - huque_alosh_bhore_2011
+  - wiens_dmitrienko_2005
+  - fixed_sequence
+  - fallback
+  - simple_successive_1
+  - simple_successive_2
+  - random_graph

@@ -17,19 +17,19 @@ test_that("vectorized testing matches standard testing (single-group)", {
   )
 
   expect_equal(
-    test_graph_fast_vms(p, .05, gw_compact_bonf),
+    test_graph_fast(p, .05, gw_compact_bonf),
     test_graph(rando, p)$outputs$rejected,
     ignore_attr = TRUE
   )
 
   expect_equal(
-    test_graph_fast_vms(p, .05, gw_compact_simes),
+    test_graph_fast(p, .05, gw_compact_simes),
     test_graph(rando, p, test_types = "s")$outputs$rejected,
     ignore_attr = TRUE
   )
 
   expect_equal(
-    test_graph_fast_vms(p, .05, gw_compact_parametric),
+    test_graph_fast(p, .05, gw_compact_parametric),
     test_graph(rando, p, test_types = "p", corr = diag(m))$outputs$rejected,
     ignore_attr = TRUE
   )
@@ -63,7 +63,7 @@ test_that("vectorized testing matches standard testing (multi-group)", {
   gw_compact_bonf <- gw_compact_bonf[, unlist(bonf_groups)]
 
   expect_equal(
-    test_graph_fast_vms(
+    test_graph_fast(
       p,
       .05,
       cbind(gw_compact_bonf, gw_compact_simes, gw_compact_para)

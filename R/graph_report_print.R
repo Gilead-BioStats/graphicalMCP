@@ -9,13 +9,13 @@ section_break <- function(text) {
 #'   * p-values & alpha used for tests,
 #'   * Which hypotheses can be rejected, and
 #'   * Detailed test results matrix, including the results of
-#' `generate_weights()` & test results for each intersection hypothesis
+#'     [generate_weights()] & test results for each intersection hypothesis
 #'
 #' @param x An object of class `graph_report` to print
 #' @param ... Other values passed on to other methods (currently unused)
-#' @param precision An integer value indicating the maximum number of decimals
+#' @param precision An integer scalar indicating the maximum number of decimals
 #'   to include in numeric values
-#' @param indent An integer value indicating how many spaces to indent results
+#' @param indent An integer scalar indicating how many spaces to indent results
 #'
 #' @export
 print.graph_report <- function(x, ..., precision = 6, indent = 2) {

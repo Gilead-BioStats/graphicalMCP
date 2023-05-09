@@ -63,6 +63,7 @@
   <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" id="dropdown-articles">Articles</a>
   <div class="dropdown-menu" aria-labelledby="dropdown-articles">
     <a class="dropdown-item" href="articles/gen-weights.html">Generating the closure tree</a>
+    <a class="dropdown-item" href="articles/power-pseudocode.html">Power pseudocode</a>
     <a class="dropdown-item" href="articles/testing-basics.html">Testing basics</a>
   </div>
 </li>
@@ -210,7 +211,7 @@
 <div class="section level3">
 <h3 id="test-hypotheses">Test hypotheses<a class="anchor" aria-label="anchor" href="#test-hypotheses"></a>
 </h3>
-<p>A mixture of statistical tests are (or will be) supported in graphicalMCP. A graph can be tested against a given alpha with <code>test_all_subgraphs()</code>. A report is then generated, showing the graph &amp; test results.</p>
+<p>A mixture of statistical tests are supported in graphicalMCP. A graph can be tested against a given alpha with <code><a href="reference/testing.html">test_graph()</a></code>. A report is then generated, showing the graph &amp; test results.</p>
 <p>In this example, a weighted Bonferroni test is applied to all hypotheses, with a threshold of 0.05. We can reject a given intersection hypothesis if any of the individual hypotheses within that sub-graph passes the test assigned to it. We can then reject a hypothesis globally if all intersection hypotheses containing that hypothesis are rejected. For instance, in this example we can reject every intersection hypothesis except the one containing only B1 &amp; B2 (Row 3 of <code>test_results</code>). Thus, we can reject the null hypotheses for A1 &amp; A2, but we cannot reject the null hypotheses for B1 &amp; B2.</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="reference/testing.html">test_graph</a></span><span class="op">(</span></span>
@@ -251,6 +252,264 @@
 <span><span class="co">#&gt;           A2         0.04   TRUE</span></span>
 <span><span class="co">#&gt;           B1         0.06  FALSE</span></span>
 <span><span class="co">#&gt;           B2         0.06  FALSE</span></span></code></pre></div>
+<p>Simes and parametric testing methods are also supported, using the <code>test_types</code> argument. Try setting the <code>verbose</code> and <code>critical</code> flags for a more detailed report on testing.</p>
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="reference/testing.html">test_graph</a></span><span class="op">(</span></span>
+<span>  <span class="va">g_dose</span>,</span>
+<span>  p <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">.01</span>, <span class="fl">.02</span>, <span class="fl">.03</span>, <span class="fl">.05</span><span class="op">)</span>,</span>
+<span>  alpha <span class="op">=</span> <span class="fl">.05</span>,</span>
+<span>  test_types <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"p"</span>, <span class="st">"s"</span><span class="op">)</span>,</span>
+<span>  groups <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">2</span>, <span class="fl">3</span><span class="op">:</span><span class="fl">4</span><span class="op">)</span>,</span>
+<span>  corr <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/cbind.html" class="external-link">rbind</a></span><span class="op">(</span></span>
+<span>    <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span> <span class="fl">1</span>, <span class="fl">.5</span>, <span class="cn">NA</span>, <span class="cn">NA</span><span class="op">)</span>,</span>
+<span>    <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">.5</span>,  <span class="fl">1</span>, <span class="cn">NA</span>, <span class="cn">NA</span><span class="op">)</span>,</span>
+<span>    <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="cn">NA</span>, <span class="cn">NA</span>, <span class="cn">NA</span>, <span class="cn">NA</span><span class="op">)</span>,</span>
+<span>    <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="cn">NA</span>, <span class="cn">NA</span>, <span class="cn">NA</span>, <span class="cn">NA</span><span class="op">)</span></span>
+<span>  <span class="op">)</span>,</span>
+<span>  verbose <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  critical <span class="op">=</span> <span class="cn">TRUE</span></span>
+<span><span class="op">)</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; Test parameters ----------------------------------------------------------------</span></span>
+<span><span class="co">#&gt;   An initial graph</span></span>
+<span><span class="co">#&gt;   </span></span>
+<span><span class="co">#&gt;   --- Hypothesis weights ---</span></span>
+<span><span class="co">#&gt;   A1: 0.5000</span></span>
+<span><span class="co">#&gt;   A2: 0.5000</span></span>
+<span><span class="co">#&gt;   B1: 0.0000</span></span>
+<span><span class="co">#&gt;   B2: 0.0000</span></span>
+<span><span class="co">#&gt;   </span></span>
+<span><span class="co">#&gt;   --- Transition weights ---</span></span>
+<span><span class="co">#&gt;          A1     A2     B1     B2</span></span>
+<span><span class="co">#&gt;   A1 0.0000 0.0000 1.0000 0.0000</span></span>
+<span><span class="co">#&gt;   A2 0.0000 0.0000 0.0000 1.0000</span></span>
+<span><span class="co">#&gt;   B1 0.0000 1.0000 0.0000 0.0000</span></span>
+<span><span class="co">#&gt;   B2 1.0000 0.0000 0.0000 0.0000</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt;   Global alpha = 0.05</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt;                          A1   A2   B1   B2</span></span>
+<span><span class="co">#&gt;   Unadjusted p-values: 0.01 0.02 0.03 0.05</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt;   Correlation matrix:     A1  A2 B1 B2</span></span>
+<span><span class="co">#&gt;                       A1 1.0 0.5 NA NA</span></span>
+<span><span class="co">#&gt;                       A2 0.5 1.0 NA NA</span></span>
+<span><span class="co">#&gt;                       B1  NA  NA NA NA</span></span>
+<span><span class="co">#&gt;                       B2  NA  NA NA NA</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt;   Test types</span></span>
+<span><span class="co">#&gt;   parametric: (A1-A2)</span></span>
+<span><span class="co">#&gt;        simes: (B1-B2)</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; Global test summary ------------------------------------------------------------</span></span>
+<span><span class="co">#&gt;   Hypothesis Adj. P-value Reject</span></span>
+<span><span class="co">#&gt;           A1         0.02   TRUE</span></span>
+<span><span class="co">#&gt;           A2         0.04   TRUE</span></span>
+<span><span class="co">#&gt;           B1         0.05   TRUE</span></span>
+<span><span class="co">#&gt;           B2         0.05   TRUE</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; Test details - Adjusted p ------------------------------------------------------</span></span>
+<span><span class="co">#&gt;       A1  A2  B1  B2 padj_grp1 padj_grp2 p_adj_inter res</span></span>
+<span><span class="co">#&gt;   1  0.5 0.5 0.0 0.0  0.018706      1.00    0.018706   1</span></span>
+<span><span class="co">#&gt;   2  0.5 0.5 0.0  NA  0.018706      1.00    0.018706   1</span></span>
+<span><span class="co">#&gt;   3  0.5 0.5  NA 0.0  0.018706      1.00    0.018706   1</span></span>
+<span><span class="co">#&gt;   4  0.5 0.5  NA  NA  0.018706      1.00    0.018706   1</span></span>
+<span><span class="co">#&gt;   5  0.5  NA 0.0 0.5  0.020000      0.10    0.020000   1</span></span>
+<span><span class="co">#&gt;   6  1.0  NA 0.0  NA  0.010000      1.00    0.010000   1</span></span>
+<span><span class="co">#&gt;   7  0.5  NA  NA 0.5  0.020000      0.10    0.020000   1</span></span>
+<span><span class="co">#&gt;   8  1.0  NA  NA  NA  0.010000      1.00    0.010000   1</span></span>
+<span><span class="co">#&gt;   9   NA 0.5 0.5 0.0  0.040000      0.06    0.040000   1</span></span>
+<span><span class="co">#&gt;   10  NA 0.5 0.5  NA  0.040000      0.06    0.040000   1</span></span>
+<span><span class="co">#&gt;   11  NA 1.0  NA 0.0  0.020000      1.00    0.020000   1</span></span>
+<span><span class="co">#&gt;   12  NA 1.0  NA  NA  0.020000      1.00    0.020000   1</span></span>
+<span><span class="co">#&gt;   13  NA  NA 0.5 0.5  1.000000      0.05    0.050000   1</span></span>
+<span><span class="co">#&gt;   14  NA  NA 1.0  NA  1.000000      0.03    0.030000   1</span></span>
+<span><span class="co">#&gt;   15  NA  NA  NA 1.0  1.000000      0.05    0.050000   1</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; Test details - Critical values -------------------------------------------------</span></span>
+<span><span class="co">#&gt;    intersection hypothesis       test    p &lt;=        c *   w * alpha   res</span></span>
+<span><span class="co">#&gt;               1         A1 parametric 0.01 &lt;= 1.106486 * 0.5 *  0.05  TRUE</span></span>
+<span><span class="co">#&gt;               1         A2 parametric 0.02 &lt;= 1.106486 * 0.5 *  0.05  TRUE</span></span>
+<span><span class="co">#&gt;               1         B1      simes 0.03 &lt;=            0.0 *  0.05 FALSE</span></span>
+<span><span class="co">#&gt;               1         B2      simes 0.05 &lt;=            0.0 *  0.05 FALSE</span></span>
+<span><span class="co">#&gt;               2         A1 parametric 0.01 &lt;= 1.106486 * 0.5 *  0.05  TRUE</span></span>
+<span><span class="co">#&gt;               2         A2 parametric 0.02 &lt;= 1.106486 * 0.5 *  0.05  TRUE</span></span>
+<span><span class="co">#&gt;               2         B1      simes 0.03 &lt;=            0.0 *  0.05 FALSE</span></span>
+<span><span class="co">#&gt;               3         A1 parametric 0.01 &lt;= 1.106486 * 0.5 *  0.05  TRUE</span></span>
+<span><span class="co">#&gt;               3         A2 parametric 0.02 &lt;= 1.106486 * 0.5 *  0.05  TRUE</span></span>
+<span><span class="co">#&gt;               3         B2      simes 0.05 &lt;=            0.0 *  0.05 FALSE</span></span>
+<span><span class="co">#&gt;               4         A1 parametric 0.01 &lt;= 1.106486 * 0.5 *  0.05  TRUE</span></span>
+<span><span class="co">#&gt;               4         A2 parametric 0.02 &lt;= 1.106486 * 0.5 *  0.05  TRUE</span></span>
+<span><span class="co">#&gt;               5         A1 parametric 0.01 &lt;=        1 * 0.5 *  0.05  TRUE</span></span>
+<span><span class="co">#&gt;               5         B1      simes 0.03 &lt;=            0.0 *  0.05 FALSE</span></span>
+<span><span class="co">#&gt;               5         B2      simes 0.05 &lt;=            0.5 *  0.05 FALSE</span></span>
+<span><span class="co">#&gt;               6         A1 parametric 0.01 &lt;=        1 * 1.0 *  0.05  TRUE</span></span>
+<span><span class="co">#&gt;               6         B1      simes 0.03 &lt;=            0.0 *  0.05 FALSE</span></span>
+<span><span class="co">#&gt;               7         A1 parametric 0.01 &lt;=        1 * 0.5 *  0.05  TRUE</span></span>
+<span><span class="co">#&gt;               7         B2      simes 0.05 &lt;=            0.5 *  0.05 FALSE</span></span>
+<span><span class="co">#&gt;               8         A1 parametric 0.01 &lt;=        1 * 1.0 *  0.05  TRUE</span></span>
+<span><span class="co">#&gt;               9         A2 parametric 0.02 &lt;=        1 * 0.5 *  0.05  TRUE</span></span>
+<span><span class="co">#&gt;               9         B1      simes 0.03 &lt;=            0.5 *  0.05 FALSE</span></span>
+<span><span class="co">#&gt;               9         B2      simes 0.05 &lt;=            0.5 *  0.05 FALSE</span></span>
+<span><span class="co">#&gt;              10         A2 parametric 0.02 &lt;=        1 * 0.5 *  0.05  TRUE</span></span>
+<span><span class="co">#&gt;              10         B1      simes 0.03 &lt;=            0.5 *  0.05 FALSE</span></span>
+<span><span class="co">#&gt;              11         A2 parametric 0.02 &lt;=        1 * 1.0 *  0.05  TRUE</span></span>
+<span><span class="co">#&gt;              11         B2      simes 0.05 &lt;=            0.0 *  0.05 FALSE</span></span>
+<span><span class="co">#&gt;              12         A2 parametric 0.02 &lt;=        1 * 1.0 *  0.05  TRUE</span></span>
+<span><span class="co">#&gt;              13         B1      simes 0.03 &lt;=            0.5 *  0.05 FALSE</span></span>
+<span><span class="co">#&gt;              13         B2      simes 0.05 &lt;=            1.0 *  0.05  TRUE</span></span>
+<span><span class="co">#&gt;              14         B1      simes 0.03 &lt;=            1.0 *  0.05  TRUE</span></span>
+<span><span class="co">#&gt;              15         B2      simes 0.05 &lt;=            1.0 *  0.05  TRUE</span></span></code></pre></div>
+</div>
+</div>
+<div class="section level2">
+<h2 id="power-simulations">Power simulations<a class="anchor" aria-label="anchor" href="#power-simulations"></a>
+</h2>
+<p>It’s not always obvious from a given graph structure how easy or difficult it will be to reject each hypothesis. One way to understand this better is to run a power simulation. The essence of a power simulation is to generate many different p-values using some chosen distribution, then test the graph against each set of p-values to see how it performs.</p>
+<div class="section level3">
+<h3 id="bonferroni">Bonferroni<a class="anchor" aria-label="anchor" href="#bonferroni"></a>
+</h3>
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="reference/calculate_power.html">calculate_power</a></span><span class="op">(</span></span>
+<span>  <span class="va">g_dose</span>,</span>
+<span>  sim_n <span class="op">=</span> <span class="fl">1e5</span>,</span>
+<span>  sim_theta <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">1</span>, <span class="fl">1</span>, <span class="fl">1</span><span class="op">)</span>,</span>
+<span>  sim_success <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/integer.html" class="external-link">integer</a></span><span class="op">(</span><span class="fl">0</span><span class="op">)</span></span>
+<span><span class="op">)</span></span>
+<span><span class="co">#&gt; $power_local</span></span>
+<span><span class="co">#&gt; [1] 0.16965 0.17159 0.02813 0.02340</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; $power_expected</span></span>
+<span><span class="co">#&gt; [1] 0.39277</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; $power_at_least_1</span></span>
+<span><span class="co">#&gt; [1] 0.30799</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; $power_all</span></span>
+<span><span class="co">#&gt; [1] 0</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; $power_success</span></span>
+<span><span class="co">#&gt; [1] 0</span></span></code></pre></div>
+<p>The <code><a href="reference/example-graphs.html">simple_successive_2()</a></code> function creates a parallel gate-keeping graph, but some weight is transferred between the primary hypotheses, rather than each passing weight on to its respective secondary hypothesis. This causes the primary hypotheses to be rejected slightly more often, and the secondary hypotheses less often.</p>
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">g_dose_2</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/example-graphs.html">simple_successive_2</a></span><span class="op">(</span><span class="va">names</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu"><a href="reference/calculate_power.html">calculate_power</a></span><span class="op">(</span></span>
+<span>  <span class="va">g_dose_2</span>,</span>
+<span>  sim_n <span class="op">=</span> <span class="fl">1e5</span>,</span>
+<span>  sim_theta <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">1</span>, <span class="fl">1</span>, <span class="fl">1</span><span class="op">)</span>,</span>
+<span>  test_types <span class="op">=</span> <span class="st">"s"</span></span>
+<span><span class="op">)</span></span>
+<span><span class="co">#&gt; $power_local</span></span>
+<span><span class="co">#&gt;      A1      A2      B1      B2 </span></span>
+<span><span class="co">#&gt; 0.18410 0.18554 0.02554 0.02472 </span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; $power_expected</span></span>
+<span><span class="co">#&gt; [1] 0.4199</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; $power_at_least_1</span></span>
+<span><span class="co">#&gt; [1] 0.31827</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; $power_all</span></span>
+<span><span class="co">#&gt; [1] 0.00455</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; $power_success</span></span>
+<span><span class="co">#&gt; [1] 0.31827</span></span></code></pre></div>
+</div>
+<div class="section level3">
+<h3 id="other-tests">Other tests<a class="anchor" aria-label="anchor" href="#other-tests"></a>
+</h3>
+<p>Bonferroni testing uses a shortcut to make testing, and therefore power, run very fast (&lt;1s up to a 10-graph/100K-simulation). However, power simulations can be run with any test strategy. Note that other testing strategies will cause a substantial increase in the time a power simulation takes. In rough ascending order of time impact: parametric tests, multiple groups, Simes tests. Vignette to come detailing the typical impact of each.</p>
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="reference/calculate_power.html">calculate_power</a></span><span class="op">(</span></span>
+<span>  <span class="va">g_dose_2</span>,</span>
+<span>  sim_n <span class="op">=</span> <span class="fl">1e5</span>,</span>
+<span>  sim_theta <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">1</span>, <span class="fl">1</span>, <span class="fl">1</span><span class="op">)</span>,</span>
+<span>  test_types <span class="op">=</span> <span class="st">"p"</span>,</span>
+<span>  test_corr <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/diag.html" class="external-link">diag</a></span><span class="op">(</span><span class="fl">4</span><span class="op">)</span></span>
+<span><span class="op">)</span></span>
+<span><span class="co">#&gt; $power_local</span></span>
+<span><span class="co">#&gt;      A1      A2      B1      B2 </span></span>
+<span><span class="co">#&gt; 0.17721 0.17790 0.02263 0.02302 </span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; $power_expected</span></span>
+<span><span class="co">#&gt; [1] 0.40076</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; $power_at_least_1</span></span>
+<span><span class="co">#&gt; [1] 0.30822</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; $power_all</span></span>
+<span><span class="co">#&gt; [1] 0.00307</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; $power_success</span></span>
+<span><span class="co">#&gt; [1] 0.30822</span></span></code></pre></div>
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="reference/calculate_power.html">calculate_power</a></span><span class="op">(</span></span>
+<span>  <span class="va">g_dose_2</span>,</span>
+<span>  sim_n <span class="op">=</span> <span class="fl">1e5</span>,</span>
+<span>  sim_theta <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">1</span>, <span class="fl">1</span>, <span class="fl">1</span><span class="op">)</span>,</span>
+<span>  test_types <span class="op">=</span> <span class="st">"p"</span>,</span>
+<span>  test_groups <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">2</span>, <span class="fl">3</span><span class="op">:</span><span class="fl">4</span><span class="op">)</span>,</span>
+<span>  test_corr <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/diag.html" class="external-link">diag</a></span><span class="op">(</span><span class="fl">4</span><span class="op">)</span></span>
+<span><span class="op">)</span></span>
+<span><span class="co">#&gt; $power_local</span></span>
+<span><span class="co">#&gt; [1] 0.17477 0.17819 0.01744 0.01485</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; $power_expected</span></span>
+<span><span class="co">#&gt; [1] 0.38525</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; $power_at_least_1</span></span>
+<span><span class="co">#&gt; [1] 0.30747</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; $power_all</span></span>
+<span><span class="co">#&gt; [1] 0.00012</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; $power_success</span></span>
+<span><span class="co">#&gt; [1] 0.30747</span></span></code></pre></div>
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="reference/calculate_power.html">calculate_power</a></span><span class="op">(</span></span>
+<span>  <span class="va">g_dose_2</span>,</span>
+<span>  sim_n <span class="op">=</span> <span class="fl">1e5</span>,</span>
+<span>  sim_theta <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">1</span>, <span class="fl">1</span>, <span class="fl">1</span><span class="op">)</span>,</span>
+<span>  test_types <span class="op">=</span> <span class="st">"s"</span>,</span>
+<span>  test_groups <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">4</span><span class="op">)</span></span>
+<span><span class="op">)</span></span>
+<span><span class="co">#&gt; $power_local</span></span>
+<span><span class="co">#&gt; [1] 0.17681 0.17775 0.01767 0.01484</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; $power_expected</span></span>
+<span><span class="co">#&gt; [1] 0.38707</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; $power_at_least_1</span></span>
+<span><span class="co">#&gt; [1] 0.30808</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; $power_all</span></span>
+<span><span class="co">#&gt; [1] 1e-04</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; $power_success</span></span>
+<span><span class="co">#&gt; [1] 0.30808</span></span></code></pre></div>
+<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="reference/calculate_power.html">calculate_power</a></span><span class="op">(</span></span>
+<span>  <span class="va">g_dose_2</span>,</span>
+<span>  sim_n <span class="op">=</span> <span class="fl">1e5</span>,</span>
+<span>  sim_theta <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">1</span>, <span class="fl">1</span>, <span class="fl">1</span><span class="op">)</span>,</span>
+<span>  test_types <span class="op">=</span> <span class="st">"s"</span>,</span>
+<span>  test_groups <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">2</span>, <span class="fl">3</span><span class="op">:</span><span class="fl">4</span><span class="op">)</span></span>
+<span><span class="op">)</span></span>
+<span><span class="co">#&gt; $power_local</span></span>
+<span><span class="co">#&gt; [1] 0.17960 0.17803 0.01891 0.01552</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; $power_expected</span></span>
+<span><span class="co">#&gt; [1] 0.39206</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; $power_at_least_1</span></span>
+<span><span class="co">#&gt; [1] 0.31051</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; $power_all</span></span>
+<span><span class="co">#&gt; [1] 1e-04</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; $power_success</span></span>
+<span><span class="co">#&gt; [1] 0.31051</span></span></code></pre></div>
 </div>
 </div>
 <div class="section level2">

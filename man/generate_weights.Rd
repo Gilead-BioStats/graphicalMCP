@@ -2,13 +2,12 @@
 % Please edit documentation in R/generate_weights.R
 \name{generate_weights}
 \alias{generate_weights}
-\title{Generate weights for each intersections hypothesis in the full closure tree
-of an MCP graph}
+\title{Calculate weights for the closure of a graph}
 \usage{
 generate_weights(graph)
 }
 \arguments{
-\item{graph}{An MCP graph as created by \code{create_graph()}}
+\item{graph}{An initial graph as returned by \code{\link[=create_graph]{create_graph()}}}
 }
 \value{
 A numeric matrix of all intersection hypothesis weights. Each row
@@ -17,8 +16,9 @@ columns indicate which hypotheses are included in the given intersection
 hypothesis, and the second half of columns are the weights
 }
 \description{
-Generate weights for each intersections hypothesis in the full closure tree
-of an MCP graph
+The closure of a graph is the set of all sub-graphs, or intersections
+hypotheses, of a graph. Weights for each sub-graph are calculated using the
+weighting strategy defined in Bretz et al (2011).
 }
 \section{Performance}{
 

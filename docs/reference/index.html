@@ -25,6 +25,7 @@
   <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" id="dropdown-articles">Articles</a>
   <div class="dropdown-menu" aria-labelledby="dropdown-articles">
     <a class="dropdown-item" href="../articles/gen-weights.html">Generating the closure tree</a>
+    <a class="dropdown-item" href="../articles/power-pseudocode.html">Power pseudocode</a>
     <a class="dropdown-item" href="../articles/testing-basics.html">Testing basics</a>
   </div>
 </li>
@@ -44,7 +45,7 @@
     <div class="section level2">
       <h2 id="creating-an-initial-graph">Creating an initial graph<a class="anchor" aria-label="anchor" href="#creating-an-initial-graph"></a></h2>
       
-      <p class="section-desc"></p><p>Functions for creating a multiple comparison procedure graph</p>
+      
 
       
     </div><div id="" class="section level2">
@@ -56,16 +57,21 @@
           
           <code><a href="create_graph.html">create_graph()</a></code> 
         </dt>
-        <dd><code>initial_graph</code> object</dd>
+        <dd>Define a graph representing a multiple comparison procedure</dd>
       </dl><dl><dt>
           
           <code><a href="print.initial_graph.html">print(<i>&lt;initial_graph&gt;</i>)</a></code> 
         </dt>
-        <dd>S3 print method for the class 'initial_graph'</dd>
+        <dd>S3 print method for the class <code>initial_graph</code></dd>
+      </dl><dl><dt>
+          
+          <code><a href="as-graph.html">as_gmcp_graph()</a></code> <code><a href="as-graph.html">as_graph()</a></code> 
+        </dt>
+        <dd>Convert between gMCP and graphicalMCP graph classes</dd>
       </dl></div><div class="section level2">
       <h2 id="updating-a-graph">Updating a graph<a class="anchor" aria-label="anchor" href="#updating-a-graph"></a></h2>
       
-      <p class="section-desc"></p><p>Functions for removing hypotheses from a graph</p>
+      
 
       
     </div><div id="" class="section level2">
@@ -77,16 +83,16 @@
           
           <code><a href="update_graph.html">update_graph()</a></code> 
         </dt>
-        <dd><code>updated_graph</code> object</dd>
+        <dd>Delete hypotheses from a graph</dd>
       </dl><dl><dt>
           
           <code><a href="print.updated_graph.html">print(<i>&lt;updated_graph&gt;</i>)</a></code> 
         </dt>
-        <dd>S3 print method for class 'updated_graph'</dd>
+        <dd>S3 print method for class <code>updated_graph</code></dd>
       </dl></div><div class="section level2">
       <h2 id="calculating-sub-graph-weights">Calculating sub-graph weights<a class="anchor" aria-label="anchor" href="#calculating-sub-graph-weights"></a></h2>
       
-      <p class="section-desc"></p><p>Functions for generating the weights of the closure</p>
+      
 
       
     </div><div id="" class="section level2">
@@ -98,40 +104,11 @@
           
           <code><a href="generate_weights.html">generate_weights()</a></code> 
         </dt>
-        <dd>Generate weights for each intersections hypothesis in the full closure tree
-of an MCP graph</dd>
+        <dd>Calculate weights for the closure of a graph</dd>
       </dl></div><div class="section level2">
-      <h2 id="example-graphs">Example graphs<a class="anchor" aria-label="anchor" href="#example-graphs"></a></h2>
-      
-      <p class="section-desc"></p><p>Functions for creating example graphs from a variety of papers</p>
-
-      
-    </div><div id="" class="section level2">
-      
-      
-      
-
-      <dl><dt>
-          
-          <code><a href="example-graphs.html">bonferroni_holm()</a></code> <code><a href="example-graphs.html">huque_alosh_bhore_2011()</a></code> <code><a href="example-graphs.html">wiens_dmitrienko_2005()</a></code> <code><a href="example-graphs.html">fixed_sequence()</a></code> <code><a href="example-graphs.html">fallback()</a></code> 
-        </dt>
-        <dd>Example graphs from a variety of papers</dd>
-      </dl></div><div class="section level2">
-      <h2 id="analyze-a-graph">Analyze a graph<a class="anchor" aria-label="anchor" href="#analyze-a-graph"></a></h2>
-      
-      <p class="section-desc"></p><p>Functions for analyzing properties of a graph</p>
-
-      
-    </div><div id="" class="section level2">
-      
-      
-      
-
-      
-    </div><div class="section level2">
       <h2 id="test-a-graph">Test a graph<a class="anchor" aria-label="anchor" href="#test-a-graph"></a></h2>
       
-      <p class="section-desc"></p><p>Functions for running Bonferroni, parametric, and Simes tests</p>
+      
 
       
     </div><div id="" class="section level2">
@@ -141,9 +118,9 @@ of an MCP graph</dd>
 
       <dl><dt>
           
-          <code><a href="testing.html">bonferroni_sequential()</a></code> <code><a href="testing.html">test_graph()</a></code> <code><a href="testing.html">test_input_val()</a></code> 
+          <code><a href="testing.html">bonferroni_sequential()</a></code> <code><a href="testing.html">test_graph()</a></code> 
         </dt>
-        <dd>Test a graph</dd>
+        <dd>Report details of hypothesis rejections</dd>
       </dl><dl><dt>
           
           <code><a href="print.graph_report.html">print(<i>&lt;graph_report&gt;</i>)</a></code> 
@@ -158,17 +135,49 @@ of an MCP graph</dd>
           
           <code><a href="calc-test_vals.html">bonferroni_test_vals()</a></code> <code><a href="calc-test_vals.html">parametric_test_vals()</a></code> <code><a href="calc-test_vals.html">simes_test_vals()</a></code> 
         </dt>
-        <dd>Test hypotheses with the <code>p &lt;= (c * ) w * a</code> method</dd>
+        <dd>Test hypotheses with the critical values method</dd>
+      </dl></div><div class="section level2">
+      <h2 id="run-a-power-simulation">Run a power simulation<a class="anchor" aria-label="anchor" href="#run-a-power-simulation"></a></h2>
+      
+      
+
+      
+    </div><div id="" class="section level2">
+      
+      
+      
+
+      <dl><dt>
+          
+          <code><a href="calculate_power.html">calculate_power()</a></code> 
+        </dt>
+        <dd>Obtain hypothesis rejection probabilities</dd>
       </dl><dl><dt>
           
-          <code><a href="corr_has_missing.html">corr_has_missing()</a></code> 
+          <code><a href="testing-fast.html">test_graph_fast()</a></code> <code><a href="testing-fast.html">bonferroni_sequential_cpp()</a></code> 
         </dt>
-        <dd>Check if a correlation matrix has any missing values in a given subset</dd>
+        <dd>Calculate hypothesis rejection results efficiently</dd>
       </dl><dl><dt>
           
-          <code><a href="gamma_graph.html">gamma_graph()</a></code> 
+          <code><a href="critical-vals.html">c_function()</a></code> <code><a href="critical-vals.html">solve_c()</a></code> <code><a href="critical-vals.html">calculate_critical_parametric()</a></code> <code><a href="critical-vals.html">calculate_critical_simes()</a></code> 
         </dt>
-        <dd>Create a graph with gamma edges</dd>
+        <dd>Calculate updated hypothesis weights for the closure of a graph</dd>
+      </dl></div><div class="section level2">
+      <h2 id="example-graphs">Example graphs<a class="anchor" aria-label="anchor" href="#example-graphs"></a></h2>
+      
+      
+
+      
+    </div><div id="" class="section level2">
+      
+      
+      
+
+      <dl><dt>
+          
+          <code><a href="example-graphs.html">bonferroni_holm()</a></code> <code><a href="example-graphs.html">huque_alosh_bhore_2011()</a></code> <code><a href="example-graphs.html">wiens_dmitrienko_2005()</a></code> <code><a href="example-graphs.html">fixed_sequence()</a></code> <code><a href="example-graphs.html">fallback()</a></code> <code><a href="example-graphs.html">simple_successive_1()</a></code> <code><a href="example-graphs.html">simple_successive_2()</a></code> <code><a href="example-graphs.html">random_graph()</a></code> 
+        </dt>
+        <dd>Example graphs from a selection of papers</dd>
       </dl></div>
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
     </nav></aside></div>

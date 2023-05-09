@@ -1,7 +1,7 @@
 #' @rdname critical-vals
-c_function <- function(x, w, corr, alpha) {
-  w_nonzero <- which(w > 0)
-  z <- stats::qnorm(x * w[w_nonzero] * alpha, lower.tail = FALSE)
+c_function <- function(x, weights, corr, alpha) {
+  w_nonzero <- which(weights > 0)
+  z <- stats::qnorm(x * weights[w_nonzero] * alpha, lower.tail = FALSE)
   y <- ifelse(
     length(z) == 1,
     stats::pnorm(z, lower.tail = FALSE)[[1]],
@@ -12,14 +12,14 @@ c_function <- function(x, w, corr, alpha) {
     )[[1]]
   )
 
-  y - alpha * sum(w)
+  y - alpha * sum(weights)
 }
 
 #' @rdname critical-vals
-solve_c <- function(w, corr, alpha) {
-  n_hyps <- seq_along(w)
+solve_c <- function(weights, corr, alpha) {
+  n_hyps <- seq_along(weights)
   c <- ifelse(
-    length(n_hyps) == 1 || sum(w) == 0,
+    length(n_hyps) == 1 || sum(weights) == 0,
     1,
     stats::uniroot(
       c_function,
@@ -27,9 +27,9 @@ solve_c <- function(w, corr, alpha) {
       # upper > 40 errors when w[i] ~= 1 && w[j] = epsilon
       # upper = 2 errors when w = c(.5, .5) && all(corr == 1)
       # furthermore, even under perfect correlation & with balanced weights, the
-      # c_function does not seem to exceed `length(w)`
-      upper = length(w) + 1,
-      w = w,
+      # c_function does not exceed `length(w)`
+      upper = length(weights) + 1,
+      weights = weights,
       corr = corr,
       alpha = alpha
     )$root
@@ -38,28 +38,35 @@ solve_c <- function(w, corr, alpha) {
   c
 }
 
-#' Calculate testing critical values for the closure of a graph
+#' Calculate updated hypothesis weights for the closure of a graph
 #'
-#' @param gw_small A compact representation of `generate_weights()` output,
+#' The weights created by [generate_weights()] work immediately for Bonferroni
+#' testing, but parametric and Simes testing require additional calculations.
+#' The `calculate_critical_*()` functions apply parametric or Simes weight
+#' increases to get updated weights for testing. They also subset the weights
+#' columns by the appropriate groups
+#'
+#' @param intersections A compact representation of [generate_weights()] output,
 #'   where missing hypotheses get a missing value for weights, and h-vectors are
 #'   dropped
-#' @param corr A numeric matrix specifying the correlation between the test
-#'   statistics of hypotheses to be tested using parametric testing
-#' @param p A numeric vector of hypothesis p-values
+#' @param corr A numeric matrix of correlations between hypotheses' test
+#'   statistics
+#' @param p A numeric vector of p-values
 #' @param alpha A numeric scalar specifying the global significance level for
-#'   parametric testing
+#'   testing
 #' @param groups A list of numeric vectors specifying hypotheses to test
 #'   together
-#' @param w A numeric vector of graph weights
-#' @param x The root to solve for with `uniroot()`
+#' @param weights A numeric vector of hypothesis weights
+#' @param x The root to solve for with [stats::uniroot()]
 #'
 #' @return Outputs:
-#' * For `calculate_critical_parametric()`, a matrix with the same shape as
-#'   gw_small, where the weights in the second half of columns have been
-#'   multiplied by the parametric critical value for the group they are in
+#' * For `calculate_critical_*()`, a matrix with the same shape as
+#'   `intersections`, where the weights have been adjusted according to the
+#'   specified adjustment method
 #' * For `c_function()`, the critical value for the given group
 #'
 #' @rdname critical-vals
+#'
 #' @export
 #'
 #' @examples
@@ -72,17 +79,17 @@ solve_c <- function(w, corr, alpha) {
 #'
 #' para_critical <- calculate_critical_parametric(gw, diag(6), .05, list(1:3))
 #' simes_critical <- calculate_critical_simes(gw, p, list(4:6))
-calculate_critical_parametric <- function(gw_small, corr, alpha, groups) {
-  h_vecs <- !is.na(gw_small)
+calculate_critical_parametric <- function(intersections, corr, alpha, groups) {
+  h_vecs <- !is.na(intersections)
 
-  c_mat <- gw_small # placeholder
+  c_mat <- intersections # placeholder
 
   for (group in groups) {
-    for (row in seq_len(nrow(gw_small))) {
+    for (row in seq_len(nrow(intersections))) {
       group_in_inter <- group[as.logical(h_vecs[row, ][group])]
 
       c_val <- solve_c(
-        gw_small[row, group_in_inter],
+        intersections[row, group_in_inter],
         corr[group_in_inter, group_in_inter],
         alpha
       )
@@ -91,22 +98,22 @@ calculate_critical_parametric <- function(gw_small, corr, alpha, groups) {
     }
   }
 
-  (c_mat * gw_small)[, unlist(groups), drop = FALSE]
+  (c_mat * intersections)[, unlist(groups), drop = FALSE]
 }
 
 #' @rdname critical-vals
 #' @export
-calculate_critical_simes <- function(gw_small, p, groups) {
-  missing_index <- is.na(gw_small)
-  gw_small[missing_index] <- 0
-  graph_names <- colnames(gw_small)[unlist(groups)]
+calculate_critical_simes <- function(intersections, p, groups) {
+  missing_index <- is.na(intersections)
+  intersections[missing_index] <- 0
+  graph_names <- colnames(intersections)[unlist(groups)]
 
   list_w_new <- vector("list", length(groups))
   i <- 1
 
   for (group in groups) {
     list_w_new[[i]] <- matrixStats::rowCumsums(
-      gw_small[, group[order(p[group])], drop = FALSE],
+      intersections[, group[order(p[group])], drop = FALSE],
       useNames = TRUE
     )
 

@@ -1,7 +1,10 @@
-#' Generate weights for each intersections hypothesis in the full closure tree
-#' of an MCP graph
+#' Calculate weights for the closure of a graph
 #'
-#' @param graph An MCP graph as created by `create_graph()`
+#' The closure of a graph is the set of all sub-graphs, or intersections
+#' hypotheses, of a graph. Weights for each sub-graph are calculated using the
+#' weighting strategy defined in Bretz et al (2011).
+#'
+#' @param graph An initial graph as returned by [create_graph()]
 #'
 #' @return A numeric matrix of all intersection hypothesis weights. Each row
 #'   corresponds to a single intersection hypothesis. The first half of the

@@ -2,17 +2,16 @@
 % Please edit documentation in R/update_graph.R
 \name{update_graph}
 \alias{update_graph}
-\title{\code{updated_graph} object}
+\title{Delete hypotheses from a graph}
 \usage{
 update_graph(graph, keep)
 }
 \arguments{
-\item{graph}{An initial graph as created by \code{create_graph()}}
+\item{graph}{An initial graph as returned by \code{\link[=create_graph]{create_graph()}}}
 
-\item{keep}{A vector coercible to Boolean, denoting which hypotheses to
+\item{keep}{A logical or integer vector, denoting which hypotheses to
 keep/delete. An entry of \code{FALSE} (or 0) corresponds to a deletion, and
-\code{TRUE} (or any number other than 0) corresponds to keeping a hypothesis. We
-recommend using either a 1/0 vector or a TRUE/FALSE vector for clarity}
+\code{TRUE} (or 1) corresponds to keeping a hypothesis}
 }
 \value{
 An object of class \code{updated_graph} with 3 elements
@@ -23,8 +22,10 @@ An object of class \code{updated_graph} with 3 elements
 }
 }
 \description{
-Creates a list that represents an updated graph with specific hypotheses
-deleted.
+It is not always obvious what a graph's weights will look like after deleting
+one or more hypotheses. While \code{\link[=generate_weights]{generate_weights()}} calculates all sub-graphs'
+hypothesis weights, \code{update_graph()} gives a more detailed view for a single
+set of deletions, including transition weights as well.
 }
 \examples{
 hypotheses <- c(0.5, 0.5, 0, 0)
@@ -38,7 +39,7 @@ g <- create_graph(hypotheses, transitions)
 
 # Delete the second hypothesis
 update_graph(g, c(TRUE, FALSE, TRUE, TRUE))
-# Equivalent call
+# Equivalent
 # update_graph(g, c(1, 0, 1, 1))
 
 }

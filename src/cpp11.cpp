@@ -6,10 +6,10 @@
 #include <R_ext/Visibility.h>
 
 // power_bonferroni.cpp
-writable::integers bonferroni_sequential_cpp(writable::doubles hypotheses, writable::doubles_matrix<> transitions, doubles p, double alpha);
-extern "C" SEXP _graphicalMCP_bonferroni_sequential_cpp(SEXP hypotheses, SEXP transitions, SEXP p, SEXP alpha) {
+writable::integers bonferroni_sequential_cpp_(writable::doubles hypotheses, writable::doubles_matrix<> transitions, doubles p, double alpha);
+extern "C" SEXP _graphicalMCP_bonferroni_sequential_cpp_(SEXP hypotheses, SEXP transitions, SEXP p, SEXP alpha) {
   BEGIN_CPP11
-    return cpp11::as_sexp(bonferroni_sequential_cpp(cpp11::as_cpp<cpp11::decay_t<writable::doubles>>(hypotheses), cpp11::as_cpp<cpp11::decay_t<writable::doubles_matrix<>>>(transitions), cpp11::as_cpp<cpp11::decay_t<doubles>>(p), cpp11::as_cpp<cpp11::decay_t<double>>(alpha)));
+    return cpp11::as_sexp(bonferroni_sequential_cpp_(cpp11::as_cpp<cpp11::decay_t<writable::doubles>>(hypotheses), cpp11::as_cpp<cpp11::decay_t<writable::doubles_matrix<>>>(transitions), cpp11::as_cpp<cpp11::decay_t<doubles>>(p), cpp11::as_cpp<cpp11::decay_t<double>>(alpha)));
   END_CPP11
 }
 // power_bonferroni.cpp
@@ -22,7 +22,7 @@ extern "C" SEXP _graphicalMCP_bonferroni_sequential_power_cpp(SEXP hypotheses, S
 
 extern "C" {
 static const R_CallMethodDef CallEntries[] = {
-    {"_graphicalMCP_bonferroni_sequential_cpp",       (DL_FUNC) &_graphicalMCP_bonferroni_sequential_cpp,       4},
+    {"_graphicalMCP_bonferroni_sequential_cpp_",      (DL_FUNC) &_graphicalMCP_bonferroni_sequential_cpp_,      4},
     {"_graphicalMCP_bonferroni_sequential_power_cpp", (DL_FUNC) &_graphicalMCP_bonferroni_sequential_power_cpp, 4},
     {NULL, NULL, 0}
 };

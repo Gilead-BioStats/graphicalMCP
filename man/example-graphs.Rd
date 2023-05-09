@@ -9,7 +9,7 @@
 \alias{simple_successive_1}
 \alias{simple_successive_2}
 \alias{random_graph}
-\title{Example graphs from a variety of papers}
+\title{Example graphs from a selection of papers}
 \usage{
 bonferroni_holm(n, names = NULL)
 
@@ -33,15 +33,13 @@ random_graph(n, names = NULL)
 \item{names}{Optional names for the hypotheses (Must have length \code{n} or be
 NULL)}
 
-\item{hypotheses}{Weights in a fallback procedure}
+\item{hypotheses}{Hypothesis weights in a fallback procedure}
 }
 \value{
-An S3 object of class \code{initial_graph}, following the structure of
-Bonferroni & Holm: A complete graph with equal weight on each hypothesis
-and equal weight on each transition
+An S3 object as returned by \code{\link[=create_graph]{create_graph()}}
 }
 \description{
-Example graphs from a variety of papers
+Example graphs from a selection of papers
 }
 \examples{
 bonferroni_holm(3, names = paste("dose", letters[1:3]))

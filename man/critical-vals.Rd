@@ -5,47 +5,51 @@
 \alias{solve_c}
 \alias{calculate_critical_parametric}
 \alias{calculate_critical_simes}
-\title{Calculate testing critical values for the closure of a graph}
+\title{Calculate updated hypothesis weights for the closure of a graph}
 \usage{
-c_function(x, w, corr, alpha)
+c_function(x, weights, corr, alpha)
 
-solve_c(w, corr, alpha)
+solve_c(weights, corr, alpha)
 
-calculate_critical_parametric(gw_small, corr, alpha, groups)
+calculate_critical_parametric(intersections, corr, alpha, groups)
 
-calculate_critical_simes(gw_small, p, groups)
+calculate_critical_simes(intersections, p, groups)
 }
 \arguments{
-\item{x}{The root to solve for with \code{uniroot()}}
+\item{x}{The root to solve for with \code{\link[stats:uniroot]{stats::uniroot()}}}
 
-\item{w}{A numeric vector of graph weights}
+\item{weights}{A numeric vector of hypothesis weights}
 
-\item{corr}{A numeric matrix specifying the correlation between the test
-statistics of hypotheses to be tested using parametric testing}
+\item{corr}{A numeric matrix of correlations between hypotheses' test
+statistics}
 
 \item{alpha}{A numeric scalar specifying the global significance level for
-parametric testing}
+testing}
 
-\item{gw_small}{A compact representation of \code{generate_weights()} output,
+\item{intersections}{A compact representation of \code{\link[=generate_weights]{generate_weights()}} output,
 where missing hypotheses get a missing value for weights, and h-vectors are
 dropped}
 
 \item{groups}{A list of numeric vectors specifying hypotheses to test
 together}
 
-\item{p}{A numeric vector of hypothesis p-values}
+\item{p}{A numeric vector of p-values}
 }
 \value{
 Outputs:
 \itemize{
-\item For \code{calculate_critical_parametric()}, a matrix with the same shape as
-gw_small, where the weights in the second half of columns have been
-multiplied by the parametric critical value for the group they are in
+\item For \verb{calculate_critical_*()}, a matrix with the same shape as
+\code{intersections}, where the weights have been adjusted according to the
+specified adjustment method
 \item For \code{c_function()}, the critical value for the given group
 }
 }
 \description{
-Calculate testing critical values for the closure of a graph
+The weights created by \code{\link[=generate_weights]{generate_weights()}} work immediately for Bonferroni
+testing, but parametric and Simes testing require additional calculations.
+The \verb{calculate_critical_*()} functions apply parametric or Simes weight
+increases to get updated weights for testing. They also subset the weights
+columns by the appropriate groups
 }
 \examples{
 p <- 1:6 / 200

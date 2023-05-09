@@ -2,13 +2,10 @@
 % Please edit documentation in R/bonferroni_sequential.R, R/graph_report.R
 \name{bonferroni_sequential}
 \alias{bonferroni_sequential}
-\alias{bs_cpp}
 \alias{test_graph}
-\title{Test a graph}
+\title{Report details of hypothesis rejections}
 \usage{
 bonferroni_sequential(graph, p, alpha = 0.05, critical = FALSE)
-
-bs_cpp(graph, p, alpha = 0.05)
 
 test_graph(
   graph,
@@ -22,11 +19,12 @@ test_graph(
 )
 }
 \arguments{
-\item{graph}{An initial graph as returned by \code{create_graph()}}
+\item{graph}{An initial graph as returned by \code{\link[=create_graph]{create_graph()}}}
 
 \item{p}{A numeric vector of p-values}
 
-\item{alpha}{A numeric scalar specifying the global level to test at}
+\item{alpha}{A numeric scalar specifying the global significance level for
+testing}
 
 \item{critical}{A logical scalar specifying whether hypothesis-level detail
 should be included in the results, including calculating critical values
@@ -55,7 +53,11 @@ intersection
 }
 }
 \description{
-Test a graph
+The slower graph testing functions have design choices made that favor ease
+of interpreting results over speed. Results include hypothesis rejection
+decisions of course, but also the test values that led to the final result.
+The functions include options for reporting details using the adjusted
+p-value method or critical value method.
 }
 \examples{
 
@@ -89,4 +91,7 @@ test_graph(
   test_types = c("bonferroni", "simes", "parametric"),
   corr = corr
 )
+}
+\seealso{
+\code{\link[=test_graph_fast]{test_graph_fast()}}, \code{\link[=bonferroni_sequential_cpp]{bonferroni_sequential_cpp()}}
 }

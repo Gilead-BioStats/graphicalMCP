@@ -1,7 +1,9 @@
-#' `initial_graph` object
+#' Define a graph representing a multiple comparison procedure
 #'
-#' Creates a list that represents an initial graphical multiple comparison
-#' procedure.
+#' A multiple comparison procedure graph can be represented by 1) a vector of
+#' initial hypothesis weights, and 2) a matrix of initial transition weights.
+#' This function also does validation to make sure that the vector and matrix
+#' combine to form a valid MCP graph.
 #'
 #' @param hypotheses A numeric vector of hypothesis weights in an initial
 #'   graphical multiple comparison procedure. Must be a vector of values between
@@ -16,8 +18,12 @@
 #' @param names (Optional) A character vector of hypothesis names. If not
 #'   provided, names from `hypotheses` and `transitions` will be used. If names
 #'   are not specified, hypotheses will be named sequentially as H1, H2, ...
-#' @return An S3 object of class `initial_graph`
+#'
+#' @return An S3 object of class `initial_graph`. The underlying structure is a
+#'   list with elements `hypotheses` and `transitions`
+#'
 #' @export
+#'
 #' @examples
 #' # A graphical multiple comparison procedure with two primary hypotheses (H1
 #' # and H2) and two secondary hypotheses (H3 and H4)

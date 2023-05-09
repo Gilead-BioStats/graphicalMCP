@@ -1,4 +1,4 @@
-#' S3 print method for class 'updated_graph'
+#' S3 print method for class `updated_graph`
 #'
 #' A printed `updated_graph` displays the initial graph, the vector of
 #' keep/delete hypotheses, and the updated graph

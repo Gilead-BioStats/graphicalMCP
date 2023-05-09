@@ -43,7 +43,9 @@ test_input_val <- function(graph,
       seq_along(test_types),
       function(i) {
         if (test_types[[i]] == "parametric") {
-          return(corr_has_missing(corr, groups[[i]]))
+          group <- groups[[i]]
+          missing <- any(is.na(corr[group, group])) || is.null(corr)
+          return(missing)
         } else {
           return(FALSE)
         }

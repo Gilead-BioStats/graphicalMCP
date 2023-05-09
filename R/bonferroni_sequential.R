@@ -21,6 +21,7 @@ bonferroni_sequential <- function(graph,
   adj_p <- vector("numeric", length(graph$hypotheses))
   rejected <- vector("logical", length(graph$hypotheses))
   critical_vals <- if (critical) vector("list", length(graph$hypotheses))
+  keep <- rep(TRUE, length(graph$hypotheses))
 
   for (i in seq_along(graph$hypotheses)) {
     adj_p_subgraph <- p / graph$hypotheses
@@ -44,7 +45,8 @@ bonferroni_sequential <- function(graph,
       critical_vals[[i]] <- critical_step
     }
 
-    graph <- delete_hypothesis(graph, min_index)
+    keep[[min_index]] <- FALSE
+    graph <- update_graph(graph, keep)$updated_graph
   }
   names(adj_p) <- names(graph$hypotheses)
   names(rejected) <- names(graph$hypotheses)
@@ -67,13 +69,4 @@ bonferroni_sequential <- function(graph,
     ),
     class = "graph_report"
   )
-}
-
-#' @rdname testing
-#' @export
-# C++ only, pass/fail only
-bs_cpp <- function(graph,
-                   p,
-                   alpha = .05) {
-  bonferroni_sequential_cpp(graph$hypotheses, graph$transitions, p, alpha)
 }

@@ -10,7 +10,7 @@ test_that("results match test_graph()", {
 
   expect_equal(
     as.integer(bonferroni_sequential(rando, p)$outputs$rejected),
-    bs_cpp(rando, p)
+    bonferroni_sequential_cpp(rando, p)
   )
 
   expect_false(
@@ -36,7 +36,7 @@ test_that("C++ sequential properly assigns new hypotheses each round", {
   )
 
   expect_equal(
-    as.logical(bs_cpp(g, p)),
+    as.logical(bonferroni_sequential_cpp(g, p)),
     unname(test_graph(g, p)$outputs$rejected)
   )
 })

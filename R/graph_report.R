@@ -1,8 +1,15 @@
-#' Test a graph
+#' Report details of hypothesis rejections
 #'
-#' @param graph An initial graph as returned by `create_graph()`
+#' The slower graph testing functions have design choices made that favor ease
+#' of interpreting results over speed. Results include hypothesis rejection
+#' decisions of course, but also the test values that led to the final result.
+#' The functions include options for reporting details using the adjusted
+#' p-value method or critical value method.
+#'
+#' @param graph An initial graph as returned by [create_graph()]
 #' @param p A numeric vector of p-values
-#' @param alpha A numeric scalar specifying the global level to test at
+#' @param alpha A numeric scalar specifying the global significance level for
+#'   testing
 #' @param groups A list of numeric vectors specifying hypotheses to test
 #'   together
 #' @param test_types A character vector of tests to apply to the given groups
@@ -23,6 +30,7 @@
 #'   intersection
 #'
 #' @rdname testing
+#' @seealso [test_graph_fast()], [bonferroni_sequential_cpp()]
 #' @export
 #'
 #' @examples
@@ -123,7 +131,7 @@ test_graph <- function(graph,
 
     p_adjust_fun <- paste0("p_adjust_", test)
     p_adjust_args <- list(
-      p_values = p[group_in_inter],
+      p = p[group_in_inter],
       weights = weights[group_in_inter],
       corr = corr[group_in_inter, group_in_inter]
     )[methods::formalArgs(p_adjust_fun)]
@@ -137,7 +145,7 @@ test_graph <- function(graph,
       } else {
         critical_fun <- paste0(test, "_test_vals")
         critical_args <- list(
-          p_values = p[group_in_inter],
+          p = p[group_in_inter],
           weights = weights[group_in_inter],
           alpha = alpha,
           corr = corr[group_in_inter, group_in_inter]

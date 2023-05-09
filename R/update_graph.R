@@ -1,13 +1,14 @@
-#' `updated_graph` object
+#' Delete hypotheses from a graph
 #'
-#' Creates a list that represents an updated graph with specific hypotheses
-#' deleted.
+#' It is not always obvious what a graph's weights will look like after deleting
+#' one or more hypotheses. While [generate_weights()] calculates all sub-graphs'
+#' hypothesis weights, `update_graph()` gives a more detailed view for a single
+#' set of deletions, including transition weights as well.
 #'
-#' @param graph An initial graph as created by `create_graph()`
-#' @param keep A vector coercible to Boolean, denoting which hypotheses to
+#' @param graph An initial graph as returned by [create_graph()]
+#' @param keep A logical or integer vector, denoting which hypotheses to
 #'   keep/delete. An entry of `FALSE` (or 0) corresponds to a deletion, and
-#'   `TRUE` (or any number other than 0) corresponds to keeping a hypothesis. We
-#'   recommend using either a 1/0 vector or a TRUE/FALSE vector for clarity
+#'   `TRUE` (or 1) corresponds to keeping a hypothesis
 #'
 #' @return An object of class `updated_graph` with 3 elements
 #'   * The initial graph object
@@ -27,15 +28,18 @@
 #'
 #' # Delete the second hypothesis
 #' update_graph(g, c(TRUE, FALSE, TRUE, TRUE))
-#' # Equivalent call
+#' # Equivalent
 #' # update_graph(g, c(1, 0, 1, 1))
 #'
 update_graph <- function(graph, keep) {
   stopifnot(
-    "'keep' must be a logical or numeric vector" =
-      (is.logical(keep) || is.numeric(keep)),
-    "length of 'keep' must match number of hypotheses in 'graph'" =
-      length(graph$hypotheses) == length(keep)
+    "Please update an `initial_graph` object" = class(graph) == "initial_graph",
+    "Hypothesis index must be a logical or integer vector" =
+      is.logical(keep) || (is.numeric(keep) && all(as.integer(keep) == keep)),
+    "Length of hypothesis index must match size of graph" =
+      length(graph$hypotheses) == length(keep),
+    "Hypothesis index must only contain 0, 1, TRUE, or FALSE" =
+      all(keep %in% c(TRUE, FALSE, 0, 1))
   )
 
   keep <- as.logical(keep)

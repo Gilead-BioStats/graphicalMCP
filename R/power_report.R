@@ -1,7 +1,15 @@
-#' Run an MCP power simulation
+#' Obtain hypothesis rejection probabilities
 #'
-#' @param graph An initial graph as returned by `create_graph()`
-#' @param test_alpha A numeric scalar specifying the global level to test at
+#' It's often difficult to tell how likely a given hypothesis is to be rejected.
+#' This is where power simulations are useful. Under a set of distribution
+#' parameters, many p-values are generated, and the graph is tested against each
+#' one. Any testing strategy can be used. Then probabilities are calculated for
+#' each hypothesis to be rejected, as well as some additional probabilities such
+#' as expected rejections and probability of rejecting any hypothesis
+#'
+#' @param graph An initial graph as returned by [create_graph()]
+#' @param test_alpha A numeric scalar specifying the global significance level
+#'   for testing
 #' @param test_groups A list of numeric vectors specifying hypotheses to test
 #'   together
 #' @param test_types A character vector of tests to apply to the given groups
@@ -18,7 +26,7 @@
 #'   hypothesis to all hypotheses in a graph
 #' @param sim_seed (Optional) Random seed to set before simulating p-values. Set
 #'   this to use a consistent set of p simulations across power calculations
-#' @param force_closure A Boolean scalar used to determine whether the full
+#' @param force_closure A logical scalar used to determine whether the full
 #'   closure test should be used for Bonferroni testing. Ignored if any tests
 #'   are non-Bonferroni
 #'
@@ -42,7 +50,7 @@
 #' # the default of 100 simulations will usually need to be increased
 #' calculate_power(par_gate, sim_n = 1e5)
 #'
-#' # but any test group/type combination that works for `test_graph()` can be
+#' # but any test group/type combination that works for [test_graph()] can be
 #' # used
 #' calculate_power(
 #'   par_gate,
@@ -150,7 +158,7 @@ calculate_power <- function(graph,
         )
       }
 
-      test_res_mat[row, ] <- test_graph_fast_vms(
+      test_res_mat[row, ] <- test_graph_fast(
         p_sim[row, ],
         test_alpha,
         cbind(gw_bonf, gw_simes, gw_para)[, graph_names, drop = FALSE]

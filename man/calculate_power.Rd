@@ -2,7 +2,7 @@
 % Please edit documentation in R/power_report.R
 \name{calculate_power}
 \alias{calculate_power}
-\title{Run an MCP power simulation}
+\title{Obtain hypothesis rejection probabilities}
 \usage{
 calculate_power(
   graph,
@@ -19,9 +19,10 @@ calculate_power(
 )
 }
 \arguments{
-\item{graph}{An initial graph as returned by \code{create_graph()}}
+\item{graph}{An initial graph as returned by \code{\link[=create_graph]{create_graph()}}}
 
-\item{test_alpha}{A numeric scalar specifying the global level to test at}
+\item{test_alpha}{A numeric scalar specifying the global significance level
+for testing}
 
 \item{test_groups}{A list of numeric vectors specifying hypotheses to test
 together}
@@ -47,7 +48,7 @@ hypothesis to all hypotheses in a graph}
 \item{sim_seed}{(Optional) Random seed to set before simulating p-values. Set
 this to use a consistent set of p simulations across power calculations}
 
-\item{force_closure}{A Boolean scalar used to determine whether the full
+\item{force_closure}{A logical scalar used to determine whether the full
 closure test should be used for Bonferroni testing. Ignored if any tests
 are non-Bonferroni}
 }
@@ -64,7 +65,12 @@ hypotheses specified in \code{sim_success}
 }
 }
 \description{
-Run an MCP power simulation
+It's often difficult to tell how likely a given hypothesis is to be rejected.
+This is where power simulations are useful. Under a set of distribution
+parameters, many p-values are generated, and the graph is tested against each
+one. Any testing strategy can be used. Then probabilities are calculated for
+each hypothesis to be rejected, as well as some additional probabilities such
+as expected rejections and probability of rejecting any hypothesis
 }
 \examples{
 par_gate <- simple_successive_1()
@@ -75,7 +81,7 @@ par_gate <- simple_successive_1()
 # the default of 100 simulations will usually need to be increased
 calculate_power(par_gate, sim_n = 1e5)
 
-# but any test group/type combination that works for `test_graph()` can be
+# but any test group/type combination that works for [test_graph()] can be
 # used
 calculate_power(
   par_gate,

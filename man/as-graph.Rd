@@ -2,12 +2,15 @@
 % Please edit documentation in R/as_graph.R
 \name{as_gmcp_graph}
 \alias{as_gmcp_graph}
+\alias{as_graph}
 \title{Convert between gMCP and graphicalMCP graph classes}
 \usage{
 as_gmcp_graph(graph)
+
+as_graph(gmcp_graph)
 }
 \arguments{
-\item{graph}{A graphicalMCP initial_graph}
+\item{graph}{An initial graph as returned by \code{\link[=create_graph]{create_graph()}}}
 
 \item{gmcp_graph}{A gMCP graph}
 }
@@ -21,7 +24,9 @@ Convert between gMCP and graphicalMCP graph classes
 \examples{
 g1 <- random_graph(5)
 
-if (requireNamespace("gMCP", quietly = TRUE)) g2 <- as_gmcp_graph(g1)
+if (requireNamespace("gMCP", quietly = TRUE)) {
+  g2 <- as_gmcp_graph(g1)
 
-all.equal(g1, as_graph(g2))
+  all.equal(g1, as_graph(g2))
+}
 }

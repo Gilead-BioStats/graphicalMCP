@@ -2,7 +2,7 @@
 % Please edit documentation in R/initial_graph.R
 \name{create_graph}
 \alias{create_graph}
-\title{\code{initial_graph} object}
+\title{Define a graph representing a multiple comparison procedure}
 \usage{
 create_graph(hypotheses, transitions, names = NULL)
 }
@@ -24,11 +24,14 @@ provided, names from \code{hypotheses} and \code{transitions} will be used. If n
 are not specified, hypotheses will be named sequentially as H1, H2, ...}
 }
 \value{
-An S3 object of class \code{initial_graph}
+An S3 object of class \code{initial_graph}. The underlying structure is a
+list with elements \code{hypotheses} and \code{transitions}
 }
 \description{
-Creates a list that represents an initial graphical multiple comparison
-procedure.
+A multiple comparison procedure graph can be represented by 1) a vector of
+initial hypothesis weights, and 2) a matrix of initial transition weights.
+This function also does validation to make sure that the vector and matrix
+combine to form a valid MCP graph.
 }
 \examples{
 # A graphical multiple comparison procedure with two primary hypotheses (H1

@@ -6,23 +6,22 @@
 \alias{simes_test_vals}
 \title{Test hypotheses with the critical values method}
 \usage{
-bonferroni_test_vals(p_values, weights, alpha)
+bonferroni_test_vals(p, weights, alpha)
 
-parametric_test_vals(p_values, weights, alpha, corr)
+parametric_test_vals(p, weights, alpha, corr)
 
-simes_test_vals(p_values, weights, alpha)
+simes_test_vals(p, weights, alpha)
 }
 \arguments{
-\item{p_values}{A numeric vector of p-values}
+\item{p}{A numeric vector of p-values}
 
 \item{weights}{A numeric vector of hypothesis weights}
 
-\item{alpha}{A numeric scalar specifying the level to test weighted p-values
-against}
+\item{alpha}{A numeric scalar specifying the global significance level for
+testing}
 
-\item{corr}{A numeric matrix indicating the correlation between
-the test statistics which generated the p-values. Must be a square matrix
-with side length equal to the length of \code{p} and \code{weights}}
+\item{corr}{A numeric matrix of correlations between hypotheses' test
+statistics}
 }
 \value{
 A data frame with columns specifying the values used to calculate

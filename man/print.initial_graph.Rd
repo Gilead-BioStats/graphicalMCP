@@ -2,7 +2,7 @@
 % Please edit documentation in R/initial_graph_print.R
 \name{print.initial_graph}
 \alias{print.initial_graph}
-\title{S3 print method for the class 'initial_graph'}
+\title{S3 print method for the class \code{initial_graph}}
 \usage{
 \method{print}{initial_graph}(x, ...)
 }

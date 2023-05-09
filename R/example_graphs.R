@@ -1,14 +1,14 @@
-#' Example graphs from a variety of papers
+#' Example graphs from a selection of papers
 #'
 #' @param n Number of vertices in the graph
-#' @param hypotheses Weights in a fallback procedure
+#' @param hypotheses Hypothesis weights in a fallback procedure
 #' @param names Optional names for the hypotheses (Must have length `n` or be
 #'   NULL)
 #'
-#' @return An S3 object of class `initial_graph`, following the structure of
-#'   Bonferroni & Holm: A complete graph with equal weight on each hypothesis
-#'   and equal weight on each transition
+#' @return An S3 object as returned by [create_graph()]
+#'
 #' @export
+#'
 #' @rdname example-graphs
 #'
 #' @examples

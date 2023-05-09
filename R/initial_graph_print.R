@@ -25,7 +25,7 @@ print_transitions <- function(graph) {
   print(transitions_text)
 }
 
-#' S3 print method for the class 'initial_graph'
+#' S3 print method for the class `initial_graph`
 #'
 #' A printed `initial_graph` displays a header stating what the object is, the
 #' hypothesis weights, and the transition weights.

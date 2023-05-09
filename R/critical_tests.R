@@ -1,23 +1,22 @@
 #' Test hypotheses with the critical values method
 #'
-#' @param p_values A numeric vector of p-values
+#' @param p A numeric vector of p-values
 #' @param weights A numeric vector of hypothesis weights
-#' @param alpha A numeric scalar specifying the level to test weighted p-values
-#'   against
-#' @param corr A numeric matrix indicating the correlation between
-#'   the test statistics which generated the p-values. Must be a square matrix
-#'   with side length equal to the length of `p` and `weights`
+#' @param alpha A numeric scalar specifying the global significance level for
+#'   testing
+#' @param corr A numeric matrix of correlations between hypotheses' test
+#'   statistics
 #'
 #' @return A data frame with columns specifying the values used to calculate
 #'   each hypothesis test
 #'
 #' @rdname calc-test_vals
-bonferroni_test_vals <- function(p_values, weights, alpha) {
+bonferroni_test_vals <- function(p, weights, alpha) {
   data.frame(
     intersection = NA,
     hypothesis = names(weights),
     test = "bonferroni",
-    p = p_values,
+    p = p,
     "<=" = "<=",
     c = "",
     "*" = "",
@@ -25,23 +24,23 @@ bonferroni_test_vals <- function(p_values, weights, alpha) {
     "*" = "*",
     alpha = alpha,
     res = ifelse(
-      p_values == 0 & weights == 0,
+      p == 0 & weights == 0,
       NA,
-      p_values <= weights * alpha
+      p <= weights * alpha
     ),
     check.names = FALSE
   )
 }
 
 #' @rdname calc-test_vals
-parametric_test_vals <- function(p_values, weights, alpha, corr) {
+parametric_test_vals <- function(p, weights, alpha, corr) {
   c <- solve_c(weights, corr, alpha)
 
   data.frame(
     intersection = NA,
     hypothesis = names(weights),
     test = "parametric",
-    p = p_values,
+    p = p,
     "<=" = "<=",
     c = c,
     "*" = "*",
@@ -49,29 +48,29 @@ parametric_test_vals <- function(p_values, weights, alpha, corr) {
     "*" = "*",
     alpha = alpha,
     res = ifelse(
-      p_values == 0 & weights == 0,
+      p == 0 & weights == 0,
       NA,
-      p_values <= c * weights * alpha
+      p <= c * weights * alpha
     ),
     check.names = FALSE
   )
 }
 
 #' @rdname calc-test_vals
-simes_test_vals <- function(p_values, weights, alpha) {
+simes_test_vals <- function(p, weights, alpha) {
   vec_res <- vector(length = length(weights))
   w_sum <- vector("numeric", length = length(weights))
 
   for (i in seq_along(weights)) {
-    w_sum[[i]] <- sum(weights[p_values <= p_values[[i]]])
-    vec_res[[i]] <- p_values[[i]] <= alpha * w_sum[[i]]
+    w_sum[[i]] <- sum(weights[p <= p[[i]]])
+    vec_res[[i]] <- p[[i]] <= alpha * w_sum[[i]]
   }
 
   data.frame(
     intersection = NA,
     hypothesis = names(weights),
     test = "simes",
-    p = p_values,
+    p = p,
     "<=" = "<=",
     c = "",
     "*" = "",
@@ -79,7 +78,7 @@ simes_test_vals <- function(p_values, weights, alpha) {
     "*" = "*",
     alpha = alpha,
     res = ifelse(
-      p_values == 0 & w_sum == 0,
+      p == 0 & w_sum == 0,
       NA,
       vec_res
     ),

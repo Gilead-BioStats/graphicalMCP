@@ -11,10 +11,10 @@
 
 \item{...}{Other values passed on to other methods (currently unused)}
 
-\item{precision}{An integer value indicating the maximum number of decimals
+\item{precision}{An integer scalar indicating the maximum number of decimals
 to include in numeric values}
 
-\item{indent}{An integer value indicating how many spaces to indent results}
+\item{indent}{An integer scalar indicating how many spaces to indent results}
 }
 \description{
 A graph report displays
@@ -23,6 +23,6 @@ A graph report displays
 \item p-values & alpha used for tests,
 \item Which hypotheses can be rejected, and
 \item Detailed test results matrix, including the results of
-\code{generate_weights()} & test results for each intersection hypothesis
+\code{\link[=generate_weights]{generate_weights()}} & test results for each intersection hypothesis
 }
 }
