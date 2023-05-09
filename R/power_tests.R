@@ -65,4 +65,3 @@ bonferroni_sequential_cpp <- function(graph,
                                       alpha = .05) {
   bonferroni_sequential_cpp_(graph$hypotheses, graph$transitions, p, alpha)
 }
-

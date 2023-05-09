@@ -63,16 +63,16 @@
 #' )
 #'
 calculate_power <- function(graph,
-                                test_alpha = .05,
-                                test_groups = list(seq_along(graph$hypotheses)),
-                                test_types = c("bonferroni"),
-                                test_corr = NULL,
-                                sim_n = 100,
-                                sim_theta = rep(0, length(graph$hypotheses)),
-                                sim_corr = diag(length(graph$hypotheses)),
-                                sim_success = 1:2,
-                                sim_seed = NULL,
-                                force_closure = FALSE) {
+                            test_alpha = .05,
+                            test_groups = list(seq_along(graph$hypotheses)),
+                            test_types = c("bonferroni"),
+                            test_corr = NULL,
+                            sim_n = 100,
+                            sim_theta = rep(0, length(graph$hypotheses)),
+                            sim_corr = diag(length(graph$hypotheses)),
+                            sim_success = 1:2,
+                            sim_seed = NULL,
+                            force_closure = FALSE) {
   test_opts <- c(
     bonferroni = "bonferroni",
     parametric = "parametric",
