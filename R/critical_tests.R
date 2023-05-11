@@ -11,6 +11,17 @@
 #'   each hypothesis test
 #'
 #' @rdname calc-test_vals
+#'
+#' @keywords internal
+#'
+#' @examples
+#' w <- c(.5, .5, 0, 0)
+#'
+#' p <- c(.024, .01, .026, .027)
+#'
+#' graphicalMCP:::bonferroni_test_vals(p, w, .05)
+#' graphicalMCP:::parametric_test_vals(p, w, .05, diag(4))
+#' graphicalMCP:::simes_test_vals(p, w, .05)
 bonferroni_test_vals <- function(p, weights, alpha) {
   data.frame(
     intersection = NA,

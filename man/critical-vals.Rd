@@ -13,7 +13,7 @@ solve_c(weights, corr, alpha)
 
 calculate_critical_parametric(intersections, corr, alpha, groups)
 
-calculate_critical_simes(simes_inters, simes_p, simes_groups)
+calculate_critical_simes(intersections, p, groups)
 }
 \arguments{
 \item{x}{The root to solve for with \code{\link[stats:uniroot]{stats::uniroot()}}}
@@ -26,9 +26,10 @@ statistics}
 \item{alpha}{A numeric scalar specifying the global significance level for
 testing}
 
-\item{intersections}{A compact representation of \code{\link[=generate_weights]{generate_weights()}} output,
-where missing hypotheses get a missing value for weights, and h-vectors are
-dropped}
+\item{intersections}{For parametric, a compact representation of
+\code{\link[=generate_weights]{generate_weights()}} output, where missing hypotheses get a missing value
+for weights, and h-vectors are dropped. For Simes, just the weights from
+\code{\link[=generate_weights]{generate_weights()}} output}
 
 \item{groups}{A list of numeric vectors specifying hypotheses to test
 together}
@@ -57,8 +58,10 @@ p <- 1:6 / 200
 g <- bonferroni_holm(6)
 gw_large <- generate_weights(g)
 
-gw <- ifelse(gw_large[, 1:6], gw_large[, 7:12], NA)
+gw_0 <- gw_large[, 7:12]
+gw <- ifelse(gw_large[, 1:6], gw_0, NA)
 
-para_critical <- calculate_critical_parametric(gw, diag(6), .05, list(1:3))
-simes_critical <- calculate_critical_simes(gw, p, list(4:6))
+graphicalMCP:::calculate_critical_parametric(gw, diag(6), .05, list(1:3))
+graphicalMCP:::calculate_critical_simes(gw_0, p, list(4:6))
 }
+\keyword{internal}

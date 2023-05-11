@@ -62,146 +62,6 @@
 #'   sim_success = 1
 #' )
 #'
-# calculate_power <- function(graph,
-#                             test_alpha = .05,
-#                             test_groups = list(seq_along(graph$hypotheses)),
-#                             test_types = c("bonferroni"),
-#                             test_corr = NULL,
-#                             sim_n = 100,
-#                             sim_theta = rep(0, length(graph$hypotheses)),
-#                             sim_corr = diag(length(graph$hypotheses)),
-#                             sim_success = 1:2,
-#                             sim_seed = NULL,
-#                             force_closure = FALSE) {
-#   test_opts <- c(
-#     bonferroni = "bonferroni",
-#     parametric = "parametric",
-#     simes = "simes",
-#     b = "bonferroni",
-#     p = "parametric",
-#     s = "simes"
-#   )
-#   test_types <- test_opts[tolower(test_types)]
-#   if (length(test_types) == 1) {
-#     test_types <- rep(test_types, length(test_groups))
-#   }
-#   # groups of size 1 should always use Bonferroni testing
-#   test_types[lengths(test_groups) == 1] <- "bonferroni"
-#
-#   fake_p <- rep(0, length(graph$hypotheses))
-#   test_input_val(
-#     graph,
-#     fake_p,
-#     test_alpha,
-#     test_groups,
-#     test_types,
-#     test_corr,
-#     FALSE,
-#     FALSE
-#   )
-#
-#   power_input_val(graph, sim_n, sim_theta, sim_corr, sim_success)
-#
-#   if (!is.null(sim_seed)) set.seed(sim_seed)
-#   p_sim <- stats::pnorm(
-#     mvtnorm::rmvnorm(sim_n, sim_theta, sigma = sim_corr),
-#     lower.tail = FALSE
-#   )
-#
-#   test_res_mat <- matrix(
-#     NA,
-#     nrow = sim_n,
-#     ncol = length(sim_theta),
-#     dimnames = list(seq_len(sim_n), names(graph$hypotheses))
-#   )
-#
-#   graph_names <- names(graph$hypotheses)
-#
-#   if (all(test_types == "bonferroni") && !force_closure) {
-#     test_res_mat <- bonferroni_sequential_power_cpp(
-#       graph$hypotheses,
-#       graph$transitions,
-#       p_sim,
-#       test_alpha
-#     ) == 1
-#
-#     colnames(test_res_mat) <- graph_names
-#     rownames(test_res_mat) <- seq_len(sim_n)
-#   } else {
-#     bonf_groups <- test_groups[test_types == "bonferroni"]
-#     simes_groups <- test_groups[test_types == "simes"]
-#     para_groups <- test_groups[test_types == "parametric"]
-#
-#     gw <- generate_weights(graph)
-#     gw_small <- ifelse(
-#       gw[, seq_len(ncol(gw) / 2)],
-#       gw[, seq_len(ncol(gw) / 2) + (ncol(gw) / 2)],
-#       NA
-#     )
-#
-#     # all `gw_` variables after this point cannot be considered to be ordered
-#
-#     gw_bonf <- gw_small[, unlist(bonf_groups), drop = FALSE]
-#     gw_simes <- gw_small[, unlist(simes_groups), drop = FALSE]
-#
-#     gw_para <- calculate_critical_parametric(
-#       gw_small,
-#       test_corr,
-#       test_alpha,
-#       para_groups
-#     )
-#     gw_para <- gw_para[, unlist(para_groups), drop = FALSE]
-#
-#     for (row in seq_len(sim_n)) {
-#       # if (row == 16) browser()
-#       if (length(simes_groups) > 0) {
-#         gw_simes <- calculate_critical_simes(
-#           gw_small,
-#           p_sim[row, ],
-#           simes_groups
-#         )
-#       }
-#
-#       test_res_mat[row, ] <- test_graph_fast(
-#         p_sim[row, ],
-#         test_alpha,
-#         cbind(gw_bonf, gw_simes, gw_para)[, graph_names, drop = FALSE]
-#       )
-#     }
-#   }
-#
-#   power <- list(
-#     power_local = colMeans(test_res_mat),
-#     power_expected = sum(test_res_mat) / sim_n,
-#     power_at_least_1 = mean(rowSums(test_res_mat) > 0),
-#     power_all = mean(rowSums(test_res_mat) == length(sim_theta)),
-#     power_success = mean(rowSums(test_res_mat[, sim_success, drop = FALSE]) > 0)
-#   )
-#
-#   structure(
-#     list(
-#       inputs = list(
-#         graph = graph,
-#         test_alpha = test_alpha,
-#         test_groups = test_groups,
-#         test_types = test_types,
-#         test_corr = test_corr,
-#         sim_n = sim_n,
-#         sim_theta = sim_theta,
-#         sim_corr = sim_corr,
-#         sim_success = sim_success,
-#         sim_seed = sim_seed
-#       ),
-#       outputs = list(
-#         p_sim = p_sim,
-#         test_results = test_res_mat
-#       ),
-#       power = power
-#     ),
-#     class = "power_report"
-#   )
-# }
-
 calculate_power <- function(graph,
                             test_alpha = .05,
                             test_groups = list(seq_along(graph$hypotheses)),
@@ -262,6 +122,7 @@ calculate_power <- function(graph,
   graph_size <- length(graph$hypotheses)
 
   if (all(test_types == "bonferroni") && !force_closure) {
+    # Bonferroni shortcut ------------------------------------------------------
     test_res_mat <- bonferroni_sequential_power_cpp(
       graph$hypotheses,
       graph$transitions,
@@ -271,14 +132,21 @@ calculate_power <- function(graph,
 
     colnames(test_res_mat) <- graph_names
     rownames(test_res_mat) <- seq_len(sim_n)
-  } else {
+  } else { # closure testing
+    # Generate weights by group ------------------------------------------------
     bonf_groups <- test_groups[test_types == "bonferroni"]
     simes_groups <- test_groups[test_types == "simes"]
+    para_groups <- test_groups[test_types == "parametric"]
+
+    # fast Simes testing requires Simes hypothesis numbers to be mapped to their
+    # relative position within the set of Simes hypotheses
     simes_groups_reduce <- lapply(
       simes_groups,
       function(group) which(unlist(simes_groups) %in% group)
     )
-    para_groups <- test_groups[test_types == "parametric"]
+
+    # it also requires a set of p-values with columns subset for Simes testing
+    p_sim_simes <- p_sim[, unlist(simes_groups), drop = FALSE]
 
     gw <- generate_weights(graph)
     inter_h <- gw[, seq_len(graph_size)]
@@ -288,10 +156,6 @@ calculate_power <- function(graph,
 
     gw_bonf <- gw_small[, unlist(bonf_groups), drop = FALSE]
 
-    gw_simes_cols <- gw_small[, unlist(simes_groups), drop = FALSE]
-    gw_simes_cols[is.na(gw_simes_cols)] <- 0 # c_c_simes() needs 0s, not NAs
-    gw_simes <- gw_simes_cols
-
     gw_para <- calculate_critical_parametric(
       gw_small,
       test_corr,
@@ -299,11 +163,15 @@ calculate_power <- function(graph,
       para_groups
     )
 
-    p_sim_simes <- p_sim[, unlist(simes_groups), drop = FALSE]
+    gw_simes_cols <- gw_small[, unlist(simes_groups), drop = FALSE]
+    gw_simes_cols[is.na(gw_simes_cols)] <- 0 # c_c_simes() needs 0s, not NAs
+    gw_simes <- gw_simes_cols
 
+    # Apply tests --------------------------------------------------------------
     for (row in seq_len(sim_n)) {
 
       if (length(simes_groups) > 0) {
+        # Simes testing depends on p-values
         gw_simes <- calculate_critical_simes(
           gw_simes_cols,
           p_sim_simes[row, ],
@@ -320,6 +188,7 @@ calculate_power <- function(graph,
         gw_all,
         inter_h
       )
+
     }
   }
 

@@ -188,12 +188,13 @@ inter_h <- gw[, seq_len(m)]
 
 gw_bonf <- ifelse(inter_h, gw[, seq_len(m) + m], NA)
 
-gw_para <- calculate_critical_parametric(gw_bonf, diag(m), .05, list(1:m))
+gw_para <-
+  graphicalMCP:::calculate_critical_parametric(gw_bonf, diag(m), .05, list(1:m))
 
 p <- runif(m, .0001, .03)
 sim_corr <- diag(m)
 
-gw_simes <- calculate_critical_simes(gw_bonf, p, list(1:m))
+gw_simes <- graphicalMCP:::calculate_critical_simes(gw_bonf, p, list(1:m))
 groups <- list(1:floor(m / 2), (floor(m / 2) + 1):m)
 
 h <- as.integer(rep(0, m))
@@ -206,9 +207,9 @@ nH <- m
 # Bonferroni
 bonf_bench <- bench::mark(
   `C++ sequential` =
-    as.logical(bonferroni_sequential_cpp(graph2, p)),
+    as.logical(graphicalMCP:::bonferroni_sequential_cpp(graph2, p)),
   `closure (vec/matrixStats)` =
-    as.logical(test_graph_fast(p, .05, gw_bonf, inter_h)),
+    as.logical(graphicalMCP:::test_graph_fast(p, .05, gw_bonf, inter_h)),
   `gMCP, raw C` =
     .C("graphproc", h = h, a = a, G = G, p, m, G, 1, 0, 0)$h, # different val?
   `gMCP::gMCP` =
@@ -225,10 +226,10 @@ gt(bonf_bench[1:9]) %>%
 # Simes
 simes_bench <- bench::mark(
   `graphicalMCP` =
-    test_graph_fast(
+    graphicalMCP:::test_graph_fast(
       p,
       .05,
-      calculate_critical_simes(gw_bonf, p, list(1:m)),
+      graphicalMCP:::calculate_critical_simes(gw_bonf, p, list(1:m)),
       inter_h
     ),
   `gMCP::gMCP` =
@@ -246,7 +247,7 @@ p_mat <- rbind(p)
 
 para_bench <- bench::mark(
   `vec/matrixStats (no critical)` =
-    test_graph_fast(p, alpha = .05, gw_para, inter_h),
+    graphicalMCP:::test_graph_fast(p, alpha = .05, gw_para, inter_h),
   `gMCP::graphTest` =
     graphTest(p_mat, graph = graph, test = "parametric", cr = sim_corr)[1, ],
   `gMCP::gMCP` =

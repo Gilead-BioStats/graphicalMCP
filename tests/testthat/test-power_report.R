@@ -97,3 +97,22 @@ test_that("parallel gatekeeping with 1-corr parametric runs without error", {
     )
   )
 })
+
+test_that("multi-group/multi-test type runs without error", {
+  expect_no_error(
+    calculate_power(
+      random_graph(4),
+      test_groups = list(c(4, 1), 2:3),
+      test_types = "s"
+    )
+  )
+
+  expect_no_error(
+    calculate_power(
+      random_graph(4),
+      test_groups = list(c(3, 1), c(2, 4)),
+      test_types = "p",
+      test_corr = diag(4)
+    )
+  )
+})

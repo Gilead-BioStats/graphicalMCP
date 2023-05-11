@@ -9,6 +9,8 @@
 #'
 #' @rdname p_adjust
 #'
+#' @keywords internal
+#'
 #' @examples
 #' set.seed(22723)
 #'

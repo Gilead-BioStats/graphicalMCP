@@ -23,9 +23,9 @@
 #'
 #' @rdname testing-fast
 #'
-#' @seealso [test_graph()], [bonferroni_sequential()]
+#' @keywords internal
 #'
-#' @export
+#' @seealso [test_graph()], [bonferroni_sequential()]
 #'
 #' @examples
 #' par_gate <- simple_successive_1()
@@ -42,8 +42,8 @@
 #' )
 #' compact_weights[is.na(compact_weights)] <- 0
 #'
-#' test_graph_fast(p, .025, compact_weights, inter_h)
-#' bonferroni_sequential_cpp(par_gate, p, .025)
+#' graphicalMCP:::test_graph_fast(p, .025, compact_weights, inter_h)
+#' graphicalMCP:::bonferroni_sequential_cpp(par_gate, p, .025)
 test_graph_fast <- function(p,
                             alpha,
                             intersections,

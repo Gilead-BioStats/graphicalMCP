@@ -1,4 +1,4 @@
-source(here::here("vignettes/knitted/renderer.R"))
+devtools::build_site(quiet = FALSE, lazy = TRUE, devel = TRUE)
 # devtools::load_all("..")
 #
 # test_m <- function(m, groups = list(seq_len(m)), test_types = "b", verbose = FALSE, critical = FALSE) {

@@ -45,3 +45,4 @@ graphicalMCP:::p_adjust_parametric(p, w, corr1)
 # Uniform random pairwise correlations
 graphicalMCP:::p_adjust_parametric(p, w, corr2)
 }
+\keyword{internal}

@@ -51,9 +51,10 @@ compact_weights <- ifelse(
 )
 compact_weights[is.na(compact_weights)] <- 0
 
-test_graph_fast(p, .025, compact_weights, inter_h)
-bonferroni_sequential_cpp(par_gate, p, .025)
+graphicalMCP:::test_graph_fast(p, .025, compact_weights, inter_h)
+graphicalMCP:::bonferroni_sequential_cpp(par_gate, p, .025)
 }
 \seealso{
 \code{\link[=test_graph]{test_graph()}}, \code{\link[=bonferroni_sequential]{bonferroni_sequential()}}
 }
+\keyword{internal}

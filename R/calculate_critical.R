@@ -46,14 +46,15 @@ solve_c <- function(weights, corr, alpha) {
 #' increases to get updated weights for testing. They also subset the weights
 #' columns by the appropriate groups
 #'
-#' @param intersections A compact representation of [generate_weights()] output,
-#'   where missing hypotheses get a missing value for weights, and h-vectors are
-#'   dropped
+#' @param intersections For parametric, a compact representation of
+#'   [generate_weights()] output, where missing hypotheses get a missing value
+#'   for weights, and h-vectors are dropped. For Simes, just the weights from
+#'   [generate_weights()] output
 #' @param corr A numeric matrix of correlations between hypotheses' test
 #'   statistics
-#' @param p A numeric vector of p-values
 #' @param alpha A numeric scalar specifying the global significance level for
 #'   testing
+#' @param p A numeric vector of p-values
 #' @param groups A list of numeric vectors specifying hypotheses to test
 #'   together
 #' @param weights A numeric vector of hypothesis weights
@@ -67,7 +68,7 @@ solve_c <- function(weights, corr, alpha) {
 #'
 #' @rdname critical-vals
 #'
-#' @export
+#' @keywords internal
 #'
 #' @examples
 #' p <- 1:6 / 200
@@ -75,10 +76,11 @@ solve_c <- function(weights, corr, alpha) {
 #' g <- bonferroni_holm(6)
 #' gw_large <- generate_weights(g)
 #'
-#' gw <- ifelse(gw_large[, 1:6], gw_large[, 7:12], NA)
+#' gw_0 <- gw_large[, 7:12]
+#' gw <- ifelse(gw_large[, 1:6], gw_0, NA)
 #'
-#' para_critical <- calculate_critical_parametric(gw, diag(6), .05, list(1:3))
-#' simes_critical <- calculate_critical_simes(gw, p, list(4:6))
+#' graphicalMCP:::calculate_critical_parametric(gw, diag(6), .05, list(1:3))
+#' graphicalMCP:::calculate_critical_simes(gw_0, p, list(4:6))
 calculate_critical_parametric <- function(intersections, corr, alpha, groups) {
   h_vecs <- !is.na(intersections)
 
@@ -102,22 +104,17 @@ calculate_critical_parametric <- function(intersections, corr, alpha, groups) {
 }
 
 #' @rdname critical-vals
-#' @export
-calculate_critical_simes <- function(
-    simes_inters,
-    simes_p,
-    simes_groups
-) {
-  p_ord <- order(simes_p)
+calculate_critical_simes <- function(intersections, p, groups) {
+  p_ord <- order(p)
 
   # re-order by p
-  simes_inters <- simes_inters[, p_ord]
+  intersections <- intersections[, p_ord]
 
-  list_w_new <- vector("list", length(simes_groups))
+  list_w_new <- vector("list", length(groups))
 
-  for (i in seq_along(simes_groups)) {
+  for (i in seq_along(groups)) {
     list_w_new[[i]] <- matrixStats::rowCumsums(
-      simes_inters[, p_ord %in% simes_groups[[i]], drop = FALSE],
+      intersections[, p_ord %in% groups[[i]], drop = FALSE],
       useNames = TRUE
     )
   }
