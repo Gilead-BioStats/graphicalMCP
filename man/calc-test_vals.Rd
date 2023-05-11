@@ -31,7 +31,7 @@ each hypothesis test
 Test hypotheses with the critical values method
 }
 \examples{
-w <- c(.5, .5, 0, 0)
+w <- c(H1 = .5, H2 = .5, H3 = 0, H4 = 0)
 
 p <- c(.024, .01, .026, .027)
 
