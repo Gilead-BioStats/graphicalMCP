@@ -2,6 +2,7 @@
 
 S3method(print,graph_report)
 S3method(print,initial_graph)
+S3method(print,power_report)
 S3method(print,updated_graph)
 export(as_gmcp_graph)
 export(as_graph)
