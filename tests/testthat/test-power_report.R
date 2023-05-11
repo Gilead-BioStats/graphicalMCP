@@ -62,19 +62,28 @@ test_that("power results are identical under a given seed", {
   )
 })
 
+test_that("results are identical whether using closure test or shortcut", {
+  g <- wiens_dmitrienko_2005()
+
+  expect_equal(
+    calculate_power(g, sim_seed = 51123),
+    calculate_power(g, sim_seed = 51123, force_closure = TRUE)
+  )
+})
+
 test_that("size one groups are turned into Bonferroni", {
-  rando <- random_graph(2)
+  g <- fallback()
 
   expect_equal(
     calculate_power(
-      rando,
+      g,
       .05,
-      list(1, 2),
-      c("s", "p"),
+      list(1, 2, 3),
+      c("s", "p", "p"),
       sim_n = 1e5,
       sim_seed = 42823
     )$inputs$test_types,
-    c("bonferroni", "bonferroni"),
+    c("bonferroni", "bonferroni", "bonferroni"),
     ignore_attr = TRUE
   )
 })

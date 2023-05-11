@@ -34,27 +34,25 @@
 #' p <- c(.001, .02, .002, .03)
 #'
 #' weights <- generate_weights(par_gate)
+#' inter_h <- weights[, seq_len(graph_size), drop = FALSE]
 #' compact_weights <- ifelse(
-#'   weights[, seq_len(graph_size), drop = FALSE],
+#'   inter_h,
 #'   weights[, seq_len(graph_size) + graph_size, drop = FALSE],
 #'   NA
 #' )
+#' compact_weights[is.na(compact_weights)] <- 0
 #'
-#' test_graph_fast(p, .025, compact_weights)
+#' test_graph_fast(p, .025, compact_weights, inter_h)
 #' bonferroni_sequential_cpp(par_gate, p, .025)
 test_graph_fast <- function(p,
                             alpha,
-                            intersections) {
-  graph_size <- ncol(intersections)
-  inter_h <- !is.na(intersections) # extract h-matrix before replacing NA vals
-  intersections[is.na(intersections)] <- 0
-
-  # Calculate test results -----------------------------------------------------
+                            intersections,
+                            inter_h) {
   rej_hyps <- t(p <= alpha * t(intersections))
 
   # "+ 0" converts to integer from logical
   matrixStats::colSums2(inter_h * matrixStats::rowMaxs(rej_hyps + 0)) ==
-    2^(graph_size - 1)
+    2^(ncol(intersections) - 1)
 }
 
 #' @rdname testing-fast

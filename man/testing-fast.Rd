@@ -5,7 +5,7 @@
 \alias{bonferroni_sequential_cpp}
 \title{Calculate hypothesis rejection results efficiently}
 \usage{
-test_graph_fast(p, alpha, intersections)
+test_graph_fast(p, alpha, intersections, inter_h)
 
 bonferroni_sequential_cpp(graph, p, alpha = 0.05)
 }
@@ -43,13 +43,15 @@ graph_size <- length(par_gate$hypotheses)
 p <- c(.001, .02, .002, .03)
 
 weights <- generate_weights(par_gate)
+inter_h <- weights[, seq_len(graph_size), drop = FALSE]
 compact_weights <- ifelse(
-  weights[, seq_len(graph_size), drop = FALSE],
+  inter_h,
   weights[, seq_len(graph_size) + graph_size, drop = FALSE],
   NA
 )
+compact_weights[is.na(compact_weights)] <- 0
 
-test_graph_fast(p, .025, compact_weights)
+test_graph_fast(p, .025, compact_weights, inter_h)
 bonferroni_sequential_cpp(par_gate, p, .025)
 }
 \seealso{

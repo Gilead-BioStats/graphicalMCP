@@ -184,11 +184,10 @@ graph <- as_gmcp_graph(graph2)
 
 # generate weights
 gw <- generate_weights(graph2)
-gw_bonf <- ifelse(
-  gw[, seq_len(ncol(gw) / 2)],
-  gw[, seq_len(ncol(gw) / 2) + (ncol(gw) / 2)],
-  NA
-)
+inter_h <- gw[, seq_len(m)]
+
+gw_bonf <- ifelse(inter_h, gw[, seq_len(m) + m], NA)
+
 gw_para <- calculate_critical_parametric(gw_bonf, diag(m), .05, list(1:m))
 
 p <- runif(m, .0001, .03)
@@ -209,7 +208,7 @@ bonf_bench <- bench::mark(
   `C++ sequential` =
     as.logical(bonferroni_sequential_cpp(graph2, p)),
   `closure (vec/matrixStats)` =
-    as.logical(test_graph_fast(p, alpha = .05, intersections = gw_bonf)),
+    as.logical(test_graph_fast(p, .05, gw_bonf, inter_h)),
   `gMCP, raw C` =
     .C("graphproc", h = h, a = a, G = G, p, m, G, 1, 0, 0)$h, # different val?
   `gMCP::gMCP` =
@@ -229,7 +228,8 @@ simes_bench <- bench::mark(
     test_graph_fast(
       p,
       .05,
-      calculate_critical_simes(gw_bonf, p, list(1:m))
+      calculate_critical_simes(gw_bonf, p, list(1:m)),
+      inter_h
     ),
   `gMCP::gMCP` =
     gMCP(graph, p, test = "Simes")@rejected,
@@ -246,7 +246,7 @@ p_mat <- rbind(p)
 
 para_bench <- bench::mark(
   `vec/matrixStats (no critical)` =
-    test_graph_fast(p, alpha = .05, intersections = gw_para),
+    test_graph_fast(p, alpha = .05, gw_para, inter_h),
   `gMCP::graphTest` =
     graphTest(p_mat, graph = graph, test = "parametric", cr = sim_corr)[1, ],
   `gMCP::gMCP` =

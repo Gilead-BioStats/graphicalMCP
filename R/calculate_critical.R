@@ -103,25 +103,24 @@ calculate_critical_parametric <- function(intersections, corr, alpha, groups) {
 
 #' @rdname critical-vals
 #' @export
-calculate_critical_simes <- function(intersections, p, groups) {
-  missing_index <- is.na(intersections)
-  intersections[missing_index] <- 0
-  graph_names <- colnames(intersections)[unlist(groups)]
+calculate_critical_simes <- function(
+    simes_inters,
+    simes_p,
+    simes_groups
+) {
+  p_ord <- order(simes_p)
 
-  list_w_new <- vector("list", length(groups))
-  i <- 1
+  # re-order by p
+  simes_inters <- simes_inters[, p_ord]
 
-  for (group in groups) {
+  list_w_new <- vector("list", length(simes_groups))
+
+  for (i in seq_along(simes_groups)) {
     list_w_new[[i]] <- matrixStats::rowCumsums(
-      intersections[, group[order(p[group])], drop = FALSE],
+      simes_inters[, p_ord %in% simes_groups[[i]], drop = FALSE],
       useNames = TRUE
     )
-
-    i <- i + 1
   }
 
-  res <- do.call(cbind, list_w_new)[, graph_names, drop = FALSE]
-  res[missing_index[, unlist(groups), drop = FALSE]] <- NA
-
-  res
+  do.call(cbind, list_w_new)
 }
