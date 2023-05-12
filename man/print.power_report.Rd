@@ -4,19 +4,25 @@
 \alias{print.power_report}
 \title{S3 print method for class \code{power_report}}
 \usage{
-\method{print}{power_report}(x, ...)
+\method{print}{power_report}(x, ..., precision = 6, indent = 2)
 }
 \arguments{
 \item{x}{An object of class \code{power_report} to print}
 
 \item{...}{Other values passed on to other methods (currently unused)}
+
+\item{precision}{An integer scalar indicating the maximum number of decimals
+to include in numeric values}
+
+\item{indent}{An integer scalar indicating how many spaces to indent results}
 }
 \description{
 A power report displays
 \itemize{
 \item The initial graph being tested,
 \item Testing and simulation options,
-\item Detailed p-values and test results, and
-\item Final power calculations
+\item Final power calculations, and
+\item (Partial) Detailed p-values and test results - The underlying object
+contains the full tables
 }
 }

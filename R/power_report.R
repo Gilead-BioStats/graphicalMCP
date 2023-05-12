@@ -169,7 +169,6 @@ calculate_power <- function(graph,
 
     # Apply tests --------------------------------------------------------------
     for (row in seq_len(sim_n)) {
-
       if (length(simes_groups) > 0) {
         # Simes testing depends on p-values
         gw_simes <- calculate_critical_simes(
@@ -188,7 +187,6 @@ calculate_power <- function(graph,
         gw_all,
         inter_h
       )
-
     }
   }
 

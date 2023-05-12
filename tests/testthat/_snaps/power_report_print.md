@@ -8,17 +8,17 @@
         An initial graph
         
         --- Hypothesis weights ---
-        H1: 0.5000
-        H2: 0.5000
+        H1: 1.0000
+        H2: 0.0000
         H3: 0.0000
         H4: 0.0000
         
         --- Transition weights ---
                H1     H2     H3     H4
         H1 0.0000 0.5000 0.5000 0.0000
-        H2 0.5000 0.0000 0.0000 0.5000
-        H3 0.0000 1.0000 0.0000 0.0000
-        H4 1.0000 0.0000 0.0000 0.0000
+        H2 0.0000 0.0000 0.0000 1.0000
+        H3 0.0000 0.5000 0.0000 0.5000
+        H4 0.0000 1.0000 0.0000 0.0000
       
         Global alpha = 0.05
       
@@ -40,8 +40,8 @@
         Success is defined as rejecting any of [H1, H2]
       
       Power calculation --------------------------------------------------------------
-                                     H1   H2 H3 H4
-             Power to reject each: 0.02 0.02  0  0
+                                     H1 H2 H3 H4
+             Power to reject each: 0.04  0  0  0
       
               Expected rejections: 0.04
         Power to reject 1 or more: 0.04
@@ -52,7 +52,7 @@
         p_sim_H1 p_sim_H2 p_sim_H3 p_sim_H4 rej_H1 rej_H2 rej_H3 rej_H4
         0.271645 0.573772 0.755581 0.025752  FALSE  FALSE  FALSE  FALSE
         0.248220 0.085146 0.607819 0.747548  FALSE  FALSE  FALSE  FALSE
-        0.692455 0.017272 0.886710 0.924565  FALSE   TRUE  FALSE  FALSE
+        0.692455 0.017272 0.886710 0.924565  FALSE  FALSE  FALSE  FALSE
         0.731529 0.508456 0.483131 0.659896  FALSE  FALSE  FALSE  FALSE
         0.663103 0.167377 0.350021 0.654562  FALSE  FALSE  FALSE  FALSE
         0.453997 0.109558 0.131049 0.253593  FALSE  FALSE  FALSE  FALSE
@@ -69,17 +69,17 @@
             An initial graph
             
             --- Hypothesis weights ---
-            H1: 0.5000
-            H2: 0.5000
+            H1: 1.0000
+            H2: 0.0000
             H3: 0.0000
             H4: 0.0000
             
             --- Transition weights ---
                    H1     H2     H3     H4
             H1 0.0000 0.5000 0.5000 0.0000
-            H2 0.5000 0.0000 0.0000 0.5000
-            H3 0.0000 1.0000 0.0000 0.0000
-            H4 1.0000 0.0000 0.0000 0.0000
+            H2 0.0000 0.0000 0.0000 1.0000
+            H3 0.0000 0.5000 0.0000 0.5000
+            H4 0.0000 1.0000 0.0000 0.0000
       
             Global alpha = 0.05
       
@@ -101,8 +101,8 @@
             Success is defined as rejecting any of [H1, H2]
       
       Power calculation --------------------------------------------------------------
-                                         H1   H2 H3 H4
-                 Power to reject each: 0.02 0.02  0  0
+                                         H1 H2 H3 H4
+                 Power to reject each: 0.04  0  0  0
       
                   Expected rejections: 0.04
             Power to reject 1 or more: 0.04
@@ -113,7 +113,7 @@
             p_sim_H1 p_sim_H2 p_sim_H3 p_sim_H4 rej_H1 rej_H2 rej_H3 rej_H4
                0.272    0.574    0.756    0.026  FALSE  FALSE  FALSE  FALSE
                0.248    0.085    0.608    0.748  FALSE  FALSE  FALSE  FALSE
-               0.692    0.017    0.887    0.925  FALSE   TRUE  FALSE  FALSE
+               0.692    0.017    0.887    0.925  FALSE  FALSE  FALSE  FALSE
                0.732    0.508    0.483    0.660  FALSE  FALSE  FALSE  FALSE
                0.663    0.167    0.350    0.655  FALSE  FALSE  FALSE  FALSE
                0.454    0.110    0.131    0.254  FALSE  FALSE  FALSE  FALSE
@@ -131,17 +131,17 @@
             An initial graph
             
             --- Hypothesis weights ---
-            H1: 0.5000
-            H2: 0.5000
+            H1: 1.0000
+            H2: 0.0000
             H3: 0.0000
             H4: 0.0000
             
             --- Transition weights ---
                    H1     H2     H3     H4
             H1 0.0000 0.5000 0.5000 0.0000
-            H2 0.5000 0.0000 0.0000 0.5000
-            H3 0.0000 1.0000 0.0000 0.0000
-            H4 1.0000 0.0000 0.0000 0.0000
+            H2 0.0000 0.0000 0.0000 1.0000
+            H3 0.0000 0.5000 0.0000 0.5000
+            H4 0.0000 1.0000 0.0000 0.0000
       
             Global alpha = 0.05
       
@@ -163,8 +163,8 @@
             Success is defined as rejecting any of [H1, H2]
       
       Power calculation --------------------------------------------------------------
-                                         H1   H2 H3 H4
-                 Power to reject each: 0.02 0.02  0  0
+                                         H1 H2 H3 H4
+                 Power to reject each: 0.04  0  0  0
       
                   Expected rejections: 0.04
             Power to reject 1 or more: 0.04
@@ -175,7 +175,7 @@
             p_sim_H1 p_sim_H2 p_sim_H3 p_sim_H4 rej_H1 rej_H2 rej_H3 rej_H4
                0.272    0.574    0.756    0.026  FALSE  FALSE  FALSE  FALSE
                0.248    0.085    0.608    0.748  FALSE  FALSE  FALSE  FALSE
-               0.692    0.017    0.887    0.925  FALSE   TRUE  FALSE  FALSE
+               0.692    0.017    0.887    0.925  FALSE  FALSE  FALSE  FALSE
                0.732    0.508    0.483    0.660  FALSE  FALSE  FALSE  FALSE
                0.663    0.167    0.350    0.655  FALSE  FALSE  FALSE  FALSE
                0.454    0.110    0.131    0.254  FALSE  FALSE  FALSE  FALSE

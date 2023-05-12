@@ -162,11 +162,11 @@ print.power_report <- function(x, ..., precision = 6, indent = 2) {
   # Details --------------------------------------------------------------------
   section_break("Simulation details")
 
-  p_dets <- round(head(x$details$p_sim), precision)
+  p_dets <- round(utils::head(x$details$p_sim), precision)
   colnames(p_dets) <- paste0("p_sim_", hyp_names)
   colnames(p_dets)[[1]] <- paste0(pad_less_1, colnames(p_dets)[[1]])
 
-  test_dets <- head(x$details$test_results)
+  test_dets <- utils::head(x$details$test_results)
   colnames(test_dets) <- paste0("rej_", hyp_names)
 
   print(
