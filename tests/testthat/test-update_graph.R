@@ -24,15 +24,24 @@ test_that("invalid input", {
 
 test_that("generate floating point differences", {
   expect_s3_class(
-    updated_1 <- update_graph(bh6, c(T, T, T, F, F, F))$updated_graph,
+    updated_1 <- update_graph(
+      bh6,
+      c(TRUE, TRUE, TRUE, FALSE, FALSE, FALSE)
+    )$updated_graph,
     "initial_graph"
   )
   expect_s3_class(
-    updated_2 <- update_graph(updated_1, c(T, T, F, F, F, F))$updated_graph,
+    updated_2 <- update_graph(
+      updated_1,
+      c(TRUE, TRUE, FALSE, FALSE, FALSE, FALSE)
+    )$updated_graph,
     "initial_graph"
   )
   expect_s3_class(
-    updated_3 <- update_graph(updated_2, c(T, F, F, F, F, F))$updated_graph,
+    updated_3 <- update_graph(
+      updated_2,
+      c(TRUE, FALSE, FALSE, FALSE, FALSE, FALSE)
+    )$updated_graph,
     "initial_graph"
   )
   expect_false(

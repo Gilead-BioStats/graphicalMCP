@@ -30,6 +30,7 @@ reference:
 - desc: Functions for running power simulations
 - contents:
   - calculate_power
+  - print.power_report
 - title: Example graphs
 - desc: Functions for creating example graphs from a variety of papers
 - contents:

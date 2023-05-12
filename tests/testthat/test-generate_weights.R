@@ -33,7 +33,9 @@ gw_11 <- generate_weights(graph)
 
 test_that("compare to gMCP", {
   # The `[nrow():1,]` piece reverses row order to match gmcp ordering
-  expect_true(all.equal(unname(gw4[nrow(gw4):1, ]), unname(gw4_gmcp)))
-  expect_true(all.equal(unname(gw10[nrow(gw10):1, ]), unname(gw10_gmcp)))
-  expect_true(all.equal(unname(gw_11[nrow(gw_11):1, ]), unname(gw_11_gmcp)))
+  expect_true(all.equal(unname(gw4[seq(nrow(gw4), 1), ]), unname(gw4_gmcp)))
+  expect_true(all.equal(unname(gw10[seq(nrow(gw10), 1), ]), unname(gw10_gmcp)))
+  expect_true(
+    all.equal(unname(gw_11[seq(nrow(gw_11), 1), ]), unname(gw_11_gmcp))
+  )
 })

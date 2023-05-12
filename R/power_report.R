@@ -214,11 +214,11 @@ calculate_power <- function(graph,
         sim_success = sim_success,
         sim_seed = sim_seed
       ),
-      outputs = list(
+      power = power,
+      details = list(
         p_sim = p_sim,
         test_results = test_res_mat
-      ),
-      power = power
+      )
     ),
     class = "power_report"
   )

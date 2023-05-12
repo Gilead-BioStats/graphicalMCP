@@ -23,74 +23,78 @@ print.graph_report <- function(x, ..., precision = 6, indent = 2) {
   pad_less_1 <- paste(rep(" ", max(indent - 1, 0)), collapse = "")
   hyp_names <- names(x$inputs$graph$hypotheses)
 
+  # Input calcs ----------------------------------------------------------------
   section_break("Test parameters")
-  in_calcs <- within(x$inputs, {
-    # Input calcs
-    graph_out <- utils::capture.output(print(graph))
-    hyp_groups <- lapply(groups, function(group) hyp_names[group])
-    pad_tests <- formatC(test_types, width = max(nchar(test_types)) + indent)
-    test_spec <- paste0(
-      pad_tests,
-      ": (",
-      lapply(hyp_groups, paste, collapse = "-"),
-      ")",
-      collapse = "\n"
+
+  graph_out <- utils::capture.output(print(x$inputs$graph))
+  hyp_groups <- lapply(x$inputs$groups, function(group) hyp_names[group])
+  pad_tests <- formatC(
+    x$inputs$test_types,
+    width = max(nchar(x$inputs$test_types)) + indent
+  )
+
+  test_spec <- paste0(
+    pad_tests,
+    ": (",
+    lapply(hyp_groups, paste, collapse = "-"),
+    ")",
+    collapse = "\n"
+  )
+
+  p_mat <- matrix(
+    x$inputs$p,
+    nrow = 1,
+    dimnames = list(
+      paste0(pad, "Unadjusted p-values:"),
+      hyp_names
+    ),
+  )
+
+  if (!is.null(x$inputs$corr)) {
+    dimnames(x$inputs$corr) <- dimnames(x$inputs$graph$transitions)
+    colname_pad <- format(
+      "Correlation matrix:   ",
+      width = max(nchar(rownames(x$inputs$corr)))
     )
-    p_mat <- matrix(
-      p,
-      nrow = 1,
-      dimnames = list(
-        paste0(pad, "Unadjusted p-values:"),
-        hyp_names
-      ),
-    )
-
-    if (!is.null(corr)) {
-      dimnames(corr) <- dimnames(graph$transitions)
-      colname_pad <- format(
-        "Correlation matrix:   ",
-        width = max(nchar(rownames(corr)))
-      )
-      label <- paste0(pad_less_1, colname_pad)
-      df_corr <- data.frame(
-        paste0(pad_less_1, rownames(corr)),
-        corr,
-        check.names = FALSE
-      )
-      names(df_corr)[[1]] <- label
-    }
-
-    # Input print
-    cat(paste0(pad, graph_out), sep = "\n")
-    cat("\n")
-    cat(pad, "Global alpha = ", alpha, sep = "")
-    cat("\n\n")
-    print(round(p_mat, precision))
-    cat("\n")
-    if (!is.null(corr)) {
-      print(df_corr, row.names = FALSE)
-      cat("\n")
-    }
-    cat(pad, "Test types", "\n", test_spec, sep = "")
-    cat("\n")
-  })
-
-  section_break("Global test summary")
-  out_calcs <- within(c(in_calcs, x$outputs), {
-    hyp_width <- max(nchar(c("Hypothesis", hyp_names))) + indent - 1
-
-    df_summary <- data.frame(
-      Hypothesis = formatC(hyp_names, width = hyp_width),
-      `Adj. P-value` = round(p_adj, precision),
-      Reject = rejected,
+    label <- paste0(pad_less_1, colname_pad)
+    df_corr <- data.frame(
+      paste0(pad_less_1, rownames(x$inputs$corr)),
+      round(x$inputs$corr, precision),
       check.names = FALSE
     )
-    names(df_summary)[[1]] <- formatC("Hypothesis", width = hyp_width)
+    names(df_corr)[[1]] <- label
+  }
 
-    print(df_summary, row.names = FALSE)
-  })
+  # Input print ----------------------------------------------------------------
+  cat(paste0(pad, graph_out), sep = "\n")
+  cat("\n")
+  cat(pad, "Global alpha = ", x$inputs$alpha, sep = "")
+  cat("\n\n")
+  print(round(p_mat, precision))
+  cat("\n")
+  if (!is.null(x$inputs$corr)) {
+    print(df_corr, row.names = FALSE)
+    cat("\n")
+  }
+  cat(pad, "Test types", "\n", test_spec, sep = "")
+  cat("\n")
 
+  # Output ---------------------------------------------------------------------
+  section_break("Global test summary")
 
+  hyp_width <- max(nchar(c("Hypothesis", hyp_names))) + indent - 1
+
+  df_summary <- data.frame(
+    Hypothesis = formatC(hyp_names, width = hyp_width),
+    `Adj. P-value` = round(x$outputs$p_adj, precision),
+    Reject = x$outputs$rejected,
+    check.names = FALSE
+  )
+  names(df_summary)[[1]] <- formatC("Hypothesis", width = hyp_width)
+
+  print(df_summary, row.names = FALSE)
+
+  # Adjusted p details ---------------------------------------------------------
   if (!is.null(x$details)) {
     section_break("Test details - Adjusted p")
     detail_results_out <- utils::capture.output(
@@ -99,6 +103,7 @@ print.graph_report <- function(x, ..., precision = 6, indent = 2) {
     cat(paste0(pad, detail_results_out), sep = "\n")
   }
 
+  # Critical details -----------------------------------------------------------
   if (!is.null(x$critical)) {
     section_break("Test details - Critical values")
 

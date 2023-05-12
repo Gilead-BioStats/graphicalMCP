@@ -199,8 +199,7 @@ groups <- list(1:floor(m / 2), (floor(m / 2) + 1):m)
 
 h <- as.integer(rep(0, m))
 a <- .05 * graph2$hypotheses
-G <- as.double(graph2$transitions)
-nH <- m
+gmcp_g <- as.double(graph2$transitions)
 ```
 
 ```{r benchmark-bonf}
@@ -211,7 +210,7 @@ bonf_bench <- bench::mark(
   `closure (vec/matrixStats)` =
     as.logical(graphicalMCP:::test_graph_fast(p, .05, gw_bonf, inter_h)),
   `gMCP, raw C` =
-    .C("graphproc", h = h, a = a, G = G, p, m, G, 1, 0, 0)$h, # different val?
+    .C("graphproc", h = h, a = a, G = gmcp_g, p, m, gmcp_g, 1, 0, 0)$h,
   `gMCP::gMCP` =
     gMCP(graph, p)@rejected,
   check = FALSE
@@ -297,9 +296,20 @@ Parametric really only has one viable method at this point, and it's not worth t
 ```{r power-para}
 power_bench <- bench::mark(
   # `gMCP (n.sim = 1)` =
-  #   calcPower(graph = graph, alpha = .05, n.sim = 1, corr.sim = diag(m), corr.test = diag(m)),
+  #   calcPower(
+  #     graph = graph,
+  #     alpha = .05,
+  #     n.sim = 1,
+  #     corr.sim = diag(m),
+  #     corr.test = diag(m)
+  #   ),
   `graphicalMCP (vec/matrixStats)` =
-    calculate_power(graph2, sim_n = sims, test_types = "p", test_corr = diag(m)),
+    calculate_power(
+      graph2,
+      sim_n = sims,
+      test_types = "p",
+      test_corr = diag(m)
+    ),
   min_iterations = 3,
   filter_gc = FALSE,
   check = FALSE
