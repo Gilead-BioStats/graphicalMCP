@@ -61,6 +61,12 @@ test_that("invalid test inputs throw errors", {
   )
   corr_inval1[3, 4] <- .01
   corr_inval2 <- diag(2)
+  corr_inval3 <- rbind(
+    c(1, NA, NA, NA),
+    c(NA, 1, .997, .929),
+    c(NA, .997, 1, .769),
+    c(NA, .929, .769, 1)
+  )
 
   expect_s3_class(meta_test_graph(), "graph_report")
 
@@ -84,6 +90,13 @@ test_that("invalid test inputs throw errors", {
   expect_error(meta_test_graph(critical = critical_inval))
   expect_error(meta_test_graph(corr = corr_inval1))
   expect_error(meta_test_graph(corr = corr_inval2))
+  expect_error(
+    meta_test_graph(
+      groups = list(1, 2:4),
+      test_types = c("b", "p"),
+      corr = corr_inval3
+    )
+  )
 })
 
 test_that("adjusted p-values are capped at 1", {

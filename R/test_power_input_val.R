@@ -38,13 +38,14 @@ test_input_val <- function(graph,
       is.logical(critical) && length(critical) == 1
   )
 
-  valid_corr <- !any(
+  missing_corr <- any(
     vapply(
       seq_along(test_types),
       function(i) {
         if (test_types[[i]] == "parametric") {
           group <- groups[[i]]
           missing <- any(is.na(corr[group, group])) || is.null(corr)
+          pos_def <- all(eigen(corr[group, group])$values > 0)
           return(missing)
         } else {
           return(FALSE)
@@ -54,14 +55,37 @@ test_input_val <- function(graph,
     )
   )
 
+  positive_definite_corr <- ifelse(
+    !missing_corr,
+    all(
+      vapply(
+        seq_along(test_types),
+        function(i) {
+          if (test_types[[i]] == "parametric") {
+            group <- groups[[i]]
+            pos_def <- all(eigen(corr[group, group])$values >= 0)
+            return(pos_def)
+          } else {
+            return(TRUE)
+          }
+        },
+        logical(1)
+      )
+    ),
+    TRUE
+  )
+
   stopifnot(
     "Correlation sub-matrix for each parametric test group must be complete" =
-      valid_corr,
+      !missing_corr,
     "Correlation matrix must be symmetric" =
       isSymmetric.matrix(corr) || is.null(corr),
     "Dimensions of correlation matrix must match size of graph" =
       unique(nrow(corr), ncol(corr)) == length(graph$hypotheses) ||
-        is.null(corr)
+        is.null(corr),
+    "Correlation matrix must be between 0 & 1" =
+      all((corr >= 0 & corr <= 1) | is.na(corr)) || is.null(corr),
+    "Correlation matrix must be positive definite" = positive_definite_corr
   )
 
   invisible(graph)
@@ -81,6 +105,8 @@ power_input_val <- function(graph, n, theta, corr, success) {
       !any(is.na(corr)),
     "Covariance matrix for simulating p-values must be symmetric" =
       isSymmetric.matrix(corr),
+    "Covariance matrix for simulating p-values must have diagonal all 1" =
+      all(diag(corr) == 1),
     "'Success' hypotheses must be positive integers" =
       all(as.integer(success) == success) && all(success > 0),
     "'Success' hypotheses must be less than graph size, and be unique" =

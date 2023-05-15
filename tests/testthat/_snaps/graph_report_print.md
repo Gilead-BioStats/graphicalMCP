@@ -270,18 +270,18 @@
       
       Test details - Critical values -------------------------------------------------
          intersection hypothesis       test    p <=        c *   w * alpha   res
-                    1         H1 parametric 0.01 <= 1.012827 * 0.5 *  0.05  TRUE
-                    1         H2 parametric 0.01 <= 1.012827 * 0.5 *  0.05  TRUE
+                    1         H1 parametric 0.01 <= 1.012823 * 0.5 *  0.05  TRUE
+                    1         H2 parametric 0.01 <= 1.012823 * 0.5 *  0.05  TRUE
                     1         H3      simes 0.01 <=            0.0 *  0.05 FALSE
                     1         H4      simes 0.01 <=            0.0 *  0.05 FALSE
-                    2         H1 parametric 0.01 <= 1.012827 * 0.5 *  0.05  TRUE
-                    2         H2 parametric 0.01 <= 1.012827 * 0.5 *  0.05  TRUE
+                    2         H1 parametric 0.01 <= 1.012823 * 0.5 *  0.05  TRUE
+                    2         H2 parametric 0.01 <= 1.012823 * 0.5 *  0.05  TRUE
                     2         H3      simes 0.01 <=            0.0 *  0.05 FALSE
-                    3         H1 parametric 0.01 <= 1.012827 * 0.5 *  0.05  TRUE
-                    3         H2 parametric 0.01 <= 1.012827 * 0.5 *  0.05  TRUE
+                    3         H1 parametric 0.01 <= 1.012823 * 0.5 *  0.05  TRUE
+                    3         H2 parametric 0.01 <= 1.012823 * 0.5 *  0.05  TRUE
                     3         H4      simes 0.01 <=            0.0 *  0.05 FALSE
-                    4         H1 parametric 0.01 <= 1.012827 * 0.5 *  0.05  TRUE
-                    4         H2 parametric 0.01 <= 1.012827 * 0.5 *  0.05  TRUE
+                    4         H1 parametric 0.01 <= 1.012823 * 0.5 *  0.05  TRUE
+                    4         H2 parametric 0.01 <= 1.012823 * 0.5 *  0.05  TRUE
                     5         H1 parametric 0.01 <=        1 * 0.5 *  0.05  TRUE
                     5         H3      simes 0.01 <=            0.5 *  0.05  TRUE
                     5         H4      simes 0.01 <=            0.5 *  0.05  TRUE
@@ -368,18 +368,18 @@
       
       Test details - Critical values -------------------------------------------------
          intersection hypothesis       test    p <=        c *   w * alpha   res
-                    1         H1 parametric 0.01 <= 1.012827 * 0.5 *  0.05  TRUE
-                    1         H2 parametric 0.01 <= 1.012827 * 0.5 *  0.05  TRUE
+                    1         H1 parametric 0.01 <= 1.012823 * 0.5 *  0.05  TRUE
+                    1         H2 parametric 0.01 <= 1.012823 * 0.5 *  0.05  TRUE
                     1         H3 parametric 0.01 <= 1.000000 * 0.0 *  0.05 FALSE
                     1         H4 parametric 0.01 <= 1.000000 * 0.0 *  0.05 FALSE
-                    2         H1 parametric 0.01 <= 1.012827 * 0.5 *  0.05  TRUE
-                    2         H2 parametric 0.01 <= 1.012827 * 0.5 *  0.05  TRUE
+                    2         H1 parametric 0.01 <= 1.012823 * 0.5 *  0.05  TRUE
+                    2         H2 parametric 0.01 <= 1.012823 * 0.5 *  0.05  TRUE
                     2         H3 parametric 0.01 <= 1.000000 * 0.0 *  0.05 FALSE
-                    3         H1 parametric 0.01 <= 1.012827 * 0.5 *  0.05  TRUE
-                    3         H2 parametric 0.01 <= 1.012827 * 0.5 *  0.05  TRUE
+                    3         H1 parametric 0.01 <= 1.012823 * 0.5 *  0.05  TRUE
+                    3         H2 parametric 0.01 <= 1.012823 * 0.5 *  0.05  TRUE
                     3         H4 parametric 0.01 <= 1.000000 * 0.0 *  0.05 FALSE
-                    4         H1 parametric 0.01 <= 1.012827 * 0.5 *  0.05  TRUE
-                    4         H2 parametric 0.01 <= 1.012827 * 0.5 *  0.05  TRUE
+                    4         H1 parametric 0.01 <= 1.012823 * 0.5 *  0.05  TRUE
+                    4         H2 parametric 0.01 <= 1.012823 * 0.5 *  0.05  TRUE
                     5         H1 parametric 0.01 <= 1.000000 * 0.5 *  0.05  TRUE
                     5         H3 parametric 0.01 <= 1.000000 * 0.0 *  0.05 FALSE
                     5         H4 parametric 0.01 <= 1.000000 * 0.5 *  0.05  TRUE
@@ -396,8 +396,8 @@
                    11         H2 parametric 0.01 <= 1.000000 * 1.0 *  0.05  TRUE
                    11         H4 parametric 0.01 <= 1.000000 * 0.0 *  0.05 FALSE
                    12         H2 parametric 0.01 <= 1.000000 * 1.0 *  0.05  TRUE
-                   13         H3 parametric 0.01 <= 1.012827 * 0.5 *  0.05  TRUE
-                   13         H4 parametric 0.01 <= 1.012827 * 0.5 *  0.05  TRUE
+                   13         H3 parametric 0.01 <= 1.012823 * 0.5 *  0.05  TRUE
+                   13         H4 parametric 0.01 <= 1.012823 * 0.5 *  0.05  TRUE
                    14         H3 parametric 0.01 <= 1.000000 * 1.0 *  0.05  TRUE
                    15         H4 parametric 0.01 <= 1.000000 * 1.0 *  0.05  TRUE
 

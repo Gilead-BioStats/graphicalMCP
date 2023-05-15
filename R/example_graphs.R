@@ -30,7 +30,7 @@ bonferroni_holm <- function(n, names = NULL) {
 
 #' @export
 #' @rdname example-graphs
-huque_alosh_bhore_2011 <- function() {
+huque_alosh_bhore_2011 <- function(names = NULL) {
   create_graph(
     c(1, 0, 0, 0),
     matrix(
@@ -42,7 +42,8 @@ huque_alosh_bhore_2011 <- function() {
       ),
       nrow = 4,
       byrow = TRUE
-    )
+    ),
+    names = names
   )
 }
 
@@ -133,4 +134,25 @@ random_graph <- function(n, names = NULL) {
   transitions <- transitions / rowSums(transitions)
 
   create_graph(hypotheses, transitions, names)
+}
+
+#' @export
+#' @rdname example-graphs
+complex_example <- function(names = NULL) {
+  eps <- .001
+
+  weights <- c(rep(c(1/3, 0, 0), 3))
+  transitions <- rbind(
+    c(0, .5, .5,  0, 0, 0,  0, 0, 0),
+    c(0, 0, 1 - eps,  eps / 2, 0, 0,  eps / 2, 0, 0),
+    c(0, 1 - eps, 0,  eps / 2, 0, 0,  eps / 2, 0, 0),
+    c(0, 0, 0,  0, .5, .5,  0, 0, 0),
+    c(eps / 2, 0, 0,  0, 0, 1 - eps,  eps / 2, 0, 0),
+    c(eps / 2, 0, 0,  0, 1 - eps, 0,  eps / 2, 0, 0),
+    c(0, 0, 0,  0, 0, 0,  0, .5, .5),
+    c(eps / 2, 0, 0,  eps / 2, 0, 0,  0, 0, 1 - eps),
+    c(eps / 2, 0, 0,  eps / 2, 0, 0,  0, 1 - eps, 0)
+  )
+
+  create_graph(weights, transitions, names = names)
 }

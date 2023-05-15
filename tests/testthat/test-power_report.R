@@ -88,16 +88,6 @@ test_that("size one groups are turned into Bonferroni", {
   )
 })
 
-test_that("parallel gatekeeping with 1-corr parametric runs without error", {
-  expect_no_error(
-    calculate_power(
-      simple_successive_1(),
-      test_types = "p",
-      test_corr = matrix(1, 4, 4)
-    )
-  )
-})
-
 test_that("multi-group/multi-test type runs without error", {
   expect_no_error(
     calculate_power(
@@ -113,6 +103,28 @@ test_that("multi-group/multi-test type runs without error", {
       test_groups = list(c(3, 1), c(2, 4)),
       test_types = "p",
       test_corr = diag(4)
+    )
+  )
+})
+
+test_that("complex example runs without error", {
+  # random positive definite matrix - not sure if the diag override can break
+  # this, but it's at least better than my last try
+  t_corr <- matrix(abs(stats::rWishart(1, 9, diag(9))), 9, 9)
+  t_corr <- t_corr / max(t_corr)
+  diag(t_corr) <- 1
+
+  expect_no_error(
+    calculate_power(
+      complex_example(),
+      test_alpha = .025,
+      test_groups = list(c(1, 4, 7), 2:3, 5:6, 8:9),
+      test_types = c("p", "s", "s", "s"),
+      test_corr = t_corr,
+      sim_n = 1e4,
+      sim_theta = runif(9, min = 0, max = 2),
+      sim_corr = diag(9),
+      sim_success = c(1, 4, 7)
     )
   )
 })

@@ -23,7 +23,7 @@ solve_c <- function(weights, corr, alpha) {
     1,
     stats::uniroot(
       c_function,
-      lower = 0.9, # Why is this not -Inf? Ohhhh because c >= 1
+      lower = 0, # Why is this not -Inf? Ohhhh because c >= 1
       # upper > 40 errors when w[i] ~= 1 && w[j] = epsilon
       # upper = 2 errors when w = c(.5, .5) && all(corr == 1)
       # furthermore, even under perfect correlation & with balanced weights, the
