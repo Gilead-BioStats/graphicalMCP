@@ -146,27 +146,7 @@ calculate_power(
 
 Bonferroni testing uses a shortcut to make testing, and therefore power, run very fast (<1s up to a 10-graph/100K-simulation). However, power simulations can be run with any test strategy. Note that other testing strategies will cause a substantial increase in the time a power simulation takes. In rough ascending order of time impact: parametric tests, multiple groups, Simes tests.
 
-```{r power-3}
-calculate_power(
-  g_dose_2,
-  sim_n = 1e5,
-  sim_theta = c(1, 1, 1, 1),
-  test_types = "p",
-  test_corr = diag(4)
-)
-```
-
-```{r power-5}
-calculate_power(
-  g_dose_2,
-  sim_n = 1e5,
-  sim_theta = c(1, 1, 1, 1),
-  test_types = "s",
-  test_groups = list(1:4)
-)
-```
-
-```{r power-6}
+```{r power-4}
 calculate_power(
   g_dose_2,
   sim_n = 1e5,
