@@ -222,8 +222,8 @@ test_graph(
   test_types = c("p", "s"),
   groups = list(1:2, 3:4),
   corr = rbind(
-    c( 1, .5, NA, NA),
-    c(.5,  1, NA, NA),
+    c(1, .5, NA, NA),
+    c(.5, 1, NA, NA),
     c(NA, NA, NA, NA),
     c(NA, NA, NA, NA)
   ),
@@ -289,18 +289,18 @@ test_graph(
 #> 
 #> Test details - Critical values -------------------------------------------------
 #>    intersection hypothesis       test    p <=        c *   w * alpha   res
-#>               1         A1 parametric 0.01 <= 1.106486 * 0.5 *  0.05  TRUE
-#>               1         A2 parametric 0.02 <= 1.106486 * 0.5 *  0.05  TRUE
+#>               1         A1 parametric 0.01 <= 1.106454 * 0.5 *  0.05  TRUE
+#>               1         A2 parametric 0.02 <= 1.106454 * 0.5 *  0.05  TRUE
 #>               1         B1      simes 0.03 <=            0.0 *  0.05 FALSE
 #>               1         B2      simes 0.05 <=            0.0 *  0.05 FALSE
-#>               2         A1 parametric 0.01 <= 1.106486 * 0.5 *  0.05  TRUE
-#>               2         A2 parametric 0.02 <= 1.106486 * 0.5 *  0.05  TRUE
+#>               2         A1 parametric 0.01 <= 1.106454 * 0.5 *  0.05  TRUE
+#>               2         A2 parametric 0.02 <= 1.106454 * 0.5 *  0.05  TRUE
 #>               2         B1      simes 0.03 <=            0.0 *  0.05 FALSE
-#>               3         A1 parametric 0.01 <= 1.106486 * 0.5 *  0.05  TRUE
-#>               3         A2 parametric 0.02 <= 1.106486 * 0.5 *  0.05  TRUE
+#>               3         A1 parametric 0.01 <= 1.106454 * 0.5 *  0.05  TRUE
+#>               3         A2 parametric 0.02 <= 1.106454 * 0.5 *  0.05  TRUE
 #>               3         B2      simes 0.05 <=            0.0 *  0.05 FALSE
-#>               4         A1 parametric 0.01 <= 1.106486 * 0.5 *  0.05  TRUE
-#>               4         A2 parametric 0.02 <= 1.106486 * 0.5 *  0.05  TRUE
+#>               4         A1 parametric 0.01 <= 1.106454 * 0.5 *  0.05  TRUE
+#>               4         A2 parametric 0.02 <= 1.106454 * 0.5 *  0.05  TRUE
 #>               5         A1 parametric 0.01 <=        1 * 0.5 *  0.05  TRUE
 #>               5         B1      simes 0.03 <=            0.0 *  0.05 FALSE
 #>               5         B2      simes 0.05 <=            0.5 *  0.05 FALSE
@@ -338,23 +338,62 @@ how it performs.
 calculate_power(
   g_dose,
   sim_n = 1e5,
-  sim_theta = c(1, 1, 1, 1),
-  sim_success = integer(0)
+  sim_theta = c(1, 1, 1, 1)
 )
-#> $power_local
-#> [1] 0.16965 0.17159 0.02813 0.02340
 #> 
-#> $power_expected
-#> [1] 0.39277
+#> Test parameters ----------------------------------------------------------------
+#>   An initial graph
+#>   
+#>   --- Hypothesis weights ---
+#>   A1: 0.5000
+#>   A2: 0.5000
+#>   B1: 0.0000
+#>   B2: 0.0000
+#>   
+#>   --- Transition weights ---
+#>          A1     A2     B1     B2
+#>   A1 0.0000 0.0000 1.0000 0.0000
+#>   A2 0.0000 0.0000 0.0000 1.0000
+#>   B1 0.0000 1.0000 0.0000 0.0000
+#>   B2 1.0000 0.0000 0.0000 0.0000
 #> 
-#> $power_at_least_1
-#> [1] 0.30799
+#>   Global alpha = 0.05
 #> 
-#> $power_all
-#> [1] 0
+#>   Test types
+#>   bonferroni: (A1-A2-B1-B2)
 #> 
-#> $power_success
-#> [1] 0
+#> Simulation parameters ----------------------------------------------------------
+#>   Testing 100,000 simulations with multivariate normal params:
+#> 
+#>                     A1 A2 B1 B2
+#>   Simulation means:  1  1  1  1
+#> 
+#>   Simulation covariance:    A1 A2 B1 B2
+#>                          A1  1  0  0  0
+#>                          A2  0  1  0  0
+#>                          B1  0  0  1  0
+#>                          B2  0  0  0  1
+#> 
+#>   Success is defined as rejecting any of [A1, A2]
+#> 
+#> Power calculation --------------------------------------------------------------
+#>                                   A1      A2      B1     B2
+#>        Power to reject each: 0.16956 0.17023 0.02943 0.0291
+#> 
+#>         Expected rejections: 0.39832
+#>   Power to reject 1 or more: 0.3074
+#>         Power to reject all: 0.00294
+#>      Probability of success: 0.3074
+#> 
+#> Simulation details -------------------------------------------------------------
+#>   p_sim_A1 p_sim_A2 p_sim_B1 p_sim_B2 rej_A1 rej_A2 rej_B1 rej_B2
+#>   0.734324 0.066643 0.072314 0.192624  FALSE  FALSE  FALSE  FALSE
+#>   0.219480 0.000344 0.579458 0.276940  FALSE   TRUE  FALSE  FALSE
+#>   0.259436 0.000584 0.302898 0.332274  FALSE   TRUE  FALSE  FALSE
+#>   0.804838 0.003552 0.044241 0.003158  FALSE   TRUE  FALSE   TRUE
+#>   0.584070 0.008772 0.287811 0.120703  FALSE   TRUE  FALSE  FALSE
+#>   0.645343 0.076597 0.583397 0.123549  FALSE  FALSE  FALSE  FALSE
+#>   ...
 ```
 
 The `simple_successive_2()` function creates a parallel gate-keeping
@@ -369,24 +408,62 @@ g_dose_2 <- simple_successive_2(names)
 calculate_power(
   g_dose_2,
   sim_n = 1e5,
-  sim_theta = c(1, 1, 1, 1),
-  test_types = "s"
+  sim_theta = c(1, 1, 1, 1)
 )
-#> $power_local
-#>      A1      A2      B1      B2 
-#> 0.18410 0.18554 0.02554 0.02472 
 #> 
-#> $power_expected
-#> [1] 0.4199
+#> Test parameters ----------------------------------------------------------------
+#>   An initial graph
+#>   
+#>   --- Hypothesis weights ---
+#>   A1: 0.5000
+#>   A2: 0.5000
+#>   B1: 0.0000
+#>   B2: 0.0000
+#>   
+#>   --- Transition weights ---
+#>          A1     A2     B1     B2
+#>   A1 0.0000 0.5000 0.5000 0.0000
+#>   A2 0.5000 0.0000 0.0000 0.5000
+#>   B1 0.0000 1.0000 0.0000 0.0000
+#>   B2 1.0000 0.0000 0.0000 0.0000
 #> 
-#> $power_at_least_1
-#> [1] 0.31827
+#>   Global alpha = 0.05
 #> 
-#> $power_all
-#> [1] 0.00455
+#>   Test types
+#>   bonferroni: (A1-A2-B1-B2)
 #> 
-#> $power_success
-#> [1] 0.31827
+#> Simulation parameters ----------------------------------------------------------
+#>   Testing 100,000 simulations with multivariate normal params:
+#> 
+#>                     A1 A2 B1 B2
+#>   Simulation means:  1  1  1  1
+#> 
+#>   Simulation covariance:    A1 A2 B1 B2
+#>                          A1  1  0  0  0
+#>                          A2  0  1  0  0
+#>                          B1  0  0  1  0
+#>                          B2  0  0  0  1
+#> 
+#>   Success is defined as rejecting any of [A1, A2]
+#> 
+#> Power calculation --------------------------------------------------------------
+#>                                   A1      A2      B1      B2
+#>        Power to reject each: 0.17694 0.17667 0.02229 0.02256
+#> 
+#>         Expected rejections: 0.39846
+#>   Power to reject 1 or more: 0.30739
+#>         Power to reject all: 0.00294
+#>      Probability of success: 0.30739
+#> 
+#> Simulation details -------------------------------------------------------------
+#>   p_sim_A1 p_sim_A2 p_sim_B1 p_sim_B2 rej_A1 rej_A2 rej_B1 rej_B2
+#>   0.121233 0.625074 0.185369 0.365154  FALSE  FALSE  FALSE  FALSE
+#>   0.003418 0.005331 0.471701 0.088073   TRUE   TRUE  FALSE  FALSE
+#>   0.414792 0.145246 0.353021 0.207961  FALSE  FALSE  FALSE  FALSE
+#>   0.054151 0.447358 0.044497 0.026981  FALSE  FALSE  FALSE  FALSE
+#>   0.381960 0.203325 0.197936 0.004214  FALSE  FALSE  FALSE  FALSE
+#>   0.308600 0.110535 0.043437 0.043006  FALSE  FALSE  FALSE  FALSE
+#>   ...
 ```
 
 ### Other tests
@@ -396,8 +473,7 @@ run very fast (\<1s up to a 10-graph/100K-simulation). However, power
 simulations can be run with any test strategy. Note that other testing
 strategies will cause a substantial increase in the time a power
 simulation takes. In rough ascending order of time impact: parametric
-tests, multiple groups, Simes tests. Vignette to come detailing the
-typical impact of each.
+tests, multiple groups, Simes tests.
 
 ``` r
 calculate_power(
@@ -407,21 +483,66 @@ calculate_power(
   test_types = "p",
   test_corr = diag(4)
 )
-#> $power_local
-#>      A1      A2      B1      B2 
-#> 0.17721 0.17790 0.02263 0.02302 
 #> 
-#> $power_expected
-#> [1] 0.40076
+#> Test parameters ----------------------------------------------------------------
+#>   An initial graph
+#>   
+#>   --- Hypothesis weights ---
+#>   A1: 0.5000
+#>   A2: 0.5000
+#>   B1: 0.0000
+#>   B2: 0.0000
+#>   
+#>   --- Transition weights ---
+#>          A1     A2     B1     B2
+#>   A1 0.0000 0.5000 0.5000 0.0000
+#>   A2 0.5000 0.0000 0.0000 0.5000
+#>   B1 0.0000 1.0000 0.0000 0.0000
+#>   B2 1.0000 0.0000 0.0000 0.0000
 #> 
-#> $power_at_least_1
-#> [1] 0.30822
+#>   Global alpha = 0.05
 #> 
-#> $power_all
-#> [1] 0.00307
+#>   Parametric testing correlation:    A1 A2 B1 B2
+#>                                   A1  1  0  0  0
+#>                                   A2  0  1  0  0
+#>                                   B1  0  0  1  0
+#>                                   B2  0  0  0  1
 #> 
-#> $power_success
-#> [1] 0.30822
+#>   Test types
+#>   parametric: (A1-A2-B1-B2)
+#> 
+#> Simulation parameters ----------------------------------------------------------
+#>   Testing 100,000 simulations with multivariate normal params:
+#> 
+#>                     A1 A2 B1 B2
+#>   Simulation means:  1  1  1  1
+#> 
+#>   Simulation covariance:    A1 A2 B1 B2
+#>                          A1  1  0  0  0
+#>                          A2  0  1  0  0
+#>                          B1  0  0  1  0
+#>                          B2  0  0  0  1
+#> 
+#>   Success is defined as rejecting any of [A1, A2]
+#> 
+#> Power calculation --------------------------------------------------------------
+#>                                   A1      A2      B1      B2
+#>        Power to reject each: 0.18042 0.17984 0.02352 0.02318
+#> 
+#>         Expected rejections: 0.40696
+#>   Power to reject 1 or more: 0.31237
+#>         Power to reject all: 0.00293
+#>      Probability of success: 0.31237
+#> 
+#> Simulation details -------------------------------------------------------------
+#>   p_sim_A1 p_sim_A2 p_sim_B1 p_sim_B2 rej_A1 rej_A2 rej_B1 rej_B2
+#>   0.059851 0.214734 0.087130 0.085869  FALSE  FALSE  FALSE  FALSE
+#>   0.669420 0.019747 0.417605 0.338864  FALSE   TRUE  FALSE  FALSE
+#>   0.415546 0.132561 0.026116 0.007222  FALSE  FALSE  FALSE  FALSE
+#>   0.028955 0.411062 0.972080 0.684987  FALSE  FALSE  FALSE  FALSE
+#>   0.004987 0.434737 0.409300 0.068290   TRUE  FALSE  FALSE  FALSE
+#>   0.056020 0.631518 0.354720 0.157413  FALSE  FALSE  FALSE  FALSE
+#>   ...
 ```
 
 ``` r
@@ -429,72 +550,135 @@ calculate_power(
   g_dose_2,
   sim_n = 1e5,
   sim_theta = c(1, 1, 1, 1),
-  test_types = "p",
-  test_groups = c(1:2, 3:4),
+  test_types = "s",
+  test_groups = list(1:4)
+)
+#> 
+#> Test parameters ----------------------------------------------------------------
+#>   An initial graph
+#>   
+#>   --- Hypothesis weights ---
+#>   A1: 0.5000
+#>   A2: 0.5000
+#>   B1: 0.0000
+#>   B2: 0.0000
+#>   
+#>   --- Transition weights ---
+#>          A1     A2     B1     B2
+#>   A1 0.0000 0.5000 0.5000 0.0000
+#>   A2 0.5000 0.0000 0.0000 0.5000
+#>   B1 0.0000 1.0000 0.0000 0.0000
+#>   B2 1.0000 0.0000 0.0000 0.0000
+#> 
+#>   Global alpha = 0.05
+#> 
+#>   Test types
+#>   simes: (A1-A2-B1-B2)
+#> 
+#> Simulation parameters ----------------------------------------------------------
+#>   Testing 100,000 simulations with multivariate normal params:
+#> 
+#>                     A1 A2 B1 B2
+#>   Simulation means:  1  1  1  1
+#> 
+#>   Simulation covariance:    A1 A2 B1 B2
+#>                          A1  1  0  0  0
+#>                          A2  0  1  0  0
+#>                          B1  0  0  1  0
+#>                          B2  0  0  0  1
+#> 
+#>   Success is defined as rejecting any of [A1, A2]
+#> 
+#> Power calculation --------------------------------------------------------------
+#>                                   A1     A2      B1      B2
+#>        Power to reject each: 0.18334 0.1833 0.02481 0.02559
+#> 
+#>         Expected rejections: 0.41704
+#>   Power to reject 1 or more: 0.31522
+#>         Power to reject all: 0.00481
+#>      Probability of success: 0.31522
+#> 
+#> Simulation details -------------------------------------------------------------
+#>   p_sim_A1 p_sim_A2 p_sim_B1 p_sim_B2 rej_A1 rej_A2 rej_B1 rej_B2
+#>   0.009093 0.002317 0.120415 0.243067   TRUE   TRUE  FALSE  FALSE
+#>   0.122093 0.033363 0.193634 0.602013  FALSE  FALSE  FALSE  FALSE
+#>   0.032154 0.214218 0.029764 0.371079  FALSE  FALSE  FALSE  FALSE
+#>   0.060998 0.207009 0.726477 0.721505  FALSE  FALSE  FALSE  FALSE
+#>   0.420560 0.636468 0.172388 0.198972  FALSE  FALSE  FALSE  FALSE
+#>   0.252351 0.079659 0.024400 0.088242  FALSE  FALSE  FALSE  FALSE
+#>   ...
+```
+
+``` r
+calculate_power(
+  g_dose_2,
+  sim_n = 1e5,
+  sim_theta = c(1, 1, 1, 1),
+  test_types = c("s", "p"),
+  test_groups = list(1:2, 3:4),
   test_corr = diag(4)
 )
-#> $power_local
-#> [1] 0.17477 0.17819 0.01744 0.01485
 #> 
-#> $power_expected
-#> [1] 0.38525
+#> Test parameters ----------------------------------------------------------------
+#>   An initial graph
+#>   
+#>   --- Hypothesis weights ---
+#>   A1: 0.5000
+#>   A2: 0.5000
+#>   B1: 0.0000
+#>   B2: 0.0000
+#>   
+#>   --- Transition weights ---
+#>          A1     A2     B1     B2
+#>   A1 0.0000 0.5000 0.5000 0.0000
+#>   A2 0.5000 0.0000 0.0000 0.5000
+#>   B1 0.0000 1.0000 0.0000 0.0000
+#>   B2 1.0000 0.0000 0.0000 0.0000
 #> 
-#> $power_at_least_1
-#> [1] 0.30747
+#>   Global alpha = 0.05
 #> 
-#> $power_all
-#> [1] 0.00012
+#>   Parametric testing correlation:    A1 A2 B1 B2
+#>                                   A1  1  0  0  0
+#>                                   A2  0  1  0  0
+#>                                   B1  0  0  1  0
+#>                                   B2  0  0  0  1
 #> 
-#> $power_success
-#> [1] 0.30747
-```
-
-``` r
-calculate_power(
-  g_dose_2,
-  sim_n = 1e5,
-  sim_theta = c(1, 1, 1, 1),
-  test_types = "s",
-  test_groups = c(1:4)
-)
-#> $power_local
-#> [1] 0.17681 0.17775 0.01767 0.01484
+#>   Test types
+#>        simes: (A1-A2)
+#>   parametric: (B1-B2)
 #> 
-#> $power_expected
-#> [1] 0.38707
+#> Simulation parameters ----------------------------------------------------------
+#>   Testing 100,000 simulations with multivariate normal params:
 #> 
-#> $power_at_least_1
-#> [1] 0.30808
+#>                     A1 A2 B1 B2
+#>   Simulation means:  1  1  1  1
 #> 
-#> $power_all
-#> [1] 1e-04
+#>   Simulation covariance:    A1 A2 B1 B2
+#>                          A1  1  0  0  0
+#>                          A2  0  1  0  0
+#>                          B1  0  0  1  0
+#>                          B2  0  0  0  1
 #> 
-#> $power_success
-#> [1] 0.30808
-```
-
-``` r
-calculate_power(
-  g_dose_2,
-  sim_n = 1e5,
-  sim_theta = c(1, 1, 1, 1),
-  test_types = "s",
-  test_groups = c(1:2, 3:4)
-)
-#> $power_local
-#> [1] 0.17960 0.17803 0.01891 0.01552
+#>   Success is defined as rejecting any of [A1, A2]
 #> 
-#> $power_expected
-#> [1] 0.39206
+#> Power calculation --------------------------------------------------------------
+#>                                   A1      A2      B1      B2
+#>        Power to reject each: 0.18379 0.18369 0.02414 0.02331
 #> 
-#> $power_at_least_1
-#> [1] 0.31051
+#>         Expected rejections: 0.41493
+#>   Power to reject 1 or more: 0.31749
+#>         Power to reject all: 0.00349
+#>      Probability of success: 0.31749
 #> 
-#> $power_all
-#> [1] 1e-04
-#> 
-#> $power_success
-#> [1] 0.31051
+#> Simulation details -------------------------------------------------------------
+#>   p_sim_A1 p_sim_A2 p_sim_B1 p_sim_B2 rej_A1 rej_A2 rej_B1 rej_B2
+#>   0.235136 0.542285 0.050847 0.347626  FALSE  FALSE  FALSE  FALSE
+#>   0.019190 0.193386 0.026304 0.412830   TRUE  FALSE  FALSE  FALSE
+#>   0.120857 0.109389 0.012917 0.068154  FALSE  FALSE  FALSE  FALSE
+#>   0.005220 0.133472 0.389114 0.108096   TRUE  FALSE  FALSE  FALSE
+#>   0.617954 0.258738 0.140075 0.111332  FALSE  FALSE  FALSE  FALSE
+#>   0.002952 0.036309 0.475232 0.506712   TRUE   TRUE  FALSE  FALSE
+#>   ...
 ```
 
 ## Related work
@@ -510,4 +694,7 @@ hope to re-implement the methods with a clearer distinction between
 weighting procedures and test procedures; with fewer dependencies, in
 particular shedding the Java dependency; with the simpler, more
 transparent S3 class framework; and with improvements to the accuracy of
-the parametric tests method.
+the parametric and Simes test methods.
+
+A portion of Simes testing is also implemented in the lrstat package
+(`install.packages("lrstat")`) with similar speed to graphicalMCP.

@@ -138,8 +138,7 @@ g_dose_2 <- simple_successive_2(names)
 calculate_power(
   g_dose_2,
   sim_n = 1e5,
-  sim_theta = c(1, 1, 1, 1),
-  test_types = "s"
+  sim_theta = c(1, 1, 1, 1)
 )
 ```
 
@@ -163,7 +162,7 @@ calculate_power(
   sim_n = 1e5,
   sim_theta = c(1, 1, 1, 1),
   test_types = "s",
-  test_groups = c(1:4)
+  test_groups = list(1:4)
 )
 ```
 
@@ -172,8 +171,9 @@ calculate_power(
   g_dose_2,
   sim_n = 1e5,
   sim_theta = c(1, 1, 1, 1),
-  test_types = "s",
-  test_groups = c(1:2, 3:4)
+  test_types = c("s", "p"),
+  test_groups = list(1:2, 3:4),
+  test_corr = diag(4)
 )
 ```
 
@@ -185,3 +185,5 @@ These methods were originally implemented in R after the 2011 paper in the gMCP 
 - https://github.com/kornl/gMCP
 
 However, because development has ceased on this original package, we hope to re-implement the methods with a clearer distinction between weighting procedures and test procedures; with fewer dependencies, in particular shedding the Java dependency; with the simpler, more transparent S3 class framework; and with improvements to the accuracy of the parametric and Simes test methods.
+
+A portion of Simes testing is also implemented in the lrstat package (`install.packages("lrstat")`) with similar speed to graphicalMCP.
