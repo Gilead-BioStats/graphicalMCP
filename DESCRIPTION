@@ -29,6 +29,7 @@ Suggests:
     gMCP,
     gt,
     knitr,
+    lrstat,
     rmarkdown,
     testthat (>= 3.0.0),
     tictoc,

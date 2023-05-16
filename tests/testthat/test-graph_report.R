@@ -202,3 +202,60 @@ test_that("check assertions in testing vignette", {
     test_graph(par_gate, pvals, .05)$outputs
   )
 })
+
+test_that("compare adjusted p-values to gMCP - Bonferroni & parametric", {
+  g <- random_graph(6)
+  p <- pnorm(rnorm(6), lower.tail = FALSE)
+
+  if (requireNamespace("gMCP", quietly = TRUE)) {
+    gmcp_g <- as_gmcp_graph(g)
+
+    expect_equal(
+      bonferroni_sequential(g, p)$outputs$p_adj,
+      gMCP::gMCP(gmcp_g, p, "Bonferroni")@adjPValues
+    )
+
+    expect_equal(
+      test_graph(g, p)$outputs$p_adj,
+      gMCP::gMCP(gmcp_g, p, "Bonferroni")@adjPValues
+    )
+
+    expect_equal(
+      test_graph(g, p, test_types = "p", corr = diag(6))$outputs$p_adj,
+      gMCP::gMCP(gmcp_g, p, "parametric", correlation = diag(6))@adjPValues
+    )
+  }
+})
+
+test_that("compare adjusted p-values to lrstat - Bonferroni & Simes", {
+  if (requireNamespace("lrstat", quietly = TRUE)) {
+    gw <- lrstat::fwgtmat(g$hypotheses, g$transitions)
+
+    fam1 <- matrix(1, ncol = 6)
+    fam2 <- rbind(c(1, 1, 1, 0, 0, 0), c(0, 0, 0, 1, 1, 1))
+
+    expect_equal(
+      bonferroni_sequential(g, p)$outputs$p_adj,
+      lrstat::fadjpbon(g$hypotheses, g$transitions, matrix(p, ncol = 6)),
+      ignore_attr = TRUE
+    )
+
+    expect_equal(
+      test_graph(g, p)$outputs$p_adj,
+      lrstat::fadjpbon(g$hypotheses, g$transitions, matrix(p, ncol = 6)),
+      ignore_attr = TRUE
+    )
+
+    expect_equal(
+      test_graph(g, p, test_types = "s")$outputs$p_adj,
+      lrstat::fadjpsim(gw, p, fam1),
+      ignore_attr = TRUE
+    )
+
+    expect_equal(
+      test_graph(g, p, groups = list(1:3, 4:6), test_types = "s")$outputs$p_adj,
+      lrstat::fadjpsim(gw, p, fam2),
+      ignore_attr = TRUE
+    )
+  }
+})
