@@ -9,11 +9,12 @@
 \alias{simple_successive_1}
 \alias{simple_successive_2}
 \alias{random_graph}
+\alias{complex_example}
 \title{Example graphs from a selection of papers}
 \usage{
 bonferroni_holm(n, names = NULL)
 
-huque_alosh_bhore_2011()
+huque_alosh_bhore_2011(names = NULL)
 
 wiens_dmitrienko_2005(names = NULL)
 
@@ -26,6 +27,8 @@ simple_successive_1(names = NULL)
 simple_successive_2(names = NULL)
 
 random_graph(n, names = NULL)
+
+complex_example(names = NULL)
 }
 \arguments{
 \item{n}{Number of vertices in the graph}

@@ -141,17 +141,17 @@ random_graph <- function(n, names = NULL) {
 complex_example <- function(names = NULL) {
   eps <- .001
 
-  weights <- c(rep(c(1/3, 0, 0), 3))
+  weights <- c(rep(c(1 / 3, 0, 0), 3))
   transitions <- rbind(
-    c(0, .5, .5,  0, 0, 0,  0, 0, 0),
-    c(0, 0, 1 - eps,  eps / 2, 0, 0,  eps / 2, 0, 0),
-    c(0, 1 - eps, 0,  eps / 2, 0, 0,  eps / 2, 0, 0),
-    c(0, 0, 0,  0, .5, .5,  0, 0, 0),
-    c(eps / 2, 0, 0,  0, 0, 1 - eps,  eps / 2, 0, 0),
-    c(eps / 2, 0, 0,  0, 1 - eps, 0,  eps / 2, 0, 0),
-    c(0, 0, 0,  0, 0, 0,  0, .5, .5),
-    c(eps / 2, 0, 0,  eps / 2, 0, 0,  0, 0, 1 - eps),
-    c(eps / 2, 0, 0,  eps / 2, 0, 0,  0, 1 - eps, 0)
+    c(0, .5, .5, 0, 0, 0, 0, 0, 0),
+    c(0, 0, 1 - eps, eps / 2, 0, 0, eps / 2, 0, 0),
+    c(0, 1 - eps, 0, eps / 2, 0, 0, eps / 2, 0, 0),
+    c(0, 0, 0, 0, .5, .5, 0, 0, 0),
+    c(eps / 2, 0, 0, 0, 0, 1 - eps, eps / 2, 0, 0),
+    c(eps / 2, 0, 0, 0, 1 - eps, 0, eps / 2, 0, 0),
+    c(0, 0, 0, 0, 0, 0, 0, .5, .5),
+    c(eps / 2, 0, 0, eps / 2, 0, 0, 0, 0, 1 - eps),
+    c(eps / 2, 0, 0, eps / 2, 0, 0, 0, 1 - eps, 0)
   )
 
   create_graph(weights, transitions, names = names)

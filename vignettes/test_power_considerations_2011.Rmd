@@ -1,0 +1,175 @@
+---
+title: "test_power_considerations_2011"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{test_power_considerations_2011}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup}
+library(graphicalMCP)
+```
+
+This vignette demonstrates re-creating table 1 from the Bretz/Maurer/Hommel Stat Med paper from 2011 using graphicalMCP. Here is the target output
+
+![Table 1 from the 2011 Statistics in Medicine paper](img/table_1.png)
+
+```{r base-graph-specs}
+hyp_names <- paste0("H", 1:4)
+
+hyp1 <- c(.5, .5, 0, 0)
+hyp2 <- c(1, 0, 0, 0)
+
+hyps <- do.call(rbind,
+                c(rep(list(hyp1), 12),
+                  rep(list(hyp2), 2)))
+colnames(hyps) <- hyp_names
+
+transitions <- rbind(c(0, 0, 1, 0),
+                     c(0, 0, 0, 1),
+                     c(0, 1, 0, 0),
+                     c(1, 0, 0, 0))
+```
+
+```{r gamma-edges}
+gamma_prop1 <- rbind(c(0, 1, -1, 0),
+                     c(1, 0, 0, -1),
+                     c(0, 0, 0, 0),
+                     c(0, 0, 0, 0))
+gamma_props <- rep(list(gamma_prop1), 14)
+
+gamma1 <- c(.5, .5, 0, 0)
+gamma2 <- c(.999, .999, 0, 0)
+gamma3 <- rep(0, 4)
+gammas <- do.call(rbind,
+                  c(rep(list(gamma1), 10),
+                    list(gamma2),
+                    rep(list(gamma3), 3)))
+```
+
+```{r mvn-params}
+rhos <- c(rep(.5, 8), 0, .99, rep(.5, 4))
+
+theta1 <- c(0, 0, 0, 0)
+theta2 <- c(3, 0, 0, 0)
+theta3 <- c(3, 0, 3, 0)
+theta4 <- c(3, 0, 3, 3)
+theta5 <- c(2, 0, 3, 3)
+theta6 <- c(1, 0, 3, 3)
+theta7 <- c(3, 3, 0, 0)
+theta8 <- c(3, 3, 2, 2)
+theta9 <- c(0, 3, 3, 0)
+
+thetas <- rbind(
+  theta1,
+  theta2,
+  theta3,
+  theta4,
+  theta5,
+  theta6,
+  theta7,
+  theta8,
+  theta8,
+  theta8,
+  theta3,
+  theta3,
+  theta3,
+  theta9
+)
+```
+
+```{r scenario-fun}
+sim_func <- function(sim_n,
+                     hypotheses,
+                     transitions,
+                     gamma_props,
+                     gamma,
+                     rho,
+                     theta,
+                     ...) {
+  new_transitions <- transitions + gamma * gamma_props
+
+  graph <- create_graph(hypotheses, new_transitions)
+
+  sim_corr <- rbind(c(1, 0.5, rho, rho / 2),
+                    c(0.5, 1, rho / 2, rho),
+                    c(rho, rho / 2, 1, 0.5),
+                    c(rho / 2, rho, 0.5, 1))
+
+  calculate_power(
+    graph = graph,
+    test_alpha = 0.025,
+    sim_theta = theta,
+    sim_corr = sim_corr,
+    sim_n = sim_n,
+    sim_success = 1,
+    ...
+  )
+}
+```
+
+```{r scenarios}
+out_list <- list()
+
+for (i in 1:14) {
+  out_list[[i]] <- sim_func(
+    sim_n = 100000,
+    hypotheses = hyps[i, ], # Hyp scenario
+    transitions = transitions, # Base edges
+    gamma_props = gamma_props[[i]], # Gamma edge locations
+    gamma = gammas[i, ], # Gamma edge values
+    rho = rhos[[i]], # Covariance base value
+    theta = thetas[i, ], # Hypothesis means
+    test_types = "s"
+  )
+}
+```
+
+```{r summarize}
+at_least_1 <- as.numeric(lapply(out_list, function(x) x$power$power_at_least_1))
+
+loc_pow <- do.call("rbind", lapply(out_list, function(x) x$power$power_local))
+
+res_pi <- round(cbind(at_least_1, loc_pow), 3)
+
+table_1 <- cbind(hyps,
+                 gammas,
+                 rhos,
+                 thetas,
+                 res_pi)
+
+colnames(table_1) <- c(
+  paste0("H", 1:4),
+  paste0("gamma_", 1:4),
+  "rho",
+  paste0("theta_", 1:4),
+  "pi",
+  paste0("pi_", 1:4)
+)
+
+rownames(table_1) <- 1:14
+
+gt::gt(as.data.frame(table_1[, c(1:2, 5:6, 9:18)])) |> 
+  gt::cols_label(
+    gamma_1 = gt::html("&gamma;<sub>1</sub>"),
+    gamma_2 = gt::html("&gamma;<sub>2</sub>"),
+    rho = gt::html("&rho;"),
+    theta_1 = gt::html("&theta;<sub>1</sub>"),
+    theta_2 = gt::html("&theta;<sub>2</sub>"),
+    theta_3 = gt::html("&theta;<sub>3</sub>"),
+    theta_4 = gt::html("&theta;<sub>4</sub>"),
+    pi = gt::html("&pi;"),
+    pi_1 = gt::html("&pi;<sub>1</sub>"),
+    pi_2 = gt::html("&pi;<sub>2</sub>"),
+    pi_3 = gt::html("&pi;<sub>3</sub>"),
+    pi_4 = gt::html("&pi;<sub>4</sub>"),
+  )
+```
