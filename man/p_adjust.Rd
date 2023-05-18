@@ -45,94 +45,35 @@ graphicalMCP:::p_adjust_parametric(p, w, corr1)
 # Uniform random pairwise correlations
 graphicalMCP:::p_adjust_parametric(p, w, corr2)
 }
-\keyword{(2009).}
-\keyword{(2011).}
-\keyword{(2016).}
-\keyword{(2017).}
-\keyword{(2019).}
-\keyword{1489–1501.}
-\keyword{28(4),}
-\keyword{30(13),}
-\keyword{35(22),}
-\keyword{38(27),}
-\keyword{4041–4055.}
-\keyword{5268–5282.}
-\keyword{53(6),}
-\keyword{586–604.}
-\keyword{59(5),}
-\keyword{894–913.}
-\keyword{918–931.}
-\keyword{A}
-\keyword{Biometrical}
-\keyword{Bonferroni}
-\keyword{Bonferroni,}
-\keyword{Brannath,}
-\keyword{Bretz,}
-\keyword{D.,}
-\keyword{E.,}
-\keyword{F.}
-\keyword{F.,}
-\keyword{G.}
-\keyword{Glimm,}
-\keyword{Graphical}
-\keyword{Hochberg}
-\keyword{Hommel,}
-\keyword{Journal,}
-\keyword{K.}
-\keyword{Klinglmueller,}
-\keyword{Lu,}
-\keyword{M.}
-\keyword{M.,}
-\keyword{Maurer,}
-\keyword{Medicine,}
-\keyword{Posch,}
-\keyword{Rohmeyer,}
-\keyword{Simes}
-\keyword{Simes,}
-\keyword{Statistics}
-\keyword{Symmetric}
-\keyword{Test}
-\keyword{W.,}
-\keyword{Xi,}
-\keyword{a}
-\keyword{analyses}
-\keyword{and}
-\keyword{application}
-\keyword{approach}
-\keyword{approaches}
-\keyword{comparison}
-\keyword{considerations}
-\keyword{endpoint}
-\keyword{equally}
-\keyword{for}
-\keyword{framework}
-\keyword{graphical}
-\keyword{graphs}
-\keyword{https://doi.org/10.1002/bimj.201000239}
-\keyword{https://doi.org/10.1002/bimj.201600233}
-\keyword{https://doi.org/10.1002/sim.3495}
-\keyword{https://doi.org/10.1002/sim.3988}
-\keyword{https://doi.org/10.1002/sim.6985}
-\keyword{https://doi.org/10.1002/sim.8375}
-\keyword{in}
+\references{
+Bretz, F., Maurer, W., Brannath, W., and Posch, M. (2009). A graphical
+approach to sequentially rejective multiple test procedures. Statistics in
+Medicine, 28(4), 586–604. \url{https://doi.org/10.1002/sim.3495}
+
+Bretz, F., Maurer, W., and Hommel, G. (2011). Test and power considerations
+for multiple endpoint analyses using sequentially rejective graphical
+procedures. Statistics in Medicine, 30(13), 1489–1501.
+\url{https://doi.org/10.1002/sim.3988}
+
+Bretz, F., Posch, M., Glimm, E., Klinglmueller, F., Maurer, W., and Rohmeyer,
+K. (2011). Graphical approaches for multiple comparison procedures using
+weighted Bonferroni, Simes, or parametric tests. Biometrical Journal, 53(6),
+894–913. \url{https://doi.org/10.1002/bimj.201000239}
+
+Lu, K. (2016). Graphical approaches using a Bonferroni mixture of weighted
+Simes tests. Statistics in Medicine, 35(22), 4041–4055.
+\url{https://doi.org/10.1002/sim.6985}
+
+Xi, D., Glimm, E., Maurer, W., and Bretz, F. (2017). A unified framework for
+weighted parametric multiple test procedures. Biometrical Journal, 59(5),
+918–931. \url{https://doi.org/10.1002/bimj.201600233}
+
+Xi, D., and Bretz, F. (2019). Symmetric graphs for equally weighted tests,
+with application to the Hochberg procedure. Statistics in Medicine, 38(27),
+5268–5282. \url{https://doi.org/10.1002/sim.8375}
+
+Rohmeyer K, Klinglmueller F (2020). \emph{gMCP: Graph Based Multiple Test
+Procedures}. R package version 0.8-15,
+\url{https://cran.r-project.org/package=gMCP}.
+}
 \keyword{internal}
-\keyword{mixture}
-\keyword{multiple}
-\keyword{of}
-\keyword{or}
-\keyword{parametric}
-\keyword{power}
-\keyword{procedure.}
-\keyword{procedures}
-\keyword{procedures.}
-\keyword{rejective}
-\keyword{sequentially}
-\keyword{test}
-\keyword{tests,}
-\keyword{tests.}
-\keyword{the}
-\keyword{to}
-\keyword{unified}
-\keyword{using}
-\keyword{weighted}
-\keyword{with}

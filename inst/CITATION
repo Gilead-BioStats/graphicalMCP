@@ -13,3 +13,21 @@ citEntry(
         "version 0.1.0. Gilead Sciences, Inc. Foster City, California.",
         "https://github.com/Gilead-BioStats/graphicalMCP")
 )
+
+citEntry(entry="article",
+         title = "Graphical approaches for multiple comparison procedures using weighted Bonferroni, Simes or parametric tests",
+         author = personList(as.person("Frank Bretz"),
+                             as.person("Martin Posch"),
+                             as.person("Ekkehard Glimm"),
+                             as.person("Florian Klinglmueller"),
+                             as.person("Willi Maurer"),
+                             as.person("Kornelius Rohmeyer")),
+         journal = "Biometrical Journal",
+         year = "2011",
+         publisher = "Wiley",
+         volume = "53",
+         number = "6",
+         pages = "894--913",
+         url = "http://onlinelibrary.wiley.com/doi/10.1002/bimj.201000239/full",
+         textVersion = "Frank Bretz, Martin Posch, Ekkehard Glimm, Florian Klinglmueller, Willi Maurer, Kornelius Rohmeyer (2011), Graphical approaches for multiple comparison procedures using weighted Bonferroni, Simes or parametric tests. Biometrical Journal 53 (6), pages 894--913, Wiley."
+)

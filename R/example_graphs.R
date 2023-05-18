@@ -9,6 +9,8 @@
 #'
 #' @export
 #'
+#' @template references
+#'
 #' @rdname example-graphs
 #'
 #' @examples

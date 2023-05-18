@@ -18,6 +18,7 @@ Description: A multiple comparison procedure (or multiple test procedure)
     low-dependency implementation of the methods described in that paper.
 License: GPL (>= 3)
 URL: https://urban-sniffle-p11zlpj.pages.github.io/
+BugReports: https://github.com/Gilead-BioStats/graphicalMCP/issues
 Imports: 
     matrixStats,
     methods,
@@ -28,6 +29,7 @@ Suggests:
     ggplot2,
     gMCP,
     gt,
+    htmltools,
     knitr,
     lrstat,
     rmarkdown,

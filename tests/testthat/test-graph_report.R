@@ -228,6 +228,9 @@ test_that("compare adjusted p-values to gMCP - Bonferroni & parametric", {
 })
 
 test_that("compare adjusted p-values to lrstat - Bonferroni & Simes", {
+  g <- random_graph(6)
+  p <- pnorm(rnorm(6), lower.tail = FALSE)
+
   if (requireNamespace("lrstat", quietly = TRUE)) {
     gw <- lrstat::fwgtmat(g$hypotheses, g$transitions)
 

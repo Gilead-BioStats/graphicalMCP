@@ -17,3 +17,5 @@
 ^vignettes/.*files$
 ^vignettes/.*\.html$
 ^vignettes/.*\.R$
+^codemeta\.json$
+^man-roxygen$
