@@ -32,8 +32,8 @@ plot.initial_graph <- function(graph,
 
   graph_igraph <- as_igraph(graph)
 
-  v_attr <- vertex_attr(graph_igraph)
-  e_attr <- edge_attr(graph_igraph)
+  v_attr <- igraph::vertex_attr(graph_igraph)
+  e_attr <- igraph::edge_attr(graph_igraph)
 
   # make labels ----------------------------------------------------------------
   v_labels <- paste(v_attr$name, round(v_attr$weight, precision), sep = "\n")
@@ -55,8 +55,16 @@ plot.initial_graph <- function(graph,
 
   # vertex pairs connected in both directions should get a small default so
   # their edges don't overlap each other
-  edge_pair_locs <- attr(igraph::E(graph_igraph), "vnames") %in% edge_pairs(graph)
-  curve[edge_pair_locs] <- .25
+  if (!is.null(edge_curves["pairs"])) {
+    edge_pair_curve <- edge_curves["pairs"]
+  } else {
+    edge_pair_curve <- .25
+  }
+
+  edge_pair_locs <-
+    attr(igraph::E(graph_igraph), "vnames") %in% edge_pairs(graph)
+
+  curve[edge_pair_locs] <- edge_pair_curve
 
   curve[names(edge_curves)] <- edge_curves
 
@@ -95,7 +103,7 @@ plot.initial_graph <- function(graph,
     # vertex.frame.color = "#e8c2ff",
     vertex.label = v_labels,
     vertex.label.color = "black",
-    vertex.size = 35,
+    vertex.size = 20,
 
     edge.label = edge_labels,
     edge.curved = curve,
