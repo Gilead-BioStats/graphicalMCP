@@ -8,7 +8,7 @@
 \description{
 \if{html}{\figure{logo.png}{options: style='float: right' alt='logo' width='120'}}
 
-A multiple comparison procedure (or multiple test procedure) is a a statistical analysis method for determining efficacy of multiple drugs, or multiple doses of the same drug, in a single clinical trial. Bretz, et al (2011) laid out a graph-based approach to these multiple comparison procedures, in which the weights of the vertices and edges of the graph are determined independently of the particular statistical test used to assess results. This package is a low-dependency implementation of the methods described in that paper.
+A multiple comparison procedure (or multiple test procedure) is a a statistical analysis method for determining efficacy of multiple drugs, or multiple doses of the same drug, in a single clinical trial. (Bretz et al., 2011) laid out a graph-based approach to these multiple comparison procedures, in which the weights of the vertices and edges of the graph are determined independently of the particular statistical test used to assess results. This is a low-dependency implementation of the methods described in that and subsequent papers.
 }
 \seealso{
 Useful links:
