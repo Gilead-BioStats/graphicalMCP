@@ -41,9 +41,10 @@ sampled from the multivariate normal distribution}
 \item{sim_corr}{A numeric matrix of correlations between hypotheses used to
 sample from the multivariate normal distribution to generate p-values}
 
-\item{sim_success}{A numeric vector indicating which hypotheses must be
-rejected to consider an experiment a success. It can range from a single
-hypothesis to all hypotheses in a graph}
+\item{sim_success}{A numeric vector indicating which hypotheses can be
+rejected to consider an experiment a success (One or more must be rejected,
+not necessarily all). It can range from a single hypothesis to all
+hypotheses in a graph}
 
 \item{sim_seed}{(Optional) Random seed to set before simulating p-values. Set
 this to use a consistent set of p simulations across power calculations}

@@ -113,6 +113,43 @@ This vignette demonstrates re-creating table 1 from Bretz et al. (2011) using {g
 
 ![Table 1 from Bretz et al. (2011)](img/table_1.png)
 
+```{r target}
+table_1_target <- read.table(
+  text = "I   0.0125  0.0125  0.5   0.5  0.5   0   0   0   0  0.025  0.015  0.014  0.002  0.001
+  2   0.0125  0.0125  0.5   0.5  0.5   3   0   0   0  0.773  0.773  0.018  0.006  0.003
+  3   0.0125  0.0125  0.5   0.5  0.5   3   0   3   0  0.774  0.774  0.022  0.596  0.003
+  4   0.0125  0.0125  0.5   0.5  0.5   3   0   3   3  0.78   0.78   0.026  0.606  0.025
+  5   0.0125  0.0125  0.5   0.5  0.5   2   0   3   3  0.404  0.403  0.023  0.351  0.022
+  6   0.0125  0.0125  0.5   0.5  0.5   1   0   3   3  0.111  0.108  0.018  0.102  0.017
+  7   0.0125  0.0125  0.5   0.5  0.5   3   3   0   0  0.897  0.806  0.806  0.014  0.015
+  8   0.0125  0.0125  0.5   0.5  0.5   3   3   2   2  0.896  0.808  0.809  0.409  0.402
+  9   0.0125  0.0125  0.5   0.5  0    3   3   2   2  0.899  0.812  0.81   0.359  0.353
+  10  0.0125  0.0125  0.5   0.5  0.99  3   3   2   2  0.897  0.812  0.812  0.448  0.44
+  11  0.0125  0.0125  .999  .999  0.5   3   0   3   0  0.774  0.774  0.024  0.131  0.004
+  12  0.0125  0.0125   0    0   0.5   3   0   3   0  0.779  0.779  0.026  0.663  0.005
+  13  0.025  0     0   0   0.5 3   0  3  0  0.85 0.85 0.023  0.759  0.004
+  14  0.025  0     0   0  0.5  0  3   3  0  0.025  0.025  0.024  0.024  0.002
+"
+)
+
+table_1_target <- data.frame(
+  alpha_1 = c(0.0125, 0.0125, 0.0125, 0.0125, 0.0125, 0.0125, 0.0125, 0.0125, 0.0125, 0.0125, 0.0125, 0.0125, 0.025, 0.025),
+  alpha_2 = c(0.0125, 0.0125, 0.0125, 0.0125, 0.0125, 0.0125, 0.0125, 0.0125, 0.0125, 0.0125, 0.0125, 0.0125, 0, 0),
+  gamma_1 = c(0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.999, 0, 0, 0),
+  gamma_2 = c(0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.999, 0, 0, 0),
+  rho = c(0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0, 0.99, 0.5, 0.5, 0.5, 0.5),
+  theta_1 = c(0L, 3L, 3L, 3L, 2L, 1L, 3L, 3L, 3L, 3L, 3L, 3L, 3L, 0L),
+  theta_2 = c(0L, 0L, 0L, 0L, 0L, 0L, 3L, 3L, 3L, 3L, 0L, 0L, 0L, 3L),
+  theta_3 = c(0L, 0L, 3L, 3L, 3L, 3L, 0L, 2L, 2L, 2L, 3L, 3L, 3L, 3L),
+  theta_4 = c(0L, 0L, 0L, 3L, 3L, 3L, 0L, 2L, 2L, 2L, 0L, 0L, 0L, 0L),
+  pi = c(0.025, 0.773, 0.774, 0.78, 0.404, 0.111, 0.897, 0.896, 0.899, 0.897, 0.774, 0.779, 0.85, 0.025),
+  pi_1 = c(0.015, 0.773, 0.774, 0.78, 0.403, 0.108, 0.806, 0.808, 0.812, 0.812, 0.774, 0.779, 0.85, 0.025),
+  pi_2 = c(0.014, 0.018, 0.022, 0.026, 0.023, 0.018, 0.806, 0.809, 0.81, 0.812, 0.024, 0.026, 0.023, 0.024),
+  pi_3 = c(0.002, 0.006, 0.596, 0.606, 0.351, 0.102, 0.014, 0.409, 0.359, 0.448, 0.131, 0.663, 0.759, 0.024),
+  pi_4 = c(0.001, 0.003, 0.003, 0.025, 0.022, 0.017, 0.015, 0.402, 0.353, 0.44, 0.004, 0.005, 0.004, 0.002)
+)
+```
+
 The scenarios are all tested at the level `𝛼 = .025` and differ by:
 
 -   Initial hypothesis weights - initial weight split between primary hypotheses, or all weight on H1
@@ -261,7 +298,13 @@ And the target again for reference
 
 ![Table 1 from Bretz et al. (2011)](img/table_1.png)
 
-Power values will differ slightly due to different simulations, but on the whole they are very similar. And that's all we need to do! Furthermore, once we've done the hard work of setting up the scenarios, it's simple to test them using other strategies. Let's try the Simes method. Note that Simes testing takes \~10x longer than Bonferroni testing for a graph of this size.
+Power values will differ slightly due to different simulations, but on the whole they are very similar.
+
+```{r compare}
+gt(table_1_target[10:14] - table_1[, 15:19])
+```
+
+And that's all we need to do! Furthermore, once we've done the hard work of setting up the scenarios, it's simple to test them using other strategies. Let's try the Simes method. Note that Simes testing takes \~10x longer than Bonferroni testing for a graph of this size.
 
 ```{r scenarios-simes}
 out_list_simes <- list()

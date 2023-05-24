@@ -21,9 +21,10 @@
 #'   sampled from the multivariate normal distribution
 #' @param sim_corr A numeric matrix of correlations between hypotheses used to
 #'   sample from the multivariate normal distribution to generate p-values
-#' @param sim_success A numeric vector indicating which hypotheses must be
-#'   rejected to consider an experiment a success. It can range from a single
-#'   hypothesis to all hypotheses in a graph
+#' @param sim_success A numeric vector indicating which hypotheses can be
+#'   rejected to consider an experiment a success (One or more must be rejected,
+#'   not necessarily all). It can range from a single hypothesis to all
+#'   hypotheses in a graph
 #' @param sim_seed (Optional) Random seed to set before simulating p-values. Set
 #'   this to use a consistent set of p simulations across power calculations
 #' @param force_closure A logical scalar used to determine whether the full
@@ -76,6 +77,8 @@ calculate_power <- function(graph,
                             sim_seed = NULL,
                             force_closure = FALSE) {
   # process test types ---------------------------------------------------------
+  # test types should be passed as full names or first letter, case-insensitive,
+  # and a single provided type should get expanded to all groups
   test_opts <- c(
     bonferroni = "bonferroni",
     parametric = "parametric",
@@ -88,6 +91,7 @@ calculate_power <- function(graph,
   if (length(test_types) == 1) {
     test_types <- rep(test_types, length(test_groups))
   }
+
   # groups of size 1 should always use Bonferroni testing
   test_types[lengths(test_groups) == 1] <- "bonferroni"
 
@@ -124,7 +128,7 @@ calculate_power <- function(graph,
   graph_size <- length(graph$hypotheses)
 
   if (all(test_types == "bonferroni") && !force_closure) {
-    # Bonferroni shortcut ------------------------------------------------------
+    # Bonferroni shortcut if possible ------------------------------------------
     test_res_mat <- bonferroni_sequential_power_cpp(
       graph$hypotheses,
       graph$transitions,
@@ -141,13 +145,18 @@ calculate_power <- function(graph,
     para_groups <- test_groups[test_types == "parametric"]
 
     # fast Simes testing requires Simes hypothesis numbers to be mapped to their
-    # relative position within the set of Simes hypotheses
+    # relative position within the set of Simes hypotheses. For example, if 1/7
+    # get parametric testing, and 2/5 & 3/4/6 get Simes, the fast Simes
+    # functions will get hypotheses 2/5 & 3/4/6 passed, but the groups will
+    # first be re-indexed to 1/4 & 2/3/5 (their relative locations within the
+    # Simes groups)
     simes_groups_reduce <- lapply(
       simes_groups,
       function(group) which(unlist(simes_groups) %in% group)
     )
 
-    # it also requires a set of p-values with columns subset for Simes testing
+    # it also requires a set of p-values with columns  already subset for Simes
+    # testing
     p_sim_simes <- p_sim[, unlist(simes_groups), drop = FALSE]
 
     gw <- generate_weights(graph)
@@ -156,6 +165,8 @@ calculate_power <- function(graph,
 
     # all `gw_` variables after this point cannot be considered to be ordered
 
+    # parametric and Bonferroni critical values do not depend on p-values, so
+    # they can be calculated just once
     gw_bonf <- gw_small[, unlist(bonf_groups), drop = FALSE]
 
     gw_para <- calculate_critical_parametric(
@@ -172,7 +183,11 @@ calculate_power <- function(graph,
     # Apply tests --------------------------------------------------------------
     for (row in seq_len(sim_n)) {
       if (length(simes_groups) > 0) {
-        # Simes testing depends on p-values
+        # Simes testing depends on p-values, so critical values must be
+        # calculated for each p-vector. Note that Simes critical values are
+        # incorrect for all missing hypotheses at this point, for the sake of
+        # speed. Missing hypotheses' critical values will be replaced with 0
+        # below
         gw_simes <- calculate_critical_simes(
           gw_simes_cols,
           p_sim_simes[row, ],
@@ -180,6 +195,7 @@ calculate_power <- function(graph,
         )
       }
 
+      # test_graph_fast() requires hypotheses to be re-ordered in original order
       gw_all <- cbind(gw_bonf, gw_simes, gw_para)[, graph_names, drop = FALSE]
       gw_all[!inter_h] <- 0 # replaces NAs as well as incorrect Simes values
 
@@ -192,6 +208,8 @@ calculate_power <- function(graph,
     }
   }
 
+  # calculate power results ----------------------------------------------------
+  # 'success' can currently only be an 'or', not an 'and'
   power <- list(
     power_local = colMeans(test_res_mat),
     power_expected = sum(test_res_mat) / sim_n,
