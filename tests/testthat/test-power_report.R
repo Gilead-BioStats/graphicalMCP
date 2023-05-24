@@ -116,7 +116,7 @@ test_that("complex example runs without error", {
 
   expect_no_error(
     calculate_power(
-      complex_example(),
+      complex_example_2(),
       test_alpha = .025,
       test_groups = list(c(1, 4, 7), 2:3, 5:6, 8:9),
       test_types = c("p", "s", "s", "s"),

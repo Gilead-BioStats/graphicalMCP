@@ -9,7 +9,7 @@
 \alias{simple_successive_1}
 \alias{simple_successive_2}
 \alias{random_graph}
-\alias{complex_example}
+\alias{complex_example_2}
 \title{Example graphs from a selection of papers}
 \usage{
 bonferroni_holm(n, names = NULL)
@@ -28,7 +28,7 @@ simple_successive_2(names = NULL)
 
 random_graph(n, names = NULL)
 
-complex_example(names = NULL)
+complex_example_2(names = NULL)
 }
 \arguments{
 \item{n}{Number of vertices in the graph}

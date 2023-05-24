@@ -140,7 +140,25 @@ random_graph <- function(n, names = NULL) {
 
 #' @export
 #' @rdname example-graphs
-complex_example <- function(names = NULL) {
+complex_example_1 <- function(names = NULL) {
+  eps <- .0001
+
+  weights <- c(rep(c(1 / 2, 0, 0), 2))
+  transitions <- rbind(
+    c(0, .5, .5, 0, 0, 0),
+    c(0, 0, 1, 0, 0, 0),
+    c(0, 1 - eps, 0, eps, 0, 0),
+    c(0, 0, 0, 0, .5, .5),
+    c(0, 0, 0, 0, 0, 1),
+    c(eps, 0, 0, 0, 1 - eps, 0)
+  )
+
+  create_graph(weights, transitions, names = names)
+}
+
+#' @export
+#' @rdname example-graphs
+complex_example_2 <- function(names = NULL) {
   eps <- .0001
 
   weights <- c(rep(c(1 / 3, 0, 0), 3))
