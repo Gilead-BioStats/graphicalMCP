@@ -2,12 +2,10 @@
 .Rhistory
 .RData
 .Ruserdata
-docs
+/docs/
 /perf-tests/log
 /cache
 *.html
-/docs
 inst/doc
 /doc/
 /Meta/
-docs
