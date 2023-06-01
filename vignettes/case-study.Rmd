@@ -1,6 +1,8 @@
 ---
 title: "case-study"
-output: rmarkdown::html_vignette
+output:
+  rmarkdown::html_vignette:
+    code_folding: "hide"
 vignette: >
   %\VignetteIndexEntry{case-study}
   %\VignetteEngine{knitr::rmarkdown}
@@ -17,4 +19,49 @@ knitr::opts_chunk$set(
 ```{r setup}
 library(graphicalMCP)
 ```
+
+This vignette serves to demonstrate testing and power calculations for a moderately complex graph example. The graph we'll create has a Bonferroni Holm structure between two groups, each of which have a parallel gate-keeping structure with one primary hypothesis and two secondary hypotheses.
+
+### Initial graph
+
+```{r initial-graph}
+eps <- .0001
+
+hypotheses <- c(rep(c(1 / 2, 0, 0), 2))
+transitions <- rbind(
+  c(0, .5, .5, 0, 0, 0),
+  c(0, 0, 1, 0, 0, 0),
+  c(0, 1 - eps, 0, eps, 0, 0),
+  c(0, 0, 0, 0, .5, .5),
+  c(0, 0, 0, 0, 0, 1),
+  c(eps, 0, 0, 0, 1 - eps, 0)
+)
+
+g_complex <- create_graph(hypotheses, transitions)
+
+print(g_complex)
+```
+
+The two primary hypotheses will be tested as a parametric group. Correlation between the primary hypotheses' test statistics is 0.5, as is the case when...[find paper that talks about this - 2010?]. P-values are chosen to illustrate a blend of accept/reject decisions. Testing and power will be calculated at the global level 0.025.
+
+```{r test}
+p_vals <- c(.01, .001, .02, .02, .001, .002)
+
+t_corr <- matrix(.5, nrow = 6, ncol = 6)
+diag(t_corr) <- 1
+
+test_graph(
+  g_complex,
+  p_vals,
+  alpha = .025,
+  groups = list(c(1, 4), 2:3, 5:6),
+  test_types = c("p", "s", "s"),
+  corr = t_corr
+)
+```
+
+```{r power}
+calculate_power(g_complex, sim_n = 1e5)
+```
+
 

@@ -1,6 +1,8 @@
 ---
 title: "test_power_considerations_2011"
-output: rmarkdown::html_vignette
+output:
+  rmarkdown::html_vignette:
+    code_folding: "hide"
 vignette: >
   %\VignetteIndexEntry{test_power_considerations_2011}
   %\VignetteEngine{knitr::rmarkdown}
@@ -161,6 +163,8 @@ The scenarios are all tested at the level `𝛼 = .025` and differ by:
 -   Simulation hypothesis means
 
 First, define the hypothesis weights and the base transitions.
+
+The different scenarios 
 
 ```{r base-graph-specs}
 hyp_names <- paste0("H", 1:4)

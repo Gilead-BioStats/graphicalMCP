@@ -1,6 +1,8 @@
 ---
 title: "Testing basics"
-output: rmarkdown::html_vignette
+output:
+  rmarkdown::html_vignette:
+    code_folding: "hide"
 params:
   m: 5
   sims: 100000
