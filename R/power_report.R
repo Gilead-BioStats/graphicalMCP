@@ -7,18 +7,25 @@
 #' each hypothesis to be rejected, as well as some additional probabilities such
 #' as expected rejections and probability of rejecting any hypothesis
 #'
+#' The parameters of the normal distribution are set with `marginal_power`
+#' (means) and `sim_corr` (correlation between test statistics). The mean of
+#' each hypothesis should be set as its marginal power
+#' \deqn{d_i=P_{\xi_i}(p_i\leq\alpha)} where \eqn{\xi_i} is the non-centrality
+#' parameter. The correlation between test statistics is induced by the study
+#' design.
+#'
 #' @param graph An initial graph as returned by [create_graph()]
-#' @param test_alpha A numeric scalar specifying the global significance level
-#'   for testing
+#' @param alpha A numeric scalar specifying the global significance level for
+#'   testing
 #' @param test_groups A list of numeric vectors specifying hypotheses to test
 #'   together
 #' @param test_types A character vector of tests to apply to the given groups
 #' @param test_corr Optional if no `test_types` are parametric. A numeric matrix
 #'   of correlations between hypotheses' test statistics
 #' @param sim_n An integer scalar specifying how many simulations to run
-#' @param sim_theta A numeric vector of mean values to use when simulating
+#' @param marginal_power A numeric vector of mean values to use when simulating
 #'   p-values. Exactly one mean per hypothesis is needed, and p-values will be
-#'   sampled from the multivariate normal distribution
+#'   sampled from the multivariate normal distribution. See Details for more
 #' @param sim_corr A numeric matrix of correlations between hypotheses used to
 #'   sample from the multivariate normal distribution to generate p-values
 #' @param sim_success A numeric vector indicating which hypotheses can be
@@ -57,7 +64,7 @@
 #' # used
 #' calculate_power(
 #'   par_gate,
-#'   test_alpha = .025,
+#'   alpha = .025,
 #'   test_groups = list(1:2, 3:4),
 #'   test_types = c("s", "p"),
 #'   test_corr = diag(4),
@@ -66,12 +73,12 @@
 #' )
 #'
 calculate_power <- function(graph,
-                            test_alpha = .05,
+                            alpha = .05,
                             test_groups = list(seq_along(graph$hypotheses)),
                             test_types = c("bonferroni"),
                             test_corr = NULL,
                             sim_n = 100,
-                            sim_theta = rep(0, length(graph$hypotheses)),
+                            marginal_power = rep(0, length(graph$hypotheses)),
                             sim_corr = diag(length(graph$hypotheses)),
                             sim_success = 1:2,
                             sim_seed = NULL,
@@ -100,7 +107,7 @@ calculate_power <- function(graph,
   test_input_val(
     graph,
     fake_p,
-    test_alpha,
+    alpha,
     test_groups,
     test_types,
     test_corr,
@@ -108,19 +115,19 @@ calculate_power <- function(graph,
     FALSE
   )
 
-  power_input_val(graph, sim_n, sim_theta, sim_corr, sim_success)
+  power_input_val(graph, sim_n, marginal_power, sim_corr, sim_success)
 
   # prep values for loop -------------------------------------------------------
   if (!is.null(sim_seed)) set.seed(sim_seed)
   p_sim <- stats::pnorm(
-    mvtnorm::rmvnorm(sim_n, sim_theta, sigma = sim_corr),
+    mvtnorm::rmvnorm(sim_n, marginal_power, sigma = sim_corr),
     lower.tail = FALSE
   )
 
   test_res_mat <- matrix(
     NA,
     nrow = sim_n,
-    ncol = length(sim_theta),
+    ncol = length(marginal_power),
     dimnames = list(seq_len(sim_n), names(graph$hypotheses))
   )
 
@@ -133,7 +140,7 @@ calculate_power <- function(graph,
       graph$hypotheses,
       graph$transitions,
       p_sim,
-      test_alpha
+      alpha
     ) == 1
 
     colnames(test_res_mat) <- graph_names
@@ -172,7 +179,7 @@ calculate_power <- function(graph,
     gw_para <- calculate_critical_parametric(
       gw_small,
       test_corr,
-      test_alpha,
+      alpha,
       para_groups
     )
 
@@ -201,7 +208,7 @@ calculate_power <- function(graph,
 
       test_res_mat[row, ] <- test_graph_fast(
         p_sim[row, ],
-        test_alpha,
+        alpha,
         gw_all,
         inter_h
       )
@@ -214,7 +221,7 @@ calculate_power <- function(graph,
     power_local = colMeans(test_res_mat),
     power_expected = sum(test_res_mat) / sim_n,
     power_at_least_1 = mean(rowSums(test_res_mat) > 0),
-    power_all = mean(rowSums(test_res_mat) == length(sim_theta)),
+    power_all = mean(rowSums(test_res_mat) == length(marginal_power)),
     power_success = mean(rowSums(test_res_mat[, sim_success, drop = FALSE]) > 0)
   )
 
@@ -222,12 +229,12 @@ calculate_power <- function(graph,
     list(
       inputs = list(
         graph = graph,
-        test_alpha = test_alpha,
+        alpha = alpha,
         test_groups = test_groups,
         test_types = test_types,
         test_corr = test_corr,
         sim_n = sim_n,
-        sim_theta = sim_theta,
+        marginal_power = marginal_power,
         sim_corr = sim_corr,
         sim_success = sim_success,
         sim_seed = sim_seed

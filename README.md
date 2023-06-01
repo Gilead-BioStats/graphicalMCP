@@ -338,7 +338,7 @@ how it performs.
 calculate_power(
   g_dose,
   sim_n = 1e5,
-  sim_theta = c(1, 1, 1, 1)
+  marginal_power = c(1, 1, 1, 1)
 )
 #> 
 #> Test parameters ----------------------------------------------------------------
@@ -408,7 +408,7 @@ g_dose_2 <- simple_successive_2(names)
 calculate_power(
   g_dose_2,
   sim_n = 1e5,
-  sim_theta = c(1, 1, 1, 1)
+  marginal_power = c(1, 1, 1, 1)
 )
 #> 
 #> Test parameters ----------------------------------------------------------------
@@ -479,7 +479,7 @@ tests, multiple groups, Simes tests.
 calculate_power(
   g_dose_2,
   sim_n = 1e5,
-  sim_theta = c(1, 1, 1, 1),
+  marginal_power = c(1, 1, 1, 1),
   test_types = "p",
   test_corr = diag(4)
 )
@@ -549,7 +549,7 @@ calculate_power(
 calculate_power(
   g_dose_2,
   sim_n = 1e5,
-  sim_theta = c(1, 1, 1, 1),
+  marginal_power = c(1, 1, 1, 1),
   test_types = "s",
   test_groups = list(1:4)
 )
@@ -613,7 +613,7 @@ calculate_power(
 calculate_power(
   g_dose_2,
   sim_n = 1e5,
-  sim_theta = c(1, 1, 1, 1),
+  marginal_power = c(1, 1, 1, 1),
   test_types = c("s", "p"),
   test_groups = list(1:2, 3:4),
   test_corr = diag(4)

@@ -5,10 +5,10 @@ test_that("improper inputs throw errors", {
 
   expect_error(calculate_power(rando, sim_n = 100.5))
 
-  expect_error(calculate_power(rando, sim_theta = c("1", 1, 1)))
+  expect_error(calculate_power(rando, marginal_power = c("1", 1, 1)))
   expect_error(calculate_power(rando, sim_corr = matrix("1", 3, 3)))
 
-  expect_error(calculate_power(rando, sim_theta = c(1, 1)))
+  expect_error(calculate_power(rando, marginal_power = c(1, 1)))
   expect_error(calculate_power(rando, sim_corr = matrix(1, 2, 2)))
 
   expect_error(calculate_power(rando, sim_corr = matrix(NA, 3, 3)))
@@ -117,12 +117,12 @@ test_that("complex example runs without error", {
   expect_no_error(
     calculate_power(
       complex_example_2(),
-      test_alpha = .025,
+      alpha = .025,
       test_groups = list(c(1, 4, 7), 2:3, 5:6, 8:9),
       test_types = c("p", "s", "s", "s"),
       test_corr = t_corr,
       sim_n = 1e4,
-      sim_theta = runif(9, min = 0, max = 2),
+      marginal_power = runif(9, min = 0, max = 2),
       sim_corr = diag(9),
       sim_success = c(1, 4, 7)
     )

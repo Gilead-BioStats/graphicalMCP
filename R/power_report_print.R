@@ -55,7 +55,7 @@ print.power_report <- function(x, ..., precision = 6, indent = 2) {
   # Test input print -----------------------------------------------------------
   cat(paste0(pad, graph_out), sep = "\n")
   cat("\n")
-  cat(pad, "Global alpha = ", x$inputs$test_alpha, sep = "")
+  cat(pad, "Global alpha = ", x$inputs$alpha, sep = "")
   cat("\n\n")
   if (!is.null(x$inputs$test_corr)) {
     print(df_corr, row.names = FALSE)
@@ -68,7 +68,7 @@ print.power_report <- function(x, ..., precision = 6, indent = 2) {
   section_break("Simulation parameters")
 
   theta_mat <- matrix(
-    x$inputs$sim_theta,
+    x$inputs$marginal_power,
     nrow = 1,
     dimnames = list(
       paste0(pad, "Simulation means:"),

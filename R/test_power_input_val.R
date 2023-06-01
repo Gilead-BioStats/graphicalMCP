@@ -99,7 +99,7 @@ power_input_val <- function(graph, n, theta, corr, success) {
       is.numeric(n) && as.integer(n) == n && length(n) == 1,
     "Mean and covariance parameters must be numeric" =
       is.numeric(theta) && is.numeric(corr),
-    "Lengths of `sim_theta` and `sim_corr` must match graph size" =
+    "Lengths of `marginal_power` and `sim_corr` must match graph size" =
       unique(length(theta), nrow(corr), ncol(corr)) == graph_size,
     "Covariance matrix for simulating p-values cannot have missing values" =
       !any(is.na(corr)),

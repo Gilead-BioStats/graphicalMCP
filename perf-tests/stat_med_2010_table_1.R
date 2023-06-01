@@ -147,10 +147,10 @@ sim_func <- function(sim_n,
 
   calculate_power(
     graph = graph,
-    test_alpha = 0.025,
+    alpha = 0.025,
     # test_types = "p",
     # test_corr = matrix(1, 4, 4),
-    sim_theta = theta,
+    marginal_power = theta,
     sim_corr = sim_corr,
     sim_n = sim_n,
     sim_success = 1,

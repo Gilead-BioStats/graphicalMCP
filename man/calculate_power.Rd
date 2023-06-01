@@ -6,12 +6,12 @@
 \usage{
 calculate_power(
   graph,
-  test_alpha = 0.05,
+  alpha = 0.05,
   test_groups = list(seq_along(graph$hypotheses)),
   test_types = c("bonferroni"),
   test_corr = NULL,
   sim_n = 100,
-  sim_theta = rep(0, length(graph$hypotheses)),
+  marginal_power = rep(0, length(graph$hypotheses)),
   sim_corr = diag(length(graph$hypotheses)),
   sim_success = 1:2,
   sim_seed = NULL,
@@ -21,8 +21,8 @@ calculate_power(
 \arguments{
 \item{graph}{An initial graph as returned by \code{\link[=create_graph]{create_graph()}}}
 
-\item{test_alpha}{A numeric scalar specifying the global significance level
-for testing}
+\item{alpha}{A numeric scalar specifying the global significance level for
+testing}
 
 \item{test_groups}{A list of numeric vectors specifying hypotheses to test
 together}
@@ -34,9 +34,9 @@ of correlations between hypotheses' test statistics}
 
 \item{sim_n}{An integer scalar specifying how many simulations to run}
 
-\item{sim_theta}{A numeric vector of mean values to use when simulating
+\item{marginal_power}{A numeric vector of mean values to use when simulating
 p-values. Exactly one mean per hypothesis is needed, and p-values will be
-sampled from the multivariate normal distribution}
+sampled from the multivariate normal distribution. See Details for more}
 
 \item{sim_corr}{A numeric matrix of correlations between hypotheses used to
 sample from the multivariate normal distribution to generate p-values}
@@ -73,6 +73,14 @@ one. Any testing strategy can be used. Then probabilities are calculated for
 each hypothesis to be rejected, as well as some additional probabilities such
 as expected rejections and probability of rejecting any hypothesis
 }
+\details{
+The parameters of the normal distribution are set with \code{marginal_power}
+(means) and \code{sim_corr} (correlation between test statistics). The mean of
+each hypothesis should be set as its marginal power
+\deqn{d_i=P_{\xi_i}(p_i\leq\alpha)} where \eqn{\xi_i} is the non-centrality
+parameter. The correlation between test statistics is induced by the study
+design.
+}
 \examples{
 par_gate <- simple_successive_1()
 
@@ -86,7 +94,7 @@ calculate_power(par_gate, sim_n = 1e5)
 # used
 calculate_power(
   par_gate,
-  test_alpha = .025,
+  alpha = .025,
   test_groups = list(1:2, 3:4),
   test_types = c("s", "p"),
   test_corr = diag(4),

@@ -60,6 +60,10 @@ test_graph(
 )
 ```
 
+It's not always obvious from a graph how easy or difficult it will be to reject each hypothesis. One way to understand this better is to run a power simulation. The essence of a power simulation is to generate many different p-values using some chosen distribution, then test the graph against each set of p-values to see how it performs.
+
+The p-values are sampled from a multivariate normal distribution using a one-sided test. The means of the MVN should be set as the marginal power of each hypothesis, and `sim_corr` should be the correlation between hypotheses that is induced by the study design.
+
 ```{r power}
 calculate_power(g_complex, sim_n = 1e5)
 ```

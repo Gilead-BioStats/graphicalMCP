@@ -9,6 +9,7 @@
 \alias{simple_successive_1}
 \alias{simple_successive_2}
 \alias{random_graph}
+\alias{complex_example_1}
 \alias{complex_example_2}
 \title{Example graphs from a selection of papers}
 \usage{
@@ -27,6 +28,8 @@ simple_successive_1(names = NULL)
 simple_successive_2(names = NULL)
 
 random_graph(n, names = NULL)
+
+complex_example_1(names = NULL)
 
 complex_example_2(names = NULL)
 }
