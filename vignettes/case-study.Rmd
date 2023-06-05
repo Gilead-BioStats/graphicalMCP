@@ -18,6 +18,19 @@ knitr::opts_chunk$set(
 
 ```{r setup}
 library(graphicalMCP)
+library(printr)
+```
+
+```{r}
+knit_print.initial_graph = function(x, ...) {
+  res = as.data.frame(cbind(x$hypotheses, x$transitions))
+  gt::gt(res, rownames_to_stub = TRUE)
+}
+
+registerS3method(
+  "knit_print", "initial_graph", knit_print.initial_graph,
+  envir = asNamespace("knitr")
+)
 ```
 
 This vignette serves to demonstrate testing and power calculations for a moderately complex graph example. The graph we'll create has a Bonferroni Holm structure between two groups, each of which have a parallel gate-keeping structure with one primary hypothesis and two secondary hypotheses.
@@ -40,7 +53,39 @@ transitions <- rbind(
 g_complex <- create_graph(hypotheses, transitions)
 
 print(g_complex)
+
+knit_print.initial_graph(g_complex)
 ```
+
+```{r printy, echo=FALSE}
+knitr::knit_print(g_complex$hypotheses)
+
+knitr::knit_print(g_complex$transitions, options = NULL)
+```
+
+```{r rendery, echo=FALSE}
+knitr::kable(g_complex$hypotheses)
+
+knitr::kable(g_complex$transitions)
+```
+
+```{r study-results}
+cohort_size <- 200
+
+# simulate performance of each endpoint against placebo
+study_results <- list(
+  H1 = rnorm(cohort_size, 4),
+  H2 = rnorm(cohort_size, .1, 2),
+  H3 = rnorm(cohort_size, 0, .1),
+  H4 = rnorm(cohort_size, 3, 3),
+  H5 = rnorm(cohort_size, 1),
+  H6 = rnorm(cohort_size, 4, .5)
+)
+
+t_tests <- lapply(study_results, t.test, alternative = "greater")
+```
+
+In this example, 
 
 The two primary hypotheses will be tested as a parametric group. Correlation between the primary hypotheses' test statistics is 0.5, as is the case when...[find paper that talks about this - 2010?]. P-values are chosen to illustrate a blend of accept/reject decisions. Testing and power will be calculated at the global level 0.025.
 
