@@ -18,19 +18,6 @@ knitr::opts_chunk$set(
 
 ```{r setup}
 library(graphicalMCP)
-library(printr)
-```
-
-```{r}
-knit_print.initial_graph = function(x, ...) {
-  res = as.data.frame(cbind(x$hypotheses, x$transitions))
-  gt::gt(res, rownames_to_stub = TRUE)
-}
-
-registerS3method(
-  "knit_print", "initial_graph", knit_print.initial_graph,
-  envir = asNamespace("knitr")
-)
 ```
 
 This vignette serves to demonstrate testing and power calculations for a moderately complex graph example. The graph we'll create has a Bonferroni Holm structure between two groups, each of which have a parallel gate-keeping structure with one primary hypothesis and two secondary hypotheses.
@@ -53,51 +40,51 @@ transitions <- rbind(
 g_complex <- create_graph(hypotheses, transitions)
 
 print(g_complex)
-
-knit_print.initial_graph(g_complex)
 ```
 
-```{r printy, echo=FALSE}
-knitr::knit_print(g_complex$hypotheses)
-
-knitr::knit_print(g_complex$transitions, options = NULL)
-```
-
-```{r rendery, echo=FALSE}
-knitr::kable(g_complex$hypotheses)
-
-knitr::kable(g_complex$transitions)
-```
+In this example, study data has been simulated to demonstrate the calculation of marginal power for the power simulation. Let's say the study is looking at a new diabetes medication. The study uses two dose levels against a placebo, corresponding to the two hypothesis groups. Each dose level is tested for A1C (primary endpoint), as well as time in range and retinopathy progression (secondary endpoints). Study sample size is 600, with participants spread equally across each dose level and placebo.
 
 ```{r study-results}
+alpha <- .025
+
 cohort_size <- 200
 
-# simulate performance of each endpoint against placebo
-study_results <- list(
-  H1 = rnorm(cohort_size, 4),
-  H2 = rnorm(cohort_size, .1, 2),
-  H3 = rnorm(cohort_size, 0, .1),
-  H4 = rnorm(cohort_size, 3, 3),
-  H5 = rnorm(cohort_size, 1),
-  H6 = rnorm(cohort_size, 4, .5)
-)
+means <- c(.7, .1, 0, .6, .25, .7)
+sds <- c(1, 2, .1, 3, 1, .5)
 
-t_tests <- lapply(study_results, t.test, alternative = "greater")
+# simulate performance of each endpoint against placebo
+study_results <- mapply(rnorm, rep(cohort_size, 6), means, sds)
+
+t_tests <- apply(study_results, 2, t.test, alternative = "greater")
+t_test_means <- lapply(t_tests, getElement, "estimate")
+t_test_pvals <- vapply(t_tests, getElement, numeric(1), "p.value")
+
+marginal_power <- vapply(
+  t_test_means,
+  function(sample_mean) qnorm(alpha, sample_mean, lower.tail = FALSE),
+  numeric(1)
+)
 ```
 
-In this example, 
-
-The two primary hypotheses will be tested as a parametric group. Correlation between the primary hypotheses' test statistics is 0.5, as is the case when...[find paper that talks about this - 2010?]. P-values are chosen to illustrate a blend of accept/reject decisions. Testing and power will be calculated at the global level 0.025.
+The two primary hypotheses will be tested as a parametric group. Correlation between doses at the same endpoint reduces to 0.5 with equal randomization. Correlation between endpoints within a dose group is unknown; we'll assume 0.4. Correlations between one endpoint in one dose group and another endpoint in another dose group can be calculated with the product rule. This results in the correlation matrix below. Testing and power will be calculated at the global level 0.025.
 
 ```{r test}
-p_vals <- c(.01, .001, .02, .02, .001, .002)
+rho_com_endpoint <- 0.4
+rho_com_dose <- 0.5
+rho_no_com <- rho_com_endpoint * rho_com_dose
 
-t_corr <- matrix(.5, nrow = 6, ncol = 6)
-diag(t_corr) <- 1
+t_corr <- rbind(
+  c(1, rho_com_dose, rho_com_dose, rho_com_endpoint, rho_no_com, rho_no_com),
+  c(rho_com_dose, 1, rho_com_dose, rho_no_com, rho_com_endpoint, rho_no_com),
+  c(rho_com_dose, rho_com_dose, 1, rho_no_com, rho_no_com, rho_com_endpoint),
+  c(rho_com_endpoint, rho_no_com, rho_no_com, 1, rho_com_dose, rho_com_dose),
+  c(rho_no_com, rho_com_endpoint, rho_no_com, rho_com_dose, 1, rho_com_dose),
+  c(rho_no_com, rho_no_com, rho_com_endpoint, rho_com_dose, rho_com_dose, 1)
+)
 
 test_graph(
   g_complex,
-  p_vals,
+  t_test_pvals,
   alpha = .025,
   groups = list(c(1, 4), 2:3, 5:6),
   test_types = c("p", "s", "s"),
@@ -110,7 +97,14 @@ It's not always obvious from a graph how easy or difficult it will be to reject 
 The p-values are sampled from a multivariate normal distribution using a one-sided test. The means of the MVN should be set as the marginal power of each hypothesis, and `sim_corr` should be the correlation between hypotheses that is induced by the study design.
 
 ```{r power}
-calculate_power(g_complex, sim_n = 1e5)
+calculate_power(
+  g_complex,
+  alpha = alpha,
+  test_groups = list(c(1, 4), 2:3, 5:6),
+  test_types = c("p", "s", "s"),
+  test_corr = t_corr,
+  sim_n = 1e5,
+  marginal_power = marginal_power,
+  sim_success = c(1, 4)
+)
 ```
-
-

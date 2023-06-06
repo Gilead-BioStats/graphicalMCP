@@ -159,11 +159,8 @@ calculate_power(
 
 ## Related work
 
-These methods were originally implemented in R after the 2011 paper in the gMCP package, which is still available on CRAN today:
+These methods were originally implemented in R after the 2011 paper in the [gMCP package](https://github.com/kornl/gMCP), which is still available on CRAN today. There is also a lighter version of gMCP implemented in [gMCPmini](https://github.com/allenzhuaz/gMCPmini) and its successor, [gMCPLite](https://github.com/Merck/gMCPLite). These two contain only a subset of the original functionality, but they remove the rJava dependency and add plotting functionality based on ggplot2. 
 
-- `install.packages("gMCP")`
-- https://github.com/kornl/gMCP
-
-However, because development has ceased on this original package, we hope to re-implement the methods with a clearer distinction between weighting procedures and test procedures; with fewer dependencies, in particular shedding the Java dependency; with the simpler, more transparent S3 class framework; and with improvements to the accuracy of the parametric and Simes test methods.
+However, because development has ceased on the original package, we hope to re-implement the methods with a clearer distinction between weighting procedures and test procedures; with fewer dependencies, in particular shedding the Java dependency; with the simpler, more transparent S3 class framework; and with improvements to the accuracy of the parametric and Simes test methods.
 
 A portion of Simes testing is also implemented in the lrstat package (`install.packages("lrstat")`) with similar speed to graphicalMCP.
