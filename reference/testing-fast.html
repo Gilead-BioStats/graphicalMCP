@@ -161,7 +161,8 @@ Procedures</em>. R package version 0.8-15,
 <span class="r-in"><span><span class="va">compact_weights</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html" class="external-link">is.na</a></span><span class="op">(</span><span class="va">compact_weights</span><span class="op">)</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="fl">0</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="fu">graphicalMCP</span><span class="fu">:::</span><span class="fu">test_graph_fast</span><span class="op">(</span><span class="va">p</span>, <span class="fl">.025</span>, <span class="va">compact_weights</span>, <span class="va">inter_h</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1]  TRUE  TRUE  TRUE FALSE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    H1    H2    H3    H4 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  TRUE  TRUE  TRUE FALSE </span>
 <span class="r-in"><span><span class="fu">graphicalMCP</span><span class="fu">:::</span><span class="fu">bonferroni_sequential_cpp</span><span class="op">(</span><span class="va">par_gate</span>, <span class="va">p</span>, <span class="fl">.025</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] 1 1 1 0</span>
 </code></pre></div>
