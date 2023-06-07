@@ -2,7 +2,7 @@
 title: "case-study"
 output:
   rmarkdown::html_vignette:
-    code_folding: "hide"
+    code_folding: "show"
 vignette: >
   %\VignetteIndexEntry{case-study}
   %\VignetteEngine{knitr::rmarkdown}
@@ -20,29 +20,116 @@ knitr::opts_chunk$set(
 library(graphicalMCP)
 ```
 
-This vignette serves to demonstrate testing and power calculations for a moderately complex graph example. The graph we'll create has a Bonferroni Holm structure between two groups, each of which have a parallel gate-keeping structure with one primary hypothesis and two secondary hypotheses.
+## Initial graph
 
-### Initial graph
+This vignette serves to demonstrate testing and power calculations for a moderately complex graph example. We'll follow a hypothetical study for a new diabetes treatment at two dose levels. Each dose level is tested at three endpoints - Mean change in A1C level against placebo as the primary endpoint, and mean time-in-range and retinopathy progression against placebo as the secondary endpoints. Study sample size is 600, with participants spread equally across each dose level and placebo.
+
+The initial weight should be split between the primary hypotheses, and each secondary hypothesis should only be tested if the corresponding primary hypothesis can be rejected. Weight from one dose group should certainly be passed to the other dose group if all of one dose is rejected. But scenarios will be explored where some weight is passed directly between primary hypotheses as well.
+
+These requirements result in the graph below. The value `gamma` can be set to control how much weight is passed between primary hypotheses vs how much is passed to the secondary groups.
 
 ```{r initial-graph}
-eps <- .0001
+complex_gamma <- function(gamma) {
+  eps <- .0001
 
-hypotheses <- c(rep(c(1 / 2, 0, 0), 2))
-transitions <- rbind(
-  c(0, .5, .5, 0, 0, 0),
-  c(0, 0, 1, 0, 0, 0),
-  c(0, 1 - eps, 0, eps, 0, 0),
-  c(0, 0, 0, 0, .5, .5),
-  c(0, 0, 0, 0, 0, 1),
-  c(eps, 0, 0, 0, 1 - eps, 0)
-)
+  hypotheses <- c(rep(c(1 / 2, 0, 0), 2))
+  transitions <- rbind(
+    c(0, (1 - gamma) / 2, (1 - gamma) / 2, gamma, 0, 0),
+    c(0, 0, 1, 0, 0, 0),
+    c(0, 1 - eps, 0, eps, 0, 0),
+    c(gamma, 0, 0, 0, (1 - gamma) / 2, (1 - gamma) / 2),
+    c(0, 0, 0, 0, 0, 1),
+    c(eps, 0, 0, 0, 1 - eps, 0)
+  )
 
-g_complex <- create_graph(hypotheses, transitions)
+  create_graph(hypotheses, transitions)
+}
+
+g_complex <- complex_gamma(.5)
 
 print(g_complex)
 ```
 
-In this example, study data has been simulated to demonstrate the calculation of marginal power for the power simulation. Let's say the study is looking at a new diabetes medication. The study uses two dose levels against a placebo, corresponding to the two hypothesis groups. Each dose level is tested for A1C (primary endpoint), as well as time in range and retinopathy progression (secondary endpoints). Study sample size is 600, with participants spread equally across each dose level and placebo.
+## Test design {#test-design}
+
+In this section we'll lay out some possible testing strategies. These testing strategies cannot be run until p-values are calculated from study data. See [Test Execution] below
+
+### Bonferroni {#test-design-bonferroni}
+
+The study results could be tested most simply with a Bonferroni testing method.
+
+```{r bonferroni, eval=FALSE}
+test_graph(g_complex, calculated_p_values, alpha = .025)
+```
+
+### Parametric-Bonferroni {#test-design-parametric-bonferroni}
+
+But we can take advantage of the correlation between doses by testing the primary hypotheses together in a parametric group. Correlation between doses at the same endpoint reduces to 0.5 with equal randomization. For parametric testing, the only correlations that need to be specified are between hypotheses in a parametric group
+
+```{r test-corr}
+rho_com_endpoint <- 0.5
+
+t_corr <- rbind(
+  c(1, NA, NA, rho_com_endpoint, NA, NA),
+  c(NA, 1, NA, NA, rho_com_endpoint, NA),
+  c(NA, NA, 1, NA, NA, rho_com_endpoint),
+  c(rho_com_endpoint, NA, NA, 1, NA, NA),
+  c(NA, rho_com_endpoint, NA, NA, 1, NA),
+  c(NA, NA, rho_com_endpoint, NA, NA, 1)
+)
+```
+
+```{r para-bonf, eval=FALSE}
+test_graph(
+  g_complex,
+  calculated_p_values,
+  alpha = .025,
+  groups = list(c(1, 4), c(2, 3, 5, 6)),
+  test_types = c("p", "b"),
+  corr = t_corr
+)
+```
+
+### Parametric-Simes {#test-design-parametric-simes}
+
+Even beyond that, it may make sense to test each pair of secondary hypotheses as a Simes group. This may add a small amount of power, depending on what gamma value is chosen.
+
+```{r para-simes, eval=FALSE}
+test_graph(
+  g_complex,
+  calculated_p_values,
+  alpha = .025,
+  groups = list(c(1, 4), 2:3, 5:6),
+  test_types = c("p", "s", "s"),
+  corr = t_corr
+)
+```
+
+These test designs are explored further in [Test execution] below.
+
+## Power calculations {#power-calculations}
+
+It's not always obvious from an initial graph how easy or difficult it will be to reject each hypothesis. One way to understand this better is to run a power simulation. The essence of a power simulation is to generate many different p-values using an assumed distribution, then test the graph against each set of p-values to see how it performs. In most cases, power will be calculated under many different scenarios to better understand the testing space.
+
+The p-values for a power simulation are sampled from a multivariate normal distribution using a one-sided test. The means of the MVN should be set as the marginal power of each hypothesis, and the correlations should be the correlation between hypotheses that are either known from the study design or assumed.
+
+[Talk about how marginal power is calculated, and where the correlation comes from. Is it different from `test_corr`?]
+
+```{r power, eval=FALSE}
+calculate_power(
+  g_complex,
+  alpha = alpha,
+  test_groups = list(c(1, 4), 2:3, 5:6),
+  test_types = c("p", "s", "s"),
+  test_corr = t_corr,
+  sim_n = 1e5,
+  marginal_power = marginal_power, # this needs to be calculated
+  sim_success = c(1, 4),
+  sim_seed = 6723
+)
+```
+
+## Study data {#study-data}
 
 ```{r study-results}
 alpha <- .025
@@ -66,45 +153,10 @@ marginal_power <- vapply(
 )
 ```
 
-The two primary hypotheses will be tested as a parametric group. Correlation between doses at the same endpoint reduces to 0.5 with equal randomization. Correlation between endpoints within a dose group is unknown; we'll assume 0.4. Correlations between one endpoint in one dose group and another endpoint in another dose group can be calculated with the product rule. This results in the correlation matrix below. Testing and power will be calculated at the global level 0.025.
+## Test execution {#test-execution}
 
-```{r test}
-rho_com_endpoint <- 0.4
-rho_com_dose <- 0.5
-rho_no_com <- rho_com_endpoint * rho_com_dose
+The study results could be tested most simply with a Bonferroni testing method.
 
-t_corr <- rbind(
-  c(1, rho_com_dose, rho_com_dose, rho_com_endpoint, rho_no_com, rho_no_com),
-  c(rho_com_dose, 1, rho_com_dose, rho_no_com, rho_com_endpoint, rho_no_com),
-  c(rho_com_dose, rho_com_dose, 1, rho_no_com, rho_no_com, rho_com_endpoint),
-  c(rho_com_endpoint, rho_no_com, rho_no_com, 1, rho_com_dose, rho_com_dose),
-  c(rho_no_com, rho_com_endpoint, rho_no_com, rho_com_dose, 1, rho_com_dose),
-  c(rho_no_com, rho_no_com, rho_com_endpoint, rho_com_dose, rho_com_dose, 1)
-)
+But we can take advantage of the correlation between doses by testing the primary hypotheses together in a parametric group. Correlation between doses at the same endpoint reduces to 0.5 with equal randomization. We can demonstrate more functionality for the package by combining each dose's secondary endpoints together in a Simes group.
 
-test_graph(
-  g_complex,
-  t_test_pvals,
-  alpha = .025,
-  groups = list(c(1, 4), 2:3, 5:6),
-  test_types = c("p", "s", "s"),
-  corr = t_corr
-)
-```
-
-It's not always obvious from a graph how easy or difficult it will be to reject each hypothesis. One way to understand this better is to run a power simulation. The essence of a power simulation is to generate many different p-values using some chosen distribution, then test the graph against each set of p-values to see how it performs.
-
-The p-values are sampled from a multivariate normal distribution using a one-sided test. The means of the MVN should be set as the marginal power of each hypothesis, and `sim_corr` should be the correlation between hypotheses that is induced by the study design.
-
-```{r power}
-calculate_power(
-  g_complex,
-  alpha = alpha,
-  test_groups = list(c(1, 4), 2:3, 5:6),
-  test_types = c("p", "s", "s"),
-  test_corr = t_corr,
-  sim_n = 1e5,
-  marginal_power = marginal_power,
-  sim_success = c(1, 4)
-)
-```
+~~Correlation between endpoints within a dose group is unknown; we'll assume 0.4. Correlations between one endpoint in one dose group and another endpoint in another dose group can be calculated with the product rule. This results in the correlation matrix below. Testing and power will be calculated at the global level 0.025.~~
