@@ -1,10 +1,10 @@
 ---
-title: "case-study"
+title: "Case Study"
 output:
   rmarkdown::html_vignette:
     code_folding: "show"
 vignette: >
-  %\VignetteIndexEntry{case-study}
+  %\VignetteIndexEntry{Case Study}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -18,6 +18,7 @@ knitr::opts_chunk$set(
 
 ```{r setup}
 library(graphicalMCP)
+library(tidyr)
 ```
 
 ## Initial graph
@@ -29,10 +30,12 @@ The initial weight should be split between the primary hypotheses, and each seco
 These requirements result in the graph below. The value `gamma` can be set to control how much weight is passed between primary hypotheses vs how much is passed to the secondary groups.
 
 ```{r initial-graph}
-complex_gamma <- function(gamma) {
-  eps <- .0001
+hyp_names <- c("lo_a1c", "lo_tir", "lo_ret", "hi_a1c", "hi_tir", "hi_ret")
 
-  hypotheses <- c(rep(c(1 / 2, 0, 0), 2))
+complex_gamma <- function(hyp_4, gamma, names = hyp_names) {
+  eps <- .0001
+  
+  hypotheses <- c(hyp_4, 0, 0, 1 - hyp_4, 0, 0)
   transitions <- rbind(
     c(0, (1 - gamma) / 2, (1 - gamma) / 2, gamma, 0, 0),
     c(0, 0, 1, 0, 0, 0),
@@ -42,10 +45,10 @@ complex_gamma <- function(gamma) {
     c(eps, 0, 0, 0, 1 - eps, 0)
   )
 
-  create_graph(hypotheses, transitions)
+  create_graph(hypotheses, transitions, hyp_names)
 }
 
-g_complex <- complex_gamma(.5)
+g_complex <- complex_gamma(.5, .5)
 
 print(g_complex)
 ```
@@ -67,15 +70,15 @@ test_graph(g_complex, calculated_p_values, alpha = .025)
 But we can take advantage of the correlation between doses by testing the primary hypotheses together in a parametric group. Correlation between doses at the same endpoint reduces to 0.5 with equal randomization. For parametric testing, the only correlations that need to be specified are between hypotheses in a parametric group
 
 ```{r test-corr}
-rho_com_endpoint <- 0.5
+rho_com_end <- 0.5
 
 t_corr <- rbind(
-  c(1, NA, NA, rho_com_endpoint, NA, NA),
-  c(NA, 1, NA, NA, rho_com_endpoint, NA),
-  c(NA, NA, 1, NA, NA, rho_com_endpoint),
-  c(rho_com_endpoint, NA, NA, 1, NA, NA),
-  c(NA, rho_com_endpoint, NA, NA, 1, NA),
-  c(NA, NA, rho_com_endpoint, NA, NA, 1)
+  c(1, NA, NA, rho_com_end, NA, NA),
+  c(NA, 1, NA, NA, rho_com_end, NA),
+  c(NA, NA, 1, NA, NA, rho_com_end),
+  c(rho_com_end, NA, NA, 1, NA, NA),
+  c(NA, rho_com_end, NA, NA, 1, NA),
+  c(NA, NA, rho_com_end, NA, NA, 1)
 )
 ```
 
@@ -92,7 +95,7 @@ test_graph(
 
 ### Parametric-Simes {#test-design-parametric-simes}
 
-Even beyond that, it may make sense to test each pair of secondary hypotheses as a Simes group. This may add a small amount of power, depending on what gamma value is chosen.
+Even beyond that, it may make sense to test each pair of secondary hypotheses as a Simes group. This will add a small amount of power to the secondary hypotheses, which will vary depending on the gamma value.
 
 ```{r para-simes, eval=FALSE}
 test_graph(
@@ -105,7 +108,7 @@ test_graph(
 )
 ```
 
-These test designs are explored further in [Test execution] below.
+These test designs are explored further in [Test execution] below. 
 
 ## Power calculations {#power-calculations}
 
@@ -113,20 +116,165 @@ It's not always obvious from an initial graph how easy or difficult it will be t
 
 The p-values for a power simulation are sampled from a multivariate normal distribution using a one-sided test. The means of the MVN should be set as the marginal power of each hypothesis, and the correlations should be the correlation between hypotheses that are either known from the study design or assumed.
 
-[Talk about how marginal power is calculated, and where the correlation comes from. Is it different from `test_corr`?]
+There are a couple differences between the correlation matrix used in parametric testing (`test_corr`) and the correlation matrix used in power simulations (`sim_corr`). Since the testing correlation is used on clinical data and can improve the chance of finding significant results, the values used should almost always be known, not assumed. If certain correlations are unknown, missing values should be used. However for sampling from the MVN distribution, all correlations must have a value. Any entries which are unknown must be assumed. These assumptions should most likely be tested for sensitivity across different power scenarios. It's also possible that some known correlations will be sensitivity tested to see the impact in the event that they are wrong.
+
+### Parameter space
+
+In order to run a power simulation, several parameters must be set. We'll divide these parameters into two categories: static and dynamic. Static parameters are more likely to be set once for a given study, while dynamic parameters are more variable. 
+
+- Static
+  - `alpha` - Significance level
+  - `test_groups`/`test_types`/`test_corr` - Testing strategy
+  - `sim_n` - Number of simulations to run for power calculations
+  - `sim_success` - Definition of success for the trial
+- Dynamic
+  - `graph` - Design of the hypothesis and transition weights
+    - Known before beginning the study, but multiple may be tested for power
+  - `marginal_power` - Power to reject each hypothesis at the full alpha level
+    - Unknown until study data is collected
+  - `sim_corr` - Correlation between hypotheses' test statistics
+    - Partially known from study design, but even known values could change after study data is collected
+
+For the study that we're following, here are the static parameters. We also set the random seed, `sim_seed`, for reproducibility.
 
 ```{r power, eval=FALSE}
 calculate_power(
-  g_complex,
-  alpha = alpha,
+  graph = <variable graph>,
+  alpha = .025,
   test_groups = list(c(1, 4), 2:3, 5:6),
   test_types = c("p", "s", "s"),
   test_corr = t_corr,
   sim_n = 1e5,
-  marginal_power = marginal_power, # this needs to be calculated
+  sim_seed = 6923,
   sim_success = c(1, 4),
-  sim_seed = 6723
+  marginal_power = <variable power>,
+  sim_corr = <variable correlation>
 )
+```
+
+#### Graph variables
+
+Because of the primary/secondary nature of each dose group, all the initial weight will be on hypotheses 1 & 4. Since hypothesis 4 is the high dose and may be more likely to yield significant results, we may want to skew the weight toward hypothesis 4.
+
+```{r hyp-weights}
+v_hyp_4 <- c(0.5, 0.75, 1.0)
+```
+
+It's also uncertain what the best choice is for how much weight should be transferred between primary hypotheses. Possible values range in `[0, 1)`.
+
+```{r trn-weights}
+v_gamma <- c(0, .5, .99)
+```
+
+#### Marginal power
+
+Marginal power is a complicated assumption to test, because there are many possibilities. In a real clinical trial scenario, there may be intuition about where the marginal power will fall, but here we just test a wide variety of scenarios.
+
+```{r marginal-power}
+marginal_power_list <- list(
+  rep(0, 6),
+  rep(1, 6),
+  rep(2, 6),
+  c(1, 0, 0, 1, 0, 0),
+  c(1, 3, 3, 1, 3, 3),
+  c(3, 0, 0, 3, 0, 0),
+  c(0, 1, 1, 4, 2, 2),
+  c(2, 0, 1, 4, 3, 0),
+  c(4, 2, 1, 0, 3, 3)
+)
+```
+
+#### Correlations
+
+We know that with equal sample size between doses, the correlation between corresponding endpoints is 0.5. Correlation between endpoints within a dose is unknown; let's call it `rho_com_dose`. And correlation between different endpoints in different doses can be calculated with the product rule.
+
+```{r sim-corr}
+rho_com_end <- 0.5
+v_rho_com_dose <- c(0.4, 0.8, .99)
+
+s_corr_list <- lapply(
+  v_rho_com_dose,
+  function(rho_com_dose) {
+    rho_mat <- matrix(rho_com_end * rho_com_dose, 6, 6)
+    
+    rho_mat[c(1, 4), c(1, 4)] <- rho_com_end
+    rho_mat[c(2, 5), c(2, 5)] <- rho_com_end
+    rho_mat[c(3, 6), c(3, 6)] <- rho_com_end
+    
+    rho_mat[1:3, 1:3] <- rho_mat[4:6, 4:6] <- rho_com_dose
+    diag(rho_mat) <- 1
+    
+    rho_mat
+  }
+)
+```
+
+### Power grid
+
+Now bring all the assumptions together and calculate power for each scenario. [Possibly need to pare down the list of scenarios, as the current situation will take ~30 minutes - though maybe this is realistic?]
+
+```{r power-results}
+power_scenario <- function(hyp_4, gamma, marginal_power, s_corr) {
+  calculate_power(
+    graph = complex_gamma(hyp_4, gamma),
+    alpha = .025,
+    test_groups = list(c(1, 4), 2:3, 5:6),
+    test_types = c("p", "s", "s"),
+    test_corr = t_corr,
+    sim_n = 1e5,
+    sim_seed = 6923,
+    sim_success = c(1, 4),
+    marginal_power = marginal_power,
+    sim_corr = s_corr
+  )$power
+}
+
+res_list <- vector(
+  "list",
+  length(v_hyp_4) *
+    length(v_gamma) *
+    length(marginal_power_list) *
+    length(s_corr_list)
+)
+i <- 1
+
+for (hyp_4 in v_hyp_4) {
+  for (gamma in v_gamma) {
+    for (marginal_power in marginal_power_list) {
+      for (s_corr in s_corr_list) {
+        
+        cat("Calculating power scenario ", i, "\n")
+        
+        tictoc::tic()
+        
+        res_list[[i]] <- power_scenario(hyp_4, gamma, marginal_power, s_corr)
+        
+        i <- i + 1
+        
+        tictoc::toc()
+        
+      }
+    }
+  }
+}
+```
+
+```{r prettify}
+df_hyp_4 <- data.frame(hyp_4 = v_hyp_4)
+df_gamma <- data.frame(gamma = v_gamma)
+
+df_marginal_power <- data.frame(do.call(rbind, marginal_power_list))
+colnames(df_marginal_power) <- hyp_names
+
+df_rho_com_dose <- data.frame(rho = v_rho_com_dose)
+
+df_params <- expand_grid(df_hyp_4, df_gamma, df_rho_com_dose, df_marginal_power)
+
+df_power <- as.data.frame(do.call(rbind, lapply(res_list, unlist)))
+
+results <- cbind(df_params, df_power)
+
+gt::gt(results)
 ```
 
 ## Study data {#study-data}
