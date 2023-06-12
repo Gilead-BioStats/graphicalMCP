@@ -16,18 +16,21 @@ knitr::opts_chunk$set(
 )
 ```
 
-```{r setup}
+```{r setup, message=FALSE, warning=FALSE}
 library(graphicalMCP)
 library(tidyr)
+library(dplyr)
+library(here)
+library(gt)
 ```
 
-## Initial graph
+# Initial graph
 
-This vignette serves to demonstrate testing and power calculations for a moderately complex graph example. We'll follow a hypothetical study for a new diabetes treatment at two dose levels. Each dose level is tested at three endpoints - Mean change in A1C level against placebo as the primary endpoint, and mean time-in-range and retinopathy progression against placebo as the secondary endpoints. Study sample size is 600, with participants spread equally across each dose level and placebo.
+This vignette demonstrates testing and power calculations for a moderately complex graph example. We'll follow a hypothetical study for a new diabetes treatment at two dose levels. Each dose level is tested at three endpoints - Mean change in A1C level against placebo as the primary endpoint, and mean time-in-range and retinopathy progression against placebo as the secondary endpoints. Study sample size is 600, with participants spread equally across each dose level and placebo.
 
 The initial weight should be split between the primary hypotheses, and each secondary hypothesis should only be tested if the corresponding primary hypothesis can be rejected. Weight from one dose group should certainly be passed to the other dose group if all of one dose is rejected. But scenarios will be explored where some weight is passed directly between primary hypotheses as well.
 
-These requirements result in the graph below. The value `gamma` can be set to control how much weight is passed between primary hypotheses vs how much is passed to the secondary groups.
+These requirements result in the graph below. The `gamma` parameter can be set to control how much weight is passed between primary hypotheses vs how much is passed to the secondary groups (`1 - gamma`). The `hyp_4` parameter controls the initial weight of hypothesis 4, high dose A1C. The rest of the initial weight, `1 - hyp_4`, is assigned to hypothesis 1, low dose A1C.
 
 ```{r initial-graph}
 hyp_names <- c("lo_a1c", "lo_tir", "lo_ret", "hi_a1c", "hi_tir", "hi_ret")
@@ -36,6 +39,7 @@ complex_gamma <- function(hyp_4, gamma, names = hyp_names) {
   eps <- .0001
   
   hypotheses <- c(hyp_4, 0, 0, 1 - hyp_4, 0, 0)
+  
   transitions <- rbind(
     c(0, (1 - gamma) / 2, (1 - gamma) / 2, gamma, 0, 0),
     c(0, 0, 1, 0, 0, 0),
@@ -48,26 +52,28 @@ complex_gamma <- function(hyp_4, gamma, names = hyp_names) {
   create_graph(hypotheses, transitions, hyp_names)
 }
 
-g_complex <- complex_gamma(.5, .5)
+g_complex <- complex_gamma(.75, .99)
 
 print(g_complex)
 ```
 
-## Test design {#test-design}
+# Test design {#test-design}
 
-In this section we'll lay out some possible testing strategies. These testing strategies cannot be run until p-values are calculated from study data. See [Test Execution] below
+In this section we'll lay out some possible testing strategies. These testing strategies cannot be run until p-values are calculated from study data. See [Test Execution] below for more details.
 
-### Bonferroni {#test-design-bonferroni}
+## Bonferroni {#test-design-bonferroni}
 
-The study results could be tested most simply with a Bonferroni testing method.
+The study results could be tested most simply with a Bonferroni testing method. A pure Bonferroni method is simple, it runs quickly, and it controls the family-wise error rate (FWER) strongly at level `alpha` [citation needed]. However, it is slightly less likely to find significant results than some other testing methods.
 
-```{r bonferroni, eval=FALSE}
-test_graph(g_complex, calculated_p_values, alpha = .025)
+```{r t-design-bonferroni, eval=FALSE}
+test_graph(g_complex, <calculated_p_values>, alpha = .025)
 ```
 
-### Parametric-Bonferroni {#test-design-parametric-bonferroni}
+## Parametric-Bonferroni {#test-design-parametric-bonferroni}
 
-But we can take advantage of the correlation between doses by testing the primary hypotheses together in a parametric group. Correlation between doses at the same endpoint reduces to 0.5 with equal randomization. For parametric testing, the only correlations that need to be specified are between hypotheses in a parametric group
+We can take advantage of the correlation between doses by testing the primary hypotheses together in a parametric group. Correlation between doses at the same endpoint reduces to 0.5 with equal randomization [similar statement to Xi unpublished (2023?)]. For parametric testing, the only correlations that need to be specified are between hypotheses in a parametric group. In this case the other correlations are unknown.
+
+Using tests other than Bonferroni can add power to reject more hypotheses, but it comes with a speed cost. This is barely noticeable for a single test, but it does slow things down for power calculations. [link to speed vignette, if we keep it around]
 
 ```{r test-corr}
 rho_com_end <- 0.5
@@ -82,10 +88,10 @@ t_corr <- rbind(
 )
 ```
 
-```{r para-bonf, eval=FALSE}
+```{r t-design-para-bonf, eval=FALSE}
 test_graph(
   g_complex,
-  calculated_p_values,
+  <calculated_p_values>,
   alpha = .025,
   groups = list(c(1, 4), c(2, 3, 5, 6)),
   test_types = c("p", "b"),
@@ -93,14 +99,14 @@ test_graph(
 )
 ```
 
-### Parametric-Simes {#test-design-parametric-simes}
+## Parametric-Simes {#test-design-parametric-simes}
 
-Even beyond that, it may make sense to test each pair of secondary hypotheses as a Simes group. This will add a small amount of power to the secondary hypotheses, which will vary depending on the gamma value.
+Even beyond that, it may make sense to test each pair of secondary hypotheses as a Simes group. This will add a small amount of power to the secondary hypotheses, which will vary depending on `gamma`.
 
-```{r para-simes, eval=FALSE}
+```{r t-design-para-simes, eval=FALSE}
 test_graph(
   g_complex,
-  calculated_p_values,
+  <calculated_p_values>,
   alpha = .025,
   groups = list(c(1, 4), 2:3, 5:6),
   test_types = c("p", "s", "s"),
@@ -110,15 +116,15 @@ test_graph(
 
 These test designs are explored further in [Test execution] below. 
 
-## Power calculations {#power-calculations}
+# Power calculations {#power-calculations}
 
 It's not always obvious from an initial graph how easy or difficult it will be to reject each hypothesis. One way to understand this better is to run a power simulation. The essence of a power simulation is to generate many different p-values using an assumed distribution, then test the graph against each set of p-values to see how it performs. In most cases, power will be calculated under many different scenarios to better understand the testing space.
 
-The p-values for a power simulation are sampled from a multivariate normal distribution using a one-sided test. The means of the MVN should be set as the marginal power of each hypothesis, and the correlations should be the correlation between hypotheses that are either known from the study design or assumed.
+The p-values for a power simulation are sampled from a multivariate normal distribution using a one-sided test. The means of the MVN are set equal to the marginal power of each hypothesis, and the correlations should be the correlation between hypotheses that are either known from the study design or assumed.
 
-There are a couple differences between the correlation matrix used in parametric testing (`test_corr`) and the correlation matrix used in power simulations (`sim_corr`). Since the testing correlation is used on clinical data and can improve the chance of finding significant results, the values used should almost always be known, not assumed. If certain correlations are unknown, missing values should be used. However for sampling from the MVN distribution, all correlations must have a value. Any entries which are unknown must be assumed. These assumptions should most likely be tested for sensitivity across different power scenarios. It's also possible that some known correlations will be sensitivity tested to see the impact in the event that they are wrong.
+There are a couple differences between the correlation matrix used in parametric testing (`test_corr`) and the correlation matrix used in power simulations (`sim_corr`). Since the testing correlation is used on clinical data and can improve the chance of finding significant results, the values used should almost always be known, not assumed. If certain correlations are unknown, missing values should be used. However for sampling from the MVN distribution, all correlations must have a value. Any entries which are unknown must be assumed, and these assumptions should be tested for sensitivity across different power scenarios. It's also possible that some known correlations will be sensitivity tested to see the impact in the event that they are wrong.
 
-### Parameter space
+## Parameter space
 
 In order to run a power simulation, several parameters must be set. We'll divide these parameters into two categories: static and dynamic. Static parameters are more likely to be set once for a given study, while dynamic parameters are more variable. 
 
@@ -129,13 +135,14 @@ In order to run a power simulation, several parameters must be set. We'll divide
   - `sim_success` - Definition of success for the trial
 - Dynamic
   - `graph` - Design of the hypothesis and transition weights
-    - Known before beginning the study, but multiple may be tested for power
+    - Known before beginning the study, but multiple options may be tested for power
   - `marginal_power` - Power to reject each hypothesis at the full alpha level
     - Unknown until study data is collected
+    - Calculated using other packages or software
   - `sim_corr` - Correlation between hypotheses' test statistics
     - Partially known from study design, but even known values could change after study data is collected
 
-For the study that we're following, here are the static parameters. We also set the random seed, `sim_seed`, for reproducibility.
+For our hypothetical study, here are the static parameters. We also set the random seed, `sim_seed`, for reproducibility.
 
 ```{r power, eval=FALSE}
 calculate_power(
@@ -152,7 +159,7 @@ calculate_power(
 )
 ```
 
-#### Graph variables
+### Graph variables
 
 Because of the primary/secondary nature of each dose group, all the initial weight will be on hypotheses 1 & 4. Since hypothesis 4 is the high dose and may be more likely to yield significant results, we may want to skew the weight toward hypothesis 4.
 
@@ -166,25 +173,7 @@ It's also uncertain what the best choice is for how much weight should be transf
 v_gamma <- c(0, .5, .99)
 ```
 
-#### Marginal power
-
-Marginal power is a complicated assumption to test, because there are many possibilities. In a real clinical trial scenario, there may be intuition about where the marginal power will fall, but here we just test a wide variety of scenarios.
-
-```{r marginal-power}
-marginal_power_list <- list(
-  rep(0, 6),
-  rep(1, 6),
-  rep(2, 6),
-  c(1, 0, 0, 1, 0, 0),
-  c(1, 3, 3, 1, 3, 3),
-  c(3, 0, 0, 3, 0, 0),
-  c(0, 1, 1, 4, 2, 2),
-  c(2, 0, 1, 4, 3, 0),
-  c(4, 2, 1, 0, 3, 3)
-)
-```
-
-#### Correlations
+### Correlations
 
 We know that with equal sample size between doses, the correlation between corresponding endpoints is 0.5. Correlation between endpoints within a dose is unknown; let's call it `rho_com_dose`. And correlation between different endpoints in different doses can be calculated with the product rule.
 
@@ -209,102 +198,210 @@ s_corr_list <- lapply(
 )
 ```
 
-### Power grid
+### Marginal power
 
-Now bring all the assumptions together and calculate power for each scenario. [Possibly need to pare down the list of scenarios, as the current situation will take ~30 minutes - though maybe this is realistic?]
+Marginal power is a complicated assumption to test, because there are many possibilities. In a real clinical trial scenario, there may be intuition about where the marginal power will fall, but here we just test a wide variety of scenarios. [Add more information about how this parameter is estimated]
+
+```{r marginal-power}
+marginal_power_list <- list(
+  rep(0, 6),
+  rep(1, 6),
+  rep(2, 6),
+  c(1, 0, 0, 1, 0, 0),
+  c(1, 3, 3, 1, 3, 3),
+  c(3, 0, 0, 3, 0, 0),
+  c(0, 1, 1, 4, 2, 2),
+  c(2, 0, 1, 4, 3, 0),
+  c(4, 2, 1, 0, 3, 3)
+)
+```
+
+## Power grid
+
+Now bring all the assumptions together and calculate power for each scenario. [Possibly need to pare down the list of scenarios, as the current situation will take ~30 minutes - though maybe this is realistic? Maybe even more situations are normally checked for power?]
 
 ```{r power-results}
-power_scenario <- function(hyp_4, gamma, marginal_power, s_corr) {
-  calculate_power(
-    graph = complex_gamma(hyp_4, gamma),
-    alpha = .025,
-    test_groups = list(c(1, 4), 2:3, 5:6),
-    test_types = c("p", "s", "s"),
-    test_corr = t_corr,
-    sim_n = 1e5,
-    sim_seed = 6923,
-    sim_success = c(1, 4),
-    marginal_power = marginal_power,
-    sim_corr = s_corr
-  )$power
-}
+power_scenario <- function(hyp_4, gamma, s_corr, marginal_power) {
+    calculate_power(
+      graph = complex_gamma(hyp_4, gamma),
+      alpha = .025,
+      test_groups = list(c(1, 4), 2:3, 5:6),
+      test_types = c("p", "s", "s"),
+      test_corr = t_corr,
+      sim_n = 1e5,
+      sim_seed = 6923,
+      sim_success = c(1, 4),
+      marginal_power = marginal_power,
+      sim_corr = s_corr
+    )$power
+  }
 
-res_list <- vector(
-  "list",
-  length(v_hyp_4) *
-    length(v_gamma) *
-    length(marginal_power_list) *
-    length(s_corr_list)
-)
-i <- 1
-
-for (hyp_4 in v_hyp_4) {
-  for (gamma in v_gamma) {
-    for (marginal_power in marginal_power_list) {
+# Do some simple caching so this re-knits faster  
+if (file.exists(here("./vignettes/data/power_results.rds"))) {
+  res_list <- readRDS(here("./vignettes/data/power_results.rds"))
+} else {
+  res_list <- vector(
+    "list",
+    length(v_hyp_4) *
+      length(v_gamma) *
+      length(marginal_power_list) *
+      length(s_corr_list)
+  )
+  i <- 1
+  
+  for (hyp_4 in v_hyp_4) {
+    for (gamma in v_gamma) {
       for (s_corr in s_corr_list) {
-        
-        cat("Calculating power scenario ", i, "\n")
-        
-        tictoc::tic()
-        
-        res_list[[i]] <- power_scenario(hyp_4, gamma, marginal_power, s_corr)
-        
-        i <- i + 1
-        
-        tictoc::toc()
-        
+        for (marginal_power in marginal_power_list) {
+          res_list[[i]] <- c(
+            list(hyp_4, gamma, s_corr[1, 2], marginal_power),
+            power_scenario(hyp_4, gamma, s_corr, marginal_power)
+          )
+          
+          i <- i + 1
+        }
       }
     }
   }
+  
+  saveRDS(res_list, here("./vignettes/data/power_results.rds"))
 }
+
+results <- as.data.frame(do.call(rbind, lapply(res_list, unlist)))
+# shorten the names so the table isn't quite so wide
+names(results) <- c(
+    "hyp_4",
+    "gamma",
+    "rho",
+    paste0("H", seq_along(hyp_names)),
+    paste0("p_H", seq_along(hyp_names)),
+    "p_expect",
+    "p_geq_1",
+    "p_all",
+    "p_success"
+  )
 ```
 
-```{r prettify}
-df_hyp_4 <- data.frame(hyp_4 = v_hyp_4)
-df_gamma <- data.frame(gamma = v_gamma)
+```{r results-full}
+# df_hyp_4 <- data.frame(hyp_4 = v_hyp_4)
+# df_gamma <- data.frame(gamma = v_gamma)
+# 
+# df_marginal_power <- data.frame(do.call(rbind, marginal_power_list))
+# colnames(df_marginal_power) <- hyp_names
+# 
+# df_rho_com_dose <- data.frame(rho = v_rho_com_dose)
+# 
+# df_params <- expand_grid(df_hyp_4, df_gamma, df_rho_com_dose, df_marginal_power)
+# 
+# df_power <- as.data.frame(do.call(rbind, lapply(res_list, unlist)))
+# 
+# results <- cbind(df_params, df_power)
+# shorten the names so the table isn't quite so wide
+# names(results) <- c(
+#     "hyp_4",
+#     "gamma",
+#     "rho",
+#     paste0("H", seq_along(hyp_names)),
+#     paste0("p_H", seq_along(hyp_names)),
+#     "p_expect",
+#     "p_geq_1",
+#     "p_all",
+#     "p_success"
+#   )
 
-df_marginal_power <- data.frame(do.call(rbind, marginal_power_list))
-colnames(df_marginal_power) <- hyp_names
-
-df_rho_com_dose <- data.frame(rho = v_rho_com_dose)
-
-df_params <- expand_grid(df_hyp_4, df_gamma, df_rho_com_dose, df_marginal_power)
-
-df_power <- as.data.frame(do.call(rbind, lapply(res_list, unlist)))
-
-results <- cbind(df_params, df_power)
-
-gt::gt(results)
+results %>%
+  # head(20) %>%
+  gt() %>%
+  tab_header(
+    title = "Power results (all)",
+    subtitle = paste0("H", seq_along(hyp_names), ": ", hyp_names, " | ")
+  )
 ```
 
-## Study data {#study-data}
+# Study data {#study-data}
 
-```{r study-results}
-alpha <- .025
+## Final graph design {#final-design}
 
-cohort_size <- 200
+After considering the power results and possible study designs, you decide to remove some parameter options that are less likely to reflect reality. Since there is correlation between doses, it would be reasonable to expect some symmetry in the marginal power between dose groups: `filter(!(lo_a1c == 4 & hi_a1c == 0) & !(lo_a1c == 0 & hi_a1c == 4))`. You also expect `rho` to not be quite as high as .99: `filter(!rho == .99)`. Finally, the power you're most interested in maximizing is the probability of a successful trial (equivalent to rejecting at least one hypothesis in this case).
 
-means <- c(.7, .1, 0, .6, .25, .7)
-sds <- c(1, 2, .1, 3, 1, .5)
+[This should probably be a DT::datatable() so it doesn't take up sooo much space. And that will make it filter- and sort-able too]
 
-# simulate performance of each endpoint against placebo
-study_results <- mapply(rnorm, rep(cohort_size, 6), means, sds)
+```{r param-arranged-success}
+sub_results <- results |> 
+  filter(!(H1 == 4 & H4 == 0) & !(H1 == 0 & H4 == 4) & !rho == .99)
 
-t_tests <- apply(study_results, 2, t.test, alternative = "greater")
-t_test_means <- lapply(t_tests, getElement, "estimate")
-t_test_pvals <- vapply(t_tests, getElement, numeric(1), "p.value")
-
-marginal_power <- vapply(
-  t_test_means,
-  function(sample_mean) qnorm(alpha, sample_mean, lower.tail = FALSE),
-  numeric(1)
-)
+sub_results |> 
+  arrange(desc(p_success)) |> 
+  head(10) |> 
+  gt() |> 
+  tab_header(
+    title = "Power results, constrained (max success)",
+    subtitle = paste0("H", seq_along(hyp_names), ": ", hyp_names, " | ")
+  )
 ```
+
+In this case, the same parameters maximize the expected rejections as well.
+
+```{r param-arranged-expect}
+sub_results |> 
+  arrange(desc(p_expect)) |> 
+  head(10) |> 
+  gt() |> 
+  tab_header(
+    title = "Power results, constrained (max expected)",
+    subtitle = paste0("H", seq_along(hyp_names), ": ", hyp_names, " | ")
+  )
+```
+
+These additional constraints result in the following graph design chosen for the study.
+
+```{r study-graph}
+g_complex_chosen <- complex_gamma(.5, .5)
+
+g_complex_chosen
+```
+
+__Note:__ This is a simplified example using a reduced parameter space for the sake of run time. In a real clinical trial the parameter space would need to be searched at a more granular level, perhaps using modeling techniques on the power results to isolate the impact of different parameters. There may also be multiple power measurements of interest, and parameters will be chosen to balance the power across multiple desired outcomes.
 
 ## Test execution {#test-execution}
 
-The study results could be tested most simply with a Bonferroni testing method.
+Finally, we demonstrate testing using example data that illustrates the differences between test strategies. Assume the study has been completed, and the data yields the following p-values.
 
-But we can take advantage of the correlation between doses by testing the primary hypotheses together in a parametric group. Correlation between doses at the same endpoint reduces to 0.5 with equal randomization. We can demonstrate more functionality for the package by combining each dose's secondary endpoints together in a Simes group.
+```{r study-results}
+p_mean_diff_from_placebo <- c(.0129, .026, .012, .0132, .007, .012)
+names(p_mean_diff_from_placebo) <- hyp_names
+```
 
-~~Correlation between endpoints within a dose group is unknown; we'll assume 0.4. Correlations between one endpoint in one dose group and another endpoint in another dose group can be calculated with the product rule. This results in the correlation matrix below. Testing and power will be calculated at the global level 0.025.~~
+When testing with the [first strategy](#test-design-bonferroni), no hypotheses can be considered significant.
+
+```{r test-bonferroni}
+test_graph(g_complex_chosen, p_mean_diff_from_placebo, alpha = .025)
+```
+
+Using the [second strategy](#test-design-parametric-bonferroni), the increased power from parametric testing allows us to reject hypotheses 1 and 4.
+
+```{r test-para-bonf}
+test_graph(
+  g_complex,
+  p_mean_diff_from_placebo,
+  alpha = .025,
+  groups = list(c(1, 4), c(2, 3, 5, 6)),
+  test_types = c("p", "b"),
+  corr = t_corr
+)
+```
+
+Finally, using our chosen strategy for testing, the Simes grouping allows some secondary hypotheses to be rejected as well.
+
+```{r test-para-simes}
+test_graph(
+  g_complex,
+  p_mean_diff_from_placebo,
+  alpha = .025,
+  groups = list(c(1, 4), 2:3, 5:6),
+  test_types = c("p", "s", "s"),
+  corr = t_corr
+)
+```
+
+Re-run any of the tests above with `verbose = TRUE` or `critical = TRUE` to get more granular insight into each rejection determination.
