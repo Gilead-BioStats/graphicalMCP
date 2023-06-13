@@ -75,9 +75,9 @@ plot.initial_graph <- function(graph,
         if (is.null(nrow) && is.null(ncol)) {
           nrow <- ceiling(sqrt(graph_size))
           ncol <- nrow
-        } else if(is.null(nrow)) {
+        } else if (is.null(nrow)) {
           nrow <- ceiling(graph_size / ncol)
-        } else if(is.null(ncol)) {
+        } else if (is.null(ncol)) {
           ncol <- ceiling(graph_size / nrow)
         }
 
@@ -90,25 +90,20 @@ plot.initial_graph <- function(graph,
     }
   }
 
-  par(bg = background_color)
+  graphics::par(bg = background_color)
 
   # draw! ----------------------------------------------------------------------
   igraph::plot.igraph(
     graph_igraph,
     ...,
-
     layout = layout,
-
     vertex.color = "#e8c2ff",
     # vertex.frame.color = "#e8c2ff",
     vertex.label = v_labels,
     vertex.label.color = "black",
     vertex.size = 20,
-
     edge.label = edge_labels,
     edge.curved = curve,
-
-
     edge.arrow.size = .5,
     edge.arrow.width = 1
   )

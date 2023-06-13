@@ -6,14 +6,15 @@
 \usage{
 \method{plot}{initial_graph}(
   graph,
-  layout = igraph::layout.auto,
+  layout = igraph::layout_nicely,
   groups = list(graph$hypotheses),
   groups_layout = NULL,
   nrow = NULL,
   ncol = NULL,
   edge_curves = NULL,
   precision = 4,
-  epsilon = 0.001,
+  eps = 0.001,
+  background_color = "white",
   ...
 )
 }

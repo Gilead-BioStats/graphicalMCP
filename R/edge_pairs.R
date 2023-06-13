@@ -15,5 +15,4 @@ edge_pairs <- function(graph) {
   } else {
     NULL
   }
-
 }
