@@ -57,6 +57,8 @@ g_complex <- complex_gamma(.75, .99)
 print(g_complex)
 ```
 
+[Need to decide whether to bring in plotting function at this point or not]
+
 # Test design {#test-design}
 
 In this section we'll lay out some possible testing strategies. These testing strategies cannot be run until p-values are calculated from study data. See [Test Execution] below for more details.
@@ -327,13 +329,13 @@ After considering the power results and possible study designs, you decide to re
 [This should probably be a DT::datatable() so it doesn't take up sooo much space. And that will make it filter- and sort-able too]
 
 ```{r param-arranged-success}
-sub_results <- results |> 
+sub_results <- results %>% 
   filter(!(H1 == 4 & H4 == 0) & !(H1 == 0 & H4 == 4) & !rho == .99)
 
-sub_results |> 
-  arrange(desc(p_success)) |> 
-  head(10) |> 
-  gt() |> 
+sub_results %>% 
+  arrange(desc(p_success)) %>% 
+  head(10) %>% 
+  gt() %>% 
   tab_header(
     title = "Power results, constrained (max success)",
     subtitle = paste0("H", seq_along(hyp_names), ": ", hyp_names, " | ")
@@ -343,10 +345,10 @@ sub_results |>
 In this case, the same parameters maximize the expected rejections as well.
 
 ```{r param-arranged-expect}
-sub_results |> 
-  arrange(desc(p_expect)) |> 
-  head(10) |> 
-  gt() |> 
+sub_results %>% 
+  arrange(desc(p_expect)) %>% 
+  head(10) %>% 
+  gt() %>% 
   tab_header(
     title = "Power results, constrained (max expected)",
     subtitle = paste0("H", seq_along(hyp_names), ": ", hyp_names, " | ")

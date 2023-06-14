@@ -205,7 +205,7 @@ test_that("check assertions in testing vignette", {
 
 test_that("compare adjusted p-values to gMCP - Bonferroni & parametric", {
   g <- random_graph(6)
-  p <- pnorm(rnorm(6), lower.tail = FALSE)
+  p <- pnorm(rnorm(6, 2.5), lower.tail = FALSE)
 
   if (requireNamespace("gMCP", quietly = TRUE)) {
     gmcp_g <- as_gmcp_graph(g)
@@ -229,7 +229,7 @@ test_that("compare adjusted p-values to gMCP - Bonferroni & parametric", {
 
 test_that("compare adjusted p-values to lrstat - Bonferroni & Simes", {
   g <- random_graph(6)
-  p <- pnorm(rnorm(6), lower.tail = FALSE)
+  p <- pnorm(rnorm(6, 2.5), lower.tail = FALSE)
 
   if (requireNamespace("lrstat", quietly = TRUE)) {
     gw <- lrstat::fwgtmat(g$hypotheses, g$transitions)
