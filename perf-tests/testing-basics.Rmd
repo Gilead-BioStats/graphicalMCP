@@ -53,13 +53,13 @@ par_gate
 This graph can be tested most simply with the default weighted Bonferroni test. When testing at the global alpha level 0.05, we can reject hypotheses A1 and A2, but not B1 or B2.
 
 ```{r bonferroni-mix-1}
-test_graph(par_gate, p = pvals, alpha = .05)
+test_graph_closure(par_gate, p = pvals, alpha = .05)
 ```
 
 The results of the weighted Simes test are equivalent to weighted Bonferroni in some situations. The power of the Simes test becomes apparent when multiple p-values fall below the global alpha level, but above their local alpha in some intersection(s). In the following case, B1 & B2 are rejected in the Bonferroni testing procedure for intersection `B1 ∩ B2` because the p-value is greater than `α * w` for each hypothesis in that case. However, the Simes test rejects `B1 ∩ B2` because the weight from B1 is added to the weight for B2.
 
 ```{r simes-all-1}
-test_graph(par_gate, p = pvals, alpha = .05, test_types = "s")
+test_graph_closure(par_gate, p = pvals, alpha = .05, test_types = "s")
 ```
 
 If a correlation matrix for the test statistics is partially or fully known, a parametric test can be used for any subsets whose correlation matrix is fully known. Here B1 & B2 get a `c` value calculated that boosts their testing threshold slightly higher. 
@@ -69,7 +69,7 @@ corr1 <- matrix(nrow = 4, ncol = 4)
 corr1[3:4, 3:4] <- .5
 diag(corr1) <- 1
 
-test_graph(par_gate,
+test_graph_closure(par_gate,
   p = pvals,
   alpha = .05,
   groups = list(1, 2, 3:4),
@@ -83,7 +83,7 @@ test_graph(par_gate,
 ```{r parametric-2}
 corr2 <- diag(4)
 
-test_graph(
+test_graph_closure(
   par_gate,
   p = pvals,
   alpha = .05,
@@ -98,7 +98,7 @@ The null case of this is when a parametric group is size 1 (Each correlation mat
 corr3 <- matrix(nrow = 4, ncol = 4)
 diag(corr3) <- 1
 
-test_graph(
+test_graph_closure(
   par_gate,
   p = pvals,
   alpha = .05,
@@ -111,7 +111,7 @@ test_graph(
 Using different test types on different parts of a graph is supported.
 
 ```{r mixed-1}
-test_graph(
+test_graph_closure(
   par_gate,
   p = pvals,
   alpha = .05,
@@ -124,7 +124,7 @@ test_graph(
 There are two different testing methods - one which tests each hypothesis with the `p <= (c *) w * α` method, and another which calculates adjusted p-values. The adjusted p-values method is much more efficient, so it is the standard method. Additional details about the adjusted p-values calculation can be seen by setting `verbose = TRUE`.
 
 ```{r verbose}
-test_graph(
+test_graph_closure(
   par_gate,
   p = pvals,
   alpha = .05,
@@ -138,7 +138,7 @@ test_graph(
 The critical value method tests every hypothesis in the closure. Setting `critical = TRUE` displays the values used in each of these tests. This can provide more detailed information about what caused a hypothesis to fail than the adjusted p-values. However, it comes at a significant cost in computation time.
 
 ```{r critical}
-test_graph(
+test_graph_closure(
   par_gate,
   p = pvals,
   alpha = .05,
@@ -152,7 +152,7 @@ test_graph(
 
 ## Performance
 
-`test_graph()` always calculates the full closure, even for Bonferroni testing. If optimal performance is needed, `bonferroni_sequential()` can be used, which uses the sequential testing shortcut. This causes a significant improvement in speed, and either method is faster than `gMCP::gMCP()`. However, using `gMCP::graphTest()` is the fastest option, as it's written primarily in C directly.
+`test_graph_closure()` always calculates the full closure, even for Bonferroni testing. If optimal performance is needed, `test_graph_shortcut()` can be used, which uses the sequential testing shortcut. This causes a significant improvement in speed, and either method is faster than `gMCP::gMCP()`. However, using `gMCP::graphTest()` is the fastest option, as it's written primarily in C directly.
 
 The gMCP suite of testing and power functions is a little confusing, so I'm going to document here to remember for future me:
 
@@ -166,13 +166,13 @@ I think it would be valuable to build a similar structure, but I'm hoping to hav
   - create_graph()
   - update_graph()
   - generate_weights()
-  - bonferroni_sequential()
-  - test_graph()
+  - test_graph_shortcut()
+  - test_graph_closure()
   - calculate_power()
 - **C++ functions** - To be as fast as possible. Transparency is less important, except to the extent it impacts maintainability. These are all in support of power simulations primarily
-  - bonferroni_sequential_cpp()
-  - bonferroni_sequential_power_cpp()
-  - test_graph() is fastest in R using vectorization or matrixStats
+  - test_graph_shortcut_cpp()
+  - power_shortcut_cpp()
+  - test_graph_closure() is fastest in R using vectorization or matrixStats
   - calculate_power() is currently fastest using a blend of languages - C++ for sequential Bonferroni testing, and R for the more complex closure testing
 
 ```{r gen-graph}
@@ -206,7 +206,7 @@ gmcp_g <- as.double(graph2$transitions)
 # Bonferroni
 bonf_bench <- bench::mark(
   `C++ sequential` =
-    as.logical(graphicalMCP:::bonferroni_sequential_cpp(graph2, p)),
+    as.logical(graphicalMCP:::test_graph_shortcut_cpp(graph2, p)),
   `closure (vec/matrixStats)` =
     as.logical(graphicalMCP:::test_graph_fast(p, .05, gw_bonf, inter_h)),
   `gMCP, raw C` =
@@ -393,7 +393,7 @@ graph2 <- create_graph(w, g)
 p <- runif(m, .0001, .05)
 sim_corr <- diag(m)
 
-mix_test <- test_graph(
+mix_test <- test_graph_closure(
   graph2,
   p = p,
   alpha = .05,

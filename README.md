@@ -156,7 +156,7 @@ generate_weights(g_dose)
 ### Test hypotheses
 
 A mixture of statistical tests are supported in graphicalMCP. A graph
-can be tested against a given alpha with `test_graph()`. A report is
+can be tested against a given alpha with `test_graph_closure()`. A report is
 then generated, showing the graph & test results.
 
 In this example, a weighted Bonferroni test is applied to all
@@ -170,7 +170,7 @@ hypothesis except the one containing only B1 & B2 (Row 3 of
 but we cannot reject the null hypotheses for B1 & B2.
 
 ``` r
-test_graph(
+test_graph_closure(
   g_dose,
   p = c(.01, .02, .03, .05),
   alpha = .05,
@@ -215,7 +215,7 @@ Simes and parametric testing methods are also supported, using the
 for a more detailed report on testing.
 
 ``` r
-test_graph(
+test_graph_closure(
   g_dose,
   p = c(.01, .02, .03, .05),
   alpha = .05,

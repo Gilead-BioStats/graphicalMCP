@@ -90,7 +90,7 @@ par_gate <- simple_successive_1()
 # the default of 100 simulations will usually need to be increased
 calculate_power(par_gate, sim_n = 1e5)
 
-# but any test group/type combination that works for [test_graph()] can be
+# but any test group/type combination that works for [test_graph_closure()] can be
 # used
 calculate_power(
   par_gate,

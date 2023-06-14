@@ -60,7 +60,7 @@
 #' # the default of 100 simulations will usually need to be increased
 #' calculate_power(par_gate, sim_n = 1e5)
 #'
-#' # but any test group/type combination that works for [test_graph()] can be
+#' # but any test group/type combination that works for [test_graph_closure()] can be
 #' # used
 #' calculate_power(
 #'   par_gate,
@@ -136,7 +136,7 @@ calculate_power <- function(graph,
 
   if (all(test_types == "bonferroni") && !force_closure) {
     # Bonferroni shortcut if possible ------------------------------------------
-    test_res_mat <- bonferroni_sequential_power_cpp(
+    test_res_mat <- power_shortcut_cpp(
       graph$hypotheses,
       graph$transitions,
       p_sim,

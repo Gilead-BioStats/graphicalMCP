@@ -41,13 +41,13 @@ ss_graph
 This graph can be tested most simply with the default weighted Bonferroni test. When testing at the global alpha level 0.05, we can reject hypotheses A1 and B1, but not A2 or B2.
 
 ```{r bonferroni-mix-1}
-test_graph(ss_graph, p = pvals, alpha = .05)
+test_graph_closure(ss_graph, p = pvals, alpha = .05)
 ```
 
 The results of the weighted Simes test are equivalent to weighted Bonferroni in some situations. The power of the Simes test becomes apparent when multiple p-values fall below the global alpha level, but above their local alpha in some intersection(s). In the following case, B1 & B2 are rejected in the Bonferroni testing procedure for intersection `B1 ∩ B2` because the p-value is greater than `α * w` for each hypothesis in that case. However, the Simes test rejects `B1 ∩ B2` because the weight from B1 is added to the weight for B2.
 
 ```{r simes-all-1}
-test_graph(ss_graph, p = pvals, alpha = .05, test_types = "s")
+test_graph_closure(ss_graph, p = pvals, alpha = .05, test_types = "s")
 ```
 
 If a correlation matrix for the test statistics is partially or fully known, a parametric test can be used for any subsets whose correlation matrix is fully known. Here B1 & B2 get a `c` value calculated that boosts their testing threshold slightly higher. 
@@ -57,7 +57,7 @@ corr1 <- matrix(nrow = 4, ncol = 4)
 corr1[3:4, 3:4] <- .5
 diag(corr1) <- 1
 
-test_graph(ss_graph,
+test_graph_closure(ss_graph,
   p = pvals,
   alpha = .05,
   groups = list(1:2, 3:4),
@@ -69,7 +69,7 @@ test_graph(ss_graph,
 There are two different testing methods - one which tests each hypothesis with the `p <= (c *) w * α` method, and another which calculates adjusted p-values. The adjusted p-values method is much more efficient, so it is the standard method. Additional details about the adjusted p-values calculation can be seen by setting `verbose = TRUE`.
 
 ```{r verbose}
-test_graph(
+test_graph_closure(
   ss_graph,
   p = pvals,
   alpha = .05,
@@ -83,7 +83,7 @@ test_graph(
 The critical value method tests every hypothesis in the closure. Setting `critical = TRUE` displays the values used in each of these tests. This can provide more detailed information about what caused a hypothesis to fail than the adjusted p-values. However, it comes with some cost in computation time.
 
 ```{r critical}
-test_graph(
+test_graph_closure(
   ss_graph,
   p = pvals,
   alpha = .05,
@@ -95,10 +95,10 @@ test_graph(
 )
 ```
 
-When using only Bonferroni testing, there is a shortcut in testing which allows us to not test the full closure of a graph. Use [bonferroni_sequential()] to call this shortcut method. In this case, `critical = TRUE` instead gives information about the order in which hypotheses are deleted. Note that the `res` column of the critical output here tells **what would have happened if sequential testing reached a given point**. However, sequential testing stops at the first non-rejected hypothesis. Global rejection results can be found in the `Global test summary` section.
+When using only Bonferroni testing, there is a shortcut in testing which allows us to not test the full closure of a graph. Use [test_graph_shortcut()] to call this shortcut method. In this case, `critical = TRUE` instead gives information about the order in which hypotheses are deleted. Note that the `res` column of the critical output here tells **what would have happened if sequential testing reached a given point**. However, sequential testing stops at the first non-rejected hypothesis. Global rejection results can be found in the `Global test summary` section.
 
 ```{r sequential}
-bonferroni_sequential(ss_graph, p = pvals, alpha = .05, critical = TRUE)
+test_graph_shortcut(ss_graph, p = pvals, alpha = .05, critical = TRUE)
 ```
 
 ## Print options
@@ -120,7 +120,7 @@ graph2 <- create_graph(w, g)
 p <- runif(m, .0001, .05)
 sim_corr <- diag(m)
 
-mix_test <- test_graph(
+mix_test <- test_graph_closure(
   graph2,
   p = p,
   alpha = .05,

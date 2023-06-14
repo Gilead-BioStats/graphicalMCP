@@ -26,5 +26,5 @@ p_vals <- c(.9, 1.1, .9, 1.3, 1.6, .4)
 g_234 <- update_graph(g, c(F, T, T, T, F, F))
 
 gMCP(G, p_vals, "parametric", rho, alpha)
-test_graph(g, p_vals, 2.5, rho,
+test_graph_closure(g, p_vals, 2.5, rho,
            tests = list(parametric = list(1:6)))

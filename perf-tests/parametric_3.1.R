@@ -25,10 +25,10 @@ g <- as_graph(G)
 alpha <- .05
 
 gMCP(G, p)
-test_graph(g, alpha = .05, p_values = p)
+test_graph_closure(g, alpha = .05, p_values = p)
 
 gMCP(G, p, corr=Cm2, test="parametric")
-test_graph(g, alpha = .05, p_values = p, corr = Cm2,
+test_graph_closure(g, alpha = .05, p_values = p, corr = Cm2,
            tests = list(parametric = list(1:4)))
 
 # cJ exploration

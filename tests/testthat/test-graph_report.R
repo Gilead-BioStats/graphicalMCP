@@ -26,7 +26,7 @@ meta_test_graph <- function(...) {
     spliced_inputs <- valid_inputs
   }
 
-  do.call(test_graph, spliced_inputs)
+  do.call(test_graph_closure, spliced_inputs)
 }
 
 test_that("invalid test inputs throw errors", {
@@ -101,7 +101,7 @@ test_that("invalid test inputs throw errors", {
 
 test_that("adjusted p-values are capped at 1", {
   expect_equal(
-    test_graph(random_graph(2), c(1, 1))$outputs$p_adj,
+    test_graph_closure(random_graph(2), c(1, 1))$outputs$p_adj,
     c(H1 = 1, H2 = 1)
   )
 })
@@ -111,15 +111,15 @@ test_that("Simes & parametric adjusted p-values are less than Bonferroni", {
 
   expect_true(
     all(
-      test_graph(rando, rep(.01, 4))$outputs$p_adj >=
-        test_graph(rando, rep(.01, 4), test_types = "s")$outputs$p_adj
+      test_graph_closure(rando, rep(.01, 4))$outputs$p_adj >=
+        test_graph_closure(rando, rep(.01, 4), test_types = "s")$outputs$p_adj
     )
   )
 
   expect_true(
     all(
-      test_graph(rando, rep(.01, 4))$outputs$p_adj >=
-        test_graph(
+      test_graph_closure(rando, rep(.01, 4))$outputs$p_adj >=
+        test_graph_closure(
           rando,
           rep(.01, 4),
           test_types = "p",
@@ -132,15 +132,15 @@ test_that("Simes & parametric adjusted p-values are less than Bonferroni", {
 test_that("verbose/critical output is only present when asked for", {
   rando <- random_graph(6)
 
-  expect_null(test_graph(rando, rep(.01, 6))$details)
-  expect_null(test_graph(rando, rep(.01, 6))$critical)
+  expect_null(test_graph_closure(rando, rep(.01, 6))$details)
+  expect_null(test_graph_closure(rando, rep(.01, 6))$critical)
 
   expect_type(
-    test_graph(rando, rep(.01, 6), verbose = TRUE)$details$results,
+    test_graph_closure(rando, rep(.01, 6), verbose = TRUE)$details$results,
     "double"
   )
   expect_s3_class(
-    test_graph(rando, rep(.01, 6), critical = TRUE)$critical$results,
+    test_graph_closure(rando, rep(.01, 6), critical = TRUE)$critical$results,
     "data.frame"
   )
 })
@@ -150,7 +150,7 @@ test_that("check assertions in testing vignette", {
   pvals <- c(.024, .01, .026, .027)
 
   expect_equal(
-    test_graph(par_gate, p = pvals, alpha = .05)$outputs,
+    test_graph_closure(par_gate, p = pvals, alpha = .05)$outputs,
     list(
       p_adj = c(.048, .02, .052, .052),
       rejected = c(TRUE, TRUE, FALSE, FALSE)
@@ -159,7 +159,7 @@ test_that("check assertions in testing vignette", {
   )
 
   expect_equal(
-    test_graph(par_gate, p = pvals, alpha = .05, test_types = "s")$outputs,
+    test_graph_closure(par_gate, p = pvals, alpha = .05, test_types = "s")$outputs,
     list(
       p_adj = c(.027, .02, .027, .027),
       rejected = rep(TRUE, 4)
@@ -172,7 +172,7 @@ test_that("check assertions in testing vignette", {
   diag(corr1) <- 1
 
   expect_equal(
-    test_graph(
+    test_graph_closure(
       par_gate,
       pvals,
       .05,
@@ -191,7 +191,7 @@ test_that("check assertions in testing vignette", {
   diag(corr3) <- 1
 
   expect_equal(
-    test_graph(
+    test_graph_closure(
       par_gate,
       pvals,
       .05,
@@ -199,7 +199,7 @@ test_that("check assertions in testing vignette", {
       rep("p", 4),
       corr3
     )$outputs,
-    test_graph(par_gate, pvals, .05)$outputs
+    test_graph_closure(par_gate, pvals, .05)$outputs
   )
 })
 
@@ -211,17 +211,17 @@ test_that("compare adjusted p-values to gMCP - Bonferroni & parametric", {
     gmcp_g <- as_gmcp_graph(g)
 
     expect_equal(
-      bonferroni_sequential(g, p)$outputs$p_adj,
+      test_graph_shortcut(g, p)$outputs$p_adj,
       gMCP::gMCP(gmcp_g, p, "Bonferroni")@adjPValues
     )
 
     expect_equal(
-      test_graph(g, p)$outputs$p_adj,
+      test_graph_closure(g, p)$outputs$p_adj,
       gMCP::gMCP(gmcp_g, p, "Bonferroni")@adjPValues
     )
 
     expect_equal(
-      test_graph(g, p, test_types = "p", corr = diag(6))$outputs$p_adj,
+      test_graph_closure(g, p, test_types = "p", corr = diag(6))$outputs$p_adj,
       gMCP::gMCP(gmcp_g, p, "parametric", correlation = diag(6))@adjPValues
     )
   }
@@ -238,25 +238,25 @@ test_that("compare adjusted p-values to lrstat - Bonferroni & Simes", {
     fam2 <- rbind(c(1, 1, 1, 0, 0, 0), c(0, 0, 0, 1, 1, 1))
 
     expect_equal(
-      bonferroni_sequential(g, p)$outputs$p_adj,
+      test_graph_shortcut(g, p)$outputs$p_adj,
       lrstat::fadjpbon(g$hypotheses, g$transitions, matrix(p, ncol = 6)),
       ignore_attr = TRUE
     )
 
     expect_equal(
-      test_graph(g, p)$outputs$p_adj,
+      test_graph_closure(g, p)$outputs$p_adj,
       lrstat::fadjpbon(g$hypotheses, g$transitions, matrix(p, ncol = 6)),
       ignore_attr = TRUE
     )
 
     expect_equal(
-      test_graph(g, p, test_types = "s")$outputs$p_adj,
+      test_graph_closure(g, p, test_types = "s")$outputs$p_adj,
       lrstat::fadjpsim(gw, p, fam1),
       ignore_attr = TRUE
     )
 
     expect_equal(
-      test_graph(g, p, groups = list(1:3, 4:6), test_types = "s")$outputs$p_adj,
+      test_graph_closure(g, p, groups = list(1:3, 4:6), test_types = "s")$outputs$p_adj,
       lrstat::fadjpsim(gw, p, fam2),
       ignore_attr = TRUE
     )

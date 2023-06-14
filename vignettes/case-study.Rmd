@@ -68,7 +68,7 @@ In this section we'll lay out some possible testing strategies. These testing st
 The study results could be tested most simply with a Bonferroni testing method. A pure Bonferroni method is simple, it runs quickly, and it controls the family-wise error rate (FWER) strongly at level `alpha` [citation needed]. However, it is slightly less likely to find significant results than some other testing methods.
 
 ```{r t-design-bonferroni, eval=FALSE}
-test_graph(g_complex, <calculated_p_values>, alpha = .025)
+test_graph_closure(g_complex, <calculated_p_values>, alpha = .025)
 ```
 
 ## Parametric-Bonferroni {#test-design-parametric-bonferroni}
@@ -91,7 +91,7 @@ t_corr <- rbind(
 ```
 
 ```{r t-design-para-bonf, eval=FALSE}
-test_graph(
+test_graph_closure(
   g_complex,
   <calculated_p_values>,
   alpha = .025,
@@ -106,7 +106,7 @@ test_graph(
 Even beyond that, it may make sense to test each pair of secondary hypotheses as a Simes group. This will add a small amount of power to the secondary hypotheses, which will vary depending on `gamma`.
 
 ```{r t-design-para-simes, eval=FALSE}
-test_graph(
+test_graph_closure(
   g_complex,
   <calculated_p_values>,
   alpha = .025,
@@ -377,13 +377,13 @@ names(p_mean_diff_from_placebo) <- hyp_names
 When testing with the [first strategy](#test-design-bonferroni), no hypotheses can be considered significant.
 
 ```{r test-bonferroni}
-test_graph(g_complex_chosen, p_mean_diff_from_placebo, alpha = .025)
+test_graph_closure(g_complex_chosen, p_mean_diff_from_placebo, alpha = .025)
 ```
 
 Using the [second strategy](#test-design-parametric-bonferroni), the increased power from parametric testing allows us to reject hypotheses 1 and 4.
 
 ```{r test-para-bonf}
-test_graph(
+test_graph_closure(
   g_complex,
   p_mean_diff_from_placebo,
   alpha = .025,
@@ -396,7 +396,7 @@ test_graph(
 Finally, using our chosen strategy for testing, the Simes grouping allows some secondary hypotheses to be rejected as well.
 
 ```{r test-para-simes}
-test_graph(
+test_graph_closure(
   g_complex,
   p_mean_diff_from_placebo,
   alpha = .025,

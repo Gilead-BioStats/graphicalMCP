@@ -3,7 +3,7 @@
 using namespace cpp11;
 
 [[cpp11::register]]
-doubles bonferroni_sequential_cpp(doubles hyps, doubles trns, doubles p, double alpha) {
+doubles test_graph_shortcut_cpp(doubles hyps, doubles trns, doubles p, double alpha) {
   writable::doubles hypotheses = hyps;
   writable::doubles transitions = trns;
 

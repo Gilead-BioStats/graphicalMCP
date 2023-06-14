@@ -1,4 +1,4 @@
-devtools::build_site(quiet = FALSE, lazy = TRUE, devel = TRUE)
+devtools::check(quiet = FALSE, vignettes = FALSE)
 # devtools::load_all("..")
 #
 # test_m <- function(m, groups = list(seq_len(m)), test_types = "b", verbose = FALSE, critical = FALSE) {
@@ -13,7 +13,7 @@ devtools::build_site(quiet = FALSE, lazy = TRUE, devel = TRUE)
 #   sim_corr <- diag(m)
 #
 #   bench::mark(
-#     test_graph(
+#     test_graph_closure(
 #       graph2,
 #       p = p,
 #       alpha = .05,

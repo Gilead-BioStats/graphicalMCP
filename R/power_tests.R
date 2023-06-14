@@ -1,7 +1,7 @@
 #' Calculate hypothesis rejection results efficiently
 #'
-#' For insight and nice reporting, prefer [test_graph()] or
-#' [bonferroni_sequential()] with all of their options. They are reasonably fast
+#' For insight and nice reporting, prefer [test_graph_closure()] or
+#' [test_graph_shortcut()] with all of their options. They are reasonably fast
 #' for interactive use. However in order to minimize power run time, more
 #' efficient testing functions are available. The power simulation can be
 #' segmented so that certain parts, like generating weights and calculating some
@@ -25,7 +25,7 @@
 #'
 #' @keywords internal
 #'
-#' @seealso [test_graph()], [bonferroni_sequential()]
+#' @seealso [test_graph_closure()], [test_graph_shortcut()]
 #'
 #' @template references
 #'
@@ -45,7 +45,7 @@
 #' compact_weights[is.na(compact_weights)] <- 0
 #'
 #' graphicalMCP:::test_graph_fast(p, .025, compact_weights, inter_h)
-#' graphicalMCP:::bonferroni_sequential_cpp(par_gate, p, .025)
+#' graphicalMCP:::test_graph_shortcut_cpp(par_gate, p, .025)
 test_graph_fast <- function(p,
                             alpha,
                             intersections,
@@ -59,8 +59,8 @@ test_graph_fast <- function(p,
 
 #' @rdname testing-fast
 # C++ only, pass/fail only
-bonferroni_sequential_cpp <- function(graph,
+test_graph_shortcut_cpp <- function(graph,
                                       p,
                                       alpha = .05) {
-  bonferroni_sequential_cpp_(graph$hypotheses, graph$transitions, p, alpha)
+  test_graph_shortcut_cpp_(graph$hypotheses, graph$transitions, p, alpha)
 }

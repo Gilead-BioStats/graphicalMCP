@@ -27,7 +27,7 @@ test_that("vectorized testing matches standard testing (single-group)", {
 
   expect_equal(
     graphicalMCP:::test_graph_fast(p, .05, gw_compact_bonf, gw_h),
-    test_graph(rando, p)$outputs$rejected,
+    test_graph_closure(rando, p)$outputs$rejected,
     ignore_attr = TRUE
   )
 
@@ -38,13 +38,13 @@ test_that("vectorized testing matches standard testing (single-group)", {
       gw_compact_simes[, graph_names],
       gw_h
     ),
-    test_graph(rando, p, test_types = "s")$outputs$rejected,
+    test_graph_closure(rando, p, test_types = "s")$outputs$rejected,
     ignore_attr = TRUE
   )
 
   expect_equal(
     graphicalMCP:::test_graph_fast(p, .05, gw_compact_parametric, gw_h),
-    test_graph(rando, p, test_types = "p", corr = diag(m))$outputs$rejected,
+    test_graph_closure(rando, p, test_types = "p", corr = diag(m))$outputs$rejected,
     ignore_attr = TRUE
   )
 })
@@ -88,7 +88,7 @@ test_that("vectorized testing matches standard testing (multi-group)", {
       cbind(gw_compact_bonf, gw_compact_simes, gw_compact_para)[, graph_names],
       gw_h
     ),
-    test_graph(
+    test_graph_closure(
       rando,
       p,
       groups = list(1:2, 4:3, 5:m),

@@ -2,12 +2,12 @@
 % Please edit documentation in R/power_tests.R
 \name{test_graph_fast}
 \alias{test_graph_fast}
-\alias{bonferroni_sequential_cpp}
+\alias{test_graph_shortcut_cpp}
 \title{Calculate hypothesis rejection results efficiently}
 \usage{
 test_graph_fast(p, alpha, intersections, inter_h)
 
-bonferroni_sequential_cpp(graph, p, alpha = 0.05)
+test_graph_shortcut_cpp(graph, p, alpha = 0.05)
 }
 \arguments{
 \item{p}{A numeric vector of p-values}
@@ -26,8 +26,8 @@ A logical or integer vector of results indicating whether each
 hypothesis can be accepted or rejected globally.
 }
 \description{
-For insight and nice reporting, prefer \code{\link[=test_graph]{test_graph()}} or
-\code{\link[=bonferroni_sequential]{bonferroni_sequential()}} with all of their options. They are reasonably fast
+For insight and nice reporting, prefer \code{\link[=test_graph_closure]{test_graph_closure()}} or
+\code{\link[=test_graph_shortcut]{test_graph_shortcut()}} with all of their options. They are reasonably fast
 for interactive use. However in order to minimize power run time, more
 efficient testing functions are available. The power simulation can be
 segmented so that certain parts, like generating weights and calculating some
@@ -52,7 +52,7 @@ compact_weights <- ifelse(
 compact_weights[is.na(compact_weights)] <- 0
 
 graphicalMCP:::test_graph_fast(p, .025, compact_weights, inter_h)
-graphicalMCP:::bonferroni_sequential_cpp(par_gate, p, .025)
+graphicalMCP:::test_graph_shortcut_cpp(par_gate, p, .025)
 }
 \references{
 Bretz, F., Maurer, W., Brannath, W., and Posch, M. (2009). A graphical
@@ -86,6 +86,6 @@ Procedures}. R package version 0.8-15,
 \url{https://cran.r-project.org/package=gMCP}.
 }
 \seealso{
-\code{\link[=test_graph]{test_graph()}}, \code{\link[=bonferroni_sequential]{bonferroni_sequential()}}
+\code{\link[=test_graph_closure]{test_graph_closure()}}, \code{\link[=test_graph_shortcut]{test_graph_shortcut()}}
 }
 \keyword{internal}

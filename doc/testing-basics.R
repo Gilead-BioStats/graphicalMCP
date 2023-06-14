@@ -27,10 +27,10 @@ g_dose <- create_graph(hypotheses, transitions, names)
 g_dose
 
 ## ----bonferroni-mix-1---------------------------------------------------------
-test_graph(g_dose, p_values = c(.024, .01, .026, .027), alpha = .05)
+test_graph_closure(g_dose, p_values = c(.024, .01, .026, .027), alpha = .05)
 
 ## ----simes-all-1--------------------------------------------------------------
-test_graph(
+test_graph_closure(
   g_dose,
   p_values = c(.024, .01, .026, .027),
   alpha = .05,
@@ -42,7 +42,7 @@ corr1 <- matrix(nrow = 4, ncol = 4)
 corr1[3:4, 3:4] <- .5
 diag(corr1) <- 1
 
-test_graph(
+test_graph_closure(
   g_dose,
   p_values = c(.024, .01, .026, .027),
   alpha = .05,
@@ -54,7 +54,7 @@ test_graph(
 ## ----parametric-2-------------------------------------------------------------
 corr2 <- diag(4)
 
-test_graph(
+test_graph_closure(
   g_dose,
   p_values = c(.024, .01, .026, .027),
   alpha = .05,
@@ -67,7 +67,7 @@ test_graph(
 corr3 <- matrix(nrow = 4, ncol = 4)
 diag(corr3) <- 1
 
-test_graph(
+test_graph_closure(
   g_dose,
   p_values = c(.024, .01, .026, .027),
   alpha = .05,
@@ -80,7 +80,7 @@ test_graph(
 corr4 <- matrix(.5, nrow = 4, ncol = 4)
 diag(corr4) <- 1
 
-test_graph(
+test_graph_closure(
   g_dose,
   p_values = c(.024, .01, .026, .027),
   alpha = .05,
@@ -90,7 +90,7 @@ test_graph(
 )
 
 ## ----parametric-5, eval=FALSE-------------------------------------------------
-#  test_graph(
+#  test_graph_closure(
 #    g_dose,
 #    p_values = c(.024, .01, .026, .027),
 #    alpha = .05,

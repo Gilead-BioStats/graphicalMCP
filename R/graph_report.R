@@ -30,7 +30,7 @@
 #'   intersection
 #'
 #' @rdname testing
-#' @seealso [test_graph_fast()], [bonferroni_sequential_cpp()]
+#' @seealso [test_graph_fast()], [test_graph_shortcut_cpp()]
 #' @export
 #'
 #' @template references
@@ -56,10 +56,10 @@
 #' diag(corr2) <- 1
 #'
 #' # The default is all Bonferroni with alpha = .05
-#' test_graph(g, p)
+#' test_graph_closure(g, p)
 #'
 #' # But tests can be specified at the hypothesis-level
-#' test_graph(
+#' test_graph_closure(
 #'   graph = g,
 #'   p = p,
 #'   alpha = .025,
@@ -67,7 +67,7 @@
 #'   test_types = c("bonferroni", "simes", "parametric"),
 #'   corr = corr
 #' )
-test_graph <- function(graph,
+test_graph_closure <- function(graph,
                        p,
                        alpha = .05,
                        groups = list(seq_along(graph$hypotheses)),

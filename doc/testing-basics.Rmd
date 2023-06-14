@@ -43,13 +43,13 @@ g_dose
 This graph can be tested most simply with the default weighted Bonferroni test. When testing at the global alpha level 0.05, we can reject hypotheses A1, A2, and B1, but not B2.
 
 ```{r bonferroni-mix-1}
-test_graph(g_dose, p_values = c(.024, .01, .026, .027), alpha = .05)
+test_graph_closure(g_dose, p_values = c(.024, .01, .026, .027), alpha = .05)
 ```
 
 The results of the weighted Simes test are equivalent to weighted Bonferroni in some situations. The power of the Simes test becomes apparent when multiple p-values fall below the global alpha level, but above their local alpha in some intersection(s). In the following case, B1 & B2 are rejected in the Bonferroni testing procedure for intersection `B1 ∩ B2` because the p-value is greater than `α * w` for each hypothesis in that case. However, the Simes test rejects `B1 ∩ B2` because the weight from B1 is added to the weight for B2.
 
 ```{r simes-all-1}
-test_graph(
+test_graph_closure(
   g_dose,
   p_values = c(.024, .01, .026, .027),
   alpha = .05,
@@ -64,7 +64,7 @@ corr1 <- matrix(nrow = 4, ncol = 4)
 corr1[3:4, 3:4] <- .5
 diag(corr1) <- 1
 
-test_graph(
+test_graph_closure(
   g_dose,
   p_values = c(.024, .01, .026, .027),
   alpha = .05,
@@ -79,7 +79,7 @@ test_graph(
 ```{r parametric-2}
 corr2 <- diag(4)
 
-test_graph(
+test_graph_closure(
   g_dose,
   p_values = c(.024, .01, .026, .027),
   alpha = .05,
@@ -95,7 +95,7 @@ The null case of this is when a parametric group is size 1
 corr3 <- matrix(nrow = 4, ncol = 4)
 diag(corr3) <- 1
 
-test_graph(
+test_graph_closure(
   g_dose,
   p_values = c(.024, .01, .026, .027),
   alpha = .05,
@@ -111,7 +111,7 @@ If `use_cj` is TRUE, the critical value `c` is calculated once for each intersec
 corr4 <- matrix(.5, nrow = 4, ncol = 4)
 diag(corr4) <- 1
 
-test_graph(
+test_graph_closure(
   g_dose,
   p_values = c(.024, .01, .026, .027),
   alpha = .05,
@@ -124,7 +124,7 @@ test_graph(
 Setting `use_cj` TRUE with a correlation matrix that is only partially known causes an error
 
 ```{r parametric-5, eval=FALSE}
-test_graph(
+test_graph_closure(
   g_dose,
   p_values = c(.024, .01, .026, .027),
   alpha = .05,
