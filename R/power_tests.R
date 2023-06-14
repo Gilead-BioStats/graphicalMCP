@@ -58,7 +58,6 @@ test_graph_fast <- function(p,
 }
 
 #' @rdname testing-fast
-#' @export
 # C++ only, pass/fail only
 bonferroni_sequential_cpp <- function(graph,
                                       p,
