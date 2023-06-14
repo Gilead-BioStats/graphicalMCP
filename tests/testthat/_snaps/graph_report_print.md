@@ -5,7 +5,7 @@
     Output
       
       Test parameters ----------------------------------------------------------------
-        An initial graph
+        Initial graph
         
         --- Hypothesis weights ---
         H1: 0.5000
@@ -20,7 +20,7 @@
         H3 0.0000 1.0000 0.0000 0.0000
         H4 1.0000 0.0000 0.0000 0.0000
       
-        Global alpha = 0.05
+        Alpha = 0.05
       
                                H1   H2   H3   H4
         Unadjusted p-values: 0.01 0.01 0.01 0.01
@@ -28,7 +28,7 @@
         Test types
         simes: (H1-H2-H3-H4)
       
-      Global test summary ------------------------------------------------------------
+      Test summary -------------------------------------------------------------------
         Hypothesis Adj. P-value Reject
                 H1         0.01   TRUE
                 H2         0.01   TRUE
@@ -42,7 +42,7 @@
     Output
       
       Test parameters ----------------------------------------------------------------
-        An initial graph
+        Initial graph
         
         --- Hypothesis weights ---
         H1: 0.5000
@@ -57,7 +57,7 @@
         H3 0.0000 1.0000 0.0000 0.0000
         H4 1.0000 0.0000 0.0000 0.0000
       
-        Global alpha = 0.05
+        Alpha = 0.05
       
                                H1   H2   H3   H4
         Unadjusted p-values: 0.01 0.01 0.01 0.01
@@ -65,7 +65,7 @@
         Test types
         bonferroni: (H1-H2-H3-H4)
       
-      Global test summary ------------------------------------------------------------
+      Test summary -------------------------------------------------------------------
         Hypothesis Adj. P-value Reject
                 H1         0.02   TRUE
                 H2         0.02   TRUE
@@ -97,7 +97,7 @@
     Output
       
       Test parameters ----------------------------------------------------------------
-        An initial graph
+        Initial graph
         
         --- Hypothesis weights ---
         H1: 0.5000
@@ -112,7 +112,7 @@
         H3 0.0000 1.0000 0.0000 0.0000
         H4 1.0000 0.0000 0.0000 0.0000
       
-        Global alpha = 0.05
+        Alpha = 0.05
       
                                H1   H2   H3   H4
         Unadjusted p-values: 0.01 0.01 0.01 0.01
@@ -120,7 +120,7 @@
         Test types
         bonferroni: (H1-H2-H3-H4)
       
-      Global test summary ------------------------------------------------------------
+      Test summary -------------------------------------------------------------------
         Hypothesis Adj. P-value Reject
                 H1         0.02   TRUE
                 H2         0.02   TRUE
@@ -128,39 +128,39 @@
                 H4         0.02   TRUE
       
       Test details - Critical values -------------------------------------------------
-         intersection hypothesis       test    p <=   w * alpha   res
-                    1         H1 bonferroni 0.01 <= 0.5 *  0.05  TRUE
-                    1         H2 bonferroni 0.01 <= 0.5 *  0.05  TRUE
-                    1         H3 bonferroni 0.01 <= 0.0 *  0.05 FALSE
-                    1         H4 bonferroni 0.01 <= 0.0 *  0.05 FALSE
-                    2         H1 bonferroni 0.01 <= 0.5 *  0.05  TRUE
-                    2         H2 bonferroni 0.01 <= 0.5 *  0.05  TRUE
-                    2         H3 bonferroni 0.01 <= 0.0 *  0.05 FALSE
-                    3         H1 bonferroni 0.01 <= 0.5 *  0.05  TRUE
-                    3         H2 bonferroni 0.01 <= 0.5 *  0.05  TRUE
-                    3         H4 bonferroni 0.01 <= 0.0 *  0.05 FALSE
-                    4         H1 bonferroni 0.01 <= 0.5 *  0.05  TRUE
-                    4         H2 bonferroni 0.01 <= 0.5 *  0.05  TRUE
-                    5         H1 bonferroni 0.01 <= 0.5 *  0.05  TRUE
-                    5         H3 bonferroni 0.01 <= 0.0 *  0.05 FALSE
-                    5         H4 bonferroni 0.01 <= 0.5 *  0.05  TRUE
-                    6         H1 bonferroni 0.01 <= 1.0 *  0.05  TRUE
-                    6         H3 bonferroni 0.01 <= 0.0 *  0.05 FALSE
-                    7         H1 bonferroni 0.01 <= 0.5 *  0.05  TRUE
-                    7         H4 bonferroni 0.01 <= 0.5 *  0.05  TRUE
-                    8         H1 bonferroni 0.01 <= 1.0 *  0.05  TRUE
-                    9         H2 bonferroni 0.01 <= 0.5 *  0.05  TRUE
-                    9         H3 bonferroni 0.01 <= 0.5 *  0.05  TRUE
-                    9         H4 bonferroni 0.01 <= 0.0 *  0.05 FALSE
-                   10         H2 bonferroni 0.01 <= 0.5 *  0.05  TRUE
-                   10         H3 bonferroni 0.01 <= 0.5 *  0.05  TRUE
-                   11         H2 bonferroni 0.01 <= 1.0 *  0.05  TRUE
-                   11         H4 bonferroni 0.01 <= 0.0 *  0.05 FALSE
-                   12         H2 bonferroni 0.01 <= 1.0 *  0.05  TRUE
-                   13         H3 bonferroni 0.01 <= 0.5 *  0.05  TRUE
-                   13         H4 bonferroni 0.01 <= 0.5 *  0.05  TRUE
-                   14         H3 bonferroni 0.01 <= 1.0 *  0.05  TRUE
-                   15         H4 bonferroni 0.01 <= 1.0 *  0.05  TRUE
+         Intersection Hypothesis       Test    p <=   w * Alpha Reject intersection
+                   NA         H1 bonferroni 0.01 <= 0.5 *  0.05   TRUE            1
+                   NA         H2 bonferroni 0.01 <= 0.5 *  0.05   TRUE            1
+                   NA         H3 bonferroni 0.01 <= 0.0 *  0.05  FALSE            1
+                   NA         H4 bonferroni 0.01 <= 0.0 *  0.05  FALSE            1
+                   NA         H1 bonferroni 0.01 <= 0.5 *  0.05   TRUE            2
+                   NA         H2 bonferroni 0.01 <= 0.5 *  0.05   TRUE            2
+                   NA         H3 bonferroni 0.01 <= 0.0 *  0.05  FALSE            2
+                   NA         H1 bonferroni 0.01 <= 0.5 *  0.05   TRUE            3
+                   NA         H2 bonferroni 0.01 <= 0.5 *  0.05   TRUE            3
+                   NA         H4 bonferroni 0.01 <= 0.0 *  0.05  FALSE            3
+                   NA         H1 bonferroni 0.01 <= 0.5 *  0.05   TRUE            4
+                   NA         H2 bonferroni 0.01 <= 0.5 *  0.05   TRUE            4
+                   NA         H1 bonferroni 0.01 <= 0.5 *  0.05   TRUE            5
+                   NA         H3 bonferroni 0.01 <= 0.0 *  0.05  FALSE            5
+                   NA         H4 bonferroni 0.01 <= 0.5 *  0.05   TRUE            5
+                   NA         H1 bonferroni 0.01 <= 1.0 *  0.05   TRUE            6
+                   NA         H3 bonferroni 0.01 <= 0.0 *  0.05  FALSE            6
+                   NA         H1 bonferroni 0.01 <= 0.5 *  0.05   TRUE            7
+                   NA         H4 bonferroni 0.01 <= 0.5 *  0.05   TRUE            7
+                   NA         H1 bonferroni 0.01 <= 1.0 *  0.05   TRUE            8
+                   NA         H2 bonferroni 0.01 <= 0.5 *  0.05   TRUE            9
+                   NA         H3 bonferroni 0.01 <= 0.5 *  0.05   TRUE            9
+                   NA         H4 bonferroni 0.01 <= 0.0 *  0.05  FALSE            9
+                   NA         H2 bonferroni 0.01 <= 0.5 *  0.05   TRUE           10
+                   NA         H3 bonferroni 0.01 <= 0.5 *  0.05   TRUE           10
+                   NA         H2 bonferroni 0.01 <= 1.0 *  0.05   TRUE           11
+                   NA         H4 bonferroni 0.01 <= 0.0 *  0.05  FALSE           11
+                   NA         H2 bonferroni 0.01 <= 1.0 *  0.05   TRUE           12
+                   NA         H3 bonferroni 0.01 <= 0.5 *  0.05   TRUE           13
+                   NA         H4 bonferroni 0.01 <= 0.5 *  0.05   TRUE           13
+                   NA         H3 bonferroni 0.01 <= 1.0 *  0.05   TRUE           14
+                   NA         H4 bonferroni 0.01 <= 1.0 *  0.05   TRUE           15
 
 # printing parametric closure test
 
@@ -169,7 +169,7 @@
     Output
       
       Test parameters ----------------------------------------------------------------
-        An initial graph
+        Initial graph
         
         --- Hypothesis weights ---
         H1: 0.5000
@@ -184,7 +184,7 @@
         H3 0.0000 1.0000 0.0000 0.0000
         H4 1.0000 0.0000 0.0000 0.0000
       
-        Global alpha = 0.05
+        Alpha = 0.05
       
                                H1   H2   H3   H4
         Unadjusted p-values: 0.01 0.01 0.01 0.01
@@ -198,7 +198,7 @@
         Test types
         parametric: (H1-H2-H3-H4)
       
-      Global test summary ------------------------------------------------------------
+      Test summary -------------------------------------------------------------------
         Hypothesis Adj. P-value Reject
                 H1       0.0199   TRUE
                 H2       0.0199   TRUE
@@ -213,7 +213,7 @@
     Output
       
       Test parameters ----------------------------------------------------------------
-        An initial graph
+        Initial graph
         
         --- Hypothesis weights ---
         H1: 0.5000
@@ -228,7 +228,7 @@
         H3 0.0000 1.0000 0.0000 0.0000
         H4 1.0000 0.0000 0.0000 0.0000
       
-        Global alpha = 0.05
+        Alpha = 0.05
       
                                H1   H2   H3   H4
         Unadjusted p-values: 0.01 0.01 0.01 0.01
@@ -243,7 +243,7 @@
         parametric: (H1-H2)
              simes: (H3-H4)
       
-      Global test summary ------------------------------------------------------------
+      Test summary -------------------------------------------------------------------
         Hypothesis Adj. P-value Reject
                 H1         0.02   TRUE
                 H2         0.02   TRUE
@@ -269,39 +269,72 @@
         15  NA  NA  NA 1.0    1.0000      0.01      0.0100   1
       
       Test details - Critical values -------------------------------------------------
-         intersection hypothesis       test    p <=        c *   w * alpha   res
-                    1         H1 parametric 0.01 <= 1.012823 * 0.5 *  0.05  TRUE
-                    1         H2 parametric 0.01 <= 1.012823 * 0.5 *  0.05  TRUE
-                    1         H3      simes 0.01 <=            0.0 *  0.05 FALSE
-                    1         H4      simes 0.01 <=            0.0 *  0.05 FALSE
-                    2         H1 parametric 0.01 <= 1.012823 * 0.5 *  0.05  TRUE
-                    2         H2 parametric 0.01 <= 1.012823 * 0.5 *  0.05  TRUE
-                    2         H3      simes 0.01 <=            0.0 *  0.05 FALSE
-                    3         H1 parametric 0.01 <= 1.012823 * 0.5 *  0.05  TRUE
-                    3         H2 parametric 0.01 <= 1.012823 * 0.5 *  0.05  TRUE
-                    3         H4      simes 0.01 <=            0.0 *  0.05 FALSE
-                    4         H1 parametric 0.01 <= 1.012823 * 0.5 *  0.05  TRUE
-                    4         H2 parametric 0.01 <= 1.012823 * 0.5 *  0.05  TRUE
-                    5         H1 parametric 0.01 <=        1 * 0.5 *  0.05  TRUE
-                    5         H3      simes 0.01 <=            0.5 *  0.05  TRUE
-                    5         H4      simes 0.01 <=            0.5 *  0.05  TRUE
-                    6         H1 parametric 0.01 <=        1 * 1.0 *  0.05  TRUE
-                    6         H3      simes 0.01 <=            0.0 *  0.05 FALSE
-                    7         H1 parametric 0.01 <=        1 * 0.5 *  0.05  TRUE
-                    7         H4      simes 0.01 <=            0.5 *  0.05  TRUE
-                    8         H1 parametric 0.01 <=        1 * 1.0 *  0.05  TRUE
-                    9         H2 parametric 0.01 <=        1 * 0.5 *  0.05  TRUE
-                    9         H3      simes 0.01 <=            0.5 *  0.05  TRUE
-                    9         H4      simes 0.01 <=            0.5 *  0.05  TRUE
-                   10         H2 parametric 0.01 <=        1 * 0.5 *  0.05  TRUE
-                   10         H3      simes 0.01 <=            0.5 *  0.05  TRUE
-                   11         H2 parametric 0.01 <=        1 * 1.0 *  0.05  TRUE
-                   11         H4      simes 0.01 <=            0.0 *  0.05 FALSE
-                   12         H2 parametric 0.01 <=        1 * 1.0 *  0.05  TRUE
-                   13         H3      simes 0.01 <=            1.0 *  0.05  TRUE
-                   13         H4      simes 0.01 <=            1.0 *  0.05  TRUE
-                   14         H3      simes 0.01 <=            1.0 *  0.05  TRUE
-                   15         H4      simes 0.01 <=            1.0 *  0.05  TRUE
+         Intersection Hypothesis       Test    p <=        c *   w * Alpha Reject
+                   NA         H1 parametric 0.01 <= 1.012823 * 0.5 *  0.05   TRUE
+                   NA         H2 parametric 0.01 <= 1.012823 * 0.5 *  0.05   TRUE
+                   NA         H3      simes 0.01 <=            0.0 *  0.05  FALSE
+                   NA         H4      simes 0.01 <=            0.0 *  0.05  FALSE
+                   NA         H1 parametric 0.01 <= 1.012823 * 0.5 *  0.05   TRUE
+                   NA         H2 parametric 0.01 <= 1.012823 * 0.5 *  0.05   TRUE
+                   NA         H3      simes 0.01 <=            0.0 *  0.05  FALSE
+                   NA         H1 parametric 0.01 <= 1.012823 * 0.5 *  0.05   TRUE
+                   NA         H2 parametric 0.01 <= 1.012823 * 0.5 *  0.05   TRUE
+                   NA         H4      simes 0.01 <=            0.0 *  0.05  FALSE
+                   NA         H1 parametric 0.01 <= 1.012823 * 0.5 *  0.05   TRUE
+                   NA         H2 parametric 0.01 <= 1.012823 * 0.5 *  0.05   TRUE
+                   NA         H1 parametric 0.01 <=        1 * 0.5 *  0.05   TRUE
+                   NA         H3      simes 0.01 <=            0.5 *  0.05   TRUE
+                   NA         H4      simes 0.01 <=            0.5 *  0.05   TRUE
+                   NA         H1 parametric 0.01 <=        1 * 1.0 *  0.05   TRUE
+                   NA         H3      simes 0.01 <=            0.0 *  0.05  FALSE
+                   NA         H1 parametric 0.01 <=        1 * 0.5 *  0.05   TRUE
+                   NA         H4      simes 0.01 <=            0.5 *  0.05   TRUE
+                   NA         H1 parametric 0.01 <=        1 * 1.0 *  0.05   TRUE
+                   NA         H2 parametric 0.01 <=        1 * 0.5 *  0.05   TRUE
+                   NA         H3      simes 0.01 <=            0.5 *  0.05   TRUE
+                   NA         H4      simes 0.01 <=            0.5 *  0.05   TRUE
+                   NA         H2 parametric 0.01 <=        1 * 0.5 *  0.05   TRUE
+                   NA         H3      simes 0.01 <=            0.5 *  0.05   TRUE
+                   NA         H2 parametric 0.01 <=        1 * 1.0 *  0.05   TRUE
+                   NA         H4      simes 0.01 <=            0.0 *  0.05  FALSE
+                   NA         H2 parametric 0.01 <=        1 * 1.0 *  0.05   TRUE
+                   NA         H3      simes 0.01 <=            1.0 *  0.05   TRUE
+                   NA         H4      simes 0.01 <=            1.0 *  0.05   TRUE
+                   NA         H3      simes 0.01 <=            1.0 *  0.05   TRUE
+                   NA         H4      simes 0.01 <=            1.0 *  0.05   TRUE
+         intersection
+                    1
+                    1
+                    1
+                    1
+                    2
+                    2
+                    2
+                    3
+                    3
+                    3
+                    4
+                    4
+                    5
+                    5
+                    5
+                    6
+                    6
+                    7
+                    7
+                    8
+                    9
+                    9
+                    9
+                   10
+                   10
+                   11
+                   11
+                   12
+                   13
+                   13
+                   14
+                   15
 
 ---
 
@@ -311,7 +344,7 @@
     Output
       
       Test parameters ----------------------------------------------------------------
-        An initial graph
+        Initial graph
         
         --- Hypothesis weights ---
         H1: 0.5000
@@ -326,7 +359,7 @@
         H3 0.0000 1.0000 0.0000 0.0000
         H4 1.0000 0.0000 0.0000 0.0000
       
-        Global alpha = 0.05
+        Alpha = 0.05
       
                                H1   H2   H3   H4
         Unadjusted p-values: 0.01 0.01 0.01 0.01
@@ -341,7 +374,7 @@
         parametric: (H1-H2)
         parametric: (H3-H4)
       
-      Global test summary ------------------------------------------------------------
+      Test summary -------------------------------------------------------------------
         Hypothesis Adj. P-value Reject
                 H1         0.02   TRUE
                 H2         0.02   TRUE
@@ -367,39 +400,72 @@
         15  NA  NA  NA 1.0    1.0000    0.0100      0.0100   1
       
       Test details - Critical values -------------------------------------------------
-         intersection hypothesis       test    p <=        c *   w * alpha   res
-                    1         H1 parametric 0.01 <= 1.012823 * 0.5 *  0.05  TRUE
-                    1         H2 parametric 0.01 <= 1.012823 * 0.5 *  0.05  TRUE
-                    1         H3 parametric 0.01 <= 1.000000 * 0.0 *  0.05 FALSE
-                    1         H4 parametric 0.01 <= 1.000000 * 0.0 *  0.05 FALSE
-                    2         H1 parametric 0.01 <= 1.012823 * 0.5 *  0.05  TRUE
-                    2         H2 parametric 0.01 <= 1.012823 * 0.5 *  0.05  TRUE
-                    2         H3 parametric 0.01 <= 1.000000 * 0.0 *  0.05 FALSE
-                    3         H1 parametric 0.01 <= 1.012823 * 0.5 *  0.05  TRUE
-                    3         H2 parametric 0.01 <= 1.012823 * 0.5 *  0.05  TRUE
-                    3         H4 parametric 0.01 <= 1.000000 * 0.0 *  0.05 FALSE
-                    4         H1 parametric 0.01 <= 1.012823 * 0.5 *  0.05  TRUE
-                    4         H2 parametric 0.01 <= 1.012823 * 0.5 *  0.05  TRUE
-                    5         H1 parametric 0.01 <= 1.000000 * 0.5 *  0.05  TRUE
-                    5         H3 parametric 0.01 <= 1.000000 * 0.0 *  0.05 FALSE
-                    5         H4 parametric 0.01 <= 1.000000 * 0.5 *  0.05  TRUE
-                    6         H1 parametric 0.01 <= 1.000000 * 1.0 *  0.05  TRUE
-                    6         H3 parametric 0.01 <= 1.000000 * 0.0 *  0.05 FALSE
-                    7         H1 parametric 0.01 <= 1.000000 * 0.5 *  0.05  TRUE
-                    7         H4 parametric 0.01 <= 1.000000 * 0.5 *  0.05  TRUE
-                    8         H1 parametric 0.01 <= 1.000000 * 1.0 *  0.05  TRUE
-                    9         H2 parametric 0.01 <= 1.000000 * 0.5 *  0.05  TRUE
-                    9         H3 parametric 0.01 <= 1.000000 * 0.5 *  0.05  TRUE
-                    9         H4 parametric 0.01 <= 1.000000 * 0.0 *  0.05 FALSE
-                   10         H2 parametric 0.01 <= 1.000000 * 0.5 *  0.05  TRUE
-                   10         H3 parametric 0.01 <= 1.000000 * 0.5 *  0.05  TRUE
-                   11         H2 parametric 0.01 <= 1.000000 * 1.0 *  0.05  TRUE
-                   11         H4 parametric 0.01 <= 1.000000 * 0.0 *  0.05 FALSE
-                   12         H2 parametric 0.01 <= 1.000000 * 1.0 *  0.05  TRUE
-                   13         H3 parametric 0.01 <= 1.012823 * 0.5 *  0.05  TRUE
-                   13         H4 parametric 0.01 <= 1.012823 * 0.5 *  0.05  TRUE
-                   14         H3 parametric 0.01 <= 1.000000 * 1.0 *  0.05  TRUE
-                   15         H4 parametric 0.01 <= 1.000000 * 1.0 *  0.05  TRUE
+         Intersection Hypothesis       Test    p <=        c *   w * Alpha Reject
+                   NA         H1 parametric 0.01 <= 1.012823 * 0.5 *  0.05   TRUE
+                   NA         H2 parametric 0.01 <= 1.012823 * 0.5 *  0.05   TRUE
+                   NA         H3 parametric 0.01 <= 1.000000 * 0.0 *  0.05  FALSE
+                   NA         H4 parametric 0.01 <= 1.000000 * 0.0 *  0.05  FALSE
+                   NA         H1 parametric 0.01 <= 1.012823 * 0.5 *  0.05   TRUE
+                   NA         H2 parametric 0.01 <= 1.012823 * 0.5 *  0.05   TRUE
+                   NA         H3 parametric 0.01 <= 1.000000 * 0.0 *  0.05  FALSE
+                   NA         H1 parametric 0.01 <= 1.012823 * 0.5 *  0.05   TRUE
+                   NA         H2 parametric 0.01 <= 1.012823 * 0.5 *  0.05   TRUE
+                   NA         H4 parametric 0.01 <= 1.000000 * 0.0 *  0.05  FALSE
+                   NA         H1 parametric 0.01 <= 1.012823 * 0.5 *  0.05   TRUE
+                   NA         H2 parametric 0.01 <= 1.012823 * 0.5 *  0.05   TRUE
+                   NA         H1 parametric 0.01 <= 1.000000 * 0.5 *  0.05   TRUE
+                   NA         H3 parametric 0.01 <= 1.000000 * 0.0 *  0.05  FALSE
+                   NA         H4 parametric 0.01 <= 1.000000 * 0.5 *  0.05   TRUE
+                   NA         H1 parametric 0.01 <= 1.000000 * 1.0 *  0.05   TRUE
+                   NA         H3 parametric 0.01 <= 1.000000 * 0.0 *  0.05  FALSE
+                   NA         H1 parametric 0.01 <= 1.000000 * 0.5 *  0.05   TRUE
+                   NA         H4 parametric 0.01 <= 1.000000 * 0.5 *  0.05   TRUE
+                   NA         H1 parametric 0.01 <= 1.000000 * 1.0 *  0.05   TRUE
+                   NA         H2 parametric 0.01 <= 1.000000 * 0.5 *  0.05   TRUE
+                   NA         H3 parametric 0.01 <= 1.000000 * 0.5 *  0.05   TRUE
+                   NA         H4 parametric 0.01 <= 1.000000 * 0.0 *  0.05  FALSE
+                   NA         H2 parametric 0.01 <= 1.000000 * 0.5 *  0.05   TRUE
+                   NA         H3 parametric 0.01 <= 1.000000 * 0.5 *  0.05   TRUE
+                   NA         H2 parametric 0.01 <= 1.000000 * 1.0 *  0.05   TRUE
+                   NA         H4 parametric 0.01 <= 1.000000 * 0.0 *  0.05  FALSE
+                   NA         H2 parametric 0.01 <= 1.000000 * 1.0 *  0.05   TRUE
+                   NA         H3 parametric 0.01 <= 1.012823 * 0.5 *  0.05   TRUE
+                   NA         H4 parametric 0.01 <= 1.012823 * 0.5 *  0.05   TRUE
+                   NA         H3 parametric 0.01 <= 1.000000 * 1.0 *  0.05   TRUE
+                   NA         H4 parametric 0.01 <= 1.000000 * 1.0 *  0.05   TRUE
+         intersection
+                    1
+                    1
+                    1
+                    1
+                    2
+                    2
+                    2
+                    3
+                    3
+                    3
+                    4
+                    4
+                    5
+                    5
+                    5
+                    6
+                    6
+                    7
+                    7
+                    8
+                    9
+                    9
+                    9
+                   10
+                   10
+                   11
+                   11
+                   12
+                   13
+                   13
+                   14
+                   15
 
 # printing Bonferroni sequential results
 
@@ -408,7 +474,7 @@
     Output
       
       Test parameters ----------------------------------------------------------------
-        An initial graph
+        Initial graph
         
         --- Hypothesis weights ---
         H1: 0.5000
@@ -423,7 +489,7 @@
         H3 0.0000 1.0000 0.0000 0.0000
         H4 1.0000 0.0000 0.0000 0.0000
       
-        Global alpha = 0.05
+        Alpha = 0.05
       
                                H1   H2   H3   H4
         Unadjusted p-values: 0.01 0.01 0.01 0.01
@@ -431,7 +497,7 @@
         Test types
         bonferroni: (H1-H2-H3-H4)
       
-      Global test summary ------------------------------------------------------------
+      Test summary -------------------------------------------------------------------
         Hypothesis Adj. P-value Reject
                 H1         0.02   TRUE
                 H2         0.02   TRUE
@@ -446,7 +512,7 @@
     Output
       
       Test parameters ----------------------------------------------------------------
-          An initial graph
+          Initial graph
           
           --- Hypothesis weights ---
           H1: 0.5000
@@ -461,7 +527,7 @@
           H3 0.0000 1.0000 0.0000 0.0000
           H4 1.0000 0.0000 0.0000 0.0000
       
-          Global alpha = 0.05
+          Alpha = 0.05
       
                                  H1   H2   H3   H4
           Unadjusted p-values: 0.01 0.01 0.01 0.01
@@ -469,7 +535,7 @@
           Test types
           bonferroni: (H1-H2-H3-H4)
       
-      Global test summary ------------------------------------------------------------
+      Test summary -------------------------------------------------------------------
           Hypothesis Adj. P-value Reject
                   H1         0.02   TRUE
                   H2         0.02   TRUE
@@ -495,39 +561,39 @@
           15  NA  NA  NA 1.0      0.01        0.01   1
       
       Test details - Critical values -------------------------------------------------
-           intersection hypothesis       test    p <=   w * alpha   res
-                      1         H1 bonferroni 0.01 <= 0.5 *  0.05  TRUE
-                      1         H2 bonferroni 0.01 <= 0.5 *  0.05  TRUE
-                      1         H3 bonferroni 0.01 <= 0.0 *  0.05 FALSE
-                      1         H4 bonferroni 0.01 <= 0.0 *  0.05 FALSE
-                      2         H1 bonferroni 0.01 <= 0.5 *  0.05  TRUE
-                      2         H2 bonferroni 0.01 <= 0.5 *  0.05  TRUE
-                      2         H3 bonferroni 0.01 <= 0.0 *  0.05 FALSE
-                      3         H1 bonferroni 0.01 <= 0.5 *  0.05  TRUE
-                      3         H2 bonferroni 0.01 <= 0.5 *  0.05  TRUE
-                      3         H4 bonferroni 0.01 <= 0.0 *  0.05 FALSE
-                      4         H1 bonferroni 0.01 <= 0.5 *  0.05  TRUE
-                      4         H2 bonferroni 0.01 <= 0.5 *  0.05  TRUE
-                      5         H1 bonferroni 0.01 <= 0.5 *  0.05  TRUE
-                      5         H3 bonferroni 0.01 <= 0.0 *  0.05 FALSE
-                      5         H4 bonferroni 0.01 <= 0.5 *  0.05  TRUE
-                      6         H1 bonferroni 0.01 <= 1.0 *  0.05  TRUE
-                      6         H3 bonferroni 0.01 <= 0.0 *  0.05 FALSE
-                      7         H1 bonferroni 0.01 <= 0.5 *  0.05  TRUE
-                      7         H4 bonferroni 0.01 <= 0.5 *  0.05  TRUE
-                      8         H1 bonferroni 0.01 <= 1.0 *  0.05  TRUE
-                      9         H2 bonferroni 0.01 <= 0.5 *  0.05  TRUE
-                      9         H3 bonferroni 0.01 <= 0.5 *  0.05  TRUE
-                      9         H4 bonferroni 0.01 <= 0.0 *  0.05 FALSE
-                     10         H2 bonferroni 0.01 <= 0.5 *  0.05  TRUE
-                     10         H3 bonferroni 0.01 <= 0.5 *  0.05  TRUE
-                     11         H2 bonferroni 0.01 <= 1.0 *  0.05  TRUE
-                     11         H4 bonferroni 0.01 <= 0.0 *  0.05 FALSE
-                     12         H2 bonferroni 0.01 <= 1.0 *  0.05  TRUE
-                     13         H3 bonferroni 0.01 <= 0.5 *  0.05  TRUE
-                     13         H4 bonferroni 0.01 <= 0.5 *  0.05  TRUE
-                     14         H3 bonferroni 0.01 <= 1.0 *  0.05  TRUE
-                     15         H4 bonferroni 0.01 <= 1.0 *  0.05  TRUE
+           Intersection Hypothesis       Test    p <=   w * Alpha Reject intersection
+                     NA         H1 bonferroni 0.01 <= 0.5 *  0.05   TRUE            1
+                     NA         H2 bonferroni 0.01 <= 0.5 *  0.05   TRUE            1
+                     NA         H3 bonferroni 0.01 <= 0.0 *  0.05  FALSE            1
+                     NA         H4 bonferroni 0.01 <= 0.0 *  0.05  FALSE            1
+                     NA         H1 bonferroni 0.01 <= 0.5 *  0.05   TRUE            2
+                     NA         H2 bonferroni 0.01 <= 0.5 *  0.05   TRUE            2
+                     NA         H3 bonferroni 0.01 <= 0.0 *  0.05  FALSE            2
+                     NA         H1 bonferroni 0.01 <= 0.5 *  0.05   TRUE            3
+                     NA         H2 bonferroni 0.01 <= 0.5 *  0.05   TRUE            3
+                     NA         H4 bonferroni 0.01 <= 0.0 *  0.05  FALSE            3
+                     NA         H1 bonferroni 0.01 <= 0.5 *  0.05   TRUE            4
+                     NA         H2 bonferroni 0.01 <= 0.5 *  0.05   TRUE            4
+                     NA         H1 bonferroni 0.01 <= 0.5 *  0.05   TRUE            5
+                     NA         H3 bonferroni 0.01 <= 0.0 *  0.05  FALSE            5
+                     NA         H4 bonferroni 0.01 <= 0.5 *  0.05   TRUE            5
+                     NA         H1 bonferroni 0.01 <= 1.0 *  0.05   TRUE            6
+                     NA         H3 bonferroni 0.01 <= 0.0 *  0.05  FALSE            6
+                     NA         H1 bonferroni 0.01 <= 0.5 *  0.05   TRUE            7
+                     NA         H4 bonferroni 0.01 <= 0.5 *  0.05   TRUE            7
+                     NA         H1 bonferroni 0.01 <= 1.0 *  0.05   TRUE            8
+                     NA         H2 bonferroni 0.01 <= 0.5 *  0.05   TRUE            9
+                     NA         H3 bonferroni 0.01 <= 0.5 *  0.05   TRUE            9
+                     NA         H4 bonferroni 0.01 <= 0.0 *  0.05  FALSE            9
+                     NA         H2 bonferroni 0.01 <= 0.5 *  0.05   TRUE           10
+                     NA         H3 bonferroni 0.01 <= 0.5 *  0.05   TRUE           10
+                     NA         H2 bonferroni 0.01 <= 1.0 *  0.05   TRUE           11
+                     NA         H4 bonferroni 0.01 <= 0.0 *  0.05  FALSE           11
+                     NA         H2 bonferroni 0.01 <= 1.0 *  0.05   TRUE           12
+                     NA         H3 bonferroni 0.01 <= 0.5 *  0.05   TRUE           13
+                     NA         H4 bonferroni 0.01 <= 0.5 *  0.05   TRUE           13
+                     NA         H3 bonferroni 0.01 <= 1.0 *  0.05   TRUE           14
+                     NA         H4 bonferroni 0.01 <= 1.0 *  0.05   TRUE           15
 
 ---
 
@@ -537,7 +603,7 @@
     Output
       
       Test parameters ----------------------------------------------------------------
-               An initial graph
+               Initial graph
                
                --- Hypothesis weights ---
                H1: 0.5000
@@ -552,7 +618,7 @@
                H3 0.0000 1.0000 0.0000 0.0000
                H4 1.0000 0.0000 0.0000 0.0000
       
-               Global alpha = 0.05
+               Alpha = 0.05
       
                                       H1   H2   H3   H4
                Unadjusted p-values: 0.01 0.01 0.01 0.01
@@ -560,7 +626,7 @@
                Test types
                bonferroni: (H1-H2-H3-H4)
       
-      Global test summary ------------------------------------------------------------
+      Test summary -------------------------------------------------------------------
                Hypothesis Adj. P-value Reject
                        H1         0.02   TRUE
                        H2         0.02   TRUE
@@ -568,9 +634,9 @@
                        H4         0.02   TRUE
       
       Test details - Critical values -------------------------------------------------
-                step hypothesis       test    p <=   w * alpha  res
-                   1         H1 bonferroni 0.01 <= 0.5 *  0.05 TRUE
-                   2         H2 bonferroni 0.01 <= 0.5 *  0.05 TRUE
-                   3         H3 bonferroni 0.01 <= 0.5 *  0.05 TRUE
-                   4         H4 bonferroni 0.01 <= 1.0 *  0.05 TRUE
+                step Hypothesis       Test    p <=   w * Alpha Reject
+                   1         H1 bonferroni 0.01 <= 0.5 *  0.05   TRUE
+                   2         H2 bonferroni 0.01 <= 0.5 *  0.05   TRUE
+                   3         H3 bonferroni 0.01 <= 0.5 *  0.05   TRUE
+                   4         H4 bonferroni 0.01 <= 1.0 *  0.05   TRUE
 

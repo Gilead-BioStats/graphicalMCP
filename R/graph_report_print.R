@@ -68,7 +68,7 @@ print.graph_report <- function(x, ..., precision = 6, indent = 2) {
   # Input print ----------------------------------------------------------------
   cat(paste0(pad, graph_out), sep = "\n")
   cat("\n")
-  cat(pad, "Global alpha = ", x$inputs$alpha, sep = "")
+  cat(pad, "Alpha = ", x$inputs$alpha, sep = "")
   cat("\n\n")
   print(round(p_mat, precision))
   cat("\n")
@@ -80,7 +80,7 @@ print.graph_report <- function(x, ..., precision = 6, indent = 2) {
   cat("\n")
 
   # Output ---------------------------------------------------------------------
-  section_break("Global test summary")
+  section_break("Test summary")
 
   hyp_width <- max(nchar(c("Hypothesis", hyp_names))) + indent - 1
 
@@ -108,9 +108,9 @@ print.graph_report <- function(x, ..., precision = 6, indent = 2) {
     section_break("Test details - Critical values")
 
     if (any(x$inputs$test_types == "parametric")) {
-      num_cols <- c("p", "c", "w", "alpha")
+      num_cols <- c("p", "c", "w", "Alpha")
     } else {
-      num_cols <- c("p", "w", "alpha")
+      num_cols <- c("p", "w", "Alpha")
     }
 
     crit_res <- x$critical$results

@@ -34,7 +34,7 @@ print_transitions <- function(graph) {
 #' @param ... Other values passed on to other methods (currently unused)
 #' @export
 print.initial_graph <- function(x, ...) {
-  cat("An initial graph\n\n")
+  cat("Initial graph\n\n")
 
   cat("--- Hypothesis weights ---\n")
 

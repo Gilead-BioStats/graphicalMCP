@@ -5,7 +5,7 @@
     Output
       
       Test parameters ----------------------------------------------------------------
-        An initial graph
+        Initial graph
         
         --- Hypothesis weights ---
         H1: 1.0000
@@ -66,7 +66,7 @@
     Output
       
       Test parameters ----------------------------------------------------------------
-            An initial graph
+            Initial graph
             
             --- Hypothesis weights ---
             H1: 1.0000
@@ -128,7 +128,7 @@
     Output
       
       Test parameters ----------------------------------------------------------------
-            An initial graph
+            Initial graph
             
             --- Hypothesis weights ---
             H1: 1.0000
@@ -189,7 +189,7 @@
     Output
       
       Test parameters ----------------------------------------------------------------
-        An initial graph
+        Initial graph
         
         --- Hypothesis weights ---
         H1: 0.5000
@@ -251,7 +251,7 @@
     Output
       
       Test parameters ----------------------------------------------------------------
-            An initial graph
+            Initial graph
             
             --- Hypothesis weights ---
             H1: 0.5000
@@ -312,7 +312,7 @@
     Output
       
       Test parameters ----------------------------------------------------------------
-        An initial graph
+        Initial graph
         
         --- Hypothesis weights ---
         H1: 1.0000
@@ -380,7 +380,7 @@
     Output
       
       Test parameters ----------------------------------------------------------------
-            An initial graph
+            Initial graph
             
             --- Hypothesis weights ---
             H1: 1.0000
@@ -451,7 +451,7 @@
     Output
       
       Test parameters ----------------------------------------------------------------
-      An initial graph
+      Initial graph
       
       --- Hypothesis weights ---
       H1: 0.1667

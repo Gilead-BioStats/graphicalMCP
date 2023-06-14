@@ -26,17 +26,17 @@
 #' graphicalMCP:::simes_test_vals(p, w, .05)
 bonferroni_test_vals <- function(p, weights, alpha) {
   data.frame(
-    intersection = NA,
-    hypothesis = names(weights),
-    test = "bonferroni",
+    Intersection = NA,
+    Hypothesis = names(weights),
+    Test = "bonferroni",
     p = p,
     "<=" = "<=",
     c = "",
     "*" = "",
     w = weights,
     "*" = "*",
-    alpha = alpha,
-    res = ifelse(
+    Alpha = alpha,
+    Reject = ifelse(
       p == 0 & weights == 0,
       NA,
       p <= weights * alpha
@@ -50,17 +50,17 @@ parametric_test_vals <- function(p, weights, alpha, corr) {
   c <- solve_c(weights, corr, alpha)
 
   data.frame(
-    intersection = NA,
-    hypothesis = names(weights),
-    test = "parametric",
+    Intersection = NA,
+    Hypothesis = names(weights),
+    Test = "parametric",
     p = p,
     "<=" = "<=",
     c = c,
     "*" = "*",
     w = weights,
     "*" = "*",
-    alpha = alpha,
-    res = ifelse(
+    Alpha = alpha,
+    Reject = ifelse(
       p == 0 & weights == 0,
       NA,
       p <= c * weights * alpha
@@ -80,17 +80,17 @@ simes_test_vals <- function(p, weights, alpha) {
   }
 
   data.frame(
-    intersection = NA,
-    hypothesis = names(weights),
-    test = "simes",
+    Intersection = NA,
+    Hypothesis = names(weights),
+    Test = "simes",
     p = p,
     "<=" = "<=",
     c = "",
     "*" = "",
     w = w_sum,
     "*" = "*",
-    alpha = alpha,
-    res = ifelse(
+    Alpha = alpha,
+    Reject = ifelse(
       p == 0 & w_sum == 0,
       NA,
       vec_res

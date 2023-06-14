@@ -3,7 +3,7 @@
     Code
       update_graph(g, c(TRUE, TRUE, TRUE, FALSE))
     Output
-      An initial graph
+      Initial graph
       
       --- Hypothesis weights ---
       H1: 0.5000
@@ -26,7 +26,7 @@
       
       --------------------------------------------------------------------------------
       
-      An initial graph
+      Initial graph
       
       --- Hypothesis weights ---
       H1: 0.5000
