@@ -131,6 +131,8 @@ test_graph <- function(graph,
     # intersection
     group_in_inter <- group[as.logical(h[group])]
 
+    # Choose which function to use to adjust p-values - could probably just be
+    # an if/else - but this way is robust to adding more tests
     p_adjust_fun <- paste0("p_adjust_", test)
     p_adjust_args <- list(
       p = p[group_in_inter],
@@ -138,6 +140,7 @@ test_graph <- function(graph,
       corr = corr[group_in_inter, group_in_inter]
     )[methods::formalArgs(p_adjust_fun)]
 
+    # Then call the chosen p_adjust_ function
     p_adj[inter_index, group_index] <- do.call(p_adjust_fun, p_adjust_args)
 
     # Calculate critical values
@@ -145,6 +148,8 @@ test_graph <- function(graph,
       if (length(group_in_inter) == 0) {
         critical_list[[i]] <- NULL
       } else {
+        # Same as p_adjust_ above, this section constructs a critical values
+        # call with the appropriate arguments based on test type...
         critical_fun <- paste0(test, "_test_vals")
         critical_args <- list(
           p = p[group_in_inter],
@@ -153,6 +158,7 @@ test_graph <- function(graph,
           corr = corr[group_in_inter, group_in_inter]
         )[methods::formalArgs(critical_fun)]
 
+        # ...then executes the call
         df_critical <- do.call(
           critical_fun,
           critical_args
@@ -165,11 +171,15 @@ test_graph <- function(graph,
   }
 
   # Adjusted p-values at higher levels -----------------------------------------
-  p_adj_cap <- ifelse(p_adj > 1, 1, p_adj)
-  p_adj_inter <- do.call(pmin, as.data.frame(p_adj_cap))
-  test_inter <- p_adj_inter <= alpha
+  p_adj_cap <- ifelse(p_adj > 1, 1, p_adj) # Adjusted p-values shouldn't exceed 1
+  p_adj_inter <- do.call(pmin, as.data.frame(p_adj_cap)) # Min adj-p by intersection
+  test_inter <- p_adj_inter <= alpha # Intersection test results
+
+  # The intersection-level adjusted p-values need to be spread out on the
+  # hypotheses that are in each intersection. Then take the max for each
+  # hypothesis
   p_adj_global <- apply(p_adj_inter * inter_h_vecs, 2, max)
-  test_global <- p_adj_global <= alpha
+  test_global <- p_adj_global <= alpha # Hypothesis test results
 
   detail_results <- if (verbose) {
     list(results = cbind(inter_small, p_adj_cap, p_adj_inter, res = test_inter))
