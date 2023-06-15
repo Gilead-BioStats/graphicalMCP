@@ -28,9 +28,9 @@ test_input_val <- function(graph,
     "Please include each hypothesis in exactly one group" =
       setequal(seq_along(graph$hypotheses), unlist(groups)) &&
         length(graph$hypotheses) == length(unlist(groups)),
-    "Please choose one test, or one test per group" =
+    "Number of test types should match the number of test groups" =
       length(test_types) == length(groups),
-    "Length of p-values & groups must match size of graph" =
+    "Length of p-values & groups must match the number of hypotheses" =
       unique(length(p), length(unlist(groups))) == length(graph$hypotheses),
     "Verbose flag must be a length one logical" =
       is.logical(verbose) && length(verbose) == 1,
@@ -76,16 +76,17 @@ test_input_val <- function(graph,
   )
 
   stopifnot(
-    "Correlation sub-matrix for each parametric test group must be complete" =
+    "Correlation sub-matrix for each parametric test group must be fully specified" =
       !missing_corr,
     "Correlation matrix must be symmetric" =
       isSymmetric.matrix(corr) || is.null(corr),
-    "Dimensions of correlation matrix must match size of graph" =
+    "Dimensions of correlation matrix must match the number of hypotheses" =
       unique(nrow(corr), ncol(corr)) == length(graph$hypotheses) ||
         is.null(corr),
-    "Correlation matrix must be between 0 & 1" =
+    "Correlation values must be between 0 & 1" =
       all((corr >= 0 & corr <= 1) | is.na(corr)) || is.null(corr),
-    "Correlation matrix must be positive definite" = positive_definite_corr
+    "Correlation matrix must be positive definite for each parametric test group" =
+      positive_definite_corr
   )
 
   invisible(graph)
@@ -97,15 +98,15 @@ power_input_val <- function(graph, n, theta, corr, success) {
   stopifnot(
     "Number of simulations must be a length one integer" =
       is.numeric(n) && as.integer(n) == n && length(n) == 1,
-    "Mean and covariance parameters must be numeric" =
+    "Marginal power and correlation parameters must be numeric" =
       is.numeric(theta) && is.numeric(corr),
-    "Lengths of `marginal_power` and `sim_corr` must match graph size" =
+    "Lengths of `marginal_power` and `sim_corr` must match number of hypotheses" =
       unique(length(theta), nrow(corr), ncol(corr)) == graph_size,
-    "Covariance matrix for simulating p-values cannot have missing values" =
+    "Correlation matrix for simulating p-values cannot have missing values" =
       !any(is.na(corr)),
-    "Covariance matrix for simulating p-values must be symmetric" =
+    "Correlation matrix for simulating p-values must be symmetric" =
       isSymmetric.matrix(corr),
-    "Covariance matrix for simulating p-values must have diagonal all 1" =
+    "Correlation matrix for simulating p-values must have diagonal all 1" =
       all(diag(corr) == 1),
     "'Success' hypotheses must be positive integers" =
       all(as.integer(success) == success) && all(success > 0),

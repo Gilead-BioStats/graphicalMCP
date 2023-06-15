@@ -24,8 +24,8 @@ reference:
 - desc: Functions for running Bonferroni, parametric, and Simes tests
 - contents:
   - test_graph_closure
-  - print.graph_report
   - test_graph_shortcut
+  - print.graph_report
 - title: Run a power simulation
 - desc: Functions for running power simulations
 - contents:
