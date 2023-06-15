@@ -11,8 +11,8 @@ Authors@R: c(
 Description: A multiple comparison procedure (or multiple test procedure)
     is a a statistical analysis method for determining efficacy of
     multiple drugs, or multiple doses of the same drug, in a single
-    clinical trial. (Bretz et al., 2011) laid out a graph-based approach to
-    these multiple comparison procedures, in which the weights of the
+    clinical trial. (Bretz et al., 2011) laid out a graph-based approach
+    to these multiple comparison procedures, in which the weights of the
     vertices and edges of the graph are determined independently of the
     particular statistical test used to assess results. This is a
     low-dependency implementation of the methods described in that and
@@ -26,16 +26,19 @@ Imports:
     mvtnorm
 Suggests: 
     bench,
+    dplyr,
     forcats,
     ggplot2,
     gMCP,
     gt,
+    here,
     htmltools,
     knitr,
     lrstat,
     rmarkdown,
     testthat (>= 3.0.0),
     tictoc,
+    tidyr,
     xfun
 LinkingTo: 
     cpp11
