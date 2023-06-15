@@ -2,7 +2,7 @@
 #' @export
 test_graph_shortcut <- function(graph,
                                   p,
-                                  alpha = .05,
+                                  alpha = .025,
                                   critical = FALSE) {
   test_input_val(
     graph,
@@ -40,7 +40,8 @@ test_graph_shortcut <- function(graph,
       )
       critical_step[[1]] <- i
       names(critical_step)[[1]] <- "step"
-      critical_step[6:7] <- NULL
+      critical_step$c <- NULL
+      critical_step$`*` <- NULL
 
       critical_vals[[i]] <- critical_step
     }

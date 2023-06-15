@@ -108,9 +108,9 @@ print.graph_report <- function(x, ..., precision = 6, indent = 2) {
     section_break("Test details - Critical values")
 
     if (any(x$inputs$test_types == "parametric")) {
-      num_cols <- c("p", "c", "w", "Alpha")
+      num_cols <- c("p", "c", "Critical", "Alpha")
     } else {
-      num_cols <- c("p", "w", "Alpha")
+      num_cols <- c("p", "Critical", "Alpha")
     }
 
     crit_res <- x$critical$results

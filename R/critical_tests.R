@@ -33,7 +33,7 @@ bonferroni_test_vals <- function(p, weights, alpha) {
     "<=" = "<=",
     c = "",
     "*" = "",
-    w = weights,
+    Critical = weights,
     "*" = "*",
     Alpha = alpha,
     Reject = ifelse(
@@ -57,7 +57,7 @@ parametric_test_vals <- function(p, weights, alpha, corr) {
     "<=" = "<=",
     c = c,
     "*" = "*",
-    w = weights,
+    Critical = weights,
     "*" = "*",
     Alpha = alpha,
     Reject = ifelse(
@@ -87,7 +87,7 @@ simes_test_vals <- function(p, weights, alpha) {
     "<=" = "<=",
     c = "",
     "*" = "",
-    w = w_sum,
+    Critical = w_sum,
     "*" = "*",
     Alpha = alpha,
     Reject = ifelse(

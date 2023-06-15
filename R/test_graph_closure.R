@@ -69,7 +69,7 @@
 #' )
 test_graph_closure <- function(graph,
                        p,
-                       alpha = .05,
+                       alpha = .025,
                        groups = list(seq_along(graph$hypotheses)),
                        test_types = c("bonferroni"),
                        corr = NULL,

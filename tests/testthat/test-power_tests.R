@@ -84,7 +84,7 @@ test_that("vectorized testing matches standard testing (multi-group)", {
   expect_equal(
     graphicalMCP:::test_graph_fast(
       p,
-      .05,
+      .025,
       cbind(gw_compact_bonf, gw_compact_simes, gw_compact_para)[, graph_names],
       gw_h
     ),

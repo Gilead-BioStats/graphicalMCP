@@ -20,7 +20,7 @@
         H3 0.0000 1.0000 0.0000 0.0000
         H4 1.0000 0.0000 0.0000 0.0000
       
-        Alpha = 0.05
+        Alpha = 0.025
       
                                H1   H2   H3   H4
         Unadjusted p-values: 0.01 0.01 0.01 0.01
@@ -57,7 +57,7 @@
         H3 0.0000 1.0000 0.0000 0.0000
         H4 1.0000 0.0000 0.0000 0.0000
       
-        Alpha = 0.05
+        Alpha = 0.025
       
                                H1   H2   H3   H4
         Unadjusted p-values: 0.01 0.01 0.01 0.01
@@ -112,7 +112,7 @@
         H3 0.0000 1.0000 0.0000 0.0000
         H4 1.0000 0.0000 0.0000 0.0000
       
-        Alpha = 0.05
+        Alpha = 0.025
       
                                H1   H2   H3   H4
         Unadjusted p-values: 0.01 0.01 0.01 0.01
@@ -128,39 +128,72 @@
                 H4         0.02   TRUE
       
       Test details - Critical values -------------------------------------------------
-         Intersection Hypothesis       Test    p <=   w * Alpha Reject intersection
-                   NA         H1 bonferroni 0.01 <= 0.5 *  0.05   TRUE            1
-                   NA         H2 bonferroni 0.01 <= 0.5 *  0.05   TRUE            1
-                   NA         H3 bonferroni 0.01 <= 0.0 *  0.05  FALSE            1
-                   NA         H4 bonferroni 0.01 <= 0.0 *  0.05  FALSE            1
-                   NA         H1 bonferroni 0.01 <= 0.5 *  0.05   TRUE            2
-                   NA         H2 bonferroni 0.01 <= 0.5 *  0.05   TRUE            2
-                   NA         H3 bonferroni 0.01 <= 0.0 *  0.05  FALSE            2
-                   NA         H1 bonferroni 0.01 <= 0.5 *  0.05   TRUE            3
-                   NA         H2 bonferroni 0.01 <= 0.5 *  0.05   TRUE            3
-                   NA         H4 bonferroni 0.01 <= 0.0 *  0.05  FALSE            3
-                   NA         H1 bonferroni 0.01 <= 0.5 *  0.05   TRUE            4
-                   NA         H2 bonferroni 0.01 <= 0.5 *  0.05   TRUE            4
-                   NA         H1 bonferroni 0.01 <= 0.5 *  0.05   TRUE            5
-                   NA         H3 bonferroni 0.01 <= 0.0 *  0.05  FALSE            5
-                   NA         H4 bonferroni 0.01 <= 0.5 *  0.05   TRUE            5
-                   NA         H1 bonferroni 0.01 <= 1.0 *  0.05   TRUE            6
-                   NA         H3 bonferroni 0.01 <= 0.0 *  0.05  FALSE            6
-                   NA         H1 bonferroni 0.01 <= 0.5 *  0.05   TRUE            7
-                   NA         H4 bonferroni 0.01 <= 0.5 *  0.05   TRUE            7
-                   NA         H1 bonferroni 0.01 <= 1.0 *  0.05   TRUE            8
-                   NA         H2 bonferroni 0.01 <= 0.5 *  0.05   TRUE            9
-                   NA         H3 bonferroni 0.01 <= 0.5 *  0.05   TRUE            9
-                   NA         H4 bonferroni 0.01 <= 0.0 *  0.05  FALSE            9
-                   NA         H2 bonferroni 0.01 <= 0.5 *  0.05   TRUE           10
-                   NA         H3 bonferroni 0.01 <= 0.5 *  0.05   TRUE           10
-                   NA         H2 bonferroni 0.01 <= 1.0 *  0.05   TRUE           11
-                   NA         H4 bonferroni 0.01 <= 0.0 *  0.05  FALSE           11
-                   NA         H2 bonferroni 0.01 <= 1.0 *  0.05   TRUE           12
-                   NA         H3 bonferroni 0.01 <= 0.5 *  0.05   TRUE           13
-                   NA         H4 bonferroni 0.01 <= 0.5 *  0.05   TRUE           13
-                   NA         H3 bonferroni 0.01 <= 1.0 *  0.05   TRUE           14
-                   NA         H4 bonferroni 0.01 <= 1.0 *  0.05   TRUE           15
+         Intersection Hypothesis       Test    p <= Critical * Alpha Reject
+                   NA         H1 bonferroni 0.01 <=      0.5 * 0.025   TRUE
+                   NA         H2 bonferroni 0.01 <=      0.5 * 0.025   TRUE
+                   NA         H3 bonferroni 0.01 <=      0.0 * 0.025  FALSE
+                   NA         H4 bonferroni 0.01 <=      0.0 * 0.025  FALSE
+                   NA         H1 bonferroni 0.01 <=      0.5 * 0.025   TRUE
+                   NA         H2 bonferroni 0.01 <=      0.5 * 0.025   TRUE
+                   NA         H3 bonferroni 0.01 <=      0.0 * 0.025  FALSE
+                   NA         H1 bonferroni 0.01 <=      0.5 * 0.025   TRUE
+                   NA         H2 bonferroni 0.01 <=      0.5 * 0.025   TRUE
+                   NA         H4 bonferroni 0.01 <=      0.0 * 0.025  FALSE
+                   NA         H1 bonferroni 0.01 <=      0.5 * 0.025   TRUE
+                   NA         H2 bonferroni 0.01 <=      0.5 * 0.025   TRUE
+                   NA         H1 bonferroni 0.01 <=      0.5 * 0.025   TRUE
+                   NA         H3 bonferroni 0.01 <=      0.0 * 0.025  FALSE
+                   NA         H4 bonferroni 0.01 <=      0.5 * 0.025   TRUE
+                   NA         H1 bonferroni 0.01 <=      1.0 * 0.025   TRUE
+                   NA         H3 bonferroni 0.01 <=      0.0 * 0.025  FALSE
+                   NA         H1 bonferroni 0.01 <=      0.5 * 0.025   TRUE
+                   NA         H4 bonferroni 0.01 <=      0.5 * 0.025   TRUE
+                   NA         H1 bonferroni 0.01 <=      1.0 * 0.025   TRUE
+                   NA         H2 bonferroni 0.01 <=      0.5 * 0.025   TRUE
+                   NA         H3 bonferroni 0.01 <=      0.5 * 0.025   TRUE
+                   NA         H4 bonferroni 0.01 <=      0.0 * 0.025  FALSE
+                   NA         H2 bonferroni 0.01 <=      0.5 * 0.025   TRUE
+                   NA         H3 bonferroni 0.01 <=      0.5 * 0.025   TRUE
+                   NA         H2 bonferroni 0.01 <=      1.0 * 0.025   TRUE
+                   NA         H4 bonferroni 0.01 <=      0.0 * 0.025  FALSE
+                   NA         H2 bonferroni 0.01 <=      1.0 * 0.025   TRUE
+                   NA         H3 bonferroni 0.01 <=      0.5 * 0.025   TRUE
+                   NA         H4 bonferroni 0.01 <=      0.5 * 0.025   TRUE
+                   NA         H3 bonferroni 0.01 <=      1.0 * 0.025   TRUE
+                   NA         H4 bonferroni 0.01 <=      1.0 * 0.025   TRUE
+         intersection
+                    1
+                    1
+                    1
+                    1
+                    2
+                    2
+                    2
+                    3
+                    3
+                    3
+                    4
+                    4
+                    5
+                    5
+                    5
+                    6
+                    6
+                    7
+                    7
+                    8
+                    9
+                    9
+                    9
+                   10
+                   10
+                   11
+                   11
+                   12
+                   13
+                   13
+                   14
+                   15
 
 # printing parametric closure test
 
@@ -184,7 +217,7 @@
         H3 0.0000 1.0000 0.0000 0.0000
         H4 1.0000 0.0000 0.0000 0.0000
       
-        Alpha = 0.05
+        Alpha = 0.025
       
                                H1   H2   H3   H4
         Unadjusted p-values: 0.01 0.01 0.01 0.01
@@ -228,7 +261,7 @@
         H3 0.0000 1.0000 0.0000 0.0000
         H4 1.0000 0.0000 0.0000 0.0000
       
-        Alpha = 0.05
+        Alpha = 0.025
       
                                H1   H2   H3   H4
         Unadjusted p-values: 0.01 0.01 0.01 0.01
@@ -269,39 +302,39 @@
         15  NA  NA  NA 1.0    1.0000      0.01      0.0100   1
       
       Test details - Critical values -------------------------------------------------
-         Intersection Hypothesis       Test    p <=        c *   w * Alpha Reject
-                   NA         H1 parametric 0.01 <= 1.012823 * 0.5 *  0.05   TRUE
-                   NA         H2 parametric 0.01 <= 1.012823 * 0.5 *  0.05   TRUE
-                   NA         H3      simes 0.01 <=            0.0 *  0.05  FALSE
-                   NA         H4      simes 0.01 <=            0.0 *  0.05  FALSE
-                   NA         H1 parametric 0.01 <= 1.012823 * 0.5 *  0.05   TRUE
-                   NA         H2 parametric 0.01 <= 1.012823 * 0.5 *  0.05   TRUE
-                   NA         H3      simes 0.01 <=            0.0 *  0.05  FALSE
-                   NA         H1 parametric 0.01 <= 1.012823 * 0.5 *  0.05   TRUE
-                   NA         H2 parametric 0.01 <= 1.012823 * 0.5 *  0.05   TRUE
-                   NA         H4      simes 0.01 <=            0.0 *  0.05  FALSE
-                   NA         H1 parametric 0.01 <= 1.012823 * 0.5 *  0.05   TRUE
-                   NA         H2 parametric 0.01 <= 1.012823 * 0.5 *  0.05   TRUE
-                   NA         H1 parametric 0.01 <=        1 * 0.5 *  0.05   TRUE
-                   NA         H3      simes 0.01 <=            0.5 *  0.05   TRUE
-                   NA         H4      simes 0.01 <=            0.5 *  0.05   TRUE
-                   NA         H1 parametric 0.01 <=        1 * 1.0 *  0.05   TRUE
-                   NA         H3      simes 0.01 <=            0.0 *  0.05  FALSE
-                   NA         H1 parametric 0.01 <=        1 * 0.5 *  0.05   TRUE
-                   NA         H4      simes 0.01 <=            0.5 *  0.05   TRUE
-                   NA         H1 parametric 0.01 <=        1 * 1.0 *  0.05   TRUE
-                   NA         H2 parametric 0.01 <=        1 * 0.5 *  0.05   TRUE
-                   NA         H3      simes 0.01 <=            0.5 *  0.05   TRUE
-                   NA         H4      simes 0.01 <=            0.5 *  0.05   TRUE
-                   NA         H2 parametric 0.01 <=        1 * 0.5 *  0.05   TRUE
-                   NA         H3      simes 0.01 <=            0.5 *  0.05   TRUE
-                   NA         H2 parametric 0.01 <=        1 * 1.0 *  0.05   TRUE
-                   NA         H4      simes 0.01 <=            0.0 *  0.05  FALSE
-                   NA         H2 parametric 0.01 <=        1 * 1.0 *  0.05   TRUE
-                   NA         H3      simes 0.01 <=            1.0 *  0.05   TRUE
-                   NA         H4      simes 0.01 <=            1.0 *  0.05   TRUE
-                   NA         H3      simes 0.01 <=            1.0 *  0.05   TRUE
-                   NA         H4      simes 0.01 <=            1.0 *  0.05   TRUE
+         Intersection Hypothesis       Test    p <=        c * Critical * Alpha Reject
+                   NA         H1 parametric 0.01 <= 1.006329 *      0.5 * 0.025   TRUE
+                   NA         H2 parametric 0.01 <= 1.006329 *      0.5 * 0.025   TRUE
+                   NA         H3      simes 0.01 <=                 0.0 * 0.025  FALSE
+                   NA         H4      simes 0.01 <=                 0.0 * 0.025  FALSE
+                   NA         H1 parametric 0.01 <= 1.006329 *      0.5 * 0.025   TRUE
+                   NA         H2 parametric 0.01 <= 1.006329 *      0.5 * 0.025   TRUE
+                   NA         H3      simes 0.01 <=                 0.0 * 0.025  FALSE
+                   NA         H1 parametric 0.01 <= 1.006329 *      0.5 * 0.025   TRUE
+                   NA         H2 parametric 0.01 <= 1.006329 *      0.5 * 0.025   TRUE
+                   NA         H4      simes 0.01 <=                 0.0 * 0.025  FALSE
+                   NA         H1 parametric 0.01 <= 1.006329 *      0.5 * 0.025   TRUE
+                   NA         H2 parametric 0.01 <= 1.006329 *      0.5 * 0.025   TRUE
+                   NA         H1 parametric 0.01 <=        1 *      0.5 * 0.025   TRUE
+                   NA         H3      simes 0.01 <=                 0.5 * 0.025   TRUE
+                   NA         H4      simes 0.01 <=                 0.5 * 0.025   TRUE
+                   NA         H1 parametric 0.01 <=        1 *      1.0 * 0.025   TRUE
+                   NA         H3      simes 0.01 <=                 0.0 * 0.025  FALSE
+                   NA         H1 parametric 0.01 <=        1 *      0.5 * 0.025   TRUE
+                   NA         H4      simes 0.01 <=                 0.5 * 0.025   TRUE
+                   NA         H1 parametric 0.01 <=        1 *      1.0 * 0.025   TRUE
+                   NA         H2 parametric 0.01 <=        1 *      0.5 * 0.025   TRUE
+                   NA         H3      simes 0.01 <=                 0.5 * 0.025   TRUE
+                   NA         H4      simes 0.01 <=                 0.5 * 0.025   TRUE
+                   NA         H2 parametric 0.01 <=        1 *      0.5 * 0.025   TRUE
+                   NA         H3      simes 0.01 <=                 0.5 * 0.025   TRUE
+                   NA         H2 parametric 0.01 <=        1 *      1.0 * 0.025   TRUE
+                   NA         H4      simes 0.01 <=                 0.0 * 0.025  FALSE
+                   NA         H2 parametric 0.01 <=        1 *      1.0 * 0.025   TRUE
+                   NA         H3      simes 0.01 <=                 1.0 * 0.025   TRUE
+                   NA         H4      simes 0.01 <=                 1.0 * 0.025   TRUE
+                   NA         H3      simes 0.01 <=                 1.0 * 0.025   TRUE
+                   NA         H4      simes 0.01 <=                 1.0 * 0.025   TRUE
          intersection
                     1
                     1
@@ -359,7 +392,7 @@
         H3 0.0000 1.0000 0.0000 0.0000
         H4 1.0000 0.0000 0.0000 0.0000
       
-        Alpha = 0.05
+        Alpha = 0.025
       
                                H1   H2   H3   H4
         Unadjusted p-values: 0.01 0.01 0.01 0.01
@@ -400,39 +433,39 @@
         15  NA  NA  NA 1.0    1.0000    0.0100      0.0100   1
       
       Test details - Critical values -------------------------------------------------
-         Intersection Hypothesis       Test    p <=        c *   w * Alpha Reject
-                   NA         H1 parametric 0.01 <= 1.012823 * 0.5 *  0.05   TRUE
-                   NA         H2 parametric 0.01 <= 1.012823 * 0.5 *  0.05   TRUE
-                   NA         H3 parametric 0.01 <= 1.000000 * 0.0 *  0.05  FALSE
-                   NA         H4 parametric 0.01 <= 1.000000 * 0.0 *  0.05  FALSE
-                   NA         H1 parametric 0.01 <= 1.012823 * 0.5 *  0.05   TRUE
-                   NA         H2 parametric 0.01 <= 1.012823 * 0.5 *  0.05   TRUE
-                   NA         H3 parametric 0.01 <= 1.000000 * 0.0 *  0.05  FALSE
-                   NA         H1 parametric 0.01 <= 1.012823 * 0.5 *  0.05   TRUE
-                   NA         H2 parametric 0.01 <= 1.012823 * 0.5 *  0.05   TRUE
-                   NA         H4 parametric 0.01 <= 1.000000 * 0.0 *  0.05  FALSE
-                   NA         H1 parametric 0.01 <= 1.012823 * 0.5 *  0.05   TRUE
-                   NA         H2 parametric 0.01 <= 1.012823 * 0.5 *  0.05   TRUE
-                   NA         H1 parametric 0.01 <= 1.000000 * 0.5 *  0.05   TRUE
-                   NA         H3 parametric 0.01 <= 1.000000 * 0.0 *  0.05  FALSE
-                   NA         H4 parametric 0.01 <= 1.000000 * 0.5 *  0.05   TRUE
-                   NA         H1 parametric 0.01 <= 1.000000 * 1.0 *  0.05   TRUE
-                   NA         H3 parametric 0.01 <= 1.000000 * 0.0 *  0.05  FALSE
-                   NA         H1 parametric 0.01 <= 1.000000 * 0.5 *  0.05   TRUE
-                   NA         H4 parametric 0.01 <= 1.000000 * 0.5 *  0.05   TRUE
-                   NA         H1 parametric 0.01 <= 1.000000 * 1.0 *  0.05   TRUE
-                   NA         H2 parametric 0.01 <= 1.000000 * 0.5 *  0.05   TRUE
-                   NA         H3 parametric 0.01 <= 1.000000 * 0.5 *  0.05   TRUE
-                   NA         H4 parametric 0.01 <= 1.000000 * 0.0 *  0.05  FALSE
-                   NA         H2 parametric 0.01 <= 1.000000 * 0.5 *  0.05   TRUE
-                   NA         H3 parametric 0.01 <= 1.000000 * 0.5 *  0.05   TRUE
-                   NA         H2 parametric 0.01 <= 1.000000 * 1.0 *  0.05   TRUE
-                   NA         H4 parametric 0.01 <= 1.000000 * 0.0 *  0.05  FALSE
-                   NA         H2 parametric 0.01 <= 1.000000 * 1.0 *  0.05   TRUE
-                   NA         H3 parametric 0.01 <= 1.012823 * 0.5 *  0.05   TRUE
-                   NA         H4 parametric 0.01 <= 1.012823 * 0.5 *  0.05   TRUE
-                   NA         H3 parametric 0.01 <= 1.000000 * 1.0 *  0.05   TRUE
-                   NA         H4 parametric 0.01 <= 1.000000 * 1.0 *  0.05   TRUE
+         Intersection Hypothesis       Test    p <=        c * Critical * Alpha Reject
+                   NA         H1 parametric 0.01 <= 1.006329 *      0.5 * 0.025   TRUE
+                   NA         H2 parametric 0.01 <= 1.006329 *      0.5 * 0.025   TRUE
+                   NA         H3 parametric 0.01 <= 1.000000 *      0.0 * 0.025  FALSE
+                   NA         H4 parametric 0.01 <= 1.000000 *      0.0 * 0.025  FALSE
+                   NA         H1 parametric 0.01 <= 1.006329 *      0.5 * 0.025   TRUE
+                   NA         H2 parametric 0.01 <= 1.006329 *      0.5 * 0.025   TRUE
+                   NA         H3 parametric 0.01 <= 1.000000 *      0.0 * 0.025  FALSE
+                   NA         H1 parametric 0.01 <= 1.006329 *      0.5 * 0.025   TRUE
+                   NA         H2 parametric 0.01 <= 1.006329 *      0.5 * 0.025   TRUE
+                   NA         H4 parametric 0.01 <= 1.000000 *      0.0 * 0.025  FALSE
+                   NA         H1 parametric 0.01 <= 1.006329 *      0.5 * 0.025   TRUE
+                   NA         H2 parametric 0.01 <= 1.006329 *      0.5 * 0.025   TRUE
+                   NA         H1 parametric 0.01 <= 1.000000 *      0.5 * 0.025   TRUE
+                   NA         H3 parametric 0.01 <= 1.000000 *      0.0 * 0.025  FALSE
+                   NA         H4 parametric 0.01 <= 1.000000 *      0.5 * 0.025   TRUE
+                   NA         H1 parametric 0.01 <= 1.000000 *      1.0 * 0.025   TRUE
+                   NA         H3 parametric 0.01 <= 1.000000 *      0.0 * 0.025  FALSE
+                   NA         H1 parametric 0.01 <= 1.000000 *      0.5 * 0.025   TRUE
+                   NA         H4 parametric 0.01 <= 1.000000 *      0.5 * 0.025   TRUE
+                   NA         H1 parametric 0.01 <= 1.000000 *      1.0 * 0.025   TRUE
+                   NA         H2 parametric 0.01 <= 1.000000 *      0.5 * 0.025   TRUE
+                   NA         H3 parametric 0.01 <= 1.000000 *      0.5 * 0.025   TRUE
+                   NA         H4 parametric 0.01 <= 1.000000 *      0.0 * 0.025  FALSE
+                   NA         H2 parametric 0.01 <= 1.000000 *      0.5 * 0.025   TRUE
+                   NA         H3 parametric 0.01 <= 1.000000 *      0.5 * 0.025   TRUE
+                   NA         H2 parametric 0.01 <= 1.000000 *      1.0 * 0.025   TRUE
+                   NA         H4 parametric 0.01 <= 1.000000 *      0.0 * 0.025  FALSE
+                   NA         H2 parametric 0.01 <= 1.000000 *      1.0 * 0.025   TRUE
+                   NA         H3 parametric 0.01 <= 1.006329 *      0.5 * 0.025   TRUE
+                   NA         H4 parametric 0.01 <= 1.006329 *      0.5 * 0.025   TRUE
+                   NA         H3 parametric 0.01 <= 1.000000 *      1.0 * 0.025   TRUE
+                   NA         H4 parametric 0.01 <= 1.000000 *      1.0 * 0.025   TRUE
          intersection
                     1
                     1
@@ -489,7 +522,7 @@
         H3 0.0000 1.0000 0.0000 0.0000
         H4 1.0000 0.0000 0.0000 0.0000
       
-        Alpha = 0.05
+        Alpha = 0.025
       
                                H1   H2   H3   H4
         Unadjusted p-values: 0.01 0.01 0.01 0.01
@@ -527,7 +560,7 @@
           H3 0.0000 1.0000 0.0000 0.0000
           H4 1.0000 0.0000 0.0000 0.0000
       
-          Alpha = 0.05
+          Alpha = 0.025
       
                                  H1   H2   H3   H4
           Unadjusted p-values: 0.01 0.01 0.01 0.01
@@ -561,39 +594,72 @@
           15  NA  NA  NA 1.0      0.01        0.01   1
       
       Test details - Critical values -------------------------------------------------
-           Intersection Hypothesis       Test    p <=   w * Alpha Reject intersection
-                     NA         H1 bonferroni 0.01 <= 0.5 *  0.05   TRUE            1
-                     NA         H2 bonferroni 0.01 <= 0.5 *  0.05   TRUE            1
-                     NA         H3 bonferroni 0.01 <= 0.0 *  0.05  FALSE            1
-                     NA         H4 bonferroni 0.01 <= 0.0 *  0.05  FALSE            1
-                     NA         H1 bonferroni 0.01 <= 0.5 *  0.05   TRUE            2
-                     NA         H2 bonferroni 0.01 <= 0.5 *  0.05   TRUE            2
-                     NA         H3 bonferroni 0.01 <= 0.0 *  0.05  FALSE            2
-                     NA         H1 bonferroni 0.01 <= 0.5 *  0.05   TRUE            3
-                     NA         H2 bonferroni 0.01 <= 0.5 *  0.05   TRUE            3
-                     NA         H4 bonferroni 0.01 <= 0.0 *  0.05  FALSE            3
-                     NA         H1 bonferroni 0.01 <= 0.5 *  0.05   TRUE            4
-                     NA         H2 bonferroni 0.01 <= 0.5 *  0.05   TRUE            4
-                     NA         H1 bonferroni 0.01 <= 0.5 *  0.05   TRUE            5
-                     NA         H3 bonferroni 0.01 <= 0.0 *  0.05  FALSE            5
-                     NA         H4 bonferroni 0.01 <= 0.5 *  0.05   TRUE            5
-                     NA         H1 bonferroni 0.01 <= 1.0 *  0.05   TRUE            6
-                     NA         H3 bonferroni 0.01 <= 0.0 *  0.05  FALSE            6
-                     NA         H1 bonferroni 0.01 <= 0.5 *  0.05   TRUE            7
-                     NA         H4 bonferroni 0.01 <= 0.5 *  0.05   TRUE            7
-                     NA         H1 bonferroni 0.01 <= 1.0 *  0.05   TRUE            8
-                     NA         H2 bonferroni 0.01 <= 0.5 *  0.05   TRUE            9
-                     NA         H3 bonferroni 0.01 <= 0.5 *  0.05   TRUE            9
-                     NA         H4 bonferroni 0.01 <= 0.0 *  0.05  FALSE            9
-                     NA         H2 bonferroni 0.01 <= 0.5 *  0.05   TRUE           10
-                     NA         H3 bonferroni 0.01 <= 0.5 *  0.05   TRUE           10
-                     NA         H2 bonferroni 0.01 <= 1.0 *  0.05   TRUE           11
-                     NA         H4 bonferroni 0.01 <= 0.0 *  0.05  FALSE           11
-                     NA         H2 bonferroni 0.01 <= 1.0 *  0.05   TRUE           12
-                     NA         H3 bonferroni 0.01 <= 0.5 *  0.05   TRUE           13
-                     NA         H4 bonferroni 0.01 <= 0.5 *  0.05   TRUE           13
-                     NA         H3 bonferroni 0.01 <= 1.0 *  0.05   TRUE           14
-                     NA         H4 bonferroni 0.01 <= 1.0 *  0.05   TRUE           15
+           Intersection Hypothesis       Test    p <= Critical * Alpha Reject
+                     NA         H1 bonferroni 0.01 <=      0.5 * 0.025   TRUE
+                     NA         H2 bonferroni 0.01 <=      0.5 * 0.025   TRUE
+                     NA         H3 bonferroni 0.01 <=      0.0 * 0.025  FALSE
+                     NA         H4 bonferroni 0.01 <=      0.0 * 0.025  FALSE
+                     NA         H1 bonferroni 0.01 <=      0.5 * 0.025   TRUE
+                     NA         H2 bonferroni 0.01 <=      0.5 * 0.025   TRUE
+                     NA         H3 bonferroni 0.01 <=      0.0 * 0.025  FALSE
+                     NA         H1 bonferroni 0.01 <=      0.5 * 0.025   TRUE
+                     NA         H2 bonferroni 0.01 <=      0.5 * 0.025   TRUE
+                     NA         H4 bonferroni 0.01 <=      0.0 * 0.025  FALSE
+                     NA         H1 bonferroni 0.01 <=      0.5 * 0.025   TRUE
+                     NA         H2 bonferroni 0.01 <=      0.5 * 0.025   TRUE
+                     NA         H1 bonferroni 0.01 <=      0.5 * 0.025   TRUE
+                     NA         H3 bonferroni 0.01 <=      0.0 * 0.025  FALSE
+                     NA         H4 bonferroni 0.01 <=      0.5 * 0.025   TRUE
+                     NA         H1 bonferroni 0.01 <=      1.0 * 0.025   TRUE
+                     NA         H3 bonferroni 0.01 <=      0.0 * 0.025  FALSE
+                     NA         H1 bonferroni 0.01 <=      0.5 * 0.025   TRUE
+                     NA         H4 bonferroni 0.01 <=      0.5 * 0.025   TRUE
+                     NA         H1 bonferroni 0.01 <=      1.0 * 0.025   TRUE
+                     NA         H2 bonferroni 0.01 <=      0.5 * 0.025   TRUE
+                     NA         H3 bonferroni 0.01 <=      0.5 * 0.025   TRUE
+                     NA         H4 bonferroni 0.01 <=      0.0 * 0.025  FALSE
+                     NA         H2 bonferroni 0.01 <=      0.5 * 0.025   TRUE
+                     NA         H3 bonferroni 0.01 <=      0.5 * 0.025   TRUE
+                     NA         H2 bonferroni 0.01 <=      1.0 * 0.025   TRUE
+                     NA         H4 bonferroni 0.01 <=      0.0 * 0.025  FALSE
+                     NA         H2 bonferroni 0.01 <=      1.0 * 0.025   TRUE
+                     NA         H3 bonferroni 0.01 <=      0.5 * 0.025   TRUE
+                     NA         H4 bonferroni 0.01 <=      0.5 * 0.025   TRUE
+                     NA         H3 bonferroni 0.01 <=      1.0 * 0.025   TRUE
+                     NA         H4 bonferroni 0.01 <=      1.0 * 0.025   TRUE
+           intersection
+                      1
+                      1
+                      1
+                      1
+                      2
+                      2
+                      2
+                      3
+                      3
+                      3
+                      4
+                      4
+                      5
+                      5
+                      5
+                      6
+                      6
+                      7
+                      7
+                      8
+                      9
+                      9
+                      9
+                     10
+                     10
+                     11
+                     11
+                     12
+                     13
+                     13
+                     14
+                     15
 
 ---
 
@@ -618,7 +684,7 @@
                H3 0.0000 1.0000 0.0000 0.0000
                H4 1.0000 0.0000 0.0000 0.0000
       
-               Alpha = 0.05
+               Alpha = 0.025
       
                                       H1   H2   H3   H4
                Unadjusted p-values: 0.01 0.01 0.01 0.01
@@ -634,9 +700,9 @@
                        H4         0.02   TRUE
       
       Test details - Critical values -------------------------------------------------
-                step Hypothesis       Test    p <=   w * Alpha Reject
-                   1         H1 bonferroni 0.01 <= 0.5 *  0.05   TRUE
-                   2         H2 bonferroni 0.01 <= 0.5 *  0.05   TRUE
-                   3         H3 bonferroni 0.01 <= 0.5 *  0.05   TRUE
-                   4         H4 bonferroni 0.01 <= 1.0 *  0.05   TRUE
+                step Hypothesis       Test    p <= Critical * Alpha Reject
+                   1         H1 bonferroni 0.01 <=      0.5 * 0.025   TRUE
+                   2         H2 bonferroni 0.01 <=      0.5 * 0.025   TRUE
+                   3         H3 bonferroni 0.01 <=      0.5 * 0.025   TRUE
+                   4         H4 bonferroni 0.01 <=      1.0 * 0.025   TRUE
 
