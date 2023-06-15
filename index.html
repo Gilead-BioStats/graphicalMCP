@@ -8,8 +8,8 @@
 <meta name="description" content="A multiple comparison procedure (or multiple test procedure)
     is a a statistical analysis method for determining efficacy of
     multiple drugs, or multiple doses of the same drug, in a single
-    clinical trial. (Bretz et al., 2011) laid out a graph-based approach to
-    these multiple comparison procedures, in which the weights of the
+    clinical trial. (Bretz et al., 2011) laid out a graph-based approach
+    to these multiple comparison procedures, in which the weights of the
     vertices and edges of the graph are determined independently of the
     particular statistical test used to assess results. This is a
     low-dependency implementation of the methods described in that and
@@ -29,8 +29,8 @@
 <meta property="og:description" content="A multiple comparison procedure (or multiple test procedure)
     is a a statistical analysis method for determining efficacy of
     multiple drugs, or multiple doses of the same drug, in a single
-    clinical trial. (Bretz et al., 2011) laid out a graph-based approach to
-    these multiple comparison procedures, in which the weights of the
+    clinical trial. (Bretz et al., 2011) laid out a graph-based approach
+    to these multiple comparison procedures, in which the weights of the
     vertices and edges of the graph are determined independently of the
     particular statistical test used to assess results. This is a
     low-dependency implementation of the methods described in that and
@@ -64,7 +64,7 @@
 <li class="nav-item dropdown">
   <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" id="dropdown-articles">Articles</a>
   <div class="dropdown-menu" aria-labelledby="dropdown-articles">
-    <a class="dropdown-item" href="articles/case-study.html">case-study</a>
+    <a class="dropdown-item" href="articles/case-study.html">Case Study</a>
     <a class="dropdown-item" href="articles/test_power_considerations_2011.html">test_power_considerations_2011</a>
     <a class="dropdown-item" href="articles/testing-power-basics.html">Testing basics</a>
   </div>
@@ -220,10 +220,10 @@
 <div class="section level3">
 <h3 id="test-hypotheses">Test hypotheses<a class="anchor" aria-label="anchor" href="#test-hypotheses"></a>
 </h3>
-<p>A mixture of statistical tests are supported in graphicalMCP. A graph can be tested against a given alpha with <code><a href="reference/testing.html">test_graph()</a></code>. A report is then generated, showing the graph &amp; test results.</p>
+<p>A mixture of statistical tests are supported in graphicalMCP. A graph can be tested against a given alpha with <code><a href="reference/testing.html">test_graph_closure()</a></code>. A report is then generated, showing the graph &amp; test results.</p>
 <p>In this example, a weighted Bonferroni test is applied to all hypotheses, with a threshold of 0.05. We can reject a given intersection hypothesis if any of the individual hypotheses within that sub-graph passes the test assigned to it. We can then reject a hypothesis globally if all intersection hypotheses containing that hypothesis are rejected. For instance, in this example we can reject every intersection hypothesis except the one containing only B1 &amp; B2 (Row 3 of <code>test_results</code>). Thus, we can reject the null hypotheses for A1 &amp; A2, but we cannot reject the null hypotheses for B1 &amp; B2.</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="reference/testing.html">test_graph</a></span><span class="op">(</span></span>
+<code class="sourceCode R"><span><span class="fu"><a href="reference/testing.html">test_graph_closure</a></span><span class="op">(</span></span>
 <span>  <span class="va">g_dose</span>,</span>
 <span>  p <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">.01</span>, <span class="fl">.02</span>, <span class="fl">.03</span>, <span class="fl">.05</span><span class="op">)</span>,</span>
 <span>  alpha <span class="op">=</span> <span class="fl">.05</span>,</span>
@@ -263,7 +263,7 @@
 <span><span class="co">#&gt;           B2         0.06  FALSE</span></span></code></pre></div>
 <p>Simes and parametric testing methods are also supported, using the <code>test_types</code> argument. Try setting the <code>verbose</code> and <code>critical</code> flags for a more detailed report on testing.</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="reference/testing.html">test_graph</a></span><span class="op">(</span></span>
+<code class="sourceCode R"><span><span class="fu"><a href="reference/testing.html">test_graph_closure</a></span><span class="op">(</span></span>
 <span>  <span class="va">g_dose</span>,</span>
 <span>  p <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">.01</span>, <span class="fl">.02</span>, <span class="fl">.03</span>, <span class="fl">.05</span><span class="op">)</span>,</span>
 <span>  alpha <span class="op">=</span> <span class="fl">.05</span>,</span>

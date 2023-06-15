@@ -34,7 +34,7 @@ as expected rejections and probability of rejecting any hypothesis"><meta proper
 <li class="nav-item dropdown">
   <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" id="dropdown-articles">Articles</a>
   <div class="dropdown-menu" aria-labelledby="dropdown-articles">
-    <a class="dropdown-item" href="../articles/case-study.html">case-study</a>
+    <a class="dropdown-item" href="../articles/case-study.html">Case Study</a>
     <a class="dropdown-item" href="../articles/test_power_considerations_2011.html">test_power_considerations_2011</a>
     <a class="dropdown-item" href="../articles/testing-power-basics.html">Testing basics</a>
   </div>
@@ -203,7 +203,7 @@ Procedures</em>. R package version 0.8-15,
 <span class="r-in"><span><span class="fu">calculate_power</span><span class="op">(</span><span class="va">par_gate</span>, sim_n <span class="op">=</span> <span class="fl">1e5</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Test parameters ----------------------------------------------------------------</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   An initial graph</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Initial graph</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   --- Hypothesis weights ---</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   H1: 0.5000</span>
@@ -238,26 +238,26 @@ Procedures</em>. R package version 0.8-15,
 <span class="r-out co"><span class="r-pr">#&gt;</span>   Success is defined as rejecting any of [H1, H2]</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Power calculation --------------------------------------------------------------</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                                   H1      H2      H3    H4</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>        Power to reject each: 0.02493 0.02525 0.00069 6e-04</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                                   H1      H2      H3      H4</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>        Power to reject each: 0.02571 0.02528 0.00061 0.00066</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>         Expected rejections: 0.05147</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   Power to reject 1 or more: 0.04952</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>         Power to reject all: 2e-05</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>      Probability of success: 0.04952</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         Expected rejections: 0.05226</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Power to reject 1 or more: 0.05012</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         Power to reject all: 0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>      Probability of success: 0.05012</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Simulation details -------------------------------------------------------------</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   p_sim_H1 p_sim_H2 p_sim_H3 p_sim_H4 rej_H1 rej_H2 rej_H3 rej_H4</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   0.705272 0.701535 0.627671 0.837684  FALSE  FALSE  FALSE  FALSE</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   0.869544 0.496530 0.409552 0.627577  FALSE  FALSE  FALSE  FALSE</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   0.943385 0.549682 0.341806 0.914626  FALSE  FALSE  FALSE  FALSE</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   0.339937 0.723700 0.903040 0.913915  FALSE  FALSE  FALSE  FALSE</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   0.160233 0.223393 0.182711 0.043511  FALSE  FALSE  FALSE  FALSE</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   0.898082 0.035786 0.769762 0.737249  FALSE  FALSE  FALSE  FALSE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   0.241441 0.301917 0.559050 0.048074  FALSE  FALSE  FALSE  FALSE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   0.458303 0.953132 0.520289 0.520867  FALSE  FALSE  FALSE  FALSE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   0.519091 0.798653 0.800023 0.641631  FALSE  FALSE  FALSE  FALSE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   0.029161 0.443395 0.161281 0.427923  FALSE  FALSE  FALSE  FALSE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   0.390977 0.331911 0.140343 0.108148  FALSE  FALSE  FALSE  FALSE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   0.415420 0.186139 0.150375 0.201166  FALSE  FALSE  FALSE  FALSE</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   ...</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="co"># but any test group/type combination that works for [test_graph()] can be</span></span></span>
+<span class="r-in"><span><span class="co"># but any test group/type combination that works for [test_graph_closure()] can be</span></span></span>
 <span class="r-in"><span><span class="co"># used</span></span></span>
 <span class="r-in"><span><span class="fu">calculate_power</span><span class="op">(</span></span></span>
 <span class="r-in"><span>  <span class="va">par_gate</span>,</span></span>
@@ -270,7 +270,7 @@ Procedures</em>. R package version 0.8-15,
 <span class="r-in"><span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Test parameters ----------------------------------------------------------------</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   An initial graph</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Initial graph</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   --- Hypothesis weights ---</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   H1: 0.5000</span>
@@ -312,22 +312,22 @@ Procedures</em>. R package version 0.8-15,
 <span class="r-out co"><span class="r-pr">#&gt;</span>   Success is defined as rejecting any of [H1]</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Power calculation --------------------------------------------------------------</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                                   H1     H2      H3    H4</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>        Power to reject each: 0.01218 0.0121 0.00016 1e-04</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                                   H1      H2      H3      H4</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>        Power to reject each: 0.01254 0.01299 0.00016 0.00013</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>         Expected rejections: 0.02454</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   Power to reject 1 or more: 0.02416</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         Expected rejections: 0.02582</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Power to reject 1 or more: 0.02538</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         Power to reject all: 0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>      Probability of success: 0.01218</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>      Probability of success: 0.01254</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Simulation details -------------------------------------------------------------</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   p_sim_H1 p_sim_H2 p_sim_H3 p_sim_H4 rej_H1 rej_H2 rej_H3 rej_H4</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   0.630860 0.740787 0.441540 0.806646  FALSE  FALSE  FALSE  FALSE</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   0.120912 0.454618 0.033231 0.391878  FALSE  FALSE  FALSE  FALSE</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   0.731368 0.653642 0.559705 0.403466  FALSE  FALSE  FALSE  FALSE</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   0.205560 0.770732 0.422185 0.495055  FALSE  FALSE  FALSE  FALSE</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   0.095424 0.858266 0.355836 0.739591  FALSE  FALSE  FALSE  FALSE</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   0.880665 0.924891 0.273265 0.780621  FALSE  FALSE  FALSE  FALSE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   0.941398 0.300241 0.788090 0.002422  FALSE  FALSE  FALSE  FALSE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   0.894899 0.849854 0.838809 0.227725  FALSE  FALSE  FALSE  FALSE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   0.829103 0.705270 0.769933 0.379936  FALSE  FALSE  FALSE  FALSE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   0.732310 0.334318 0.037437 0.684974  FALSE  FALSE  FALSE  FALSE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   0.867408 0.009940 0.190720 0.447250  FALSE   TRUE  FALSE  FALSE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   0.075525 0.906145 0.646166 0.084622  FALSE  FALSE  FALSE  FALSE</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   ...</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-in"><span></span></span>

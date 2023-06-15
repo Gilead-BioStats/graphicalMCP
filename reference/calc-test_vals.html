@@ -24,7 +24,7 @@
 <li class="nav-item dropdown">
   <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" id="dropdown-articles">Articles</a>
   <div class="dropdown-menu" aria-labelledby="dropdown-articles">
-    <a class="dropdown-item" href="../articles/case-study.html">case-study</a>
+    <a class="dropdown-item" href="../articles/case-study.html">Case Study</a>
     <a class="dropdown-item" href="../articles/test_power_considerations_2011.html">test_power_considerations_2011</a>
     <a class="dropdown-item" href="../articles/testing-power-basics.html">Testing basics</a>
   </div>
@@ -124,23 +124,28 @@ Procedures</em>. R package version 0.8-15,
 <span class="r-in"><span><span class="va">p</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">.024</span>, <span class="fl">.01</span>, <span class="fl">.026</span>, <span class="fl">.027</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="fu">graphicalMCP</span><span class="fu">:::</span><span class="fu">bonferroni_test_vals</span><span class="op">(</span><span class="va">p</span>, <span class="va">w</span>, <span class="fl">.05</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    intersection hypothesis       test     p &lt;= c *   w * alpha   res</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> H1           NA         H1 bonferroni 0.024 &lt;=     0.5 *  0.05  TRUE</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> H2           NA         H2 bonferroni 0.010 &lt;=     0.5 *  0.05  TRUE</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> H3           NA         H3 bonferroni 0.026 &lt;=     0.0 *  0.05 FALSE</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> H4           NA         H4 bonferroni 0.027 &lt;=     0.0 *  0.05 FALSE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    Intersection Hypothesis       Test     p &lt;= c * Critical * Alpha Reject</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> H1           NA         H1 bonferroni 0.024 &lt;=          0.5 *  0.05   TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> H2           NA         H2 bonferroni 0.010 &lt;=          0.5 *  0.05   TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> H3           NA         H3 bonferroni 0.026 &lt;=          0.0 *  0.05  FALSE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> H4           NA         H4 bonferroni 0.027 &lt;=          0.0 *  0.05  FALSE</span>
 <span class="r-in"><span><span class="fu">graphicalMCP</span><span class="fu">:::</span><span class="fu">parametric_test_vals</span><span class="op">(</span><span class="va">p</span>, <span class="va">w</span>, <span class="fl">.05</span>, <span class="fu"><a href="https://rdrr.io/r/base/diag.html" class="external-link">diag</a></span><span class="op">(</span><span class="fl">4</span><span class="op">)</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    intersection hypothesis       test     p &lt;=        c *   w * alpha   res</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> H1           NA         H1 parametric 0.024 &lt;= 1.012823 * 0.5 *  0.05  TRUE</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> H2           NA         H2 parametric 0.010 &lt;= 1.012823 * 0.5 *  0.05  TRUE</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> H3           NA         H3 parametric 0.026 &lt;= 1.012823 * 0.0 *  0.05 FALSE</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> H4           NA         H4 parametric 0.027 &lt;= 1.012823 * 0.0 *  0.05 FALSE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    Intersection Hypothesis       Test     p &lt;=        c * Critical * Alpha</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> H1           NA         H1 parametric 0.024 &lt;= 1.012823 *      0.5 *  0.05</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> H2           NA         H2 parametric 0.010 &lt;= 1.012823 *      0.5 *  0.05</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> H3           NA         H3 parametric 0.026 &lt;= 1.012823 *      0.0 *  0.05</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> H4           NA         H4 parametric 0.027 &lt;= 1.012823 *      0.0 *  0.05</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    Reject</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> H1   TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> H2   TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> H3  FALSE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> H4  FALSE</span>
 <span class="r-in"><span><span class="fu">graphicalMCP</span><span class="fu">:::</span><span class="fu">simes_test_vals</span><span class="op">(</span><span class="va">p</span>, <span class="va">w</span>, <span class="fl">.05</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   intersection hypothesis  test     p &lt;= c *   w * alpha  res</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1           NA         H1 simes 0.024 &lt;=     1.0 *  0.05 TRUE</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2           NA         H2 simes 0.010 &lt;=     0.5 *  0.05 TRUE</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3           NA         H3 simes 0.026 &lt;=     1.0 *  0.05 TRUE</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4           NA         H4 simes 0.027 &lt;=     1.0 *  0.05 TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Intersection Hypothesis  Test     p &lt;= c * Critical * Alpha Reject</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1           NA         H1 simes 0.024 &lt;=          1.0 *  0.05   TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2           NA         H2 simes 0.010 &lt;=          0.5 *  0.05   TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3           NA         H3 simes 0.026 &lt;=          1.0 *  0.05   TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4           NA         H4 simes 0.027 &lt;=          1.0 *  0.05   TRUE</span>
 </code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>

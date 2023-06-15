@@ -3,7 +3,7 @@
 of interpreting results over speed. Results include hypothesis rejection
 decisions of course, but also the test values that led to the final result.
 The functions include options for reporting details using the adjusted
-p-value method or critical value method."><title>Report details of hypothesis rejections — bonferroni_sequential • graphicalMCP</title><!-- favicons --><link rel="icon" type="image/png" sizes="16x16" href="../favicon-16x16.png"><link rel="icon" type="image/png" sizes="32x32" href="../favicon-32x32.png"><link rel="apple-touch-icon" type="image/png" sizes="180x180" href="../apple-touch-icon.png"><link rel="apple-touch-icon" type="image/png" sizes="120x120" href="../apple-touch-icon-120x120.png"><link rel="apple-touch-icon" type="image/png" sizes="76x76" href="../apple-touch-icon-76x76.png"><link rel="apple-touch-icon" type="image/png" sizes="60x60" href="../apple-touch-icon-60x60.png"><script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"><link href="../deps/bootstrap-5.2.2/bootstrap.min.css" rel="stylesheet"><script src="../deps/bootstrap-5.2.2/bootstrap.bundle.min.js"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous"><!-- bootstrap-toc --><script src="https://cdn.jsdelivr.net/gh/afeld/bootstrap-toc@v1.0.1/dist/bootstrap-toc.min.js" integrity="sha256-4veVQbu7//Lk5TSmc7YV48MxtMy98e26cf5MrgZYnwo=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><!-- search --><script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/6.4.6/fuse.js" integrity="sha512-zv6Ywkjyktsohkbp9bb45V6tEMoWhzFzXis+LrMehmJZZSys19Yxf1dopHx7WzIKxr5tK2dVcYmaCk2uqdjF4A==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/autocomplete.js/0.38.0/autocomplete.jquery.min.js" integrity="sha512-GU9ayf+66Xx2TmpxqJpliWbT5PiGYxpaG8rfnBEk1LL8l1KGkRShhngwdXK1UgqhAzWpZHSiYPc09/NwDQIGyg==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/mark.min.js" integrity="sha512-5CYOlHXGh6QpOFA/TeTylKLWfB3ftPsde7AnmhuitiTX4K5SqCLBeKro6sPS8ilsz1Q4NRx3v8Ko2IBiszzdww==" crossorigin="anonymous"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="Report details of hypothesis rejections — bonferroni_sequential"><meta property="og:description" content="The slower graph testing functions have design choices made that favor ease
+p-value method or critical value method."><title>Report details of hypothesis rejections — test_graph_closure • graphicalMCP</title><!-- favicons --><link rel="icon" type="image/png" sizes="16x16" href="../favicon-16x16.png"><link rel="icon" type="image/png" sizes="32x32" href="../favicon-32x32.png"><link rel="apple-touch-icon" type="image/png" sizes="180x180" href="../apple-touch-icon.png"><link rel="apple-touch-icon" type="image/png" sizes="120x120" href="../apple-touch-icon-120x120.png"><link rel="apple-touch-icon" type="image/png" sizes="76x76" href="../apple-touch-icon-76x76.png"><link rel="apple-touch-icon" type="image/png" sizes="60x60" href="../apple-touch-icon-60x60.png"><script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"><link href="../deps/bootstrap-5.2.2/bootstrap.min.css" rel="stylesheet"><script src="../deps/bootstrap-5.2.2/bootstrap.bundle.min.js"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous"><!-- bootstrap-toc --><script src="https://cdn.jsdelivr.net/gh/afeld/bootstrap-toc@v1.0.1/dist/bootstrap-toc.min.js" integrity="sha256-4veVQbu7//Lk5TSmc7YV48MxtMy98e26cf5MrgZYnwo=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><!-- search --><script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/6.4.6/fuse.js" integrity="sha512-zv6Ywkjyktsohkbp9bb45V6tEMoWhzFzXis+LrMehmJZZSys19Yxf1dopHx7WzIKxr5tK2dVcYmaCk2uqdjF4A==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/autocomplete.js/0.38.0/autocomplete.jquery.min.js" integrity="sha512-GU9ayf+66Xx2TmpxqJpliWbT5PiGYxpaG8rfnBEk1LL8l1KGkRShhngwdXK1UgqhAzWpZHSiYPc09/NwDQIGyg==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/mark.min.js" integrity="sha512-5CYOlHXGh6QpOFA/TeTylKLWfB3ftPsde7AnmhuitiTX4K5SqCLBeKro6sPS8ilsz1Q4NRx3v8Ko2IBiszzdww==" crossorigin="anonymous"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="Report details of hypothesis rejections — test_graph_closure"><meta property="og:description" content="The slower graph testing functions have design choices made that favor ease
 of interpreting results over speed. Results include hypothesis rejection
 decisions of course, but also the test values that led to the final result.
 The functions include options for reporting details using the adjusted
@@ -32,7 +32,7 @@ p-value method or critical value method."><meta property="og:image" content="htt
 <li class="nav-item dropdown">
   <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" id="dropdown-articles">Articles</a>
   <div class="dropdown-menu" aria-labelledby="dropdown-articles">
-    <a class="dropdown-item" href="../articles/case-study.html">case-study</a>
+    <a class="dropdown-item" href="../articles/case-study.html">Case Study</a>
     <a class="dropdown-item" href="../articles/test_power_considerations_2011.html">test_power_considerations_2011</a>
     <a class="dropdown-item" href="../articles/testing-power-basics.html">Testing basics</a>
   </div>
@@ -54,7 +54,7 @@ p-value method or critical value method."><meta property="og:image" content="htt
 <div class="row">
   <main id="main" class="col-md-9"><div class="page-header">
       <img src="../logo.png" class="logo" alt=""><h1>Report details of hypothesis rejections</h1>
-      <small class="dont-index">Source: <a href="https://github.com/Gilead-BioStats/graphicalMCP/blob/HEAD/R/bonferroni_sequential.R" class="external-link"><code>R/bonferroni_sequential.R</code></a>, <a href="https://github.com/Gilead-BioStats/graphicalMCP/blob/HEAD/R/graph_report.R" class="external-link"><code>R/graph_report.R</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/Gilead-BioStats/graphicalMCP/blob/HEAD/R/test_graph_closure.R" class="external-link"><code>R/test_graph_closure.R</code></a>, <a href="https://github.com/Gilead-BioStats/graphicalMCP/blob/HEAD/R/test_graph_shortcut.R" class="external-link"><code>R/test_graph_shortcut.R</code></a></small>
       <div class="d-none name"><code>testing.Rd</code></div>
     </div>
 
@@ -68,18 +68,18 @@ p-value method or critical value method.</p>
 
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">bonferroni_sequential</span><span class="op">(</span><span class="va">graph</span>, <span class="va">p</span>, alpha <span class="op">=</span> <span class="fl">0.05</span>, critical <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
-<span></span>
-<span><span class="fu">test_graph</span><span class="op">(</span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">test_graph_closure</span><span class="op">(</span></span>
 <span>  <span class="va">graph</span>,</span>
 <span>  <span class="va">p</span>,</span>
-<span>  alpha <span class="op">=</span> <span class="fl">0.05</span>,</span>
+<span>  alpha <span class="op">=</span> <span class="fl">0.025</span>,</span>
 <span>  groups <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq_along</a></span><span class="op">(</span><span class="va">graph</span><span class="op">$</span><span class="va">hypotheses</span><span class="op">)</span><span class="op">)</span>,</span>
 <span>  test_types <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"bonferroni"</span><span class="op">)</span>,</span>
 <span>  corr <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  verbose <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  critical <span class="op">=</span> <span class="cn">FALSE</span></span>
-<span><span class="op">)</span></span></code></pre></div>
+<span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu">test_graph_shortcut</span><span class="op">(</span><span class="va">graph</span>, <span class="va">p</span>, alpha <span class="op">=</span> <span class="fl">0.025</span>, critical <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
@@ -95,12 +95,6 @@ p-value method or critical value method.</p>
 <dt>alpha</dt>
 <dd><p>A numeric scalar specifying the global significance level for
 testing</p></dd>
-
-
-<dt>critical</dt>
-<dd><p>A logical scalar specifying whether hypothesis-level detail
-should be included in the results, including calculating critical values
-for parametric tests</p></dd>
 
 
 <dt>groups</dt>
@@ -120,6 +114,12 @@ test statistics</p></dd>
 <dt>verbose</dt>
 <dd><p>A logical scalar specifying whether the results for each
 intersection hypothesis should be included</p></dd>
+
+
+<dt>critical</dt>
+<dd><p>A logical scalar specifying whether hypothesis-level detail
+should be included in the results, including calculating critical values
+for parametric tests</p></dd>
 
 </dl></div>
     <div class="section level2">
@@ -164,7 +164,7 @@ Procedures</em>. R package version 0.8-15,
     </div>
     <div class="section level2">
     <h2 id="see-also">See also<a class="anchor" aria-label="anchor" href="#see-also"></a></h2>
-    <div class="dont-index"><p><code><a href="testing-fast.html">test_graph_fast()</a></code>, <code><a href="testing-fast.html">bonferroni_sequential_cpp()</a></code></p></div>
+    <div class="dont-index"><p><code><a href="testing-fast.html">test_graph_fast()</a></code>, <code><a href="testing-fast.html">test_graph_shortcut_cpp()</a></code></p></div>
     </div>
 
     <div class="section level2">
@@ -189,10 +189,10 @@ Procedures</em>. R package version 0.8-15,
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/diag.html" class="external-link">diag</a></span><span class="op">(</span><span class="va">corr2</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fl">1</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># The default is all Bonferroni with alpha = .05</span></span></span>
-<span class="r-in"><span><span class="fu">test_graph</span><span class="op">(</span><span class="va">g</span>, <span class="va">p</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu">test_graph_closure</span><span class="op">(</span><span class="va">g</span>, <span class="va">p</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Test parameters ----------------------------------------------------------------</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   An initial graph</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Initial graph</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   --- Hypothesis weights ---</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   H1: 0.5000</span>
@@ -207,7 +207,7 @@ Procedures</em>. R package version 0.8-15,
 <span class="r-out co"><span class="r-pr">#&gt;</span>   H3 0.0000 1.0000 0.0000 0.0000</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   H4 1.0000 0.0000 0.0000 0.0000</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   Global alpha = 0.05</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Alpha = 0.025</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                          H1    H2    H3    H4</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   Unadjusted p-values: 0.01 0.005 0.015 0.022</span>
@@ -215,15 +215,15 @@ Procedures</em>. R package version 0.8-15,
 <span class="r-out co"><span class="r-pr">#&gt;</span>   Test types</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   bonferroni: (H1-H2-H3-H4)</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Global test summary ------------------------------------------------------------</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Test summary -------------------------------------------------------------------</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   Hypothesis Adj. P-value Reject</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           H1         0.02   TRUE</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           H2         0.01   TRUE</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           H3         0.03   TRUE</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           H4         0.03   TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           H3         0.03  FALSE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           H4         0.03  FALSE</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># But tests can be specified at the hypothesis-level</span></span></span>
-<span class="r-in"><span><span class="fu">test_graph</span><span class="op">(</span></span></span>
+<span class="r-in"><span><span class="fu">test_graph_closure</span><span class="op">(</span></span></span>
 <span class="r-in"><span>  graph <span class="op">=</span> <span class="va">g</span>,</span></span>
 <span class="r-in"><span>  p <span class="op">=</span> <span class="va">p</span>,</span></span>
 <span class="r-in"><span>  alpha <span class="op">=</span> <span class="fl">.025</span>,</span></span>
@@ -233,7 +233,7 @@ Procedures</em>. R package version 0.8-15,
 <span class="r-in"><span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Test parameters ----------------------------------------------------------------</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   An initial graph</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Initial graph</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   --- Hypothesis weights ---</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   H1: 0.5000</span>
@@ -248,7 +248,7 @@ Procedures</em>. R package version 0.8-15,
 <span class="r-out co"><span class="r-pr">#&gt;</span>   H3 0.0000 1.0000 0.0000 0.0000</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   H4 1.0000 0.0000 0.0000 0.0000</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   Global alpha = 0.025</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Alpha = 0.025</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                          H1    H2    H3    H4</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   Unadjusted p-values: 0.01 0.005 0.015 0.022</span>
@@ -264,7 +264,7 @@ Procedures</em>. R package version 0.8-15,
 <span class="r-out co"><span class="r-pr">#&gt;</span>        simes: (H2)</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   parametric: (H3-H4)</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Global test summary ------------------------------------------------------------</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Test summary -------------------------------------------------------------------</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   Hypothesis Adj. P-value Reject</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           H1     0.020000   TRUE</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           H2     0.010000   TRUE</span>
