@@ -7,7 +7,7 @@
 \usage{
 test_graph_fast(p, alpha, intersections, inter_h)
 
-test_graph_shortcut_cpp(graph, p, alpha = 0.05)
+test_graph_shortcut_cpp(graph, p, alpha = 0.025)
 }
 \arguments{
 \item{p}{A numeric vector of p-values}
