@@ -49,7 +49,7 @@ sim_func <- function(sim_n,
     marginal_power = theta,
     sim_corr = sim_corr,
     sim_n = sim_n,
-    sim_success = 1,
+    sim_success = function(.) .[1],
     ...
   )
 }
@@ -259,7 +259,7 @@ for (i in 1:14) {
     transitions = transitions, # Base edges
     gamma_props = gamma_props, # Gamma edge locations
     gamma = gammas[i, ], # Gamma edge values
-    rho = rhos[[i]], # Covariance base value
+    rho = rhos[[i]], # Correlation base value
     theta = thetas[i, ], # Hypothesis means
   )
 }
@@ -320,7 +320,7 @@ for (i in 1:14) {
     transitions = transitions, # Base edges
     gamma_props = gamma_props, # Gamma edge locations
     gamma = gammas[i, ], # Gamma edge values
-    rho = rhos[[i]], # Covariance base value
+    rho = rhos[[i]], # Correlation base value
     theta = thetas[i, ], # Hypothesis means
     test_types = "simes"
   )
@@ -373,7 +373,7 @@ for (i in 1:14) {
     transitions = transitions, # Base edges
     gamma_props = gamma_props, # Gamma edge locations
     gamma = gammas[i, ], # Gamma edge values
-    rho = rhos[[i]], # Covariance base value
+    rho = rhos[[i]], # Correlation base value
     theta = thetas[i, ], # Hypothesis means
     test_groups = list(1:2, 3:4),
     test_types = c("s", "p"),

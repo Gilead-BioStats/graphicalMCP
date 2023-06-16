@@ -109,10 +109,8 @@ power_input_val <- function(graph, n, theta, corr, success) {
       all(diag(corr) == 1),
     "Correlation matrix for simulating p-values must be positive definite" =
       all(eigen(corr)$values >= 0),
-    "'Success' hypotheses must be positive integers" =
-      all(as.integer(success) == success) && all(success > 0),
-    "'Success' hypotheses must be less than graph size, and be unique" =
-      length(unique(success)) == length(success) && max(success) <= graph_size
+    "'sim_success' must be a list of functions" =
+      all(vapply(success, is.function, logical(1)))
   )
 
   invisible(graph)

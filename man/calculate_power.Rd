@@ -13,7 +13,7 @@ calculate_power(
   sim_n = 100,
   marginal_power = rep(0, length(graph$hypotheses)),
   sim_corr = diag(length(graph$hypotheses)),
-  sim_success = 1:2,
+  sim_success = NULL,
   sim_seed = NULL,
   force_closure = FALSE
 )
@@ -41,10 +41,12 @@ sampled from the multivariate normal distribution. See Details for more}
 \item{sim_corr}{A numeric matrix of correlations between hypotheses used to
 sample from the multivariate normal distribution to generate p-values}
 
-\item{sim_success}{A numeric vector indicating which hypotheses can be
-rejected to consider an experiment a success (One or more must be rejected,
-not necessarily all). It can range from a single hypothesis to all
-hypotheses in a graph}
+\item{sim_success}{A list of user-defined functions to apply to the power
+results. Functions must take one simulation's logical vector results as an
+input, and return a length-one logical vector. For instance, if "success"
+means rejecting hypotheses 1 and 2, you would use \code{sim_success = list("1 and 2" = function(x) x[1] && x[2])}. If the list is not named, the function
+body will be used as the name. Lambda functions also work, e.g.
+\verb{sim_success = list(\\(x) x[3] || x[4])}}
 
 \item{sim_seed}{(Optional) Random seed to set before simulating p-values. Set
 this to use a consistent set of p simulations across power calculations}
@@ -99,7 +101,10 @@ calculate_power(
   test_types = c("s", "p"),
   test_corr = diag(4),
   sim_n = 1e5,
-  sim_success = 1
+  sim_success = list(
+    function(.) .[1] || .[2],
+    function(.) .[1] && .[2]
+  )
 )
 
 }

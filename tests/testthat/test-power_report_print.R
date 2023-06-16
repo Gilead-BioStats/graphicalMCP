@@ -58,7 +58,7 @@ test_that("printing blended power", {
   t_corr <- matrix(pi / 4, nrow = 6, ncol = 6)
   diag(t_corr) <- 1
 
-  s_corr <- matrix(pi / 3, nrow = 6, ncol = 6)
+  s_corr <- matrix(pi / 5, nrow = 6, ncol = 6)
   diag(s_corr) <- 1
 
   expect_snapshot(
@@ -72,7 +72,10 @@ test_that("printing blended power", {
         1328,
         pi / seq(.3, 2.8, by = .5),
         s_corr,
-        c(1, 5, 6),
+        list(
+          function(.) .[1] || .[5] || .[6],
+          function(.) .[2] && (.[5] || .[6])
+        ),
         51223
       ),
       indent = 0,

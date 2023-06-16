@@ -28,10 +28,13 @@
 #'   sampled from the multivariate normal distribution. See Details for more
 #' @param sim_corr A numeric matrix of correlations between hypotheses used to
 #'   sample from the multivariate normal distribution to generate p-values
-#' @param sim_success A numeric vector indicating which hypotheses can be
-#'   rejected to consider an experiment a success (One or more must be rejected,
-#'   not necessarily all). It can range from a single hypothesis to all
-#'   hypotheses in a graph
+#' @param sim_success A list of user-defined functions to apply to the power
+#'   results. Functions must take one simulation's logical vector results as an
+#'   input, and return a length-one logical vector. For instance, if "success"
+#'   means rejecting hypotheses 1 and 2, you would use `sim_success = list("1
+#'   and 2" = function(x) x[1] && x[2])`. If the list is not named, the function
+#'   body will be used as the name. Lambda functions also work, e.g.
+#'   `sim_success = list(\(x) x[3] || x[4])`
 #' @param sim_seed (Optional) Random seed to set before simulating p-values. Set
 #'   this to use a consistent set of p simulations across power calculations
 #' @param force_closure A logical scalar used to determine whether the full
@@ -69,7 +72,10 @@
 #'   test_types = c("s", "p"),
 #'   test_corr = diag(4),
 #'   sim_n = 1e5,
-#'   sim_success = 1
+#'   sim_success = list(
+#'     function(.) .[1] || .[2],
+#'     function(.) .[1] && .[2]
+#'   )
 #' )
 #'
 calculate_power <- function(graph,
@@ -80,7 +86,7 @@ calculate_power <- function(graph,
                             sim_n = 100,
                             marginal_power = rep(0, length(graph$hypotheses)),
                             sim_corr = diag(length(graph$hypotheses)),
-                            sim_success = 1:2,
+                            sim_success = NULL,
                             sim_seed = NULL,
                             force_closure = FALSE) {
   # process test types ---------------------------------------------------------
@@ -101,6 +107,9 @@ calculate_power <- function(graph,
 
   # groups of size 1 should always use Bonferroni testing
   test_types[lengths(test_groups) == 1] <- "bonferroni"
+
+  # put a single success function into a list
+  if (is.function(sim_success)) sim_success <- list(sim_success)
 
   # input validation -----------------------------------------------------------
   fake_p <- rep(0, length(graph$hypotheses))
@@ -217,12 +226,28 @@ calculate_power <- function(graph,
 
   # calculate power results ----------------------------------------------------
   # 'success' can currently only be an 'or', not an 'and'
+  power_success <- vapply(
+    sim_success,
+    function(udf) mean(apply(test_res_mat, 1, udf)),
+    numeric(1)
+  )
+
+  if (is.null(names(power_success))) {
+    success_fun_bodies <- vapply(
+      sim_success,
+      function(udf) deparse(udf)[[2]],
+      character(1)
+    )
+
+    names(power_success) <- success_fun_bodies
+  }
+
   power <- list(
     power_local = colMeans(test_res_mat),
     power_expected = sum(test_res_mat) / sim_n,
     power_at_least_1 = mean(rowSums(test_res_mat) > 0),
     power_all = mean(rowSums(test_res_mat) == length(marginal_power)),
-    power_success = mean(rowSums(test_res_mat[, sim_success, drop = FALSE]) > 0)
+    power_success = power_success
   )
 
   structure(

@@ -1,5 +1,5 @@
 section_break <- function(text) {
-  cat("\n", text, " ", rep("-", 79 - nchar(text)), "\n", sep = "")
+  cat(text, " ", rep("-", 79 - nchar(text)), "\n", sep = "")
 }
 
 #' S3 print method for class `graph_report`
@@ -24,6 +24,7 @@ print.graph_report <- function(x, ..., precision = 6, indent = 2) {
   hyp_names <- names(x$inputs$graph$hypotheses)
 
   # Input calcs ----------------------------------------------------------------
+  cat("\n")
   section_break("Test parameters")
 
   hyp_groups <- lapply(x$inputs$groups, function(group) hyp_names[group])
@@ -79,6 +80,7 @@ print.graph_report <- function(x, ..., precision = 6, indent = 2) {
   cat("\n")
 
   # Output ---------------------------------------------------------------------
+  cat("\n")
   section_break("Test summary")
 
   hyp_width <- max(nchar(c("Hypothesis", hyp_names))) + indent - 1
@@ -104,6 +106,7 @@ print.graph_report <- function(x, ..., precision = 6, indent = 2) {
 
   # Adjusted p details ---------------------------------------------------------
   if (!is.null(x$details)) {
+    cat("\n")
     section_break("Test details - Adjusted p")
     detail_results_out <- utils::capture.output(
       print(round(x$details$results, precision))
@@ -113,6 +116,7 @@ print.graph_report <- function(x, ..., precision = 6, indent = 2) {
 
   # Critical details -----------------------------------------------------------
   if (!is.null(x$critical)) {
+    cat("\n")
     section_break("Test details - Critical values")
 
     if (any(x$inputs$test_types == "parametric")) {

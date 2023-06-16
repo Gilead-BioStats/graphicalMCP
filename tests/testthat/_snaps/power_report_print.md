@@ -28,16 +28,14 @@
       Simulation parameters ----------------------------------------------------------
         Testing 100 simulations - random seed 51223 & multivariate normal params:
       
-                          H1 H2 H3 H4
-        Simulation means:  0  0  0  0
+                        H1 H2 H3 H4
+        Marginal power:  0  0  0  0
       
-        Simulation covariance:    H1 H2 H3 H4
-                               H1  1  0  0  0
-                               H2  0  1  0  0
-                               H3  0  0  1  0
-                               H4  0  0  0  1
-      
-        Success is defined as rejecting any of [H1, H2]
+        Correlation:    H1 H2 H3 H4
+                     H1  1  0  0  0
+                     H2  0  1  0  0
+                     H3  0  0  1  0
+                     H4  0  0  0  1
       
       Power calculation --------------------------------------------------------------
                                      H1 H2 H3 H4
@@ -46,7 +44,6 @@
               Expected rejections: 0.04
         Power to reject 1 or more: 0.04
               Power to reject all: 0
-           Probability of success: 0.04
       
       Simulation details -------------------------------------------------------------
         p_sim_H1 p_sim_H2 p_sim_H3 p_sim_H4 rej_H1 rej_H2 rej_H3 rej_H4
@@ -89,16 +86,14 @@
       Simulation parameters ----------------------------------------------------------
             Testing 100 simulations - random seed 51223 & multivariate normal params:
       
-                              H1 H2 H3 H4
-            Simulation means:  0  0  0  0
+                            H1 H2 H3 H4
+            Marginal power:  0  0  0  0
       
-            Simulation covariance:    H1 H2 H3 H4
-                                   H1  1  0  0  0
-                                   H2  0  1  0  0
-                                   H3  0  0  1  0
-                                   H4  0  0  0  1
-      
-            Success is defined as rejecting any of [H1, H2]
+            Correlation:    H1 H2 H3 H4
+                         H1  1  0  0  0
+                         H2  0  1  0  0
+                         H3  0  0  1  0
+                         H4  0  0  0  1
       
       Power calculation --------------------------------------------------------------
                                          H1 H2 H3 H4
@@ -107,7 +102,6 @@
                   Expected rejections: 0.04
             Power to reject 1 or more: 0.04
                   Power to reject all: 0
-               Probability of success: 0.04
       
       Simulation details -------------------------------------------------------------
             p_sim_H1 p_sim_H2 p_sim_H3 p_sim_H4 rej_H1 rej_H2 rej_H3 rej_H4
@@ -151,16 +145,14 @@
       Simulation parameters ----------------------------------------------------------
             Testing 100 simulations - random seed 51223 & multivariate normal params:
       
-                              H1 H2 H3 H4
-            Simulation means:  0  0  0  0
+                            H1 H2 H3 H4
+            Marginal power:  0  0  0  0
       
-            Simulation covariance:    H1 H2 H3 H4
-                                   H1  1  0  0  0
-                                   H2  0  1  0  0
-                                   H3  0  0  1  0
-                                   H4  0  0  0  1
-      
-            Success is defined as rejecting any of [H1, H2]
+            Correlation:    H1 H2 H3 H4
+                         H1  1  0  0  0
+                         H2  0  1  0  0
+                         H3  0  0  1  0
+                         H4  0  0  0  1
       
       Power calculation --------------------------------------------------------------
                                          H1 H2 H3 H4
@@ -169,7 +161,6 @@
                   Expected rejections: 0.04
             Power to reject 1 or more: 0.04
                   Power to reject all: 0
-               Probability of success: 0.04
       
       Simulation details -------------------------------------------------------------
             p_sim_H1 p_sim_H2 p_sim_H3 p_sim_H4 rej_H1 rej_H2 rej_H3 rej_H4
@@ -212,16 +203,14 @@
       Simulation parameters ----------------------------------------------------------
         Testing 100 simulations - random seed 51223 & multivariate normal params:
       
-                          H1 H2 H3 H4
-        Simulation means:  0  0  0  0
+                        H1 H2 H3 H4
+        Marginal power:  0  0  0  0
       
-        Simulation covariance:    H1 H2 H3 H4
-                               H1  1  0  0  0
-                               H2  0  1  0  0
-                               H3  0  0  1  0
-                               H4  0  0  0  1
-      
-        Success is defined as rejecting any of [H1, H2]
+        Correlation:    H1 H2 H3 H4
+                     H1  1  0  0  0
+                     H2  0  1  0  0
+                     H3  0  0  1  0
+                     H4  0  0  0  1
       
       Power calculation --------------------------------------------------------------
                                      H1   H2 H3 H4
@@ -230,7 +219,6 @@
               Expected rejections: 0.04
         Power to reject 1 or more: 0.04
               Power to reject all: 0
-           Probability of success: 0.04
       
       Simulation details -------------------------------------------------------------
         p_sim_H1 p_sim_H2 p_sim_H3 p_sim_H4 rej_H1 rej_H2 rej_H3 rej_H4
@@ -274,16 +262,14 @@
       Simulation parameters ----------------------------------------------------------
             Testing 100 simulations - random seed 51223 & multivariate normal params:
       
-                              H1 H2 H3 H4
-            Simulation means:  0  0  0  0
+                            H1 H2 H3 H4
+            Marginal power:  0  0  0  0
       
-            Simulation covariance:    H1 H2 H3 H4
-                                   H1  1  0  0  0
-                                   H2  0  1  0  0
-                                   H3  0  0  1  0
-                                   H4  0  0  0  1
-      
-            Success is defined as rejecting any of [H1, H2]
+            Correlation:    H1 H2 H3 H4
+                         H1  1  0  0  0
+                         H2  0  1  0  0
+                         H3  0  0  1  0
+                         H4  0  0  0  1
       
       Power calculation --------------------------------------------------------------
                                          H1   H2 H3 H4
@@ -292,7 +278,6 @@
                   Expected rejections: 0.04
             Power to reject 1 or more: 0.04
                   Power to reject all: 0
-               Probability of success: 0.04
       
       Simulation details -------------------------------------------------------------
             p_sim_H1 p_sim_H2 p_sim_H3 p_sim_H4 rej_H1 rej_H2 rej_H3 rej_H4
@@ -341,16 +326,14 @@
       Simulation parameters ----------------------------------------------------------
         Testing 100 simulations - random seed 51223 & multivariate normal params:
       
-                          H1 H2 H3 H4
-        Simulation means:  0  0  0  0
+                        H1 H2 H3 H4
+        Marginal power:  0  0  0  0
       
-        Simulation covariance:    H1 H2 H3 H4
-                               H1  1  0  0  0
-                               H2  0  1  0  0
-                               H3  0  0  1  0
-                               H4  0  0  0  1
-      
-        Success is defined as rejecting any of [H1, H2]
+        Correlation:    H1 H2 H3 H4
+                     H1  1  0  0  0
+                     H2  0  1  0  0
+                     H3  0  0  1  0
+                     H4  0  0  0  1
       
       Power calculation --------------------------------------------------------------
                                      H1 H2 H3 H4
@@ -359,7 +342,6 @@
               Expected rejections: 0.04
         Power to reject 1 or more: 0.04
               Power to reject all: 0
-           Probability of success: 0.04
       
       Simulation details -------------------------------------------------------------
         p_sim_H1 p_sim_H2 p_sim_H3 p_sim_H4 rej_H1 rej_H2 rej_H3 rej_H4
@@ -409,16 +391,14 @@
       Simulation parameters ----------------------------------------------------------
             Testing 100 simulations - random seed 51223 & multivariate normal params:
       
-                              H1 H2 H3 H4
-            Simulation means:  0  0  0  0
+                            H1 H2 H3 H4
+            Marginal power:  0  0  0  0
       
-            Simulation covariance:    H1 H2 H3 H4
-                                   H1  1  0  0  0
-                                   H2  0  1  0  0
-                                   H3  0  0  1  0
-                                   H4  0  0  0  1
-      
-            Success is defined as rejecting any of [H1, H2]
+            Correlation:    H1 H2 H3 H4
+                         H1  1  0  0  0
+                         H2  0  1  0  0
+                         H3  0  0  1  0
+                         H4  0  0  0  1
       
       Power calculation --------------------------------------------------------------
                                          H1 H2 H3 H4
@@ -427,7 +407,6 @@
                   Expected rejections: 0.04
             Power to reject 1 or more: 0.04
                   Power to reject all: 0
-               Probability of success: 0.04
       
       Simulation details -------------------------------------------------------------
             p_sim_H1 p_sim_H2 p_sim_H3 p_sim_H4 rej_H1 rej_H2 rej_H3 rej_H4
@@ -444,10 +423,9 @@
 
     Code
       print(calculate_power(g, 0.0254871, list(4:3, c(6, 1), c(2, 5)), c("b", "s",
-        "p"), t_corr, 1328, pi / seq(0.3, 2.8, by = 0.5), s_corr, c(1, 5, 6), 51223),
-      indent = 0, precision = 10)
-    Warning <simpleWarning>
-      sigma is numerically not positive semidefinite
+        "p"), t_corr, 1328, pi / seq(0.3, 2.8, by = 0.5), s_corr, list(function(.) .[
+        1] || .[5] || .[6], function(.) .[2] && (.[5] || .[6])), 51223), indent = 0,
+      precision = 10)
     Output
       
       Test parameters ----------------------------------------------------------------
@@ -502,46 +480,39 @@
       Simulation parameters ----------------------------------------------------------
       Testing 1,328 simulations - random seed 51223 & multivariate normal params:
       
-                              H1       H2      H3       H4      H5       H6
-      Simulation means: 10.47198 3.926991 2.41661 1.745329 1.36591 1.121997
+                            H1       H2      H3       H4      H5       H6
+      Marginal power: 10.47198 3.926991 2.41661 1.745329 1.36591 1.121997
       
-       Simulation covariance:          H1       H2       H3       H4       H5
-                              H1 1.000000 1.047198 1.047198 1.047198 1.047198
-                              H2 1.047198 1.000000 1.047198 1.047198 1.047198
-                              H3 1.047198 1.047198 1.000000 1.047198 1.047198
-                              H4 1.047198 1.047198 1.047198 1.000000 1.047198
-                              H5 1.047198 1.047198 1.047198 1.047198 1.000000
-                              H6 1.047198 1.047198 1.047198 1.047198 1.047198
-             H6
-       1.047198
-       1.047198
-       1.047198
-       1.047198
-       1.047198
-       1.000000
-      
-      Success is defined as rejecting any of [H1, H5, H6]
+       Correlation:           H1        H2        H3        H4        H5        H6
+                    H1 1.0000000 0.6283185 0.6283185 0.6283185 0.6283185 0.6283185
+                    H2 0.6283185 1.0000000 0.6283185 0.6283185 0.6283185 0.6283185
+                    H3 0.6283185 0.6283185 1.0000000 0.6283185 0.6283185 0.6283185
+                    H4 0.6283185 0.6283185 0.6283185 1.0000000 0.6283185 0.6283185
+                    H5 0.6283185 0.6283185 0.6283185 0.6283185 1.0000000 0.6283185
+                    H6 0.6283185 0.6283185 0.6283185 0.6283185 0.6283185 1.0000000
       
       Power calculation --------------------------------------------------------------
                                  H1        H2        H3        H4        H5        H6
-           Power to reject each:  1 0.9164157 0.4781627 0.2756024 0.2048193 0.2048193
+           Power to reject each:  1 0.9224398 0.4856928 0.2823795 0.1822289 0.1362952
       
-            Expected rejections: 3.079819
+            Expected rejections: 3.009036
       Power to reject 1 or more: 1
-            Power to reject all: 0.2048193
-         Probability of success: 1
+            Power to reject all: 0.09638554
+      
+                                   .[1] || .[5] || .[6] .[2] && (.[5] || .[6])
+          Probability of success:                     1              0.2115964
       
       Simulation details -------------------------------------------------------------
-       p_sim_H1     p_sim_H2     p_sim_H3     p_sim_H4     p_sim_H5     p_sim_H6
-              0 0.0000000214 0.0000361885 0.0004885258 0.0017634943 0.0037507434
-              0 0.0009517561 0.0554112930 0.1779446580 0.2932872009 0.3821288658
-              0 0.0000944166 0.0131037073 0.0603497904 0.1205133360 0.1765710188
-              0 0.0000000875 0.0001020906 0.0011730862 0.0038713757 0.0077778986
-              0 0.0000000000 0.0000000068 0.0000002770 0.0000018532 0.0000058451
-              0 0.0008426908 0.0515158779 0.1687668824 0.2810820164 0.3685418740
+       p_sim_H1     p_sim_H2     p_sim_H3     p_sim_H4     p_sim_H5    p_sim_H6
+              0 0.0000013050 0.0019860128 0.0000672064 0.0038347547 0.002229351
+              0 0.0011396108 0.0504200678 0.0051636505 0.4366626910 0.588240099
+              0 0.0000712973 0.0098515982 0.0832408855 0.1589378659 0.054841743
+              0 0.0000048222 0.0006243574 0.0006082713 0.0026349721 0.011701741
+              0 0.0000000000 0.0000857302 0.0000000124 0.0000000524 0.008079884
+              0 0.0001605458 0.0233254582 0.1180986407 0.1956347397 0.553643562
        rej_H1 rej_H2 rej_H3 rej_H4 rej_H5 rej_H6
          TRUE   TRUE   TRUE   TRUE   TRUE   TRUE
-         TRUE   TRUE  FALSE  FALSE  FALSE  FALSE
+         TRUE   TRUE  FALSE   TRUE  FALSE  FALSE
          TRUE   TRUE  FALSE  FALSE  FALSE  FALSE
          TRUE   TRUE   TRUE   TRUE   TRUE   TRUE
          TRUE   TRUE   TRUE   TRUE   TRUE   TRUE

@@ -15,10 +15,7 @@ test_that("improper inputs throw errors", {
   corr_inval <- matrix(c(1, 0, .5, 0, 1, 0, 0, 0, 1), nrow = 3, byrow = TRUE)
   expect_error(calculate_power(rando, sim_corr = corr_inval))
 
-  expect_error(calculate_power(rando, sim_success = 0))
-  expect_error(calculate_power(rando, sim_success = .5))
-  expect_error(calculate_power(rando, sim_success = c(1, 1)))
-  expect_error(calculate_power(rando, sim_success = 4))
+  expect_error(calculate_power(rando, sim_success = "non-function"))
 })
 
 test_that("power results are identical under a given seed", {
@@ -124,7 +121,7 @@ test_that("complex example runs without error", {
       sim_n = 1e4,
       marginal_power = runif(9, min = 0, max = 2),
       sim_corr = diag(9),
-      sim_success = c(1, 4, 7)
+      sim_success = function(.) .[1] || .[4] || .[7]
     )
   )
 })

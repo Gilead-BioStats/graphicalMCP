@@ -20,6 +20,7 @@ print.power_report <- function(x, ..., precision = 6, indent = 2) {
   hyp_names <- names(x$inputs$graph$hypotheses)
 
   # Test input calcs -----------------------------------------------------------
+  cat("\n")
   section_break("Test parameters")
 
   hyp_groups <- lapply(x$inputs$test_groups, function(group) hyp_names[group])
@@ -64,20 +65,21 @@ print.power_report <- function(x, ..., precision = 6, indent = 2) {
   cat("\n")
 
   # Sim input calcs ------------------------------------------------------------
+  cat("\n")
   section_break("Simulation parameters")
 
   theta_mat <- matrix(
     x$inputs$marginal_power,
     nrow = 1,
     dimnames = list(
-      paste0(pad, "Simulation means:"),
+      paste0(pad, "Marginal power:"),
       hyp_names
     ),
   )
 
   dimnames(x$inputs$sim_corr) <- dimnames(x$inputs$graph$transitions)
   colname_pad <- format(
-    "Simulation covariance:   ",
+    "Correlation:   ",
     width = max(nchar(rownames(x$inputs$sim_corr)))
   )
   label <- paste0(pad_less_1, colname_pad)
@@ -105,16 +107,9 @@ print.power_report <- function(x, ..., precision = 6, indent = 2) {
   print(round(theta_mat, precision))
   cat("\n")
   print(df_corr, row.names = FALSE)
-  cat("\n")
-  cat(
-    pad,
-    "Success is defined as rejecting any of [",
-    paste(hyp_names[x$inputs$sim_success], collapse = ", "),
-    "]\n",
-    sep = ""
-  )
 
   # Power ----------------------------------------------------------------------
+  cat("\n")
   section_break("Power calculation")
 
   local_mat <- matrix(
@@ -150,15 +145,24 @@ print.power_report <- function(x, ..., precision = 6, indent = 2) {
     "\n",
     sep = ""
   )
-  cat(
-    pad,
-    "   Probability of success: ",
-    round(x$power$power_success, precision),
-    "\n",
-    sep = ""
-  )
+
+  if (!length(x$power$power_success) == 0) {
+    cat("\n")
+
+    success_mat <- matrix(
+      x$power$power_success,
+      nrow = 1,
+      dimnames = list(
+        paste0(pad, "    Probability of success: "),
+        names(x$power$power_success)
+      ),
+    )
+
+    print(round(success_mat, precision))
+  }
 
   # Details --------------------------------------------------------------------
+  cat("\n")
   section_break("Simulation details")
 
   p_dets <- round(utils::head(x$details$p_sim), precision)
