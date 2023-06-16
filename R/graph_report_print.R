@@ -94,6 +94,14 @@ print.graph_report <- function(x, ..., precision = 6, indent = 2) {
 
   print(df_summary, row.names = FALSE)
 
+  cat("\n")
+
+  graph_out <- utils::capture.output(
+    print(x$outputs$graph, title = "Updated graph after rejections")
+  )
+
+  cat(paste0(pad, graph_out), sep = "\n")
+
   # Adjusted p details ---------------------------------------------------------
   if (!is.null(x$details)) {
     section_break("Test details - Adjusted p")

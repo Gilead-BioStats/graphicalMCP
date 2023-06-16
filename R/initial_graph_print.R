@@ -33,8 +33,8 @@ print_transitions <- function(graph) {
 #' @param x An object of class `initial_graph` to print
 #' @param ... Other values passed on to other methods (currently unused)
 #' @export
-print.initial_graph <- function(x, ...) {
-  cat("Initial graph\n\n")
+print.initial_graph <- function(x, ..., title = "Initial graph") {
+  cat(paste0(title, "\n\n"))
 
   cat("--- Hypothesis weights ---\n")
 

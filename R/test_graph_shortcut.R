@@ -1,9 +1,9 @@
 #' @rdname testing
 #' @export
 test_graph_shortcut <- function(graph,
-                                  p,
-                                  alpha = .025,
-                                  critical = FALSE) {
+                                p,
+                                alpha = .025,
+                                critical = FALSE) {
   test_input_val(
     graph,
     p,
@@ -64,7 +64,11 @@ test_graph_shortcut <- function(graph,
         test_types = "bonferroni",
         corr = NULL
       ),
-      outputs = list(p_adj = adj_p, rejected = rejected),
+      outputs = list(
+        p_adj = adj_p,
+        rejected = rejected,
+        graph = update_graph(initial_graph, !rejected)$updated_graph
+      ),
       details = NULL,
       critical = critical_vals
     ),

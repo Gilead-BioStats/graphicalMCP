@@ -60,7 +60,7 @@ test_graph_fast <- function(p,
 #' @rdname testing-fast
 # C++ only, pass/fail only
 test_graph_shortcut_cpp <- function(graph,
-                                      p,
-                                      alpha = .025) {
+                                    p,
+                                    alpha = .025) {
   test_graph_shortcut_cpp_(graph$hypotheses, graph$transitions, p, alpha)
 }

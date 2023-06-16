@@ -153,7 +153,8 @@ test_that("check assertions in testing vignette", {
     test_graph_closure(par_gate, p = pvals, alpha = .05)$outputs,
     list(
       p_adj = c(.048, .02, .052, .052),
-      rejected = c(TRUE, TRUE, FALSE, FALSE)
+      rejected = c(TRUE, TRUE, FALSE, FALSE),
+      graph = update_graph(par_gate, c(FALSE, FALSE, TRUE, TRUE))$updated_graph
     ),
     ignore_attr = TRUE
   )
@@ -167,7 +168,8 @@ test_that("check assertions in testing vignette", {
     )$outputs,
     list(
       p_adj = c(.027, .02, .027, .027),
-      rejected = rep(TRUE, 4)
+      rejected = rep(TRUE, 4),
+      graph = update_graph(par_gate, rep(FALSE, 4))$updated_graph
     ),
     ignore_attr = TRUE
   )
@@ -187,7 +189,8 @@ test_that("check assertions in testing vignette", {
     )$outputs,
     list(
       p_adj = c(.048, .02, .048, .048),
-      rejected = rep(TRUE, 4)
+      rejected = rep(TRUE, 4),
+      graph = update_graph(par_gate, rep(FALSE, 4))$updated_graph
     ),
     ignore_attr = TRUE
   )

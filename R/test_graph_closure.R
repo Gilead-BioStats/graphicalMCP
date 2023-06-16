@@ -68,13 +68,13 @@
 #'   corr = corr
 #' )
 test_graph_closure <- function(graph,
-                       p,
-                       alpha = .025,
-                       groups = list(seq_along(graph$hypotheses)),
-                       test_types = c("bonferroni"),
-                       corr = NULL,
-                       verbose = FALSE,
-                       critical = FALSE) {
+                               p,
+                               alpha = .025,
+                               groups = list(seq_along(graph$hypotheses)),
+                               test_types = c("bonferroni"),
+                               corr = NULL,
+                               verbose = FALSE,
+                               critical = FALSE) {
   test_opts <- c(
     bonferroni = "bonferroni",
     parametric = "parametric",
@@ -204,7 +204,11 @@ test_graph_closure <- function(graph,
         test_types = test_types,
         corr = corr
       ),
-      outputs = list(p_adj = p_adj_global, rejected = test_global),
+      outputs = list(
+        p_adj = p_adj_global,
+        rejected = test_global,
+        graph = update_graph(graph, !test_global)$updated_graph
+      ),
       details = detail_results,
       critical = critical_results
     ),

@@ -34,6 +34,21 @@
                 H2         0.01   TRUE
                 H3         0.01   TRUE
                 H4         0.01   TRUE
+      
+        Updated graph after rejections
+        
+        --- Hypothesis weights ---
+        H1: 0.0000
+        H2: 0.0000
+        H3: 0.0000
+        H4: 0.0000
+        
+        --- Transition weights ---
+               H1     H2     H3     H4
+        H1 0.0000 0.0000 0.0000 0.0000
+        H2 0.0000 0.0000 0.0000 0.0000
+        H3 0.0000 0.0000 0.0000 0.0000
+        H4 0.0000 0.0000 0.0000 0.0000
 
 ---
 
@@ -71,6 +86,21 @@
                 H2         0.02   TRUE
                 H3         0.02   TRUE
                 H4         0.02   TRUE
+      
+        Updated graph after rejections
+        
+        --- Hypothesis weights ---
+        H1: 0.0000
+        H2: 0.0000
+        H3: 0.0000
+        H4: 0.0000
+        
+        --- Transition weights ---
+               H1     H2     H3     H4
+        H1 0.0000 0.0000 0.0000 0.0000
+        H2 0.0000 0.0000 0.0000 0.0000
+        H3 0.0000 0.0000 0.0000 0.0000
+        H4 0.0000 0.0000 0.0000 0.0000
       
       Test details - Adjusted p ------------------------------------------------------
             H1  H2  H3  H4 padj_grp1 p_adj_inter res
@@ -126,6 +156,21 @@
                 H2         0.02   TRUE
                 H3         0.02   TRUE
                 H4         0.02   TRUE
+      
+        Updated graph after rejections
+        
+        --- Hypothesis weights ---
+        H1: 0.0000
+        H2: 0.0000
+        H3: 0.0000
+        H4: 0.0000
+        
+        --- Transition weights ---
+               H1     H2     H3     H4
+        H1 0.0000 0.0000 0.0000 0.0000
+        H2 0.0000 0.0000 0.0000 0.0000
+        H3 0.0000 0.0000 0.0000 0.0000
+        H4 0.0000 0.0000 0.0000 0.0000
       
       Test details - Critical values -------------------------------------------------
          Intersection Hypothesis       Test    p <= Critical * Alpha Reject
@@ -237,6 +282,21 @@
                 H2       0.0199   TRUE
                 H3       0.0199   TRUE
                 H4       0.0199   TRUE
+      
+        Updated graph after rejections
+        
+        --- Hypothesis weights ---
+        H1: 0.0000
+        H2: 0.0000
+        H3: 0.0000
+        H4: 0.0000
+        
+        --- Transition weights ---
+               H1     H2     H3     H4
+        H1 0.0000 0.0000 0.0000 0.0000
+        H2 0.0000 0.0000 0.0000 0.0000
+        H3 0.0000 0.0000 0.0000 0.0000
+        H4 0.0000 0.0000 0.0000 0.0000
 
 ---
 
@@ -282,6 +342,21 @@
                 H2         0.02   TRUE
                 H3         0.02   TRUE
                 H4         0.02   TRUE
+      
+        Updated graph after rejections
+        
+        --- Hypothesis weights ---
+        H1: 0.0000
+        H2: 0.0000
+        H3: 0.0000
+        H4: 0.0000
+        
+        --- Transition weights ---
+               H1     H2     H3     H4
+        H1 0.0000 0.0000 0.0000 0.0000
+        H2 0.0000 0.0000 0.0000 0.0000
+        H3 0.0000 0.0000 0.0000 0.0000
+        H4 0.0000 0.0000 0.0000 0.0000
       
       Test details - Adjusted p ------------------------------------------------------
             H1  H2  H3  H4 padj_grp1 padj_grp2 p_adj_inter res
@@ -414,6 +489,21 @@
                 H3         0.02   TRUE
                 H4         0.02   TRUE
       
+        Updated graph after rejections
+        
+        --- Hypothesis weights ---
+        H1: 0.0000
+        H2: 0.0000
+        H3: 0.0000
+        H4: 0.0000
+        
+        --- Transition weights ---
+               H1     H2     H3     H4
+        H1 0.0000 0.0000 0.0000 0.0000
+        H2 0.0000 0.0000 0.0000 0.0000
+        H3 0.0000 0.0000 0.0000 0.0000
+        H4 0.0000 0.0000 0.0000 0.0000
+      
       Test details - Adjusted p ------------------------------------------------------
             H1  H2  H3  H4 padj_grp1 padj_grp2 p_adj_inter res
         1  0.5 0.5 0.0 0.0    0.0199    1.0000      0.0199   1
@@ -536,6 +626,21 @@
                 H2         0.02   TRUE
                 H3         0.02   TRUE
                 H4         0.02   TRUE
+      
+        Updated graph after rejections
+        
+        --- Hypothesis weights ---
+        H1: 0.0000
+        H2: 0.0000
+        H3: 0.0000
+        H4: 0.0000
+        
+        --- Transition weights ---
+               H1     H2     H3     H4
+        H1 0.0000 0.0000 0.0000 0.0000
+        H2 0.0000 0.0000 0.0000 0.0000
+        H3 0.0000 0.0000 0.0000 0.0000
+        H4 0.0000 0.0000 0.0000 0.0000
 
 # additional printing options for graph report
 
@@ -574,6 +679,21 @@
                   H2         0.02   TRUE
                   H3         0.02   TRUE
                   H4         0.02   TRUE
+      
+          Updated graph after rejections
+          
+          --- Hypothesis weights ---
+          H1: 0.0000
+          H2: 0.0000
+          H3: 0.0000
+          H4: 0.0000
+          
+          --- Transition weights ---
+                 H1     H2     H3     H4
+          H1 0.0000 0.0000 0.0000 0.0000
+          H2 0.0000 0.0000 0.0000 0.0000
+          H3 0.0000 0.0000 0.0000 0.0000
+          H4 0.0000 0.0000 0.0000 0.0000
       
       Test details - Adjusted p ------------------------------------------------------
               H1  H2  H3  H4 padj_grp1 p_adj_inter res
@@ -698,6 +818,21 @@
                        H2         0.02   TRUE
                        H3         0.02   TRUE
                        H4         0.02   TRUE
+      
+               Updated graph after rejections
+               
+               --- Hypothesis weights ---
+               H1: 0.0000
+               H2: 0.0000
+               H3: 0.0000
+               H4: 0.0000
+               
+               --- Transition weights ---
+                      H1     H2     H3     H4
+               H1 0.0000 0.0000 0.0000 0.0000
+               H2 0.0000 0.0000 0.0000 0.0000
+               H3 0.0000 0.0000 0.0000 0.0000
+               H4 0.0000 0.0000 0.0000 0.0000
       
       Test details - Critical values -------------------------------------------------
                 step Hypothesis       Test    p <= Critical * Alpha Reject
