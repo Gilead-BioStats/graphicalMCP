@@ -60,7 +60,7 @@ hypothesis weights, and the transition weights.</p>
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="co"># S3 method for initial_graph</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">x</span>, <span class="va">...</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">x</span>, <span class="va">...</span>, precision <span class="op">=</span> <span class="fl">4</span>, indent <span class="op">=</span> <span class="fl">0</span>, title <span class="op">=</span> <span class="st">"Initial graph"</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
@@ -71,6 +71,20 @@ hypothesis weights, and the transition weights.</p>
 
 <dt>...</dt>
 <dd><p>Other values passed on to other methods (currently unused)</p></dd>
+
+
+<dt>precision</dt>
+<dd><p>An integer scalar indicating the maximum number of decimals
+to include in numeric values</p></dd>
+
+
+<dt>indent</dt>
+<dd><p>An integer scalar indicating how many spaces to indent results</p></dd>
+
+
+<dt>title</dt>
+<dd><p>First line of printing, used internally to distinguish initial
+graphs from updated graphs</p></dd>
 
 </dl></div>
 
