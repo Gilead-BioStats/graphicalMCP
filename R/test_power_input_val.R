@@ -107,6 +107,8 @@ power_input_val <- function(graph, n, theta, corr, success) {
       isSymmetric.matrix(corr),
     "Correlation matrix for simulating p-values must have diagonal all 1" =
       all(diag(corr) == 1),
+    "Correlation matrix for simulating p-values must be positive definite" =
+      all(eigen(corr)$values >= 0),
     "'Success' hypotheses must be positive integers" =
       all(as.integer(success) == success) && all(success > 0),
     "'Success' hypotheses must be less than graph size, and be unique" =
