@@ -40,6 +40,7 @@ test_graph_shortcut <- function(graph,
       )
       critical_step[[1]] <- i
       names(critical_step)[[1]] <- "step"
+      critical_step$Test <- NULL
       critical_step$c <- NULL
       critical_step$`*` <- NULL
 

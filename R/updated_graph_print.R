@@ -9,7 +9,7 @@
 #'
 #' @export
 print.updated_graph <- function(x, ...) {
-  print(x$initial_graph)
+  print(x$initial_graph, ...)
 
   cat("\n", paste(rep("-", 80), collapse = ""), "\n\n", sep = "")
 
@@ -19,5 +19,5 @@ print.updated_graph <- function(x, ...) {
 
   cat("\n", paste(rep("-", 80), collapse = ""), "\n\n", sep = "")
 
-  print(x$updated_graph)
+  print(x$updated_graph, title = "Updated graph", ...)
 }

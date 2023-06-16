@@ -22,7 +22,6 @@ print.power_report <- function(x, ..., precision = 6, indent = 2) {
   # Test input calcs -----------------------------------------------------------
   section_break("Test parameters")
 
-  graph_out <- utils::capture.output(print(x$inputs$graph))
   hyp_groups <- lapply(x$inputs$test_groups, function(group) hyp_names[group])
   pad_tests <- formatC(
     x$inputs$test_types,
@@ -53,7 +52,7 @@ print.power_report <- function(x, ..., precision = 6, indent = 2) {
   }
 
   # Test input print -----------------------------------------------------------
-  cat(paste0(pad, graph_out), sep = "\n")
+  print(x$inputs$graph, precision = precision, indent = indent)
   cat("\n")
   cat(pad, "Global alpha = ", x$inputs$alpha, sep = "")
   cat("\n\n")

@@ -26,7 +26,6 @@ print.graph_report <- function(x, ..., precision = 6, indent = 2) {
   # Input calcs ----------------------------------------------------------------
   section_break("Test parameters")
 
-  graph_out <- utils::capture.output(print(x$inputs$graph))
   hyp_groups <- lapply(x$inputs$groups, function(group) hyp_names[group])
   pad_tests <- formatC(
     x$inputs$test_types,
@@ -66,7 +65,7 @@ print.graph_report <- function(x, ..., precision = 6, indent = 2) {
   }
 
   # Input print ----------------------------------------------------------------
-  cat(paste0(pad, graph_out), sep = "\n")
+  print(x$inputs$graph, precision = precision, indent = indent)
   cat("\n")
   cat(pad, "Alpha = ", x$inputs$alpha, sep = "")
   cat("\n\n")
@@ -96,11 +95,12 @@ print.graph_report <- function(x, ..., precision = 6, indent = 2) {
 
   cat("\n")
 
-  graph_out <- utils::capture.output(
-    print(x$outputs$graph, title = "Updated graph after rejections")
+  print(
+    x$outputs$graph,
+    precision = precision,
+    indent = indent,
+    title = "Updated graph after rejections"
   )
-
-  cat(paste0(pad, graph_out), sep = "\n")
 
   # Adjusted p details ---------------------------------------------------------
   if (!is.null(x$details)) {
