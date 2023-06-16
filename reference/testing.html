@@ -193,19 +193,19 @@ Procedures</em>. R package version 0.8-15,
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Test parameters ----------------------------------------------------------------</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   Initial graph</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   --- Hypothesis weights ---</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   H1: 0.5000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   H2: 0.5000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   H3: 0.0000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   H4: 0.0000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   H1: 0.500000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   H2: 0.500000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   H3: 0.000000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   H4: 0.000000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   --- Transition weights ---</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>          H1     H2     H3     H4</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   H1 0.0000 0.0000 1.0000 0.0000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   H2 0.0000 0.0000 0.0000 1.0000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   H3 0.0000 1.0000 0.0000 0.0000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   H4 1.0000 0.0000 0.0000 0.0000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            H1       H2       H3       H4</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   H1 0.000000 0.000000 1.000000 0.000000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   H2 0.000000 0.000000 0.000000 1.000000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   H3 0.000000 1.000000 0.000000 0.000000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   H4 1.000000 0.000000 0.000000 0.000000</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   Alpha = 0.025</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
@@ -221,6 +221,21 @@ Procedures</em>. R package version 0.8-15,
 <span class="r-out co"><span class="r-pr">#&gt;</span>           H2         0.01   TRUE</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           H3         0.03  FALSE</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           H4         0.03  FALSE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Updated graph after rejections</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   --- Hypothesis weights ---</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   H1: 0.000000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   H2: 0.000000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   H3: 0.500000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   H4: 0.500000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   --- Transition weights ---</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            H1       H2       H3       H4</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   H1 0.000000 0.000000 0.000000 0.000000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   H2 0.000000 0.000000 0.000000 0.000000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   H3 0.000000 0.000000 0.000000 1.000000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   H4 0.000000 0.000000 1.000000 0.000000</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># But tests can be specified at the hypothesis-level</span></span></span>
 <span class="r-in"><span><span class="fu">test_graph_closure</span><span class="op">(</span></span></span>
@@ -234,19 +249,19 @@ Procedures</em>. R package version 0.8-15,
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Test parameters ----------------------------------------------------------------</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   Initial graph</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   --- Hypothesis weights ---</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   H1: 0.5000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   H2: 0.5000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   H3: 0.0000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   H4: 0.0000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   H1: 0.500000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   H2: 0.500000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   H3: 0.000000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   H4: 0.000000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   --- Transition weights ---</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>          H1     H2     H3     H4</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   H1 0.0000 0.0000 1.0000 0.0000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   H2 0.0000 0.0000 0.0000 1.0000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   H3 0.0000 1.0000 0.0000 0.0000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   H4 1.0000 0.0000 0.0000 0.0000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            H1       H2       H3       H4</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   H1 0.000000 0.000000 1.000000 0.000000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   H2 0.000000 0.000000 0.000000 1.000000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   H3 0.000000 1.000000 0.000000 0.000000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   H4 1.000000 0.000000 0.000000 0.000000</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   Alpha = 0.025</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
@@ -270,6 +285,21 @@ Procedures</em>. R package version 0.8-15,
 <span class="r-out co"><span class="r-pr">#&gt;</span>           H2     0.010000   TRUE</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           H3     0.021546   TRUE</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           H4     0.022000   TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Updated graph after rejections</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   --- Hypothesis weights ---</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   H1: 0.000000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   H2: 0.000000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   H3: 0.000000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   H4: 0.000000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   --- Transition weights ---</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            H1       H2       H3       H4</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   H1 0.000000 0.000000 0.000000 0.000000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   H2 0.000000 0.000000 0.000000 0.000000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   H3 0.000000 0.000000 0.000000 0.000000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   H4 0.000000 0.000000 0.000000 0.000000</span>
 </code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
