@@ -80,7 +80,7 @@ as expected rejections and probability of rejecting any hypothesis</p>
 <span>  sim_n <span class="op">=</span> <span class="fl">100</span>,</span>
 <span>  marginal_power <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">graph</span><span class="op">$</span><span class="va">hypotheses</span><span class="op">)</span><span class="op">)</span>,</span>
 <span>  sim_corr <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/diag.html" class="external-link">diag</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">graph</span><span class="op">$</span><span class="va">hypotheses</span><span class="op">)</span><span class="op">)</span>,</span>
-<span>  sim_success <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="fl">2</span>,</span>
+<span>  sim_success <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  sim_seed <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  force_closure <span class="op">=</span> <span class="cn">FALSE</span></span>
 <span><span class="op">)</span></span></code></pre></div>
@@ -127,10 +127,12 @@ sample from the multivariate normal distribution to generate p-values</p></dd>
 
 
 <dt>sim_success</dt>
-<dd><p>A numeric vector indicating which hypotheses can be
-rejected to consider an experiment a success (One or more must be rejected,
-not necessarily all). It can range from a single hypothesis to all
-hypotheses in a graph</p></dd>
+<dd><p>A list of user-defined functions to apply to the power
+results. Functions must take one simulation's logical vector results as an
+input, and return a length-one logical vector. For instance, if "success"
+means rejecting hypotheses 1 and 2, you would use <code>sim_success = list("1 and 2" = function(x) x[1] &amp;&amp; x[2])</code>. If the list is not named, the function
+body will be used as the name. Lambda functions also work, e.g.
+<code>sim_success = list(\(x) x[3] || x[4])</code></p></dd>
 
 
 <dt>sim_seed</dt>
@@ -226,34 +228,31 @@ Procedures</em>. R package version 0.8-15,
 <span class="r-out co"><span class="r-pr">#&gt;</span> Simulation parameters ----------------------------------------------------------</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   Testing 100,000 simulations with multivariate normal params:</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                     H1 H2 H3 H4</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   Simulation means:  0  0  0  0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                   H1 H2 H3 H4</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Marginal power:  0  0  0  0</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   Simulation covariance:    H1 H2 H3 H4</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                          H1  1  0  0  0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                          H2  0  1  0  0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                          H3  0  0  1  0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                          H4  0  0  0  1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   Success is defined as rejecting any of [H1, H2]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Correlation:    H1 H2 H3 H4</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                H1  1  0  0  0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                H2  0  1  0  0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                H3  0  0  1  0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                H4  0  0  0  1</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Power calculation --------------------------------------------------------------</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                                  H1      H2      H3      H4</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>        Power to reject each: 0.0257 0.02522 0.00056 0.00062</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>        Power to reject each: 0.0254 0.02508 0.00077 0.00047</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>         Expected rejections: 0.0521</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   Power to reject 1 or more: 0.05033</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>         Power to reject all: 0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>      Probability of success: 0.05033</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         Expected rejections: 0.05172</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Power to reject 1 or more: 0.0498</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         Power to reject all: 1e-05</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Simulation details -------------------------------------------------------------</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   p_sim_H1 p_sim_H2 p_sim_H3 p_sim_H4 rej_H1 rej_H2 rej_H3 rej_H4</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   0.783655 0.290186 0.019856 0.389687  FALSE  FALSE  FALSE  FALSE</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   0.976933 0.137408 0.843859 0.557907  FALSE  FALSE  FALSE  FALSE</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   0.167606 0.889726 0.752011 0.547201  FALSE  FALSE  FALSE  FALSE</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   0.291550 0.196287 0.452440 0.681048  FALSE  FALSE  FALSE  FALSE</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   0.587235 0.348949 0.599121 0.695705  FALSE  FALSE  FALSE  FALSE</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   0.832773 0.662777 0.302513 0.780583  FALSE  FALSE  FALSE  FALSE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   0.635363 0.616792 0.520342 0.208376  FALSE  FALSE  FALSE  FALSE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   0.493956 0.211090 0.921053 0.311328  FALSE  FALSE  FALSE  FALSE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   0.992262 0.563372 0.603579 0.895049  FALSE  FALSE  FALSE  FALSE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   0.220901 0.377367 0.087020 0.029849  FALSE  FALSE  FALSE  FALSE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   0.781923 0.456116 0.579934 0.394845  FALSE  FALSE  FALSE  FALSE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   0.289719 0.496770 0.919732 0.699976  FALSE  FALSE  FALSE  FALSE</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   ...</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-in"><span></span></span>
@@ -266,7 +265,10 @@ Procedures</em>. R package version 0.8-15,
 <span class="r-in"><span>  test_types <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"s"</span>, <span class="st">"p"</span><span class="op">)</span>,</span></span>
 <span class="r-in"><span>  test_corr <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/diag.html" class="external-link">diag</a></span><span class="op">(</span><span class="fl">4</span><span class="op">)</span>,</span></span>
 <span class="r-in"><span>  sim_n <span class="op">=</span> <span class="fl">1e5</span>,</span></span>
-<span class="r-in"><span>  sim_success <span class="op">=</span> <span class="fl">1</span></span></span>
+<span class="r-in"><span>  sim_success <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span></span>
+<span class="r-in"><span>    <span class="kw">function</span><span class="op">(</span><span class="va">.</span><span class="op">)</span> <span class="va">.</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span> <span class="op">||</span> <span class="va">.</span><span class="op">[</span><span class="fl">2</span><span class="op">]</span>,</span></span>
+<span class="r-in"><span>    <span class="kw">function</span><span class="op">(</span><span class="va">.</span><span class="op">)</span> <span class="va">.</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span> <span class="op">&amp;&amp;</span> <span class="va">.</span><span class="op">[</span><span class="fl">2</span><span class="op">]</span></span></span>
+<span class="r-in"><span>  <span class="op">)</span></span></span>
 <span class="r-in"><span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Test parameters ----------------------------------------------------------------</span>
@@ -300,34 +302,34 @@ Procedures</em>. R package version 0.8-15,
 <span class="r-out co"><span class="r-pr">#&gt;</span> Simulation parameters ----------------------------------------------------------</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   Testing 100,000 simulations with multivariate normal params:</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                     H1 H2 H3 H4</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   Simulation means:  0  0  0  0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                   H1 H2 H3 H4</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Marginal power:  0  0  0  0</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   Simulation covariance:    H1 H2 H3 H4</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                          H1  1  0  0  0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                          H2  0  1  0  0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                          H3  0  0  1  0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                          H4  0  0  0  1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   Success is defined as rejecting any of [H1]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Correlation:    H1 H2 H3 H4</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                H1  1  0  0  0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                H2  0  1  0  0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                H3  0  0  1  0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                H4  0  0  0  1</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Power calculation --------------------------------------------------------------</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                                   H1      H2    H3      H4</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>        Power to reject each: 0.01256 0.01214 7e-05 0.00012</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                                   H1      H2      H3      H4</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>        Power to reject each: 0.01271 0.01244 0.00018 0.00018</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>         Expected rejections: 0.02489</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   Power to reject 1 or more: 0.02457</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         Expected rejections: 0.02551</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Power to reject 1 or more: 0.02497</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         Power to reject all: 0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>      Probability of success: 0.01256</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                                .[1] || .[2] .[1] &amp;&amp; .[2]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       Probability of success:       0.02497      0.00018</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Simulation details -------------------------------------------------------------</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   p_sim_H1 p_sim_H2 p_sim_H3 p_sim_H4 rej_H1 rej_H2 rej_H3 rej_H4</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   0.259768 0.029469 0.303981 0.901774  FALSE  FALSE  FALSE  FALSE</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   0.931307 0.003320 0.510739 0.953731  FALSE   TRUE  FALSE  FALSE</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   0.028217 0.379949 0.021014 0.270630  FALSE  FALSE  FALSE  FALSE</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   0.411473 0.744847 0.330344 0.129083  FALSE  FALSE  FALSE  FALSE</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   0.018243 0.432281 0.487328 0.072647  FALSE  FALSE  FALSE  FALSE</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   0.429250 0.465437 0.185197 0.492935  FALSE  FALSE  FALSE  FALSE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   0.055205 0.383128 0.322496 0.197117  FALSE  FALSE  FALSE  FALSE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   0.375146 0.877173 0.547235 0.463142  FALSE  FALSE  FALSE  FALSE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   0.141440 0.276052 0.917459 0.179086  FALSE  FALSE  FALSE  FALSE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   0.548382 0.248543 0.507890 0.732309  FALSE  FALSE  FALSE  FALSE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   0.907547 0.716558 0.341091 0.895246  FALSE  FALSE  FALSE  FALSE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   0.586701 0.646057 0.846489 0.187124  FALSE  FALSE  FALSE  FALSE</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   ...</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-in"><span></span></span>

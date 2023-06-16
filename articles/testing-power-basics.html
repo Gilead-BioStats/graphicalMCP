@@ -1264,16 +1264,14 @@ graph at alpha level .05 with Bonferroni testing.</p>
 <span><span class="co">#&gt; Simulation parameters ----------------------------------------------------------</span></span>
 <span><span class="co">#&gt;   Testing 100,000 simulations with multivariate normal params:</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;                     A1 B1 A2 B2</span></span>
-<span><span class="co">#&gt;   Simulation means:  0  0  0  0</span></span>
+<span><span class="co">#&gt;                   A1 B1 A2 B2</span></span>
+<span><span class="co">#&gt;   Marginal power:  0  0  0  0</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;   Simulation covariance:    A1 B1 A2 B2</span></span>
-<span><span class="co">#&gt;                          A1  1  0  0  0</span></span>
-<span><span class="co">#&gt;                          B1  0  1  0  0</span></span>
-<span><span class="co">#&gt;                          A2  0  0  1  0</span></span>
-<span><span class="co">#&gt;                          B2  0  0  0  1</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;   Success is defined as rejecting any of [A1, B1]</span></span>
+<span><span class="co">#&gt;   Correlation:    A1 B1 A2 B2</span></span>
+<span><span class="co">#&gt;                A1  1  0  0  0</span></span>
+<span><span class="co">#&gt;                B1  0  1  0  0</span></span>
+<span><span class="co">#&gt;                A2  0  0  1  0</span></span>
+<span><span class="co">#&gt;                B2  0  0  0  1</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Power calculation --------------------------------------------------------------</span></span>
 <span><span class="co">#&gt;                                   A1      B1      A2      B2</span></span>
@@ -1282,7 +1280,6 @@ graph at alpha level .05 with Bonferroni testing.</p>
 <span><span class="co">#&gt;         Expected rejections: 0.05133</span></span>
 <span><span class="co">#&gt;   Power to reject 1 or more: 0.04948</span></span>
 <span><span class="co">#&gt;         Power to reject all: 0</span></span>
-<span><span class="co">#&gt;      Probability of success: 0.04948</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Simulation details -------------------------------------------------------------</span></span>
 <span><span class="co">#&gt;   p_sim_A1 p_sim_B1 p_sim_A2 p_sim_B2 rej_A1 rej_B1 rej_A2 rej_B2</span></span>
@@ -1337,16 +1334,14 @@ well.</p>
 <span><span class="co">#&gt; Simulation parameters ----------------------------------------------------------</span></span>
 <span><span class="co">#&gt;   Testing 100,000 simulations with multivariate normal params:</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;                     A1 B1 A2 B2</span></span>
-<span><span class="co">#&gt;   Simulation means:  0  0  0  0</span></span>
+<span><span class="co">#&gt;                   A1 B1 A2 B2</span></span>
+<span><span class="co">#&gt;   Marginal power:  0  0  0  0</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;   Simulation covariance:    A1 B1 A2 B2</span></span>
-<span><span class="co">#&gt;                          A1  1  0  0  0</span></span>
-<span><span class="co">#&gt;                          B1  0  1  0  0</span></span>
-<span><span class="co">#&gt;                          A2  0  0  1  0</span></span>
-<span><span class="co">#&gt;                          B2  0  0  0  1</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;   Success is defined as rejecting any of [A1, B1]</span></span>
+<span><span class="co">#&gt;   Correlation:    A1 B1 A2 B2</span></span>
+<span><span class="co">#&gt;                A1  1  0  0  0</span></span>
+<span><span class="co">#&gt;                B1  0  1  0  0</span></span>
+<span><span class="co">#&gt;                A2  0  0  1  0</span></span>
+<span><span class="co">#&gt;                B2  0  0  0  1</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Power calculation --------------------------------------------------------------</span></span>
 <span><span class="co">#&gt;                                   A1      B1    A2      B2</span></span>
@@ -1355,7 +1350,6 @@ well.</p>
 <span><span class="co">#&gt;         Expected rejections: 0.05619</span></span>
 <span><span class="co">#&gt;   Power to reject 1 or more: 0.05395</span></span>
 <span><span class="co">#&gt;         Power to reject all: 0</span></span>
-<span><span class="co">#&gt;      Probability of success: 0.05395</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Simulation details -------------------------------------------------------------</span></span>
 <span><span class="co">#&gt;   p_sim_A1 p_sim_B1 p_sim_A2 p_sim_B2 rej_A1 rej_B1 rej_A2 rej_B2</span></span>
@@ -1383,7 +1377,7 @@ p-values are simulated from the multivariate normal distribution.</p>
 <span>  test_corr <span class="op">=</span> <span class="va">corr2</span>,</span>
 <span>  marginal_power <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">1</span>, <span class="fl">3</span>, <span class="fl">3</span><span class="op">)</span>,</span>
 <span>  sim_corr <span class="op">=</span> <span class="va">s_corr1</span>,</span>
-<span>  sim_success <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="fl">2</span>,</span>
+<span>  sim_success <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="va">.</span><span class="op">)</span> <span class="va">.</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span> <span class="op">||</span> <span class="va">.</span><span class="op">[</span><span class="fl">2</span><span class="op">]</span>,</span>
 <span>  sim_seed <span class="op">=</span> <span class="fl">52423</span>, <span class="co"># Set a seed if you need consistent p-values</span></span>
 <span>  sim_n <span class="op">=</span> <span class="fl">1e5</span></span>
 <span><span class="op">)</span></span>
@@ -1418,16 +1412,14 @@ p-values are simulated from the multivariate normal distribution.</p>
 <span><span class="co">#&gt; Simulation parameters ----------------------------------------------------------</span></span>
 <span><span class="co">#&gt;   Testing 100,000 simulations - random seed 52423 &amp; multivariate normal params:</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;                     A1 B1 A2 B2</span></span>
-<span><span class="co">#&gt;   Simulation means:  1  1  3  3</span></span>
+<span><span class="co">#&gt;                   A1 B1 A2 B2</span></span>
+<span><span class="co">#&gt;   Marginal power:  1  1  3  3</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;   Simulation covariance:      A1   B1   A2   B2</span></span>
-<span><span class="co">#&gt;                          A1 1.00 0.50 0.50 0.25</span></span>
-<span><span class="co">#&gt;                          B1 0.50 1.00 0.25 0.50</span></span>
-<span><span class="co">#&gt;                          A2 0.50 0.25 1.00 0.50</span></span>
-<span><span class="co">#&gt;                          B2 0.25 0.50 0.50 1.00</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;   Success is defined as rejecting any of [A1, B1]</span></span>
+<span><span class="co">#&gt;   Correlation:      A1   B1   A2   B2</span></span>
+<span><span class="co">#&gt;                A1 1.00 0.50 0.50 0.25</span></span>
+<span><span class="co">#&gt;                B1 0.50 1.00 0.25 0.50</span></span>
+<span><span class="co">#&gt;                A2 0.50 0.25 1.00 0.50</span></span>
+<span><span class="co">#&gt;                B2 0.25 0.50 0.50 1.00</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Power calculation --------------------------------------------------------------</span></span>
 <span><span class="co">#&gt;                                   A1      B1      A2      B2</span></span>
@@ -1436,7 +1428,9 @@ p-values are simulated from the multivariate normal distribution.</p>
 <span><span class="co">#&gt;         Expected rejections: 0.80722</span></span>
 <span><span class="co">#&gt;   Power to reject 1 or more: 0.28897</span></span>
 <span><span class="co">#&gt;         Power to reject all: 0.11828</span></span>
-<span><span class="co">#&gt;      Probability of success: 0.28897</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt;                                .[1] || .[2]</span></span>
+<span><span class="co">#&gt;       Probability of success:       0.28897</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Simulation details -------------------------------------------------------------</span></span>
 <span><span class="co">#&gt;   p_sim_A1 p_sim_B1 p_sim_A2 p_sim_B2 rej_A1 rej_B1 rej_A2 rej_B2</span></span>
