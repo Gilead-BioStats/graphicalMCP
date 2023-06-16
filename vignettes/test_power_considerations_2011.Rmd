@@ -326,9 +326,14 @@ for (i in 1:14) {
   )
 }
 
-at_least_1_simes <- as.numeric(lapply(out_list_simes, function(x) x$power$power_at_least_1))
+at_least_1_simes <- as.numeric(
+  lapply(out_list_simes, function(x) x$power$power_at_least_1)
+)
 
-loc_pow_simes <- do.call(rbind, lapply(out_list_simes, function(x) x$power$power_local))
+loc_pow_simes <- do.call(
+  rbind,
+  lapply(out_list_simes, function(x) x$power$power_local)
+)
 
 res_pi_simes <- round(cbind(at_least_1_simes, loc_pow_simes), 3)
 
@@ -376,9 +381,14 @@ for (i in 1:14) {
   )
 }
 
-at_least_1_mix <- as.numeric(lapply(out_list_mix, function(x) x$power$power_at_least_1))
+at_least_1_mix <- as.numeric(
+  lapply(out_list_mix, function(x) x$power$power_at_least_1)
+)
 
-loc_pow_mix <- do.call(rbind, lapply(out_list_mix, function(x) x$power$power_local))
+loc_pow_mix <- do.call(
+  rbind,
+  lapply(out_list_mix, function(x) x$power$power_local)
+)
 
 res_pi_mix <- round(cbind(at_least_1_mix, loc_pow_mix), 3)
 

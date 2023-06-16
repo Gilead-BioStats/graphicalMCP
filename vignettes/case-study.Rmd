@@ -18,7 +18,6 @@ knitr::opts_chunk$set(
 
 ```{r setup, message=FALSE, warning=FALSE}
 library(graphicalMCP)
-library(tidyr)
 library(dplyr)
 library(here)
 library(gt)
@@ -285,32 +284,6 @@ names(results) <- c(
 ```
 
 ```{r results-full}
-# df_hyp_4 <- data.frame(hyp_4 = v_hyp_4)
-# df_gamma <- data.frame(gamma = v_gamma)
-# 
-# df_marginal_power <- data.frame(do.call(rbind, marginal_power_list))
-# colnames(df_marginal_power) <- hyp_names
-# 
-# df_rho_com_dose <- data.frame(rho = v_rho_com_dose)
-# 
-# df_params <- expand_grid(df_hyp_4, df_gamma, df_rho_com_dose, df_marginal_power)
-# 
-# df_power <- as.data.frame(do.call(rbind, lapply(res_list, unlist)))
-# 
-# results <- cbind(df_params, df_power)
-# shorten the names so the table isn't quite so wide
-# names(results) <- c(
-#     "hyp_4",
-#     "gamma",
-#     "rho",
-#     paste0("H", seq_along(hyp_names)),
-#     paste0("p_H", seq_along(hyp_names)),
-#     "p_expect",
-#     "p_geq_1",
-#     "p_all",
-#     "p_success"
-#   )
-
 results %>%
   # head(20) %>%
   gt() %>%

@@ -45,7 +45,6 @@ test_input_val <- function(graph,
         if (test_types[[i]] == "parametric") {
           group <- groups[[i]]
           missing <- any(is.na(corr[group, group])) || is.null(corr)
-          pos_def <- all(eigen(corr[group, group])$values > 0)
           return(missing)
         } else {
           return(FALSE)
@@ -100,7 +99,7 @@ power_input_val <- function(graph, n, theta, corr, success) {
       is.numeric(n) && as.integer(n) == n && length(n) == 1,
     "Marginal power and correlation parameters must be numeric" =
       is.numeric(theta) && is.numeric(corr),
-    "Lengths of `marginal_power` and `sim_corr` must match number of hypotheses" =
+    "Lengths of marginal power and Correlation matrix for simulating p-values must match number of hypotheses" =
       unique(length(theta), nrow(corr), ncol(corr)) == graph_size,
     "Correlation matrix for simulating p-values cannot have missing values" =
       !any(is.na(corr)),

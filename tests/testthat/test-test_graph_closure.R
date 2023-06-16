@@ -159,7 +159,12 @@ test_that("check assertions in testing vignette", {
   )
 
   expect_equal(
-    test_graph_closure(par_gate, p = pvals, alpha = .05, test_types = "s")$outputs,
+    test_graph_closure(
+      par_gate,
+      p = pvals,
+      alpha = .05,
+      test_types = "s"
+    )$outputs,
     list(
       p_adj = c(.027, .02, .027, .027),
       rejected = rep(TRUE, 4)
@@ -259,7 +264,12 @@ test_that("compare adjusted p-values to lrstat - Bonferroni & Simes", {
     )
 
     expect_equal(
-      test_graph_closure(g, p, groups = list(1:3, 4:6), test_types = "s")$outputs$p_adj,
+      test_graph_closure(
+        g,
+        p,
+        groups = list(1:3, 4:6),
+        test_types = "s"
+      )$outputs$p_adj,
       lrstat::fadjpsim(gw, p, fam2),
       ignore_attr = TRUE
     )

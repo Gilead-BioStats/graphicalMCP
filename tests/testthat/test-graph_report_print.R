@@ -49,7 +49,12 @@ test_that("additional printing options for graph report", {
 
   expect_snapshot(
     print(
-      test_graph_closure(par_gate, rep(.01, 4), verbose = TRUE, critical = TRUE),
+      test_graph_closure(
+        par_gate,
+        rep(.01, 4),
+        verbose = TRUE,
+        critical = TRUE
+      ),
       precison = 4,
       indent = 4
     )

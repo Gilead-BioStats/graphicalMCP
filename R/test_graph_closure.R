@@ -171,8 +171,10 @@ test_graph_closure <- function(graph,
   }
 
   # Adjusted p-values at higher levels -----------------------------------------
-  p_adj_cap <- ifelse(p_adj > 1, 1, p_adj) # Adjusted p-values shouldn't exceed 1
-  p_adj_inter <- do.call(pmin, as.data.frame(p_adj_cap)) # Min adj-p by intersection
+  # Adjusted p-values shouldn't exceed 1
+  p_adj_cap <- ifelse(p_adj > 1, 1, p_adj)
+  #  Min adj-p by intersection
+  p_adj_inter <- do.call(pmin, as.data.frame(p_adj_cap))
   test_inter <- p_adj_inter <= alpha # Intersection test results
 
   # The intersection-level adjusted p-values need to be spread out on the

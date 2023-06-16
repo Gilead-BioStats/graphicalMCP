@@ -44,7 +44,12 @@ test_that("vectorized testing matches standard testing (single-group)", {
 
   expect_equal(
     graphicalMCP:::test_graph_fast(p, .05, gw_compact_parametric, gw_h),
-    test_graph_closure(rando, p, test_types = "p", corr = diag(m))$outputs$rejected,
+    test_graph_closure(
+      rando,
+      p,
+      test_types = "p",
+      corr = diag(m)
+    )$outputs$rejected,
     ignore_attr = TRUE
   )
 })
