@@ -25,9 +25,10 @@
 #'   `verbose`, and `critical`
 #'   * Inputs - A list of the input parameters used to run the test
 #'   * Outputs - A list of global test results
-#'   * Verbose - A matrix with detailed adjusted p-value results
+#'   * Verbose - A matrix with detailed adjusted p-value results (graph deletion
+#'     sequence for shortcut testing)
 #'   * Critical - A data frame with hypothesis-level test details for each
-#'   intersection
+#'   intersection (each step for shortcut testing)
 #'
 #' @rdname testing
 #' @seealso [test_graph_fast()], [test_graph_shortcut_cpp()]
@@ -117,21 +118,21 @@ test_graph_closure <- function(graph,
 
   # Calculate adjusted p-values ------------------------------------------------
   for (i in seq_len(gw_size * num_groups)) {
-    # This index is periodic over the number of intersection hypotheses
+    # this index is periodic over the number of intersection hypotheses
     inter_index <- (i - 1) %/% num_groups + 1
     h <- inter_h_vecs[inter_index, ]
     weights <- inter_small[inter_index, ]
 
-    # This index is periodic over the number of groups as i progresses
+    # this index is periodic over the number of groups as i progresses
     group_index <- (i - 1) %% num_groups + 1
     group <- groups[[group_index]]
     test <- test_types[[group_index]]
 
-    # Hypotheses to test must be in both the current group and the current
+    # typotheses to test must be in both the current group and the current
     # intersection
     group_in_inter <- group[as.logical(h[group])]
 
-    # Choose which function to use to adjust p-values - could probably just be
+    # choose which function to use to adjust p-values - could probably just be
     # an if/else - but this way is robust to adding more tests
     p_adjust_fun <- paste0("p_adjust_", test)
     p_adjust_args <- list(
@@ -140,15 +141,15 @@ test_graph_closure <- function(graph,
       corr = corr[group_in_inter, group_in_inter]
     )[methods::formalArgs(p_adjust_fun)]
 
-    # Then call the chosen p_adjust_ function
+    # then call the chosen p_adjust_ function
     p_adj[inter_index, group_index] <- do.call(p_adjust_fun, p_adjust_args)
 
-    # Calculate critical values
+    # calculate critical values
     if (critical) {
       if (length(group_in_inter) == 0) {
         critical_list[[i]] <- NULL
       } else {
-        # Same as p_adjust_ above, this section constructs a critical values
+        # same as p_adjust_ above, this section constructs a critical values
         # call with the appropriate arguments based on test type...
         critical_fun <- paste0(test, "_test_vals")
         critical_args <- list(
@@ -163,7 +164,7 @@ test_graph_closure <- function(graph,
           critical_fun,
           critical_args
         )
-        df_critical$intersection <- inter_index
+        df_critical$Intersection <- inter_index
 
         critical_list[[i]] <- df_critical
       }
@@ -171,13 +172,13 @@ test_graph_closure <- function(graph,
   }
 
   # Adjusted p-values at higher levels -----------------------------------------
-  # Adjusted p-values shouldn't exceed 1
+  # adjusted p-values shouldn't exceed 1
   p_adj_cap <- ifelse(p_adj > 1, 1, p_adj)
-  #  Min adj-p by intersection
+  # min adj-p by intersection
   p_adj_inter <- do.call(pmin, as.data.frame(p_adj_cap))
   test_inter <- p_adj_inter <= alpha # Intersection test results
 
-  # The intersection-level adjusted p-values need to be spread out on the
+  # the intersection-level adjusted p-values need to be spread out on the
   # hypotheses that are in each intersection. Then take the max for each
   # hypothesis
   p_adj_global <- apply(p_adj_inter * inter_h_vecs, 2, max)

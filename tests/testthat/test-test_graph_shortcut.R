@@ -13,8 +13,14 @@ test_that("results match test_graph_closure()", {
     test_graph_shortcut_cpp(rando, p)
   )
 
-  expect_false(
-    is.null(test_graph_shortcut(rando, p, critical = TRUE)$critical)
+  expect_s3_class(
+    test_graph_shortcut(rando, p, critical = TRUE)$critical$results,
+    "data.frame"
+  )
+
+  expect_type(
+    test_graph_shortcut(rando, p, verbose = TRUE)$details$results,
+    "list"
   )
 })
 

@@ -104,19 +104,57 @@ print.graph_report <- function(x, ..., precision = 6, indent = 2) {
     title = "Updated graph after rejections"
   )
 
-  # Adjusted p details ---------------------------------------------------------
+  # Adjusted p/rejection sequence details --------------------------------------
   if (!is.null(x$details)) {
-    cat("\n")
-    section_break("Test details - Adjusted p")
-    detail_results_out <- utils::capture.output(
-      print(round(x$details$results, precision))
-    )
-    cat(paste0(pad, detail_results_out), sep = "\n")
+
+    if (is.matrix(x$details$results)) {
+      cat("\n")
+      section_break("Test details - Adjusted p")
+      detail_results_out <- utils::capture.output(
+        print(round(x$details$results, precision))
+      )
+      cat(paste0(pad, detail_results_out), sep = "\n")
+      cat("\n")
+    } else {
+      graph_seq <- x$details$results
+      del_seq <- x$details$del_seq
+
+      cat("\n")
+      section_break("Test details - Rejection sequence")
+      for (i in seq_along(graph_seq) - 1) {
+
+        if (i == 0) {
+          print(graph_seq[[i + 1]], precision = precision, indent = indent)
+        } else if (i != length(graph_seq) - 1) {
+          print(
+            graph_seq[[i + 1]],
+            precision = precision,
+            indent = indent * (i + 1),
+            title = paste0("Step ", i, ": Delete hypothesis ", del_seq[[i]])
+          )
+        } else {
+          print(
+            graph_seq[[i + 1]],
+            precision = precision,
+            indent = indent * (i + 1),
+            title = paste0(
+              "Step ",
+              i,
+              " (Ending state): Delete hypothesis ",
+              del_seq[[i]]
+            )
+          )
+        }
+        cat("\n")
+
+      }
+
+    }
+
   }
 
   # Critical details -----------------------------------------------------------
   if (!is.null(x$critical)) {
-    cat("\n")
     section_break("Test details - Critical values")
 
     if (any(x$inputs$test_types == "parametric")) {

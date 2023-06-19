@@ -26,16 +26,16 @@
 #' graphicalMCP:::simes_test_vals(p, w, .05)
 bonferroni_test_vals <- function(p, weights, alpha) {
   data.frame(
-    Intersection = NA,
+    Intersection = rep(NA, length(p)),
     Hypothesis = names(weights),
-    Test = "bonferroni",
+    Test = rep("bonferroni", length(p)),
     p = p,
-    "<=" = "<=",
-    c = "",
-    "*" = "",
+    "<=" = rep("<=", length(p)),
+    c = rep("", length(p)),
+    "*" = rep("", length(p)),
     Critical = weights,
-    "*" = "*",
-    Alpha = alpha,
+    "*" = rep("*", length(p)),
+    Alpha = rep(alpha, length(p)),
     Reject = ifelse(
       p == 0 & weights == 0,
       NA,

@@ -65,6 +65,7 @@ test_that("additional printing options for graph report", {
       test_graph_shortcut(
         simple_successive_1(),
         rep(.01, 4),
+        verbose = TRUE,
         critical = TRUE
       ),
       precision = 7,
