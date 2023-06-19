@@ -16,7 +16,7 @@ test_graph_closure(
   critical = FALSE
 )
 
-test_graph_shortcut(graph, p, alpha = 0.025, critical = FALSE)
+test_graph_shortcut(graph, p, alpha = 0.025, verbose = FALSE, critical = FALSE)
 }
 \arguments{
 \item{graph}{An initial graph as returned by \code{\link[=create_graph]{create_graph()}}}
@@ -47,9 +47,10 @@ A \code{graph_report} object, a list of 4 elements: \code{inputs}, \code{outputs
 \itemize{
 \item Inputs - A list of the input parameters used to run the test
 \item Outputs - A list of global test results
-\item Verbose - A matrix with detailed adjusted p-value results
+\item Verbose - A matrix with detailed adjusted p-value results (graph deletion
+sequence for shortcut testing)
 \item Critical - A data frame with hypothesis-level test details for each
-intersection
+intersection (each step for shortcut testing)
 }
 }
 \description{
