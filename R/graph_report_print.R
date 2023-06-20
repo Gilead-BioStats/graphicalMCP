@@ -106,7 +106,6 @@ print.graph_report <- function(x, ..., precision = 6, indent = 2) {
 
   # Adjusted p/rejection sequence details --------------------------------------
   if (!is.null(x$details)) {
-
     if (is.matrix(x$details$results)) {
       cat("\n")
       section_break("Test details - Adjusted p")
@@ -122,7 +121,6 @@ print.graph_report <- function(x, ..., precision = 6, indent = 2) {
       cat("\n")
       section_break("Test details - Rejection sequence")
       for (i in seq_along(graph_seq) - 1) {
-
         if (i == 0) {
           print(graph_seq[[i + 1]], precision = precision, indent = indent)
         } else if (i != length(graph_seq) - 1) {
@@ -146,11 +144,8 @@ print.graph_report <- function(x, ..., precision = 6, indent = 2) {
           )
         }
         cat("\n")
-
       }
-
     }
-
   }
 
   # Critical details -----------------------------------------------------------
