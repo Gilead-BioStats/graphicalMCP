@@ -79,7 +79,7 @@ p-value method or critical value method.</p>
 <span>  critical <span class="op">=</span> <span class="cn">FALSE</span></span>
 <span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu">test_graph_shortcut</span><span class="op">(</span><span class="va">graph</span>, <span class="va">p</span>, alpha <span class="op">=</span> <span class="fl">0.025</span>, critical <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu">test_graph_shortcut</span><span class="op">(</span><span class="va">graph</span>, <span class="va">p</span>, alpha <span class="op">=</span> <span class="fl">0.025</span>, verbose <span class="op">=</span> <span class="cn">FALSE</span>, critical <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
@@ -132,9 +132,10 @@ for parametric tests</p></dd>
 
 <ul><li><p>Inputs - A list of the input parameters used to run the test</p></li>
 <li><p>Outputs - A list of global test results</p></li>
-<li><p>Verbose - A matrix with detailed adjusted p-value results</p></li>
+<li><p>Verbose - A matrix with detailed adjusted p-value results (graph deletion
+sequence for shortcut testing)</p></li>
 <li><p>Critical - A data frame with hypothesis-level test details for each
-intersection</p></li>
+intersection (each step for shortcut testing)</p></li>
 </ul></div>
     <div class="section level2">
     <h2 id="references">References<a class="anchor" aria-label="anchor" href="#references"></a></h2>
