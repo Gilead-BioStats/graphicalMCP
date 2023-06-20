@@ -16,35 +16,62 @@ test_graph_shortcut <- function(graph,
     critical = critical
   )
 
+  hyp_names <- names(graph$hypotheses)
+  graph_size <- length(graph$hypotheses)
+
   initial_graph <- graph
 
   adj_p_max <- 0
-  adj_p <- vector("numeric", length(graph$hypotheses))
+  adj_p <- vector("numeric", graph_size)
 
-  rejected <- vector("logical", length(graph$hypotheses))
-  keep <- rep(TRUE, length(graph$hypotheses))
+  rejected <- vector("logical", graph_size)
+  keep <- rep(TRUE, graph_size)
+  proc_sequence <- vector("integer")
   del_sequence <- vector("integer")
 
   list_critical <- if (critical) vector("list")
   df_critical <- NULL
 
-  names(adj_p) <- names(graph$hypotheses)
-  names(rejected) <- names(graph$hypotheses)
+  names(p) <- hyp_names
+  names(keep) <- hyp_names
+  names(adj_p) <- hyp_names
+  names(rejected) <- hyp_names
 
   for (i in seq_along(graph$hypotheses)) {
     adj_p_subgraph <- p / graph$hypotheses
 
+    hyps_not_processed <- setdiff(hyp_names, proc_sequence)
+    if (all(is.nan(adj_p_subgraph[hyps_not_processed]))) {
+      err_msg <- paste0(
+        "All weights and p-values are 0\n",
+        "  Deleted ", paste(proc_sequence, collapse = ", "), "\n",
+        paste(
+          capture.output(print(
+            graph,
+            indent = 2,
+            precision = 6,
+            title = paste0("Step ", i, ", Graph state:")
+          )),
+          collapse = "\n"
+        )
+      )
+
+      stop(err_msg)
+    }
+
     # chooses the first sequentially in case of a tie in value
-    min_index <- which.min(adj_p_subgraph)
+    # ignoring prior processed is necessary in the case of all 0 weights
+    min_hyp_name <- names(which.min(adj_p_subgraph[hyps_not_processed]))
 
     # largest adjusted p-value seen so far
-    adj_p_max <- max(adj_p_max, adj_p_subgraph[[min_index]])
+    adj_p_max <- max(adj_p_max, adj_p_subgraph[[min_hyp_name]])
 
-    adj_p[[min_index]] <- min(adj_p_max, 1) # cap adjusted p-values at 1
-    rejected[[min_index]] <- adj_p_max <= alpha
+    adj_p[[min_hyp_name]] <- min(adj_p_max, 1) # cap adjusted p-values at 1
+    rejected[[min_hyp_name]] <- adj_p_max <= alpha
 
-    keep[[min_index]] <- FALSE
-    graph <- update_graph(graph, keep)$updated_graph
+    keep[[min_hyp_name]] <- FALSE
+
+    proc_sequence <- c(proc_sequence, min_hyp_name)
 
     # we only want critical values from graphs with a rejection. After that, all
     # critical values come from the last remaining graph
@@ -52,8 +79,8 @@ test_graph_shortcut <- function(graph,
 
       if (critical) {
         critical_step <- bonferroni_test_vals(
-          p[min_index],
-          graph$hypotheses[min_index],
+          p[min_hyp_name],
+          graph$hypotheses[min_hyp_name],
           alpha
         )
         critical_step[[1]] <- i
@@ -65,11 +92,13 @@ test_graph_shortcut <- function(graph,
         list_critical <- c(list_critical, list(critical_step))
       }
 
-      del_sequence <- c(del_sequence, i)
+      del_sequence <- c(del_sequence, min_hyp_name)
 
       # save graph state after last rejection
       last_graph <- graph
     }
+
+    graph <- update_graph(graph, keep)$updated_graph
   }
 
   if (critical) {
@@ -96,7 +125,8 @@ test_graph_shortcut <- function(graph,
     graph_seq[[1]] <- initial_graph
 
     for (i in seq_along(del_sequence)) {
-      keep <- rep(TRUE, length(graph$hypotheses))
+      keep <- rep(TRUE, graph_size)
+      names(keep) <- hyp_names
       keep[[del_sequence[[i]]]] <- FALSE
 
       graph_seq[[i + 1]] <- update_graph(graph_seq[[i]], keep)$updated_graph

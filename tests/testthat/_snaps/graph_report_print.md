@@ -718,7 +718,7 @@
                H3 0.0000000 1.0000000 0.0000000 0.0000000
                H4 1.0000000 0.0000000 0.0000000 0.0000000
       
-                        Step 1: Delete hypothesis 1
+                        Step 1: Delete hypothesis H1
       
                         --- Hypothesis weights ---
                         H1: 0.0000000
@@ -733,7 +733,7 @@
                         H3 0.0000000 1.0000000 0.0000000 0.0000000
                         H4 0.0000000 0.0000000 1.0000000 0.0000000
       
-                                 Step 2: Delete hypothesis 2
+                                 Step 2: Delete hypothesis H2
       
                                  --- Hypothesis weights ---
                                  H1: 0.0000000
@@ -748,7 +748,7 @@
                                  H3 0.0000000 0.0000000 0.0000000 1.0000000
                                  H4 0.0000000 0.0000000 1.0000000 0.0000000
       
-                                          Step 3: Delete hypothesis 3
+                                          Step 3: Delete hypothesis H3
       
                                           --- Hypothesis weights ---
                                           H1: 0.0000000
@@ -763,7 +763,7 @@
                                           H3 0.0000000 0.0000000 0.0000000 0.0000000
                                           H4 0.0000000 0.0000000 0.0000000 0.0000000
       
-                                                   Step 4 (Ending state): Delete hypothesis 4
+                                                   Step 4 (Ending state): Delete hypothesis H4
       
                                                    --- Hypothesis weights ---
                                                    H1: 0.0000000
@@ -785,8 +785,8 @@
       
       Test details - Critical values -------------------------------------------------
                 step Hypothesis    p <= Critical * Alpha Reject
-                   1         H1 0.01 <=        0 * 0.025  FALSE
-                   2         H2 0.01 <=        0 * 0.025  FALSE
-                   3         H3 0.01 <=        0 * 0.025  FALSE
-                   4         H4 0.01 <=        0 * 0.025  FALSE
+                   1         H1 0.01 <=      0.5 * 0.025   TRUE
+                   2         H2 0.01 <=      0.5 * 0.025   TRUE
+                   3         H3 0.01 <=      0.5 * 0.025   TRUE
+                   4         H4 0.01 <=      1.0 * 0.025   TRUE
 

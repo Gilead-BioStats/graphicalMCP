@@ -46,3 +46,42 @@ test_that("C++ sequential properly assigns new hypotheses each round", {
     unname(test_graph_closure(g, p)$outputs$rejected)
   )
 })
+
+test_that("shortcut testing handles 0 cases", {
+  g_zero_1 <- create_graph(c(.5, .5, 0), matrix(0, 3, 3))
+  g_zero_2 <- create_graph(rep(0, 3), matrix(0, 3, 3))
+
+  p_zero_1 <- c(1, 0, 0)
+  p_zero_2 <- rep(0, 3)
+
+  expect_error(
+    test_graph_shortcut(g_zero_1, p_zero_1),
+    regexp = "All weights and p-values are 0"
+  )
+  expect_error(
+    test_graph_shortcut(g_zero_1, p_zero_1),
+    regexp = "All weights and p-values are 0"
+  )
+  expect_error(
+    test_graph_shortcut(g_zero_1, p_zero_1),
+    regexp = "All weights and p-values are 0"
+  )
+  expect_error(
+    test_graph_shortcut(g_zero_1, p_zero_1),
+    regexp = "All weights and p-values are 0"
+  )
+
+  expect_equal(
+    test_graph_shortcut(g_zero_2, rep(.001, 3))$outputs$p_adj,
+    rep(1, 3),
+    ignore_attr = TRUE
+  )
+
+  expect_equal(
+    test_graph_shortcut(bonferroni_holm(3), p_zero_2)$outputs$p_adj,
+    rep(0, 3),
+    ignore_attr = TRUE
+  )
+
+  expect_no_error(test_graph_shortcut(bonferroni_holm(3), p_zero_2))
+})
