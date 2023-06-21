@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <meta name="description" content="graphicalMCP">
-<title>Testing basics • graphicalMCP</title>
+<title>Testing and power basics • graphicalMCP</title>
 <!-- favicons --><link rel="icon" type="image/png" sizes="16x16" href="../favicon-16x16.png">
 <link rel="icon" type="image/png" sizes="32x32" href="../favicon-32x32.png">
 <link rel="apple-touch-icon" type="image/png" sizes="180x180" href="../apple-touch-icon.png">
@@ -17,7 +17,7 @@
 <link href="../deps/bootstrap-5.2.2/bootstrap.min.css" rel="stylesheet">
 <script src="../deps/bootstrap-5.2.2/bootstrap.bundle.min.js"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous">
-<!-- bootstrap-toc --><script src="https://cdn.jsdelivr.net/gh/afeld/bootstrap-toc@v1.0.1/dist/bootstrap-toc.min.js" integrity="sha256-4veVQbu7//Lk5TSmc7YV48MxtMy98e26cf5MrgZYnwo=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><!-- search --><script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/6.4.6/fuse.js" integrity="sha512-zv6Ywkjyktsohkbp9bb45V6tEMoWhzFzXis+LrMehmJZZSys19Yxf1dopHx7WzIKxr5tK2dVcYmaCk2uqdjF4A==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/autocomplete.js/0.38.0/autocomplete.jquery.min.js" integrity="sha512-GU9ayf+66Xx2TmpxqJpliWbT5PiGYxpaG8rfnBEk1LL8l1KGkRShhngwdXK1UgqhAzWpZHSiYPc09/NwDQIGyg==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/mark.min.js" integrity="sha512-5CYOlHXGh6QpOFA/TeTylKLWfB3ftPsde7AnmhuitiTX4K5SqCLBeKro6sPS8ilsz1Q4NRx3v8Ko2IBiszzdww==" crossorigin="anonymous"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="Testing basics">
+<!-- bootstrap-toc --><script src="https://cdn.jsdelivr.net/gh/afeld/bootstrap-toc@v1.0.1/dist/bootstrap-toc.min.js" integrity="sha256-4veVQbu7//Lk5TSmc7YV48MxtMy98e26cf5MrgZYnwo=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><!-- search --><script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/6.4.6/fuse.js" integrity="sha512-zv6Ywkjyktsohkbp9bb45V6tEMoWhzFzXis+LrMehmJZZSys19Yxf1dopHx7WzIKxr5tK2dVcYmaCk2uqdjF4A==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/autocomplete.js/0.38.0/autocomplete.jquery.min.js" integrity="sha512-GU9ayf+66Xx2TmpxqJpliWbT5PiGYxpaG8rfnBEk1LL8l1KGkRShhngwdXK1UgqhAzWpZHSiYPc09/NwDQIGyg==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/mark.min.js" integrity="sha512-5CYOlHXGh6QpOFA/TeTylKLWfB3ftPsde7AnmhuitiTX4K5SqCLBeKro6sPS8ilsz1Q4NRx3v8Ko2IBiszzdww==" crossorigin="anonymous"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="Testing and power basics">
 <meta property="og:description" content="graphicalMCP">
 <meta property="og:image" content="https://urban-sniffle-p11zlpj.pages.github.io/logo.png">
 <!-- mathjax --><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js" integrity="sha256-nvJJv9wWKEm88qvoQl9ekL2J+k/RWIsaSScxxlsrv8k=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/config/TeX-AMS-MML_HTMLorMML.js" integrity="sha256-84DKXVJXs0/F8OTMzX4UR909+jtl4G7SPypPavF+GfA=" crossorigin="anonymous"></script><!--[if lt IE 9]>
@@ -49,8 +49,8 @@
   <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" id="dropdown-articles">Articles</a>
   <div class="dropdown-menu" aria-labelledby="dropdown-articles">
     <a class="dropdown-item" href="../articles/case-study.html">Case Study</a>
-    <a class="dropdown-item" href="../articles/test_power_considerations_2011.html">test_power_considerations_2011</a>
-    <a class="dropdown-item" href="../articles/testing-power-basics.html">Testing basics</a>
+    <a class="dropdown-item" href="../articles/test-power-considerations-2011.html">Test and power considerations (Bretz et al 2011)</a>
+    <a class="dropdown-item" href="../articles/testing-power-basics.html">Testing and power basics</a>
   </div>
 </li>
       </ul>
@@ -77,7 +77,7 @@
 
 <div class="row">
   <main id="main" class="col-md-9"><div class="page-header">
-      <img src="../logo.png" class="logo" alt=""><h1>Testing basics</h1>
+      <img src="../logo.png" class="logo" alt=""><h1>Testing and power basics</h1>
             
       
       <small class="dont-index">Source: <a href="https://github.com/Gilead-BioStats/graphicalMCP/blob/HEAD/vignettes/testing-power-basics.Rmd" class="external-link"><code>vignettes/testing-power-basics.Rmd</code></a></small>
@@ -368,7 +368,7 @@ the adjusted p-values calculation can be seen by setting
 <span><span class="co">#&gt;   B2 0.000000 0.000000 0.000000 0.000000</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Test details - Adjusted p ------------------------------------------------------</span></span>
-<span><span class="co">#&gt;        A1   B1   A2   B2 padj_grp1 padj_grp2 p_adj_inter res</span></span>
+<span><span class="co">#&gt;        A1   B1   A2   B2 padj_grp1 padj_grp2 p_adj_inter rej</span></span>
 <span><span class="co">#&gt;   1  0.50 0.50 0.00 0.00  0.020000  1.000000    0.020000   1</span></span>
 <span><span class="co">#&gt;   2  0.50 0.50 0.00   NA  0.020000  1.000000    0.020000   1</span></span>
 <span><span class="co">#&gt;   3  0.50 0.50   NA 0.00  0.020000  1.000000    0.020000   1</span></span>
@@ -455,7 +455,7 @@ comes with some cost in computation time.</p>
 <span><span class="co">#&gt;   B2 0.000000 0.000000 0.000000 0.000000</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Test details - Adjusted p ------------------------------------------------------</span></span>
-<span><span class="co">#&gt;        A1   B1   A2   B2 padj_grp1 padj_grp2 p_adj_inter res</span></span>
+<span><span class="co">#&gt;        A1   B1   A2   B2 padj_grp1 padj_grp2 p_adj_inter rej</span></span>
 <span><span class="co">#&gt;   1  0.50 0.50 0.00 0.00  0.020000  1.000000    0.020000   1</span></span>
 <span><span class="co">#&gt;   2  0.50 0.50 0.00   NA  0.020000  1.000000    0.020000   1</span></span>
 <span><span class="co">#&gt;   3  0.50 0.50   NA 0.00  0.020000  1.000000    0.020000   1</span></span>
@@ -568,8 +568,8 @@ section.</p>
 <span><span class="co">#&gt;    step Hypothesis     p &lt;= Critical * Alpha Reject</span></span>
 <span><span class="co">#&gt;       1         B1 0.010 &lt;=     0.50 *  0.05   TRUE</span></span>
 <span><span class="co">#&gt;       2         A1 0.024 &lt;=     0.75 *  0.05   TRUE</span></span>
-<span><span class="co">#&gt;      NA         A2 0.026 &lt;=     0.00 *  0.05  FALSE</span></span>
-<span><span class="co">#&gt;      NA         B2 0.027 &lt;=     0.00 *  0.05  FALSE</span></span></code></pre></div>
+<span><span class="co">#&gt;      NA         A2 0.026 &lt;=     0.50 *  0.05  FALSE</span></span>
+<span><span class="co">#&gt;      NA         B2 0.027 &lt;=     0.50 *  0.05  FALSE</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="print-options">Print options<a class="anchor" aria-label="anchor" href="#print-options"></a>
@@ -701,7 +701,7 @@ printing format, not the underlying values.</p>
 <span><span class="co">#&gt;   29       NA       NA       NA 0.540409 0.459591  1.000000  1.000000  0.053207</span></span>
 <span><span class="co">#&gt;   30       NA       NA       NA 1.000000       NA  1.000000  1.000000  0.029144</span></span>
 <span><span class="co">#&gt;   31       NA       NA       NA       NA 1.000000  1.000000  1.000000  0.039695</span></span>
-<span><span class="co">#&gt;      p_adj_inter res</span></span>
+<span><span class="co">#&gt;      p_adj_inter rej</span></span>
 <span><span class="co">#&gt;   1     0.012686   1</span></span>
 <span><span class="co">#&gt;   2     0.010307   1</span></span>
 <span><span class="co">#&gt;   3     0.011458   1</span></span>
@@ -995,7 +995,7 @@ printing format, not the underlying values.</p>
 <span><span class="co">#&gt;       29        NA        NA        NA 0.5404095 0.4595905 1.00000000 1.000000000</span></span>
 <span><span class="co">#&gt;       30        NA        NA        NA 1.0000000        NA 1.00000000 1.000000000</span></span>
 <span><span class="co">#&gt;       31        NA        NA        NA        NA 1.0000000 1.00000000 1.000000000</span></span>
-<span><span class="co">#&gt;           padj_grp3 p_adj_inter res</span></span>
+<span><span class="co">#&gt;           padj_grp3 p_adj_inter rej</span></span>
 <span><span class="co">#&gt;       1  0.15316875 0.012686023   1</span></span>
 <span><span class="co">#&gt;       2  0.12628990 0.010307394   1</span></span>
 <span><span class="co">#&gt;       3  0.15599404 0.011458343   1</span></span>
