@@ -72,4 +72,15 @@ test_that("additional printing options for graph report", {
       indent = 9
     )
   )
+
+  expect_snapshot(
+    print(
+      test_graph_shortcut(
+        complex_example_1(),
+        5:0 / 200,
+        verbose = TRUE,
+        critical = TRUE
+      )
+    )
+  )
 })

@@ -22,7 +22,6 @@ URL: https://urban-sniffle-p11zlpj.pages.github.io/
 BugReports: https://github.com/Gilead-BioStats/graphicalMCP/issues
 Imports: 
     matrixStats,
-    methods,
     mvtnorm
 Suggests: 
     bench,

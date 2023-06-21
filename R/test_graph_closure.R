@@ -160,17 +160,17 @@ test_graph_closure <- function(graph,
             )
           } else if (test == "simes") {
             df_critical <- simes_test_vals(
-                p[group_in_inter],
-                weights[group_in_inter],
-                alpha
-              )
+              p[group_in_inter],
+              weights[group_in_inter],
+              alpha
+            )
           } else if (test == "parametric") {
             df_critical <- parametric_test_vals(
-                p[group_in_inter],
-                weights[group_in_inter],
-                alpha,
-                corr[group_in_inter, group_in_inter]
-              )
+              p[group_in_inter],
+              weights[group_in_inter],
+              alpha,
+              corr[group_in_inter, group_in_inter]
+            )
           } else {
             stop(paste(test, "testing is not supported at this time"))
           }

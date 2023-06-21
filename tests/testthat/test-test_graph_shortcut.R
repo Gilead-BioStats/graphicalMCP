@@ -85,3 +85,42 @@ test_that("shortcut testing handles 0 cases", {
 
   expect_no_error(test_graph_shortcut(bonferroni_holm(3), p_zero_2))
 })
+
+test_that("shortcut internal consistency", {
+  rando <- random_graph(6)
+  p <- pnorm(rnorm(6, 2), lower.tail = FALSE)
+
+  shortcut_results <- test_graph_shortcut(rando, p, .025, TRUE, TRUE)
+
+  expect_equal(
+    shortcut_results$inputs$graph,
+    shortcut_results$details$results[[1]],
+    ignore_attr = TRUE
+  )
+
+  critical_sequence <- shortcut_results$critical$results$Hypothesis
+  expect_equal(
+    shortcut_results$inputs$p[critical_sequence],
+    shortcut_results$critical$results$p,
+    ignore_attr = TRUE
+  )
+
+  expect_equal(
+    shortcut_results$inputs$alpha,
+    shortcut_results$critical$results$Alpha[[1]],
+    ignore_attr = TRUE
+  )
+
+  expect_equal(
+    shortcut_results$outputs$rejected[critical_sequence],
+    shortcut_results$critical$results$Reject,
+    ignore_attr = TRUE
+  )
+
+  last_graph_index <- length(shortcut_results$details$results)
+  expect_equal(
+    shortcut_results$outputs$graph,
+    shortcut_results$details$results[[last_graph_index]],
+    ignore_attr = TRUE
+  )
+})

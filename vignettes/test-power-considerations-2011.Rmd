@@ -1,10 +1,10 @@
 ---
-title: "test_power_considerations_2011"
+title: "Test and power considerations (Bretz et al 2011)"
 output:
   rmarkdown::html_vignette:
     code_folding: "hide"
 vignette: >
-  %\VignetteIndexEntry{test_power_considerations_2011}
+  %\VignetteIndexEntry{Test and power considerations (Bretz et al 2011)}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -83,7 +83,11 @@ gt_display_table_1 <- function(df) {
     ) %>%
     tab_style(
       cell_text(align = "center"),
-      list(cells_body(!case), cells_column_labels(!case), cells_column_spanners())
+      list(
+        cells_body(!case),
+        cells_column_labels(!case),
+        cells_column_spanners()
+      )
     ) %>%
     tab_style(
       cell_text(align = "left"),
@@ -164,8 +168,6 @@ The scenarios are all tested at the level `𝛼 = .025` and differ by:
 
 First, define the hypothesis weights and the base transitions.
 
-The different scenarios 
-
 ```{r base-graph-specs}
 hyp_names <- paste0("H", 1:4)
 
@@ -191,7 +193,7 @@ transitions <- rbind(
 gt(as.data.frame(hyps))
 ```
 
-Then set `𝛾` values - that is, the amount of weight to transfer between primary hypotheses.
+Then set `𝛾` values - In this case, `𝛾` represents the amount of weight to transfer between primary hypotheses.
 
 ```{r gamma-edges}
 gamma_props <- rbind(
@@ -290,7 +292,7 @@ colnames(table_1) <- c(
 )
 ```
 
-Finally, choose some nice options for display, using the {gt} package. The first two columns in our version shows the weights in the now-more-common format of keeping hypothesis weights separate from testing level.
+Finally, choose some nice options for display, using the {gt} package. The first two columns in our version show the weights in the now-more-common format of keeping hypothesis weights separate from alpha.
 
 ```{r summarize-bonf}
 title <- "<strong>Table I.</strong> Probability <em>&pi;</em> for a successful trial and individual power <em>&pi;<sub>i</sub></em> for different design options and scenarios (<em>&alpha;</em>=0.025). "
@@ -376,7 +378,7 @@ for (i in 1:14) {
     rho = rhos[[i]], # Correlation base value
     theta = thetas[i, ], # Hypothesis means
     test_groups = list(1:2, 3:4),
-    test_types = c("s", "p"),
+    test_types = c("p", "s"),
     test_corr = diag(4)
   )
 }

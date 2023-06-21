@@ -1,5 +1,5 @@
 ---
-title: "Testing basics"
+title: "Testing and power basics"
 output:
   rmarkdown::html_vignette:
     code_folding: "hide"
@@ -7,7 +7,7 @@ params:
   m: 5
   sims: 100000
 vignette: >
-  %\VignetteIndexEntry{Testing basics}
+  %\VignetteIndexEntry{Testing and power basics}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---

@@ -154,7 +154,7 @@ calculate_power(
   test_corr = t_corr,
   sim_n = 1e5,
   sim_seed = 6923,
-  sim_success = function(.) .[1] || .[4],
+  sim_success = function(.) .[1] && .[4],
   marginal_power = <variable power>,
   sim_corr = <variable correlation>
 )
@@ -231,7 +231,7 @@ power_scenario <- function(hyp_4, gamma, s_corr, marginal_power) {
       test_corr = t_corr,
       sim_n = 1e5,
       sim_seed = 6923,
-      sim_success = function(.) .[1] || .[4],
+      sim_success = function(.) .[1] && .[4],
       marginal_power = marginal_power,
       sim_corr = s_corr
     )$power
@@ -285,7 +285,6 @@ names(results) <- c(
 
 ```{r results-full}
 results %>%
-  # head(20) %>%
   gt() %>%
   tab_header(
     title = "Power results (all)",

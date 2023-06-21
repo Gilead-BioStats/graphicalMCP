@@ -278,3 +278,61 @@ test_that("compare adjusted p-values to lrstat - Bonferroni & Simes", {
     )
   }
 })
+
+test_that("closure internal consistency", {
+  rando <- random_graph(6)
+  p <- pnorm(rnorm(6, 2), lower.tail = FALSE)
+
+  closure_results <- test_graph_closure(
+    rando,
+    p,
+    .025,
+    list(1:2, 3:4, 5:6),
+    c("b", "p", "s"),
+    diag(6),
+    TRUE,
+    TRUE
+  )
+
+  graph_size <- length(rando$hypotheses)
+
+  expect_equal(
+    closure_results$inputs$p,
+    closure_results$critical$results$p[seq_len(graph_size)],
+    ignore_attr = TRUE
+  )
+
+  expect_equal(
+    closure_results$inputs$alpha,
+    closure_results$critical$results$Alpha[[1]],
+    ignore_attr = TRUE
+  )
+
+  df_critical_intersect_reject <- dplyr::mutate(
+    dplyr::group_by(
+      tibble::as_tibble(closure_results$critical$results[-c(7, 9)]),
+      Intersection
+    ),
+    Hypothesis = Hypothesis,
+    Reject = max(Reject),
+    .keep = "used"
+  )
+
+  df_critical_hypothesis_reject <- dplyr::summarise(
+    dplyr::group_by(
+      df_critical_intersect_reject,
+      Hypothesis
+    ),
+    Reject = min(Reject)
+  )
+
+  critical_hypothesis_reject <- !!setNames(
+    df_critical_hypothesis_reject$Reject,
+    df_critical_hypothesis_reject$Hypothesis
+  )
+
+  expect_equal(
+    closure_results$outputs$rejected,
+    critical_hypothesis_reject
+  )
+})

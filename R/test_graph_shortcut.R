@@ -18,6 +18,7 @@ test_graph_shortcut <- function(graph,
   )
 
   initial_graph <- graph
+  last_graph <- graph
 
   hyp_names <- names(graph$hypotheses)
   graph_size <- length(graph$hypotheses)
@@ -84,21 +85,18 @@ test_graph_shortcut <- function(graph,
 
         list_critical <- c(list_critical, list(critical_step))
       }
-
-      # save graph state after last rejection
-      last_graph <- graph
     }
 
     graph <- update_graph(graph, !hyp_names %in% proc_sequence)$updated_graph
 
+    # save graph state after last rejection
+    if (adj_p_max <= alpha) last_graph <- graph
   }
 
   rejected <- adj_p <= alpha
   adj_p <- pmin(adj_p, 1)
 
   # Verbose and critical calculations ------------------------------------------
-  # the loop only calculates critical values for rejected hypotheses; here we
-  # get the rest of the critical values from the last-updated graph
   if (verbose) {
     del_sequence <- proc_sequence[seq_along(which(rejected))]
 
@@ -116,10 +114,12 @@ test_graph_shortcut <- function(graph,
     details <- list(del_sequence = del_sequence, results = graph_seq)
   }
 
+  # the loop only calculates critical values for rejected hypotheses; here we
+  # get the rest of the critical values from the last-updated graph
   if (critical) {
     critical_step <- bonferroni_test_vals(
       p[!rejected],
-      graph$hypotheses[!rejected],
+      last_graph$hypotheses[!rejected],
       alpha
     )
     if (any(!rejected)) critical_step[[1]] <- NA
