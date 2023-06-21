@@ -22,7 +22,6 @@ test_graph_shortcut <- function(graph,
   hyp_names <- names(graph$hypotheses)
   graph_size <- length(graph$hypotheses)
 
-
   names(p) <- hyp_names
   adj_p <- structure(vector("numeric", graph_size), names = hyp_names)
   adj_p_max <- 0

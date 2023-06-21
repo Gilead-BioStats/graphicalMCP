@@ -76,6 +76,7 @@ test_graph_closure <- function(graph,
                                corr = NULL,
                                verbose = FALSE,
                                critical = FALSE) {
+  # Input processing -----------------------------------------------------------
   test_opts <- c(
     bonferroni = "bonferroni",
     parametric = "parametric",
@@ -114,59 +115,71 @@ test_graph_closure <- function(graph,
     dimnames = list(NULL, paste0("padj_grp", seq_along(groups)))
   )
 
+  critical_index <- 1
   critical_list <- if (critical) vector("list", gw_size * num_groups)
 
   # Calculate adjusted p-values ------------------------------------------------
-  for (i in seq_len(gw_size * num_groups)) {
-    # this index is periodic over the number of intersection hypotheses
-    inter_index <- (i - 1) %/% num_groups + 1
+  for (inter_index in seq_len(gw_size)) {
     h <- inter_h_vecs[inter_index, ]
     weights <- inter_small[inter_index, ]
 
-    # this index is periodic over the number of groups as i progresses
-    group_index <- (i - 1) %% num_groups + 1
-    group <- groups[[group_index]]
-    test <- test_types[[group_index]]
+    for (group_index in seq_len(num_groups)) {
+      group <- groups[[group_index]]
+      test <- test_types[[group_index]]
 
-    # typotheses to test must be in both the current group and the current
-    # intersection
-    group_in_inter <- group[as.logical(h[group])]
+      # hypotheses to test must be in both the current group and the current
+      # intersection
+      group_in_inter <- group[as.logical(h[group])]
 
-    # choose which function to use to adjust p-values - could probably just be
-    # an if/else - but this way is robust to adding more tests
-    p_adjust_fun <- paste0("p_adjust_", test)
-    p_adjust_args <- list(
-      p = p[group_in_inter],
-      weights = weights[group_in_inter],
-      corr = corr[group_in_inter, group_in_inter]
-    )[methods::formalArgs(p_adjust_fun)]
-
-    # then call the chosen p_adjust_ function
-    p_adj[inter_index, group_index] <- do.call(p_adjust_fun, p_adjust_args)
-
-    # calculate critical values
-    if (critical) {
-      if (length(group_in_inter) == 0) {
-        critical_list[[i]] <- NULL
-      } else {
-        # same as p_adjust_ above, this section constructs a critical values
-        # call with the appropriate arguments based on test type...
-        critical_fun <- paste0(test, "_test_vals")
-        critical_args <- list(
-          p = p[group_in_inter],
-          weights = weights[group_in_inter],
-          alpha = alpha,
-          corr = corr[group_in_inter, group_in_inter]
-        )[methods::formalArgs(critical_fun)]
-
-        # ...then executes the call
-        df_critical <- do.call(
-          critical_fun,
-          critical_args
+      if (test == "bonferroni") {
+        p_adj[inter_index, group_index] <-
+          p_adjust_bonferroni(p[group_in_inter], weights[group_in_inter])
+      } else if (test == "simes") {
+        p_adj[inter_index, group_index] <-
+          p_adjust_simes(p[group_in_inter], weights[group_in_inter])
+      } else if (test == "parametric") {
+        p_adj[inter_index, group_index] <- p_adjust_parametric(
+          p[group_in_inter],
+          weights[group_in_inter],
+          corr[group_in_inter, group_in_inter]
         )
-        df_critical$Intersection <- inter_index
+      } else {
+        stop(paste(test, "testing is not supported at this time"))
+      }
 
-        critical_list[[i]] <- df_critical
+      # calculate critical values
+      if (critical) {
+        if (length(group_in_inter) == 0) {
+          critical_list[[critical_index]] <- NULL
+        } else {
+          if (test == "bonferroni") {
+            df_critical <- bonferroni_test_vals(
+              p[group_in_inter],
+              weights[group_in_inter],
+              alpha
+            )
+          } else if (test == "simes") {
+            df_critical <- simes_test_vals(
+                p[group_in_inter],
+                weights[group_in_inter],
+                alpha
+              )
+          } else if (test == "parametric") {
+            df_critical <- parametric_test_vals(
+                p[group_in_inter],
+                weights[group_in_inter],
+                alpha,
+                corr[group_in_inter, group_in_inter]
+              )
+          } else {
+            stop(paste(test, "testing is not supported at this time"))
+          }
+
+          df_critical$Intersection <- inter_index
+
+          critical_list[[critical_index]] <- df_critical
+          critical_index <- critical_index + 1
+        }
       }
     }
   }
@@ -179,13 +192,13 @@ test_graph_closure <- function(graph,
   test_inter <- p_adj_inter <= alpha # Intersection test results
 
   # the intersection-level adjusted p-values need to be spread out on the
-  # hypotheses that are in each intersection. Then take the max for each
+  # hypotheses that are in each intersection; then take the max for each
   # hypothesis
   p_adj_global <- apply(p_adj_inter * inter_h_vecs, 2, max)
   test_global <- p_adj_global <= alpha # Hypothesis test results
 
   detail_results <- if (verbose) {
-    list(results = cbind(inter_small, p_adj_cap, p_adj_inter, res = test_inter))
+    list(results = cbind(inter_small, p_adj_cap, p_adj_inter, rej = test_inter))
   }
 
   critical_results <- if (critical) {
