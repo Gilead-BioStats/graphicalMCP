@@ -1,1 +1,1 @@
-devtools::build_site(quiet = FALSE)
+usethis::use_package("tibble", "Suggests")
