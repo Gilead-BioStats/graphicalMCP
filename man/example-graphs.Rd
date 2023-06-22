@@ -13,30 +13,30 @@
 \alias{complex_example_2}
 \title{Example graphs from a selection of papers}
 \usage{
-bonferroni_holm(n, names = NULL)
+bonferroni_holm(num_hyps, hyp_names = NULL)
 
-huque_alosh_bhore_2011(names = NULL)
+huque_alosh_bhore_2011(hyp_names = NULL)
 
-wiens_dmitrienko_2005(names = NULL)
+wiens_dmitrienko_2005(hyp_names = NULL)
 
-fixed_sequence(n = 3, names = NULL)
+fixed_sequence(num_hyps = 3, hyp_names = NULL)
 
-fallback(hypotheses = c(1, 0, 0), names = NULL)
+fallback(hypotheses = c(1, 0, 0), hyp_names = NULL)
 
-simple_successive_1(names = NULL)
+simple_successive_1(hyp_names = NULL)
 
-simple_successive_2(names = NULL)
+simple_successive_2(hyp_names = NULL)
 
-random_graph(n, names = NULL)
+random_graph(num_hyps, hyp_names = NULL)
 
-complex_example_1(names = NULL)
+complex_example_1(hyp_names = NULL)
 
-complex_example_2(names = NULL)
+complex_example_2(hyp_names = NULL)
 }
 \arguments{
-\item{n}{Number of vertices in the graph}
+\item{num_hyps}{Number of vertices in the graph}
 
-\item{names}{Optional names for the hypotheses (Must have length \code{n} or be
+\item{hyp_names}{Optional names for the hypotheses (Must have length \code{num_hyps} or be
 NULL)}
 
 \item{hypotheses}{Hypothesis weights in a fallback procedure}
@@ -48,7 +48,7 @@ An S3 object as returned by \code{\link[=create_graph]{create_graph()}}
 Example graphs from a selection of papers
 }
 \examples{
-bonferroni_holm(3, names = paste("dose", letters[1:3]))
+bonferroni_holm(3, hyp_names = paste("dose", letters[1:3]))
 }
 \references{
 Bretz, F., Maurer, W., Brannath, W., and Posch, M. (2009). A graphical

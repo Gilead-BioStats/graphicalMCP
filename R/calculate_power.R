@@ -41,6 +41,14 @@
 #'   closure test should be used for Bonferroni testing. Ignored if any tests
 #'   are non-Bonferroni
 #'
+#' @section Success: Success will mean something different for each trial, so
+#'   there's a lot of flexibility in the `sim_success` parameter. However, this
+#'   flexibility means there's very little validation of inputs. It's up to the
+#'   user to make sure the function(s) passed mean what they think. From an
+#'   implementation perspective, each function will be applied row-wise to the
+#'   matrix of test results for the simulation, resulting in a `sim_n` length
+#'   vector. The mean of this vector is returned as "Probability of success"
+#'
 #' @return A list with five elements
 #'   * power_local - rejection proportion for each hypothesis individually
 #'   * power_expected - average number of hypotheses rejected in a single
@@ -108,7 +116,7 @@ calculate_power <- function(graph,
   # groups of size 1 should always use Bonferroni testing
   test_types[lengths(test_groups) == 1] <- "bonferroni"
 
-  # put a single success function into a list
+  # a bare success function should get put into a length-one list
   if (is.function(sim_success)) sim_success <- list(sim_success)
 
   # input validation -----------------------------------------------------------
@@ -225,7 +233,6 @@ calculate_power <- function(graph,
   }
 
   # calculate power results ----------------------------------------------------
-  # 'success' can currently only be an 'or', not an 'and'
   power_success <- vapply(
     sim_success,
     function(udf) mean(apply(test_res_mat, 1, udf)),

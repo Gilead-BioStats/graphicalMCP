@@ -56,7 +56,7 @@ intersection (each step for shortcut testing)
 \description{
 The slower graph testing functions have design choices made that favor ease
 of interpreting results over speed. Results include hypothesis rejection
-decisions of course, but also the test values that led to the final result.
+decisions, but also the test values that led to the final result.
 The functions include options for reporting details using the adjusted
 p-value method or critical value method.
 }
@@ -80,7 +80,7 @@ diag(corr) <- 1
 corr2 <- matrix(.5, nrow = 4, ncol = 4)
 diag(corr2) <- 1
 
-# The default is all Bonferroni with alpha = .05
+# The default is all Bonferroni with alpha = .025
 test_graph_closure(g, p)
 
 # But tests can be specified at the hypothesis-level
