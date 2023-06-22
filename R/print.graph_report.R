@@ -1,7 +1,3 @@
-section_break <- function(text) {
-  cat(text, " ", rep("-", 79 - nchar(text)), "\n", sep = "")
-}
-
 #' S3 print method for class `graph_report`
 #'
 #' A graph report displays
@@ -177,4 +173,8 @@ print.graph_report <- function(x, ..., precision = 6, indent = 2) {
   }
 
   invisible(x)
+}
+
+section_break <- function(text) {
+  cat(text, " ", rep("-", 79 - nchar(text)), "\n", sep = "")
 }
