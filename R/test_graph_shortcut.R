@@ -21,10 +21,10 @@ test_graph_shortcut <- function(graph,
   last_graph <- graph
 
   hyp_names <- names(graph$hypotheses)
-  graph_size <- length(graph$hypotheses)
+  num_hyps <- length(graph$hypotheses)
 
   names(p) <- hyp_names
-  adj_p <- structure(vector("numeric", graph_size), names = hyp_names)
+  adj_p <- structure(vector("numeric", num_hyps), names = hyp_names)
   adj_p_max <- 0
 
   proc_sequence <- vector("integer")
@@ -104,7 +104,7 @@ test_graph_shortcut <- function(graph,
     graph_seq[[1]] <- initial_graph
 
     for (i in seq_along(del_sequence)) {
-      keep <- rep(TRUE, graph_size)
+      keep <- rep(TRUE, num_hyps)
       names(keep) <- hyp_names
       keep[[del_sequence[[i]]]] <- FALSE
 

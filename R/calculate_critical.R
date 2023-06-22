@@ -1,43 +1,3 @@
-#' @rdname critical-vals
-c_function <- function(x, weights, corr, alpha) {
-  w_nonzero <- which(weights > 0)
-  z <- stats::qnorm(x * weights[w_nonzero] * alpha, lower.tail = FALSE)
-  y <- ifelse(
-    length(z) == 1,
-    stats::pnorm(z, lower.tail = FALSE)[[1]],
-    1 - mvtnorm::pmvnorm(
-      lower = -Inf,
-      upper = z,
-      corr = corr[w_nonzero, w_nonzero]
-    )[[1]]
-  )
-
-  y - alpha * sum(weights)
-}
-
-#' @rdname critical-vals
-solve_c <- function(weights, corr, alpha) {
-  n_hyps <- seq_along(weights)
-  c <- ifelse(
-    length(n_hyps) == 1 || sum(weights) == 0,
-    1,
-    stats::uniroot(
-      c_function,
-      lower = 0, # Why is this not -Inf? Ohhhh because c >= 1
-      # upper > 40 errors when w[i] ~= 1 && w[j] = epsilon
-      # upper = 2 errors when w = c(.5, .5) && all(corr == 1)
-      # furthermore, even under perfect correlation & with balanced weights, the
-      # c_function does not exceed `length(w)`
-      upper = length(weights) + 1,
-      weights = weights,
-      corr = corr,
-      alpha = alpha
-    )$root
-  )
-
-  c
-}
-
 #' Calculate updated hypothesis weights for the closure of a graph
 #'
 #' The weights created by [generate_weights()] work immediately for Bonferroni
@@ -122,4 +82,44 @@ calculate_critical_simes <- function(intersections, p, groups) {
   }
 
   do.call(cbind, list_w_new)
+}
+
+#' @rdname critical-vals
+c_function <- function(x, weights, corr, alpha) {
+  w_nonzero <- which(weights > 0)
+  z <- stats::qnorm(x * weights[w_nonzero] * alpha, lower.tail = FALSE)
+  y <- ifelse(
+    length(z) == 1,
+    stats::pnorm(z, lower.tail = FALSE)[[1]],
+    1 - mvtnorm::pmvnorm(
+      lower = -Inf,
+      upper = z,
+      corr = corr[w_nonzero, w_nonzero]
+    )[[1]]
+  )
+
+  y - alpha * sum(weights)
+}
+
+#' @rdname critical-vals
+solve_c <- function(weights, corr, alpha) {
+  n_hyps <- seq_along(weights)
+  c <- ifelse(
+    length(n_hyps) == 1 || sum(weights) == 0,
+    1,
+    stats::uniroot(
+      c_function,
+      lower = 0, # Why is this not -Inf? Ohhhh because c >= 1
+      # upper > 40 errors when w[i] ~= 1 && w[j] = epsilon
+      # upper = 2 errors when w = c(.5, .5) && all(corr == 1)
+      # furthermore, even under perfect correlation & with balanced weights, the
+      # c_function does not exceed `length(w)`
+      upper = length(weights) + 1,
+      weights = weights,
+      corr = corr,
+      alpha = alpha
+    )$root
+  )
+
+  c
 }

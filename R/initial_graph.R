@@ -15,7 +15,7 @@
 #'   should match the length of `hypotheses`. Each row (Transition weights
 #'   leaving a hypothesis) can sum to no more than 1. The diagonal (Transition
 #'   weights from a hypothesis to itself) must be all 0s
-#' @param names (Optional) A character vector of hypothesis names. If not
+#' @param hyp_names (Optional) A character vector of hypothesis names. If not
 #'   provided, names from `hypotheses` and `transitions` will be used. If names
 #'   are not specified, hypotheses will be named sequentially as H1, H2, ...
 #'
@@ -40,8 +40,8 @@
 #'   c(0, 1, 0, 0),
 #'   c(1, 0, 0, 0)
 #' )
-#' names <- c("H1", "H2", "H3", "H4")
-#' g <- create_graph(hypotheses, transitions, names)
+#' hyp_names <- c("H1", "H2", "H3", "H4")
+#' g <- create_graph(hypotheses, transitions, hyp_names)
 #' g
 #'
 #' # Explicit names override names in `hypotheses` (with a warning)
@@ -52,8 +52,8 @@
 #'   c(0, 1, 0, 0),
 #'   c(1, 0, 0, 0)
 #' )
-#' names <- c("H1", "H2", "H3", "H4")
-#' g <- create_graph(hypotheses, transitions, names)
+#'
+#' g <- create_graph(hypotheses, transitions, hyp_names)
 #' g
 #'
 #' # Explicit names override names in `transitions` (with a warning)
@@ -64,8 +64,8 @@
 #'   h3 = c(0, 1, 0, 0),
 #'   h4 = c(1, 0, 0, 0)
 #' )
-#' names <- c("H1", "H2", "H3", "H4")
-#' g <- create_graph(hypotheses, transitions, names)
+#'
+#' g <- create_graph(hypotheses, transitions, hyp_names)
 #' g
 #'
 #' # Use names in `hypotheses`
@@ -101,7 +101,7 @@
 #' )
 #' g <- create_graph(hypotheses, transitions)
 #' g
-create_graph <- function(hypotheses, transitions, names = NULL) {
+create_graph <- function(hypotheses, transitions, hyp_names = NULL) {
   # Basic input validation -----------------------------------------------------
   stopifnot(
     "hypothesis weights must be numeric" = is.numeric(hypotheses),
@@ -120,7 +120,7 @@ create_graph <- function(hypotheses, transitions, names = NULL) {
   }
 
   # Validation of names of hypotheses ----------------------------------------
-  explicit_names <- !is.null(names)
+  explicit_names <- !is.null(hyp_names)
 
   implicit_names <- any(
     !is.null(names(hypotheses)),
@@ -140,14 +140,15 @@ create_graph <- function(hypotheses, transitions, names = NULL) {
   } else if (implicit_names && names_diff) {
     stop("names provided in 'hypotheses' and 'transitions' should match")
   } else if (implicit_names) {
-    names <- unique(
+    hyp_names <- unique(
       c(names(hypotheses), colnames(transitions), rownames(transitions))
     )
   } else if (!explicit_names) {
-    names <- paste0("H", seq_along(hypotheses))
+    hyp_names <- paste0("H", seq_along(hypotheses))
   }
 
-  names(hypotheses) <- colnames(transitions) <- rownames(transitions) <- names
+  names(hypotheses) <-
+    colnames(transitions) <- rownames(transitions) <- hyp_names
 
   # Validation of numerical conditions for a valid graphical multiple
   # comparison procedure -----------------------------------------------------

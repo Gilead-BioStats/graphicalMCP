@@ -91,8 +91,8 @@ test_graph_closure <- function(graph,
   test_input_val(graph, p, alpha, groups, test_types, corr, verbose, critical)
 
   # Some useful values ---------------------------------------------------------
-  graph_size <- length(graph$hypotheses)
-  gw_size <- 2^graph_size - 1
+  num_hyps <- length(graph$hypotheses)
+  gw_size <- 2^num_hyps - 1
   num_groups <- length(groups)
 
   hyp_names <- names(graph$hypotheses)
@@ -101,10 +101,10 @@ test_graph_closure <- function(graph,
 
   # Generate weights -----------------------------------------------------------
   intersections <- generate_weights(graph)
-  inter_h_vecs <- intersections[, seq_len(graph_size), drop = FALSE]
+  inter_h_vecs <- intersections[, seq_len(num_hyps), drop = FALSE]
   inter_small <- ifelse(
     inter_h_vecs,
-    intersections[, seq_len(graph_size) + graph_size],
+    intersections[, seq_len(num_hyps) + num_hyps],
     NA_real_
   )
 

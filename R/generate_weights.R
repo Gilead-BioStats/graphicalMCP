@@ -40,18 +40,21 @@
 #' generate_weights(par_gate)
 #'
 generate_weights <- function(graph) {
-  g_names <- names(graph$hypotheses)
-  n <- length(graph$hypotheses)
+  hyp_names <- names(graph$hypotheses)
+  num_hyps <- length(graph$hypotheses)
 
-  parents <- do.call(c, lapply(2^(seq_len(n) - 1), seq_len))[-(2^n - 1)]
-  delete <- rep(rev(seq_len(n)), 2^(seq_len(n) - 1))[-(2^n - 1)]
+  parents <- do.call(c, lapply(2^(seq_len(num_hyps) - 1), seq_len))
+  parents <- parents[-(2^num_hyps - 1)]
+
+  delete <- rep(rev(seq_len(num_hyps)), 2^(seq_len(num_hyps) - 1))
+  delete <- delete[-(2^num_hyps - 1)]
 
   graphs <- vector("list", length(parents))
   graphs[[1]] <- graph
 
   for (i in seq_along(parents)) {
     parent <- graphs[[parents[[i]]]]
-    del_index <- which(g_names[[delete[[i]]]] == names(parent$hypotheses))
+    del_index <- which(hyp_names[[delete[[i]]]] == names(parent$hypotheses))
 
     init_hypotheses <- parent$hypotheses
     init_transitions <- parent$transitions
@@ -59,7 +62,7 @@ generate_weights <- function(graph) {
     hypotheses <- parent$hypotheses
     transitions <- parent$transitions
 
-    hyp_nums <- seq_along(hypotheses)[seq_along(hypotheses) != del_index]
+    hyp_nums <- seq_along(hypotheses)[-del_index]
 
     for (hyp_num in hyp_nums) {
       hypotheses[[hyp_num]] <-
@@ -94,10 +97,10 @@ generate_weights <- function(graph) {
     do.call(
       rbind,
       lapply(graphs, function(graph) {
-        graph$hypotheses[g_names]
+        graph$hypotheses[hyp_names]
       })
     ),
-    dimnames = list(1:(2^length(g_names) - 1), g_names)
+    dimnames = list(1:(2^length(hyp_names) - 1), hyp_names)
   )
 
   wgts_mat_h <- !is.na(wgts_mat)

@@ -31,15 +31,15 @@
 #'
 #' @examples
 #' par_gate <- simple_successive_1()
-#' graph_size <- length(par_gate$hypotheses)
+#' num_hyps <- length(par_gate$hypotheses)
 #'
 #' p <- c(.001, .02, .002, .03)
 #'
 #' weights <- generate_weights(par_gate)
-#' inter_h <- weights[, seq_len(graph_size), drop = FALSE]
+#' inter_h <- weights[, seq_len(num_hyps), drop = FALSE]
 #' compact_weights <- ifelse(
 #'   inter_h,
-#'   weights[, seq_len(graph_size) + graph_size, drop = FALSE],
+#'   weights[, seq_len(num_hyps) + num_hyps, drop = FALSE],
 #'   NA
 #' )
 #' compact_weights[is.na(compact_weights)] <- 0

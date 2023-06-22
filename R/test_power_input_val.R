@@ -91,16 +91,16 @@ test_input_val <- function(graph,
   invisible(graph)
 }
 
-power_input_val <- function(graph, n, theta, corr, success) {
-  graph_size <- length(graph$hypotheses)
+power_input_val <- function(graph, sim_n, theta, corr, success) {
+  num_hyps <- length(graph$hypotheses)
 
   stopifnot(
     "Number of simulations must be a length one integer" =
-      is.numeric(n) && as.integer(n) == n && length(n) == 1,
+      is.numeric(sim_n) && as.integer(sim_n) == sim_n && length(sim_n) == 1,
     "Marginal power and correlation parameters must be numeric" =
       is.numeric(theta) && is.numeric(corr),
     "Lengths of marginal power and Correlation matrix for simulating p-values must match number of hypotheses" =
-      unique(length(theta), nrow(corr), ncol(corr)) == graph_size,
+      unique(length(theta), nrow(corr), ncol(corr)) == num_hyps,
     "Correlation matrix for simulating p-values cannot have missing values" =
       !any(is.na(corr)),
     "Correlation matrix for simulating p-values must be symmetric" =

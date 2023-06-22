@@ -294,11 +294,11 @@ test_that("closure internal consistency", {
     TRUE
   )
 
-  graph_size <- length(rando$hypotheses)
+  num_hyps <- length(rando$hypotheses)
 
   expect_equal(
     closure_results$inputs$p,
-    closure_results$critical$results$p[seq_len(graph_size)],
+    closure_results$critical$results$p[seq_len(num_hyps)],
     ignore_attr = TRUE
   )
 

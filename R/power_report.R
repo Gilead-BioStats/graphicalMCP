@@ -140,8 +140,8 @@ calculate_power <- function(graph,
     dimnames = list(seq_len(sim_n), names(graph$hypotheses))
   )
 
-  graph_names <- names(graph$hypotheses)
-  graph_size <- length(graph$hypotheses)
+  hyp_names <- names(graph$hypotheses)
+  num_hyps <- length(graph$hypotheses)
 
   if (all(test_types == "bonferroni") && !force_closure) {
     # Bonferroni shortcut if possible ------------------------------------------
@@ -152,7 +152,7 @@ calculate_power <- function(graph,
       alpha
     ) == 1
 
-    colnames(test_res_mat) <- graph_names
+    colnames(test_res_mat) <- hyp_names
     rownames(test_res_mat) <- seq_len(sim_n)
   } else { # closure testing
     # Generate weights by group ------------------------------------------------
@@ -176,8 +176,8 @@ calculate_power <- function(graph,
     p_sim_simes <- p_sim[, unlist(simes_groups), drop = FALSE]
 
     gw <- generate_weights(graph)
-    inter_h <- gw[, seq_len(graph_size)]
-    gw_small <- ifelse(inter_h, gw[, seq_len(graph_size) + graph_size], NA)
+    inter_h <- gw[, seq_len(num_hyps)]
+    gw_small <- ifelse(inter_h, gw[, seq_len(num_hyps) + num_hyps], NA)
 
     # all `gw_` variables after this point cannot be considered to be ordered
 
@@ -212,7 +212,7 @@ calculate_power <- function(graph,
       }
 
       # test_graph_fast() requires hypotheses to be re-ordered in original order
-      gw_all <- cbind(gw_bonf, gw_simes, gw_para)[, graph_names, drop = FALSE]
+      gw_all <- cbind(gw_bonf, gw_simes, gw_para)[, hyp_names, drop = FALSE]
       gw_all[!inter_h] <- 0 # replaces NAs as well as incorrect Simes values
 
       test_res_mat[row, ] <- test_graph_fast(

@@ -1,7 +1,7 @@
 test_that("vectorized testing matches standard testing (single-group)", {
   m <- 6
   rando <- random_graph(m)
-  graph_names <- names(rando$hypotheses)
+  hyp_names <- names(rando$hypotheses)
 
   p <- pnorm(rnorm(m, 2), lower.tail = FALSE)
   gw <- generate_weights(rando)
@@ -35,7 +35,7 @@ test_that("vectorized testing matches standard testing (single-group)", {
     graphicalMCP:::test_graph_fast(
       p,
       .05,
-      gw_compact_simes[, graph_names],
+      gw_compact_simes[, hyp_names],
       gw_h
     ),
     test_graph_closure(rando, p, test_types = "s")$outputs$rejected,
@@ -57,7 +57,7 @@ test_that("vectorized testing matches standard testing (single-group)", {
 test_that("vectorized testing matches standard testing (multi-group)", {
   m <- 6
   rando <- random_graph(m)
-  graph_names <- names(rando$hypotheses)
+  hyp_names <- names(rando$hypotheses)
 
   p <- pnorm(rnorm(m, 2), lower.tail = FALSE)
   gw <- generate_weights(rando)
@@ -90,7 +90,7 @@ test_that("vectorized testing matches standard testing (multi-group)", {
     graphicalMCP:::test_graph_fast(
       p,
       .025,
-      cbind(gw_compact_bonf, gw_compact_simes, gw_compact_para)[, graph_names],
+      cbind(gw_compact_bonf, gw_compact_simes, gw_compact_para)[, hyp_names],
       gw_h
     ),
     test_graph_closure(
