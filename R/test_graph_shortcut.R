@@ -24,8 +24,8 @@ test_graph_shortcut <- function(graph,
   num_hyps <- length(graph$hypotheses)
 
   names(p) <- hyp_names
-  adj_p <- structure(vector("numeric", num_hyps), names = hyp_names)
-  adj_p_max <- 0
+  p_adj <- structure(vector("numeric", num_hyps), names = hyp_names)
+  p_adj_max <- 0
 
   proc_sequence <- vector("integer")
 
@@ -63,14 +63,14 @@ test_graph_shortcut <- function(graph,
     min_hyp_name <- names(which.min(adj_p_subgraph[hyps_not_processed]))
 
     # largest adjusted p-value seen so far
-    adj_p_max <- max(adj_p_max, adj_p_subgraph[[min_hyp_name]])
-    adj_p[[min_hyp_name]] <- adj_p_max
+    p_adj_max <- max(p_adj_max, adj_p_subgraph[[min_hyp_name]])
+    p_adj[[min_hyp_name]] <- p_adj_max
 
     proc_sequence <- c(proc_sequence, min_hyp_name)
 
     # we only want critical values from graphs with a rejection; after that, all
     # critical values come from the last remaining graph
-    if (adj_p_max <= alpha) {
+    if (p_adj_max <= alpha) {
       if (critical) {
         critical_step <- bonferroni_test_vals(
           p[min_hyp_name],
@@ -90,28 +90,28 @@ test_graph_shortcut <- function(graph,
     graph <- update_graph(graph, !hyp_names %in% proc_sequence)$updated_graph
 
     # save graph state after last rejection
-    if (adj_p_max <= alpha) last_graph <- graph
+    if (p_adj_max <= alpha) last_graph <- graph
   }
 
-  rejected <- adj_p <= alpha
-  adj_p <- pmin(adj_p, 1)
+  rejected <- p_adj <= alpha
+  p_adj <- pmin(p_adj, 1)
 
   # Verbose and critical calculations ------------------------------------------
   if (verbose) {
-    del_sequence <- proc_sequence[seq_along(which(rejected))]
+    del_seq <- proc_sequence[seq_along(which(rejected))]
 
-    graph_seq <- vector("list", length(del_sequence) + 1)
+    graph_seq <- vector("list", length(del_seq) + 1)
     graph_seq[[1]] <- initial_graph
 
-    for (i in seq_along(del_sequence)) {
+    for (i in seq_along(del_seq)) {
       keep <- rep(TRUE, num_hyps)
       names(keep) <- hyp_names
-      keep[[del_sequence[[i]]]] <- FALSE
+      keep[[del_seq[[i]]]] <- FALSE
 
       graph_seq[[i + 1]] <- update_graph(graph_seq[[i]], keep)$updated_graph
     }
 
-    details <- list(del_sequence = del_sequence, results = graph_seq)
+    details <- list(del_seq = del_seq, results = graph_seq)
   }
 
   # the loop only calculates critical values for rejected hypotheses; here we
@@ -144,7 +144,7 @@ test_graph_shortcut <- function(graph,
         corr = NULL
       ),
       outputs = list(
-        p_adj = adj_p,
+        p_adj = p_adj,
         rejected = rejected,
         graph = update_graph(initial_graph, !rejected)$updated_graph
       ),

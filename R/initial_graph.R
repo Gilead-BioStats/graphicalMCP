@@ -104,8 +104,8 @@
 create_graph <- function(hypotheses, transitions, hyp_names = NULL) {
   # Basic input validation -----------------------------------------------------
   stopifnot(
-    "hypothesis weights must be numeric" = is.numeric(hypotheses),
-    "transition weights must be numeric" = is.numeric(transitions)
+    "Hypothesis weights must be numeric" = is.numeric(hypotheses),
+    "Transition weights must be numeric" = is.numeric(transitions)
   )
 
   if (
@@ -115,7 +115,7 @@ create_graph <- function(hypotheses, transitions, hyp_names = NULL) {
       ncol(transitions) != length(hypotheses)
     )
   ) {
-    stop("length of 'hypotheses', rows of 'transitions', and columns of
+    stop("Length of 'hypotheses', rows of 'transitions', and columns of
              'transitions' must all match")
   }
 
@@ -135,10 +135,10 @@ create_graph <- function(hypotheses, transitions, hyp_names = NULL) {
   )
 
   if (implicit_names && explicit_names) {
-    warning("hypothesis names specified - overriding names in
-                    'hypotheses' and 'transitions'")
+    warning("Hypothesis names specified - overriding names in
+                    `hypotheses` and `transitions`")
   } else if (implicit_names && names_diff) {
-    stop("names provided in 'hypotheses' and 'transitions' should match")
+    stop("Names provided in `hypotheses` and `transitions` should match")
   } else if (implicit_names) {
     hyp_names <- unique(
       c(names(hypotheses), colnames(transitions), rownames(transitions))
@@ -158,12 +158,12 @@ create_graph <- function(hypotheses, transitions, hyp_names = NULL) {
     not_one_float <- sapply(offending, function(x) !isTRUE(all.equal(1, x)))
 
     if (any(not_zero_float & not_one_float)) {
-      stop("hypothesis weights must be between 0 and 1")
+      stop("Hypothesis weights must be between 0 and 1")
     }
   }
 
   if (sum(hypotheses) > 1 && !isTRUE(all.equal(sum(hypotheses), 1))) {
-    stop("hypothesis weights must sum to no more than 1")
+    stop("Hypothesis weights must sum to no more than 1")
   }
 
   if (any(transitions < 0 | transitions > 1)) {
@@ -172,7 +172,7 @@ create_graph <- function(hypotheses, transitions, hyp_names = NULL) {
     not_one_float <- sapply(offending, function(x) !isTRUE(all.equal(1, x)))
 
     if (any(not_zero_float & not_one_float)) {
-      stop("transition weights must be between 0 and 1")
+      stop("Transition weights must be between 0 and 1")
     }
   }
 
@@ -182,7 +182,7 @@ create_graph <- function(hypotheses, transitions, hyp_names = NULL) {
   )
 
   if (any(not_zero_float)) {
-    stop("diagonal of transition weights must be all 0s")
+    stop("Diagonal of transition weights must be all 0s")
   }
 
   if (any(rowSums(transitions) > 1)) {
@@ -192,16 +192,13 @@ create_graph <- function(hypotheses, transitions, hyp_names = NULL) {
     )
 
     if (any(not_one_float)) {
-      stop("transition weights from each row must sum to no more than 1")
+      stop("Transition weights from each row must sum to no more than 1")
     }
   }
 
   # Create an initial graph object ---------------------------------------------
   new_graph <- structure(
-    list(
-      hypotheses = hypotheses,
-      transitions = transitions
-    ),
+    list(hypotheses = hypotheses, transitions = transitions),
     class = "initial_graph"
   )
   new_graph
