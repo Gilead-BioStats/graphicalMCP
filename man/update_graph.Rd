@@ -23,9 +23,9 @@ An object of class \code{updated_graph} with 3 elements
 }
 \description{
 It is not always obvious what a graph's weights will look like after deleting
-one or more hypotheses. While \code{\link[=generate_weights]{generate_weights()}} calculates all sub-graphs'
-hypothesis weights, \code{update_graph()} gives a more detailed view for a single
-set of deletions, including transition weights as well.
+one or more hypotheses. While \code{\link[=generate_weights]{generate_weights()}} calculates all
+sub-graphs' hypothesis weights, \code{update_graph()} gives a more detailed view
+for a single set of deletions, including transition weights as well.
 }
 \examples{
 hypotheses <- c(0.5, 0.5, 0, 0)
