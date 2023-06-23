@@ -9,3 +9,6 @@
 inst/doc
 /doc/
 /Meta/
+*~$*docx
+*~$*xlsx
+*~$*pptx

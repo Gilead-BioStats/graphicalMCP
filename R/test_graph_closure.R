@@ -92,7 +92,7 @@ test_graph_closure <- function(graph,
 
   # Some useful values ---------------------------------------------------------
   num_hyps <- length(graph$hypotheses)
-  gw_size <- 2^num_hyps - 1
+  closure_rows <- 2^num_hyps - 1
   num_groups <- length(groups)
 
   hyp_names <- names(graph$hypotheses)
@@ -100,28 +100,28 @@ test_graph_closure <- function(graph,
   if (!is.null(corr)) dimnames(corr) <- list(hyp_names, hyp_names)
 
   # Generate weights -----------------------------------------------------------
-  intersections <- generate_weights(graph)
-  inter_h_vecs <- intersections[, seq_len(num_hyps), drop = FALSE]
-  inter_small <- ifelse(
-    inter_h_vecs,
-    intersections[, seq_len(num_hyps) + num_hyps],
+  closure_standard <- generate_weights(graph)
+  closure_presence <- closure_standard[, seq_len(num_hyps), drop = FALSE]
+  closure_compact <- ifelse(
+    closure_presence,
+    closure_standard[, seq_len(num_hyps) + num_hyps],
     NA_real_
   )
 
   p_adj <- matrix(
     NA_real_,
-    nrow = gw_size,
+    nrow = closure_rows,
     ncol = num_groups,
     dimnames = list(NULL, paste0("padj_grp", seq_along(groups)))
   )
 
   critical_index <- 1
-  critical_list <- if (critical) vector("list", gw_size * num_groups)
+  critical_list <- if (critical) vector("list", closure_rows * num_groups)
 
   # Calculate adjusted p-values ------------------------------------------------
-  for (inter_index in seq_len(gw_size)) {
-    h <- inter_h_vecs[inter_index, ]
-    weights <- inter_small[inter_index, ]
+  for (intersection_index in seq_len(closure_rows)) {
+    h <- closure_presence[intersection_index, ]
+    weights <- closure_compact[intersection_index, ]
 
     for (group_index in seq_len(num_groups)) {
       group <- groups[[group_index]]
@@ -129,19 +129,23 @@ test_graph_closure <- function(graph,
 
       # hypotheses to test must be in both the current group and the current
       # intersection
-      group_in_inter <- group[as.logical(h[group])]
+      group_x_intersection <- group[as.logical(h[group])]
 
       if (test == "bonferroni") {
-        p_adj[inter_index, group_index] <-
-          p_adjust_bonferroni(p[group_in_inter], weights[group_in_inter])
+        p_adj[intersection_index, group_index] <- p_adjust_bonferroni(
+          p[group_x_intersection],
+          weights[group_x_intersection]
+        )
       } else if (test == "simes") {
-        p_adj[inter_index, group_index] <-
-          p_adjust_simes(p[group_in_inter], weights[group_in_inter])
+        p_adj[intersection_index, group_index] <- p_adjust_simes(
+          p[group_x_intersection],
+          weights[group_x_intersection]
+        )
       } else if (test == "parametric") {
-        p_adj[inter_index, group_index] <- p_adjust_parametric(
-          p[group_in_inter],
-          weights[group_in_inter],
-          corr[group_in_inter, group_in_inter]
+        p_adj[intersection_index, group_index] <- p_adjust_parametric(
+          p[group_x_intersection],
+          weights[group_x_intersection],
+          corr[group_x_intersection, group_x_intersection]
         )
       } else {
         stop(paste(test, "testing is not supported at this time"))
@@ -149,33 +153,33 @@ test_graph_closure <- function(graph,
 
       # calculate critical values
       if (critical) {
-        if (length(group_in_inter) == 0) {
+        if (length(group_x_intersection) == 0) {
           critical_list[[critical_index]] <- NULL
         } else {
           if (test == "bonferroni") {
             df_critical <- bonferroni_test_vals(
-              p[group_in_inter],
-              weights[group_in_inter],
+              p[group_x_intersection],
+              weights[group_x_intersection],
               alpha
             )
           } else if (test == "simes") {
             df_critical <- simes_test_vals(
-              p[group_in_inter],
-              weights[group_in_inter],
+              p[group_x_intersection],
+              weights[group_x_intersection],
               alpha
             )
           } else if (test == "parametric") {
             df_critical <- parametric_test_vals(
-              p[group_in_inter],
-              weights[group_in_inter],
+              p[group_x_intersection],
+              weights[group_x_intersection],
               alpha,
-              corr[group_in_inter, group_in_inter]
+              corr[group_x_intersection, group_x_intersection]
             )
           } else {
             stop(paste(test, "testing is not supported at this time"))
           }
 
-          df_critical$Intersection <- inter_index
+          df_critical$Intersection <- intersection_index
 
           critical_list[[critical_index]] <- df_critical
           critical_index <- critical_index + 1
@@ -188,24 +192,34 @@ test_graph_closure <- function(graph,
   # adjusted p-values shouldn't exceed 1
   p_adj_cap <- ifelse(p_adj > 1, 1, p_adj)
   # min adj-p by intersection
-  p_adj_inter <- do.call(pmin, as.data.frame(p_adj_cap))
-  test_inter <- p_adj_inter <= alpha # Intersection test results
+  p_adj_intersection <- do.call(pmin, as.data.frame(p_adj_cap))
+  reject_intersection <- p_adj_intersection <= alpha # Intersection test results
 
   # the intersection-level adjusted p-values need to be spread out on the
   # hypotheses that are in each intersection; then take the max for each
   # hypothesis
-  p_adj_global <- apply(p_adj_inter * inter_h_vecs, 2, max)
-  test_global <- p_adj_global <= alpha # Hypothesis test results
+  p_adj_global <- apply(p_adj_intersection * closure_presence, 2, max)
+  reject_global <- p_adj_global <= alpha # Hypothesis test results
 
   detail_results <- if (verbose) {
-    list(results = cbind(inter_small, p_adj_cap, p_adj_inter, rej = test_inter))
+    list(
+      results = cbind(
+        closure_compact,
+        p_adj_cap,
+        p_adj_intersection,
+        rej = reject_intersection
+      )
+    )
   }
 
   critical_results <- if (critical) {
-    df_crit_res <- do.call(rbind, critical_list)
-    if (!any(test_types == "parametric")) df_crit_res[6:7] <- NULL
+    df_critical_results <- do.call(rbind, critical_list)
+    if (!any(test_types == "parametric")) {
+      df_critical_results$c <- NULL
+      df_critical_results$`*` <- NULL
+    }
 
-    list(results = df_crit_res)
+    list(results = df_critical_results)
   }
 
   structure(
@@ -220,8 +234,8 @@ test_graph_closure <- function(graph,
       ),
       outputs = list(
         p_adj = p_adj_global,
-        rejected = test_global,
-        graph = update_graph(graph, !test_global)$updated_graph
+        rejected = reject_global,
+        graph = update_graph(graph, !reject_global)$updated_graph
       ),
       details = detail_results,
       critical = critical_results
