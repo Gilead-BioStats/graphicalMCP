@@ -76,7 +76,7 @@ test_graph_closure <- function(graph,
                                corr = NULL,
                                verbose = FALSE,
                                critical = FALSE) {
-  # Input processing -----------------------------------------------------------
+  # Input validation & sanitization --------------------------------------------
   test_opts <- c(
     bonferroni = "bonferroni",
     parametric = "parametric",
@@ -90,7 +90,6 @@ test_graph_closure <- function(graph,
 
   test_input_val(graph, p, alpha, groups, test_types, corr, verbose, critical)
 
-  # Some useful values ---------------------------------------------------------
   num_hyps <- length(graph$hypotheses)
   closure_rows <- 2^num_hyps - 1
   num_groups <- length(groups)
@@ -99,7 +98,7 @@ test_graph_closure <- function(graph,
   names(p) <- hyp_names
   if (!is.null(corr)) dimnames(corr) <- list(hyp_names, hyp_names)
 
-  # Generate weights -----------------------------------------------------------
+  # Generate weights of the closure --------------------------------------------
   closure_standard <- generate_weights(graph)
   closure_presence <- closure_standard[, seq_len(num_hyps), drop = FALSE]
   closure_compact <- ifelse(
@@ -108,7 +107,7 @@ test_graph_closure <- function(graph,
     NA_real_
   )
 
-  p_adj <- matrix(
+  adjusted_p <- matrix(
     NA_real_,
     nrow = closure_rows,
     ncol = num_groups,
@@ -132,17 +131,17 @@ test_graph_closure <- function(graph,
       group_x_intersection <- group[as.logical(h[group])]
 
       if (test == "bonferroni") {
-        p_adj[intersection_index, group_index] <- p_adjust_bonferroni(
+        adjusted_p[intersection_index, group_index] <- p_adjust_bonferroni(
           p[group_x_intersection],
           weights[group_x_intersection]
         )
       } else if (test == "simes") {
-        p_adj[intersection_index, group_index] <- p_adjust_simes(
+        adjusted_p[intersection_index, group_index] <- p_adjust_simes(
           p[group_x_intersection],
           weights[group_x_intersection]
         )
       } else if (test == "parametric") {
-        p_adj[intersection_index, group_index] <- p_adjust_parametric(
+        adjusted_p[intersection_index, group_index] <- p_adjust_parametric(
           p[group_x_intersection],
           weights[group_x_intersection],
           corr[group_x_intersection, group_x_intersection]
@@ -190,23 +189,23 @@ test_graph_closure <- function(graph,
 
   # Adjusted p-values at higher levels -----------------------------------------
   # adjusted p-values shouldn't exceed 1
-  p_adj_cap <- ifelse(p_adj > 1, 1, p_adj)
-  # min adj-p by intersection
-  p_adj_intersection <- do.call(pmin, as.data.frame(p_adj_cap))
-  reject_intersection <- p_adj_intersection <= alpha # Intersection test results
+  adjusted_p_cap <- ifelse(adjusted_p > 1, 1, adjusted_p)
+  # each intersection's adjusted p-value is the minimum for hypotheses in that
+  # intersection
+  adjusted_p_intersection <- apply(adjusted_p_cap, 1, min)
+  reject_intersection <- adjusted_p_intersection <= alpha
 
-  # the intersection-level adjusted p-values need to be spread out on the
-  # hypotheses that are in each intersection; then take the max for each
-  # hypothesis
-  p_adj_global <- apply(p_adj_intersection * closure_presence, 2, max)
-  reject_global <- p_adj_global <= alpha # Hypothesis test results
+  # each hypothesis gets an adjusted p-value equal to the largest intersection
+  # adjusted p-value containing that hypothesis
+  adjusted_p_global <- apply(adjusted_p_intersection * closure_presence, 2, max)
+  reject_global <- adjusted_p_global <= alpha # Hypothesis test results
 
   detail_results <- if (verbose) {
     list(
       results = cbind(
         closure_compact,
-        p_adj_cap,
-        p_adj_intersection,
+        adjusted_p_cap,
+        adjusted_p_intersection,
         rej = reject_intersection
       )
     )
@@ -233,7 +232,7 @@ test_graph_closure <- function(graph,
         corr = corr
       ),
       outputs = list(
-        p_adj = p_adj_global,
+        p_adj = adjusted_p_global,
         rejected = reject_global,
         graph = update_graph(graph, !reject_global)$updated_graph
       ),

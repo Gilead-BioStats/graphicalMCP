@@ -45,10 +45,22 @@ test_that("generate floating point differences", {
     "initial_graph"
   )
   expect_false(
-    all(sapply(rowSums(updated_1$transitions), function(x) x == 1 || x == 0))
+    all(
+      vapply(
+        rowSums(updated_1$transitions),
+        function(x) x == 1 || x == 0,
+        logical(1)
+      )
+    )
   )
   expect_false(
-    all(sapply(rowSums(updated_2$transitions), function(x) x == 1 || x == 0))
+    all(
+      vapply(
+        rowSums(updated_2$transitions),
+        function(x) x == 1 || x == 0,
+        logical(1)
+      )
+    )
   )
   expect_false(all(updated_3$hypotheses == 1 | updated_2$hypotheses == 0))
 })

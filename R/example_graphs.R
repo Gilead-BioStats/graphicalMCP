@@ -2,8 +2,8 @@
 #'
 #' @param num_hyps Number of vertices in the graph
 #' @param hypotheses Hypothesis weights in a fallback procedure
-#' @param hyp_names Optional names for the hypotheses (Must have length `num_hyps` or be
-#'   NULL)
+#' @param hyp_names Optional names for the hypotheses (Must have length
+#'   `num_hyps` or be NULL)
 #'
 #' @return An S3 object as returned by [create_graph()]
 #'

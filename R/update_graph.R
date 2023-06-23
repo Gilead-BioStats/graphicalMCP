@@ -1,9 +1,9 @@
 #' Delete hypotheses from a graph
 #'
 #' It is not always obvious what a graph's weights will look like after deleting
-#' one or more hypotheses. While [`generate_weights()`] calculates all sub-graphs'
-#' hypothesis weights, `update_graph()` gives a more detailed view for a single
-#' set of deletions, including transition weights as well.
+#' one or more hypotheses. While [`generate_weights()`] calculates all
+#' sub-graphs' hypothesis weights, `update_graph()` gives a more detailed view
+#' for a single set of deletions, including transition weights as well.
 #'
 #' @param graph An initial graph as returned by [create_graph()]
 #' @param keep A logical or integer vector, denoting which hypotheses to
