@@ -200,6 +200,7 @@ test_graph_closure <- function(graph,
   adjusted_p_global <- apply(adjusted_p_intersection * closure_presence, 2, max)
   reject_global <- adjusted_p_global <= alpha # Hypothesis test results
 
+  # Verbose and critical outputs -----------------------------------------------
   detail_results <- if (verbose) {
     list(
       results = cbind(
@@ -214,8 +215,7 @@ test_graph_closure <- function(graph,
   critical_results <- if (critical) {
     df_critical_results <- do.call(rbind, critical_list)
     if (!any(test_types == "parametric")) {
-      df_critical_results$c <- NULL
-      df_critical_results$`*` <- NULL
+      df_critical_results[c("c", "*")] <- NULL
     }
 
     list(results = df_critical_results)
