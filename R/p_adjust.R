@@ -73,14 +73,14 @@ p_adjust_simes <- function(p, weights) {
     return(Inf)
   }
 
-  adj_p <- Inf
+  adjusted_p <- Inf
   for (i in seq_along(weights)) {
     # See Bonferroni for na.rm reasoning
-    adj_p <- min(
-      adj_p,
+    adjusted_p <- min(
+      adjusted_p,
       p[[i]] / sum(weights[p <= p[[i]]]),
       na.rm = TRUE
     )
   }
-  adj_p
+  adjusted_p
 }

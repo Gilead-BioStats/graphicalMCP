@@ -101,7 +101,7 @@ test_that("invalid test inputs throw errors", {
 
 test_that("adjusted p-values are capped at 1", {
   expect_equal(
-    test_graph_closure(random_graph(2), c(1, 1))$outputs$p_adj,
+    test_graph_closure(random_graph(2), c(1, 1))$outputs$adjusted_p,
     c(H1 = 1, H2 = 1)
   )
 })
@@ -111,20 +111,20 @@ test_that("Simes & parametric adjusted p-values are less than Bonferroni", {
 
   expect_true(
     all(
-      test_graph_closure(rando, rep(.01, 4))$outputs$p_adj >=
-        test_graph_closure(rando, rep(.01, 4), test_types = "s")$outputs$p_adj
+      test_graph_closure(rando, rep(.01, 4))$outputs$adjusted_p >=
+        test_graph_closure(rando, rep(.01, 4), test_types = "s")$outputs$adjusted_p
     )
   )
 
   expect_true(
     all(
-      test_graph_closure(rando, rep(.01, 4))$outputs$p_adj >=
+      test_graph_closure(rando, rep(.01, 4))$outputs$adjusted_p >=
         test_graph_closure(
           rando,
           rep(.01, 4),
           test_types = "p",
           corr = diag(4)
-        )$outputs$p_adj
+        )$outputs$adjusted_p
     )
   )
 })
@@ -152,7 +152,7 @@ test_that("check assertions in testing vignette", {
   expect_equal(
     test_graph_closure(par_gate, p = pvals, alpha = .05)$outputs,
     list(
-      p_adj = c(.048, .02, .052, .052),
+      adjusted_p = c(.048, .02, .052, .052),
       rejected = c(TRUE, TRUE, FALSE, FALSE),
       graph = update_graph(par_gate, c(FALSE, FALSE, TRUE, TRUE))$updated_graph
     ),
@@ -167,7 +167,7 @@ test_that("check assertions in testing vignette", {
       test_types = "s"
     )$outputs,
     list(
-      p_adj = c(.027, .02, .027, .027),
+      adjusted_p = c(.027, .02, .027, .027),
       rejected = rep(TRUE, 4),
       graph = update_graph(par_gate, rep(FALSE, 4))$updated_graph
     ),
@@ -188,7 +188,7 @@ test_that("check assertions in testing vignette", {
       corr1
     )$outputs,
     list(
-      p_adj = c(.048, .02, .048, .048),
+      adjusted_p = c(.048, .02, .048, .048),
       rejected = rep(TRUE, 4),
       graph = update_graph(par_gate, rep(FALSE, 4))$updated_graph
     ),
@@ -219,17 +219,17 @@ test_that("compare adjusted p-values to gMCP - Bonferroni & parametric", {
     gmcp_g <- as_gmcp_graph(g)
 
     expect_equal(
-      test_graph_shortcut(g, p)$outputs$p_adj,
+      test_graph_shortcut(g, p)$outputs$adjusted_p,
       gMCP::gMCP(gmcp_g, p, "Bonferroni")@adjPValues
     )
 
     expect_equal(
-      test_graph_closure(g, p)$outputs$p_adj,
+      test_graph_closure(g, p)$outputs$adjusted_p,
       gMCP::gMCP(gmcp_g, p, "Bonferroni")@adjPValues
     )
 
     expect_equal(
-      test_graph_closure(g, p, test_types = "p", corr = diag(6))$outputs$p_adj,
+      test_graph_closure(g, p, test_types = "p", corr = diag(6))$outputs$adjusted_p,
       gMCP::gMCP(gmcp_g, p, "parametric", correlation = diag(6))@adjPValues
     )
   }
@@ -249,19 +249,19 @@ test_that("compare adjusted p-values to lrstat - Bonferroni & Simes", {
     fam2 <- rbind(c(1, 1, 1, 0, 0, 0), c(0, 0, 0, 1, 1, 1))
 
     expect_equal(
-      test_graph_shortcut(g, p)$outputs$p_adj,
+      test_graph_shortcut(g, p)$outputs$adjusted_p,
       lrstat::fadjpbon(g$hypotheses, g$transitions, matrix(p, ncol = 6)),
       ignore_attr = TRUE
     )
 
     expect_equal(
-      test_graph_closure(g, p)$outputs$p_adj,
+      test_graph_closure(g, p)$outputs$adjusted_p,
       lrstat::fadjpbon(g$hypotheses, g$transitions, matrix(p, ncol = 6)),
       ignore_attr = TRUE
     )
 
     expect_equal(
-      test_graph_closure(g, p, test_types = "s")$outputs$p_adj,
+      test_graph_closure(g, p, test_types = "s")$outputs$adjusted_p,
       lrstat::fadjpsim(gw, p, fam1),
       ignore_attr = TRUE
     )
@@ -272,11 +272,19 @@ test_that("compare adjusted p-values to lrstat - Bonferroni & Simes", {
         p,
         groups = list(1:3, 4:6),
         test_types = "s"
-      )$outputs$p_adj,
+      )$outputs$adjusted_p,
       lrstat::fadjpsim(gw, p, fam2),
       ignore_attr = TRUE
     )
   }
+})
+
+test_that("closure testing rejects all when alpha is 1", {
+  expect_equal(
+    test_graph_closure(random_graph(6), rep(1, 6), 1)$outputs$rejected,
+    rep(TRUE, 6),
+    ignore_attr = TRUE
+  )
 })
 
 test_that("closure internal consistency", {

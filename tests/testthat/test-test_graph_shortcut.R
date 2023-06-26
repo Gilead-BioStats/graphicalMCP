@@ -26,7 +26,7 @@ test_that("results match test_graph_closure()", {
 
 test_that("adjusted p-values are capped at 1", {
   expect_equal(
-    test_graph_shortcut(random_graph(2), c(1, 1))$outputs$p_adj,
+    test_graph_shortcut(random_graph(2), c(1, 1))$outputs$adjusted_p,
     c(1, 1),
     ignore_attr = TRUE
   )
@@ -72,13 +72,13 @@ test_that("shortcut testing handles 0 cases", {
   )
 
   expect_equal(
-    test_graph_shortcut(g_zero_2, rep(.001, 3))$outputs$p_adj,
+    test_graph_shortcut(g_zero_2, rep(.001, 3))$outputs$adjusted_p,
     rep(1, 3),
     ignore_attr = TRUE
   )
 
   expect_equal(
-    test_graph_shortcut(bonferroni_holm(3), p_zero_2)$outputs$p_adj,
+    test_graph_shortcut(bonferroni_holm(3), p_zero_2)$outputs$adjusted_p,
     rep(0, 3),
     ignore_attr = TRUE
   )

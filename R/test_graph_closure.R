@@ -77,6 +77,9 @@ test_graph_closure <- function(graph,
                                verbose = FALSE,
                                critical = FALSE) {
   # Input validation & sanitization --------------------------------------------
+  # Test types should be specified as full names or first initial,
+  # case-insensitive. A single provided test type should be applied to all
+  # groups.
   test_opts <- c(
     bonferroni = "bonferroni",
     parametric = "parametric",
@@ -91,7 +94,7 @@ test_graph_closure <- function(graph,
   test_input_val(graph, p, alpha, groups, test_types, corr, verbose, critical)
 
   num_hyps <- length(graph$hypotheses)
-  closure_rows <- 2^num_hyps - 1
+  closure_rows <- 2^num_hyps - 1 # "- 1" for the null sub-graph
   num_groups <- length(groups)
 
   hyp_names <- names(graph$hypotheses)
@@ -101,9 +104,13 @@ test_graph_closure <- function(graph,
   # Generate weights of the closure --------------------------------------------
   closure_standard <- generate_weights(graph)
   closure_presence <- closure_standard[, seq_len(num_hyps), drop = FALSE]
+
+  # "Compact" representation shows hypothesis weights where a hypothesis is
+  # present (even when that weight is 0), and NA where a hypothesis is missing.
+  # This form represents the closure with only `num_hyps` columns
   closure_compact <- ifelse(
     closure_presence,
-    closure_standard[, seq_len(num_hyps) + num_hyps],
+    closure_standard[, seq_len(num_hyps) + num_hyps, drop = FALSE],
     NA_real_
   )
 
@@ -118,30 +125,34 @@ test_graph_closure <- function(graph,
   critical_list <- if (critical) vector("list", closure_rows * num_groups)
 
   # Calculate adjusted p-values ------------------------------------------------
+  # Adjusted p-values are calculated for each group in each intersection of the
+  # closure
   for (intersection_index in seq_len(closure_rows)) {
-    h <- closure_presence[intersection_index, ]
+    hyp_presence <- closure_presence[intersection_index, ]
     weights <- closure_compact[intersection_index, ]
 
     for (group_index in seq_len(num_groups)) {
       group <- groups[[group_index]]
       test <- test_types[[group_index]]
 
-      # hypotheses to test must be in both the current group and the current
-      # intersection
-      group_x_intersection <- group[as.logical(h[group])]
+      # Hypotheses to include in adjusted p-value calculations must be in both
+      # the current group and the current intersection
+      group_x_intersection <- group[as.logical(hyp_presence[group])]
 
+      # Each `p_adjust_*` function expects a whole group as input and returns a
+      # single value as output (adjusted p-value for the whole group)
       if (test == "bonferroni") {
-        adjusted_p[intersection_index, group_index] <- p_adjust_bonferroni(
+        adjusted_p[[intersection_index, group_index]] <- p_adjust_bonferroni(
           p[group_x_intersection],
           weights[group_x_intersection]
         )
       } else if (test == "simes") {
-        adjusted_p[intersection_index, group_index] <- p_adjust_simes(
+        adjusted_p[[intersection_index, group_index]] <- p_adjust_simes(
           p[group_x_intersection],
           weights[group_x_intersection]
         )
       } else if (test == "parametric") {
-        adjusted_p[intersection_index, group_index] <- p_adjust_parametric(
+        adjusted_p[[intersection_index, group_index]] <- p_adjust_parametric(
           p[group_x_intersection],
           weights[group_x_intersection],
           corr[group_x_intersection, group_x_intersection]
@@ -150,57 +161,57 @@ test_graph_closure <- function(graph,
         stop(paste(test, "testing is not supported at this time"))
       }
 
-      # calculate critical values
+      # Critical values, like adjusted p-values, must be calculated at both the
+      # group and intersection level. Inputs are for a single group, and output
+      # is a dataframe containing critical value test information at the
+      # hypothesis/operand level.
       if (critical) {
-        if (length(group_x_intersection) == 0) {
-          critical_list[[critical_index]] <- NULL
+        if (test == "bonferroni") {
+          critical_list[[critical_index]] <- bonferroni_test_vals(
+            p[group_x_intersection],
+            weights[group_x_intersection],
+            alpha,
+            intersection_index
+          )
+        } else if (test == "simes") {
+          critical_list[[critical_index]] <- simes_test_vals(
+            p[group_x_intersection],
+            weights[group_x_intersection],
+            alpha,
+            intersection_index
+          )
+        } else if (test == "parametric") {
+          critical_list[[critical_index]] <- parametric_test_vals(
+            p[group_x_intersection],
+            weights[group_x_intersection],
+            alpha,
+            intersection_index,
+            corr[group_x_intersection, group_x_intersection]
+          )
         } else {
-          if (test == "bonferroni") {
-            df_critical <- bonferroni_test_vals(
-              p[group_x_intersection],
-              weights[group_x_intersection],
-              alpha
-            )
-          } else if (test == "simes") {
-            df_critical <- simes_test_vals(
-              p[group_x_intersection],
-              weights[group_x_intersection],
-              alpha
-            )
-          } else if (test == "parametric") {
-            df_critical <- parametric_test_vals(
-              p[group_x_intersection],
-              weights[group_x_intersection],
-              alpha,
-              corr[group_x_intersection, group_x_intersection]
-            )
-          } else {
-            stop(paste(test, "testing is not supported at this time"))
-          }
-
-          df_critical$Intersection <- intersection_index
-
-          critical_list[[critical_index]] <- df_critical
-          critical_index <- critical_index + 1
+          stop(paste(test, "testing is not supported at this time"))
         }
+
+        critical_index <- critical_index + 1
       }
     }
   }
 
-  # Adjusted p-values at higher levels -----------------------------------------
-  # adjusted p-values shouldn't exceed 1
+  # Adjusted p-value summaries -------------------------------------------------
+  # Adjusted p-values shouldn't exceed 1
   adjusted_p_cap <- ifelse(adjusted_p > 1, 1, adjusted_p)
-  # each intersection's adjusted p-value is the minimum for hypotheses in that
-  # intersection
+
+  # The adjusted p-value for an *intersection* is the smallest adjusted p-value
+  # for the groups it contains
   adjusted_p_intersection <- apply(adjusted_p_cap, 1, min)
   reject_intersection <- adjusted_p_intersection <= alpha
 
-  # each hypothesis gets an adjusted p-value equal to the largest intersection
-  # adjusted p-value containing that hypothesis
+  # The adjusted p-value for a *hypothesis* is the largest adjusted p-value for
+  # the intersections containing that hypothesis
   adjusted_p_global <- apply(adjusted_p_intersection * closure_presence, 2, max)
   reject_global <- adjusted_p_global <= alpha # Hypothesis test results
 
-  # Verbose and critical outputs -----------------------------------------------
+  # Adjusted p-value details ---------------------------------------------------
   detail_results <- if (verbose) {
     list(
       results = cbind(
@@ -212,8 +223,12 @@ test_graph_closure <- function(graph,
     )
   }
 
+  # Critical value details -----------------------------------------------------
   critical_results <- if (critical) {
     df_critical_results <- do.call(rbind, critical_list)
+
+    # "c" value is only used in parametric testing, so there's no need to
+    # include this column when there are no parametric groups
     if (!any(test_types == "parametric")) {
       df_critical_results[c("c", "*")] <- NULL
     }
@@ -232,7 +247,7 @@ test_graph_closure <- function(graph,
         corr = corr
       ),
       outputs = list(
-        p_adj = adjusted_p_global,
+        adjusted_p = adjusted_p_global,
         rejected = reject_global,
         graph = update_graph(graph, !reject_global)$updated_graph
       ),

@@ -175,7 +175,7 @@ test_graph_shortcut <- function(graph,
         corr = NULL
       ),
       outputs = list(
-        p_adj = adjusted_p,
+        adjusted_p = adjusted_p,
         rejected = rejected,
         graph = update_graph(initial_graph, !rejected)$updated_graph
       ),

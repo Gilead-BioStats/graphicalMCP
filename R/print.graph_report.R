@@ -83,7 +83,7 @@ print.graph_report <- function(x, ..., precision = 6, indent = 2) {
 
   df_summary <- data.frame(
     Hypothesis = formatC(hyp_names, width = hyp_width),
-    `Adj. P-value` = round(x$outputs$p_adj, precision),
+    `Adj. P-value` = round(x$outputs$adjusted_p, precision),
     Reject = x$outputs$rejected,
     check.names = FALSE
   )

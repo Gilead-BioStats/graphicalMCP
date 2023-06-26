@@ -4,6 +4,8 @@
 #' @param weights A numeric vector of hypothesis weights
 #' @param alpha A numeric scalar specifying the global significance level for
 #'   testing
+#' @param intersection A numeric scalar used to track the intersection the test
+#'   values are from
 #' @param corr A numeric matrix of correlations between hypotheses' test
 #'   statistics
 #'
@@ -24,77 +26,89 @@
 #' graphicalMCP:::bonferroni_test_vals(p, w, .05)
 #' graphicalMCP:::parametric_test_vals(p, w, .05, diag(4))
 #' graphicalMCP:::simes_test_vals(p, w, .05)
-bonferroni_test_vals <- function(p, weights, alpha) {
-  data.frame(
-    Intersection = rep(NA, length(p)),
-    Hypothesis = names(weights),
-    Test = rep("bonferroni", length(p)),
-    p = p,
-    "<=" = rep("<=", length(p)),
-    c = rep("", length(p)),
-    "*" = rep("", length(p)),
-    Critical = weights,
-    "*" = rep("*", length(p)),
-    Alpha = rep(alpha, length(p)),
-    Reject = ifelse(
-      p == 0 & weights == 0,
-      NA,
-      p <= weights * alpha
-    ),
-    check.names = FALSE
-  )
-}
-
-#' @rdname calc-test_vals
-parametric_test_vals <- function(p, weights, alpha, corr) {
-  c <- solve_c(weights, corr, alpha)
-
-  data.frame(
-    Intersection = NA,
-    Hypothesis = names(weights),
-    Test = "parametric",
-    p = p,
-    "<=" = "<=",
-    c = c,
-    "*" = "*",
-    Critical = weights,
-    "*" = "*",
-    Alpha = alpha,
-    Reject = ifelse(
-      p == 0 & weights == 0,
-      NA,
-      p <= c * weights * alpha
-    ),
-    check.names = FALSE
-  )
-}
-
-#' @rdname calc-test_vals
-simes_test_vals <- function(p, weights, alpha) {
-  vec_res <- vector(length = length(weights))
-  w_sum <- vector("numeric", length = length(weights))
-
-  for (i in seq_along(weights)) {
-    w_sum[[i]] <- sum(weights[p <= p[[i]]])
-    vec_res[[i]] <- p[[i]] <= alpha * w_sum[[i]]
+bonferroni_test_vals <- function(p, weights, alpha, intersection = NA) {
+  if (length(p) == 0) {
+    NULL
+  } else {
+    data.frame(
+      Intersection = intersection,
+      Hypothesis = names(weights),
+      Test = "bonferroni",
+      p = p,
+      "<=" = "<=",
+      c = "",
+      "*" = "",
+      Critical = weights,
+      "*" = "*",
+      Alpha = alpha,
+      Reject = ifelse(
+        p == 0 & weights == 0,
+        NA,
+        p <= weights * alpha
+      ),
+      check.names = FALSE
+    )
   }
+}
 
-  data.frame(
-    Intersection = NA,
-    Hypothesis = names(weights),
-    Test = "simes",
-    p = p,
-    "<=" = "<=",
-    c = "",
-    "*" = "",
-    Critical = w_sum,
-    "*" = "*",
-    Alpha = alpha,
-    Reject = ifelse(
-      p == 0 & w_sum == 0,
-      NA,
-      vec_res
-    ),
-    check.names = FALSE
-  )
+#' @rdname calc-test_vals
+parametric_test_vals <- function(p, weights, alpha, intersection = NA, corr) {
+  if (length(p) == 0) {
+    NULL
+  } else {
+    c <- solve_c(weights, corr, alpha)
+
+    data.frame(
+      Intersection = intersection,
+      Hypothesis = names(weights),
+      Test = "parametric",
+      p = p,
+      "<=" = "<=",
+      c = c,
+      "*" = "*",
+      Critical = weights,
+      "*" = "*",
+      Alpha = alpha,
+      Reject = ifelse(
+        p == 0 & weights == 0,
+        NA,
+        p <= c * weights * alpha
+      ),
+      check.names = FALSE
+    )
+  }
+}
+
+#' @rdname calc-test_vals
+simes_test_vals <- function(p, weights, alpha, intersection = NA) {
+  if (length(p) == 0) {
+    NULL
+  } else {
+    vec_res <- vector(length = length(weights))
+    w_sum <- vector("numeric", length = length(weights))
+
+    for (i in seq_along(weights)) {
+      w_sum[[i]] <- sum(weights[p <= p[[i]]])
+      vec_res[[i]] <- p[[i]] <= alpha * w_sum[[i]]
+    }
+
+    data.frame(
+      Intersection = intersection,
+      Hypothesis = names(weights),
+      Test = "simes",
+      p = p,
+      "<=" = "<=",
+      c = "",
+      "*" = "",
+      Critical = w_sum,
+      "*" = "*",
+      Alpha = alpha,
+      Reject = ifelse(
+        p == 0 & w_sum == 0,
+        NA,
+        vec_res
+      ),
+      check.names = FALSE
+    )
+  }
 }
