@@ -39,7 +39,7 @@ w <- c(H1 = .5, H2 = .5, H3 = 0, H4 = 0)
 p <- c(.024, .01, .026, .027)
 
 graphicalMCP:::bonferroni_test_vals(p, w, .05)
-graphicalMCP:::parametric_test_vals(p, w, .05, diag(4))
+graphicalMCP:::parametric_test_vals(p, w, .05, corr = diag(4))
 graphicalMCP:::simes_test_vals(p, w, .05)
 }
 \references{
