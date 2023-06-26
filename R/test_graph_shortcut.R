@@ -31,9 +31,8 @@ test_graph_shortcut <- function(graph,
 
   # Calculate adjusted p-values for all hypotheses by deleting every hypothesis
   # one at a time
-  for (hyp_num in seq_along(graph$hypotheses)) {
+  for (i in seq_along(graph$hypotheses)) {
     hyps_not_deleted <- setdiff(hyp_names, adjusted_p_sequence)
-    hyps_zero_weight <- names(graph$hypotheses[graph$hypotheses == 0])
 
     adjusted_p_subgraph <-
       p[hyps_not_deleted] / graph$hypotheses[hyps_not_deleted]
@@ -42,8 +41,8 @@ test_graph_shortcut <- function(graph,
     # catch this before which.min does
     if (all(is.nan(adjusted_p_subgraph))) {
       err_msg <- paste0(
-        "Calculation of adjusted p-values stops when all remaining hypotheses\n",
-        "    have 0 hypothesis weights and 0 p-values\n",
+        "Calculation of adjusted p-values stops when all remaining\n",
+        "    hypotheses have 0 hypothesis weights and 0 p-values\n",
         "  Hypotheses [", paste(adjusted_p_sequence, collapse = ", "), "]\n",
         "    have been deleted\n",
         paste(
@@ -51,7 +50,7 @@ test_graph_shortcut <- function(graph,
             graph,
             indent = 2,
             precision = 6,
-            title = paste0("Step ", hyp_num, ", Graph state:")
+            title = paste0("Step ", i, ", Graph state:")
           )),
           collapse = "\n"
         )
@@ -72,6 +71,7 @@ test_graph_shortcut <- function(graph,
 
     adjusted_p_sequence <- c(adjusted_p_sequence, min_hyp_name)
 
+    # Update graph to delete a hypothesis
     graph <-
       update_graph(graph, !hyp_names %in% adjusted_p_sequence)$updated_graph
   }
@@ -81,11 +81,11 @@ test_graph_shortcut <- function(graph,
 
   # Adjusted p-value details (sequence of graphs) ------------------------------
   if (verbose) {
-    # the first n = (number of rejected) hypotheses in the adjusted p sequence
+    # The first n = (number of rejected) hypotheses in the adjusted p sequence
     # are the hypotheses that will be rejected
     rejection_sequence <- adjusted_p_sequence[seq_along(which(rejected))]
 
-    # the sequence of graphs is the initial graph, plus one entry for each
+    # The sequence of graphs is the initial graph, plus one entry for each
     # rejected hypothesis
     graph_sequence <- vector("list", length(rejection_sequence) + 1)
     graph_sequence[[1]] <- initial_graph
@@ -94,10 +94,14 @@ test_graph_shortcut <- function(graph,
       verbose_keep <- rep(TRUE, num_hyps)
       names(verbose_keep) <- hyp_names
 
+      # Starting from the original initial graph, delete each hypothesis with
+      # adjusted p-value less than alpha. Record the graph state after each
+      # deletion
       for (hyp_num_to_reject in seq_along(rejection_sequence)) {
         hyp_name_to_reject <- rejection_sequence[[hyp_num_to_reject]]
         verbose_keep[[hyp_name_to_reject]] <- FALSE
 
+        # Update a graph to delete a hypothesis. Record the resulting graph
         graph_sequence[[hyp_num_to_reject + 1]] <- update_graph(
           graph_sequence[[hyp_num_to_reject]],
           verbose_keep
@@ -110,7 +114,7 @@ test_graph_shortcut <- function(graph,
 
   # Critical value details -----------------------------------------------------
   if (critical) {
-    step_graph <- initial_graph
+    # Record the final graph after all rejected hypotheses have been deleted
     graph_after_rejections <-
       update_graph(initial_graph, !rejected)$updated_graph
 
@@ -119,26 +123,40 @@ test_graph_shortcut <- function(graph,
     critical_keep <- rep(TRUE, num_hyps)
     names(critical_keep) <- hyp_names
 
+    step_graph <- initial_graph
+
+    # Calculate critical values for all hypotheses. For rejected hypotheses,
+    # critical values should come from the last graph they're present in. For
+    # non-rejected hypotheses, critical values should be calculated from the
+    # graph with all rejected hypotheses deleted.
     for (i in seq_along(adjusted_p_sequence)) {
-      delete_hypothesis <- adjusted_p_sequence[[i]]
+      # Follow the same hypothesis order as adjusted p-values
+      hyp_name_for_critical <- adjusted_p_sequence[[i]]
 
-      step_num <- if (rejected[delete_hypothesis]) i else NA
-
+      # Record critical values
       critical_step <- bonferroni_test_vals(
-        p[delete_hypothesis],
-        step_graph$hypotheses[delete_hypothesis],
+        p[hyp_name_for_critical],
+        step_graph$hypotheses[hyp_name_for_critical],
         alpha
       )
+
+      # Normally the first column of `*_test_vals()` is an intersection counter.
+      # Since shortcut testing doesn't track intersections, re-purpose that
+      # column as a step counter. Steps count up one at a time for each
+      # hypothesis rejected, then switch to NA for non-rejected hypotheses (i.e.
+      # "These rows represent steps that are not taken by the shortcut rejection
+      # algorithm")
       names(critical_step)[[1]] <- "step"
-      critical_step$step <- step_num
+      critical_step$step <- if (rejected[hyp_name_for_critical]) i else NA
       critical_step[c("Test", "c", "*")] <- NULL
 
       df_critical <- rbind(df_critical, critical_step)
 
-      if (rejected[delete_hypothesis]) {
+      hyp_name_for_critical_is_rejected <- rejected[hyp_name_for_critical]
+      if (hyp_name_for_critical_is_rejected) {
         step_graph <- update_graph(
           step_graph,
-          !hyp_names == delete_hypothesis
+          !hyp_names == hyp_name_for_critical
         )$updated_graph
       } else {
         step_graph <- graph_after_rejections

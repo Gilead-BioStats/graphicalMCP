@@ -56,19 +56,19 @@ test_that("shortcut testing handles 0 cases", {
 
   expect_error(
     test_graph_shortcut(g_zero_1, p_zero_1),
-    regexp = "All weights and p-values are 0"
+    regexp = "Calculation of adjusted p-values stops when all remaining"
   )
   expect_error(
     test_graph_shortcut(g_zero_1, p_zero_1),
-    regexp = "All weights and p-values are 0"
+    regexp = "Calculation of adjusted p-values stops when all remaining"
   )
   expect_error(
     test_graph_shortcut(g_zero_1, p_zero_1),
-    regexp = "All weights and p-values are 0"
+    regexp = "Calculation of adjusted p-values stops when all remaining"
   )
   expect_error(
     test_graph_shortcut(g_zero_1, p_zero_1),
-    regexp = "All weights and p-values are 0"
+    regexp = "Calculation of adjusted p-values stops when all remaining"
   )
 
   expect_equal(
@@ -84,6 +84,14 @@ test_that("shortcut testing handles 0 cases", {
   )
 
   expect_no_error(test_graph_shortcut(bonferroni_holm(3), p_zero_2))
+})
+
+test_that("shortcut testing rejects all when alpha is 1", {
+  expect_equal(
+    test_graph_shortcut(random_graph(6), rep(1, 6), 1)$outputs$rejected,
+    rep(TRUE, 6),
+    ignore_attr = TRUE
+  )
 })
 
 test_that("shortcut internal consistency", {
@@ -115,6 +123,12 @@ test_that("shortcut internal consistency", {
     shortcut_results$outputs$rejected[critical_sequence],
     shortcut_results$critical$results$Reject,
     ignore_attr = TRUE
+  )
+
+  steps <- seq_along(which(shortcut_results$outputs$rejected))
+  expect_equal(
+    c(steps, rep(NA, length(rando$hypotheses) - length(steps))),
+    shortcut_results$critical$results$step
   )
 
   last_graph_index <- length(shortcut_results$details$results)
