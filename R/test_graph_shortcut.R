@@ -5,7 +5,7 @@ test_graph_shortcut <- function(graph,
                                 alpha = .025,
                                 verbose = FALSE,
                                 critical = FALSE) {
-  # Input processing and useful initial values ---------------------------------
+  # Input validation -----------------------------------------------------------
   test_input_val(
     graph,
     p,
@@ -29,7 +29,7 @@ test_graph_shortcut <- function(graph,
 
   adjusted_p_sequence <- vector("integer")
 
-  # calculate adjusted p-values for all hypotheses by deleting every hypothesis
+  # Calculate adjusted p-values for all hypotheses by deleting every hypothesis
   # one at a time
   for (hyp_num in seq_along(graph$hypotheses)) {
     hyps_not_deleted <- setdiff(hyp_names, adjusted_p_sequence)
@@ -42,8 +42,10 @@ test_graph_shortcut <- function(graph,
     # catch this before which.min does
     if (all(is.nan(adjusted_p_subgraph))) {
       err_msg <- paste0(
-        "All weights and p-values are 0\n",
-        "  Deleted ", paste(adjusted_p_sequence, collapse = ", "), "\n",
+        "Calculation of adjusted p-values stops when all remaining hypotheses\n",
+        "    have 0 hypothesis weights and 0 p-values\n",
+        "  Hypotheses [", paste(adjusted_p_sequence, collapse = ", "), "]\n",
+        "    have been deleted\n",
         paste(
           utils::capture.output(print(
             graph,
@@ -58,12 +60,13 @@ test_graph_shortcut <- function(graph,
       stop(err_msg)
     }
 
-    # chooses the first sequentially in case of a tie in value
-    # ignoring prior processed is necessary in the case of all 0 weights
+    # Identify the hypothesis with the smallest adjusted p-value only among
+    # hypotheses not deleted so far. Choose the first hypothesis in case of a
+    # tie in adjusted p-values.
     min_hyp_name <- names(which.min(adjusted_p_subgraph[hyps_not_deleted]))
 
-    # the adjusted p-value for the current hypothesis being considered is the
-    # largest adjusted p-value seen so far in the sequence
+    # Record the adjusted p-value for the current hypothesis being considered;
+    # that is, the largest adjusted p-value seen so far in the sequence
     adjusted_p_max <- max(adjusted_p_max, adjusted_p_subgraph[[min_hyp_name]])
     adjusted_p[[min_hyp_name]] <- adjusted_p_max
 
