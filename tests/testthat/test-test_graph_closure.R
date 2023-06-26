@@ -112,7 +112,11 @@ test_that("Simes & parametric adjusted p-values are less than Bonferroni", {
   expect_true(
     all(
       test_graph_closure(rando, rep(.01, 4))$outputs$adjusted_p >=
-        test_graph_closure(rando, rep(.01, 4), test_types = "s")$outputs$adjusted_p
+        test_graph_closure(
+          rando,
+          rep(.01, 4),
+          test_types = "s"
+        )$outputs$adjusted_p
     )
   )
 
@@ -229,7 +233,12 @@ test_that("compare adjusted p-values to gMCP - Bonferroni & parametric", {
     )
 
     expect_equal(
-      test_graph_closure(g, p, test_types = "p", corr = diag(6))$outputs$adjusted_p,
+      test_graph_closure(
+        g,
+        p,
+        test_types = "p",
+        corr = diag(6)
+      )$outputs$adjusted_p,
       gMCP::gMCP(gmcp_g, p, "parametric", correlation = diag(6))@adjPValues
     )
   }
