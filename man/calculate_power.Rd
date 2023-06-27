@@ -97,7 +97,7 @@ vector. The mean of this vector is returned as "Probability of success"
 par_gate <- simple_successive_1()
 
 # the default is to test all hypotheses with: Bonferroni testing at alpha
-# level .05, 0 mean under the alternative, and 0 correlation between
+# level .025, 0 mean under the alternative, and 0 correlation between
 # hypotheses under the alternative
 # the default of 100 simulations will usually need to be increased
 calculate_power(par_gate, sim_n = 1e5)

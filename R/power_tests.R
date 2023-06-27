@@ -46,10 +46,7 @@
 #'
 #' graphicalMCP:::test_graph_fast(p, .025, compact_weights, inter_h)
 #' graphicalMCP:::test_graph_shortcut_cpp(par_gate, p, .025)
-test_graph_fast <- function(p,
-                            alpha,
-                            intersections,
-                            inter_h) {
+test_graph_fast <- function(p, alpha, intersections, inter_h) {
   rej_hyps <- t(p <= alpha * t(intersections))
 
   # "+ 0" converts to integer from logical
@@ -58,9 +55,6 @@ test_graph_fast <- function(p,
 }
 
 #' @rdname testing-fast
-# C++ only, pass/fail only
-test_graph_shortcut_cpp <- function(graph,
-                                    p,
-                                    alpha = .025) {
+test_graph_shortcut_cpp <- function(graph, p, alpha = .025) {
   test_graph_shortcut_cpp_(graph$hypotheses, graph$transitions, p, alpha)
 }

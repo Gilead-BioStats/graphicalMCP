@@ -236,6 +236,10 @@ test_graph_closure <- function(graph,
     list(results = df_critical_results)
   }
 
+  # The core output of a test is the adjusted p-values, rejection decisions, and
+  # resulting graph after deleting all rejected hypotheses. Inputs are recorded
+  # as well. Details about adjusted p-values and critical values are optionally
+  # available.
   structure(
     list(
       inputs = list(

@@ -164,6 +164,10 @@ test_graph_shortcut <- function(graph,
     }
   }
 
+  # The core output of a test is the adjusted p-values, rejection decisions, and
+  # resulting graph after deleting all rejected hypotheses. Inputs are recorded
+  # as well. Details about adjusted p-values and critical values are optionally
+  # available.
   structure(
     list(
       inputs = list(
