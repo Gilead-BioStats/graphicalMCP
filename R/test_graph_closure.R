@@ -122,9 +122,6 @@ test_graph_closure <- function(graph,
     dimnames = list(NULL, paste0("padj_grp", seq_along(groups)))
   )
 
-  critical_index <- 1
-  critical_list <- if (critical) vector("list", num_intersections * num_groups)
-
   # Calculate adjusted p-values ------------------------------------------------
   # Adjusted p-values are calculated for each group in each intersection of the
   # closure
@@ -140,8 +137,9 @@ test_graph_closure <- function(graph,
       # the current group and the current intersection
       group_x_intersection <- group[as.logical(vec_intersection[group])]
 
-      # Each `p_adjust_*` function expects a whole group as input and returns a
-      # single value as output (adjusted p-value for the whole group)
+      # The adjusted p-value for a *group* has varying rules depending on the
+      # test type. Each `p_adjust_*` function expects a whole group as input and
+      # returns a single value as output (adjusted p-value for the whole group)
       if (test == "bonferroni") {
         adjusted_p[[intersection_index, group_index]] <- p_adjust_bonferroni(
           p[group_x_intersection],
@@ -161,12 +159,61 @@ test_graph_closure <- function(graph,
       } else {
         stop(paste(test, "testing is not supported at this time"))
       }
+    }
+  }
 
-      # Critical values, like adjusted p-values, must be calculated at both the
-      # group and intersection level. Inputs are for a single group, and output
-      # is a dataframe containing critical value test information at the
-      # hypothesis/operand level.
-      if (critical) {
+  # Adjusted p-value summaries -------------------------------------------------
+  # Adjusted p-values shouldn't exceed 1
+  adjusted_p_cap <- pmin(adjusted_p, 1)
+
+  # The adjusted p-value for an *intersection* is the smallest adjusted p-value
+  # for the groups it contains
+  adjusted_p_intersection <- apply(adjusted_p_cap, 1, min)
+  reject_intersection <- adjusted_p_intersection <= alpha
+
+  # The adjusted p-value for a *hypothesis* is the largest adjusted p-value for
+  # the intersections containing that hypothesis
+  adjusted_p_hypothesis <-
+    apply(adjusted_p_intersection * matrix_intersections, 2, max)
+  reject_hypothesis <- adjusted_p_hypothesis <= alpha # Hypothesis test results
+
+  # Adjusted p-value details ---------------------------------------------------
+  detail_results <- list(
+    results = cbind(
+      weighting_scheme_compact,
+      adjusted_p_cap,
+      adjusted_p_intersection,
+      rej = reject_intersection
+    )
+  )
+
+  # Critical value details -----------------------------------------------------
+  if (critical) {
+    # Critical values are recorded in a dataframe, which doesn't store in a
+    # matrix. So for the critical loops, each group's critical value dataframe
+    # is stored in a list. These are the initialized list and counter for
+    # indexing into it.
+    critical_index <- 1
+    critical_list <- vector("list", num_intersections * num_groups)
+
+    # Critical values are calculated for each group in each intersection of the
+    # closure
+    for (intersection_index in seq_len(num_intersections)) {
+      vec_intersection <- matrix_intersections[intersection_index, ]
+      vec_weights <- weighting_scheme_compact[intersection_index, ]
+
+      for (group_index in seq_len(num_groups)) {
+        group <- groups[[group_index]]
+        test <- test_types[[group_index]]
+
+        # Hypotheses to include in critical value calculations must be in both
+        # the current group and the current intersection
+        group_x_intersection <- group[as.logical(vec_intersection[group])]
+
+        # Critical values, like adjusted p-values, must be calculated at both the
+        # group and intersection level. Inputs are for a single group, and output
+        # is a dataframe containing critical value test information at the
+        # hypothesis/operand level.
         if (test == "bonferroni") {
           critical_list[[critical_index]] <- bonferroni_test_vals(
             p[group_x_intersection],
@@ -196,36 +243,7 @@ test_graph_closure <- function(graph,
         critical_index <- critical_index + 1
       }
     }
-  }
 
-  # Adjusted p-value summaries -------------------------------------------------
-  # Adjusted p-values shouldn't exceed 1
-  adjusted_p_cap <- pmin(adjusted_p, 1)
-
-  # The adjusted p-value for an *intersection* is the smallest adjusted p-value
-  # for the groups it contains
-  adjusted_p_intersection <- apply(adjusted_p_cap, 1, min)
-  reject_intersection <- adjusted_p_intersection <= alpha
-
-  # The adjusted p-value for a *hypothesis* is the largest adjusted p-value for
-  # the intersections containing that hypothesis
-  adjusted_p_global <- apply(adjusted_p_intersection * matrix_intersections, 2, max)
-  reject_global <- adjusted_p_global <= alpha # Hypothesis test results
-
-  # Adjusted p-value details ---------------------------------------------------
-  detail_results <- if (verbose) {
-    list(
-      results = cbind(
-        weighting_scheme_compact,
-        adjusted_p_cap,
-        adjusted_p_intersection,
-        rej = reject_intersection
-      )
-    )
-  }
-
-  # Critical value details -----------------------------------------------------
-  critical_results <- if (critical) {
     df_critical_results <- do.call(rbind, critical_list)
 
     # "c" value is only used in parametric testing, so there's no need to
@@ -233,14 +251,13 @@ test_graph_closure <- function(graph,
     if (!any(test_types == "parametric")) {
       df_critical_results[c("c", "*")] <- NULL
     }
-
-    list(results = df_critical_results)
   }
 
-  # The core output of a test is the adjusted p-values, rejection decisions, and
-  # resulting graph after deleting all rejected hypotheses. Inputs are recorded
-  # as well. Details about adjusted p-values and critical values are optionally
-  # available.
+  # Build the report -----------------------------------------------------------
+  # The core output of a test report is the adjusted p-values, rejection
+  # decisions, and resulting graph after deleting all rejected hypotheses.
+  # Inputs are recorded as well. Details about adjusted p-values and critical
+  # values are optionally available.
   structure(
     list(
       inputs = list(
@@ -252,12 +269,12 @@ test_graph_closure <- function(graph,
         corr = corr
       ),
       outputs = list(
-        adjusted_p = adjusted_p_global,
-        rejected = reject_global,
-        graph = update_graph(graph, !reject_global)$updated_graph
+        adjusted_p = adjusted_p_hypothesis,
+        rejected = reject_hypothesis,
+        graph = update_graph(graph, !reject_hypothesis)$updated_graph
       ),
-      details = detail_results,
-      critical = critical_results
+      details = if (verbose) detail_results,
+      critical = if (critical) list(results = df_critical_results)
     ),
     class = "graph_report"
   )

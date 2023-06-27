@@ -61,7 +61,7 @@ writable::integers test_graph_shortcut_cpp_(
     // reject ends as 0 if none are rejected
     for (rej_num = 0; rej_num < num_hyps; rej_num++) {
       // this line has the actual test
-      reject = p[rej_num] < hypotheses[rej_num] * alpha;
+      reject = p[rej_num] <= hypotheses[rej_num] * alpha;
       // increase count of rejections and break for loop
       if (reject) {
         rejected[rej_num] = 1;

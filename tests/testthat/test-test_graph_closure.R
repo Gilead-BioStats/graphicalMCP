@@ -247,7 +247,10 @@ test_that("compare adjusted p-values to gMCP - Bonferroni & parametric", {
 test_that("compare adjusted p-values to lrstat - Bonferroni & Simes", {
   g <- random_graph(6)
 
-  g$hypotheses <- g$hypotheses / sum(g$hypotheses)
+  # lrstat has no allowance for floating point differences - hypothesis weights
+  # must sum to exactly 1. So this corrects any floating point differences (I
+  # think).
+  g$hypotheses[[6]] <- 1 - sum(g$hypotheses[1:5])
 
   p <- pnorm(rnorm(6, 2.5), lower.tail = FALSE)
 
