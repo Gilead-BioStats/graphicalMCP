@@ -94,7 +94,6 @@ test_graph_closure <- function(graph,
   test_input_val(graph, p, alpha, groups, test_types, corr, verbose, critical)
 
   num_hyps <- length(graph$hypotheses)
-  closure_rows <- 2^num_hyps - 1 # "- 1" for the null sub-graph
   num_groups <- length(groups)
 
   hyp_names <- names(graph$hypotheses)
@@ -102,34 +101,36 @@ test_graph_closure <- function(graph,
   if (!is.null(corr)) dimnames(corr) <- list(hyp_names, hyp_names)
 
   # Generate weights of the closure --------------------------------------------
-  closure_standard <- generate_weights(graph)
-  closure_presence <- closure_standard[, seq_len(num_hyps), drop = FALSE]
+  weighting_scheme <- generate_weights(graph)
+  matrix_intersections <- weighting_scheme[, seq_len(num_hyps), drop = FALSE]
 
   # "Compact" representation shows hypothesis weights where a hypothesis is
   # present (even when that weight is 0), and NA where a hypothesis is missing.
   # This form represents the closure with only `num_hyps` columns
-  closure_compact <- ifelse(
-    closure_presence,
-    closure_standard[, seq_len(num_hyps) + num_hyps, drop = FALSE],
+  weighting_scheme_compact <- ifelse(
+    matrix_intersections,
+    weighting_scheme[, seq_len(num_hyps) + num_hyps, drop = FALSE],
     NA_real_
   )
 
+  num_intersections <- nrow(matrix_intersections)
+
   adjusted_p <- matrix(
     NA_real_,
-    nrow = closure_rows,
+    nrow = num_intersections,
     ncol = num_groups,
     dimnames = list(NULL, paste0("padj_grp", seq_along(groups)))
   )
 
   critical_index <- 1
-  critical_list <- if (critical) vector("list", closure_rows * num_groups)
+  critical_list <- if (critical) vector("list", num_intersections * num_groups)
 
   # Calculate adjusted p-values ------------------------------------------------
   # Adjusted p-values are calculated for each group in each intersection of the
   # closure
-  for (intersection_index in seq_len(closure_rows)) {
-    hyp_presence <- closure_presence[intersection_index, ]
-    weights <- closure_compact[intersection_index, ]
+  for (intersection_index in seq_len(num_intersections)) {
+    vec_intersection <- matrix_intersections[intersection_index, ]
+    vec_weights <- weighting_scheme_compact[intersection_index, ]
 
     for (group_index in seq_len(num_groups)) {
       group <- groups[[group_index]]
@@ -137,24 +138,24 @@ test_graph_closure <- function(graph,
 
       # Hypotheses to include in adjusted p-value calculations must be in both
       # the current group and the current intersection
-      group_x_intersection <- group[as.logical(hyp_presence[group])]
+      group_x_intersection <- group[as.logical(vec_intersection[group])]
 
       # Each `p_adjust_*` function expects a whole group as input and returns a
       # single value as output (adjusted p-value for the whole group)
       if (test == "bonferroni") {
         adjusted_p[[intersection_index, group_index]] <- p_adjust_bonferroni(
           p[group_x_intersection],
-          weights[group_x_intersection]
+          vec_weights[group_x_intersection]
         )
       } else if (test == "simes") {
         adjusted_p[[intersection_index, group_index]] <- p_adjust_simes(
           p[group_x_intersection],
-          weights[group_x_intersection]
+          vec_weights[group_x_intersection]
         )
       } else if (test == "parametric") {
         adjusted_p[[intersection_index, group_index]] <- p_adjust_parametric(
           p[group_x_intersection],
-          weights[group_x_intersection],
+          vec_weights[group_x_intersection],
           corr[group_x_intersection, group_x_intersection]
         )
       } else {
@@ -169,21 +170,21 @@ test_graph_closure <- function(graph,
         if (test == "bonferroni") {
           critical_list[[critical_index]] <- bonferroni_test_vals(
             p[group_x_intersection],
-            weights[group_x_intersection],
+            vec_weights[group_x_intersection],
             alpha,
             intersection_index
           )
         } else if (test == "simes") {
           critical_list[[critical_index]] <- simes_test_vals(
             p[group_x_intersection],
-            weights[group_x_intersection],
+            vec_weights[group_x_intersection],
             alpha,
             intersection_index
           )
         } else if (test == "parametric") {
           critical_list[[critical_index]] <- parametric_test_vals(
             p[group_x_intersection],
-            weights[group_x_intersection],
+            vec_weights[group_x_intersection],
             alpha,
             intersection_index,
             corr[group_x_intersection, group_x_intersection]
@@ -199,7 +200,7 @@ test_graph_closure <- function(graph,
 
   # Adjusted p-value summaries -------------------------------------------------
   # Adjusted p-values shouldn't exceed 1
-  adjusted_p_cap <- ifelse(adjusted_p > 1, 1, adjusted_p)
+  adjusted_p_cap <- pmin(adjusted_p, 1)
 
   # The adjusted p-value for an *intersection* is the smallest adjusted p-value
   # for the groups it contains
@@ -208,14 +209,14 @@ test_graph_closure <- function(graph,
 
   # The adjusted p-value for a *hypothesis* is the largest adjusted p-value for
   # the intersections containing that hypothesis
-  adjusted_p_global <- apply(adjusted_p_intersection * closure_presence, 2, max)
+  adjusted_p_global <- apply(adjusted_p_intersection * matrix_intersections, 2, max)
   reject_global <- adjusted_p_global <= alpha # Hypothesis test results
 
   # Adjusted p-value details ---------------------------------------------------
   detail_results <- if (verbose) {
     list(
       results = cbind(
-        closure_compact,
+        weighting_scheme_compact,
         adjusted_p_cap,
         adjusted_p_intersection,
         rej = reject_intersection
