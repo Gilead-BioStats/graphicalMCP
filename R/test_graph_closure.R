@@ -135,26 +135,26 @@ test_graph_closure <- function(graph,
 
       # Hypotheses to include in adjusted p-value calculations must be in both
       # the current group and the current intersection
-      group_x_intersection <- group[as.logical(vec_intersection[group])]
+      group_by_intersection <- group[as.logical(vec_intersection[group])]
 
       # The adjusted p-value for a *group* has varying rules depending on the
       # test type. Each `p_adjust_*` function expects a whole group as input and
       # returns a single value as output (adjusted p-value for the whole group)
       if (test == "bonferroni") {
         adjusted_p[[intersection_index, group_index]] <- p_adjust_bonferroni(
-          p[group_x_intersection],
-          vec_weights[group_x_intersection]
+          p[group_by_intersection],
+          vec_weights[group_by_intersection]
         )
       } else if (test == "simes") {
         adjusted_p[[intersection_index, group_index]] <- p_adjust_simes(
-          p[group_x_intersection],
-          vec_weights[group_x_intersection]
+          p[group_by_intersection],
+          vec_weights[group_by_intersection]
         )
       } else if (test == "parametric") {
         adjusted_p[[intersection_index, group_index]] <- p_adjust_parametric(
-          p[group_x_intersection],
-          vec_weights[group_x_intersection],
-          corr[group_x_intersection, group_x_intersection]
+          p[group_by_intersection],
+          vec_weights[group_by_intersection],
+          corr[group_by_intersection, group_by_intersection]
         )
       } else {
         stop(paste(test, "testing is not supported at this time"))
@@ -208,7 +208,7 @@ test_graph_closure <- function(graph,
 
         # Hypotheses to include in critical value calculations must be in both
         # the current group and the current intersection
-        group_x_intersection <- group[as.logical(vec_intersection[group])]
+        group_by_intersection <- group[as.logical(vec_intersection[group])]
 
         # Critical values, like adjusted p-values, must be calculated at both the
         # group and intersection level. Inputs are for a single group, and output
@@ -216,25 +216,25 @@ test_graph_closure <- function(graph,
         # hypothesis/operand level.
         if (test == "bonferroni") {
           critical_list[[critical_index]] <- bonferroni_test_vals(
-            p[group_x_intersection],
-            vec_weights[group_x_intersection],
+            p[group_by_intersection],
+            vec_weights[group_by_intersection],
             alpha,
             intersection_index
           )
         } else if (test == "simes") {
           critical_list[[critical_index]] <- simes_test_vals(
-            p[group_x_intersection],
-            vec_weights[group_x_intersection],
+            p[group_by_intersection],
+            vec_weights[group_by_intersection],
             alpha,
             intersection_index
           )
         } else if (test == "parametric") {
           critical_list[[critical_index]] <- parametric_test_vals(
-            p[group_x_intersection],
-            vec_weights[group_x_intersection],
+            p[group_by_intersection],
+            vec_weights[group_by_intersection],
             alpha,
             intersection_index,
-            corr[group_x_intersection, group_x_intersection]
+            corr[group_by_intersection, group_by_intersection]
           )
         } else {
           stop(paste(test, "testing is not supported at this time"))

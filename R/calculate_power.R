@@ -240,7 +240,6 @@ calculate_power <- function(graph,
         # hypotheses are given a zero value rather than NA before calculating
         # critical values. This results in missing hypotheses getting a critical
         # value calculated for them. These incorrect values are then corrected.
-
       }
 
       # `test_graph_fast()` requires hypotheses, p-values, and the closure
