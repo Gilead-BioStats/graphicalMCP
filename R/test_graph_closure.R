@@ -101,15 +101,15 @@ test_graph_closure <- function(graph,
   if (!is.null(corr)) dimnames(corr) <- list(hyp_names, hyp_names)
 
   # Generate weights of the closure --------------------------------------------
-  weighting_scheme <- generate_weights(graph)
-  matrix_intersections <- weighting_scheme[, seq_len(num_hyps), drop = FALSE]
+  weighting_strategy <- generate_weights(graph)
+  matrix_intersections <- weighting_strategy[, seq_len(num_hyps), drop = FALSE]
 
   # "Compact" representation shows hypothesis weights where a hypothesis is
   # present (even when that weight is 0), and NA where a hypothesis is missing.
   # This form represents the closure with only `num_hyps` columns
-  weighting_scheme_compact <- ifelse(
+  weighting_strategy_compact <- ifelse(
     matrix_intersections,
-    weighting_scheme[, seq_len(num_hyps) + num_hyps, drop = FALSE],
+    weighting_strategy[, seq_len(num_hyps) + num_hyps, drop = FALSE],
     NA_real_
   )
 
@@ -127,7 +127,7 @@ test_graph_closure <- function(graph,
   # closure
   for (intersection_index in seq_len(num_intersections)) {
     vec_intersection <- matrix_intersections[intersection_index, ]
-    vec_weights <- weighting_scheme_compact[intersection_index, ]
+    vec_weights <- weighting_strategy_compact[intersection_index, ]
 
     for (group_index in seq_len(num_groups)) {
       group <- groups[[group_index]]
@@ -180,7 +180,7 @@ test_graph_closure <- function(graph,
   # Adjusted p-value details ---------------------------------------------------
   detail_results <- list(
     results = cbind(
-      weighting_scheme_compact,
+      weighting_strategy_compact,
       adjusted_p_cap,
       adjusted_p_intersection,
       rej = reject_intersection
@@ -200,7 +200,7 @@ test_graph_closure <- function(graph,
     # closure
     for (intersection_index in seq_len(num_intersections)) {
       vec_intersection <- matrix_intersections[intersection_index, ]
-      vec_weights <- weighting_scheme_compact[intersection_index, ]
+      vec_weights <- weighting_strategy_compact[intersection_index, ]
 
       for (group_index in seq_len(num_groups)) {
         group <- groups[[group_index]]

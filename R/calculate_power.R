@@ -65,13 +65,13 @@
 #' @examples
 #' par_gate <- simple_successive_1()
 #'
-#' # the default is to test all hypotheses with: Bonferroni testing at alpha
+#' # The default is to test all hypotheses with: Bonferroni testing at alpha
 #' # level .025, 0 mean under the alternative, and 0 correlation between
 #' # hypotheses under the alternative
-#' # the default of 100 simulations will usually need to be increased
+#' # The default of 100 simulations will usually need to be increased
 #' calculate_power(par_gate, sim_n = 1e5)
 #'
-#' # but any test group/type combination that works for [test_graph_closure()]
+#' # But any test group/type combination that works for [test_graph_closure()]
 #' # can be used
 #' calculate_power(
 #'   par_gate,
@@ -100,7 +100,7 @@ calculate_power <- function(graph,
   # Input sanitization ---------------------------------------------------------
   # Test types should be passed as full names or first letter, case-insensitive,
   # and a single provided type should get expanded to all groups
-  test_opts <- c(
+  test_options <- c(
     bonferroni = "bonferroni",
     parametric = "parametric",
     simes = "simes",
@@ -108,7 +108,7 @@ calculate_power <- function(graph,
     p = "parametric",
     s = "simes"
   )
-  test_types <- test_opts[tolower(test_types)]
+  test_types <- test_options[tolower(test_types)]
   if (length(test_types) == 1) {
     test_types <- rep(test_types, length(test_groups))
   }
@@ -151,7 +151,7 @@ calculate_power <- function(graph,
     NA,
     nrow = sim_n,
     ncol = length(marginal_power),
-    dimnames = list(seq_len(sim_n), names(graph$hypotheses))
+    dimnames = list(seq_len(sim_n), hyp_names)
   )
 
   if (all(test_types == "bonferroni") && !force_closure) {
@@ -170,99 +170,109 @@ calculate_power <- function(graph,
     colnames(simulation_test_results) <- hyp_names
     rownames(simulation_test_results) <- seq_len(sim_n)
   } else {
-    # Test each simulation with closure testing --------------------------------
-    bonf_groups <- test_groups[test_types == "bonferroni", drop = FALSE]
-    simes_groups <- test_groups[test_types == "simes", drop = FALSE]
-    para_groups <- test_groups[test_types == "parametric", drop = FALSE]
-
-    # fast Simes testing requires Simes hypothesis numbers to be mapped to their
-    # relative position within the set of Simes hypotheses. For example, if 1/7
-    # get parametric testing, and 2/5 & 3/4/6 get Simes, the fast Simes
-    # functions will get hypotheses 2/5 & 3/4/6 passed, but the groups will
-    # first be re-indexed to 1/4 & 2/3/5 (their relative locations within the
-    # Simes groups).
-    simes_groups_reduce <- lapply(
-      simes_groups,
-      function(group) which(unlist(simes_groups) %in% group)
-    )
-
-    # Fast Simes testing also requires a set of p-values with columns  already
-    # subset for Simes testing
-    p_sim_simes <- p_sim[, unlist(simes_groups), drop = FALSE]
-
-    closure_standard <- generate_weights(graph)
-    closure_presence <- closure_standard[, seq_len(num_hyps)]
-    closure_compact <- ifelse(
-      closure_presence,
-      closure_standard[, seq_len(num_hyps) + num_hyps],
+    # Calculate weights for each intersection in the closure -------------------
+    weighting_strategy <- generate_weights(graph)
+    matrix_intersections <- weighting_strategy[, seq_len(num_hyps)]
+    weighting_strategy_compact <- ifelse(
+      matrix_intersections,
+      weighting_strategy[, seq_len(num_hyps) + num_hyps],
       NA
     )
 
-    # Before this point, all `gw_*` variables have columns in the original
-    # hypothesis order. After this point, that may no longer be the case
+    # Calculate Bonferroni critical values -------------------------------------
+    groups_bonferroni <- test_groups[test_types == "bonferroni", drop = FALSE]
 
-    # Bonferroni and parametric critical values do not depend on p-values, so
-    # they can be calculated just once
-    closure_bonferroni <- closure_compact[, unlist(bonf_groups), drop = FALSE]
+    # Bonferroni critical values are just the weights from the closure
+    critical_values_bonferroni <-
+      weighting_strategy_compact[, unlist(groups_bonferroni), drop = FALSE]
 
-    closure_parametric <- calculate_critical_parametric(
-      closure_compact,
+    # Calculate parametric critical values -------------------------------------
+    groups_parametric <- test_groups[test_types == "parametric", drop = FALSE]
+
+    # Parametric critical values depend only on the joint distribution and
+    # alpha. This allows critical values to be calculated once, rather than
+    # re-calculating for each simulation
+    critical_values_parametric <- calculate_critical_parametric(
+      weighting_strategy_compact,
       test_corr,
       alpha,
-      para_groups
+      groups_parametric
     )
 
-    # Simes needs different treatment than Bonferroni or parametric for a couple
-    # reasons. Because Simes testing values can change for each simulation, the
-    # initial Simes closure weights must be saved separately from results.
-    # Furthermore, `calculate_critical_simes()` has been heavily optimized, and
-    # the fastest option found requires the closure weights for missing
-    # hypotheses to be 0, not NA.
-    closure_simes_initial <-
-      closure_compact[, unlist(simes_groups), drop = FALSE]
+    # Separate Simes weighting strategy ----------------------------------------
+    groups_simes <- test_groups[test_types == "simes", drop = FALSE]
 
-    closure_simes_initial[is.na(closure_simes_initial)] <- 0
-    closure_simes <- closure_simes_initial
+    # The fastest option found for calculating Simes critical values requires
+    # missing hypotheses' weights to be 0, rather than NA
+    weighting_strategy_simes <-
+      weighting_strategy_compact[, unlist(groups_simes), drop = FALSE]
+
+    weighting_strategy_simes[is.na(weighting_strategy_simes)] <- 0
+    critical_values_simes <- weighting_strategy_simes
+
+    # Unlike Bonferroni and parametric critical values, Simes critical values
+    # depend on the order of p-values. This means they must be re-calculated for
+    # each simulation. Because this causes a bottleneck in calculations, Simes
+    # testing has been heavily optimized. Fast Simes testing requires Simes
+    # hypothesis numbers to be mapped to their relative position within the set
+    # of all Simes hypotheses. For example, if hypotheses 1/7 form a parametric
+    # group, and 2/5 & 3/4/6 each form a Simes group, the fast Simes functions
+    # will get hypotheses 2/5 & 3/4/6 passed, but the groups must first be
+    # re-indexed to 1/4 & 2/3/5 (their relative locations within all Simes
+    # groups).
+    groups_simes_reduce <- lapply(
+      groups_simes,
+      function(group) which(unlist(groups_simes) %in% group)
+    )
+
+    # Fast Simes testing also requires a set of p-values with columns already
+    # subset for Simes testing, similar to how the weighting strategy is subset
+    # for each test type
+    p_sim_simes <- p_sim[, unlist(groups_simes), drop = FALSE]
 
     # Apply closure testing to each simulation ---------------------------------
     for (row in seq_len(sim_n)) {
-      if (length(simes_groups) > 0) {
+      # If there are no Simes groups, critical values are the Simes weighting
+      # strategy (a matrix with 0 columns)
+      if (length(groups_simes) == 0) {
+        critical_values_simes <- weighting_strategy_simes
+      } else {
         # Simes testing depends on p-values, so critical values must be
         # calculated for each simulation.
-        closure_simes <- calculate_critical_simes(
-          closure_simes_initial,
+        critical_values_simes <- calculate_critical_simes(
+          weighting_strategy_simes,
           p_sim_simes[row, ],
-          simes_groups_reduce
+          groups_simes_reduce
         )
 
-        # *Note:* The output of `calculate_critical_simes()` is incorrect for
-        # missing hypotheses in the closure. To improve performance, missing
-        # hypotheses are given a zero value rather than NA before calculating
-        # critical values. This results in missing hypotheses getting a critical
-        # value calculated for them. These incorrect values are then corrected.
+        # *Note:* The Simes critical values are incorrect for missing Simes
+        # hypotheses. To improve performance, missing hypotheses are given a
+        # zero value rather than NA before calculating critical values. This
+        # results in missing hypotheses getting a critical value calculated for
+        # them. These incorrect values are then replaced with zeroes for testing
       }
 
-      # `test_graph_fast()` requires hypotheses, p-values, and the closure
-      # presence indicator to all have hypotheses/columns in the same order.
-      # P-values and the presence indicator are already in the original order,
-      # so order the critical values back in original hypothesis order.
-      closure_critical_all <- cbind(
-        closure_bonferroni,
-        closure_simes,
-        closure_parametric
+      # `test_graph_fast()` requires hypotheses, p-values, and the intersections
+      # matrix to all have hypotheses/columns in the same order. P-values and
+      # the intersections matrix are already in the original order, so order the
+      # critical values back in original hypothesis order.
+      critical_values_all <- cbind(
+        critical_values_bonferroni,
+        critical_values_simes,
+        critical_values_parametric
       )[, hyp_names, drop = FALSE]
 
       # Similar to Simes critical values, the optimized testing function
       # requires missing values to be replaced by zero. This line also replaces
       # the incorrect Simes critical values with zero.
-      closure_critical_all[!closure_presence] <- 0
+      critical_values_all[!matrix_intersections] <- 0
 
-      # Record test results for one simulation
+      # Record test results for one simulation, all groups
       simulation_test_results[row, ] <- test_graph_fast(
         p_sim[row, ],
         alpha,
-        closure_critical_all,
-        closure_presence
+        critical_values_all,
+        matrix_intersections
       )
     }
   }
@@ -270,12 +280,12 @@ calculate_power <- function(graph,
   # Summarize power results ----------------------------------------------------
   # Each user-defined function provided as a "success" measure should take a
   # logical vector (a single simulation's test results) as input, and return a
-  # logical scalar. Applying such a function to each simulation results in a
+  # logical scalar. Applying such a function to each simulation, results in a
   # success indicator vector with one entry per simulation. The average of this
   # vector is the probability of "success".
   power_success <- vapply(
     sim_success,
-    function(success_fun) mean(apply(simulation_test_results, 1, success_fun)),
+    function(fn_success) mean(apply(simulation_test_results, 1, fn_success)),
     numeric(1)
   )
 
@@ -284,7 +294,7 @@ calculate_power <- function(graph,
   if (is.null(names(power_success))) {
     success_fun_bodies <- vapply(
       sim_success,
-      function(success_fun) deparse(success_fun)[[2]],
+      function(fn_success) deparse(fn_success)[[2]],
       character(1)
     )
 

@@ -46,7 +46,7 @@
 calculate_critical_parametric <- function(intersections, corr, alpha, groups) {
   h_vecs <- !is.na(intersections)
 
-  c_mat <- intersections # placeholder
+  c_mat <- intersections
 
   for (group in groups) {
     for (row in seq_len(nrow(intersections))) {
@@ -69,7 +69,7 @@ calculate_critical_parametric <- function(intersections, corr, alpha, groups) {
 calculate_critical_simes <- function(intersections, p, groups) {
   p_ord <- order(p)
 
-  # re-order by p
+  # Re-order by p
   intersections <- intersections[, p_ord]
 
   list_w_new <- vector("list", length(groups))
