@@ -30,7 +30,7 @@ print.initial_graph <- function(x,
       width = max(nchar(names(x$hypotheses)))
     ),
     ": ",
-    formatC(x$hypotheses, digits = precision, format = "f"),
+    format(x$hypotheses, digits = precision),
     sep = "",
     collapse = "\n"
   )
@@ -39,10 +39,10 @@ print.initial_graph <- function(x,
 
   cat(paste0(pad, "--- Transition weights ---\n"))
 
-  transitions <- formatC(
+  transitions <- format(
     x$transitions,
     digits = precision,
-    format = "f"
+    scientific = FALSE
   )
 
   colname_pad <- format("", width = max(nchar(rownames(transitions))))

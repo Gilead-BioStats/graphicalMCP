@@ -46,7 +46,7 @@ print.power_report <- function(x, ..., precision = 6, indent = 2) {
     label <- paste0(pad_less_1, colname_pad)
     df_corr <- data.frame(
       paste0(pad_less_1, rownames(x$inputs$test_corr)),
-      round(x$inputs$test_corr, precision),
+      format(x$inputs$test_corr, digits = precision),
       check.names = FALSE
     )
     names(df_corr)[[1]] <- label
@@ -55,7 +55,7 @@ print.power_report <- function(x, ..., precision = 6, indent = 2) {
   # Test input print -----------------------------------------------------------
   print(x$inputs$graph, precision = precision, indent = indent)
   cat("\n")
-  cat(pad, "Global alpha = ", x$inputs$alpha, sep = "")
+  cat(pad, "Alpha = ", x$inputs$alpha, sep = "")
   cat("\n\n")
   if (!is.null(x$inputs$test_corr)) {
     print(df_corr, row.names = FALSE)
@@ -85,7 +85,7 @@ print.power_report <- function(x, ..., precision = 6, indent = 2) {
   label <- paste0(pad_less_1, colname_pad)
   df_corr <- data.frame(
     paste0(pad_less_1, rownames(x$inputs$sim_corr)),
-    round(x$inputs$sim_corr, precision),
+    format(x$inputs$sim_corr, digits = precision),
     check.names = FALSE
   )
   names(df_corr)[[1]] <- label
@@ -104,7 +104,7 @@ print.power_report <- function(x, ..., precision = 6, indent = 2) {
   ))
   cat("\n\n")
 
-  print(round(theta_mat, precision))
+  print(as.data.frame(format(theta_mat, digits = precision)))
   cat("\n")
   print(df_corr, row.names = FALSE)
 
@@ -121,27 +121,27 @@ print.power_report <- function(x, ..., precision = 6, indent = 2) {
     ),
   )
 
-  print(round(local_mat, precision))
+  print(as.data.frame(format(local_mat, digits = precision)))
   cat("\n")
 
   cat(
     pad,
     "      Expected rejections: ",
-    round(x$power$power_expected, precision),
+    format(x$power$power_expected, digits = precision),
     "\n",
     sep = ""
   )
   cat(
     pad,
     "Power to reject 1 or more: ",
-    round(x$power$power_at_least_1, precision),
+    format(x$power$power_at_least_1, digits = precision),
     "\n",
     sep = ""
   )
   cat(
     pad,
     "      Power to reject all: ",
-    round(x$power$power_all, precision),
+    format(x$power$power_all, digits = precision),
     "\n",
     sep = ""
   )
@@ -158,14 +158,14 @@ print.power_report <- function(x, ..., precision = 6, indent = 2) {
       ),
     )
 
-    print(round(success_mat, precision))
+    print(as.data.frame(format(success_mat, digits = precision)))
   }
 
   # Details --------------------------------------------------------------------
   cat("\n")
   section_break("Simulation details")
 
-  p_dets <- round(utils::head(x$details$p_sim), precision)
+  p_dets <- format(utils::head(x$details$p_sim), digits = precision)
   colnames(p_dets) <- paste0("p_sim_", hyp_names)
   colnames(p_dets)[[1]] <- paste0(pad_less_1, colnames(p_dets)[[1]])
 

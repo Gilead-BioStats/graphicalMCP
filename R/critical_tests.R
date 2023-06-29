@@ -56,7 +56,7 @@ parametric_test_vals <- function(p, weights, alpha, intersection = NA, corr) {
   if (length(p) == 0) {
     NULL
   } else {
-    c <- solve_c(weights, corr, alpha)
+    c <- solve_c_parametric(weights, corr, alpha)
 
     data.frame(
       Intersection = intersection,

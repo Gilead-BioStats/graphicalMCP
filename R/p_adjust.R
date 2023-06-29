@@ -60,11 +60,13 @@ p_adjust_parametric <- function(p, weights, corr = NULL) {
     1 - mvtnorm::pmvnorm(
       lower = -Inf,
       upper = z,
-      corr = corr[w_nonzero, w_nonzero, drop = FALSE]
+      corr = corr[w_nonzero, w_nonzero, drop = FALSE],
+      algorithm = mvtnorm::GenzBretz(maxpts = 25000, abseps = 1e-6, releps = 0)
     )[[1]]
   )
 
-  1 / sum(weights) * prob_lt_z
+  # Occasionally off by floating point differences
+  round(1 / sum(weights) * prob_lt_z, 10)
 }
 
 #' @rdname p_adjust

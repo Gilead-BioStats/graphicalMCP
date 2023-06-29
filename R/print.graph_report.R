@@ -55,7 +55,7 @@ print.graph_report <- function(x, ..., precision = 6, indent = 2) {
     label <- paste0(pad_less_1, colname_pad)
     df_corr <- data.frame(
       paste0(pad_less_1, rownames(x$inputs$corr)),
-      round(x$inputs$corr, precision),
+      format(x$inputs$corr, digits = precision),
       check.names = FALSE
     )
     names(df_corr)[[1]] <- label
@@ -66,7 +66,7 @@ print.graph_report <- function(x, ..., precision = 6, indent = 2) {
   cat("\n")
   cat(pad, "Alpha = ", x$inputs$alpha, sep = "")
   cat("\n\n")
-  print(round(p_mat, precision))
+  print(as.data.frame(format(p_mat, digits = precision)))
   cat("\n")
   if (!is.null(x$inputs$corr)) {
     print(df_corr, row.names = FALSE)
@@ -83,7 +83,7 @@ print.graph_report <- function(x, ..., precision = 6, indent = 2) {
 
   df_summary <- data.frame(
     Hypothesis = formatC(hyp_names, width = hyp_width),
-    `Adj. P-value` = round(x$outputs$adjusted_p, precision),
+    `Adj. P-value` = format(x$outputs$adjusted_p, digits = precision),
     Reject = x$outputs$rejected,
     check.names = FALSE
   )
@@ -106,7 +106,7 @@ print.graph_report <- function(x, ..., precision = 6, indent = 2) {
       cat("\n")
       section_break("Test details - Adjusted p")
       detail_results_out <- utils::capture.output(
-        print(round(x$details$results, precision))
+        print(as.data.frame(format(x$details$results, digits = precision)))
       )
       cat(paste0(pad, detail_results_out), sep = "\n")
       cat("\n")
@@ -159,7 +159,7 @@ print.graph_report <- function(x, ..., precision = 6, indent = 2) {
       crit_res[num_cols],
       2,
       function(num_col) {
-        round(as.numeric(num_col), precision)
+        format(as.numeric(num_col), digits = precision)
       }
     )
     if (any(x$inputs$test_types == "parametric")) {

@@ -8,19 +8,19 @@
         Initial graph
       
         --- Hypothesis weights ---
-        H1: 1.000000
-        H2: 0.000000
-        H3: 0.000000
-        H4: 0.000000
+        H1: 1
+        H2: 0
+        H3: 0
+        H4: 0
       
         --- Transition weights ---
-                 H1       H2       H3       H4
-        H1 0.000000 0.500000 0.500000 0.000000
-        H2 0.000000 0.000000 0.000000 1.000000
-        H3 0.000000 0.500000 0.000000 0.500000
-        H4 0.000000 1.000000 0.000000 0.000000
+            H1  H2  H3  H4
+        H1 0.0 0.5 0.5 0.0
+        H2 0.0 0.0 0.0 1.0
+        H3 0.0 0.5 0.0 0.5
+        H4 0.0 1.0 0.0 0.0
       
-        Global alpha = 0.05
+        Alpha = 0.05
       
         Test types
         bonferroni: (H1-H2-H3-H4)
@@ -38,21 +38,21 @@
                      H4  0  0  0  1
       
       Power calculation --------------------------------------------------------------
-                                     H1 H2 H3 H4
-             Power to reject each: 0.04  0  0  0
+                                     H1   H2   H3   H4
+             Power to reject each: 0.04 0.00 0.00 0.00
       
               Expected rejections: 0.04
         Power to reject 1 or more: 0.04
               Power to reject all: 0
       
       Simulation details -------------------------------------------------------------
-        p_sim_H1 p_sim_H2 p_sim_H3 p_sim_H4 rej_H1 rej_H2 rej_H3 rej_H4
-        0.271645 0.573772 0.755581 0.025752  FALSE  FALSE  FALSE  FALSE
-        0.248220 0.085146 0.607819 0.747548  FALSE  FALSE  FALSE  FALSE
-        0.692455 0.017272 0.886710 0.924565  FALSE  FALSE  FALSE  FALSE
-        0.731529 0.508456 0.483131 0.659896  FALSE  FALSE  FALSE  FALSE
-        0.663103 0.167377 0.350021 0.654562  FALSE  FALSE  FALSE  FALSE
-        0.453997 0.109558 0.131049 0.253593  FALSE  FALSE  FALSE  FALSE
+        p_sim_H1  p_sim_H2  p_sim_H3  p_sim_H4 rej_H1 rej_H2 rej_H3 rej_H4
+       0.2716446 0.5737722 0.7555814 0.0257523  FALSE  FALSE  FALSE  FALSE
+       0.2482202 0.0851463 0.6078186 0.7475477  FALSE  FALSE  FALSE  FALSE
+       0.6924547 0.0172719 0.8867099 0.9245648  FALSE  FALSE  FALSE  FALSE
+       0.7315287 0.5084556 0.4831309 0.6598959  FALSE  FALSE  FALSE  FALSE
+       0.6631030 0.1673771 0.3500209 0.6545621  FALSE  FALSE  FALSE  FALSE
+       0.4539974 0.1095576 0.1310492 0.2535933  FALSE  FALSE  FALSE  FALSE
         ...
       
 
@@ -66,19 +66,19 @@
             Initial graph
       
             --- Hypothesis weights ---
-            H1: 1.000
-            H2: 0.000
-            H3: 0.000
-            H4: 0.000
+            H1: 1
+            H2: 0
+            H3: 0
+            H4: 0
       
             --- Transition weights ---
-                  H1    H2    H3    H4
-            H1 0.000 0.500 0.500 0.000
-            H2 0.000 0.000 0.000 1.000
-            H3 0.000 0.500 0.000 0.500
-            H4 0.000 1.000 0.000 0.000
+                H1  H2  H3  H4
+            H1 0.0 0.5 0.5 0.0
+            H2 0.0 0.0 0.0 1.0
+            H3 0.0 0.5 0.0 0.5
+            H4 0.0 1.0 0.0 0.0
       
-            Global alpha = 0.05
+            Alpha = 0.05
       
             Test types
             bonferroni: (H1-H2-H3-H4)
@@ -96,8 +96,8 @@
                          H4  0  0  0  1
       
       Power calculation --------------------------------------------------------------
-                                         H1 H2 H3 H4
-                 Power to reject each: 0.04  0  0  0
+                                         H1   H2   H3   H4
+                 Power to reject each: 0.04 0.00 0.00 0.00
       
                   Expected rejections: 0.04
             Power to reject 1 or more: 0.04
@@ -105,12 +105,12 @@
       
       Simulation details -------------------------------------------------------------
             p_sim_H1 p_sim_H2 p_sim_H3 p_sim_H4 rej_H1 rej_H2 rej_H3 rej_H4
-               0.272    0.574    0.756    0.026  FALSE  FALSE  FALSE  FALSE
-               0.248    0.085    0.608    0.748  FALSE  FALSE  FALSE  FALSE
-               0.692    0.017    0.887    0.925  FALSE  FALSE  FALSE  FALSE
-               0.732    0.508    0.483    0.660  FALSE  FALSE  FALSE  FALSE
-               0.663    0.167    0.350    0.655  FALSE  FALSE  FALSE  FALSE
-               0.454    0.110    0.131    0.254  FALSE  FALSE  FALSE  FALSE
+              0.2716   0.5738   0.7556   0.0258  FALSE  FALSE  FALSE  FALSE
+              0.2482   0.0851   0.6078   0.7475  FALSE  FALSE  FALSE  FALSE
+              0.6925   0.0173   0.8867   0.9246  FALSE  FALSE  FALSE  FALSE
+              0.7315   0.5085   0.4831   0.6599  FALSE  FALSE  FALSE  FALSE
+              0.6631   0.1674   0.3500   0.6546  FALSE  FALSE  FALSE  FALSE
+              0.4540   0.1096   0.1310   0.2536  FALSE  FALSE  FALSE  FALSE
             ...
       
 
@@ -125,19 +125,19 @@
             Initial graph
       
             --- Hypothesis weights ---
-            H1: 1.000
-            H2: 0.000
-            H3: 0.000
-            H4: 0.000
+            H1: 1
+            H2: 0
+            H3: 0
+            H4: 0
       
             --- Transition weights ---
-                  H1    H2    H3    H4
-            H1 0.000 0.500 0.500 0.000
-            H2 0.000 0.000 0.000 1.000
-            H3 0.000 0.500 0.000 0.500
-            H4 0.000 1.000 0.000 0.000
+                H1  H2  H3  H4
+            H1 0.0 0.5 0.5 0.0
+            H2 0.0 0.0 0.0 1.0
+            H3 0.0 0.5 0.0 0.5
+            H4 0.0 1.0 0.0 0.0
       
-            Global alpha = 0.05
+            Alpha = 0.05
       
             Test types
             bonferroni: (H1-H2-H3-H4)
@@ -155,8 +155,8 @@
                          H4  0  0  0  1
       
       Power calculation --------------------------------------------------------------
-                                         H1 H2 H3 H4
-                 Power to reject each: 0.04  0  0  0
+                                         H1   H2   H3   H4
+                 Power to reject each: 0.04 0.00 0.00 0.00
       
                   Expected rejections: 0.04
             Power to reject 1 or more: 0.04
@@ -164,12 +164,12 @@
       
       Simulation details -------------------------------------------------------------
             p_sim_H1 p_sim_H2 p_sim_H3 p_sim_H4 rej_H1 rej_H2 rej_H3 rej_H4
-               0.272    0.574    0.756    0.026  FALSE  FALSE  FALSE  FALSE
-               0.248    0.085    0.608    0.748  FALSE  FALSE  FALSE  FALSE
-               0.692    0.017    0.887    0.925  FALSE  FALSE  FALSE  FALSE
-               0.732    0.508    0.483    0.660  FALSE  FALSE  FALSE  FALSE
-               0.663    0.167    0.350    0.655  FALSE  FALSE  FALSE  FALSE
-               0.454    0.110    0.131    0.254  FALSE  FALSE  FALSE  FALSE
+              0.2716   0.5738   0.7556   0.0258  FALSE  FALSE  FALSE  FALSE
+              0.2482   0.0851   0.6078   0.7475  FALSE  FALSE  FALSE  FALSE
+              0.6925   0.0173   0.8867   0.9246  FALSE  FALSE  FALSE  FALSE
+              0.7315   0.5085   0.4831   0.6599  FALSE  FALSE  FALSE  FALSE
+              0.6631   0.1674   0.3500   0.6546  FALSE  FALSE  FALSE  FALSE
+              0.4540   0.1096   0.1310   0.2536  FALSE  FALSE  FALSE  FALSE
             ...
       
 
@@ -183,19 +183,19 @@
         Initial graph
       
         --- Hypothesis weights ---
-        H1: 0.500000
-        H2: 0.500000
-        H3: 0.000000
-        H4: 0.000000
+        H1: 0.5
+        H2: 0.5
+        H3: 0.0
+        H4: 0.0
       
         --- Transition weights ---
-                 H1       H2       H3       H4
-        H1 0.000000 0.000000 1.000000 0.000000
-        H2 0.000000 0.000000 0.000000 1.000000
-        H3 0.000000 1.000000 0.000000 0.000000
-        H4 1.000000 0.000000 0.000000 0.000000
+           H1 H2 H3 H4
+        H1  0  0  1  0
+        H2  0  0  0  1
+        H3  0  1  0  0
+        H4  1  0  0  0
       
-        Global alpha = 0.05
+        Alpha = 0.05
       
         Test types
         simes: (H1-H2-H3-H4)
@@ -213,21 +213,21 @@
                      H4  0  0  0  1
       
       Power calculation --------------------------------------------------------------
-                                     H1   H2 H3 H4
-             Power to reject each: 0.02 0.02  0  0
+                                     H1   H2   H3   H4
+             Power to reject each: 0.02 0.02 0.00 0.00
       
               Expected rejections: 0.04
         Power to reject 1 or more: 0.04
               Power to reject all: 0
       
       Simulation details -------------------------------------------------------------
-        p_sim_H1 p_sim_H2 p_sim_H3 p_sim_H4 rej_H1 rej_H2 rej_H3 rej_H4
-        0.271645 0.573772 0.755581 0.025752  FALSE  FALSE  FALSE  FALSE
-        0.248220 0.085146 0.607819 0.747548  FALSE  FALSE  FALSE  FALSE
-        0.692455 0.017272 0.886710 0.924565  FALSE   TRUE  FALSE  FALSE
-        0.731529 0.508456 0.483131 0.659896  FALSE  FALSE  FALSE  FALSE
-        0.663103 0.167377 0.350021 0.654562  FALSE  FALSE  FALSE  FALSE
-        0.453997 0.109558 0.131049 0.253593  FALSE  FALSE  FALSE  FALSE
+        p_sim_H1  p_sim_H2  p_sim_H3  p_sim_H4 rej_H1 rej_H2 rej_H3 rej_H4
+       0.2716446 0.5737722 0.7555814 0.0257523  FALSE  FALSE  FALSE  FALSE
+       0.2482202 0.0851463 0.6078186 0.7475477  FALSE  FALSE  FALSE  FALSE
+       0.6924547 0.0172719 0.8867099 0.9245648  FALSE   TRUE  FALSE  FALSE
+       0.7315287 0.5084556 0.4831309 0.6598959  FALSE  FALSE  FALSE  FALSE
+       0.6631030 0.1673771 0.3500209 0.6545621  FALSE  FALSE  FALSE  FALSE
+       0.4539974 0.1095576 0.1310492 0.2535933  FALSE  FALSE  FALSE  FALSE
         ...
       
 
@@ -242,19 +242,19 @@
             Initial graph
       
             --- Hypothesis weights ---
-            H1: 0.500
-            H2: 0.500
-            H3: 0.000
-            H4: 0.000
+            H1: 0.5
+            H2: 0.5
+            H3: 0.0
+            H4: 0.0
       
             --- Transition weights ---
-                  H1    H2    H3    H4
-            H1 0.000 0.000 1.000 0.000
-            H2 0.000 0.000 0.000 1.000
-            H3 0.000 1.000 0.000 0.000
-            H4 1.000 0.000 0.000 0.000
+               H1 H2 H3 H4
+            H1  0  0  1  0
+            H2  0  0  0  1
+            H3  0  1  0  0
+            H4  1  0  0  0
       
-            Global alpha = 0.05
+            Alpha = 0.05
       
             Test types
             simes: (H1-H2-H3-H4)
@@ -272,8 +272,8 @@
                          H4  0  0  0  1
       
       Power calculation --------------------------------------------------------------
-                                         H1   H2 H3 H4
-                 Power to reject each: 0.02 0.02  0  0
+                                         H1   H2   H3   H4
+                 Power to reject each: 0.02 0.02 0.00 0.00
       
                   Expected rejections: 0.04
             Power to reject 1 or more: 0.04
@@ -281,12 +281,12 @@
       
       Simulation details -------------------------------------------------------------
             p_sim_H1 p_sim_H2 p_sim_H3 p_sim_H4 rej_H1 rej_H2 rej_H3 rej_H4
-               0.272    0.574    0.756    0.026  FALSE  FALSE  FALSE  FALSE
-               0.248    0.085    0.608    0.748  FALSE  FALSE  FALSE  FALSE
-               0.692    0.017    0.887    0.925  FALSE   TRUE  FALSE  FALSE
-               0.732    0.508    0.483    0.660  FALSE  FALSE  FALSE  FALSE
-               0.663    0.167    0.350    0.655  FALSE  FALSE  FALSE  FALSE
-               0.454    0.110    0.131    0.254  FALSE  FALSE  FALSE  FALSE
+              0.2716   0.5738   0.7556   0.0258  FALSE  FALSE  FALSE  FALSE
+              0.2482   0.0851   0.6078   0.7475  FALSE  FALSE  FALSE  FALSE
+              0.6925   0.0173   0.8867   0.9246  FALSE   TRUE  FALSE  FALSE
+              0.7315   0.5085   0.4831   0.6599  FALSE  FALSE  FALSE  FALSE
+              0.6631   0.1674   0.3500   0.6546  FALSE  FALSE  FALSE  FALSE
+              0.4540   0.1096   0.1310   0.2536  FALSE  FALSE  FALSE  FALSE
             ...
       
 
@@ -300,19 +300,19 @@
         Initial graph
       
         --- Hypothesis weights ---
-        H1: 1.000000
-        H2: 0.000000
-        H3: 0.000000
-        H4: 0.000000
+        H1: 1
+        H2: 0
+        H3: 0
+        H4: 0
       
         --- Transition weights ---
-                 H1       H2       H3       H4
-        H1 0.000000 1.000000 0.000000 0.000000
-        H2 0.000000 0.000000 1.000000 0.000000
-        H3 0.000000 0.000000 0.000000 1.000000
-        H4 0.000000 0.000000 0.000000 0.000000
+           H1 H2 H3 H4
+        H1  0  1  0  0
+        H2  0  0  1  0
+        H3  0  0  0  1
+        H4  0  0  0  0
       
-        Global alpha = 0.05
+        Alpha = 0.05
       
         Parametric testing correlation:    H1 H2 H3 H4
                                         H1  1  0  0  0
@@ -336,21 +336,21 @@
                      H4  0  0  0  1
       
       Power calculation --------------------------------------------------------------
-                                     H1 H2 H3 H4
-             Power to reject each: 0.04  0  0  0
+                                     H1   H2   H3   H4
+             Power to reject each: 0.04 0.00 0.00 0.00
       
               Expected rejections: 0.04
         Power to reject 1 or more: 0.04
               Power to reject all: 0
       
       Simulation details -------------------------------------------------------------
-        p_sim_H1 p_sim_H2 p_sim_H3 p_sim_H4 rej_H1 rej_H2 rej_H3 rej_H4
-        0.271645 0.573772 0.755581 0.025752  FALSE  FALSE  FALSE  FALSE
-        0.248220 0.085146 0.607819 0.747548  FALSE  FALSE  FALSE  FALSE
-        0.692455 0.017272 0.886710 0.924565  FALSE  FALSE  FALSE  FALSE
-        0.731529 0.508456 0.483131 0.659896  FALSE  FALSE  FALSE  FALSE
-        0.663103 0.167377 0.350021 0.654562  FALSE  FALSE  FALSE  FALSE
-        0.453997 0.109558 0.131049 0.253593  FALSE  FALSE  FALSE  FALSE
+        p_sim_H1  p_sim_H2  p_sim_H3  p_sim_H4 rej_H1 rej_H2 rej_H3 rej_H4
+       0.2716446 0.5737722 0.7555814 0.0257523  FALSE  FALSE  FALSE  FALSE
+       0.2482202 0.0851463 0.6078186 0.7475477  FALSE  FALSE  FALSE  FALSE
+       0.6924547 0.0172719 0.8867099 0.9245648  FALSE  FALSE  FALSE  FALSE
+       0.7315287 0.5084556 0.4831309 0.6598959  FALSE  FALSE  FALSE  FALSE
+       0.6631030 0.1673771 0.3500209 0.6545621  FALSE  FALSE  FALSE  FALSE
+       0.4539974 0.1095576 0.1310492 0.2535933  FALSE  FALSE  FALSE  FALSE
         ...
       
 
@@ -365,19 +365,19 @@
             Initial graph
       
             --- Hypothesis weights ---
-            H1: 1.000
-            H2: 0.000
-            H3: 0.000
-            H4: 0.000
+            H1: 1
+            H2: 0
+            H3: 0
+            H4: 0
       
             --- Transition weights ---
-                  H1    H2    H3    H4
-            H1 0.000 1.000 0.000 0.000
-            H2 0.000 0.000 1.000 0.000
-            H3 0.000 0.000 0.000 1.000
-            H4 0.000 0.000 0.000 0.000
+               H1 H2 H3 H4
+            H1  0  1  0  0
+            H2  0  0  1  0
+            H3  0  0  0  1
+            H4  0  0  0  0
       
-            Global alpha = 0.05
+            Alpha = 0.05
       
             Parametric testing correlation:    H1 H2 H3 H4
                                             H1  1  0  0  0
@@ -401,8 +401,8 @@
                          H4  0  0  0  1
       
       Power calculation --------------------------------------------------------------
-                                         H1 H2 H3 H4
-                 Power to reject each: 0.04  0  0  0
+                                         H1   H2   H3   H4
+                 Power to reject each: 0.04 0.00 0.00 0.00
       
                   Expected rejections: 0.04
             Power to reject 1 or more: 0.04
@@ -410,12 +410,12 @@
       
       Simulation details -------------------------------------------------------------
             p_sim_H1 p_sim_H2 p_sim_H3 p_sim_H4 rej_H1 rej_H2 rej_H3 rej_H4
-               0.272    0.574    0.756    0.026  FALSE  FALSE  FALSE  FALSE
-               0.248    0.085    0.608    0.748  FALSE  FALSE  FALSE  FALSE
-               0.692    0.017    0.887    0.925  FALSE  FALSE  FALSE  FALSE
-               0.732    0.508    0.483    0.660  FALSE  FALSE  FALSE  FALSE
-               0.663    0.167    0.350    0.655  FALSE  FALSE  FALSE  FALSE
-               0.454    0.110    0.131    0.254  FALSE  FALSE  FALSE  FALSE
+              0.2716   0.5738   0.7556   0.0258  FALSE  FALSE  FALSE  FALSE
+              0.2482   0.0851   0.6078   0.7475  FALSE  FALSE  FALSE  FALSE
+              0.6925   0.0173   0.8867   0.9246  FALSE  FALSE  FALSE  FALSE
+              0.7315   0.5085   0.4831   0.6599  FALSE  FALSE  FALSE  FALSE
+              0.6631   0.1674   0.3500   0.6546  FALSE  FALSE  FALSE  FALSE
+              0.4540   0.1096   0.1310   0.2536  FALSE  FALSE  FALSE  FALSE
             ...
       
 
@@ -440,37 +440,30 @@
       H6: 0.1666666667
       
       --- Transition weights ---
-                    H1           H2           H3           H4           H5
-       H1 0.0000000000 0.2000000000 0.2000000000 0.2000000000 0.2000000000
-       H2 0.2000000000 0.0000000000 0.2000000000 0.2000000000 0.2000000000
-       H3 0.2000000000 0.2000000000 0.0000000000 0.2000000000 0.2000000000
-       H4 0.2000000000 0.2000000000 0.2000000000 0.0000000000 0.2000000000
-       H5 0.2000000000 0.2000000000 0.2000000000 0.2000000000 0.0000000000
-       H6 0.2000000000 0.2000000000 0.2000000000 0.2000000000 0.2000000000
-                 H6
-       0.2000000000
-       0.2000000000
-       0.2000000000
-       0.2000000000
-       0.2000000000
-       0.0000000000
+           H1  H2  H3  H4  H5  H6
+       H1 0.0 0.2 0.2 0.2 0.2 0.2
+       H2 0.2 0.0 0.2 0.2 0.2 0.2
+       H3 0.2 0.2 0.0 0.2 0.2 0.2
+       H4 0.2 0.2 0.2 0.0 0.2 0.2
+       H5 0.2 0.2 0.2 0.2 0.0 0.2
+       H6 0.2 0.2 0.2 0.2 0.2 0.0
       
-      Global alpha = 0.0254871
+      Alpha = 0.0254871
       
-       Parametric testing correlation:           H1        H2        H3        H4
-                                       H1 1.0000000 0.7853982 0.7853982 0.7853982
-                                       H2 0.7853982 1.0000000 0.7853982 0.7853982
-                                       H3 0.7853982 0.7853982 1.0000000 0.7853982
-                                       H4 0.7853982 0.7853982 0.7853982 1.0000000
-                                       H5 0.7853982 0.7853982 0.7853982 0.7853982
-                                       H6 0.7853982 0.7853982 0.7853982 0.7853982
-              H5        H6
-       0.7853982 0.7853982
-       0.7853982 0.7853982
-       0.7853982 0.7853982
-       0.7853982 0.7853982
-       1.0000000 0.7853982
-       0.7853982 1.0000000
+       Parametric testing correlation:              H1           H2           H3
+                                       H1 1.0000000000 0.7853981634 0.7853981634
+                                       H2 0.7853981634 1.0000000000 0.7853981634
+                                       H3 0.7853981634 0.7853981634 1.0000000000
+                                       H4 0.7853981634 0.7853981634 0.7853981634
+                                       H5 0.7853981634 0.7853981634 0.7853981634
+                                       H6 0.7853981634 0.7853981634 0.7853981634
+                 H4           H5           H6
+       0.7853981634 0.7853981634 0.7853981634
+       0.7853981634 0.7853981634 0.7853981634
+       0.7853981634 0.7853981634 0.7853981634
+       1.0000000000 0.7853981634 0.7853981634
+       0.7853981634 1.0000000000 0.7853981634
+       0.7853981634 0.7853981634 1.0000000000
       
       Test types
       bonferroni: (H4-H3)
@@ -480,43 +473,54 @@
       Simulation parameters ----------------------------------------------------------
       Testing 1,328 simulations - random seed 51223 & multivariate normal params:
       
-                            H1       H2      H3       H4      H5       H6
-      Marginal power: 10.47198 3.926991 2.41661 1.745329 1.36591 1.121997
+                                H1           H2           H3           H4
+      Marginal power: 10.471975512  3.926990817  2.416609734  1.745329252
+                                H5           H6
+      Marginal power:  1.365909849  1.121997376
       
-       Correlation:           H1        H2        H3        H4        H5        H6
-                    H1 1.0000000 0.6283185 0.6283185 0.6283185 0.6283185 0.6283185
-                    H2 0.6283185 1.0000000 0.6283185 0.6283185 0.6283185 0.6283185
-                    H3 0.6283185 0.6283185 1.0000000 0.6283185 0.6283185 0.6283185
-                    H4 0.6283185 0.6283185 0.6283185 1.0000000 0.6283185 0.6283185
-                    H5 0.6283185 0.6283185 0.6283185 0.6283185 1.0000000 0.6283185
-                    H6 0.6283185 0.6283185 0.6283185 0.6283185 0.6283185 1.0000000
+       Correlation:              H1           H2           H3           H4
+                    H1 1.0000000000 0.6283185307 0.6283185307 0.6283185307
+                    H2 0.6283185307 1.0000000000 0.6283185307 0.6283185307
+                    H3 0.6283185307 0.6283185307 1.0000000000 0.6283185307
+                    H4 0.6283185307 0.6283185307 0.6283185307 1.0000000000
+                    H5 0.6283185307 0.6283185307 0.6283185307 0.6283185307
+                    H6 0.6283185307 0.6283185307 0.6283185307 0.6283185307
+                 H5           H6
+       0.6283185307 0.6283185307
+       0.6283185307 0.6283185307
+       0.6283185307 0.6283185307
+       0.6283185307 0.6283185307
+       1.0000000000 0.6283185307
+       0.6283185307 1.0000000000
       
       Power calculation --------------------------------------------------------------
-                                 H1        H2        H3        H4        H5        H6
-           Power to reject each:  1 0.9224398 0.4856928 0.2823795 0.1822289 0.1362952
+                                           H1           H2           H3           H4
+           Power to reject each: 1.0000000000 0.9224397590 0.4856927711 0.2823795181
+                                           H5           H6
+           Power to reject each: 0.1822289157 0.1362951807
       
-            Expected rejections: 3.009036
+            Expected rejections: 3.009036145
       Power to reject 1 or more: 1
-            Power to reject all: 0.09638554
+            Power to reject all: 0.09638554217
       
                                    .[1] || .[5] || .[6] .[2] && (.[5] || .[6])
-          Probability of success:                     1              0.2115964
+          Probability of success:          1.0000000000           0.2115963855
       
       Simulation details -------------------------------------------------------------
-       p_sim_H1     p_sim_H2     p_sim_H3     p_sim_H4     p_sim_H5    p_sim_H6
-              0 0.0000013050 0.0019860128 0.0000672064 0.0038347547 0.002229351
-              0 0.0011396108 0.0504200678 0.0051636505 0.4366626910 0.588240099
-              0 0.0000712973 0.0098515982 0.0832408855 0.1589378659 0.054841743
-              0 0.0000048222 0.0006243574 0.0006082713 0.0026349721 0.011701741
-              0 0.0000000000 0.0000857302 0.0000000124 0.0000000524 0.008079884
-              0 0.0001605458 0.0233254582 0.1180986407 0.1956347397 0.553643562
-       rej_H1 rej_H2 rej_H3 rej_H4 rej_H5 rej_H6
-         TRUE   TRUE   TRUE   TRUE   TRUE   TRUE
-         TRUE   TRUE  FALSE   TRUE  FALSE  FALSE
-         TRUE   TRUE  FALSE  FALSE  FALSE  FALSE
-         TRUE   TRUE   TRUE   TRUE   TRUE   TRUE
-         TRUE   TRUE   TRUE   TRUE   TRUE   TRUE
-         TRUE   TRUE  FALSE  FALSE  FALSE  FALSE
+              p_sim_H1        p_sim_H2        p_sim_H3        p_sim_H4
+       4.563762322e-32 1.304967090e-06 1.986012764e-03 6.720642049e-05
+       3.943645821e-23 1.139610848e-03 5.042006780e-02 5.163650525e-03
+       8.855848936e-24 7.129726936e-05 9.851598164e-03 8.324088549e-02
+       1.212914948e-30 4.822190438e-06 6.243573730e-04 6.082713066e-04
+       5.992374781e-39 1.983489601e-12 8.573019478e-05 1.242712361e-08
+       1.366248847e-22 1.605457751e-04 2.332545819e-02 1.180986407e-01
+              p_sim_H5        p_sim_H6 rej_H1 rej_H2 rej_H3 rej_H4 rej_H5 rej_H6
+       3.834754655e-03 2.229351519e-03   TRUE   TRUE   TRUE   TRUE   TRUE   TRUE
+       4.366626910e-01 5.882400991e-01   TRUE   TRUE  FALSE   TRUE  FALSE  FALSE
+       1.589378659e-01 5.484174340e-02   TRUE   TRUE  FALSE  FALSE  FALSE  FALSE
+       2.634972137e-03 1.170174107e-02   TRUE   TRUE   TRUE   TRUE   TRUE   TRUE
+       5.237022700e-08 8.079883817e-03   TRUE   TRUE   TRUE   TRUE   TRUE   TRUE
+       1.956347397e-01 5.536435621e-01   TRUE   TRUE  FALSE  FALSE  FALSE  FALSE
       ...
       
 

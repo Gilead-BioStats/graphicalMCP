@@ -3,24 +3,19 @@
 \name{calculate_critical_parametric}
 \alias{calculate_critical_parametric}
 \alias{calculate_critical_simes}
-\alias{c_function}
-\alias{solve_c}
+\alias{c_value_function}
+\alias{solve_c_parametric}
 \title{Calculate updated hypothesis weights for the closure of a graph}
 \usage{
-calculate_critical_parametric(intersections, corr, alpha, groups)
+calculate_critical_parametric(weighting_strategy, corr, alpha, groups)
 
-calculate_critical_simes(intersections, p, groups)
+calculate_critical_simes(weighting_strategy, p, groups)
 
-c_function(x, weights, corr, alpha)
+c_value_function(x, hypotheses, corr, alpha)
 
-solve_c(weights, corr, alpha)
+solve_c_parametric(hypotheses, corr, alpha)
 }
 \arguments{
-\item{intersections}{For parametric, a compact representation of
-\code{\link[=generate_weights]{generate_weights()}} output, where missing hypotheses get a missing value
-for weights, and h-vectors are dropped. For Simes, just the weights from
-\code{\link[=generate_weights]{generate_weights()}} output}
-
 \item{corr}{A numeric matrix of correlations between hypotheses' test
 statistics}
 
@@ -34,6 +29,11 @@ together}
 
 \item{x}{The root to solve for with \code{\link[stats:uniroot]{stats::uniroot()}}}
 
+\item{intersections}{For parametric, a compact representation of
+\code{\link[=generate_weights]{generate_weights()}} output, where missing hypotheses get a missing value
+for weights, and h-vectors are dropped. For Simes, just the weights from
+\code{\link[=generate_weights]{generate_weights()}} output}
+
 \item{weights}{A numeric vector of hypothesis weights}
 }
 \value{
@@ -42,7 +42,7 @@ Outputs:
 \item For \verb{calculate_critical_*()}, a matrix with the same shape as
 \code{intersections}, where the weights have been adjusted according to the
 specified adjustment method
-\item For \code{c_function()}, the critical value for the given group
+\item For \code{c_function_to_solve()}, the critical value for the given group
 }
 }
 \description{

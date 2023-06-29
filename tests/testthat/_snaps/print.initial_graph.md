@@ -6,13 +6,13 @@
       Initial graph
       
       --- Hypothesis weights ---
-      H1: 0.5000
-      H2: 0.5000
+      H1: 0.5
+      H2: 0.5
       
       --- Transition weights ---
-              H1     H2
-       H1 0.0000 1.0000
-       H2 1.0000 0.0000
+          H1 H2
+       H1  0  1
+       H2  1  0
 
 ---
 
@@ -22,9 +22,9 @@
       Initial graph
       
       --- Hypothesis weights ---
-      H1: 0.0000
+      H1: 0
       
       --- Transition weights ---
-              H1
-       H1 0.0000
+          H1
+       H1  0
 
