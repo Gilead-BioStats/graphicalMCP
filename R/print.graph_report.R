@@ -149,7 +149,7 @@ print.graph_report <- function(x, ..., precision = 6, indent = 2) {
     section_break("Test details - Critical values")
 
     if (any(x$inputs$test_types == "parametric")) {
-      num_cols <- c("p", "c", "Critical", "Alpha")
+      num_cols <- c("p", "c_value", "Critical", "Alpha")
     } else {
       num_cols <- c("p", "Critical", "Alpha")
     }
@@ -163,7 +163,7 @@ print.graph_report <- function(x, ..., precision = 6, indent = 2) {
       }
     )
     if (any(x$inputs$test_types == "parametric")) {
-      crit_res$c <- ifelse(is.na(crit_res$c), "", crit_res$c)
+      crit_res$c_value <- ifelse(is.na(crit_res$c_value), "", crit_res$c_value)
     }
 
     critical_results_out <- utils::capture.output(

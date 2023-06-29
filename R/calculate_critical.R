@@ -6,7 +6,7 @@
 #' increases to get updated weights for testing. They also subset the weights
 #' columns by the appropriate groups
 #'
-#' @param intersections For parametric, a compact representation of
+#' @param weighting_strategy For parametric, a compact representation of
 #'   [generate_weights()] output, where missing hypotheses get a missing value
 #'   for weights, and h-vectors are dropped. For Simes, just the weights from
 #'   [generate_weights()] output
@@ -17,14 +17,14 @@
 #' @param p A numeric vector of p-values
 #' @param groups A list of numeric vectors specifying hypotheses to test
 #'   together
-#' @param weights A numeric vector of hypothesis weights
+#' @param hypotheses A numeric vector of hypothesis weights
 #' @param x The root to solve for with [stats::uniroot()]
 #'
 #' @return Outputs:
 #' * For `calculate_critical_*()`, a matrix with the same shape as
-#'   `intersections`, where the weights have been adjusted according to the
+#'   `weighting_strategy`, where the weights have been adjusted according to the
 #'   specified adjustment method
-#' * For `c_function_to_solve()`, the critical value for the given group
+#' * For `c_value_function()`, the critical value for the given group
 #'
 #' @rdname critical-vals
 #'
@@ -120,7 +120,7 @@ solve_c_parametric <- function(hypotheses, corr, alpha) {
     1,
     stats::uniroot(
       c_value_function,
-      lower = 0, # Why is this not -Inf? Ohhhh because c >= 1
+      lower = 0, # Why is this not -Inf? Ohhhh because c_value >= 1
       # upper > 40 errors when w[i] ~= 1 && w[j] = epsilon
       # upper = 2 errors when w = c(.5, .5) && all(corr == 1)
       # furthermore, even under perfect correlation & with balanced weights, the

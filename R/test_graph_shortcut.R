@@ -148,7 +148,7 @@ test_graph_shortcut <- function(graph,
       # algorithm")
       names(critical_step)[[1]] <- "step"
       critical_step$step <- if (rejected[hyp_name_for_critical]) i else NA
-      critical_step[c("Test", "c", "*")] <- NULL
+      critical_step[c("Test", "c_value", "*")] <- NULL
 
       df_critical <- rbind(df_critical, critical_step)
 

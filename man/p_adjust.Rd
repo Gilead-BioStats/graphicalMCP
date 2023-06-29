@@ -6,16 +6,16 @@
 \alias{p_adjust_simes}
 \title{Calculate adjusted p-values}
 \usage{
-p_adjust_bonferroni(p, weights)
+p_adjust_bonferroni(p, hypotheses)
 
-p_adjust_parametric(p, weights, corr = NULL)
+p_adjust_parametric(p, hypotheses, corr = NULL)
 
-p_adjust_simes(p, weights)
+p_adjust_simes(p, hypotheses)
 }
 \arguments{
 \item{p}{A named numeric vector of p-values}
 
-\item{weights}{A named numeric vector of hypothesis weights}
+\item{hypotheses}{A named numeric vector of hypothesis weights}
 
 \item{corr}{(Optional) A numeric matrix of correlations between hypotheses'
 test statistics}

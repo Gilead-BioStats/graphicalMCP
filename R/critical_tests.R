@@ -1,7 +1,7 @@
 #' Test hypotheses with the critical values method
 #'
 #' @param p A numeric vector of p-values
-#' @param weights A numeric vector of hypothesis weights
+#' @param hypotheses A numeric vector of hypothesis hypotheses
 #' @param alpha A numeric scalar specifying the global significance level for
 #'   testing
 #' @param intersection A numeric scalar used to track the intersection the test
@@ -26,25 +26,25 @@
 #' graphicalMCP:::bonferroni_test_vals(p, w, .05)
 #' graphicalMCP:::parametric_test_vals(p, w, .05, corr = diag(4))
 #' graphicalMCP:::simes_test_vals(p, w, .05)
-bonferroni_test_vals <- function(p, weights, alpha, intersection = NA) {
+bonferroni_test_vals <- function(p, hypotheses, alpha, intersection = NA) {
   if (length(p) == 0) {
     NULL
   } else {
     data.frame(
       Intersection = intersection,
-      Hypothesis = names(weights),
+      Hypothesis = names(hypotheses),
       Test = "bonferroni",
       p = p,
       "<=" = "<=",
-      c = "",
+      c_value = "",
       "*" = "",
-      Critical = weights,
+      Critical = hypotheses,
       "*" = "*",
       Alpha = alpha,
       Reject = ifelse(
-        p == 0 & weights == 0,
+        p == 0 & hypotheses == 0,
         NA,
-        p <= weights * alpha
+        p <= hypotheses * alpha
       ),
       check.names = FALSE
     )
@@ -52,27 +52,27 @@ bonferroni_test_vals <- function(p, weights, alpha, intersection = NA) {
 }
 
 #' @rdname calc-test_vals
-parametric_test_vals <- function(p, weights, alpha, intersection = NA, corr) {
+parametric_test_vals <- function(p, hypotheses, alpha, intersection = NA, corr) {
   if (length(p) == 0) {
     NULL
   } else {
-    c <- solve_c_parametric(weights, corr, alpha)
+    c_value <- solve_c_parametric(hypotheses, corr, alpha)
 
     data.frame(
       Intersection = intersection,
-      Hypothesis = names(weights),
+      Hypothesis = names(hypotheses),
       Test = "parametric",
       p = p,
       "<=" = "<=",
-      c = c,
+      c_value = c_value,
       "*" = "*",
-      Critical = weights,
+      Critical = hypotheses,
       "*" = "*",
       Alpha = alpha,
       Reject = ifelse(
-        p == 0 & weights == 0,
+        p == 0 & hypotheses == 0,
         NA,
-        p <= c * weights * alpha
+        p <= c_value * hypotheses * alpha
       ),
       check.names = FALSE
     )
@@ -80,25 +80,25 @@ parametric_test_vals <- function(p, weights, alpha, intersection = NA, corr) {
 }
 
 #' @rdname calc-test_vals
-simes_test_vals <- function(p, weights, alpha, intersection = NA) {
+simes_test_vals <- function(p, hypotheses, alpha, intersection = NA) {
   if (length(p) == 0) {
     NULL
   } else {
-    vec_res <- vector(length = length(weights))
-    w_sum <- vector("numeric", length = length(weights))
+    vec_res <- vector(length = length(hypotheses))
+    w_sum <- vector("numeric", length = length(hypotheses))
 
-    for (i in seq_along(weights)) {
-      w_sum[[i]] <- sum(weights[p <= p[[i]]])
+    for (i in seq_along(hypotheses)) {
+      w_sum[[i]] <- sum(hypotheses[p <= p[[i]]])
       vec_res[[i]] <- p[[i]] <= alpha * w_sum[[i]]
     }
 
     data.frame(
       Intersection = intersection,
-      Hypothesis = names(weights),
+      Hypothesis = names(hypotheses),
       Test = "simes",
       p = p,
       "<=" = "<=",
-      c = "",
+      c_value = "",
       "*" = "",
       Critical = w_sum,
       "*" = "*",

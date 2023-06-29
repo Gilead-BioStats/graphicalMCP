@@ -6,16 +6,16 @@
 \alias{simes_test_vals}
 \title{Test hypotheses with the critical values method}
 \usage{
-bonferroni_test_vals(p, weights, alpha, intersection = NA)
+bonferroni_test_vals(p, hypotheses, alpha, intersection = NA)
 
-parametric_test_vals(p, weights, alpha, intersection = NA, corr)
+parametric_test_vals(p, hypotheses, alpha, intersection = NA, corr)
 
-simes_test_vals(p, weights, alpha, intersection = NA)
+simes_test_vals(p, hypotheses, alpha, intersection = NA)
 }
 \arguments{
 \item{p}{A numeric vector of p-values}
 
-\item{weights}{A numeric vector of hypothesis weights}
+\item{hypotheses}{A numeric vector of hypothesis hypotheses}
 
 \item{alpha}{A numeric scalar specifying the global significance level for
 testing}

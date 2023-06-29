@@ -1,7 +1,7 @@
 #' Calculate adjusted p-values
 #'
 #' @param p A named numeric vector of p-values
-#' @param weights A named numeric vector of hypothesis weights
+#' @param hypotheses A named numeric vector of hypothesis weights
 #' @param corr (Optional) A numeric matrix of correlations between hypotheses'
 #'   test statistics
 #'
@@ -31,8 +31,8 @@
 #'
 #' # Uniform random pairwise correlations
 #' graphicalMCP:::p_adjust_parametric(p, w, corr2)
-p_adjust_bonferroni <- function(p, weights) {
-  if (sum(weights) == 0) {
+p_adjust_bonferroni <- function(p, hypotheses) {
+  if (sum(hypotheses) == 0) {
     return(Inf)
   }
 
@@ -41,20 +41,20 @@ p_adjust_bonferroni <- function(p, weights) {
   # and weights by keeping only indices where `!(p == 0 & weights == 0)`.
   # Considering that p-values are validated in the test function, this should be
   # safe
-  min(p / weights, na.rm = TRUE)
+  min(p / hypotheses, na.rm = TRUE)
 }
 
 #' @rdname p_adjust
-p_adjust_parametric <- function(p, weights, corr = NULL) {
-  if (sum(weights) == 0) {
+p_adjust_parametric <- function(p, hypotheses, corr = NULL) {
+  if (sum(hypotheses) == 0) {
     return(Inf)
   }
 
-  w_nonzero <- weights > 0
-  q <- min(p[w_nonzero] / weights[w_nonzero])
-  q <- q * weights[w_nonzero]
+  w_nonzero <- hypotheses > 0
+  q <- min(p[w_nonzero] / hypotheses[w_nonzero])
+  q <- q * hypotheses[w_nonzero]
   z <- stats::qnorm(q, lower.tail = FALSE)
-  prob_lt_z <- ifelse(
+  prob_less_than_z <- ifelse(
     length(z) == 1,
     stats::pnorm(z, lower.tail = FALSE)[[1]],
     1 - mvtnorm::pmvnorm(
@@ -66,23 +66,41 @@ p_adjust_parametric <- function(p, weights, corr = NULL) {
   )
 
   # Occasionally off by floating point differences
-  round(1 / sum(weights) * prob_lt_z, 10)
+  round(1 / sum(hypotheses) * prob_less_than_z, 10)
 }
 
 #' @rdname p_adjust
-p_adjust_simes <- function(p, weights) {
-  if (sum(weights) == 0) {
+p_adjust_simes <- function(p, hypotheses) {
+  if (sum(hypotheses) == 0) {
     return(Inf)
   }
 
   adjusted_p <- Inf
-  for (i in seq_along(weights)) {
-    # See Bonferroni for na.rm reasoning
+  for (i in seq_along(hypotheses)) {
+    # This demonstrates a different and slightly more accurate way of
+    # calculating Simes critical values/adjusted p-values compared to the method
+    # used in [calculate_critical_simes()]. In this function (and
+    # [simes_test_vals()]), we add all hypothesis weights for hypotheses with a
+    # smaller p-value than hypothesis_j, for all j in J. In the case that two
+    # p-values are identical, the corresponding hypotheses will get identical
+    # critical values/adjusted p-values. [calculate_critical_simes()], on the
+    # other hand, uses an alternate method that's faster: First order hypotheses
+    # according to their p-values in ascending order, then take the cumulative
+    # sum. In the case that two p-values are identical, they will be sorted
+    # sequentially, and the hypothesis that happens to come first will get a
+    # smaller, incorrect critical value (larger, incorrect adjusted p-value).
+    # The hypothesis that comes second will be correct.
+    # [calculate_critical_simes()] is only used in power calculations where it
+    # should not be possible to have identical p-values, since they are sampled
+    # randomly (unless `all(corr == 1)`). Furthermore, even when there are
+    # incorrect critical values, it cannot affect the hypothesis rejections. See
+    # Bonferroni function above for na.rm reasoning
     adjusted_p <- min(
       adjusted_p,
-      p[[i]] / sum(weights[p <= p[[i]]]),
+      p[[i]] / sum(hypotheses[p <= p[[i]]]),
       na.rm = TRUE
     )
   }
+
   adjusted_p
 }
