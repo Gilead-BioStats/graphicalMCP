@@ -360,7 +360,7 @@
         15 1.0000
       
       Test details - Critical values -------------------------------------------------
-         Intersection Hypothesis       Test    p <=       c * Critical * Alpha Reject
+         Intersection Hypothesis       Test    p <= c_value * Critical * Alpha Reject
                     1         H1 parametric 0.01 <= 1.00633 *      0.5 * 0.025   TRUE
                     1         H2 parametric 0.01 <= 1.00633 *      0.5 * 0.025   TRUE
                     1         H3      simes 0.01 <=      NA        0.0 * 0.025  FALSE
@@ -489,7 +489,7 @@
         15 1.0000
       
       Test details - Critical values -------------------------------------------------
-         Intersection Hypothesis       Test    p <=       c * Critical * Alpha Reject
+         Intersection Hypothesis       Test    p <= c_value * Critical * Alpha Reject
                     1         H1 parametric 0.01 <= 1.00633 *      0.5 * 0.025   TRUE
                     1         H2 parametric 0.01 <= 1.00633 *      0.5 * 0.025   TRUE
                     1         H3 parametric 0.01 <= 1.00000 *      0.0 * 0.025  FALSE
