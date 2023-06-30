@@ -62,7 +62,7 @@ test_input_val <- function(graph,
         function(i) {
           if (test_types[[i]] == "parametric") {
             group <- groups[[i]]
-            pos_def <- all(eigen(corr[group, group])$values >= 0)
+            pos_def <- all(round(eigen(corr[group, group])$values, 10) >= 0)
             return(pos_def)
           } else {
             return(TRUE)
@@ -108,7 +108,7 @@ power_input_val <- function(graph, sim_n, marginal_power, corr, success) {
     "Correlation matrix for simulating p-values must have diagonal all 1" =
       all(diag(corr) == 1),
     "Correlation matrix for simulating p-values must be positive definite" =
-      all(eigen(corr)$values >= 0),
+      all(round(eigen(corr)$values, 10) >= 0),
     "'sim_success' must be a list of functions" =
       all(vapply(success, is.function, logical(1)))
   )
