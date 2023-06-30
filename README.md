@@ -7,9 +7,10 @@ status](https://www.r-pkg.org/badges/version/graphicalMCP)](https://cran.r-proje
 [![Codecov test
 coverage](https://codecov.io/gh/Gilead-BioStats/graphicalMCP/branch/s3-graph_mcp/graph/badge.svg)](https://app.codecov.io/gh/Gilead-BioStats/graphicalMCP?branch=s3-graph_mcp)
 [![R-CMD-check](https://github.com/Gilead-BioStats/graphicalMCP/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/Gilead-BioStats/graphicalMCP/actions/workflows/R-CMD-check.yaml)
+
 <!-- badges: end -->
 
-# graphicalMCP <img src="man/figures/logo.png" align="right" height="350" />
+# graphicalMCP <img src="man/figures/logo.png" align="right" height="350"/>
 
 ## Introduction
 
@@ -25,6 +26,29 @@ graphical method to MCPs was described, which separates the weighting of
 the dependency graph from the particular statistical test used to assess
 each endpoint. This package is a low-dependency implementation of those
 methods.
+
+## Glossary of terms
+
+| Entity                          | Definition                                                                                                                                                                                            | Aliases                               | Variable(s)                     | Related                         |
+|---------------------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|---------------------------------------|---------------------------------|---------------------------------|
+| **Graph**                       | A set of nodes and edges representing a potential clinical trial design                                                                                                                               |                                       | `graph`                         | Hypotheses, Transitions         |
+|                                 | **Graphs** are so central that two of their core qualities get their own common variable names: Node names, and number of hypotheses                                                                  |                                       | `hyp_names`, `num_hyps`         |                                 |
+| **Hypotheses**                  | The weighted nodes in a **graph**. Each node represents a null hypothesis, and its weight the local significance level.                                                                               | weights, hypothesis weights           | `hypotheses`                    | Weighting strategy, Transitions |
+| **Transitions**                 | The weighted edges in a **graph**. Each edge defines how to propagate local significance when a source node is deleted.                                                                               |                                       | `transitions`                   | Hypotheses                      |
+| **Intersection** **hypothesis** | A subset of **hypotheses** from a **graph**. Plural often implies all such subsets.                                                                                                                   | intersection,sub-graphs, closure      | `intersections`                 | Weighting strategy              |
+| **Weighting strategy**          | The set of all **intersections** and their **weights** according to Algorithm 1 in Bretz et al                                                                                                        | intersection weights, closure weights | `weighting_strategy`            |                                 |
+| **Critical values**             |                                                                                                                                                                                                       |                                       |                                 |                                 |
+| **P-values**                    | The set of p-values from a real or simulated clinical trial                                                                                                                                           |                                       | `p`                             | Adjusted & ordered p-values     |
+| **Ordered p-values**            | **P-values** sorted from smallest to largest                                                                                                                                                          |                                       | `ordered_p`                     | (Adjusted) P-values             |
+| **Adjusted p-values**           | **P-values** that have been divided by **critical values**, allowing direct comparison to **alpha** to determine significance                                                                         |                                       | `adjusted_p`                    | (Ordered) P-values              |
+| **Significance level**          | The threshold chosen for results of a clinical trial to be considered significant                                                                                                                     |                                       | `alpha`                         | P-values                        |
+| **Test types**                  | A specification of which testing algorithm to use - Bonferroni, Simes, and parametric are supported                                                                                                   | tests                                 | `test_types`                    | Testing strategy                |
+| **Test groups**                 | A partition of nodes in a **graph** specifying which **hypotheses** should be tested together                                                                                                         | groups                                | `groups`, `test_groups`         | Testing strategy                |
+| **Testing strategy**            | **Test types** and **test groups** combined                                                                                                                                                           |                                       |                                 |                                 |
+| **Marginal power**              | The mean of each null **hypothesis** in the underlying multivariate normal distribution of the null hypotheses                                                                                        |                                       | `marginal_power`                | Correlation matrix              |
+| **Correlation matrix**          | Specification of correlations between **hypotheses**. Together with **marginal power**, this specifies the (known or assumed) underlying multivariate normal distribution of the null **hypotheses**. |                                       | `corr`, `test_corr`, `sim_corr` | Marginal power                  |
+| **Success**                     | A specification of which null **hypotheses** must be rejected to consider a clinical trial a success                                                                                                  |                                       | `sim_success`                   |                                 |
+| **Power**                       | Under a given **graph**, **testing strategy**, **significance level**, and underlying distribution, the estimated likelihood that a particular combination of null hypotheses will be rejected        |                                       | `power_*`                       | Success                         |
 
 ## Installation
 
@@ -63,7 +87,7 @@ names <- c("A1", "A2", "B1", "B2")
 g_dose <- create_graph(hypotheses, transitions, names)
 
 g_dose
-#> An initial graph
+#> Initial graph
 #> 
 #> --- Hypothesis weights ---
 #> A1: 0.5000
@@ -72,11 +96,11 @@ g_dose
 #> B2: 0.0000
 #> 
 #> --- Transition weights ---
-#>        A1     A2     B1     B2
-#> A1 0.0000 0.0000 1.0000 0.0000
-#> A2 0.0000 0.0000 0.0000 1.0000
-#> B1 0.0000 1.0000 0.0000 0.0000
-#> B2 1.0000 0.0000 0.0000 0.0000
+#>         A1     A2     B1     B2
+#>  A1 0.0000 0.0000 1.0000 0.0000
+#>  A2 0.0000 0.0000 0.0000 1.0000
+#>  B1 0.0000 1.0000 0.0000 0.0000
+#>  B2 1.0000 0.0000 0.0000 0.0000
 ```
 
 ### Update graph
@@ -88,7 +112,7 @@ strategy in [Bretz et al
 
 ``` r
 update_graph(g_dose, c(TRUE, FALSE, FALSE, TRUE))
-#> An initial graph
+#> Initial graph
 #> 
 #> --- Hypothesis weights ---
 #> A1: 0.5000
@@ -97,11 +121,11 @@ update_graph(g_dose, c(TRUE, FALSE, FALSE, TRUE))
 #> B2: 0.0000
 #> 
 #> --- Transition weights ---
-#>        A1     A2     B1     B2
-#> A1 0.0000 0.0000 1.0000 0.0000
-#> A2 0.0000 0.0000 0.0000 1.0000
-#> B1 0.0000 1.0000 0.0000 0.0000
-#> B2 1.0000 0.0000 0.0000 0.0000
+#>         A1     A2     B1     B2
+#>  A1 0.0000 0.0000 1.0000 0.0000
+#>  A2 0.0000 0.0000 0.0000 1.0000
+#>  B1 0.0000 1.0000 0.0000 0.0000
+#>  B2 1.0000 0.0000 0.0000 0.0000
 #> 
 #> --------------------------------------------------------------------------------
 #> 
@@ -111,7 +135,7 @@ update_graph(g_dose, c(TRUE, FALSE, FALSE, TRUE))
 #> 
 #> --------------------------------------------------------------------------------
 #> 
-#> An initial graph
+#> Updated graph
 #> 
 #> --- Hypothesis weights ---
 #> A1: 0.5000
@@ -120,11 +144,11 @@ update_graph(g_dose, c(TRUE, FALSE, FALSE, TRUE))
 #> B2: 0.5000
 #> 
 #> --- Transition weights ---
-#>        A1     A2     B1     B2
-#> A1 0.0000 0.0000 0.0000 1.0000
-#> A2 0.0000 0.0000 0.0000 0.0000
-#> B1 0.0000 0.0000 0.0000 0.0000
-#> B2 1.0000 0.0000 0.0000 0.0000
+#>         A1     A2     B1     B2
+#>  A1 0.0000 0.0000 0.0000 1.0000
+#>  A2 0.0000 0.0000 0.0000 0.0000
+#>  B1 0.0000 0.0000 0.0000 0.0000
+#>  B2 1.0000 0.0000 0.0000 0.0000
 ```
 
 ### Generate weights
@@ -156,8 +180,8 @@ generate_weights(g_dose)
 ### Test hypotheses
 
 A mixture of statistical tests are supported in graphicalMCP. A graph
-can be tested against a given alpha with `test_graph_closure()`. A report is
-then generated, showing the graph & test results.
+can be tested against a given alpha with `test_graph_closure()`. A
+report is then generated, showing the graph & test results.
 
 In this example, a weighted Bonferroni test is applied to all
 hypotheses, with a threshold of 0.05. We can reject a given intersection
@@ -179,22 +203,22 @@ test_graph_closure(
 )
 #> 
 #> Test parameters ----------------------------------------------------------------
-#>   An initial graph
-#>   
-#>   --- Hypothesis weights ---
-#>   A1: 0.5000
-#>   A2: 0.5000
-#>   B1: 0.0000
-#>   B2: 0.0000
-#>   
-#>   --- Transition weights ---
-#>          A1     A2     B1     B2
-#>   A1 0.0000 0.0000 1.0000 0.0000
-#>   A2 0.0000 0.0000 0.0000 1.0000
-#>   B1 0.0000 1.0000 0.0000 0.0000
-#>   B2 1.0000 0.0000 0.0000 0.0000
+#>   Initial graph
 #> 
-#>   Global alpha = 0.05
+#>   --- Hypothesis weights ---
+#>   A1: 0.500000
+#>   A2: 0.500000
+#>   B1: 0.000000
+#>   B2: 0.000000
+#> 
+#>   --- Transition weights ---
+#>            A1       A2       B1       B2
+#>   A1 0.000000 0.000000 1.000000 0.000000
+#>   A2 0.000000 0.000000 0.000000 1.000000
+#>   B1 0.000000 1.000000 0.000000 0.000000
+#>   B2 1.000000 0.000000 0.000000 0.000000
+#> 
+#>   Alpha = 0.05
 #> 
 #>                          A1   A2   B1   B2
 #>   Unadjusted p-values: 0.01 0.02 0.03 0.05
@@ -202,12 +226,27 @@ test_graph_closure(
 #>   Test types
 #>   bonferroni: (A1-A2-B1-B2)
 #> 
-#> Global test summary ------------------------------------------------------------
+#> Test summary -------------------------------------------------------------------
 #>   Hypothesis Adj. P-value Reject
 #>           A1         0.02   TRUE
 #>           A2         0.04   TRUE
 #>           B1         0.06  FALSE
 #>           B2         0.06  FALSE
+#> 
+#>   Updated graph after rejections
+#> 
+#>   --- Hypothesis weights ---
+#>   A1: 0.000000
+#>   A2: 0.000000
+#>   B1: 0.500000
+#>   B2: 0.500000
+#> 
+#>   --- Transition weights ---
+#>            A1       A2       B1       B2
+#>   A1 0.000000 0.000000 0.000000 0.000000
+#>   A2 0.000000 0.000000 0.000000 0.000000
+#>   B1 0.000000 0.000000 0.000000 1.000000
+#>   B2 0.000000 0.000000 1.000000 0.000000
 ```
 
 Simes and parametric testing methods are also supported, using the
@@ -232,22 +271,22 @@ test_graph_closure(
 )
 #> 
 #> Test parameters ----------------------------------------------------------------
-#>   An initial graph
-#>   
-#>   --- Hypothesis weights ---
-#>   A1: 0.5000
-#>   A2: 0.5000
-#>   B1: 0.0000
-#>   B2: 0.0000
-#>   
-#>   --- Transition weights ---
-#>          A1     A2     B1     B2
-#>   A1 0.0000 0.0000 1.0000 0.0000
-#>   A2 0.0000 0.0000 0.0000 1.0000
-#>   B1 0.0000 1.0000 0.0000 0.0000
-#>   B2 1.0000 0.0000 0.0000 0.0000
+#>   Initial graph
 #> 
-#>   Global alpha = 0.05
+#>   --- Hypothesis weights ---
+#>   A1: 0.500000
+#>   A2: 0.500000
+#>   B1: 0.000000
+#>   B2: 0.000000
+#> 
+#>   --- Transition weights ---
+#>            A1       A2       B1       B2
+#>   A1 0.000000 0.000000 1.000000 0.000000
+#>   A2 0.000000 0.000000 0.000000 1.000000
+#>   B1 0.000000 1.000000 0.000000 0.000000
+#>   B2 1.000000 0.000000 0.000000 0.000000
+#> 
+#>   Alpha = 0.05
 #> 
 #>                          A1   A2   B1   B2
 #>   Unadjusted p-values: 0.01 0.02 0.03 0.05
@@ -262,15 +301,30 @@ test_graph_closure(
 #>   parametric: (A1-A2)
 #>        simes: (B1-B2)
 #> 
-#> Global test summary ------------------------------------------------------------
+#> Test summary -------------------------------------------------------------------
 #>   Hypothesis Adj. P-value Reject
 #>           A1         0.02   TRUE
 #>           A2         0.04   TRUE
 #>           B1         0.05   TRUE
 #>           B2         0.05   TRUE
 #> 
+#>   Updated graph after rejections
+#> 
+#>   --- Hypothesis weights ---
+#>   A1: 0.000000
+#>   A2: 0.000000
+#>   B1: 0.000000
+#>   B2: 0.000000
+#> 
+#>   --- Transition weights ---
+#>            A1       A2       B1       B2
+#>   A1 0.000000 0.000000 0.000000 0.000000
+#>   A2 0.000000 0.000000 0.000000 0.000000
+#>   B1 0.000000 0.000000 0.000000 0.000000
+#>   B2 0.000000 0.000000 0.000000 0.000000
+#> 
 #> Test details - Adjusted p ------------------------------------------------------
-#>       A1  A2  B1  B2 padj_grp1 padj_grp2 p_adj_inter res
+#>       A1  A2  B1  B2 padj_grp1 padj_grp2 p_adj_inter rej
 #>   1  0.5 0.5 0.0 0.0  0.018706      1.00    0.018706   1
 #>   2  0.5 0.5 0.0  NA  0.018706      1.00    0.018706   1
 #>   3  0.5 0.5  NA 0.0  0.018706      1.00    0.018706   1
@@ -288,39 +342,39 @@ test_graph_closure(
 #>   15  NA  NA  NA 1.0  1.000000      0.05    0.050000   1
 #> 
 #> Test details - Critical values -------------------------------------------------
-#>    intersection hypothesis       test    p <=        c *   w * alpha   res
-#>               1         A1 parametric 0.01 <= 1.106458 * 0.5 *  0.05  TRUE
-#>               1         A2 parametric 0.02 <= 1.106458 * 0.5 *  0.05  TRUE
-#>               1         B1      simes 0.03 <=            0.0 *  0.05 FALSE
-#>               1         B2      simes 0.05 <=            0.0 *  0.05 FALSE
-#>               2         A1 parametric 0.01 <= 1.106458 * 0.5 *  0.05  TRUE
-#>               2         A2 parametric 0.02 <= 1.106458 * 0.5 *  0.05  TRUE
-#>               2         B1      simes 0.03 <=            0.0 *  0.05 FALSE
-#>               3         A1 parametric 0.01 <= 1.106458 * 0.5 *  0.05  TRUE
-#>               3         A2 parametric 0.02 <= 1.106458 * 0.5 *  0.05  TRUE
-#>               3         B2      simes 0.05 <=            0.0 *  0.05 FALSE
-#>               4         A1 parametric 0.01 <= 1.106458 * 0.5 *  0.05  TRUE
-#>               4         A2 parametric 0.02 <= 1.106458 * 0.5 *  0.05  TRUE
-#>               5         A1 parametric 0.01 <=        1 * 0.5 *  0.05  TRUE
-#>               5         B1      simes 0.03 <=            0.0 *  0.05 FALSE
-#>               5         B2      simes 0.05 <=            0.5 *  0.05 FALSE
-#>               6         A1 parametric 0.01 <=        1 * 1.0 *  0.05  TRUE
-#>               6         B1      simes 0.03 <=            0.0 *  0.05 FALSE
-#>               7         A1 parametric 0.01 <=        1 * 0.5 *  0.05  TRUE
-#>               7         B2      simes 0.05 <=            0.5 *  0.05 FALSE
-#>               8         A1 parametric 0.01 <=        1 * 1.0 *  0.05  TRUE
-#>               9         A2 parametric 0.02 <=        1 * 0.5 *  0.05  TRUE
-#>               9         B1      simes 0.03 <=            0.5 *  0.05 FALSE
-#>               9         B2      simes 0.05 <=            0.5 *  0.05 FALSE
-#>              10         A2 parametric 0.02 <=        1 * 0.5 *  0.05  TRUE
-#>              10         B1      simes 0.03 <=            0.5 *  0.05 FALSE
-#>              11         A2 parametric 0.02 <=        1 * 1.0 *  0.05  TRUE
-#>              11         B2      simes 0.05 <=            0.0 *  0.05 FALSE
-#>              12         A2 parametric 0.02 <=        1 * 1.0 *  0.05  TRUE
-#>              13         B1      simes 0.03 <=            0.5 *  0.05 FALSE
-#>              13         B2      simes 0.05 <=            1.0 *  0.05  TRUE
-#>              14         B1      simes 0.03 <=            1.0 *  0.05  TRUE
-#>              15         B2      simes 0.05 <=            1.0 *  0.05  TRUE
+#>    Intersection Hypothesis       Test    p <=        c * Critical * Alpha Reject
+#>               1         A1 parametric 0.01 <= 1.106458 *      0.5 *  0.05   TRUE
+#>               1         A2 parametric 0.02 <= 1.106458 *      0.5 *  0.05   TRUE
+#>               1         B1      simes 0.03 <=                 0.0 *  0.05  FALSE
+#>               1         B2      simes 0.05 <=                 0.0 *  0.05  FALSE
+#>               2         A1 parametric 0.01 <= 1.106458 *      0.5 *  0.05   TRUE
+#>               2         A2 parametric 0.02 <= 1.106458 *      0.5 *  0.05   TRUE
+#>               2         B1      simes 0.03 <=                 0.0 *  0.05  FALSE
+#>               3         A1 parametric 0.01 <= 1.106458 *      0.5 *  0.05   TRUE
+#>               3         A2 parametric 0.02 <= 1.106458 *      0.5 *  0.05   TRUE
+#>               3         B2      simes 0.05 <=                 0.0 *  0.05  FALSE
+#>               4         A1 parametric 0.01 <= 1.106458 *      0.5 *  0.05   TRUE
+#>               4         A2 parametric 0.02 <= 1.106458 *      0.5 *  0.05   TRUE
+#>               5         A1 parametric 0.01 <=        1 *      0.5 *  0.05   TRUE
+#>               5         B1      simes 0.03 <=                 0.0 *  0.05  FALSE
+#>               5         B2      simes 0.05 <=                 0.5 *  0.05  FALSE
+#>               6         A1 parametric 0.01 <=        1 *      1.0 *  0.05   TRUE
+#>               6         B1      simes 0.03 <=                 0.0 *  0.05  FALSE
+#>               7         A1 parametric 0.01 <=        1 *      0.5 *  0.05   TRUE
+#>               7         B2      simes 0.05 <=                 0.5 *  0.05  FALSE
+#>               8         A1 parametric 0.01 <=        1 *      1.0 *  0.05   TRUE
+#>               9         A2 parametric 0.02 <=        1 *      0.5 *  0.05   TRUE
+#>               9         B1      simes 0.03 <=                 0.5 *  0.05  FALSE
+#>               9         B2      simes 0.05 <=                 0.5 *  0.05  FALSE
+#>              10         A2 parametric 0.02 <=        1 *      0.5 *  0.05   TRUE
+#>              10         B1      simes 0.03 <=                 0.5 *  0.05  FALSE
+#>              11         A2 parametric 0.02 <=        1 *      1.0 *  0.05   TRUE
+#>              11         B2      simes 0.05 <=                 0.0 *  0.05  FALSE
+#>              12         A2 parametric 0.02 <=        1 *      1.0 *  0.05   TRUE
+#>              13         B1      simes 0.03 <=                 0.5 *  0.05  FALSE
+#>              13         B2      simes 0.05 <=                 1.0 *  0.05   TRUE
+#>              14         B1      simes 0.03 <=                 1.0 *  0.05   TRUE
+#>              15         B2      simes 0.05 <=                 1.0 *  0.05   TRUE
 ```
 
 ## Power simulations
@@ -342,20 +396,20 @@ calculate_power(
 )
 #> 
 #> Test parameters ----------------------------------------------------------------
-#>   An initial graph
-#>   
+#>   Initial graph
+#> 
 #>   --- Hypothesis weights ---
-#>   A1: 0.5000
-#>   A2: 0.5000
-#>   B1: 0.0000
-#>   B2: 0.0000
-#>   
+#>   A1: 0.500000
+#>   A2: 0.500000
+#>   B1: 0.000000
+#>   B2: 0.000000
+#> 
 #>   --- Transition weights ---
-#>          A1     A2     B1     B2
-#>   A1 0.0000 0.0000 1.0000 0.0000
-#>   A2 0.0000 0.0000 0.0000 1.0000
-#>   B1 0.0000 1.0000 0.0000 0.0000
-#>   B2 1.0000 0.0000 0.0000 0.0000
+#>            A1       A2       B1       B2
+#>   A1 0.000000 0.000000 1.000000 0.000000
+#>   A2 0.000000 0.000000 0.000000 1.000000
+#>   B1 0.000000 1.000000 0.000000 0.000000
+#>   B2 1.000000 0.000000 0.000000 0.000000
 #> 
 #>   Global alpha = 0.05
 #> 
@@ -365,34 +419,31 @@ calculate_power(
 #> Simulation parameters ----------------------------------------------------------
 #>   Testing 100,000 simulations with multivariate normal params:
 #> 
-#>                     A1 A2 B1 B2
-#>   Simulation means:  1  1  1  1
+#>                   A1 A2 B1 B2
+#>   Marginal power:  1  1  1  1
 #> 
-#>   Simulation covariance:    A1 A2 B1 B2
-#>                          A1  1  0  0  0
-#>                          A2  0  1  0  0
-#>                          B1  0  0  1  0
-#>                          B2  0  0  0  1
-#> 
-#>   Success is defined as rejecting any of [A1, A2]
+#>   Correlation:    A1 A2 B1 B2
+#>                A1  1  0  0  0
+#>                A2  0  1  0  0
+#>                B1  0  0  1  0
+#>                B2  0  0  0  1
 #> 
 #> Power calculation --------------------------------------------------------------
-#>                                   A1      A2     B1      B2
-#>        Power to reject each: 0.17203 0.16925 0.0297 0.02997
+#>                                   A1      A2      B1      B2
+#>        Power to reject each: 0.17102 0.16981 0.03003 0.02983
 #> 
-#>         Expected rejections: 0.40095
-#>   Power to reject 1 or more: 0.30842
-#>         Power to reject all: 0.00275
-#>      Probability of success: 0.30842
+#>         Expected rejections: 0.40069
+#>   Power to reject 1 or more: 0.30706
+#>         Power to reject all: 0.00332
 #> 
 #> Simulation details -------------------------------------------------------------
 #>   p_sim_A1 p_sim_A2 p_sim_B1 p_sim_B2 rej_A1 rej_A2 rej_B1 rej_B2
-#>   0.078526 0.137882 0.569016 0.848786  FALSE  FALSE  FALSE  FALSE
-#>   0.637682 0.015930 0.022852 0.018868  FALSE   TRUE  FALSE   TRUE
-#>   0.467484 0.542416 0.051216 0.028471  FALSE  FALSE  FALSE  FALSE
-#>   0.019250 0.228063 0.247862 0.003454   TRUE  FALSE  FALSE  FALSE
-#>   0.287055 0.496514 0.221542 0.087701  FALSE  FALSE  FALSE  FALSE
-#>   0.347756 0.024206 0.739294 0.102398  FALSE   TRUE  FALSE  FALSE
+#>   0.487245 0.039462 0.237048 0.278554  FALSE  FALSE  FALSE  FALSE
+#>   0.033752 0.252295 0.004860 0.007874  FALSE  FALSE  FALSE  FALSE
+#>   0.418167 0.395485 0.106901 0.302197  FALSE  FALSE  FALSE  FALSE
+#>   0.277895 0.164969 0.022008 0.062993  FALSE  FALSE  FALSE  FALSE
+#>   0.081146 0.239575 0.565388 0.021711  FALSE  FALSE  FALSE  FALSE
+#>   0.007596 0.071909 0.554441 0.573774   TRUE  FALSE  FALSE  FALSE
 #>   ...
 ```
 
@@ -412,20 +463,20 @@ calculate_power(
 )
 #> 
 #> Test parameters ----------------------------------------------------------------
-#>   An initial graph
-#>   
+#>   Initial graph
+#> 
 #>   --- Hypothesis weights ---
-#>   A1: 0.5000
-#>   A2: 0.5000
-#>   B1: 0.0000
-#>   B2: 0.0000
-#>   
+#>   A1: 0.500000
+#>   A2: 0.500000
+#>   B1: 0.000000
+#>   B2: 0.000000
+#> 
 #>   --- Transition weights ---
-#>          A1     A2     B1     B2
-#>   A1 0.0000 0.5000 0.5000 0.0000
-#>   A2 0.5000 0.0000 0.0000 0.5000
-#>   B1 0.0000 1.0000 0.0000 0.0000
-#>   B2 1.0000 0.0000 0.0000 0.0000
+#>            A1       A2       B1       B2
+#>   A1 0.000000 0.500000 0.500000 0.000000
+#>   A2 0.500000 0.000000 0.000000 0.500000
+#>   B1 0.000000 1.000000 0.000000 0.000000
+#>   B2 1.000000 0.000000 0.000000 0.000000
 #> 
 #>   Global alpha = 0.05
 #> 
@@ -435,34 +486,31 @@ calculate_power(
 #> Simulation parameters ----------------------------------------------------------
 #>   Testing 100,000 simulations with multivariate normal params:
 #> 
-#>                     A1 A2 B1 B2
-#>   Simulation means:  1  1  1  1
+#>                   A1 A2 B1 B2
+#>   Marginal power:  1  1  1  1
 #> 
-#>   Simulation covariance:    A1 A2 B1 B2
-#>                          A1  1  0  0  0
-#>                          A2  0  1  0  0
-#>                          B1  0  0  1  0
-#>                          B2  0  0  0  1
-#> 
-#>   Success is defined as rejecting any of [A1, A2]
+#>   Correlation:    A1 A2 B1 B2
+#>                A1  1  0  0  0
+#>                A2  0  1  0  0
+#>                B1  0  0  1  0
+#>                B2  0  0  0  1
 #> 
 #> Power calculation --------------------------------------------------------------
 #>                                   A1      A2      B1      B2
-#>        Power to reject each: 0.18129 0.17751 0.02183 0.02247
+#>        Power to reject each: 0.17609 0.17668 0.02264 0.02268
 #> 
-#>         Expected rejections: 0.4031
-#>   Power to reject 1 or more: 0.31209
-#>         Power to reject all: 0.00293
-#>      Probability of success: 0.31209
+#>         Expected rejections: 0.39809
+#>   Power to reject 1 or more: 0.30741
+#>         Power to reject all: 0.00301
 #> 
 #> Simulation details -------------------------------------------------------------
 #>   p_sim_A1 p_sim_A2 p_sim_B1 p_sim_B2 rej_A1 rej_A2 rej_B1 rej_B2
-#>   0.388090 0.086645 0.038033 0.097627  FALSE  FALSE  FALSE  FALSE
-#>   0.019200 0.187812 0.168495 0.092665   TRUE  FALSE  FALSE  FALSE
-#>   0.541078 0.073938 0.018417 0.031343  FALSE  FALSE  FALSE  FALSE
-#>   0.003939 0.139559 0.110924 0.231875   TRUE  FALSE  FALSE  FALSE
-#>   0.089314 0.002850 0.638163 0.028909  FALSE   TRUE  FALSE  FALSE
-#>   0.206538 0.000013 0.061784 0.197883  FALSE   TRUE  FALSE  FALSE
+#>   0.187090 0.297671 0.143046 0.187417  FALSE  FALSE  FALSE  FALSE
+#>   0.357566 0.450327 0.004242 0.269982  FALSE  FALSE  FALSE  FALSE
+#>   0.086783 0.484388 0.421100 0.158553  FALSE  FALSE  FALSE  FALSE
+#>   0.075160 0.151046 0.927364 0.413286  FALSE  FALSE  FALSE  FALSE
+#>   0.154559 0.303063 0.405742 0.316448  FALSE  FALSE  FALSE  FALSE
+#>   0.048938 0.212898 0.537415 0.000170  FALSE  FALSE  FALSE  FALSE
 #>   ...
 ```
 
@@ -486,20 +534,20 @@ calculate_power(
 )
 #> 
 #> Test parameters ----------------------------------------------------------------
-#>   An initial graph
-#>   
+#>   Initial graph
+#> 
 #>   --- Hypothesis weights ---
-#>   A1: 0.5000
-#>   A2: 0.5000
-#>   B1: 0.0000
-#>   B2: 0.0000
-#>   
+#>   A1: 0.500000
+#>   A2: 0.500000
+#>   B1: 0.000000
+#>   B2: 0.000000
+#> 
 #>   --- Transition weights ---
-#>          A1     A2     B1     B2
-#>   A1 0.0000 0.5000 0.5000 0.0000
-#>   A2 0.5000 0.0000 0.0000 0.5000
-#>   B1 0.0000 1.0000 0.0000 0.0000
-#>   B2 1.0000 0.0000 0.0000 0.0000
+#>            A1       A2       B1       B2
+#>   A1 0.000000 0.500000 0.500000 0.000000
+#>   A2 0.500000 0.000000 0.000000 0.500000
+#>   B1 0.000000 1.000000 0.000000 0.000000
+#>   B2 1.000000 0.000000 0.000000 0.000000
 #> 
 #>   Global alpha = 0.05
 #> 
@@ -516,34 +564,31 @@ calculate_power(
 #> Simulation parameters ----------------------------------------------------------
 #>   Testing 100,000 simulations with multivariate normal params:
 #> 
-#>                     A1 A2 B1 B2
-#>   Simulation means:  1  1  1  1
+#>                   A1 A2 B1 B2
+#>   Marginal power:  1  1  1  1
 #> 
-#>   Simulation covariance:    A1 A2 B1 B2
-#>                          A1  1  0  0  0
-#>                          A2  0  1  0  0
-#>                          B1  0  0  1  0
-#>                          B2  0  0  0  1
-#> 
-#>   Success is defined as rejecting any of [A1, A2]
+#>   Correlation:    A1 A2 B1 B2
+#>                A1  1  0  0  0
+#>                A2  0  1  0  0
+#>                B1  0  0  1  0
+#>                B2  0  0  0  1
 #> 
 #> Power calculation --------------------------------------------------------------
 #>                                   A1      A2      B1      B2
-#>        Power to reject each: 0.18334 0.18309 0.02369 0.02324
+#>        Power to reject each: 0.18154 0.18339 0.02362 0.02389
 #> 
-#>         Expected rejections: 0.41336
-#>   Power to reject 1 or more: 0.31697
-#>         Power to reject all: 0.00329
-#>      Probability of success: 0.31697
+#>         Expected rejections: 0.41244
+#>   Power to reject 1 or more: 0.3154
+#>         Power to reject all: 0.00366
 #> 
 #> Simulation details -------------------------------------------------------------
 #>   p_sim_A1 p_sim_A2 p_sim_B1 p_sim_B2 rej_A1 rej_A2 rej_B1 rej_B2
-#>   0.218883 0.014727 0.010175 0.002190  FALSE   TRUE  FALSE   TRUE
-#>   0.049056 0.089459 0.000390 0.382826  FALSE  FALSE  FALSE  FALSE
-#>   0.375876 0.041990 0.060148 0.214056  FALSE  FALSE  FALSE  FALSE
-#>   0.250626 0.206095 0.000410 0.315290  FALSE  FALSE  FALSE  FALSE
-#>   0.190990 0.991152 0.013499 0.404970  FALSE  FALSE  FALSE  FALSE
-#>   0.049104 0.114863 0.372571 0.194330  FALSE  FALSE  FALSE  FALSE
+#>   0.674925 0.004111 0.356191 0.872622  FALSE   TRUE  FALSE  FALSE
+#>   0.074545 0.060858 0.309452 0.047561  FALSE  FALSE  FALSE  FALSE
+#>   0.000938 0.065281 0.012272 0.050659   TRUE  FALSE   TRUE  FALSE
+#>   0.179105 0.586872 0.233590 0.278176  FALSE  FALSE  FALSE  FALSE
+#>   0.031682 0.033470 0.214807 0.093020   TRUE   TRUE  FALSE  FALSE
+#>   0.103165 0.014152 0.502712 0.024165  FALSE   TRUE  FALSE  FALSE
 #>   ...
 ```
 

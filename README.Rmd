@@ -14,18 +14,41 @@ knitr::opts_chunk$set(
 ```
 
 <!-- badges: start -->
-[![CRAN status](https://www.r-pkg.org/badges/version/graphicalMCP)](https://cran.r-project.org/package=graphicalMCP)
-[![Codecov test coverage](https://codecov.io/gh/Gilead-BioStats/graphicalMCP/branch/s3-graph_mcp/graph/badge.svg)](https://app.codecov.io/gh/Gilead-BioStats/graphicalMCP?branch=s3-graph_mcp)
-[![R-CMD-check](https://github.com/Gilead-BioStats/graphicalMCP/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/Gilead-BioStats/graphicalMCP/actions/workflows/R-CMD-check.yaml)
+
+[![CRAN status](https://www.r-pkg.org/badges/version/graphicalMCP)](https://cran.r-project.org/package=graphicalMCP) [![Codecov test coverage](https://codecov.io/gh/Gilead-BioStats/graphicalMCP/branch/s3-graph_mcp/graph/badge.svg)](https://app.codecov.io/gh/Gilead-BioStats/graphicalMCP?branch=s3-graph_mcp) [![R-CMD-check](https://github.com/Gilead-BioStats/graphicalMCP/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/Gilead-BioStats/graphicalMCP/actions/workflows/R-CMD-check.yaml)
+
 <!-- badges: end -->
 
-# graphicalMCP <img src="man/figures/logo.png" align="right" height="350" />
+# graphicalMCP <img src="man/figures/logo.png" align="right" height="350"/>
 
 ## Introduction
 
 A multiple comparison procedure (MCP) is a statistical analysis method that allows for assessing the efficacy of multiple endpoints, some of which are dependent on each other, in a single clinical trial. Endpoints can be different doses, treatment of different conditions, or combined superiority & non-inferiority testing.
 
 In [Bretz et al (2011)](https://onlinelibrary.wiley.com/doi/10.1002/bimj.201000239), a graphical method to MCPs was described, which separates the weighting of the dependency graph from the particular statistical test used to assess each endpoint. This package is a low-dependency implementation of those methods.
+
+## Glossary of terms
+
+| Entity                           | Definition                                                                                                                                                                                            | Aliases                               | Variable(s)                     | Related                         |
+|-----------|--------------------------|-----------|--------------|-----------|
+| **Graph**                        | A set of nodes and edges representing a potential clinical trial design                                                                                                                               |                                       | `graph`                         | Hypotheses, Transitions         |
+|                                  | **Graphs** are so central that two of their core qualities get their own common variable names: Node names, and number of hypotheses                                                                  |                                       | `hyp_names`, `num_hyps`         |                                 |
+| **Hypotheses**                   | The weighted nodes in a **graph**. Each node represents a null hypothesis, and its weight the local significance level.                                                                               | weights, hypothesis weights           | `hypotheses`                    | Weighting strategy, Transitions |
+| **Transitions**                  | The weighted edges in a **graph**. Each edge defines how to propagate local significance when a source node is deleted.                                                                               |                                       | `transitions`                   | Hypotheses                      |
+| **Intersection** **hypothesis**  | A subset of **hypotheses** from a **graph**. Plural often implies all such subsets.                                                                                                                   | intersection,sub-graphs, closure      | `intersections`                 | Weighting strategy              |
+| **Weighting strategy**           | The set of all **intersections** and their **weights** according to Algorithm 1 in Bretz et al                                                                                                        | intersection weights, closure weights | `weighting_strategy`            |                                 |
+| **Critical values**              |                                                                                                                                                                                                       |                                       |                                 |                                 |
+| **P-values**                     | The set of p-values from a real or simulated clinical trial                                                                                                                                           |                                       | `p`                             | Adjusted & ordered p-values     |
+| **Ordered p-values**             | **P-values** sorted from smallest to largest                                                                                                                                                          |                                       | `ordered_p`                     | (Adjusted) P-values             |
+| **Adjusted p-values**            | **P-values** that have been divided by **critical values**, allowing direct comparison to **alpha** to determine significance                                                                         |                                       | `adjusted_p`                    | (Ordered) P-values              |
+| **Significance level**           | The threshold chosen for results of a clinical trial to be considered significant                                                                                                                     |                                       | `alpha`                         | P-values                        |
+| **Test types**                   | A specification of which testing algorithm to use - Bonferroni, Simes, and parametric are supported                                                                                                   | tests                                 | `test_types`                    | Testing strategy                |
+| **Test groups**                  | A partition of nodes in a **graph** specifying which **hypotheses** should be tested together                                                                                                         | groups                                | `groups`, `test_groups`         | Testing strategy                |
+| **Testing strategy**             | **Test types** and **test groups** combined                                                                                                                                                           |                                       |                                 |                                 |
+| **Marginal power**               | The mean of each null **hypothesis** in the underlying multivariate normal distribution of the null hypotheses                                                                                        |                                       | `marginal_power`                | Correlation matrix              |
+| **Correlation matrix**           | Specification of correlations between **hypotheses**. Together with **marginal power**, this specifies the (known or assumed) underlying multivariate normal distribution of the null **hypotheses**. |                                       | `corr`, `test_corr`, `sim_corr` | Marginal power                  |
+| **Success**                      | A specification of which null **hypotheses** must be rejected to consider a clinical trial a success                                                                                                  |                                       | `sim_success`                   |                                 |
+| **Power**                        | Under a given **graph**, **testing strategy**, **significance level**, and underlying distribution, the estimated likelihood that a particular combination of null hypotheses will be rejected        |                                       | `power_*`                       | Success                         |
 
 ## Installation
 
@@ -144,7 +167,7 @@ calculate_power(
 
 ### Other tests
 
-Bonferroni testing uses a shortcut to make testing, and therefore power, run very fast (<1s up to a 10-graph/100K-simulation). However, power simulations can be run with any test strategy. Note that other testing strategies will cause a substantial increase in the time a power simulation takes. In rough ascending order of time impact: parametric tests, multiple groups, Simes tests.
+Bonferroni testing uses a shortcut to make testing, and therefore power, run very fast (\<1s up to a 10-graph/100K-simulation). However, power simulations can be run with any test strategy. Note that other testing strategies will cause a substantial increase in the time a power simulation takes. In rough ascending order of time impact: parametric tests, multiple groups, Simes tests.
 
 ```{r power-4}
 calculate_power(
@@ -159,7 +182,7 @@ calculate_power(
 
 ## Related work
 
-These methods were originally implemented in R after the 2011 paper in the [gMCP package](https://github.com/kornl/gMCP), which is still available on CRAN today. There is also a lighter version of gMCP implemented in [gMCPmini](https://github.com/allenzhuaz/gMCPmini) and its successor, [gMCPLite](https://github.com/Merck/gMCPLite). These two contain only a subset of the original functionality, but they remove the rJava dependency and add plotting functionality based on ggplot2. 
+These methods were originally implemented in R after the 2011 paper in the [gMCP package](https://github.com/kornl/gMCP), which is still available on CRAN today. There is also a lighter version of gMCP implemented in [gMCPmini](https://github.com/allenzhuaz/gMCPmini) and its successor, [gMCPLite](https://github.com/Merck/gMCPLite). These two contain only a subset of the original functionality, but they remove the rJava dependency and add plotting functionality based on ggplot2.
 
 However, because development has ceased on the original package, we hope to re-implement the methods with a clearer distinction between weighting procedures and test procedures; with fewer dependencies, in particular shedding the Java dependency; with the simpler, more transparent S3 class framework; and with improvements to the accuracy of the parametric and Simes test methods.
 

@@ -312,7 +312,7 @@ gt(table_1_target[10:14] - table_1[, 15:19])
 
 And that's all we need to do! Furthermore, once we've done the hard work of setting up the scenarios, it's simple to test them using other strategies. Let's try the Simes method. Note that Simes testing takes \~10x longer than Bonferroni testing for a graph of this size.
 
-```{r scenarios-simes}
+```{r scenarios-simes, eval=FALSE}
 out_list_simes <- list()
 
 for (i in 1:14) {
@@ -365,7 +365,7 @@ gt_display_table_1(as.data.frame(table_1_simes[, c(1:3, 6:7, 10:19)]))
 
 And different hypotheses can be tested with differing strategies as well.
 
-```{r scenarios-mixed}
+```{r scenarios-mixed, eval=FALSE}
 out_list_mix <- list()
 
 for (i in 1:14) {

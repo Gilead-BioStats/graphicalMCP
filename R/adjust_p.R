@@ -7,7 +7,7 @@
 #'
 #' @return A single adjusted p-value for the given group
 #'
-#' @rdname p_adjust
+#' @rdname adjust_p
 #'
 #' @keywords internal
 #'
@@ -19,19 +19,19 @@
 #' w <- c("H1" = .75, "H2" = .25, "H3" = 0)
 #' p <- c("H1" = .019, "H2" = .025, "H3" = .05)
 #'
-#' graphicalMCP:::p_adjust_bonferroni(p, w)
-#' graphicalMCP:::p_adjust_simes(p, w)
+#' graphicalMCP:::adjust_p_bonferroni(p, w)
+#' graphicalMCP:::adjust_p_simes(p, w)
 #'
 #' corr1 <- diag(3)
 #' corr2 <- corr1
 #' corr2[lower.tri(corr2)] <- corr2[upper.tri(corr2)] <- runif(3, -1, 1)
 #'
 #' # No correlation
-#' graphicalMCP:::p_adjust_parametric(p, w, corr1)
+#' graphicalMCP:::adjust_p_parametric(p, w, corr1)
 #'
 #' # Uniform random pairwise correlations
-#' graphicalMCP:::p_adjust_parametric(p, w, corr2)
-p_adjust_bonferroni <- function(p, hypotheses) {
+#' graphicalMCP:::adjust_p_parametric(p, w, corr2)
+adjust_p_bonferroni <- function(p, hypotheses) {
   if (sum(hypotheses) == 0) {
     return(Inf)
   }
@@ -44,8 +44,8 @@ p_adjust_bonferroni <- function(p, hypotheses) {
   min(p / hypotheses, na.rm = TRUE)
 }
 
-#' @rdname p_adjust
-p_adjust_parametric <- function(p, hypotheses, corr = NULL) {
+#' @rdname adjust_p
+adjust_p_parametric <- function(p, hypotheses, corr = NULL) {
   if (sum(hypotheses) == 0) {
     return(Inf)
   }
@@ -65,12 +65,12 @@ p_adjust_parametric <- function(p, hypotheses, corr = NULL) {
     )[[1]]
   )
 
-  # Occasionally off by floating point differences
+  # Occasionally off by floating point differences, so round at some high detail
   round(1 / sum(hypotheses) * prob_less_than_z, 10)
 }
 
-#' @rdname p_adjust
-p_adjust_simes <- function(p, hypotheses) {
+#' @rdname adjust_p
+adjust_p_simes <- function(p, hypotheses) {
   if (sum(hypotheses) == 0) {
     return(Inf)
   }

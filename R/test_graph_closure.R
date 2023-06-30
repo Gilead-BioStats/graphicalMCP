@@ -138,20 +138,20 @@ test_graph_closure <- function(graph,
       group_by_intersection <- group[as.logical(vec_intersection[group])]
 
       # The adjusted p-value for a *group* has varying rules depending on the
-      # test type. Each `p_adjust_*` function expects a whole group as input and
+      # test type. Each `adjust_p_*` function expects a whole group as input and
       # returns a single value as output (adjusted p-value for the whole group)
       if (test == "bonferroni") {
-        adjusted_p[[intersection_index, group_index]] <- p_adjust_bonferroni(
+        adjusted_p[[intersection_index, group_index]] <- adjust_p_bonferroni(
           p[group_by_intersection],
           vec_weights[group_by_intersection]
         )
       } else if (test == "simes") {
-        adjusted_p[[intersection_index, group_index]] <- p_adjust_simes(
+        adjusted_p[[intersection_index, group_index]] <- adjust_p_simes(
           p[group_by_intersection],
           vec_weights[group_by_intersection]
         )
       } else if (test == "parametric") {
-        adjusted_p[[intersection_index, group_index]] <- p_adjust_parametric(
+        adjusted_p[[intersection_index, group_index]] <- adjust_p_parametric(
           p[group_by_intersection],
           vec_weights[group_by_intersection],
           corr[group_by_intersection, group_by_intersection]
