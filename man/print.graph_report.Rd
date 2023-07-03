@@ -4,7 +4,7 @@
 \alias{print.graph_report}
 \title{S3 print method for class \code{graph_report}}
 \usage{
-\method{print}{graph_report}(x, ..., precision = 6, indent = 2)
+\method{print}{graph_report}(x, ..., precision = 6, indent = 2, rows = 10)
 }
 \arguments{
 \item{x}{An object of class \code{graph_report} to print}
@@ -15,6 +15,9 @@
 to include in numeric values}
 
 \item{indent}{An integer scalar indicating how many spaces to indent results}
+
+\item{rows}{An integer scalar indicating how many rows of verbose and
+critical output to print}
 }
 \description{
 A graph report displays

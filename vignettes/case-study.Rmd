@@ -32,26 +32,26 @@ The initial weight should be split between the primary hypotheses, and each seco
 These requirements result in the graph below. The `gamma` parameter can be set to control how much weight is passed between primary hypotheses vs how much is passed to the secondary groups (`1 - gamma`). The `hyp_4` parameter controls the initial weight of hypothesis 4, high dose A1C. The rest of the initial weight, `1 - hyp_4`, is assigned to hypothesis 1, low dose A1C.
 
 ```{r initial-graph}
-hyp_names <- c("lo_a1c", "lo_tir", "lo_ret", "hi_a1c", "hi_tir", "hi_ret")
+hyp_names <- c("lo_a1c", "hi_a1c", "lo_tir", "hi_tir", "lo_ret", "hi_ret")
 
-complex_gamma <- function(hyp_4, gamma, names = hyp_names) {
+motivating_example <- function(hyp_4, gamma, names = hyp_names) {
   eps <- .0001
   
-  hypotheses <- c(hyp_4, 0, 0, 1 - hyp_4, 0, 0)
+  hypotheses <- c(hyp_4, 1 - hyp_4, 0, 0, 0, 0)
   
   transitions <- rbind(
-    c(0, (1 - gamma) / 2, (1 - gamma) / 2, gamma, 0, 0),
-    c(0, 0, 1, 0, 0, 0),
-    c(0, 1 - eps, 0, eps, 0, 0),
-    c(gamma, 0, 0, 0, (1 - gamma) / 2, (1 - gamma) / 2),
-    c(0, 0, 0, 0, 0, 1),
-    c(eps, 0, 0, 0, 1 - eps, 0)
+    c(0, gamma, (1 - gamma) / 2, 0, (1 - gamma) / 2, 0),
+    c(gamma, 0, 0, (1 - gamma) / 2, 0, (1 - gamma) / 2),
+    c(0, 0, 0, 0, 1, 0),
+    c(eps, 0, 0, 0, 0, 1 - eps),
+    c(0, eps, 1 - eps, 0, 0, 0),
+    c(0, 0, 0, 1, 0, 0)
   )
 
   create_graph(hypotheses, transitions, hyp_names)
 }
 
-g_complex <- complex_gamma(.75, .99)
+g_complex <- motivating_example(.75, .99)
 
 print(g_complex)
 ```
@@ -80,12 +80,12 @@ Using tests other than Bonferroni can add power to reject more hypotheses, but i
 rho_com_end <- 0.5
 
 t_corr <- rbind(
-  c(1, NA, NA, rho_com_end, NA, NA),
-  c(NA, 1, NA, NA, rho_com_end, NA),
-  c(NA, NA, 1, NA, NA, rho_com_end),
-  c(rho_com_end, NA, NA, 1, NA, NA),
-  c(NA, rho_com_end, NA, NA, 1, NA),
-  c(NA, NA, rho_com_end, NA, NA, 1)
+  c(1, rho_com_end, NA, NA, NA, NA),
+  c(rho_com_end, 1, NA, NA, NA, NA),
+  c(NA, NA, 1, rho_com_end, NA, NA),
+  c(NA, NA, rho_com_end, 1, NA, NA),
+  c(NA, NA, NA, NA, 1, rho_com_end),
+  c(NA, NA, NA, NA, rho_com_end, 1)
 )
 ```
 
@@ -94,7 +94,7 @@ test_graph_closure(
   g_complex,
   <calculated_p_values>,
   alpha = .025,
-  groups = list(c(1, 4), c(2, 3, 5, 6)),
+  groups = list(1:2, 3:6),
   test_types = c("p", "b"),
   corr = t_corr
 )
@@ -109,7 +109,7 @@ test_graph_closure(
   g_complex,
   <calculated_p_values>,
   alpha = .025,
-  groups = list(c(1, 4), 2:3, 5:6),
+  groups = list(1:2, c(3, 5), c(4, 6)),
   test_types = c("p", "s", "s"),
   corr = t_corr
 )
@@ -149,7 +149,7 @@ For our hypothetical study, here are the static parameters. We also set the rand
 calculate_power(
   graph = <variable graph>,
   alpha = .025,
-  test_groups = list(c(1, 4), 2:3, 5:6),
+  test_groups = list(1:2, c(3, 5), c(4, 6)),
   test_types = c("p", "s", "s"),
   test_corr = t_corr,
   sim_n = 1e5,
@@ -224,9 +224,9 @@ Now bring all the assumptions together and calculate power for each scenario. [P
 ```{r power-results}
 power_scenario <- function(hyp_4, gamma, s_corr, marginal_power) {
     calculate_power(
-      graph = complex_gamma(hyp_4, gamma),
+      graph = motivating_example(hyp_4, gamma),
       alpha = .025,
-      test_groups = list(c(1, 4), 2:3, 5:6),
+      test_groups = list(1:2, c(3, 5), c(4, 6)),
       test_types = c("p", "s", "s"),
       test_corr = t_corr,
       sim_n = 1e5,
@@ -330,9 +330,9 @@ sub_results %>%
 These additional constraints result in the following graph design chosen for the study.
 
 ```{r study-graph}
-g_complex_chosen <- complex_gamma(.5, .5)
+motiv_ex_.5_.5 <- motivating_example(.5, .5)
 
-g_complex_chosen
+motiv_ex_.5_.5
 ```
 
 __Note:__ This is a simplified example using a reduced parameter space for the sake of run time. In a real clinical trial the parameter space would need to be searched at a more granular level, perhaps using modeling techniques on the power results to isolate the impact of different parameters. There may also be multiple power measurements of interest, and parameters will be chosen to balance the power across multiple desired outcomes.
@@ -342,24 +342,25 @@ __Note:__ This is a simplified example using a reduced parameter space for the s
 Finally, we demonstrate testing using example data that illustrates the differences between test strategies. Assume the study has been completed, and the data yields the following p-values.
 
 ```{r study-results}
-p_mean_diff_from_placebo <- c(.0129, .026, .012, .0132, .007, .012)
+p_mean_diff_from_placebo <- c(.0129, .0132, .026, .007, .012, .012)
+
 names(p_mean_diff_from_placebo) <- hyp_names
 ```
 
 When testing with the [first strategy](#test-design-bonferroni), no hypotheses can be considered significant.
 
 ```{r test-bonferroni}
-test_graph_closure(g_complex_chosen, p_mean_diff_from_placebo, alpha = .025)
+test_graph_shortcut(motiv_ex_.5_.5, p_mean_diff_from_placebo, alpha = .025, verbose = TRUE, critical = TRUE)
 ```
 
 Using the [second strategy](#test-design-parametric-bonferroni), the increased power from parametric testing allows us to reject hypotheses 1 and 4.
 
 ```{r test-para-bonf}
 test_graph_closure(
-  g_complex,
+  motiv_ex_.5_.5,
   p_mean_diff_from_placebo,
   alpha = .025,
-  groups = list(c(1, 4), c(2, 3, 5, 6)),
+  groups = list(1:2, 3:6),
   test_types = c("p", "b"),
   corr = t_corr
 )
@@ -369,13 +370,40 @@ Finally, using our chosen strategy for testing, the Simes grouping allows some s
 
 ```{r test-para-simes}
 test_graph_closure(
-  g_complex,
+  motiv_ex_.5_.5,
   p_mean_diff_from_placebo,
   alpha = .025,
-  groups = list(c(1, 4), 2:3, 5:6),
+  groups = list(1:2, c(3, 5), c(4, 6)),
   test_types = c("p", "s", "s"),
   corr = t_corr
 )
 ```
 
 Re-run any of the tests above with `verbose = TRUE` or `critical = TRUE` to get more granular insight into each rejection determination.
+
+
+```{r pres-examples-1}
+shortcut_example <- test_graph_shortcut(
+  motiv_ex_.5_.5,
+  c(.0123, .0132, .026, .007, .012, .012),
+  alpha = .025,
+  verbose = TRUE,
+  critical = TRUE
+)
+
+shortcut_example
+```
+
+```{r pres-examples-2}closure_example <- test_graph_closure(
+  motiv_ex_.5_.5,
+  c(.0129, .0132, .026, .007, .012, .012),
+  alpha = .025,
+  groups = list(1:2, c(3, 5), c(4, 6)),
+  test_types = c("p", "s", "s"),
+  corr = t_corr,
+  verbose = TRUE,
+  critical = TRUE
+)
+
+print(closure_example, precision = 4)
+```

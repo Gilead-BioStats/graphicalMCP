@@ -4,7 +4,7 @@
       test_graph_closure(par_gate, rep(0.01, 4), test_types = "s")
     Output
       
-      Test parameters ----------------------------------------------------------------
+      Test parameters ($inputs) ------------------------------------------------------
         Initial graph
       
         --- Hypothesis weights ---
@@ -28,7 +28,7 @@
         Test types
         simes: (H1-H2-H3-H4)
       
-      Test summary -------------------------------------------------------------------
+      Test summary ($outputs) --------------------------------------------------------
         Hypothesis Adj. P-value Reject
                 H1         0.01   TRUE
                 H2         0.01   TRUE
@@ -56,7 +56,7 @@
       test_graph_closure(par_gate, rep(0.01, 4), verbose = TRUE)
     Output
       
-      Test parameters ----------------------------------------------------------------
+      Test parameters ($inputs) ------------------------------------------------------
         Initial graph
       
         --- Hypothesis weights ---
@@ -80,7 +80,7 @@
         Test types
         bonferroni: (H1-H2-H3-H4)
       
-      Test summary -------------------------------------------------------------------
+      Test summary ($outputs) --------------------------------------------------------
         Hypothesis Adj. P-value Reject
                 H1         0.02   TRUE
                 H2         0.02   TRUE
@@ -102,23 +102,19 @@
         H3  0  0  0  0
         H4  0  0  0  0
       
-      Test details - Adjusted p ------------------------------------------------------
-             H1   H2   H3   H4 padj_grp1 adjusted_p_intersection  rej
-        1  0.50 0.50 0.00 0.00      0.02                    0.02 1.00
-        2  0.50 0.50 0.00   NA      0.02                    0.02 1.00
-        3  0.50 0.50   NA 0.00      0.02                    0.02 1.00
-        4  0.50 0.50   NA   NA      0.02                    0.02 1.00
-        5  0.50   NA 0.00 0.50      0.02                    0.02 1.00
-        6  1.00   NA 0.00   NA      0.01                    0.01 1.00
-        7  0.50   NA   NA 0.50      0.02                    0.02 1.00
-        8  1.00   NA   NA   NA      0.01                    0.01 1.00
-        9    NA 0.50 0.50 0.00      0.02                    0.02 1.00
-        10   NA 0.50 0.50   NA      0.02                    0.02 1.00
-        11   NA 1.00   NA 0.00      0.01                    0.01 1.00
-        12   NA 1.00   NA   NA      0.01                    0.01 1.00
-        13   NA   NA 0.50 0.50      0.02                    0.02 1.00
-        14   NA   NA 1.00   NA      0.01                    0.01 1.00
-        15   NA   NA   NA 1.00      0.01                    0.01 1.00
+      Test details - Adjusted p ($details) -------------------------------------------
+             H1   H2   H3   H4 adj_p_grp1 adj_p_inter reject
+        1  0.50 0.50 0.00 0.00       0.02        0.02   TRUE
+        2  0.50 0.50 0.00   NA       0.02        0.02   TRUE
+        3  0.50 0.50   NA 0.00       0.02        0.02   TRUE
+        4  0.50 0.50   NA   NA       0.02        0.02   TRUE
+        5  0.50   NA 0.00 0.50       0.02        0.02   TRUE
+        6  1.00   NA 0.00   NA       0.01        0.01   TRUE
+        7  0.50   NA   NA 0.50       0.02        0.02   TRUE
+        8  1.00   NA   NA   NA       0.01        0.01   TRUE
+        9    NA 0.50 0.50 0.00       0.02        0.02   TRUE
+        10   NA 0.50 0.50   NA       0.02        0.02   TRUE
+        ... (Use `print(x, rows = <nn>)` for more)
       
 
 ---
@@ -127,7 +123,7 @@
       test_graph_closure(par_gate, rep(0.01, 4), critical = TRUE)
     Output
       
-      Test parameters ----------------------------------------------------------------
+      Test parameters ($inputs) ------------------------------------------------------
         Initial graph
       
         --- Hypothesis weights ---
@@ -151,7 +147,7 @@
         Test types
         bonferroni: (H1-H2-H3-H4)
       
-      Test summary -------------------------------------------------------------------
+      Test summary ($outputs) --------------------------------------------------------
         Hypothesis Adj. P-value Reject
                 H1         0.02   TRUE
                 H2         0.02   TRUE
@@ -172,7 +168,7 @@
         H2  0  0  0  0
         H3  0  0  0  0
         H4  0  0  0  0
-      Test details - Critical values -------------------------------------------------
+      Test details - Critical values ($critical) -------------------------------------
          Intersection Hypothesis       Test    p <= Critical * Alpha Reject
                     1         H1 bonferroni 0.01 <=      0.5 * 0.025   TRUE
                     1         H2 bonferroni 0.01 <=      0.5 * 0.025   TRUE
@@ -184,28 +180,8 @@
                     3         H1 bonferroni 0.01 <=      0.5 * 0.025   TRUE
                     3         H2 bonferroni 0.01 <=      0.5 * 0.025   TRUE
                     3         H4 bonferroni 0.01 <=      0.0 * 0.025  FALSE
-                    4         H1 bonferroni 0.01 <=      0.5 * 0.025   TRUE
-                    4         H2 bonferroni 0.01 <=      0.5 * 0.025   TRUE
-                    5         H1 bonferroni 0.01 <=      0.5 * 0.025   TRUE
-                    5         H3 bonferroni 0.01 <=      0.0 * 0.025  FALSE
-                    5         H4 bonferroni 0.01 <=      0.5 * 0.025   TRUE
-                    6         H1 bonferroni 0.01 <=      1.0 * 0.025   TRUE
-                    6         H3 bonferroni 0.01 <=      0.0 * 0.025  FALSE
-                    7         H1 bonferroni 0.01 <=      0.5 * 0.025   TRUE
-                    7         H4 bonferroni 0.01 <=      0.5 * 0.025   TRUE
-                    8         H1 bonferroni 0.01 <=      1.0 * 0.025   TRUE
-                    9         H2 bonferroni 0.01 <=      0.5 * 0.025   TRUE
-                    9         H3 bonferroni 0.01 <=      0.5 * 0.025   TRUE
-                    9         H4 bonferroni 0.01 <=      0.0 * 0.025  FALSE
-                   10         H2 bonferroni 0.01 <=      0.5 * 0.025   TRUE
-                   10         H3 bonferroni 0.01 <=      0.5 * 0.025   TRUE
-                   11         H2 bonferroni 0.01 <=      1.0 * 0.025   TRUE
-                   11         H4 bonferroni 0.01 <=      0.0 * 0.025  FALSE
-                   12         H2 bonferroni 0.01 <=      1.0 * 0.025   TRUE
-                   13         H3 bonferroni 0.01 <=      0.5 * 0.025   TRUE
-                   13         H4 bonferroni 0.01 <=      0.5 * 0.025   TRUE
-                   14         H3 bonferroni 0.01 <=      1.0 * 0.025   TRUE
-                   15         H4 bonferroni 0.01 <=      1.0 * 0.025   TRUE
+        ... (Use `print(x, rows = <nn>)` for more)
+      
 
 # printing parametric closure test
 
@@ -213,7 +189,7 @@
       test_graph_closure(par_gate, rep(0.01, 4), test_types = "p", corr = diag(4))
     Output
       
-      Test parameters ----------------------------------------------------------------
+      Test parameters ($inputs) ------------------------------------------------------
         Initial graph
       
         --- Hypothesis weights ---
@@ -243,7 +219,7 @@
         Test types
         parametric: (H1-H2-H3-H4)
       
-      Test summary -------------------------------------------------------------------
+      Test summary ($outputs) --------------------------------------------------------
         Hypothesis Adj. P-value Reject
                 H1       0.0199   TRUE
                 H2       0.0199   TRUE
@@ -272,7 +248,7 @@
         "p", "s"), corr = diag(4), critical = TRUE, verbose = TRUE)
     Output
       
-      Test parameters ----------------------------------------------------------------
+      Test parameters ($inputs) ------------------------------------------------------
         Initial graph
       
         --- Hypothesis weights ---
@@ -303,7 +279,7 @@
         parametric: (H1-H2)
              simes: (H3-H4)
       
-      Test summary -------------------------------------------------------------------
+      Test summary ($outputs) --------------------------------------------------------
         Hypothesis Adj. P-value Reject
                 H1         0.02   TRUE
                 H2         0.02   TRUE
@@ -325,41 +301,21 @@
         H3  0  0  0  0
         H4  0  0  0  0
       
-      Test details - Adjusted p ------------------------------------------------------
-               H1     H2     H3     H4 padj_grp1 padj_grp2 adjusted_p_intersection
-        1  0.5000 0.5000 0.0000 0.0000    0.0199    1.0000                  0.0199
-        2  0.5000 0.5000 0.0000     NA    0.0199    1.0000                  0.0199
-        3  0.5000 0.5000     NA 0.0000    0.0199    1.0000                  0.0199
-        4  0.5000 0.5000     NA     NA    0.0199    1.0000                  0.0199
-        5  0.5000     NA 0.0000 0.5000    0.0200    0.0200                  0.0200
-        6  1.0000     NA 0.0000     NA    0.0100    1.0000                  0.0100
-        7  0.5000     NA     NA 0.5000    0.0200    0.0200                  0.0200
-        8  1.0000     NA     NA     NA    0.0100    1.0000                  0.0100
-        9      NA 0.5000 0.5000 0.0000    0.0200    0.0200                  0.0200
-        10     NA 0.5000 0.5000     NA    0.0200    0.0200                  0.0200
-        11     NA 1.0000     NA 0.0000    0.0100    1.0000                  0.0100
-        12     NA 1.0000     NA     NA    0.0100    1.0000                  0.0100
-        13     NA     NA 0.5000 0.5000    1.0000    0.0100                  0.0100
-        14     NA     NA 1.0000     NA    1.0000    0.0100                  0.0100
-        15     NA     NA     NA 1.0000    1.0000    0.0100                  0.0100
-              rej
-        1  1.0000
-        2  1.0000
-        3  1.0000
-        4  1.0000
-        5  1.0000
-        6  1.0000
-        7  1.0000
-        8  1.0000
-        9  1.0000
-        10 1.0000
-        11 1.0000
-        12 1.0000
-        13 1.0000
-        14 1.0000
-        15 1.0000
+      Test details - Adjusted p ($details) -------------------------------------------
+               H1     H2     H3     H4 adj_p_grp1 adj_p_grp2 adj_p_inter reject
+        1  0.5000 0.5000 0.0000 0.0000     0.0199     1.0000      0.0199   TRUE
+        2  0.5000 0.5000 0.0000     NA     0.0199     1.0000      0.0199   TRUE
+        3  0.5000 0.5000     NA 0.0000     0.0199     1.0000      0.0199   TRUE
+        4  0.5000 0.5000     NA     NA     0.0199     1.0000      0.0199   TRUE
+        5  0.5000     NA 0.0000 0.5000     0.0200     0.0200      0.0200   TRUE
+        6  1.0000     NA 0.0000     NA     0.0100     1.0000      0.0100   TRUE
+        7  0.5000     NA     NA 0.5000     0.0200     0.0200      0.0200   TRUE
+        8  1.0000     NA     NA     NA     0.0100     1.0000      0.0100   TRUE
+        9      NA 0.5000 0.5000 0.0000     0.0200     0.0200      0.0200   TRUE
+        10     NA 0.5000 0.5000     NA     0.0200     0.0200      0.0200   TRUE
+        ... (Use `print(x, rows = <nn>)` for more)
       
-      Test details - Critical values -------------------------------------------------
+      Test details - Critical values ($critical) -------------------------------------
          Intersection Hypothesis       Test    p <= c_value * Critical * Alpha Reject
                     1         H1 parametric 0.01 <= 1.00633 *      0.5 * 0.025   TRUE
                     1         H2 parametric 0.01 <= 1.00633 *      0.5 * 0.025   TRUE
@@ -371,28 +327,8 @@
                     3         H1 parametric 0.01 <= 1.00633 *      0.5 * 0.025   TRUE
                     3         H2 parametric 0.01 <= 1.00633 *      0.5 * 0.025   TRUE
                     3         H4      simes 0.01 <=      NA        0.0 * 0.025  FALSE
-                    4         H1 parametric 0.01 <= 1.00633 *      0.5 * 0.025   TRUE
-                    4         H2 parametric 0.01 <= 1.00633 *      0.5 * 0.025   TRUE
-                    5         H1 parametric 0.01 <= 1.00000 *      0.5 * 0.025   TRUE
-                    5         H3      simes 0.01 <=      NA        0.5 * 0.025   TRUE
-                    5         H4      simes 0.01 <=      NA        0.5 * 0.025   TRUE
-                    6         H1 parametric 0.01 <= 1.00000 *      1.0 * 0.025   TRUE
-                    6         H3      simes 0.01 <=      NA        0.0 * 0.025  FALSE
-                    7         H1 parametric 0.01 <= 1.00000 *      0.5 * 0.025   TRUE
-                    7         H4      simes 0.01 <=      NA        0.5 * 0.025   TRUE
-                    8         H1 parametric 0.01 <= 1.00000 *      1.0 * 0.025   TRUE
-                    9         H2 parametric 0.01 <= 1.00000 *      0.5 * 0.025   TRUE
-                    9         H3      simes 0.01 <=      NA        0.5 * 0.025   TRUE
-                    9         H4      simes 0.01 <=      NA        0.5 * 0.025   TRUE
-                   10         H2 parametric 0.01 <= 1.00000 *      0.5 * 0.025   TRUE
-                   10         H3      simes 0.01 <=      NA        0.5 * 0.025   TRUE
-                   11         H2 parametric 0.01 <= 1.00000 *      1.0 * 0.025   TRUE
-                   11         H4      simes 0.01 <=      NA        0.0 * 0.025  FALSE
-                   12         H2 parametric 0.01 <= 1.00000 *      1.0 * 0.025   TRUE
-                   13         H3      simes 0.01 <=      NA        1.0 * 0.025   TRUE
-                   13         H4      simes 0.01 <=      NA        1.0 * 0.025   TRUE
-                   14         H3      simes 0.01 <=      NA        1.0 * 0.025   TRUE
-                   15         H4      simes 0.01 <=      NA        1.0 * 0.025   TRUE
+        ... (Use `print(x, rows = <nn>)` for more)
+      
 
 ---
 
@@ -401,7 +337,7 @@
         "p", "p"), corr = diag(4), critical = TRUE, verbose = TRUE)
     Output
       
-      Test parameters ----------------------------------------------------------------
+      Test parameters ($inputs) ------------------------------------------------------
         Initial graph
       
         --- Hypothesis weights ---
@@ -432,7 +368,7 @@
         parametric: (H1-H2)
         parametric: (H3-H4)
       
-      Test summary -------------------------------------------------------------------
+      Test summary ($outputs) --------------------------------------------------------
         Hypothesis Adj. P-value Reject
                 H1         0.02   TRUE
                 H2         0.02   TRUE
@@ -454,41 +390,21 @@
         H3  0  0  0  0
         H4  0  0  0  0
       
-      Test details - Adjusted p ------------------------------------------------------
-               H1     H2     H3     H4 padj_grp1 padj_grp2 adjusted_p_intersection
-        1  0.5000 0.5000 0.0000 0.0000    0.0199    1.0000                  0.0199
-        2  0.5000 0.5000 0.0000     NA    0.0199    1.0000                  0.0199
-        3  0.5000 0.5000     NA 0.0000    0.0199    1.0000                  0.0199
-        4  0.5000 0.5000     NA     NA    0.0199    1.0000                  0.0199
-        5  0.5000     NA 0.0000 0.5000    0.0200    0.0200                  0.0200
-        6  1.0000     NA 0.0000     NA    0.0100    1.0000                  0.0100
-        7  0.5000     NA     NA 0.5000    0.0200    0.0200                  0.0200
-        8  1.0000     NA     NA     NA    0.0100    1.0000                  0.0100
-        9      NA 0.5000 0.5000 0.0000    0.0200    0.0200                  0.0200
-        10     NA 0.5000 0.5000     NA    0.0200    0.0200                  0.0200
-        11     NA 1.0000     NA 0.0000    0.0100    1.0000                  0.0100
-        12     NA 1.0000     NA     NA    0.0100    1.0000                  0.0100
-        13     NA     NA 0.5000 0.5000    1.0000    0.0199                  0.0199
-        14     NA     NA 1.0000     NA    1.0000    0.0100                  0.0100
-        15     NA     NA     NA 1.0000    1.0000    0.0100                  0.0100
-              rej
-        1  1.0000
-        2  1.0000
-        3  1.0000
-        4  1.0000
-        5  1.0000
-        6  1.0000
-        7  1.0000
-        8  1.0000
-        9  1.0000
-        10 1.0000
-        11 1.0000
-        12 1.0000
-        13 1.0000
-        14 1.0000
-        15 1.0000
+      Test details - Adjusted p ($details) -------------------------------------------
+               H1     H2     H3     H4 adj_p_grp1 adj_p_grp2 adj_p_inter reject
+        1  0.5000 0.5000 0.0000 0.0000     0.0199     1.0000      0.0199   TRUE
+        2  0.5000 0.5000 0.0000     NA     0.0199     1.0000      0.0199   TRUE
+        3  0.5000 0.5000     NA 0.0000     0.0199     1.0000      0.0199   TRUE
+        4  0.5000 0.5000     NA     NA     0.0199     1.0000      0.0199   TRUE
+        5  0.5000     NA 0.0000 0.5000     0.0200     0.0200      0.0200   TRUE
+        6  1.0000     NA 0.0000     NA     0.0100     1.0000      0.0100   TRUE
+        7  0.5000     NA     NA 0.5000     0.0200     0.0200      0.0200   TRUE
+        8  1.0000     NA     NA     NA     0.0100     1.0000      0.0100   TRUE
+        9      NA 0.5000 0.5000 0.0000     0.0200     0.0200      0.0200   TRUE
+        10     NA 0.5000 0.5000     NA     0.0200     0.0200      0.0200   TRUE
+        ... (Use `print(x, rows = <nn>)` for more)
       
-      Test details - Critical values -------------------------------------------------
+      Test details - Critical values ($critical) -------------------------------------
          Intersection Hypothesis       Test    p <= c_value * Critical * Alpha Reject
                     1         H1 parametric 0.01 <= 1.00633 *      0.5 * 0.025   TRUE
                     1         H2 parametric 0.01 <= 1.00633 *      0.5 * 0.025   TRUE
@@ -500,28 +416,8 @@
                     3         H1 parametric 0.01 <= 1.00633 *      0.5 * 0.025   TRUE
                     3         H2 parametric 0.01 <= 1.00633 *      0.5 * 0.025   TRUE
                     3         H4 parametric 0.01 <= 1.00000 *      0.0 * 0.025  FALSE
-                    4         H1 parametric 0.01 <= 1.00633 *      0.5 * 0.025   TRUE
-                    4         H2 parametric 0.01 <= 1.00633 *      0.5 * 0.025   TRUE
-                    5         H1 parametric 0.01 <= 1.00000 *      0.5 * 0.025   TRUE
-                    5         H3 parametric 0.01 <= 1.00000 *      0.0 * 0.025  FALSE
-                    5         H4 parametric 0.01 <= 1.00000 *      0.5 * 0.025   TRUE
-                    6         H1 parametric 0.01 <= 1.00000 *      1.0 * 0.025   TRUE
-                    6         H3 parametric 0.01 <= 1.00000 *      0.0 * 0.025  FALSE
-                    7         H1 parametric 0.01 <= 1.00000 *      0.5 * 0.025   TRUE
-                    7         H4 parametric 0.01 <= 1.00000 *      0.5 * 0.025   TRUE
-                    8         H1 parametric 0.01 <= 1.00000 *      1.0 * 0.025   TRUE
-                    9         H2 parametric 0.01 <= 1.00000 *      0.5 * 0.025   TRUE
-                    9         H3 parametric 0.01 <= 1.00000 *      0.5 * 0.025   TRUE
-                    9         H4 parametric 0.01 <= 1.00000 *      0.0 * 0.025  FALSE
-                   10         H2 parametric 0.01 <= 1.00000 *      0.5 * 0.025   TRUE
-                   10         H3 parametric 0.01 <= 1.00000 *      0.5 * 0.025   TRUE
-                   11         H2 parametric 0.01 <= 1.00000 *      1.0 * 0.025   TRUE
-                   11         H4 parametric 0.01 <= 1.00000 *      0.0 * 0.025  FALSE
-                   12         H2 parametric 0.01 <= 1.00000 *      1.0 * 0.025   TRUE
-                   13         H3 parametric 0.01 <= 1.00633 *      0.5 * 0.025   TRUE
-                   13         H4 parametric 0.01 <= 1.00633 *      0.5 * 0.025   TRUE
-                   14         H3 parametric 0.01 <= 1.00000 *      1.0 * 0.025   TRUE
-                   15         H4 parametric 0.01 <= 1.00000 *      1.0 * 0.025   TRUE
+        ... (Use `print(x, rows = <nn>)` for more)
+      
 
 # printing Bonferroni sequential results
 
@@ -529,7 +425,7 @@
       test_graph_shortcut(simple_successive_1(), rep(0.01, 4))
     Output
       
-      Test parameters ----------------------------------------------------------------
+      Test parameters ($inputs) ------------------------------------------------------
         Initial graph
       
         --- Hypothesis weights ---
@@ -553,7 +449,7 @@
         Test types
         bonferroni: (H1-H2-H3-H4)
       
-      Test summary -------------------------------------------------------------------
+      Test summary ($outputs) --------------------------------------------------------
         Hypothesis Adj. P-value Reject
                 H1         0.02   TRUE
                 H2         0.02   TRUE
@@ -582,7 +478,7 @@
       precison = 4, indent = 4)
     Output
       
-      Test parameters ----------------------------------------------------------------
+      Test parameters ($inputs) ------------------------------------------------------
           Initial graph
       
           --- Hypothesis weights ---
@@ -606,7 +502,7 @@
           Test types
           bonferroni: (H1-H2-H3-H4)
       
-      Test summary -------------------------------------------------------------------
+      Test summary ($outputs) --------------------------------------------------------
           Hypothesis Adj. P-value Reject
                   H1         0.02   TRUE
                   H2         0.02   TRUE
@@ -628,25 +524,21 @@
           H3  0  0  0  0
           H4  0  0  0  0
       
-      Test details - Adjusted p ------------------------------------------------------
-               H1   H2   H3   H4 padj_grp1 adjusted_p_intersection  rej
-          1  0.50 0.50 0.00 0.00      0.02                    0.02 1.00
-          2  0.50 0.50 0.00   NA      0.02                    0.02 1.00
-          3  0.50 0.50   NA 0.00      0.02                    0.02 1.00
-          4  0.50 0.50   NA   NA      0.02                    0.02 1.00
-          5  0.50   NA 0.00 0.50      0.02                    0.02 1.00
-          6  1.00   NA 0.00   NA      0.01                    0.01 1.00
-          7  0.50   NA   NA 0.50      0.02                    0.02 1.00
-          8  1.00   NA   NA   NA      0.01                    0.01 1.00
-          9    NA 0.50 0.50 0.00      0.02                    0.02 1.00
-          10   NA 0.50 0.50   NA      0.02                    0.02 1.00
-          11   NA 1.00   NA 0.00      0.01                    0.01 1.00
-          12   NA 1.00   NA   NA      0.01                    0.01 1.00
-          13   NA   NA 0.50 0.50      0.02                    0.02 1.00
-          14   NA   NA 1.00   NA      0.01                    0.01 1.00
-          15   NA   NA   NA 1.00      0.01                    0.01 1.00
+      Test details - Adjusted p ($details) -------------------------------------------
+               H1   H2   H3   H4 adj_p_grp1 adj_p_inter reject
+          1  0.50 0.50 0.00 0.00       0.02        0.02   TRUE
+          2  0.50 0.50 0.00   NA       0.02        0.02   TRUE
+          3  0.50 0.50   NA 0.00       0.02        0.02   TRUE
+          4  0.50 0.50   NA   NA       0.02        0.02   TRUE
+          5  0.50   NA 0.00 0.50       0.02        0.02   TRUE
+          6  1.00   NA 0.00   NA       0.01        0.01   TRUE
+          7  0.50   NA   NA 0.50       0.02        0.02   TRUE
+          8  1.00   NA   NA   NA       0.01        0.01   TRUE
+          9    NA 0.50 0.50 0.00       0.02        0.02   TRUE
+          10   NA 0.50 0.50   NA       0.02        0.02   TRUE
+          ... (Use `print(x, rows = <nn>)` for more)
       
-      Test details - Critical values -------------------------------------------------
+      Test details - Critical values ($critical) -------------------------------------
            Intersection Hypothesis       Test    p <= Critical * Alpha Reject
                       1         H1 bonferroni 0.01 <=      0.5 * 0.025   TRUE
                       1         H2 bonferroni 0.01 <=      0.5 * 0.025   TRUE
@@ -658,28 +550,8 @@
                       3         H1 bonferroni 0.01 <=      0.5 * 0.025   TRUE
                       3         H2 bonferroni 0.01 <=      0.5 * 0.025   TRUE
                       3         H4 bonferroni 0.01 <=      0.0 * 0.025  FALSE
-                      4         H1 bonferroni 0.01 <=      0.5 * 0.025   TRUE
-                      4         H2 bonferroni 0.01 <=      0.5 * 0.025   TRUE
-                      5         H1 bonferroni 0.01 <=      0.5 * 0.025   TRUE
-                      5         H3 bonferroni 0.01 <=      0.0 * 0.025  FALSE
-                      5         H4 bonferroni 0.01 <=      0.5 * 0.025   TRUE
-                      6         H1 bonferroni 0.01 <=      1.0 * 0.025   TRUE
-                      6         H3 bonferroni 0.01 <=      0.0 * 0.025  FALSE
-                      7         H1 bonferroni 0.01 <=      0.5 * 0.025   TRUE
-                      7         H4 bonferroni 0.01 <=      0.5 * 0.025   TRUE
-                      8         H1 bonferroni 0.01 <=      1.0 * 0.025   TRUE
-                      9         H2 bonferroni 0.01 <=      0.5 * 0.025   TRUE
-                      9         H3 bonferroni 0.01 <=      0.5 * 0.025   TRUE
-                      9         H4 bonferroni 0.01 <=      0.0 * 0.025  FALSE
-                     10         H2 bonferroni 0.01 <=      0.5 * 0.025   TRUE
-                     10         H3 bonferroni 0.01 <=      0.5 * 0.025   TRUE
-                     11         H2 bonferroni 0.01 <=      1.0 * 0.025   TRUE
-                     11         H4 bonferroni 0.01 <=      0.0 * 0.025  FALSE
-                     12         H2 bonferroni 0.01 <=      1.0 * 0.025   TRUE
-                     13         H3 bonferroni 0.01 <=      0.5 * 0.025   TRUE
-                     13         H4 bonferroni 0.01 <=      0.5 * 0.025   TRUE
-                     14         H3 bonferroni 0.01 <=      1.0 * 0.025   TRUE
-                     15         H4 bonferroni 0.01 <=      1.0 * 0.025   TRUE
+          ... (Use `print(x, rows = <nn>)` for more)
+      
 
 ---
 
@@ -688,7 +560,7 @@
       critical = TRUE), precision = 7, indent = 9)
     Output
       
-      Test parameters ----------------------------------------------------------------
+      Test parameters ($inputs) ------------------------------------------------------
                Initial graph
       
                --- Hypothesis weights ---
@@ -712,7 +584,7 @@
                Test types
                bonferroni: (H1-H2-H3-H4)
       
-      Test summary -------------------------------------------------------------------
+      Test summary ($outputs) --------------------------------------------------------
                Hypothesis Adj. P-value Reject
                        H1         0.02   TRUE
                        H2         0.02   TRUE
@@ -734,7 +606,7 @@
                H3  0  0  0  0
                H4  0  0  0  0
       
-      Test details - Rejection sequence ----------------------------------------------
+      Test details - Rejection sequence ($details) -----------------------------------
                Initial graph
       
                --- Hypothesis weights ---
@@ -810,12 +682,13 @@
                                                    H3  0  0  0  0
                                                    H4  0  0  0  0
       
-      Test details - Critical values -------------------------------------------------
+      Test details - Critical values ($critical) -------------------------------------
                 step Hypothesis    p <= Critical * Alpha Reject
                    1         H1 0.01 <=      0.5 * 0.025   TRUE
                    2         H2 0.01 <=      0.5 * 0.025   TRUE
                    3         H3 0.01 <=      0.5 * 0.025   TRUE
                    4         H4 0.01 <=      1.0 * 0.025   TRUE
+      
 
 ---
 
@@ -824,7 +697,7 @@
       critical = TRUE))
     Output
       
-      Test parameters ----------------------------------------------------------------
+      Test parameters ($inputs) ------------------------------------------------------
         Initial graph
       
         --- Hypothesis weights ---
@@ -852,7 +725,7 @@
         Test types
         bonferroni: (H1-H2-H3-H4-H5-H6)
       
-      Test summary -------------------------------------------------------------------
+      Test summary ($outputs) --------------------------------------------------------
         Hypothesis Adj. P-value Reject
                 H1        0.025   TRUE
                 H2        0.030  FALSE
@@ -880,7 +753,7 @@
         H5  0  0  0  0  0  0
         H6  0  0  0  0  0  0
       
-      Test details - Rejection sequence ----------------------------------------------
+      Test details - Rejection sequence ($details) -----------------------------------
         Initial graph
       
         --- Hypothesis weights ---
@@ -983,7 +856,7 @@
                 H5  0  0  0  0  0  0
                 H6  0  0  0  0  0  0
       
-      Test details - Critical values -------------------------------------------------
+      Test details - Critical values ($critical) -------------------------------------
          step Hypothesis     p <= Critical * Alpha Reject
             1         H4 0.010 <= 0.500000 * 0.025   TRUE
             2         H6 0.000 <= 0.250000 * 0.025   TRUE
@@ -991,4 +864,5 @@
             4         H1 0.025 <= 1.000000 * 0.025   TRUE
            NA         H3 0.015 <= 0.500000 * 0.025  FALSE
            NA         H2 0.020 <= 0.500000 * 0.025  FALSE
+      
 

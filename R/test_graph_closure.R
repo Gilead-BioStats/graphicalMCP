@@ -119,7 +119,7 @@ test_graph_closure <- function(graph,
     NA_real_,
     nrow = num_intersections,
     ncol = num_groups,
-    dimnames = list(NULL, paste0("padj_grp", seq_along(groups)))
+    dimnames = list(NULL, paste0("adj_p_grp", seq_along(groups)))
   )
 
   # Calculate adjusted p-values ------------------------------------------------
@@ -182,8 +182,8 @@ test_graph_closure <- function(graph,
     results = cbind(
       weighting_strategy_compact,
       adjusted_p_cap,
-      adjusted_p_intersection,
-      rej = reject_intersection
+      adj_p_inter = adjusted_p_intersection,
+      reject = reject_intersection
     )
   )
 

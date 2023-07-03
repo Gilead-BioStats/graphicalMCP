@@ -40,6 +40,8 @@
 #' @param force_closure A logical scalar used to determine whether the full
 #'   closure test should be used for Bonferroni testing. Ignored if any tests
 #'   are non-Bonferroni
+#' @param verbose A logical scalar specifying whether the full matrix of
+#'   simulations and test results should be included in the output or not
 #'
 #' @section Success: Success will mean something different for each trial, so
 #'   there's a lot of flexibility in the `sim_success` parameter. However, this
@@ -96,7 +98,8 @@ calculate_power <- function(graph,
                             sim_corr = diag(length(graph$hypotheses)),
                             sim_success = NULL,
                             sim_seed = NULL,
-                            force_closure = FALSE) {
+                            force_closure = FALSE,
+                            verbose = FALSE) {
   # Input sanitization ---------------------------------------------------------
   # Test types should be passed as full names or first letter, case-insensitive,
   # and a single provided type should get expanded to all groups
@@ -340,10 +343,12 @@ calculate_power <- function(graph,
         sim_seed = sim_seed
       ),
       power = power,
-      details = list(
-        p_sim = p_sim,
-        test_results = simulation_test_results
-      )
+      details = if (verbose) {
+        list(
+          p_sim = p_sim,
+          test_results = simulation_test_results
+        )
+      }
     ),
     class = "power_report"
   )

@@ -383,7 +383,7 @@ test_that("parametric floating point errors", {
   )
 
   expect_equal(
-    res_para$details$results[, "rej"],
+    res_para$details$results[, "reject"],
     setNames(rep(1, 7), seq_len(7))
   )
 

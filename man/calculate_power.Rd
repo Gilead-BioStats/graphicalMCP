@@ -15,7 +15,8 @@ calculate_power(
   sim_corr = diag(length(graph$hypotheses)),
   sim_success = NULL,
   sim_seed = NULL,
-  force_closure = FALSE
+  force_closure = FALSE,
+  verbose = FALSE
 )
 }
 \arguments{
@@ -54,6 +55,9 @@ this to use a consistent set of p simulations across power calculations}
 \item{force_closure}{A logical scalar used to determine whether the full
 closure test should be used for Bonferroni testing. Ignored if any tests
 are non-Bonferroni}
+
+\item{verbose}{A logical scalar specifying whether the full matrix of
+simulations and test results should be included in the output or not}
 }
 \value{
 A list with five elements

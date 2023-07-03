@@ -5,23 +5,25 @@
 #'   * p-values & alpha used for tests,
 #'   * Which hypotheses can be rejected, and
 #'   * Detailed test results matrix, including the results of
-#'     [generate_weights()] & test results for each intersection hypothesis
+#' [generate_weights()] & test results for each intersection hypothesis
 #'
 #' @param x An object of class `graph_report` to print
 #' @param ... Other values passed on to other methods (currently unused)
 #' @param precision An integer scalar indicating the maximum number of decimals
 #'   to include in numeric values
 #' @param indent An integer scalar indicating how many spaces to indent results
+#' @param rows An integer scalar indicating how many rows of verbose and
+#'   critical output to print
 #'
 #' @export
-print.graph_report <- function(x, ..., precision = 6, indent = 2) {
+print.graph_report <- function(x, ..., precision = 6, indent = 2, rows = 10) {
   pad <- paste(rep(" ", indent), collapse = "")
   pad_less_1 <- paste(rep(" ", max(indent - 1, 0)), collapse = "")
   hyp_names <- names(x$inputs$graph$hypotheses)
 
   # Input calcs ----------------------------------------------------------------
   cat("\n")
-  section_break("Test parameters")
+  section_break("Test parameters ($inputs)")
 
   hyp_groups <- lapply(x$inputs$groups, function(group) hyp_names[group])
   pad_tests <- formatC(
@@ -77,7 +79,7 @@ print.graph_report <- function(x, ..., precision = 6, indent = 2) {
 
   # Output ---------------------------------------------------------------------
   cat("\n")
-  section_break("Test summary")
+  section_break("Test summary ($outputs)")
 
   hyp_width <- max(nchar(c("Hypothesis", hyp_names))) + indent - 1
 
@@ -103,19 +105,32 @@ print.graph_report <- function(x, ..., precision = 6, indent = 2) {
   # Adjusted p/rejection sequence details --------------------------------------
   if (!is.null(x$details)) {
     if (is.matrix(x$details$results)) {
+      df_details <- as.data.frame(format(x$details$results, digits = precision))
+      df_details$reject <- as.logical(as.numeric(df_details$reject))
+
+      max_print_old <- getOption("max.print")
+      options(max.print = 99999)
+
       cat("\n")
-      section_break("Test details - Adjusted p")
+      section_break("Test details - Adjusted p ($details)")
       detail_results_out <- utils::capture.output(
-        print(as.data.frame(format(x$details$results, digits = precision)))
+        print(utils::head(df_details, rows))
       )
       cat(paste0(pad, detail_results_out), sep = "\n")
-      cat("\n")
+
+      options(max.print = max_print_old)
+
+      if (rows < nrow(df_details)) {
+        cat(pad, "... (Use `print(x, rows = <nn>)` for more)\n\n", sep = "")
+      } else {
+        cat("\n")
+      }
     } else {
       graph_seq <- x$details$results
       del_seq <- x$details$del_seq
 
       cat("\n")
-      section_break("Test details - Rejection sequence")
+      section_break("Test details - Rejection sequence ($details)")
       for (i in seq_along(graph_seq) - 1) {
         if (i == 0) {
           print(graph_seq[[i + 1]], precision = precision, indent = indent)
@@ -146,7 +161,7 @@ print.graph_report <- function(x, ..., precision = 6, indent = 2) {
 
   # Critical details -----------------------------------------------------------
   if (!is.null(x$critical)) {
-    section_break("Test details - Critical values")
+    section_break("Test details - Critical values ($critical)")
 
     if (any(x$inputs$test_types == "parametric")) {
       num_cols <- c("p", "c_value", "Critical", "Alpha")
@@ -166,10 +181,21 @@ print.graph_report <- function(x, ..., precision = 6, indent = 2) {
       crit_res$c_value <- ifelse(is.na(crit_res$c_value), "", crit_res$c_value)
     }
 
+    max_print_old <- getOption("max.print")
+    options(max.print = 99999)
+
     critical_results_out <- utils::capture.output(
-      print(crit_res, row.names = FALSE)
+      print(utils::head(crit_res, rows), row.names = FALSE)
     )
     cat(paste0(pad, critical_results_out), sep = "\n")
+
+    options(max.print = max_print_old)
+
+    if (rows < nrow(crit_res)) {
+      cat(pad, "... (Use `print(x, rows = <nn>)` for more)\n\n", sep = "")
+    } else {
+      cat("\n")
+    }
   }
 
   invisible(x)

@@ -5,23 +5,25 @@
 #'   * Testing and simulation options,
 #'   * Final power calculations, and
 #'   * (Partial) Detailed p-values and test results - The underlying object
-#'   contains the full tables
+#' contains the full tables
 #'
 #' @param x An object of class `power_report` to print
 #' @param ... Other values passed on to other methods (currently unused)
 #' @param precision An integer scalar indicating the maximum number of decimals
 #'   to include in numeric values
 #' @param indent An integer scalar indicating how many spaces to indent results
+#' @param rows An integer scalar indicating how many rows of verbose output to
+#'   print
 #'
 #' @export
-print.power_report <- function(x, ..., precision = 6, indent = 2) {
+print.power_report <- function(x, ..., precision = 6, indent = 2, rows = 10) {
   pad <- paste(rep(" ", indent), collapse = "")
   pad_less_1 <- paste(rep(" ", max(indent - 1, 0)), collapse = "")
   hyp_names <- names(x$inputs$graph$hypotheses)
 
   # Test input calcs -----------------------------------------------------------
   cat("\n")
-  section_break("Test parameters")
+  section_break("Test parameters ($inputs)")
 
   hyp_groups <- lapply(x$inputs$test_groups, function(group) hyp_names[group])
   pad_tests <- formatC(
@@ -66,7 +68,7 @@ print.power_report <- function(x, ..., precision = 6, indent = 2) {
 
   # Sim input calcs ------------------------------------------------------------
   cat("\n")
-  section_break("Simulation parameters")
+  section_break("Simulation parameters ($inputs)")
 
   theta_mat <- matrix(
     x$inputs$marginal_power,
@@ -110,7 +112,7 @@ print.power_report <- function(x, ..., precision = 6, indent = 2) {
 
   # Power ----------------------------------------------------------------------
   cat("\n")
-  section_break("Power calculation")
+  section_break("Power calculation ($power)")
 
   local_mat <- matrix(
     x$power$power_local,
@@ -160,23 +162,41 @@ print.power_report <- function(x, ..., precision = 6, indent = 2) {
 
     print(as.data.frame(format(success_mat, digits = precision)))
   }
+  cat("\n")
 
   # Details --------------------------------------------------------------------
-  cat("\n")
-  section_break("Simulation details")
+  if (!is.null(x$details)) {
+    section_break("Simulation details ($details)")
 
-  p_dets <- format(utils::head(x$details$p_sim), digits = precision)
-  colnames(p_dets) <- paste0("p_sim_", hyp_names)
-  colnames(p_dets)[[1]] <- paste0(pad_less_1, colnames(p_dets)[[1]])
+    p_dets <- format(x$details$p_sim, digits = precision)
+    colnames(p_dets) <- paste0("p_sim_", hyp_names)
+    colnames(p_dets)[[1]] <- paste0(pad_less_1, colnames(p_dets)[[1]])
 
-  test_dets <- utils::head(x$details$test_results)
-  colnames(test_dets) <- paste0("rej_", hyp_names)
+    test_dets <- x$details$test_results
+    colnames(test_dets) <- paste0("rej_", hyp_names)
 
-  print(
-    cbind(as.data.frame(p_dets), as.data.frame(test_dets)),
-    row.names = FALSE
-  )
-  cat(pad, "...\n\n", sep = "")
+    max_print_old <- getOption("max.print")
+    options(max.print = 99999)
+
+    sim_det_out <- utils::capture.output(
+      print(
+        utils::head(
+          cbind(as.data.frame(p_dets), as.data.frame(test_dets)),
+          rows
+        ),
+        row.names = FALSE
+      )
+    )
+    cat(paste0(pad, sim_det_out), sep = "\n")
+
+    options(max.print = max_print_old)
+
+    if (rows < nrow(p_dets)) {
+      cat(pad, "... (Use `print(x, rows = <nn>)` for more)\n\n", sep = "")
+    } else {
+      cat("\n")
+    }
+  }
 
   invisible(x)
 }

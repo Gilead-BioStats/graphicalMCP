@@ -4,7 +4,7 @@
 \alias{print.power_report}
 \title{S3 print method for class \code{power_report}}
 \usage{
-\method{print}{power_report}(x, ..., precision = 6, indent = 2)
+\method{print}{power_report}(x, ..., precision = 6, indent = 2, rows = 10)
 }
 \arguments{
 \item{x}{An object of class \code{power_report} to print}
@@ -15,6 +15,9 @@
 to include in numeric values}
 
 \item{indent}{An integer scalar indicating how many spaces to indent results}
+
+\item{rows}{An integer scalar indicating how many rows of verbose output to
+print}
 }
 \description{
 A power report displays
