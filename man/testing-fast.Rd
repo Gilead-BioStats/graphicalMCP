@@ -5,7 +5,7 @@
 \alias{test_graph_shortcut_cpp}
 \title{Calculate hypothesis rejection results efficiently}
 \usage{
-test_graph_fast(p, alpha, intersections, inter_h)
+test_graph_fast(p, alpha, weights, intersections)
 
 test_graph_shortcut_cpp(graph, p, alpha = 0.025)
 }
@@ -15,7 +15,7 @@ test_graph_shortcut_cpp(graph, p, alpha = 0.025)
 \item{alpha}{A numeric scalar specifying the global significance level for
 testing}
 
-\item{intersections}{A compact representation of \code{\link[=generate_weights]{generate_weights()}} output,
+\item{weights}{A compact representation of \code{\link[=generate_weights]{generate_weights()}} output,
 where missing hypotheses get a missing value for weights, and h-vectors are
 dropped}
 
@@ -43,15 +43,15 @@ num_hyps <- length(par_gate$hypotheses)
 p <- c(.001, .02, .002, .03)
 
 weights <- generate_weights(par_gate)
-inter_h <- weights[, seq_len(num_hyps), drop = FALSE]
+intersections <- weights[, seq_len(num_hyps), drop = FALSE]
 compact_weights <- ifelse(
-  inter_h,
+  intersections,
   weights[, seq_len(num_hyps) + num_hyps, drop = FALSE],
   NA
 )
 compact_weights[is.na(compact_weights)] <- 0
 
-graphicalMCP:::test_graph_fast(p, .025, compact_weights, inter_h)
+graphicalMCP:::test_graph_fast(p, .025, compact_weights, intersections)
 graphicalMCP:::test_graph_shortcut_cpp(par_gate, p, .025)
 }
 \references{

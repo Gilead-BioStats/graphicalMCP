@@ -14,7 +14,7 @@
 #' @param p A numeric vector of p-values
 #' @param alpha A numeric scalar specifying the global significance level for
 #'   testing
-#' @param intersections A compact representation of [generate_weights()] output,
+#' @param weights A compact representation of [generate_weights()] output,
 #'   where missing hypotheses get a missing value for weights, and h-vectors are
 #'   dropped
 #'
@@ -36,22 +36,22 @@
 #' p <- c(.001, .02, .002, .03)
 #'
 #' weights <- generate_weights(par_gate)
-#' inter_h <- weights[, seq_len(num_hyps), drop = FALSE]
+#' intersections <- weights[, seq_len(num_hyps), drop = FALSE]
 #' compact_weights <- ifelse(
-#'   inter_h,
+#'   intersections,
 #'   weights[, seq_len(num_hyps) + num_hyps, drop = FALSE],
 #'   NA
 #' )
 #' compact_weights[is.na(compact_weights)] <- 0
 #'
-#' graphicalMCP:::test_graph_fast(p, .025, compact_weights, inter_h)
+#' graphicalMCP:::test_graph_fast(p, .025, compact_weights, intersections)
 #' graphicalMCP:::test_graph_shortcut_cpp(par_gate, p, .025)
-test_graph_fast <- function(p, alpha, intersections, inter_h) {
-  rej_hyps <- t(p <= alpha * t(intersections))
+test_graph_fast <- function(p, alpha, weights, intersections) {
+  rej_hyps <- t(p <= alpha * t(weights))
 
   # "+ 0" converts to integer from logical
-  matrixStats::colSums2(inter_h * matrixStats::rowMaxs(rej_hyps + 0)) ==
-    2^(ncol(intersections) - 1)
+  matrixStats::colSums2(intersections * matrixStats::rowMaxs(rej_hyps + 0)) ==
+    2^(ncol(weights) - 1)
 }
 
 #' @rdname testing-fast
