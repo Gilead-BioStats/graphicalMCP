@@ -235,7 +235,7 @@ ggplot(
 ```{r df-benchmarks-power}
 set.seed(7523)
 
-sizes <- 2:8
+sizes <- 2:10
 sims <- 2^13
 
 if (file.exists(here("./vignettes/data/df_benchmarks_power.rds"))) {

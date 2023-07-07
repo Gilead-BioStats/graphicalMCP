@@ -66,7 +66,7 @@ In this section we'll lay out some possible testing strategies. These testing st
 
 ## Bonferroni {#test-design-bonferroni}
 
-The study results could be tested most simply with a Bonferroni testing method. A pure Bonferroni method is simple, it runs quickly, and it controls the family-wise error rate (FWER) strongly at level `alpha` [citation needed]. However, it is slightly less likely to find significant results than some other testing methods.
+The study results could be tested most simply with a Bonferroni testing method. A pure Bonferroni method is simple, it runs quickly, and it conservatively controls the family-wise error rate (FWER) at level alpha [citation needed]. As a result of the Bonferroni method being the most conservative of the methods implemented in this framework, it is less likely to return significant results at level alpha than some other testing methods. 
 
 ```{r t-design-bonferroni, eval=FALSE}
 test_graph_closure(g_complex, <calculated_p_values>, alpha = .025)
@@ -76,7 +76,7 @@ test_graph_closure(g_complex, <calculated_p_values>, alpha = .025)
 
 We can take advantage of the correlation between doses by testing the primary hypotheses together in a parametric group. Correlation between doses at the same endpoint reduces to 0.5 with equal randomization [similar statement to Xi unpublished (2023?)]. For parametric testing, the only correlations that need to be specified are between hypotheses in a parametric group. In this case the other correlations are unknown.
 
-Using tests other than Bonferroni can add power to reject more hypotheses, but it comes with a speed cost. This is barely noticeable for a single test, but it does slow things down for power calculations. [link to speed vignette, if we keep it around]
+Using testing methods other than Bonferroni can add power to reject more hypotheses as a result of these other methods being less conservative in controlling the Type-I error rate, but it comes with a speed cost. This is barely noticeable for a single test, but it does slow things down for power calculations. [link to speed vignette, if we keep it around] Currently the Bonferroni, parametric, and Simes classes of tests have been implemented.
 
 ```{r test-corr}
 rho_com_end <- 0.5
@@ -121,11 +121,11 @@ These test designs are explored further in [Test execution] below.
 
 # Power calculations {#power-calculations}
 
-It's not always obvious from an initial graph how easy or difficult it will be to reject each hypothesis. One way to understand this better is to run a power simulation. The essence of a power simulation is to generate many different p-values using an assumed distribution, then test the graph against each set of p-values to see how it performs. In most cases, power will be calculated under many different scenarios to better understand the testing space.
+Even with an initial graph and an assumed underlying joint distribution, it can be difficult to tell how likely each hypothesis is to be rejected because the propagation of weights is not always obvious, and there are subtle interactions between hypothesis weights, edge weights, the test algorithm chosen, and the underlying joint distribution between hypotheses. One way to understand this better is to run a power simulation. The essence of a power simulation is to generate many different p-values using an assumed distribution, then test the graph against each set of p-values to see how it performs. In most cases, power will be calculated under many different scenarios to better understand the testing space.
 
 The p-values for a power simulation are sampled from a multivariate normal distribution using a one-sided test. The means of the MVN are set equal to the marginal power of each hypothesis, and the correlations should be the correlation between hypotheses that are either known from the study design or assumed.
 
-There are a couple differences between the correlation matrix used in parametric testing (`test_corr`) and the correlation matrix used in power simulations (`sim_corr`). Since the testing correlation is used on clinical data and can improve the chance of finding significant results, the values used should almost always be known, not assumed. If certain correlations are unknown, missing values should be used. However for sampling from the MVN distribution, all correlations must have a value. Any entries which are unknown must be assumed, and these assumptions should be tested for sensitivity across different power scenarios. It's also possible that some known correlations will be sensitivity tested to see the impact in the event that they are wrong.
+There are a couple differences between the correlation matrix used in parametric testing (`test_corr`) and the correlation matrix used in power simulations (`sim_corr`). Since the testing correlation is used on clinical data and can improve the chance of finding significant results, the values used should almost always be known, not assumed. If certain correlations are unknown, missing values should be used. However for sampling from the MVN distribution for a power simulation, all correlations must have a value. Any entries which are unknown must be assumed, and these assumptions should be tested for sensitivity across different power scenarios. It's also possible that some known correlations will be sensitivity tested to see the impact in the event that they are wrong.
 
 ## Parameter space
 
@@ -287,12 +287,14 @@ names(results) <- c(
 ```
 
 ```{r results-full}
-results %>%
-  gt() %>%
-  tab_header(
-    title = "Power results (all)",
-    subtitle = paste0("H", seq_along(hyp_names), ": ", hyp_names, " | ")
-  )
+# results %>%
+#   gt() %>%
+#   tab_header(
+#     title = "Power results (all)",
+#     subtitle = paste0("H", seq_along(hyp_names), ": ", hyp_names, " | ")
+#   )
+
+# DT::datatable(results)
 ```
 
 # Study data {#study-data}
@@ -433,7 +435,8 @@ power_example <- calculate_power(
   test_corr = t_corr,
   sim_n = 1e5,
   marginal_power = marginal_power,
-  sim_corr = s_corr
+  sim_corr = s_corr,
+  verbose = TRUE
 )
 
 print(power_example, precision = 4)
@@ -480,13 +483,12 @@ if (file.exists(here("./vignettes/data/power_timing.rds"))) {
   saveRDS(power_timing, here("./vignettes/data/power_timing.rds"))
 }
 
-power_timing[c("char_expr", "median_scale", "mem_alloc")] |> 
+power_timing[c("char_expr", "median_scale")] |> 
   gt() |> 
   tab_header("Power calculations", "100,000 simulations") |> 
   cols_label(
     char_expr = "Package/algorithm",
-    median_scale = "Median runtime (s)",
-    mem_alloc = "Memory allocated"
+    median_scale = "Median runtime (s)"
   ) |> 
   fmt_number(median_scale) |> 
   tab_options(table.font.size = 24)
