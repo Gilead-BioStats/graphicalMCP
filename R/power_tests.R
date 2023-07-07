@@ -14,9 +14,11 @@
 #' @param p A numeric vector of p-values
 #' @param alpha A numeric scalar specifying the global significance level for
 #'   testing
-#' @param weights A compact representation of [generate_weights()] output,
-#'   where missing hypotheses get a missing value for weights, and h-vectors are
-#'   dropped
+#' @param critical_values The weights (second half of columns) from
+#'   [generate_weights()] output, adjusted by the appropriate testing algorithm
+#'   (Bonferroni, Simes, or parametric)
+#' @param intersections The first half of columns from [generate_weights()]
+#'   output, indicating which hypotheses are contained in each intersection
 #'
 #' @return A logical or integer vector of results indicating whether each
 #'   hypothesis can be accepted or rejected globally.
@@ -35,23 +37,17 @@
 #'
 #' p <- c(.001, .02, .002, .03)
 #'
-#' weights <- generate_weights(par_gate)
-#' intersections <- weights[, seq_len(num_hyps), drop = FALSE]
-#' compact_weights <- ifelse(
-#'   intersections,
-#'   weights[, seq_len(num_hyps) + num_hyps, drop = FALSE],
-#'   NA
-#' )
-#' compact_weights[is.na(compact_weights)] <- 0
+#' weighting_strategy <- generate_weights(par_gate)
+#' intersections <- weighting_strategy[, seq_len(num_hyps), drop = FALSE]
 #'
-#' graphicalMCP:::test_graph_fast(p, .025, compact_weights, intersections)
+#' graphicalMCP:::test_graph_fast(p, .025, weighting_strategy, intersections)
 #' graphicalMCP:::test_graph_shortcut_cpp(par_gate, p, .025)
-test_graph_fast <- function(p, alpha, weights, intersections) {
-  rej_hyps <- t(p <= alpha * t(weights))
+test_graph_fast <- function(p, alpha, critical_values, intersections) {
+  rej_hyps <- t(p <= alpha * t(critical_values))
 
   # "+ 0" converts to integer from logical
   matrixStats::colSums2(intersections * matrixStats::rowMaxs(rej_hyps + 0)) ==
-    2^(ncol(weights) - 1)
+    2^(ncol(critical_values) - 1)
 }
 
 #' @rdname testing-fast

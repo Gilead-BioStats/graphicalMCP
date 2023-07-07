@@ -29,26 +29,182 @@ methods.
 
 ## Glossary of terms
 
-| Entity                          | Definition                                                                                                                                                                                            | Aliases                               | Variable(s)                     | Related                         |
-|---------------------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|---------------------------------------|---------------------------------|---------------------------------|
-| **Graph**                       | A set of nodes and edges representing a potential clinical trial design                                                                                                                               |                                       | `graph`                         | Hypotheses, Transitions         |
-|                                 | **Graphs** are so central that two of their core qualities get their own common variable names: Hypothesis names, and number of hypotheses                                                            |                                       | `hyp_names`, `num_hyps`         |                                 |
-| **Hypotheses**                  | The weighted nodes in a **graph**. Each node represents a null hypothesis, and its weight the local significance level.                                                                               | weights, hypothesis weights           | `hypotheses`                    | Weighting strategy, Transitions |
-| **Transitions**                 | The weighted edges in a **graph**. Each edge defines how to propagate local significance when a source node is deleted.                                                                               |                                       | `transitions`                   | Hypotheses                      |
-| **Intersection** **hypothesis** | A subset of **hypotheses** from a **graph**. Plural often implies all such subsets.                                                                                                                   | intersection,sub-graphs, closure      | `intersections`                 | Weighting strategy              |
-| **Weighting strategy**          | The set of all **intersections** and their **weights** according to Algorithm 1 in Bretz et al                                                                                                        | intersection weights, closure weights | `weighting_strategy`            |                                 |
-| **Critical values**             |                                                                                                                                                                                                       |                                       |                                 |                                 |
-| **P-values**                    | The set of p-values from a real or simulated clinical trial                                                                                                                                           |                                       | `p`                             | Adjusted & ordered p-values     |
-| **Ordered p-values**            | **P-values** sorted from smallest to largest                                                                                                                                                          |                                       | `ordered_p`                     | (Adjusted) P-values             |
-| **Adjusted p-values**           | **P-values** that have been divided by **critical values**, allowing direct comparison to **alpha** to determine significance                                                                         |                                       | `adjusted_p`                    | (Ordered) P-values              |
-| **Significance level**          | The threshold chosen for results of a clinical trial to be considered significant                                                                                                                     |                                       | `alpha`                         | P-values                        |
-| **Test types**                  | A specification of which testing algorithm to use - Bonferroni, Simes, and parametric are supported                                                                                                   | tests                                 | `test_types`                    | Testing strategy                |
-| **Test groups**                 | A partition of nodes in a **graph** specifying which **hypotheses** should be tested together                                                                                                         | groups                                | `groups`, `test_groups`         | Testing strategy                |
-| **Testing strategy**            | **Test types** and **test groups** combined                                                                                                                                                           |                                       |                                 |                                 |
-| **Marginal power**              | The mean of each null **hypothesis** in the underlying multivariate normal distribution of the null hypotheses                                                                                        |                                       | `marginal_power`                | Correlation matrix              |
-| **Correlation matrix**          | Specification of correlations between **hypotheses**. Together with **marginal power**, this specifies the (known or assumed) underlying multivariate normal distribution of the null **hypotheses**. |                                       | `corr`, `test_corr`, `sim_corr` | Marginal power                  |
-| **Success**                     | A specification of which null **hypotheses** must be rejected to consider a clinical trial a success                                                                                                  |                                       | `sim_success`                   |                                 |
-| **Power**                       | Under a given **graph**, **testing strategy**, **significance level**, and underlying distribution, the estimated likelihood that a particular combination of null hypotheses will be rejected        |                                       | `power_*`                       | Success                         |
+<table style="width:99%;">
+<colgroup>
+<col style="width: 9%" />
+<col style="width: 57%" />
+<col style="width: 11%" />
+<col style="width: 9%" />
+<col style="width: 9%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Entity</th>
+<th>Definition</th>
+<th>Aliases</th>
+<th>Variable(s)</th>
+<th>Related</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>Graph</strong></td>
+<td>A set of nodes and edges representing a potential clinical trial
+design</td>
+<td></td>
+<td><code>graph</code></td>
+<td>Hypotheses, Transitions</td>
+</tr>
+<tr class="even">
+<td></td>
+<td><strong>Graphs</strong> are so central that two of their core
+qualities get their own common variable names: Hypothesis names, and
+number of hypotheses</td>
+<td></td>
+<td><code>hyp_names</code>, <code>num_hyps</code></td>
+<td></td>
+</tr>
+<tr class="odd">
+<td><strong>Hypotheses</strong></td>
+<td>The weighted nodes in a <strong>graph</strong>. Each node represents
+a null hypothesis, and its weight the local significance level.</td>
+<td>weights, hypothesis weights</td>
+<td><code>hypotheses</code></td>
+<td>Weighting strategy, Transitions</td>
+</tr>
+<tr class="even">
+<td><strong>Transitions</strong></td>
+<td>The weighted edges in a <strong>graph</strong>. Each edge defines
+how to propagate local significance when a source node is deleted.</td>
+<td></td>
+<td><code>transitions</code></td>
+<td>Hypotheses</td>
+</tr>
+<tr class="odd">
+<td><strong>Intersection</strong> <strong>hypothesis</strong></td>
+<td>A subset of <strong>hypotheses</strong> from a
+<strong>graph</strong>. Plural often implies all such subsets.</td>
+<td>intersection,sub-graphs, closure</td>
+<td><code>intersections</code></td>
+<td>Weighting strategy</td>
+</tr>
+<tr class="even">
+<td><strong>Weighting strategy</strong></td>
+<td>The set of all <strong>intersections</strong> and their
+<strong>weights</strong> according to Algorithm 1 in Bretz et al
+(2011)</td>
+<td>intersection weights, closure weights</td>
+<td><code>weighting_strategy</code></td>
+<td></td>
+</tr>
+<tr class="odd">
+<td><strong>Critical values</strong></td>
+<td><p>The set of <strong>weights</strong>, adjusted according to a
+testing algorithm:</p>
+<ul>
+<li>Bonferroni: No change</li>
+<li>Simes: Sum weights for hypotheses with smaller p-values</li>
+<li>Parametric: Multiply weights by c-value, based on the joint
+distribution</li>
+</ul></td>
+<td></td>
+<td><code>critical_values</code></td>
+<td></td>
+</tr>
+<tr class="even">
+<td><strong>P-values</strong></td>
+<td>The set of p-values from a real or simulated clinical trial</td>
+<td></td>
+<td><code>p</code></td>
+<td>Adjusted &amp; ordered p-values</td>
+</tr>
+<tr class="odd">
+<td><strong>Ordered p-values</strong></td>
+<td><strong>P-values</strong> sorted from smallest to largest</td>
+<td></td>
+<td><code>ordered_p</code></td>
+<td>(Adjusted) P-values</td>
+</tr>
+<tr class="even">
+<td><strong>Adjusted p-values</strong></td>
+<td><strong>P-values</strong> that have been divided by <strong>critical
+values</strong>, allowing direct comparison to <strong>alpha</strong> to
+determine significance</td>
+<td></td>
+<td><code>adjusted_p</code></td>
+<td>(Ordered) P-values</td>
+</tr>
+<tr class="odd">
+<td><strong>Significance level</strong></td>
+<td>The threshold chosen for results of a clinical trial to be
+considered significant</td>
+<td></td>
+<td><code>alpha</code></td>
+<td>P-values</td>
+</tr>
+<tr class="even">
+<td><strong>Test types</strong></td>
+<td>A specification of which testing algorithm to use - Bonferroni,
+Simes, and parametric are supported</td>
+<td>tests</td>
+<td><code>test_types</code></td>
+<td>Testing strategy</td>
+</tr>
+<tr class="odd">
+<td><strong>Test groups</strong></td>
+<td>A partition of nodes in a <strong>graph</strong> specifying which
+<strong>hypotheses</strong> should be tested together</td>
+<td>groups</td>
+<td><code>groups</code>, <code>test_groups</code></td>
+<td>Testing strategy</td>
+</tr>
+<tr class="even">
+<td><strong>Testing strategy</strong></td>
+<td><strong>Test types</strong> and <strong>test groups</strong>
+combined</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="odd">
+<td><strong>Marginal power</strong></td>
+<td>The mean of each null <strong>hypothesis</strong> in the underlying
+multivariate normal distribution of the null hypotheses</td>
+<td></td>
+<td><code>marginal_power</code></td>
+<td>Correlation matrix</td>
+</tr>
+<tr class="even">
+<td><strong>Correlation matrix</strong></td>
+<td>Specification of correlations between <strong>hypotheses</strong>.
+Together with <strong>marginal power</strong>, this specifies the (known
+or assumed) underlying multivariate normal distribution of the null
+<strong>hypotheses</strong>.</td>
+<td></td>
+<td><code>corr</code>, <code>test_corr</code>,
+<code>sim_corr</code></td>
+<td>Marginal power</td>
+</tr>
+<tr class="odd">
+<td><strong>Success</strong></td>
+<td>A specification of which null <strong>hypotheses</strong> must be
+rejected to consider a clinical trial a success</td>
+<td></td>
+<td><code>sim_success</code></td>
+<td></td>
+</tr>
+<tr class="even">
+<td><strong>Power</strong></td>
+<td>Under a given <strong>graph</strong>, <strong>testing
+strategy</strong>, <strong>significance level</strong>, and underlying
+distribution, the estimated likelihood that a particular combination of
+null hypotheses will be rejected</td>
+<td></td>
+<td><code>power_*</code></td>
+<td>Success</td>
+</tr>
+</tbody>
+</table>
 
 ## Installation
 
@@ -416,11 +572,11 @@ calculate_power(
 #> 
 #> Power calculation ($power) -----------------------------------------------------
 #>                                   A1      A2      B1      B2
-#>        Power to reject each: 0.17124 0.17214 0.02899 0.02980
+#>        Power to reject each: 0.17087 0.16880 0.02986 0.02975
 #> 
-#>         Expected rejections: 0.40217
-#>   Power to reject 1 or more: 0.30936
-#>         Power to reject all: 0.00285
+#>         Expected rejections: 0.39928
+#>   Power to reject 1 or more: 0.30602
+#>         Power to reject all: 0.00302
 ```
 
 The `simple_successive_2()` function creates a parallel gate-keeping
@@ -473,11 +629,11 @@ calculate_power(
 #> 
 #> Power calculation ($power) -----------------------------------------------------
 #>                                   A1      A2      B1      B2
-#>        Power to reject each: 0.17503 0.17726 0.02219 0.02228
+#>        Power to reject each: 0.17924 0.17745 0.02310 0.02287
 #> 
-#>         Expected rejections: 0.39676
-#>   Power to reject 1 or more: 0.3058
-#>         Power to reject all: 0.00301
+#>         Expected rejections: 0.40266
+#>   Power to reject 1 or more: 0.31006
+#>         Power to reject all: 0.00331
 ```
 
 ### Other tests
@@ -541,11 +697,11 @@ calculate_power(
 #> 
 #> Power calculation ($power) -----------------------------------------------------
 #>                                   A1      A2      B1      B2
-#>        Power to reject each: 0.18319 0.18232 0.02351 0.02336
+#>        Power to reject each: 0.18161 0.18280 0.02334 0.02384
 #> 
-#>         Expected rejections: 0.41238
-#>   Power to reject 1 or more: 0.3163
-#>         Power to reject all: 0.00328
+#>         Expected rejections: 0.41159
+#>   Power to reject 1 or more: 0.31572
+#>         Power to reject all: 0.00352
 ```
 
 ## Related work

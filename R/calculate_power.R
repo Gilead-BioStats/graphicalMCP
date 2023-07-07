@@ -89,7 +89,7 @@
 #' )
 #'
 calculate_power <- function(graph,
-                            alpha = .05,
+                            alpha = .025,
                             test_groups = list(seq_along(graph$hypotheses)),
                             test_types = c("bonferroni"),
                             test_corr = NULL,

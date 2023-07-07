@@ -18,8 +18,10 @@ knitr::opts_chunk$set(
 
 ```{r setup, message=FALSE, warning=FALSE}
 library(graphicalMCP)
+library(ggplot2)
 library(dplyr)
 library(here)
+library(gMCP)
 library(gt)
 ```
 
@@ -187,11 +189,12 @@ s_corr_list <- lapply(
   function(rho_com_dose) {
     rho_mat <- matrix(rho_com_end * rho_com_dose, 6, 6)
     
-    rho_mat[c(1, 4), c(1, 4)] <- rho_com_end
-    rho_mat[c(2, 5), c(2, 5)] <- rho_com_end
-    rho_mat[c(3, 6), c(3, 6)] <- rho_com_end
+    rho_mat[1:2, 1:2] <- rho_mat[3:4, 3:4] <- rho_mat[5:6, 5:6] <- rho_com_end
     
-    rho_mat[1:3, 1:3] <- rho_mat[4:6, 4:6] <- rho_com_dose
+    rho_mat[c(1, 3, 5), c(1, 3, 5)] <-
+      rho_mat[c(2, 4, 6), c(2, 4, 6)] <-
+      rho_com_dose
+    
     diag(rho_mat) <- 1
     
     rho_mat
@@ -330,9 +333,9 @@ sub_results %>%
 These additional constraints result in the following graph design chosen for the study.
 
 ```{r study-graph}
-motiv_ex_.5_.5 <- motivating_example(.5, .5)
+example_.5_.5 <- motivating_example(.5, .5)
 
-motiv_ex_.5_.5
+example_.5_.5
 ```
 
 __Note:__ This is a simplified example using a reduced parameter space for the sake of run time. In a real clinical trial the parameter space would need to be searched at a more granular level, perhaps using modeling techniques on the power results to isolate the impact of different parameters. There may also be multiple power measurements of interest, and parameters will be chosen to balance the power across multiple desired outcomes.
@@ -350,14 +353,14 @@ names(p_mean_diff_from_placebo) <- hyp_names
 When testing with the [first strategy](#test-design-bonferroni), no hypotheses can be considered significant.
 
 ```{r test-bonferroni}
-test_graph_shortcut(motiv_ex_.5_.5, p_mean_diff_from_placebo, alpha = .025, verbose = TRUE, critical = TRUE)
+test_graph_shortcut(example_.5_.5, p_mean_diff_from_placebo, alpha = .025, verbose = TRUE, critical = TRUE)
 ```
 
 Using the [second strategy](#test-design-parametric-bonferroni), the increased power from parametric testing allows us to reject hypotheses 1 and 4.
 
 ```{r test-para-bonf}
 test_graph_closure(
-  motiv_ex_.5_.5,
+  example_.5_.5,
   p_mean_diff_from_placebo,
   alpha = .025,
   groups = list(1:2, 3:6),
@@ -370,7 +373,7 @@ Finally, using our chosen strategy for testing, the Simes grouping allows some s
 
 ```{r test-para-simes}
 test_graph_closure(
-  motiv_ex_.5_.5,
+  example_.5_.5,
   p_mean_diff_from_placebo,
   alpha = .025,
   groups = list(1:2, c(3, 5), c(4, 6)),
@@ -384,7 +387,7 @@ Re-run any of the tests above with `verbose = TRUE` or `critical = TRUE` to get 
 
 ```{r pres-examples-1}
 shortcut_example <- test_graph_shortcut(
-  motiv_ex_.5_.5,
+  example_.5_.5,
   c(.0123, .0132, .026, .007, .012, .012),
   alpha = .025,
   verbose = TRUE,
@@ -394,16 +397,97 @@ shortcut_example <- test_graph_shortcut(
 shortcut_example
 ```
 
-```{r pres-examples-2}closure_example <- test_graph_closure(
-  motiv_ex_.5_.5,
+```{r pres-examples-2}
+closure_example <- test_graph_closure(
+  example_.5_.5,
   c(.0129, .0132, .026, .007, .012, .012),
   alpha = .025,
   groups = list(1:2, c(3, 5), c(4, 6)),
-  test_types = c("p", "s", "s"),
+  test_types = c("parametric", "simes", "simes"),
   corr = t_corr,
   verbose = TRUE,
   critical = TRUE
 )
 
 print(closure_example, precision = 4)
+```
+
+```{r pres-examples-3}
+# Assume 0.8 correlation between endpoints with a common dose
+s_corr <- rbind(
+  c(1, 0.5, 0.8, 0.4, 0.8, 0.4),
+  c(0.5, 1, 0.4, 0.8, 0.4, 0.8),
+  c(0.8, 0.4, 1, 0.5, 0.8, 0.4),
+  c(0.4, 0.8, 0.5, 1, 0.4, 0.8),
+  c(0.8, 0.4, 0.8, 0.4, 1, 0.5),
+  c(0.4, 0.8, 0.4, 0.8, 0.5, 1)
+)
+
+marginal_power <- c(2.7, 2.8, 1.9, 2.1, 1.7, 2.5)
+
+power_example <- calculate_power(
+  example_.5_.5,
+  alpha = .025,
+  test_groups = list(1:2, c(3, 5), c(4, 6)),
+  test_types = c("parametric", "simes", "simes"),
+  test_corr = t_corr,
+  sim_n = 1e5,
+  marginal_power = marginal_power,
+  sim_corr = s_corr
+)
+
+print(power_example, precision = 4)
+```
+
+```{r performance-comp}
+# gMCP relies on corr.test for group specification
+t_corr_gmcp <- t_corr
+t_corr_gmcp[3:6, 3:6] <- NA
+diag(t_corr_gmcp) <- 1
+
+if (file.exists(here("./vignettes/data/power_timing.rds"))) {
+  power_timing <- readRDS(here("./vignettes/data/power_timing.rds"))
+} else {
+  power_timing <- bench::mark(
+    `gMCP shortcut` = calcPower(graph = as_gmcp_graph(example_.5_.5),
+                                alpha = .025,
+                                mean = marginal_power, corr.sim = s_corr,
+                                n.sim = 2^13),
+    `graphicalMCP shortcut` = calculate_power(example_.5_.5,
+                                              sim_n = 2^13,
+                                              marginal_power = marginal_power,
+                                              sim_corr = s_corr),
+    `graphicalMCP closure` = calculate_power(example_.5_.5,
+                                              test_groups = list(1:2, 3:6),
+                                              test_types = c("p", "b"),
+                                              test_corr = t_corr,
+                                              sim_n = 2^13,
+                                              marginal_power = marginal_power,
+                                              sim_corr = s_corr),
+    `gMCP closure` = calcPower(graph = as_gmcp_graph(example_.5_.5),
+                               alpha = .025,
+                               mean = marginal_power, corr.sim = s_corr,
+                               n.sim = 2^13,
+                               corr.test = t_corr_gmcp),
+    check = FALSE,
+    min_iterations = 1,
+    time_unit = "s"
+  )
+  
+  power_timing$median_scale <- power_timing$median * 12.2
+  power_timing$char_expr <- as.character(power_timing$expression)
+  
+  saveRDS(power_timing, here("./vignettes/data/power_timing.rds"))
+}
+
+power_timing[c("char_expr", "median_scale", "mem_alloc")] |> 
+  gt() |> 
+  tab_header("Power calculations", "100,000 simulations") |> 
+  cols_label(
+    char_expr = "Package/algorithm",
+    median_scale = "Median runtime (s)",
+    mem_alloc = "Memory allocated"
+  ) |> 
+  fmt_number(median_scale) |> 
+  tab_options(table.font.size = 24)
 ```

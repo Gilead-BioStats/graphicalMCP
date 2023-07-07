@@ -6,7 +6,7 @@
 \usage{
 calculate_power(
   graph,
-  alpha = 0.05,
+  alpha = 0.025,
   test_groups = list(seq_along(graph$hypotheses)),
   test_types = c("bonferroni"),
   test_corr = NULL,
