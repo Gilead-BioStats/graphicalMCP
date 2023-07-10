@@ -12,6 +12,8 @@ knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "##>"
 )
+
+ggplot2::theme_set(ggplot2::theme_bw())
 ```
 
 ```{r setup}
@@ -19,11 +21,59 @@ library(graphicalMCP)
 library(lrstat)
 library(gMCP)
 
+library(gt)
 library(here)
 library(bench)
+library(dplyr)
+library(tidyr)
 library(tictoc)
 library(ggplot2)
 library(forcats)
+```
+
+```{r udfs}
+plot_benchmarks <- function(df_benchmarks,
+                            subtitle,
+                            x_max = 14,
+                            y_breaks = 10 ^ (0:4),
+                            scale = FALSE) {
+  ggplot(
+  df_benchmarks,
+  aes(
+    size,
+    if (scale) median * 1e5 / sims else median,
+    colour = fct_reorder2(char_expression, size, median),
+    group = char_expression
+  )
+) +
+  geom_line() +
+  geom_point() +
+  geom_text(
+    data = . %>%
+      group_by(char_expression) %>%
+      drop_na(median) %>%
+      filter(size == max(size)),
+    aes(label = char_expression),
+    nudge_x = .1,
+    nudge_y = .2,
+    color = "black",
+    size = 3.5,
+    hjust = 0,
+    check_overlap = TRUE
+  ) +
+  scale_x_continuous(breaks = 2:10, limits = c(2, x_max)) +
+  scale_y_log10(
+    breaks = y_breaks,
+    labels = function(breaks) format(breaks, scientific = FALSE, big.mark = ",")
+  ) +
+  labs(
+    title = "Median run time (sec, log scale)",
+    subtitle = subtitle,
+    x = "Number of hypotheses",
+    y = NULL
+  ) +
+  theme(legend.position = "none", panel.grid.minor = element_blank())
+}
 ```
 
 ## Introduction
@@ -80,7 +130,7 @@ Suppose these formulas hold for a graph of size `n - 1`. Then the closure is `2^
 
 We analyzed performance of the various methods using the bench package.
 
-```{r df-benchmarks-gw}
+```{r df-benchmarks-gw, fig.width=7, fig.height=5, warning=FALSE}
 set.seed(7523)
 
 sizes <- 2:10
@@ -98,8 +148,6 @@ list_benchmarks_gw <- lapply(
     i <- 0
     res_is_error <- TRUE
     while (res_is_error) {
-      cat(size, " | ", i, "\n")
-
       if (i > 0) {
         hyp[seq_len(size - i)] <- round(hyp[seq_len(size - i)], 6)
         hyp[(size - i + 1):size] <- (1 - sum(hyp[seq_len(size - i)])) / i
@@ -128,34 +176,46 @@ list_benchmarks_gw <- lapply(
   }
 )
 
-df_benchmarks_gw <- do.call(rbind, list_benchmarks_gw)
-
-ggplot(
-  df_benchmarks_gw,
-  aes(as.factor(size), median,
-      colour = fct_reorder2(char_expression, size, median),
-      group = char_expression)
-) +
-  geom_line() +
-  geom_point() +
-  scale_y_log10() +
-  labs(
-    title = "Median run time (ms)",
-    subtitle = "Generate weights of the closure",
-    x = "Number of hypotheses",
-    y = NULL,
-    colour = "Package"
+keep_cols <-
+  c(
+    "min",
+    "median",
+    "itr/sec",
+    "mem_alloc",
+    "gc/sec",
+    "n_itr",
+    "n_gc",
+    "total_time",
+    "size",
+    "char_expression"
   )
+
+df_benchmarks_gw <- do.call(rbind, list_benchmarks_gw)[keep_cols]
+
+df_benchmarks_gw %>%
+  filter(char_expression != "lrstat (C++)") %>%
+  plot_benchmarks("Generate weights of the closure", 12, 10^(-2:4))
+
+df_benchmarks_gw %>%
+  filter(char_expression != "lrstat (C++)") %>%
+  select(char_expression, size, median) %>%
+  pivot_wider(names_from = size, values_from = median) %>%
+  gt() %>%
+  tab_header("Generate weights of the closure") %>%
+  fmt_number(pattern = "{x}s") %>%
+  tab_spanner("Number of hypotheses", 2:10) %>%
+  cols_label(char_expression = "Package") %>%
+  tab_options(table.font.size = 24)
 ```
 
-```{r df-benchmarks-seqtest}
+```{r df-benchmarks-seqtest, fig.width=7, fig.height=5, warning=FALSE}
 set.seed(7523)
 
 sizes <- 2:10
 
-if (file.exists(here("./vignettes/data/df_benchmarks_seqtest.rds"))) {
+if (file.exists(here("vignettes/data/df_benchmarks_seqtest.rds"))) {
   df_benchmarks_seqtest <-
-    readRDS(here("./vignettes/data/df_benchmarks_seqtest.rds"))
+    readRDS(here("vignettes/data/df_benchmarks_seqtest.rds"))[keep_cols]
 } else {
   list_benchmarks_seqtest <- lapply(
     sizes,
@@ -169,13 +229,11 @@ if (file.exists(here("./vignettes/data/df_benchmarks_seqtest.rds"))) {
       )
   
       # lrstat::fwgtmat() errors out due to weights not summing to 1, sometimes
-      # even when they seem to sum to 1 exactly. This loop tests whether fwgtmat()
-      # will run successfully, and updates weights if not
+      # even when they seem to sum to 1 exactly. This loop tests whether
+      # fwgtmat() will run successfully, and updates weights if not
       i <- 0
       res_is_error <- TRUE
       while (res_is_error) {
-        cat(size, " | ", i, "\n")
-  
         if (i > 0) {
           hyp[seq_len(size - i)] <- round(hyp[seq_len(size - i)], 6)
           hyp[(size - i + 1):size] <- (1 - sum(hyp[seq_len(size - i)])) / i
@@ -213,39 +271,40 @@ if (file.exists(here("./vignettes/data/df_benchmarks_seqtest.rds"))) {
     }
   )
   
-  df_benchmarks_seqtest <- do.call(rbind, list_benchmarks_seqtest)
-}
+  df_benchmarks_seqtest <- do.call(rbind, list_benchmarks_seqtest)[keep_cols]
   
-ggplot(
-  df_benchmarks_seqtest,
-  aes(size, median, colour = char_expression, group = char_expression)
-) +
-  geom_line() +
-  geom_point() +
-  scale_y_log10() +
-  labs(
-    title = "Median run time (ms)",
-    subtitle = "Test a graph",
-    x = "Number of hypotheses",
-    y = NULL,
-    colour = "Package"
+  saveRDS(
+    df_benchmarks_seqtest,
+    here("vignettes/data/df_benchmarks_seqtest.rds")
   )
+}
+
+df_benchmarks_seqtest %>%
+  filter(
+    !char_expression %in% c(
+      "lrstat Bonferroni (C++)",
+      "lrstat Simes (C++)",
+      "graphicalMCP closure Simes (R)"
+    )
+  ) %>%
+  plot_benchmarks("Test a graph")
 ```
 
-```{r df-benchmarks-power}
+```{r df-benchmarks-power, fig.width=7, fig.height=5, warning=FALSE}
 set.seed(7523)
 
 sizes <- 2:10
 sims <- 2^13
 
-if (file.exists(here("./vignettes/data/df_benchmarks_power.rds"))) {
+if (file.exists(here("vignettes/data/df_benchmarks_power.rds"))) {
   df_benchmarks_power <-
-    readRDS(here("./vignettes/data/df_benchmarks_seqtest.rds"))
+    readRDS(here("vignettes/data/df_benchmarks_power.rds"))[keep_cols] %>% 
+    filter(!(char_expression == "gMCP closure parametric (R)" & size > 5))
 } else {
   list_benchmarks_power <- lapply(
     sizes,
     function(size) {
-      cat(size, "\n", file = here::here("./vignettes/log.txt"), append = TRUE)
+      cat(size, "\n", file = here::here("vignettes/log.txt"), append = TRUE)
   
       rando <- random_graph(size)
       trn <- rando$transitions
@@ -256,12 +315,12 @@ if (file.exists(here("./vignettes/data/df_benchmarks_power.rds"))) {
   
       speed_comp <- mark(
         `gMCP shortcut (C)` =
-          if (size < 6) calcPower(hyp, .025, trn, marg_pow, s_corr, n.sim = sims),
+          calcPower(hyp, .025, trn, marg_pow, s_corr, n.sim = sims),
         `graphicalMCP shortcut (C++)` =
           calculate_power(rando, sim_n = sims, marginal_power = marg_pow,
                           sim_corr = s_corr),
         `gMCP closure parametric (R)` =
-          calcPower(hyp, .025, trn, marg_pow, s_corr, t_corr, sims),
+          if (size < 6) calcPower(hyp, .025, trn, marg_pow, s_corr, t_corr, sims),
         `graphicalMCP closure parametric (R)` =
           calculate_power(rando, sim_n = sims, marginal_power = marg_pow,
                           sim_corr = s_corr, test_types = "parametric",
@@ -282,32 +341,23 @@ if (file.exists(here("./vignettes/data/df_benchmarks_power.rds"))) {
     }
   )
   
-  df_benchmarks_power <- do.call(rbind, list_benchmarks_power)
+  df_benchmarks_power <- do.call(rbind, list_benchmarks_power)[keep_cols] %>% 
+    filter(!(char_expression == "gMCP closure parametric (R)" & size > 5))
+  
+  saveRDS(
+    df_benchmarks_power,
+    here("vignettes/data/df_benchmarks_power.rds")
+  )
 }
 
-ggplot(
-  df_benchmarks_power,
-  aes(size, median * 1e5 / sims,
-      colour = char_expression,
-      group = char_expression)
-) +
-  geom_line() +
-  geom_point() +
-  scale_y_log10() +
-  labs(
-    title = "Median run time (s)",
-    subtitle = "Calculate power",
-    x = "Number of hypotheses",
-    y = NULL,
-    colour = "Package"
-  )
+df_benchmarks_power %>%
+  filter(char_expression != "graphicalMCP closure Simes (R)") %>%
+  plot_benchmarks("Power: 100,000 simulations", scale = TRUE)
 ```
-
-
 
 All methods increase in time by `O(2^n)`, but the starting point is lowest for `generate_weights()`.
 
-```{r gg-benchmarks-runtime, fig.width = 7}
+```{r gg-benchmarks-runtime, fig.width = 7, fig.height=5}
 gg_benchmarks <- ggplot(df_benchmarks_gw) +
   scale_y_log10() +
   theme_minimal()
@@ -317,9 +367,19 @@ gg_benchmarks +
     aes(
       as.factor(size),
       median,
-      colour = fct_reorder2(as.character(expression), size, median)
+      colour = fct_reorder2(char_expression, size, median)
     )
   ) +
+  geom_text(data = . %>%
+              group_by(char_expression) %>%
+              drop_na() %>%
+              filter(size == max(size)),
+            aes(as.factor(size),
+      median, label = char_expression),
+            nudge_x = .1,
+            nudge_y = .12,
+            color = "black",
+            size = 7) +
   labs(
     colour = "Expression",
     title = "Log of median runtime in milliseconds",
@@ -336,7 +396,7 @@ gg_benchmarks +
     aes(
       as.factor(size),
       mem_alloc,
-      colour = fct_reorder2(as.character(expression), size, median)
+      colour = fct_reorder2(char_expression, size, median)
     )
   ) +
   labs(

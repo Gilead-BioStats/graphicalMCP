@@ -20,7 +20,7 @@
         H3 0.0 0.5 0.0 0.5
         H4 0.0 1.0 0.0 0.0
       
-        Alpha = 0.05
+        Alpha = 0.025
       
         Test types
         bonferroni: (H1-H2-H3-H4)
@@ -39,10 +39,10 @@
       
       Power calculation ($power) -----------------------------------------------------
                                      H1   H2   H3   H4
-             Power to reject each: 0.04 0.00 0.00 0.00
+             Power to reject each: 0.02 0.00 0.00 0.00
       
-              Expected rejections: 0.04
-        Power to reject 1 or more: 0.04
+              Expected rejections: 0.02
+        Power to reject 1 or more: 0.02
               Power to reject all: 0
       
 
@@ -68,7 +68,7 @@
             H3 0.0 0.5 0.0 0.5
             H4 0.0 1.0 0.0 0.0
       
-            Alpha = 0.05
+            Alpha = 0.025
       
             Test types
             bonferroni: (H1-H2-H3-H4)
@@ -87,10 +87,10 @@
       
       Power calculation ($power) -----------------------------------------------------
                                          H1   H2   H3   H4
-                 Power to reject each: 0.04 0.00 0.00 0.00
+                 Power to reject each: 0.02 0.00 0.00 0.00
       
-                  Expected rejections: 0.04
-            Power to reject 1 or more: 0.04
+                  Expected rejections: 0.02
+            Power to reject 1 or more: 0.02
                   Power to reject all: 0
       
 
@@ -117,7 +117,7 @@
             H3 0.0 0.5 0.0 0.5
             H4 0.0 1.0 0.0 0.0
       
-            Alpha = 0.05
+            Alpha = 0.025
       
             Test types
             bonferroni: (H1-H2-H3-H4)
@@ -136,10 +136,10 @@
       
       Power calculation ($power) -----------------------------------------------------
                                          H1   H2   H3   H4
-                 Power to reject each: 0.04 0.00 0.00 0.00
+                 Power to reject each: 0.02 0.00 0.00 0.00
       
-                  Expected rejections: 0.04
-            Power to reject 1 or more: 0.04
+                  Expected rejections: 0.02
+            Power to reject 1 or more: 0.02
                   Power to reject all: 0
       
 
@@ -165,7 +165,7 @@
         H3  0  1  0  0
         H4  1  0  0  0
       
-        Alpha = 0.05
+        Alpha = 0.025
       
         Test types
         simes: (H1-H2-H3-H4)
@@ -184,10 +184,10 @@
       
       Power calculation ($power) -----------------------------------------------------
                                      H1   H2   H3   H4
-             Power to reject each: 0.02 0.02 0.00 0.00
+             Power to reject each: 0.01 0.01 0.00 0.00
       
-              Expected rejections: 0.04
-        Power to reject 1 or more: 0.04
+              Expected rejections: 0.02
+        Power to reject 1 or more: 0.02
               Power to reject all: 0
       
 
@@ -214,7 +214,7 @@
             H3  0  1  0  0
             H4  1  0  0  0
       
-            Alpha = 0.05
+            Alpha = 0.025
       
             Test types
             simes: (H1-H2-H3-H4)
@@ -233,10 +233,10 @@
       
       Power calculation ($power) -----------------------------------------------------
                                          H1   H2   H3   H4
-                 Power to reject each: 0.02 0.02 0.00 0.00
+                 Power to reject each: 0.01 0.01 0.00 0.00
       
-                  Expected rejections: 0.04
-            Power to reject 1 or more: 0.04
+                  Expected rejections: 0.02
+            Power to reject 1 or more: 0.02
                   Power to reject all: 0
       
 
@@ -262,7 +262,7 @@
         H3  0  0  0  1
         H4  0  0  0  0
       
-        Alpha = 0.05
+        Alpha = 0.025
       
         Parametric testing correlation:    H1 H2 H3 H4
                                         H1  1  0  0  0
@@ -287,10 +287,10 @@
       
       Power calculation ($power) -----------------------------------------------------
                                      H1   H2   H3   H4
-             Power to reject each: 0.04 0.00 0.00 0.00
+             Power to reject each: 0.02 0.00 0.00 0.00
       
-              Expected rejections: 0.04
-        Power to reject 1 or more: 0.04
+              Expected rejections: 0.02
+        Power to reject 1 or more: 0.02
               Power to reject all: 0
       
 
@@ -317,7 +317,7 @@
             H3  0  0  0  1
             H4  0  0  0  0
       
-            Alpha = 0.05
+            Alpha = 0.025
       
             Parametric testing correlation:    H1 H2 H3 H4
                                             H1  1  0  0  0
@@ -342,10 +342,10 @@
       
       Power calculation ($power) -----------------------------------------------------
                                          H1   H2   H3   H4
-                 Power to reject each: 0.04 0.00 0.00 0.00
+                 Power to reject each: 0.02 0.00 0.00 0.00
       
-                  Expected rejections: 0.04
-            Power to reject 1 or more: 0.04
+                  Expected rejections: 0.02
+            Power to reject 1 or more: 0.02
                   Power to reject all: 0
       
 
