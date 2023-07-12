@@ -34,7 +34,7 @@ print.graph_report <- function(x, ..., precision = 6, indent = 2, rows = 10) {
   test_spec <- paste0(
     pad_tests,
     ": (",
-    lapply(hyp_groups, paste, collapse = "-"),
+    lapply(hyp_groups, paste, collapse = ", "),
     ")",
     collapse = "\n"
   )
@@ -49,6 +49,7 @@ print.graph_report <- function(x, ..., precision = 6, indent = 2, rows = 10) {
   )
 
   if (!is.null(x$inputs$corr)) {
+    para_hyps <- unlist(x$inputs$groups[x$inputs$test_types == "parametric"])
     dimnames(x$inputs$corr) <- dimnames(x$inputs$graph$transitions)
     colname_pad <- format(
       "Correlation matrix:   ",
@@ -56,8 +57,8 @@ print.graph_report <- function(x, ..., precision = 6, indent = 2, rows = 10) {
     )
     label <- paste0(pad_less_1, colname_pad)
     df_corr <- data.frame(
-      paste0(pad_less_1, rownames(x$inputs$corr)),
-      format(x$inputs$corr, digits = precision),
+      paste0(pad_less_1, rownames(x$inputs$corr[para_hyps, ])),
+      format(x$inputs$corr[para_hyps, para_hyps], digits = precision),
       check.names = FALSE
     )
     names(df_corr)[[1]] <- label
@@ -83,9 +84,17 @@ print.graph_report <- function(x, ..., precision = 6, indent = 2, rows = 10) {
 
   hyp_width <- max(nchar(c("Hypothesis", hyp_names))) + indent - 1
 
+  adjusted_p <- x$outputs$adjusted_p
+  exceed_1 <- adjusted_p > 1
+  adjusted_p_plus <- gsub(".00000001", "+", adjusted_p[exceed_1])
+  adjusted_p_format <- format(adjusted_p[!exceed_1], digits = precision)
+
+  adjusted_p[exceed_1] <- adjusted_p_plus
+  adjusted_p[!exceed_1] <- adjusted_p_format
+
   df_summary <- data.frame(
     Hypothesis = formatC(hyp_names, width = hyp_width),
-    `Adj. P-value` = format(x$outputs$adjusted_p, digits = precision),
+    `Adj. P-value` = adjusted_p,
     Reject = x$outputs$rejected,
     check.names = FALSE
   )
@@ -102,6 +111,8 @@ print.graph_report <- function(x, ..., precision = 6, indent = 2, rows = 10) {
     title = "Updated graph after rejections"
   )
 
+  cat("\n")
+
   # Adjusted p/rejection sequence details --------------------------------------
   if (!is.null(x$details)) {
     if (is.matrix(x$details$results)) {
@@ -111,7 +122,6 @@ print.graph_report <- function(x, ..., precision = 6, indent = 2, rows = 10) {
       max_print_old <- getOption("max.print")
       options(max.print = 99999)
 
-      cat("\n")
       section_break("Test details - Adjusted p ($details)")
       detail_results_out <- utils::capture.output(
         print(utils::head(df_details, rows))
@@ -129,7 +139,6 @@ print.graph_report <- function(x, ..., precision = 6, indent = 2, rows = 10) {
       graph_seq <- x$details$results
       del_seq <- x$details$del_seq
 
-      cat("\n")
       section_break("Test details - Rejection sequence ($details)")
       for (i in seq_along(graph_seq) - 1) {
         if (i == 0) {

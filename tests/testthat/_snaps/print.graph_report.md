@@ -26,7 +26,7 @@
         Unadjusted p-values: 0.01 0.01 0.01 0.01
       
         Test types
-        simes: (H1-H2-H3-H4)
+        simes: (H1, H2, H3, H4)
       
       Test summary ($outputs) --------------------------------------------------------
         Hypothesis Adj. P-value Reject
@@ -49,6 +49,7 @@
         H2  0  0  0  0
         H3  0  0  0  0
         H4  0  0  0  0
+      
 
 ---
 
@@ -78,7 +79,7 @@
         Unadjusted p-values: 0.01 0.01 0.01 0.01
       
         Test types
-        bonferroni: (H1-H2-H3-H4)
+        bonferroni: (H1, H2, H3, H4)
       
       Test summary ($outputs) --------------------------------------------------------
         Hypothesis Adj. P-value Reject
@@ -145,7 +146,7 @@
         Unadjusted p-values: 0.01 0.01 0.01 0.01
       
         Test types
-        bonferroni: (H1-H2-H3-H4)
+        bonferroni: (H1, H2, H3, H4)
       
       Test summary ($outputs) --------------------------------------------------------
         Hypothesis Adj. P-value Reject
@@ -168,6 +169,7 @@
         H2  0  0  0  0
         H3  0  0  0  0
         H4  0  0  0  0
+      
       Test details - Critical values ($critical) -------------------------------------
          Intersection Hypothesis       Test    p <= Critical * Alpha Reject
                     1         H1 bonferroni 0.01 <=      0.5 * 0.025   TRUE
@@ -217,7 +219,7 @@
                             H4  0  0  0  1
       
         Test types
-        parametric: (H1-H2-H3-H4)
+        parametric: (H1, H2, H3, H4)
       
       Test summary ($outputs) --------------------------------------------------------
         Hypothesis Adj. P-value Reject
@@ -240,6 +242,7 @@
         H2  0  0  0  0
         H3  0  0  0  0
         H4  0  0  0  0
+      
 
 ---
 
@@ -269,15 +272,13 @@
                                H1   H2   H3   H4
         Unadjusted p-values: 0.01 0.01 0.01 0.01
       
-        Correlation matrix:    H1 H2 H3 H4
-                            H1  1  0  0  0
-                            H2  0  1  0  0
-                            H3  0  0  1  0
-                            H4  0  0  0  1
+        Correlation matrix:    H1 H2
+                            H1  1  0
+                            H2  0  1
       
         Test types
-        parametric: (H1-H2)
-             simes: (H3-H4)
+        parametric: (H1, H2)
+             simes: (H3, H4)
       
       Test summary ($outputs) --------------------------------------------------------
         Hypothesis Adj. P-value Reject
@@ -365,8 +366,8 @@
                             H4  0  0  0  1
       
         Test types
-        parametric: (H1-H2)
-        parametric: (H3-H4)
+        parametric: (H1, H2)
+        parametric: (H3, H4)
       
       Test summary ($outputs) --------------------------------------------------------
         Hypothesis Adj. P-value Reject
@@ -447,7 +448,7 @@
         Unadjusted p-values: 0.01 0.01 0.01 0.01
       
         Test types
-        bonferroni: (H1-H2-H3-H4)
+        bonferroni: (H1, H2, H3, H4)
       
       Test summary ($outputs) --------------------------------------------------------
         Hypothesis Adj. P-value Reject
@@ -470,6 +471,7 @@
         H2  0  0  0  0
         H3  0  0  0  0
         H4  0  0  0  0
+      
 
 # additional printing options for graph report
 
@@ -500,7 +502,7 @@
           Unadjusted p-values: 0.01 0.01 0.01 0.01
       
           Test types
-          bonferroni: (H1-H2-H3-H4)
+          bonferroni: (H1, H2, H3, H4)
       
       Test summary ($outputs) --------------------------------------------------------
           Hypothesis Adj. P-value Reject
@@ -582,7 +584,7 @@
                Unadjusted p-values: 0.01 0.01 0.01 0.01
       
                Test types
-               bonferroni: (H1-H2-H3-H4)
+               bonferroni: (H1, H2, H3, H4)
       
       Test summary ($outputs) --------------------------------------------------------
                Hypothesis Adj. P-value Reject
@@ -723,7 +725,7 @@
         Unadjusted p-values: 0.025 0.020 0.015 0.010 0.005 0.000
       
         Test types
-        bonferroni: (H1-H2-H3-H4-H5-H6)
+        bonferroni: (H1, H2, H3, H4, H5, H6)
       
       Test summary ($outputs) --------------------------------------------------------
         Hypothesis Adj. P-value Reject

@@ -34,21 +34,23 @@ print.power_report <- function(x, ..., precision = 6, indent = 2, rows = 10) {
   test_spec <- paste0(
     pad_tests,
     ": (",
-    lapply(hyp_groups, paste, collapse = "-"),
+    lapply(hyp_groups, paste, collapse = ", "),
     ")",
     collapse = "\n"
   )
 
   if (!is.null(x$inputs$test_corr)) {
+    para_hyps <-
+      unlist(x$inputs$test_groups[x$inputs$test_types == "parametric"])
     dimnames(x$inputs$test_corr) <- dimnames(x$inputs$graph$transitions)
     colname_pad <- format(
       "Parametric testing correlation:   ",
-      width = max(nchar(rownames(x$inputs$test_corr)))
+      width = max(nchar(rownames(x$inputs$test_corr[para_hyps, para_hyps])))
     )
     label <- paste0(pad_less_1, colname_pad)
     df_corr <- data.frame(
-      paste0(pad_less_1, rownames(x$inputs$test_corr)),
-      format(x$inputs$test_corr, digits = precision),
+      paste0(pad_less_1, rownames(x$inputs$test_corr)[para_hyps]),
+      format(x$inputs$test_corr[para_hyps, para_hyps], digits = precision),
       check.names = FALSE
     )
     names(df_corr)[[1]] <- label
@@ -118,7 +120,7 @@ print.power_report <- function(x, ..., precision = 6, indent = 2, rows = 10) {
     x$power$power_local,
     nrow = 1,
     dimnames = list(
-      paste0(pad, "     Power to reject each:"),
+      paste0(pad, "               Local power:"),
       hyp_names
     ),
   )
@@ -128,21 +130,21 @@ print.power_report <- function(x, ..., precision = 6, indent = 2, rows = 10) {
 
   cat(
     pad,
-    "      Expected rejections: ",
+    "Expected no. of rejections: ",
     format(x$power$power_expected, digits = precision),
     "\n",
     sep = ""
   )
   cat(
     pad,
-    "Power to reject 1 or more: ",
+    " Power to reject 1 or more: ",
     format(x$power$power_at_least_1, digits = precision),
     "\n",
     sep = ""
   )
   cat(
     pad,
-    "      Power to reject all: ",
+    "       Power to reject all: ",
     format(x$power$power_all, digits = precision),
     "\n",
     sep = ""
@@ -155,7 +157,7 @@ print.power_report <- function(x, ..., precision = 6, indent = 2, rows = 10) {
       x$power$power_success,
       nrow = 1,
       dimnames = list(
-        paste0(pad, "    Probability of success: "),
+        paste0(pad, "     Probability of success: "),
         names(x$power$power_success)
       ),
     )

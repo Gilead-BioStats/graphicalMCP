@@ -78,7 +78,7 @@ test_graph_shortcut <- function(graph,
 
   # Testing should be done *before* capping adjusted p-values
   rejected <- adjusted_p <= alpha
-  adjusted_p <- pmin(adjusted_p, 1) # adjusted p-values should not exceed 1
+  adjusted_p <- pmin(adjusted_p, 1 + 1e-8) # adjusted p-values should not exceed 1
 
   # Adjusted p-value details (sequence of graphs) ------------------------------
   if (verbose) {

@@ -41,7 +41,7 @@ plot_benchmarks <- function(df_benchmarks,
     df_benchmarks,
     aes(
       size,
-      if (scale) median * 1e5 / sims else median,
+      if (scale) log(median * 1e5 / sims) else log(median),
       colour = fct_reorder2(char_expression, size, median),
       group = char_expression
     )
@@ -62,11 +62,11 @@ plot_benchmarks <- function(df_benchmarks,
       check_overlap = TRUE
     ) +
     scale_x_continuous(breaks = 2:10, limits = c(2, x_max)) +
-    scale_y_log10(
-      breaks = y_breaks,
-      labels =
-        function(breaks) format(breaks, scientific = FALSE, big.mark = ",")
-    ) +
+    # scale_y_log10(
+    #   breaks = y_breaks,
+    #   labels =
+    #     function(breaks) format(breaks, scientific = FALSE, big.mark = ",")
+    # ) +
     labs(
       title = "Median run time (sec, log scale)",
       subtitle = subtitle,

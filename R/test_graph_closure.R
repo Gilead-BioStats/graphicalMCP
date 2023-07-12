@@ -179,8 +179,8 @@ test_graph_closure <- function(graph,
   detail_results <- list(
     results = cbind(
       weighting_strategy_compact,
-      pmin(adjusted_p, 1),
-      adj_p_inter = pmin(adjusted_p_intersection, 1),
+      pmin(adjusted_p, 1 + 1e-8),
+      adj_p_inter = pmin(adjusted_p_intersection, 1 + 1e-8),
       reject = reject_intersection
     )
   )
@@ -267,7 +267,7 @@ test_graph_closure <- function(graph,
         corr = corr
       ),
       outputs = list(
-        adjusted_p = pmin(adjusted_p_hypothesis, 1), # Cap reported at 1
+        adjusted_p = pmin(adjusted_p_hypothesis, 1 + 1e-8), # Cap reported at 1
         rejected = reject_hypothesis,
         graph = update_graph(graph, !reject_hypothesis)$updated_graph
       ),

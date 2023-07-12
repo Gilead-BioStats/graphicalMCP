@@ -23,7 +23,7 @@
         Alpha = 0.025
       
         Test types
-        bonferroni: (H1-H2-H3-H4)
+        bonferroni: (H1, H2, H3, H4)
       
       Simulation parameters ($inputs) ------------------------------------------------
         Testing 100 simulations - random seed 51223 & multivariate normal params:
@@ -38,12 +38,12 @@
                      H4  0  0  0  1
       
       Power calculation ($power) -----------------------------------------------------
-                                     H1   H2   H3   H4
-             Power to reject each: 0.02 0.00 0.00 0.00
+                                      H1   H2   H3   H4
+                       Local power: 0.02 0.00 0.00 0.00
       
-              Expected rejections: 0.02
-        Power to reject 1 or more: 0.02
-              Power to reject all: 0
+        Expected no. of rejections: 0.02
+         Power to reject 1 or more: 0.02
+               Power to reject all: 0
       
 
 ---
@@ -71,7 +71,7 @@
             Alpha = 0.025
       
             Test types
-            bonferroni: (H1-H2-H3-H4)
+            bonferroni: (H1, H2, H3, H4)
       
       Simulation parameters ($inputs) ------------------------------------------------
             Testing 100 simulations - random seed 51223 & multivariate normal params:
@@ -86,12 +86,12 @@
                          H4  0  0  0  1
       
       Power calculation ($power) -----------------------------------------------------
-                                         H1   H2   H3   H4
-                 Power to reject each: 0.02 0.00 0.00 0.00
+                                          H1   H2   H3   H4
+                           Local power: 0.02 0.00 0.00 0.00
       
-                  Expected rejections: 0.02
-            Power to reject 1 or more: 0.02
-                  Power to reject all: 0
+            Expected no. of rejections: 0.02
+             Power to reject 1 or more: 0.02
+                   Power to reject all: 0
       
 
 ---
@@ -120,7 +120,7 @@
             Alpha = 0.025
       
             Test types
-            bonferroni: (H1-H2-H3-H4)
+            bonferroni: (H1, H2, H3, H4)
       
       Simulation parameters ($inputs) ------------------------------------------------
             Testing 100 simulations - random seed 51223 & multivariate normal params:
@@ -135,12 +135,12 @@
                          H4  0  0  0  1
       
       Power calculation ($power) -----------------------------------------------------
-                                         H1   H2   H3   H4
-                 Power to reject each: 0.02 0.00 0.00 0.00
+                                          H1   H2   H3   H4
+                           Local power: 0.02 0.00 0.00 0.00
       
-                  Expected rejections: 0.02
-            Power to reject 1 or more: 0.02
-                  Power to reject all: 0
+            Expected no. of rejections: 0.02
+             Power to reject 1 or more: 0.02
+                   Power to reject all: 0
       
 
 # printing Simes power
@@ -168,7 +168,7 @@
         Alpha = 0.025
       
         Test types
-        simes: (H1-H2-H3-H4)
+        simes: (H1, H2, H3, H4)
       
       Simulation parameters ($inputs) ------------------------------------------------
         Testing 100 simulations - random seed 51223 & multivariate normal params:
@@ -183,12 +183,12 @@
                      H4  0  0  0  1
       
       Power calculation ($power) -----------------------------------------------------
-                                     H1   H2   H3   H4
-             Power to reject each: 0.01 0.01 0.00 0.00
+                                      H1   H2   H3   H4
+                       Local power: 0.01 0.01 0.00 0.00
       
-              Expected rejections: 0.02
-        Power to reject 1 or more: 0.02
-              Power to reject all: 0
+        Expected no. of rejections: 0.02
+         Power to reject 1 or more: 0.02
+               Power to reject all: 0
       
 
 ---
@@ -217,7 +217,7 @@
             Alpha = 0.025
       
             Test types
-            simes: (H1-H2-H3-H4)
+            simes: (H1, H2, H3, H4)
       
       Simulation parameters ($inputs) ------------------------------------------------
             Testing 100 simulations - random seed 51223 & multivariate normal params:
@@ -232,12 +232,12 @@
                          H4  0  0  0  1
       
       Power calculation ($power) -----------------------------------------------------
-                                         H1   H2   H3   H4
-                 Power to reject each: 0.01 0.01 0.00 0.00
+                                          H1   H2   H3   H4
+                           Local power: 0.01 0.01 0.00 0.00
       
-                  Expected rejections: 0.02
-            Power to reject 1 or more: 0.02
-                  Power to reject all: 0
+            Expected no. of rejections: 0.02
+             Power to reject 1 or more: 0.02
+                   Power to reject all: 0
       
 
 # printing parametric power
@@ -271,7 +271,7 @@
                                         H4  0  0  0  1
       
         Test types
-        parametric: (H1-H2-H3-H4)
+        parametric: (H1, H2, H3, H4)
       
       Simulation parameters ($inputs) ------------------------------------------------
         Testing 100 simulations - random seed 51223 & multivariate normal params:
@@ -286,12 +286,12 @@
                      H4  0  0  0  1
       
       Power calculation ($power) -----------------------------------------------------
-                                     H1   H2   H3   H4
-             Power to reject each: 0.02 0.00 0.00 0.00
+                                      H1   H2   H3   H4
+                       Local power: 0.02 0.00 0.00 0.00
       
-              Expected rejections: 0.02
-        Power to reject 1 or more: 0.02
-              Power to reject all: 0
+        Expected no. of rejections: 0.02
+         Power to reject 1 or more: 0.02
+               Power to reject all: 0
       
 
 ---
@@ -326,7 +326,7 @@
                                             H4  0  0  0  1
       
             Test types
-            parametric: (H1-H2-H3-H4)
+            parametric: (H1, H2, H3, H4)
       
       Simulation parameters ($inputs) ------------------------------------------------
             Testing 100 simulations - random seed 51223 & multivariate normal params:
@@ -341,12 +341,12 @@
                          H4  0  0  0  1
       
       Power calculation ($power) -----------------------------------------------------
-                                         H1   H2   H3   H4
-                 Power to reject each: 0.02 0.00 0.00 0.00
+                                          H1   H2   H3   H4
+                           Local power: 0.02 0.00 0.00 0.00
       
-                  Expected rejections: 0.02
-            Power to reject 1 or more: 0.02
-                  Power to reject all: 0
+            Expected no. of rejections: 0.02
+             Power to reject 1 or more: 0.02
+                   Power to reject all: 0
       
 
 # printing blended power
@@ -380,25 +380,14 @@
       
       Alpha = 0.0254871
       
-       Parametric testing correlation:              H1           H2           H3
-                                       H1 1.0000000000 0.7853981634 0.7853981634
-                                       H2 0.7853981634 1.0000000000 0.7853981634
-                                       H3 0.7853981634 0.7853981634 1.0000000000
-                                       H4 0.7853981634 0.7853981634 0.7853981634
-                                       H5 0.7853981634 0.7853981634 0.7853981634
-                                       H6 0.7853981634 0.7853981634 0.7853981634
-                 H4           H5           H6
-       0.7853981634 0.7853981634 0.7853981634
-       0.7853981634 0.7853981634 0.7853981634
-       0.7853981634 0.7853981634 0.7853981634
-       1.0000000000 0.7853981634 0.7853981634
-       0.7853981634 1.0000000000 0.7853981634
-       0.7853981634 0.7853981634 1.0000000000
+       Parametric testing correlation:              H2           H5
+                                       H2 1.0000000000 0.7853981634
+                                       H5 0.7853981634 1.0000000000
       
       Test types
-      bonferroni: (H4-H3)
-           simes: (H6-H1)
-      parametric: (H2-H5)
+      bonferroni: (H4, H3)
+           simes: (H6, H1)
+      parametric: (H2, H5)
       
       Simulation parameters ($inputs) ------------------------------------------------
       Testing 1,328 simulations - random seed 51223 & multivariate normal params:
@@ -424,16 +413,16 @@
        0.6283185307 1.0000000000
       
       Power calculation ($power) -----------------------------------------------------
-                                           H1           H2           H3           H4
-           Power to reject each: 1.0000000000 0.9224397590 0.4856927711 0.2823795181
-                                           H5           H6
-           Power to reject each: 0.1822289157 0.1362951807
+                                            H1           H2           H3           H4
+                     Local power: 1.0000000000 0.9224397590 0.4856927711 0.2823795181
+                                            H5           H6
+                     Local power: 0.1822289157 0.1362951807
       
-            Expected rejections: 3.009036145
-      Power to reject 1 or more: 1
-            Power to reject all: 0.09638554217
+      Expected no. of rejections: 3.009036145
+       Power to reject 1 or more: 1
+             Power to reject all: 0.09638554217
       
-                                   .[1] || .[5] || .[6] .[2] && (.[5] || .[6])
-          Probability of success:          1.0000000000           0.2115963855
+                                    .[1] || .[5] || .[6] .[2] && (.[5] || .[6])
+           Probability of success:          1.0000000000           0.2115963855
       
 

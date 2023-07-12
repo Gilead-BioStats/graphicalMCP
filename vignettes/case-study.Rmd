@@ -373,9 +373,10 @@ Re-run any of the tests above with `verbose = TRUE` or `critical = TRUE` to get 
 The {graphicalMCP} package can help design a study for new therapeutic treatments. Several different testing designs are supported, and power calculations can be used to understand the potential study result space in an efficient way. The testing functions can be used to test study results, and the verbose/critical output gives rich information about why a hypothesis was rejected or not.
 
 ```{r pres-examples-1}
-names(example_.5_.5$hypotheses) <- paste0("H", 1:6)
-rownames(example_.5_.5$transitions) <- paste0("H", 1:6)
-colnames(example_.5_.5$transitions) <- paste0("H", 1:6)
+slides_names <- c("lo_pe", "hi_pe", "lo_se1", "hi_se1", "lo_se2", "hi_se2")
+names(example_.5_.5$hypotheses) <-
+  rownames(example_.5_.5$transitions) <-
+  colnames(example_.5_.5$transitions) <- slides_names
 
 shortcut_example <- test_graph_shortcut(
   example_.5_.5,
@@ -399,9 +400,9 @@ closure_example <- test_graph_closure(
   verbose = TRUE,
   critical = TRUE
 )
-closure_example2 <- closure_example
-closure_example2$inputs$corr <- NULL
-print(closure_example2, precision = 4)
+# closure_example2 <- closure_example
+# closure_example2$inputs$corr <- NULL
+print(closure_example, precision = 2)
 ```
 
 ```{r pres-examples-3}
