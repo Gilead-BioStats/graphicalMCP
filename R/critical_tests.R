@@ -52,7 +52,11 @@ bonferroni_test_vals <- function(p, hypotheses, alpha, intersection = NA) {
 }
 
 #' @rdname calc-test_vals
-parametric_test_vals <- function(p, hypotheses, alpha, intersection = NA, corr) {
+parametric_test_vals <- function(p,
+                                 hypotheses,
+                                 alpha,
+                                 intersection = NA,
+                                 corr) {
   if (length(p) == 0) {
     NULL
   } else {

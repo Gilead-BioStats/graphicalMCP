@@ -210,10 +210,10 @@ test_graph_closure <- function(graph,
         # the current group and the current intersection
         group_by_intersection <- group[as.logical(vec_intersection[group])]
 
-        # Critical values, like adjusted p-values, must be calculated at both the
-        # group and intersection level. Inputs are for a single group, and output
-        # is a dataframe containing critical value test information at the
-        # hypothesis/operand level.
+        # Critical values, like adjusted p-values, must be calculated at both
+        # the group and intersection level. Inputs are for a single group, and
+        # output is a dataframe containing critical value test information at
+        # the hypothesis/operand level.
         if (test == "bonferroni") {
           critical_list[[critical_index]] <- bonferroni_test_vals(
             p[group_by_intersection],

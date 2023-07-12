@@ -42,9 +42,9 @@ hyp_names <- c("lo_a1c", "hi_a1c", "lo_tir", "hi_tir", "lo_ret", "hi_ret")
 
 motivating_example <- function(hyp_1, gamma, names = hyp_names) {
   eps <- .0001
-  
+
   hypotheses <- c(hyp_1, 1 - hyp_1, 0, 0, 0, 0)
-  
+
   transitions <- rbind(
     c(0, gamma, (1 - gamma) / 2, 0, (1 - gamma) / 2, 0),
     c(gamma, 0, 0, (1 - gamma) / 2, 0, (1 - gamma) / 2),
@@ -170,15 +170,15 @@ s_corr_list <- lapply(
   v_rho_com_dose,
   function(rho_com_dose) {
     rho_mat <- matrix(rho_com_end * rho_com_dose, 6, 6)
-    
+
     rho_mat[1:2, 1:2] <- rho_mat[3:4, 3:4] <- rho_mat[5:6, 5:6] <- rho_com_end
-    
+
     rho_mat[c(1, 3, 5), c(1, 3, 5)] <-
       rho_mat[c(2, 4, 6), c(2, 4, 6)] <-
       rho_com_dose
-    
+
     diag(rho_mat) <- 1
-    
+
     rho_mat
   }
 )
@@ -205,21 +205,21 @@ Now bring all the assumptions together and calculate power for each scenario. [P
 
 ```{r power-results}
 power_scenario <- function(hyp_1, gamma, s_corr, marginal_power) {
-    calculate_power(
-      graph = motivating_example(hyp_1, gamma),
-      alpha = .025,
-      test_groups = list(1:2, c(3, 5), c(4, 6)),
-      test_types = c("p", "s", "s"),
-      test_corr = t_corr,
-      sim_n = 1e5,
-      sim_seed = 6923,
-      sim_success = function(.) .[1] && .[2],
-      marginal_power = marginal_power,
-      sim_corr = s_corr
-    )$power
-  }
+  calculate_power(
+    graph = motivating_example(hyp_1, gamma),
+    alpha = .025,
+    test_groups = list(1:2, c(3, 5), c(4, 6)),
+    test_types = c("p", "s", "s"),
+    test_corr = t_corr,
+    sim_n = 1e5,
+    sim_seed = 6923,
+    sim_success = function(.) .[1] && .[2],
+    marginal_power = marginal_power,
+    sim_corr = s_corr
+  )$power
+}
 
-# Do some simple caching so this re-knits faster  
+# Do some simple caching so this re-knits faster
 if (file.exists(here("vignettes/data/power_results.rds"))) {
   res_list <- readRDS(here("vignettes/data/power_results.rds"))
 } else {
@@ -231,7 +231,7 @@ if (file.exists(here("vignettes/data/power_results.rds"))) {
       length(s_corr_list)
   )
   i <- 1
-  
+
   for (hyp_1 in v_hyp_1) {
     for (gamma in v_gamma) {
       for (s_corr in s_corr_list) {
@@ -240,29 +240,29 @@ if (file.exists(here("vignettes/data/power_results.rds"))) {
             list(hyp_1, gamma, s_corr[1, 2], marginal_power),
             power_scenario(hyp_1, gamma, s_corr, marginal_power)
           )
-          
+
           i <- i + 1
         }
       }
     }
   }
-  
+
   saveRDS(res_list, here("vignettes/data/power_results.rds"))
 }
 
 results <- as.data.frame(do.call(rbind, lapply(res_list, unlist)))
 # shorten the names so the table isn't quite so wide
 names(results) <- c(
-    "hyp_1",
-    "gamma",
-    "rho",
-    paste0("H", seq_along(hyp_names)),
-    paste0("p_H", seq_along(hyp_names)),
-    "p_expect",
-    "p_geq_1",
-    "p_all",
-    "p_success"
-  )
+  "hyp_1",
+  "gamma",
+  "rho",
+  paste0("H", seq_along(hyp_names)),
+  paste0("p_H", seq_along(hyp_names)),
+  "p_expect",
+  "p_geq_1",
+  "p_all",
+  "p_success"
+)
 ```
 
 ```{r results-full}
@@ -273,8 +273,6 @@ results %>%
     subtitle = paste0("H", seq_along(hyp_names), ": ", hyp_names, " | ")
   ) %>%
   tab_options(table.font.size = 10)
-
-# DT::datatable(results)
 ```
 
 # Study data {#study-data}
@@ -286,13 +284,13 @@ After considering the power results and possible study designs, there are some p
 [This should probably be a DT::datatable() so it doesn't take up sooo much space. And that will make it filter- and sort-able too. Update: DT::datatable() was taking many minutest to render, so maybe just cutting down on assumptions would be better]
 
 ```{r param-arranged-success}
-sub_results <- results %>% 
+sub_results <- results %>%
   filter(!(H1 == 4 & H4 == 0) & !(H1 == 0 & H4 == 4) & !rho == .99)
 
-sub_results %>% 
-  arrange(desc(p_success)) %>% 
-  head(10) %>% 
-  gt() %>% 
+sub_results %>%
+  arrange(desc(p_success)) %>%
+  head(10) %>%
+  gt() %>%
   tab_header(
     title = "Power results, constrained (max success)",
     subtitle = paste0("H", seq_along(hyp_names), ": ", hyp_names, " | ")
@@ -303,10 +301,10 @@ sub_results %>%
 In this case, the same parameters maximize the expected rejections as well.
 
 ```{r param-arranged-expect}
-sub_results %>% 
-  arrange(desc(p_expect)) %>% 
-  head(10) %>% 
-  gt() %>% 
+sub_results %>%
+  arrange(desc(p_expect)) %>%
+  head(10) %>%
+  gt() %>%
   tab_header(
     title = "Power results, constrained (max expected)",
     subtitle = paste0("H", seq_along(hyp_names), ": ", hyp_names, " | ")
@@ -445,51 +443,57 @@ if (file.exists(here("vignettes/data/power_timing.rds"))) {
   power_timing <- readRDS(here("vignettes/data/power_timing.rds"))
 } else {
   power_timing <- bench::mark(
-    `gMCP shortcut` = calcPower(graph = as_gmcp_graph(example_.5_.5),
-                                alpha = .025,
-                                mean = marginal_power, corr.sim = s_corr,
-                                n.sim = 2^13),
+    `gMCP shortcut` = calcPower(
+      graph = as_gmcp_graph(example_.5_.5),
+      alpha = .025,
+      mean = marginal_power, corr.sim = s_corr,
+      n.sim = 2^13
+    ),
     `graphicalMCP shortcut` = calculate_power(example_.5_.5,
-                                              sim_n = 2^13,
-                                              marginal_power = marginal_power,
-                                              sim_corr = s_corr),
+      sim_n = 2^13,
+      marginal_power = marginal_power,
+      sim_corr = s_corr
+    ),
     `graphicalMCP closure` = calculate_power(example_.5_.5,
-                                              test_groups = list(1:2, 3:6),
-                                              test_types = c("p", "b"),
-                                              test_corr = t_corr,
-                                              sim_n = 2^13,
-                                              marginal_power = marginal_power,
-                                              sim_corr = s_corr),
-    `gMCP closure` = calcPower(graph = as_gmcp_graph(example_.5_.5),
-                               alpha = .025,
-                               mean = marginal_power, corr.sim = s_corr,
-                               n.sim = 2^13,
-                               corr.test = t_corr_gmcp),
+      test_groups = list(1:2, 3:6),
+      test_types = c("p", "b"),
+      test_corr = t_corr,
+      sim_n = 2^13,
+      marginal_power = marginal_power,
+      sim_corr = s_corr
+    ),
+    `gMCP closure` = calcPower(
+      graph = as_gmcp_graph(example_.5_.5),
+      alpha = .025,
+      mean = marginal_power, corr.sim = s_corr,
+      n.sim = 2^13,
+      corr.test = t_corr_gmcp
+    ),
     check = FALSE,
     min_iterations = 1,
     time_unit = "s"
   )
-  
+
   # We'd like to show time difference for 100,000 simulations, but that just
   # takes too long for gMCP. So the timing is done for 2^13 simulations, and
   # results are scaled up.
   power_timing$median_scale <- power_timing$median * 1e5 / 2^13
   power_timing$char_expr <- as.character(power_timing$expression)
-  
+
   saveRDS(power_timing, here("vignettes/data/power_timing.rds"))
 }
 
-power_timing[c("char_expr", "median_scale")] %>% 
-  gt() %>% 
-  tab_header("Power calculations", "100,000 simulations") %>% 
+power_timing[c("char_expr", "median_scale")] %>%
+  gt() %>%
+  tab_header("Power calculations", "100,000 simulations") %>%
   cols_label(
     char_expr = "Package/algorithm",
     median_scale = "Median runtime (s)"
-  ) %>% 
+  ) %>%
   tab_footnote(
     "Shortcut procedures use all Bonferroni testing. Closure procedures use parametric for hypotheses 1&2 and Bonferroni otherwise",
     cells_column_labels("char_expr")
   ) %>%
-  fmt_number(median_scale) %>% 
+  fmt_number(median_scale) %>%
   tab_options(table.font.size = 24)
 ```

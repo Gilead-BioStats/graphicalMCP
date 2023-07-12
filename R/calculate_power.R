@@ -161,8 +161,8 @@ calculate_power <- function(graph,
     # Test each simulation with shortcut testing -------------------------------
     # The much faster shortcut testing should always be used if possible. This
     # includes when there are other tests specified, but they have a group of
-    # only size one. The default to use shortcut testing can be overridden with
-    # `force_closure = TRUE`
+    # only size one. The default to use shortcut testing when possible can be
+    # overridden with `force_closure = TRUE`
     simulation_test_results <- power_shortcut_cpp(
       graph$hypotheses,
       graph$transitions,
@@ -318,7 +318,8 @@ calculate_power <- function(graph,
     power_local = colMeans(simulation_test_results),
     power_expected = sum(simulation_test_results) / sim_n,
     power_at_least_1 = mean(rowSums(simulation_test_results) > 0),
-    power_all = mean(rowSums(simulation_test_results) == length(marginal_power)),
+    power_all =
+      mean(rowSums(simulation_test_results) == length(marginal_power)),
     power_success = power_success
   )
 

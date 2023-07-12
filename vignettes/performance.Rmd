@@ -35,44 +35,45 @@ library(forcats)
 plot_benchmarks <- function(df_benchmarks,
                             subtitle,
                             x_max = 14,
-                            y_breaks = 10 ^ (0:4),
+                            y_breaks = 10^(0:4),
                             scale = FALSE) {
   ggplot(
-  df_benchmarks,
-  aes(
-    size,
-    if (scale) median * 1e5 / sims else median,
-    colour = fct_reorder2(char_expression, size, median),
-    group = char_expression
-  )
-) +
-  geom_line() +
-  geom_point() +
-  geom_text(
-    data = . %>%
-      group_by(char_expression) %>%
-      drop_na(median) %>%
-      filter(size == max(size)),
-    aes(label = char_expression),
-    nudge_x = .1,
-    nudge_y = .2,
-    color = "black",
-    size = 3.5,
-    hjust = 0,
-    check_overlap = TRUE
+    df_benchmarks,
+    aes(
+      size,
+      if (scale) median * 1e5 / sims else median,
+      colour = fct_reorder2(char_expression, size, median),
+      group = char_expression
+    )
   ) +
-  scale_x_continuous(breaks = 2:10, limits = c(2, x_max)) +
-  scale_y_log10(
-    breaks = y_breaks,
-    labels = function(breaks) format(breaks, scientific = FALSE, big.mark = ",")
-  ) +
-  labs(
-    title = "Median run time (sec, log scale)",
-    subtitle = subtitle,
-    x = "Number of hypotheses",
-    y = NULL
-  ) +
-  theme(legend.position = "none", panel.grid.minor = element_blank())
+    geom_line() +
+    geom_point() +
+    geom_text(
+      data = . %>%
+        group_by(char_expression) %>%
+        drop_na(median) %>%
+        filter(size == max(size)),
+      aes(label = char_expression),
+      nudge_x = .1,
+      nudge_y = .2,
+      color = "black",
+      size = 3.5,
+      hjust = 0,
+      check_overlap = TRUE
+    ) +
+    scale_x_continuous(breaks = 2:10, limits = c(2, x_max)) +
+    scale_y_log10(
+      breaks = y_breaks,
+      labels =
+        function(breaks) format(breaks, scientific = FALSE, big.mark = ",")
+    ) +
+    labs(
+      title = "Median run time (sec, log scale)",
+      subtitle = subtitle,
+      x = "Number of hypotheses",
+      y = NULL
+    ) +
+    theme(legend.position = "none", panel.grid.minor = element_blank())
 }
 ```
 
@@ -135,47 +136,6 @@ set.seed(7523)
 
 sizes <- 2:10
 
-list_benchmarks_gw <- lapply(
-  sizes,
-  function(size) {
-    rando <- random_graph(size)
-    trn <- rando$transitions
-    hyp <- rando$hypotheses
-    
-    # lrstat::fwgtmat() errors out due to weights not summing to 1, sometimes
-    # even when they seem to sum to 1 exactly. This loop tests whether fwgtmat()
-    # will run successfully, and updates weights if not
-    i <- 0
-    res_is_error <- TRUE
-    while (res_is_error) {
-      if (i > 0) {
-        hyp[seq_len(size - i)] <- round(hyp[seq_len(size - i)], 6)
-        hyp[(size - i + 1):size] <- (1 - sum(hyp[seq_len(size - i)])) / i
-      }
-
-      res <- try(fwgtmat(hyp, trn), silent = TRUE)
-      res_is_error <- inherits(res, "try-error")
-      
-      i <- i + 1
-    }
-
-    speed_comp <- mark(
-      `gMCP (R)` = generateWeights(trn, hyp),
-      `graphicalMCP (R)` = generate_weights(rando),
-      `lrstat (C++)` = fwgtmat(hyp, trn),
-      check = FALSE,
-      min_iterations = 5,
-      time_unit = "ms"
-    )
-
-    speed_comp$size <- size
-    speed_comp$mem_alloc <- as.integer(speed_comp$mem_alloc)
-    speed_comp$char_expression <- as.character(speed_comp$expression)
-
-    speed_comp
-  }
-)
-
 keep_cols <-
   c(
     "min",
@@ -190,7 +150,58 @@ keep_cols <-
     "char_expression"
   )
 
-df_benchmarks_gw <- do.call(rbind, list_benchmarks_gw)[keep_cols]
+if (file.exists(here("vignettes/data/df_benchmarks_gw.rds"))) {
+  df_benchmarks_gw <-
+    readRDS(here("vignettes/data/df_benchmarks_gw.rds"))
+} else {
+  list_benchmarks_gw <- lapply(
+    sizes,
+    function(size) {
+      rando <- random_graph(size)
+      trn <- rando$transitions
+      hyp <- rando$hypotheses
+  
+      # lrstat::fwgtmat() errors out due to weights not summing to 1, sometimes
+      # even when they seem to sum to 1 exactly. This loop tests whether fwgtmat()
+      # will run successfully, and updates weights if not
+      i <- 0
+      res_is_error <- TRUE
+      while (res_is_error) {
+        if (i > 0) {
+          hyp[seq_len(size - i)] <- round(hyp[seq_len(size - i)], 6)
+          hyp[(size - i + 1):size] <- (1 - sum(hyp[seq_len(size - i)])) / i
+        }
+  
+        res <- try(fwgtmat(hyp, trn), silent = TRUE)
+        res_is_error <- inherits(res, "try-error")
+  
+        i <- i + 1
+      }
+  
+      speed_comp <- mark(
+        `gMCP (R)` = generateWeights(trn, hyp),
+        `graphicalMCP (R)` = generate_weights(rando),
+        `lrstat (C++)` = fwgtmat(hyp, trn),
+        check = FALSE,
+        min_iterations = 5,
+        time_unit = "ms"
+      )
+  
+      speed_comp$size <- size
+      speed_comp$mem_alloc <- as.integer(speed_comp$mem_alloc)
+      speed_comp$char_expression <- as.character(speed_comp$expression)
+  
+      speed_comp
+    }
+  )
+  
+  df_benchmarks_gw <- do.call(rbind, list_benchmarks_gw)[keep_cols]
+
+  saveRDS(
+    df_benchmarks_gw,
+    here("vignettes/data/df_benchmarks_gw.rds")
+  )
+}
 
 df_benchmarks_gw %>%
   filter(char_expression != "lrstat (C++)") %>%
@@ -223,11 +234,11 @@ if (file.exists(here("vignettes/data/df_benchmarks_seqtest.rds"))) {
       rando <- random_graph(size)
       trn <- rando$transitions
       hyp <- rando$hypotheses
-  
+
       p <- as.numeric(
         pnorm(mvtnorm::rmvnorm(1, runif(size, 1.5, 3)), lower.tail = FALSE)
       )
-  
+
       # lrstat::fwgtmat() errors out due to weights not summing to 1, sometimes
       # even when they seem to sum to 1 exactly. This loop tests whether
       # fwgtmat() will run successfully, and updates weights if not
@@ -238,13 +249,13 @@ if (file.exists(here("vignettes/data/df_benchmarks_seqtest.rds"))) {
           hyp[seq_len(size - i)] <- round(hyp[seq_len(size - i)], 6)
           hyp[(size - i + 1):size] <- (1 - sum(hyp[seq_len(size - i)])) / i
         }
-  
+
         res <- try(fwgtmat(hyp, trn), silent = TRUE)
         res_is_error <- inherits(res, "try-error")
-  
+
         i <- i + 1
       }
-  
+
       speed_comp <- mark(
         `gMCP shortcut (C)` =
           gMCP(as_gmcp_graph(rando), p, alpha = .025)@rejected,
@@ -262,17 +273,17 @@ if (file.exists(here("vignettes/data/df_benchmarks_seqtest.rds"))) {
         min_iterations = 5,
         time_unit = "ms"
       )
-  
+
       speed_comp$size <- size
       speed_comp$mem_alloc <- as.integer(speed_comp$mem_alloc)
       speed_comp$char_expression <- as.character(speed_comp$expression)
-  
+
       speed_comp
     }
   )
-  
+
   df_benchmarks_seqtest <- do.call(rbind, list_benchmarks_seqtest)[keep_cols]
-  
+
   saveRDS(
     df_benchmarks_seqtest,
     here("vignettes/data/df_benchmarks_seqtest.rds")
@@ -298,52 +309,63 @@ sims <- 2^13
 
 if (file.exists(here("vignettes/data/df_benchmarks_power.rds"))) {
   df_benchmarks_power <-
-    readRDS(here("vignettes/data/df_benchmarks_power.rds"))[keep_cols] %>% 
+    readRDS(here("vignettes/data/df_benchmarks_power.rds"))[keep_cols] %>%
     filter(!(char_expression == "gMCP closure parametric (R)" & size > 5))
 } else {
   list_benchmarks_power <- lapply(
     sizes,
     function(size) {
       cat(size, "\n", file = here::here("vignettes/log.txt"), append = TRUE)
-  
+
       rando <- random_graph(size)
       trn <- rando$transitions
       hyp <- rando$hypotheses
-  
+
       marg_pow <- rep(2.2, size)
       t_corr <- s_corr <- diag(size)
-  
+
       speed_comp <- mark(
         `gMCP shortcut (C)` =
           calcPower(hyp, .025, trn, marg_pow, s_corr, n.sim = sims),
         `graphicalMCP shortcut (C++)` =
-          calculate_power(rando, sim_n = sims, marginal_power = marg_pow,
-                          sim_corr = s_corr),
+          calculate_power(rando,
+            sim_n = sims, marginal_power = marg_pow,
+            sim_corr = s_corr
+          ),
         `gMCP closure parametric (R)` =
-          if (size < 6) calcPower(hyp, .025, trn, marg_pow, s_corr, t_corr, sims),
+          if (size < 6) {
+            calcPower(
+              hyp, .025, trn,
+              marg_pow, s_corr, t_corr, sims
+            )
+          },
         `graphicalMCP closure parametric (R)` =
-          calculate_power(rando, sim_n = sims, marginal_power = marg_pow,
-                          sim_corr = s_corr, test_types = "parametric",
-                          test_corr = t_corr),
+          calculate_power(rando,
+            sim_n = sims, marginal_power = marg_pow,
+            sim_corr = s_corr, test_types = "parametric",
+            test_corr = t_corr
+          ),
         `graphicalMCP closure Simes (R)` =
-          calculate_power(rando, sim_n = sims, marginal_power = marg_pow,
-                          sim_corr = s_corr, test_types = "simes"),
+          calculate_power(rando,
+            sim_n = sims, marginal_power = marg_pow,
+            sim_corr = s_corr, test_types = "simes"
+          ),
         check = FALSE,
         min_iterations = 1,
         time_unit = "s"
       )
-  
+
       speed_comp$size <- size
       speed_comp$mem_alloc <- as.integer(speed_comp$mem_alloc)
       speed_comp$char_expression <- as.character(speed_comp$expression)
-  
+
       speed_comp
     }
   )
-  
-  df_benchmarks_power <- do.call(rbind, list_benchmarks_power)[keep_cols] %>% 
+
+  df_benchmarks_power <- do.call(rbind, list_benchmarks_power)[keep_cols] %>%
     filter(!(char_expression == "gMCP closure parametric (R)" & size > 5))
-  
+
   saveRDS(
     df_benchmarks_power,
     here("vignettes/data/df_benchmarks_power.rds")
@@ -370,16 +392,20 @@ gg_benchmarks +
       colour = fct_reorder2(char_expression, size, median)
     )
   ) +
-  geom_text(data = . %>%
-              group_by(char_expression) %>%
-              drop_na() %>%
-              filter(size == max(size)),
-            aes(as.factor(size),
-      median, label = char_expression),
-            nudge_x = .1,
-            nudge_y = .12,
-            color = "black",
-            size = 7) +
+  geom_text(
+    data = . %>%
+      group_by(char_expression) %>%
+      drop_na() %>%
+      filter(size == max(size)),
+    aes(as.factor(size),
+      median,
+      label = char_expression
+    ),
+    nudge_x = .1,
+    nudge_y = .12,
+    color = "black",
+    size = 7
+  ) +
   labs(
     colour = "Expression",
     title = "Log of median runtime in milliseconds",
