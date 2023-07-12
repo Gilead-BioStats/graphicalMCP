@@ -76,8 +76,9 @@ test_graph_shortcut <- function(graph,
       update_graph(graph, !hyp_names %in% adjusted_p_sequence)$updated_graph
   }
 
-  adjusted_p <- pmin(adjusted_p, 1) # adjusted p-values should not exceed 1
+  # Testing should be done *before* capping adjusted p-values
   rejected <- adjusted_p <= alpha
+  adjusted_p <- pmin(adjusted_p, 1) # adjusted p-values should not exceed 1
 
   # Adjusted p-value details (sequence of graphs) ------------------------------
   if (verbose) {

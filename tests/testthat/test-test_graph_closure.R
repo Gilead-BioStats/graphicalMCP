@@ -291,10 +291,10 @@ test_that("compare adjusted p-values to lrstat - Bonferroni & Simes", {
   }
 })
 
-test_that("closure testing rejects all when alpha is 1", {
+test_that("closure testing rejects none when adjusted p-values exceed 1", {
   expect_equal(
     test_graph_closure(random_graph(6), rep(1, 6), 1)$outputs$rejected,
-    rep(TRUE, 6),
+    rep(FALSE, 6),
     ignore_attr = TRUE
   )
 })

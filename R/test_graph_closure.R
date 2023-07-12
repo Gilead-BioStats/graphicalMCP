@@ -163,12 +163,9 @@ test_graph_closure <- function(graph,
   }
 
   # Adjusted p-value summaries -------------------------------------------------
-  # Adjusted p-values shouldn't exceed 1
-  adjusted_p_cap <- pmin(adjusted_p, 1)
-
   # The adjusted p-value for an *intersection* is the smallest adjusted p-value
   # for the groups it contains
-  adjusted_p_intersection <- apply(adjusted_p_cap, 1, min)
+  adjusted_p_intersection <- apply(adjusted_p, 1, min)
   reject_intersection <- adjusted_p_intersection <= alpha
 
   # The adjusted p-value for a *hypothesis* is the largest adjusted p-value for
@@ -178,11 +175,12 @@ test_graph_closure <- function(graph,
   reject_hypothesis <- adjusted_p_hypothesis <= alpha # Hypothesis test results
 
   # Adjusted p-value details ---------------------------------------------------
+  # Reported adjusted p-values shouldn't exceed 1
   detail_results <- list(
     results = cbind(
       weighting_strategy_compact,
-      adjusted_p_cap,
-      adj_p_inter = adjusted_p_intersection,
+      pmin(adjusted_p, 1),
+      adj_p_inter = pmin(adjusted_p_intersection, 1),
       reject = reject_intersection
     )
   )
@@ -269,7 +267,7 @@ test_graph_closure <- function(graph,
         corr = corr
       ),
       outputs = list(
-        adjusted_p = adjusted_p_hypothesis,
+        adjusted_p = pmin(adjusted_p_hypothesis, 1), # Cap reported at 1
         rejected = reject_hypothesis,
         graph = update_graph(graph, !reject_hypothesis)$updated_graph
       ),
