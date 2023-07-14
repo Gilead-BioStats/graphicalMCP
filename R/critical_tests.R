@@ -38,7 +38,7 @@ bonferroni_test_vals <- function(p, hypotheses, alpha, intersection = NA) {
       "<=" = "<=",
       c_value = "",
       "*" = "",
-      Critical = hypotheses,
+      Weight = hypotheses,
       "*" = "*",
       Alpha = alpha,
       Reject = ifelse(
@@ -70,7 +70,7 @@ parametric_test_vals <- function(p,
       "<=" = "<=",
       c_value = c_value,
       "*" = "*",
-      Critical = hypotheses,
+      Weight = hypotheses,
       "*" = "*",
       Alpha = alpha,
       Reject = ifelse(
@@ -104,7 +104,7 @@ simes_test_vals <- function(p, hypotheses, alpha, intersection = NA) {
       "<=" = "<=",
       c_value = "",
       "*" = "",
-      Critical = w_sum,
+      Weight = w_sum,
       "*" = "*",
       Alpha = alpha,
       Reject = ifelse(

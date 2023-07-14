@@ -154,11 +154,14 @@ print.power_report <- function(x, ..., precision = 6, indent = 2, rows = 10) {
     cat("\n")
 
     success_mat <- matrix(
-      x$power$power_success,
+      c("", format(x$power$power_success, digits = precision)),
       nrow = 1,
       dimnames = list(
-        paste0(pad, "     Probability of success: "),
-        names(x$power$power_success)
+        "",
+        c(
+          paste0(pad, "           Power to reject: "),
+          paste0("  ", names(x$power$power_success))
+        )
       ),
     )
 

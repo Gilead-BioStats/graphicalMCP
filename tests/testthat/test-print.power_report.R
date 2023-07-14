@@ -70,7 +70,7 @@ test_that("printing blended power", {
         c("b", "s", "p"),
         t_corr,
         1328,
-        pi / seq(.3, 2.8, by = .5),
+        pi / seq(.3, 2.8, by = .5) / 11,
         s_corr,
         list(
           function(.) .[1] || .[5] || .[6],

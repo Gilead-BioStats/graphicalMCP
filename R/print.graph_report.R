@@ -108,7 +108,7 @@ print.graph_report <- function(x, ..., precision = 6, indent = 2, rows = 10) {
     x$outputs$graph,
     precision = precision,
     indent = indent,
-    title = "Updated graph after rejections"
+    title = "Final updated graph after removing rejected hypotheses"
   )
 
   cat("\n")
@@ -118,15 +118,16 @@ print.graph_report <- function(x, ..., precision = 6, indent = 2, rows = 10) {
     if (is.matrix(x$details$results)) {
       df_details <- as.data.frame(format(x$details$results, digits = precision))
       df_details$reject <- as.logical(as.numeric(df_details$reject))
+      df_details <- cbind(Intersection = rownames(df_details), df_details)
 
       max_print_old <- getOption("max.print")
       options(max.print = 99999)
 
       section_break("Test details - Adjusted p ($details)")
       detail_results_out <- utils::capture.output(
-        print(utils::head(df_details, rows))
+        print(utils::head(df_details, rows), row.names = FALSE)
       )
-      cat(paste0(pad, detail_results_out), sep = "\n")
+      cat(paste0(pad_less_1, detail_results_out), sep = "\n")
 
       options(max.print = max_print_old)
 
@@ -143,28 +144,28 @@ print.graph_report <- function(x, ..., precision = 6, indent = 2, rows = 10) {
       for (i in seq_along(graph_seq) - 1) {
         if (i == 0) {
           print(graph_seq[[i + 1]], precision = precision, indent = indent)
-        } else if (i != length(graph_seq) - 1) {
-          print(
-            graph_seq[[i + 1]],
-            precision = precision,
-            indent = indent * (i + 1),
-            title = paste0("Step ", i, ": Delete hypothesis ", del_seq[[i]])
-          )
         } else {
           print(
             graph_seq[[i + 1]],
             precision = precision,
             indent = indent * (i + 1),
             title = paste0(
-              "Step ",
-              i,
-              " (Ending state): Delete hypothesis ",
-              del_seq[[i]]
+              "Step ", i, ": Updated graph after removing ",
+              if (i == 1) "hypothesis " else "hypotheses ",
+              paste0(del_seq[seq_len(i)], collapse = ", ")
             )
           )
         }
         cat("\n")
       }
+
+      print(
+        graph_seq[[length(graph_seq)]],
+        precision = precision,
+        indent = indent,
+        title = "Final updated graph after removing rejected hypotheses"
+      )
+      cat("\n")
     }
   }
 
@@ -173,9 +174,9 @@ print.graph_report <- function(x, ..., precision = 6, indent = 2, rows = 10) {
     section_break("Test details - Critical values ($critical)")
 
     if (any(x$inputs$test_types == "parametric")) {
-      num_cols <- c("p", "c_value", "Critical", "Alpha")
+      num_cols <- c("p", "c_value", "Weight", "Alpha")
     } else {
-      num_cols <- c("p", "Critical", "Alpha")
+      num_cols <- c("p", "Weight", "Alpha")
     }
 
     crit_res <- x$critical$results
@@ -196,7 +197,7 @@ print.graph_report <- function(x, ..., precision = 6, indent = 2, rows = 10) {
     critical_results_out <- utils::capture.output(
       print(utils::head(crit_res, rows), row.names = FALSE)
     )
-    cat(paste0(pad, critical_results_out), sep = "\n")
+    cat(paste0(pad_less_1, critical_results_out), sep = "\n")
 
     options(max.print = max_print_old)
 

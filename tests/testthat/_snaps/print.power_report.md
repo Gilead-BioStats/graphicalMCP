@@ -353,8 +353,8 @@
 
     Code
       print(calculate_power(g, 0.0254871, list(4:3, c(6, 1), c(2, 5)), c("b", "s",
-        "p"), t_corr, 1328, pi / seq(0.3, 2.8, by = 0.5), s_corr, list(function(.) .[
-        1] || .[5] || .[6], function(.) .[2] && (.[5] || .[6])), 51223), indent = 0,
+        "p"), t_corr, 1328, pi / seq(0.3, 2.8, by = 0.5) / 11, s_corr, list(function(
+        .) .[1] || .[5] || .[6], function(.) .[2] && (.[5] || .[6])), 51223), indent = 0,
       precision = 10)
     Output
       
@@ -393,9 +393,9 @@
       Testing 1,328 simulations - random seed 51223 & multivariate normal params:
       
                                 H1           H2           H3           H4
-      Marginal power: 10.471975512  3.926990817  2.416609734  1.745329252
+      Marginal power: 0.9519977738 0.3569991652 0.2196917940 0.1586662956
                                 H5           H6
-      Marginal power:  1.365909849  1.121997376
+      Marginal power: 0.1241736227 0.1019997615
       
        Correlation:              H1           H2           H3           H4
                     H1 1.0000000000 0.6283185307 0.6283185307 0.6283185307
@@ -413,16 +413,16 @@
        0.6283185307 1.0000000000
       
       Power calculation ($power) -----------------------------------------------------
-                                            H1           H2           H3           H4
-                     Local power: 1.0000000000 0.9224397590 0.4856927711 0.2823795181
-                                            H5           H6
-                     Local power: 0.1822289157 0.1362951807
+                                              H1             H2             H3
+                     Local power: 0.048945783133 0.015813253012 0.008283132530
+                                              H4             H5             H6
+                     Local power: 0.009789156627 0.009036144578 0.008283132530
       
-      Expected no. of rejections: 3.009036145
-       Power to reject 1 or more: 1
-             Power to reject all: 0.09638554217
+      Expected no. of rejections: 0.1001506024
+       Power to reject 1 or more: 0.06475903614
+             Power to reject all: 0.001506024096
       
-                                    .[1] || .[5] || .[6] .[2] && (.[5] || .[6])
-           Probability of success:          1.0000000000           0.2115963855
+                  Power to reject:    .[1] || .[5] || .[6]   .[2] && (.[5] || .[6])
+                                            0.054216867470           0.004518072289
       
 

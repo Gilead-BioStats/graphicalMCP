@@ -127,8 +127,8 @@ test_that("shortcut internal consistency", {
 
   steps <- seq_along(which(shortcut_results$outputs$rejected))
   expect_equal(
-    c(steps, rep(NA, length(rando$hypotheses) - length(steps))),
-    shortcut_results$critical$results$step
+    c(steps, rep(max(steps) + 1, length(rando$hypotheses) - length(steps))),
+    shortcut_results$critical$results$Step
   )
 
   last_graph_index <- length(shortcut_results$details$results)

@@ -119,7 +119,7 @@ test_that("complex example runs without error", {
       test_types = c("p", "s", "s", "s"),
       test_corr = t_corr,
       sim_n = 1e4,
-      marginal_power = runif(9, min = 0, max = 2),
+      marginal_power = runif(9, min = 0, max = 1),
       sim_corr = diag(9),
       sim_success = function(.) .[1] || .[4] || .[7]
     )

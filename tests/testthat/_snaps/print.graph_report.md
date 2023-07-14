@@ -35,7 +35,7 @@
                 H3         0.01   TRUE
                 H4         0.01   TRUE
       
-        Updated graph after rejections
+        Final updated graph after removing rejected hypotheses
       
         --- Hypothesis weights ---
         H1: 0
@@ -88,7 +88,7 @@
                 H3         0.02   TRUE
                 H4         0.02   TRUE
       
-        Updated graph after rejections
+        Final updated graph after removing rejected hypotheses
       
         --- Hypothesis weights ---
         H1: 0
@@ -104,17 +104,17 @@
         H4  0  0  0  0
       
       Test details - Adjusted p ($details) -------------------------------------------
-             H1   H2   H3   H4 adj_p_grp1 adj_p_inter reject
-        1  0.50 0.50 0.00 0.00       0.02        0.02   TRUE
-        2  0.50 0.50 0.00   NA       0.02        0.02   TRUE
-        3  0.50 0.50   NA 0.00       0.02        0.02   TRUE
-        4  0.50 0.50   NA   NA       0.02        0.02   TRUE
-        5  0.50   NA 0.00 0.50       0.02        0.02   TRUE
-        6  1.00   NA 0.00   NA       0.01        0.01   TRUE
-        7  0.50   NA   NA 0.50       0.02        0.02   TRUE
-        8  1.00   NA   NA   NA       0.01        0.01   TRUE
-        9    NA 0.50 0.50 0.00       0.02        0.02   TRUE
-        10   NA 0.50 0.50   NA       0.02        0.02   TRUE
+        Intersection   H1   H2   H3   H4 adj_p_grp1 adj_p_inter reject
+                   1 0.50 0.50 0.00 0.00       0.02        0.02   TRUE
+                   2 0.50 0.50 0.00   NA       0.02        0.02   TRUE
+                   3 0.50 0.50   NA 0.00       0.02        0.02   TRUE
+                   4 0.50 0.50   NA   NA       0.02        0.02   TRUE
+                   5 0.50   NA 0.00 0.50       0.02        0.02   TRUE
+                   6 1.00   NA 0.00   NA       0.01        0.01   TRUE
+                   7 0.50   NA   NA 0.50       0.02        0.02   TRUE
+                   8 1.00   NA   NA   NA       0.01        0.01   TRUE
+                   9   NA 0.50 0.50 0.00       0.02        0.02   TRUE
+                  10   NA 0.50 0.50   NA       0.02        0.02   TRUE
         ... (Use `print(x, rows = <nn>)` for more)
       
 
@@ -155,7 +155,7 @@
                 H3         0.02   TRUE
                 H4         0.02   TRUE
       
-        Updated graph after rejections
+        Final updated graph after removing rejected hypotheses
       
         --- Hypothesis weights ---
         H1: 0
@@ -171,17 +171,17 @@
         H4  0  0  0  0
       
       Test details - Critical values ($critical) -------------------------------------
-         Intersection Hypothesis       Test    p <= Critical * Alpha Reject
-                    1         H1 bonferroni 0.01 <=      0.5 * 0.025   TRUE
-                    1         H2 bonferroni 0.01 <=      0.5 * 0.025   TRUE
-                    1         H3 bonferroni 0.01 <=      0.0 * 0.025  FALSE
-                    1         H4 bonferroni 0.01 <=      0.0 * 0.025  FALSE
-                    2         H1 bonferroni 0.01 <=      0.5 * 0.025   TRUE
-                    2         H2 bonferroni 0.01 <=      0.5 * 0.025   TRUE
-                    2         H3 bonferroni 0.01 <=      0.0 * 0.025  FALSE
-                    3         H1 bonferroni 0.01 <=      0.5 * 0.025   TRUE
-                    3         H2 bonferroni 0.01 <=      0.5 * 0.025   TRUE
-                    3         H4 bonferroni 0.01 <=      0.0 * 0.025  FALSE
+        Intersection Hypothesis       Test    p <= Weight * Alpha Reject
+                   1         H1 bonferroni 0.01 <=    0.5 * 0.025   TRUE
+                   1         H2 bonferroni 0.01 <=    0.5 * 0.025   TRUE
+                   1         H3 bonferroni 0.01 <=    0.0 * 0.025  FALSE
+                   1         H4 bonferroni 0.01 <=    0.0 * 0.025  FALSE
+                   2         H1 bonferroni 0.01 <=    0.5 * 0.025   TRUE
+                   2         H2 bonferroni 0.01 <=    0.5 * 0.025   TRUE
+                   2         H3 bonferroni 0.01 <=    0.0 * 0.025  FALSE
+                   3         H1 bonferroni 0.01 <=    0.5 * 0.025   TRUE
+                   3         H2 bonferroni 0.01 <=    0.5 * 0.025   TRUE
+                   3         H4 bonferroni 0.01 <=    0.0 * 0.025  FALSE
         ... (Use `print(x, rows = <nn>)` for more)
       
 
@@ -228,7 +228,7 @@
                 H3       0.0199   TRUE
                 H4       0.0199   TRUE
       
-        Updated graph after rejections
+        Final updated graph after removing rejected hypotheses
       
         --- Hypothesis weights ---
         H1: 0
@@ -287,7 +287,7 @@
                 H3         0.02   TRUE
                 H4         0.02   TRUE
       
-        Updated graph after rejections
+        Final updated graph after removing rejected hypotheses
       
         --- Hypothesis weights ---
         H1: 0
@@ -303,31 +303,42 @@
         H4  0  0  0  0
       
       Test details - Adjusted p ($details) -------------------------------------------
-               H1     H2     H3     H4 adj_p_grp1 adj_p_grp2 adj_p_inter reject
-        1  0.5000 0.5000 0.0000 0.0000     0.0199     1.0000      0.0199   TRUE
-        2  0.5000 0.5000 0.0000     NA     0.0199     1.0000      0.0199   TRUE
-        3  0.5000 0.5000     NA 0.0000     0.0199     1.0000      0.0199   TRUE
-        4  0.5000 0.5000     NA     NA     0.0199     1.0000      0.0199   TRUE
-        5  0.5000     NA 0.0000 0.5000     0.0200     0.0200      0.0200   TRUE
-        6  1.0000     NA 0.0000     NA     0.0100     1.0000      0.0100   TRUE
-        7  0.5000     NA     NA 0.5000     0.0200     0.0200      0.0200   TRUE
-        8  1.0000     NA     NA     NA     0.0100     1.0000      0.0100   TRUE
-        9      NA 0.5000 0.5000 0.0000     0.0200     0.0200      0.0200   TRUE
-        10     NA 0.5000 0.5000     NA     0.0200     0.0200      0.0200   TRUE
+        Intersection     H1     H2     H3     H4 adj_p_grp1 adj_p_grp2 adj_p_inter
+                   1 0.5000 0.5000 0.0000 0.0000     0.0199     1.0000      0.0199
+                   2 0.5000 0.5000 0.0000     NA     0.0199     1.0000      0.0199
+                   3 0.5000 0.5000     NA 0.0000     0.0199     1.0000      0.0199
+                   4 0.5000 0.5000     NA     NA     0.0199     1.0000      0.0199
+                   5 0.5000     NA 0.0000 0.5000     0.0200     0.0200      0.0200
+                   6 1.0000     NA 0.0000     NA     0.0100     1.0000      0.0100
+                   7 0.5000     NA     NA 0.5000     0.0200     0.0200      0.0200
+                   8 1.0000     NA     NA     NA     0.0100     1.0000      0.0100
+                   9     NA 0.5000 0.5000 0.0000     0.0200     0.0200      0.0200
+                  10     NA 0.5000 0.5000     NA     0.0200     0.0200      0.0200
+        reject
+          TRUE
+          TRUE
+          TRUE
+          TRUE
+          TRUE
+          TRUE
+          TRUE
+          TRUE
+          TRUE
+          TRUE
         ... (Use `print(x, rows = <nn>)` for more)
       
       Test details - Critical values ($critical) -------------------------------------
-         Intersection Hypothesis       Test    p <= c_value * Critical * Alpha Reject
-                    1         H1 parametric 0.01 <= 1.00633 *      0.5 * 0.025   TRUE
-                    1         H2 parametric 0.01 <= 1.00633 *      0.5 * 0.025   TRUE
-                    1         H3      simes 0.01 <=      NA        0.0 * 0.025  FALSE
-                    1         H4      simes 0.01 <=      NA        0.0 * 0.025  FALSE
-                    2         H1 parametric 0.01 <= 1.00633 *      0.5 * 0.025   TRUE
-                    2         H2 parametric 0.01 <= 1.00633 *      0.5 * 0.025   TRUE
-                    2         H3      simes 0.01 <=      NA        0.0 * 0.025  FALSE
-                    3         H1 parametric 0.01 <= 1.00633 *      0.5 * 0.025   TRUE
-                    3         H2 parametric 0.01 <= 1.00633 *      0.5 * 0.025   TRUE
-                    3         H4      simes 0.01 <=      NA        0.0 * 0.025  FALSE
+        Intersection Hypothesis       Test    p <= c_value * Weight * Alpha Reject
+                   1         H1 parametric 0.01 <= 1.00633 *    0.5 * 0.025   TRUE
+                   1         H2 parametric 0.01 <= 1.00633 *    0.5 * 0.025   TRUE
+                   1         H3      simes 0.01 <=      NA      0.0 * 0.025  FALSE
+                   1         H4      simes 0.01 <=      NA      0.0 * 0.025  FALSE
+                   2         H1 parametric 0.01 <= 1.00633 *    0.5 * 0.025   TRUE
+                   2         H2 parametric 0.01 <= 1.00633 *    0.5 * 0.025   TRUE
+                   2         H3      simes 0.01 <=      NA      0.0 * 0.025  FALSE
+                   3         H1 parametric 0.01 <= 1.00633 *    0.5 * 0.025   TRUE
+                   3         H2 parametric 0.01 <= 1.00633 *    0.5 * 0.025   TRUE
+                   3         H4      simes 0.01 <=      NA      0.0 * 0.025  FALSE
         ... (Use `print(x, rows = <nn>)` for more)
       
 
@@ -376,7 +387,7 @@
                 H3         0.02   TRUE
                 H4         0.02   TRUE
       
-        Updated graph after rejections
+        Final updated graph after removing rejected hypotheses
       
         --- Hypothesis weights ---
         H1: 0
@@ -392,31 +403,42 @@
         H4  0  0  0  0
       
       Test details - Adjusted p ($details) -------------------------------------------
-               H1     H2     H3     H4 adj_p_grp1 adj_p_grp2 adj_p_inter reject
-        1  0.5000 0.5000 0.0000 0.0000     0.0199     1.0000      0.0199   TRUE
-        2  0.5000 0.5000 0.0000     NA     0.0199     1.0000      0.0199   TRUE
-        3  0.5000 0.5000     NA 0.0000     0.0199     1.0000      0.0199   TRUE
-        4  0.5000 0.5000     NA     NA     0.0199     1.0000      0.0199   TRUE
-        5  0.5000     NA 0.0000 0.5000     0.0200     0.0200      0.0200   TRUE
-        6  1.0000     NA 0.0000     NA     0.0100     1.0000      0.0100   TRUE
-        7  0.5000     NA     NA 0.5000     0.0200     0.0200      0.0200   TRUE
-        8  1.0000     NA     NA     NA     0.0100     1.0000      0.0100   TRUE
-        9      NA 0.5000 0.5000 0.0000     0.0200     0.0200      0.0200   TRUE
-        10     NA 0.5000 0.5000     NA     0.0200     0.0200      0.0200   TRUE
+        Intersection     H1     H2     H3     H4 adj_p_grp1 adj_p_grp2 adj_p_inter
+                   1 0.5000 0.5000 0.0000 0.0000     0.0199     1.0000      0.0199
+                   2 0.5000 0.5000 0.0000     NA     0.0199     1.0000      0.0199
+                   3 0.5000 0.5000     NA 0.0000     0.0199     1.0000      0.0199
+                   4 0.5000 0.5000     NA     NA     0.0199     1.0000      0.0199
+                   5 0.5000     NA 0.0000 0.5000     0.0200     0.0200      0.0200
+                   6 1.0000     NA 0.0000     NA     0.0100     1.0000      0.0100
+                   7 0.5000     NA     NA 0.5000     0.0200     0.0200      0.0200
+                   8 1.0000     NA     NA     NA     0.0100     1.0000      0.0100
+                   9     NA 0.5000 0.5000 0.0000     0.0200     0.0200      0.0200
+                  10     NA 0.5000 0.5000     NA     0.0200     0.0200      0.0200
+        reject
+          TRUE
+          TRUE
+          TRUE
+          TRUE
+          TRUE
+          TRUE
+          TRUE
+          TRUE
+          TRUE
+          TRUE
         ... (Use `print(x, rows = <nn>)` for more)
       
       Test details - Critical values ($critical) -------------------------------------
-         Intersection Hypothesis       Test    p <= c_value * Critical * Alpha Reject
-                    1         H1 parametric 0.01 <= 1.00633 *      0.5 * 0.025   TRUE
-                    1         H2 parametric 0.01 <= 1.00633 *      0.5 * 0.025   TRUE
-                    1         H3 parametric 0.01 <= 1.00000 *      0.0 * 0.025  FALSE
-                    1         H4 parametric 0.01 <= 1.00000 *      0.0 * 0.025  FALSE
-                    2         H1 parametric 0.01 <= 1.00633 *      0.5 * 0.025   TRUE
-                    2         H2 parametric 0.01 <= 1.00633 *      0.5 * 0.025   TRUE
-                    2         H3 parametric 0.01 <= 1.00000 *      0.0 * 0.025  FALSE
-                    3         H1 parametric 0.01 <= 1.00633 *      0.5 * 0.025   TRUE
-                    3         H2 parametric 0.01 <= 1.00633 *      0.5 * 0.025   TRUE
-                    3         H4 parametric 0.01 <= 1.00000 *      0.0 * 0.025  FALSE
+        Intersection Hypothesis       Test    p <= c_value * Weight * Alpha Reject
+                   1         H1 parametric 0.01 <= 1.00633 *    0.5 * 0.025   TRUE
+                   1         H2 parametric 0.01 <= 1.00633 *    0.5 * 0.025   TRUE
+                   1         H3 parametric 0.01 <= 1.00000 *    0.0 * 0.025  FALSE
+                   1         H4 parametric 0.01 <= 1.00000 *    0.0 * 0.025  FALSE
+                   2         H1 parametric 0.01 <= 1.00633 *    0.5 * 0.025   TRUE
+                   2         H2 parametric 0.01 <= 1.00633 *    0.5 * 0.025   TRUE
+                   2         H3 parametric 0.01 <= 1.00000 *    0.0 * 0.025  FALSE
+                   3         H1 parametric 0.01 <= 1.00633 *    0.5 * 0.025   TRUE
+                   3         H2 parametric 0.01 <= 1.00633 *    0.5 * 0.025   TRUE
+                   3         H4 parametric 0.01 <= 1.00000 *    0.0 * 0.025  FALSE
         ... (Use `print(x, rows = <nn>)` for more)
       
 
@@ -457,7 +479,7 @@
                 H3         0.02   TRUE
                 H4         0.02   TRUE
       
-        Updated graph after rejections
+        Final updated graph after removing rejected hypotheses
       
         --- Hypothesis weights ---
         H1: 0
@@ -511,7 +533,7 @@
                   H3         0.02   TRUE
                   H4         0.02   TRUE
       
-          Updated graph after rejections
+          Final updated graph after removing rejected hypotheses
       
           --- Hypothesis weights ---
           H1: 0
@@ -527,31 +549,31 @@
           H4  0  0  0  0
       
       Test details - Adjusted p ($details) -------------------------------------------
-               H1   H2   H3   H4 adj_p_grp1 adj_p_inter reject
-          1  0.50 0.50 0.00 0.00       0.02        0.02   TRUE
-          2  0.50 0.50 0.00   NA       0.02        0.02   TRUE
-          3  0.50 0.50   NA 0.00       0.02        0.02   TRUE
-          4  0.50 0.50   NA   NA       0.02        0.02   TRUE
-          5  0.50   NA 0.00 0.50       0.02        0.02   TRUE
-          6  1.00   NA 0.00   NA       0.01        0.01   TRUE
-          7  0.50   NA   NA 0.50       0.02        0.02   TRUE
-          8  1.00   NA   NA   NA       0.01        0.01   TRUE
-          9    NA 0.50 0.50 0.00       0.02        0.02   TRUE
-          10   NA 0.50 0.50   NA       0.02        0.02   TRUE
+          Intersection   H1   H2   H3   H4 adj_p_grp1 adj_p_inter reject
+                     1 0.50 0.50 0.00 0.00       0.02        0.02   TRUE
+                     2 0.50 0.50 0.00   NA       0.02        0.02   TRUE
+                     3 0.50 0.50   NA 0.00       0.02        0.02   TRUE
+                     4 0.50 0.50   NA   NA       0.02        0.02   TRUE
+                     5 0.50   NA 0.00 0.50       0.02        0.02   TRUE
+                     6 1.00   NA 0.00   NA       0.01        0.01   TRUE
+                     7 0.50   NA   NA 0.50       0.02        0.02   TRUE
+                     8 1.00   NA   NA   NA       0.01        0.01   TRUE
+                     9   NA 0.50 0.50 0.00       0.02        0.02   TRUE
+                    10   NA 0.50 0.50   NA       0.02        0.02   TRUE
           ... (Use `print(x, rows = <nn>)` for more)
       
       Test details - Critical values ($critical) -------------------------------------
-           Intersection Hypothesis       Test    p <= Critical * Alpha Reject
-                      1         H1 bonferroni 0.01 <=      0.5 * 0.025   TRUE
-                      1         H2 bonferroni 0.01 <=      0.5 * 0.025   TRUE
-                      1         H3 bonferroni 0.01 <=      0.0 * 0.025  FALSE
-                      1         H4 bonferroni 0.01 <=      0.0 * 0.025  FALSE
-                      2         H1 bonferroni 0.01 <=      0.5 * 0.025   TRUE
-                      2         H2 bonferroni 0.01 <=      0.5 * 0.025   TRUE
-                      2         H3 bonferroni 0.01 <=      0.0 * 0.025  FALSE
-                      3         H1 bonferroni 0.01 <=      0.5 * 0.025   TRUE
-                      3         H2 bonferroni 0.01 <=      0.5 * 0.025   TRUE
-                      3         H4 bonferroni 0.01 <=      0.0 * 0.025  FALSE
+          Intersection Hypothesis       Test    p <= Weight * Alpha Reject
+                     1         H1 bonferroni 0.01 <=    0.5 * 0.025   TRUE
+                     1         H2 bonferroni 0.01 <=    0.5 * 0.025   TRUE
+                     1         H3 bonferroni 0.01 <=    0.0 * 0.025  FALSE
+                     1         H4 bonferroni 0.01 <=    0.0 * 0.025  FALSE
+                     2         H1 bonferroni 0.01 <=    0.5 * 0.025   TRUE
+                     2         H2 bonferroni 0.01 <=    0.5 * 0.025   TRUE
+                     2         H3 bonferroni 0.01 <=    0.0 * 0.025  FALSE
+                     3         H1 bonferroni 0.01 <=    0.5 * 0.025   TRUE
+                     3         H2 bonferroni 0.01 <=    0.5 * 0.025   TRUE
+                     3         H4 bonferroni 0.01 <=    0.0 * 0.025  FALSE
           ... (Use `print(x, rows = <nn>)` for more)
       
 
@@ -593,7 +615,7 @@
                        H3         0.02   TRUE
                        H4         0.02   TRUE
       
-               Updated graph after rejections
+               Final updated graph after removing rejected hypotheses
       
                --- Hypothesis weights ---
                H1: 0
@@ -624,7 +646,7 @@
                H3  0  1  0  0
                H4  1  0  0  0
       
-                        Step 1: Delete hypothesis H1
+                        Step 1: Updated graph after removing hypothesis H1
       
                         --- Hypothesis weights ---
                         H1: 0.0
@@ -639,7 +661,7 @@
                         H3  0  1  0  0
                         H4  0  0  1  0
       
-                                 Step 2: Delete hypothesis H2
+                                 Step 2: Updated graph after removing hypotheses H1, H2
       
                                  --- Hypothesis weights ---
                                  H1: 0.0
@@ -654,7 +676,7 @@
                                  H3  0  0  0  1
                                  H4  0  0  1  0
       
-                                          Step 3: Delete hypothesis H3
+                                          Step 3: Updated graph after removing hypotheses H1, H2, H3
       
                                           --- Hypothesis weights ---
                                           H1: 0
@@ -669,7 +691,7 @@
                                           H3  0  0  0  0
                                           H4  0  0  0  0
       
-                                                   Step 4 (Ending state): Delete hypothesis H4
+                                                   Step 4: Updated graph after removing hypotheses H1, H2, H3, H4
       
                                                    --- Hypothesis weights ---
                                                    H1: 0
@@ -684,12 +706,27 @@
                                                    H3  0  0  0  0
                                                    H4  0  0  0  0
       
+               Final updated graph after removing rejected hypotheses
+      
+               --- Hypothesis weights ---
+               H1: 0
+               H2: 0
+               H3: 0
+               H4: 0
+      
+               --- Transition weights ---
+                  H1 H2 H3 H4
+               H1  0  0  0  0
+               H2  0  0  0  0
+               H3  0  0  0  0
+               H4  0  0  0  0
+      
       Test details - Critical values ($critical) -------------------------------------
-                step Hypothesis    p <= Critical * Alpha Reject
-                   1         H1 0.01 <=      0.5 * 0.025   TRUE
-                   2         H2 0.01 <=      0.5 * 0.025   TRUE
-                   3         H3 0.01 <=      0.5 * 0.025   TRUE
-                   4         H4 0.01 <=      1.0 * 0.025   TRUE
+               Step Hypothesis    p <= Weight * Alpha Reject
+                  1         H1 0.01 <=    0.5 * 0.025   TRUE
+                  2         H2 0.01 <=    0.5 * 0.025   TRUE
+                  3         H3 0.01 <=    0.5 * 0.025   TRUE
+                  4         H4 0.01 <=    1.0 * 0.025   TRUE
       
 
 ---
@@ -736,7 +773,7 @@
                 H5        0.020   TRUE
                 H6        0.020   TRUE
       
-        Updated graph after rejections
+        Final updated graph after removing rejected hypotheses
       
         --- Hypothesis weights ---
         H1: 0.0
@@ -775,7 +812,7 @@
         H5 0.0000 0.0000 0.0000 0.0000 0.0000 1.0000
         H6 0.0001 0.0000 0.0000 0.0000 0.9999 0.0000
       
-          Step 1: Delete hypothesis H4
+          Step 1: Updated graph after removing hypothesis H4
       
           --- Hypothesis weights ---
           H1: 0.50
@@ -794,7 +831,7 @@
           H5 0.00000 0.00000 0.00000 0.00000 0.00000 1.00000
           H6 0.00010 0.00000 0.00000 0.00000 0.99990 0.00000
       
-            Step 2: Delete hypothesis H6
+            Step 2: Updated graph after removing hypotheses H4, H6
       
             --- Hypothesis weights ---
             H1: 0.500025
@@ -820,7 +857,7 @@
        0.000000000
        0.000000000
       
-              Step 3: Delete hypothesis H5
+              Step 3: Updated graph after removing hypotheses H4, H6, H5
       
               --- Hypothesis weights ---
               H1: 1
@@ -839,7 +876,7 @@
               H5 0.0000 0.0000 0.0000 0.0000 0.0000 0.0000
               H6 0.0000 0.0000 0.0000 0.0000 0.0000 0.0000
       
-                Step 4 (Ending state): Delete hypothesis H1
+                Step 4: Updated graph after removing hypotheses H4, H6, H5, H1
       
                 --- Hypothesis weights ---
                 H1: 0.0
@@ -858,13 +895,32 @@
                 H5  0  0  0  0  0  0
                 H6  0  0  0  0  0  0
       
+        Final updated graph after removing rejected hypotheses
+      
+        --- Hypothesis weights ---
+        H1: 0.0
+        H2: 0.5
+        H3: 0.5
+        H4: 0.0
+        H5: 0.0
+        H6: 0.0
+      
+        --- Transition weights ---
+           H1 H2 H3 H4 H5 H6
+        H1  0  0  0  0  0  0
+        H2  0  0  1  0  0  0
+        H3  0  1  0  0  0  0
+        H4  0  0  0  0  0  0
+        H5  0  0  0  0  0  0
+        H6  0  0  0  0  0  0
+      
       Test details - Critical values ($critical) -------------------------------------
-         step Hypothesis     p <= Critical * Alpha Reject
-            1         H4 0.010 <= 0.500000 * 0.025   TRUE
-            2         H6 0.000 <= 0.250000 * 0.025   TRUE
-            3         H5 0.005 <= 0.499975 * 0.025   TRUE
-            4         H1 0.025 <= 1.000000 * 0.025   TRUE
-           NA         H3 0.015 <= 0.500000 * 0.025  FALSE
-           NA         H2 0.020 <= 0.500000 * 0.025  FALSE
+        Step Hypothesis     p <=   Weight * Alpha Reject
+           1         H4 0.010 <= 0.500000 * 0.025   TRUE
+           2         H6 0.000 <= 0.250000 * 0.025   TRUE
+           3         H5 0.005 <= 0.499975 * 0.025   TRUE
+           4         H1 0.025 <= 1.000000 * 0.025   TRUE
+           5         H3 0.015 <= 0.500000 * 0.025  FALSE
+           5         H2 0.020 <= 0.500000 * 0.025  FALSE
       
 

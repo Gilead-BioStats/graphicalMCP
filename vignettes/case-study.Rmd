@@ -373,10 +373,9 @@ Re-run any of the tests above with `verbose = TRUE` or `critical = TRUE` to get 
 The {graphicalMCP} package can help design a study for new therapeutic treatments. Several different testing designs are supported, and power calculations can be used to understand the potential study result space in an efficient way. The testing functions can be used to test study results, and the verbose/critical output gives rich information about why a hypothesis was rejected or not.
 
 ```{r pres-examples-1}
-slides_names <- c("lo_pe", "hi_pe", "lo_se1", "hi_se1", "lo_se2", "hi_se2")
 names(example_.5_.5$hypotheses) <-
   rownames(example_.5_.5$transitions) <-
-  colnames(example_.5_.5$transitions) <- slides_names
+  colnames(example_.5_.5$transitions) <- paste0("H", 1:6)
 
 shortcut_example <- test_graph_shortcut(
   example_.5_.5,
@@ -416,7 +415,7 @@ s_corr <- rbind(
   c(0.4, 0.8, 0.4, 0.8, 0.5, 1)
 )
 
-marginal_power <- c(2.7, 2.8, 1.9, 2.1, 1.7, 2.5)
+marginal_power <- c(.9, .9, .8, .8, .7, .7)
 
 power_example <- calculate_power(
   example_.5_.5,
@@ -427,7 +426,10 @@ power_example <- calculate_power(
   sim_n = 1e5,
   marginal_power = marginal_power,
   sim_corr = s_corr,
-  sim_success = list(`1 and 2` = \(x) x[1] & x[2]),
+  sim_success = list(
+    `1 and 2` = \(x) x[1] & x[2],
+    `1&3&5 or 2&4&6` = \(x) (x[1] & x[3] & x[5]) | (x[2] & x[4] & x[6])
+  ),
   verbose = TRUE
 )
 
