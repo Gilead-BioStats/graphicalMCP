@@ -534,7 +534,7 @@ how it performs.
 calculate_power(
   g_dose,
   sim_n = 1e5,
-  marginal_power = c(1, 1, 1, 1)
+  marginal_power = c(.1, .1, .1, .1)
 )
 #> 
 #> Test parameters ($inputs) ------------------------------------------------------
@@ -561,8 +561,8 @@ calculate_power(
 #> Simulation parameters ($inputs) ------------------------------------------------
 #>   Testing 100,000 simulations with multivariate normal params:
 #> 
-#>                   A1 A2 B1 B2
-#>   Marginal power:  1  1  1  1
+#>                    A1  A2  B1  B2
+#>   Marginal power: 0.1 0.1 0.1 0.1
 #> 
 #>   Correlation:    A1 A2 B1 B2
 #>                A1  1  0  0  0
@@ -572,11 +572,11 @@ calculate_power(
 #> 
 #> Power calculation ($power) -----------------------------------------------------
 #>                                   A1      A2      B1      B2
-#>        Power to reject each: 0.17087 0.16880 0.02986 0.02975
+#>        Power to reject each: 0.03130 0.03197 0.00100 0.00102
 #> 
-#>         Expected rejections: 0.39928
-#>   Power to reject 1 or more: 0.30602
-#>         Power to reject all: 0.00302
+#>         Expected rejections: 0.06529
+#>   Power to reject 1 or more: 0.06217
+#>         Power to reject all: 0
 ```
 
 The `simple_successive_2()` function creates a parallel gate-keeping
@@ -591,7 +591,7 @@ g_dose_2 <- simple_successive_2(names)
 calculate_power(
   g_dose_2,
   sim_n = 1e5,
-  marginal_power = c(1, 1, 1, 1)
+  marginal_power = c(.1, .1, .1, .1)
 )
 #> 
 #> Test parameters ($inputs) ------------------------------------------------------
@@ -618,8 +618,8 @@ calculate_power(
 #> Simulation parameters ($inputs) ------------------------------------------------
 #>   Testing 100,000 simulations with multivariate normal params:
 #> 
-#>                   A1 A2 B1 B2
-#>   Marginal power:  1  1  1  1
+#>                    A1  A2  B1  B2
+#>   Marginal power: 0.1 0.1 0.1 0.1
 #> 
 #>   Correlation:    A1 A2 B1 B2
 #>                A1  1  0  0  0
@@ -629,11 +629,11 @@ calculate_power(
 #> 
 #> Power calculation ($power) -----------------------------------------------------
 #>                                   A1      A2      B1      B2
-#>        Power to reject each: 0.17924 0.17745 0.02310 0.02287
+#>        Power to reject each: 0.03208 0.03275 0.00085 0.00048
 #> 
-#>         Expected rejections: 0.40266
-#>   Power to reject 1 or more: 0.31006
-#>         Power to reject all: 0.00331
+#>         Expected rejections: 0.06616
+#>   Power to reject 1 or more: 0.06287
+#>         Power to reject all: 0
 ```
 
 ### Other tests
@@ -649,7 +649,7 @@ tests, multiple groups, Simes tests.
 calculate_power(
   g_dose_2,
   sim_n = 1e5,
-  marginal_power = c(1, 1, 1, 1),
+  marginal_power = c(.1, .1, .1, .1),
   test_types = c("s", "p"),
   test_groups = list(1:2, 3:4),
   test_corr = diag(4)
@@ -686,8 +686,8 @@ calculate_power(
 #> Simulation parameters ($inputs) ------------------------------------------------
 #>   Testing 100,000 simulations with multivariate normal params:
 #> 
-#>                   A1 A2 B1 B2
-#>   Marginal power:  1  1  1  1
+#>                    A1  A2  B1  B2
+#>   Marginal power: 0.1 0.1 0.1 0.1
 #> 
 #>   Correlation:    A1 A2 B1 B2
 #>                A1  1  0  0  0
@@ -697,11 +697,11 @@ calculate_power(
 #> 
 #> Power calculation ($power) -----------------------------------------------------
 #>                                   A1      A2      B1      B2
-#>        Power to reject each: 0.18161 0.18280 0.02334 0.02384
+#>        Power to reject each: 0.03184 0.03235 0.00048 0.00055
 #> 
-#>         Expected rejections: 0.41159
-#>   Power to reject 1 or more: 0.31572
-#>         Power to reject all: 0.00352
+#>         Expected rejections: 0.06522
+#>   Power to reject 1 or more: 0.062
+#>         Power to reject all: 0
 ```
 
 ## Related work

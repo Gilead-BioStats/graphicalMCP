@@ -172,7 +172,7 @@ It's not always obvious from a given graph structure how easy or difficult it wi
 calculate_power(
   g_dose,
   sim_n = 1e5,
-  marginal_power = c(1, 1, 1, 1)
+  marginal_power = c(.1, .1, .1, .1)
 )
 ```
 
@@ -184,7 +184,7 @@ g_dose_2 <- simple_successive_2(names)
 calculate_power(
   g_dose_2,
   sim_n = 1e5,
-  marginal_power = c(1, 1, 1, 1)
+  marginal_power = c(.1, .1, .1, .1)
 )
 ```
 
@@ -196,7 +196,7 @@ Bonferroni testing uses a shortcut to make testing, and therefore power, run ver
 calculate_power(
   g_dose_2,
   sim_n = 1e5,
-  marginal_power = c(1, 1, 1, 1),
+  marginal_power = c(.1, .1, .1, .1),
   test_types = c("s", "p"),
   test_groups = list(1:2, 3:4),
   test_corr = diag(4)

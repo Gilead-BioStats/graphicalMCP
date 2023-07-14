@@ -321,7 +321,7 @@ if (file.exists(here("vignettes/data/df_benchmarks_power.rds"))) {
       trn <- rando$transitions
       hyp <- rando$hypotheses
 
-      marg_pow <- rep(2.2, size)
+      marg_pow <- rep(.8, size)
       t_corr <- s_corr <- diag(size)
 
       speed_comp <- mark(
