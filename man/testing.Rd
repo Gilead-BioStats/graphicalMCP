@@ -43,11 +43,11 @@ for parametric tests}
 }
 \value{
 A \code{graph_report} object, a list of 4 elements: \code{inputs}, \code{outputs},
-\code{verbose}, and \code{critical}
+\code{details}, and \code{critical}
 \itemize{
 \item Inputs - A list of the input parameters used to run the test
 \item Outputs - A list of global test results
-\item Verbose - A matrix with detailed adjusted p-value results (graph deletion
+\item Details - A matrix with detailed adjusted p-value results (graph deletion
 sequence for shortcut testing)
 \item Critical - A data frame with hypothesis-level test details for each
 intersection (each step for shortcut testing)
