@@ -94,12 +94,16 @@ calculate_power <- function(graph,
                             test_types = c("bonferroni"),
                             test_corr = NULL,
                             sim_n = 100,
-                            marginal_power = rep(0, length(graph$hypotheses)),
+                            marginal_power = NULL,
                             sim_corr = diag(length(graph$hypotheses)),
                             sim_success = NULL,
                             sim_seed = NULL,
                             force_closure = FALSE,
                             verbose = FALSE) {
+  if (is.null(marginal_power)) {
+    marginal_power <- rep(alpha, length(graph$hypotheses))
+  }
+
   # Input sanitization ---------------------------------------------------------
   # Test types should be passed as full names or first letter, case-insensitive,
   # and a single provided type should get expanded to all groups
@@ -126,7 +130,7 @@ calculate_power <- function(graph,
   num_hyps <- length(graph$hypotheses)
 
   # Input validation -----------------------------------------------------------
-  fake_p <- rep(0, length(graph$hypotheses))
+  fake_p <- rep(alpha, length(graph$hypotheses))
   test_input_val(
     graph,
     fake_p,
@@ -145,8 +149,16 @@ calculate_power <- function(graph,
   # are set with `sim_corr`. Random samples are converted to p-values with a
   # one-sided test.
   if (!is.null(sim_seed)) set.seed(sim_seed)
+
+  noncentrality_parameter <-
+    stats::qnorm(1 - alpha) - stats::qnorm(1 - marginal_power)
+
   p_sim <- stats::pnorm(
-    mvtnorm::rmvnorm(sim_n, marginal_power, sigma = sim_corr),
+    mvtnorm::rmvnorm(
+      sim_n,
+      noncentrality_parameter,
+      sigma = sim_corr
+    ),
     lower.tail = FALSE
   )
 

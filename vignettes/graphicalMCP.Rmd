@@ -1,0 +1,186 @@
+---
+title: "Get started"
+output:
+  rmarkdown::html_vignette:
+    code_folding: "hide"
+params:
+  m: 5
+  sims: 100000
+vignette: >
+  %\VignetteIndexEntry{Testing and power basics}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  cache.lazy = FALSE
+)
+```
+
+```{r setup}
+library(gt)
+library(gMCP)
+library(graphicalMCP)
+```
+
+## Testing a graph
+
+Start testing with the example graph from the README, a simple successive graph with two primary and two secondary hypotheses.
+
+```{r create-graph-1}
+ss_graph <- simple_successive_2(c("A1", "B1", "A2", "B2"))
+
+pvals <- c(.024, .01, .026, .027)
+
+ss_graph
+```
+
+This graph can be tested most simply with the default weighted Bonferroni test. When testing at the global alpha level 0.05, we can reject hypotheses A1 and B1, but not A2 or B2.
+
+```{r bonferroni-mix-1}
+test_graph_closure(ss_graph, p = pvals, alpha = .05)
+```
+
+The results of the weighted Simes test are equivalent to weighted Bonferroni in some situations. The power of the Simes test becomes apparent when multiple p-values fall below the global alpha level, but above their local alpha in some intersection(s). In the following case, B1 & B2 are rejected in the Bonferroni testing procedure for intersection `B1 ∩ B2` because the p-value is greater than `α * w` for each hypothesis in that case. However, the Simes test rejects `B1 ∩ B2` because the weight from B1 is added to the weight for B2.
+
+```{r simes-all-1}
+test_graph_closure(ss_graph, p = pvals, alpha = .05, test_types = "s")
+```
+
+If a correlation matrix for the test statistics is partially or fully known, a parametric test can be used for any subsets whose correlation matrix is fully known. Here B1 & B2 get a `c` value calculated that boosts their testing threshold slightly higher. 
+
+```{r parametric-1}
+corr1 <- matrix(nrow = 4, ncol = 4)
+corr1[3:4, 3:4] <- .5
+diag(corr1) <- 1
+
+test_graph_closure(ss_graph,
+  p = pvals,
+  alpha = .05,
+  groups = list(1:2, 3:4),
+  test_types = c("b", "p"),
+  corr = corr1
+)
+```
+
+There are two different testing methods - one which tests each hypothesis with the `p <= (c *) w * α` method, and another which calculates adjusted p-values. The adjusted p-values method is much more efficient, so it is the standard method. Additional details about the adjusted p-values calculation can be seen by setting `verbose = TRUE`.
+
+```{r verbose}
+test_graph_closure(
+  ss_graph,
+  p = pvals,
+  alpha = .05,
+  corr = corr1,
+  groups = list(1:2, 3:4),
+  test_types = c("s", "p"),
+  verbose = TRUE
+)
+```
+
+The critical value method tests every hypothesis in the closure. Setting `critical = TRUE` displays the values used in each of these tests. This can provide more detailed information about what caused a hypothesis to fail than the adjusted p-values. However, it comes with some cost in computation time.
+
+```{r critical}
+test_graph_closure(
+  ss_graph,
+  p = pvals,
+  alpha = .05,
+  corr = corr1,
+  groups = list(1:2, 3:4),
+  test_types = c("s", "p"),
+  verbose = TRUE,
+  critical = TRUE
+)
+```
+
+When using only Bonferroni testing, there is a shortcut in testing which allows us to not test the full closure of a graph. Use [test_graph_shortcut()] to call this shortcut method. In this case, `critical = TRUE` instead gives information about the order in which hypotheses are deleted. Note that the `res` column of the critical output here tells **what would have happened if sequential testing reached a given point**. However, sequential testing stops at the first non-rejected hypothesis. Global rejection results can be found in the `Global test summary` section.
+
+```{r sequential}
+test_graph_shortcut(ss_graph, p = pvals, alpha = .05, critical = TRUE)
+```
+
+## Print options
+
+The print generic for test results includes a couple of additional options. Each section within results is indented 2 spaces by default, but this can be adjusted with `indent`. Numeric values are rounded to 6 decimals to control the amount of space used, but this can be set using the `precision` argument. This only affects the printing format, not the underlying values.
+
+```{r print-indent}
+set.seed(3123)
+# Randomly generate a graph
+m <- 5
+w <- sample(1:m, replace = TRUE)
+w <- w / sum(w)
+g <- replicate(m, sample(1:m, replace = TRUE), simplify = TRUE)
+diag(g) <- 0
+g <- g / rowSums(g)
+graph <- new("graphMCP", m = g, weights = w)
+graph2 <- create_graph(w, g)
+
+p <- runif(m, .0001, .05)
+sim_corr <- diag(m)
+
+mix_test <- test_graph_closure(
+  graph2,
+  p = p,
+  alpha = .05,
+  corr = sim_corr,
+  groups = list(1, 2:3, 4:5),
+  test_types = c("b", "s", "p"),
+  verbose = TRUE,
+  critical = TRUE
+)
+
+print(mix_test)
+
+print(mix_test, indent = 6, precision = 10)
+```
+
+## Power simulations
+
+It's not always obvious from a given graph structure how easy or difficult it will be to reject each hypothesis. One way to understand this better is to run a power simulation. The essence of a power simulation is to generate many different p-values using some chosen distribution, then test the graph against each set of p-values to see how it performs.
+
+The default for power simulations, like for testing, is to test a graph at alpha level .05 with Bonferroni testing.
+
+```{r power-bonf}
+calculate_power(ss_graph, sim_n = 1e5)
+```
+
+However, all testing options are available for power calculations as well.
+
+```{r power-mix}
+corr2 <- matrix(.5, nrow = 4, ncol = 4)
+diag(corr2) <- 1
+
+calculate_power(
+  ss_graph,
+  test_groups = list(1:4),
+  test_types = c("p"),
+  test_corr = corr2,
+  sim_n = 1e5
+)
+```
+
+In addition to testing options, there are options that control how p-values are simulated from the multivariate normal distribution.
+
+```{r power-sims}
+s_corr1 <- rbind(
+  c(1, .5, .5, .25),
+  c(.5, 1, .25, .5),
+  c(.5, .25, 1, .5),
+  c(.25, .5, .5, 1)
+)
+
+calculate_power(
+  ss_graph,
+  test_groups = list(1:4),
+  test_types = c("p"),
+  test_corr = corr2,
+  marginal_power = c(.4, .4, .9, .9),
+  sim_corr = s_corr1,
+  sim_success = function(.) .[1] || .[2],
+  sim_seed = 52423, # Set a seed if you need consistent p-values
+  sim_n = 1e5
+)
+```
+

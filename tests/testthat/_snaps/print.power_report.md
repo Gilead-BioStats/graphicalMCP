@@ -28,8 +28,8 @@
       Simulation parameters ($inputs) ------------------------------------------------
         Testing 100 simulations - random seed 51223 & multivariate normal params:
       
-                        H1 H2 H3 H4
-        Marginal power:  0  0  0  0
+                           H1    H2    H3    H4
+        Marginal power: 0.025 0.025 0.025 0.025
       
         Correlation:    H1 H2 H3 H4
                      H1  1  0  0  0
@@ -76,8 +76,8 @@
       Simulation parameters ($inputs) ------------------------------------------------
             Testing 100 simulations - random seed 51223 & multivariate normal params:
       
-                            H1 H2 H3 H4
-            Marginal power:  0  0  0  0
+                               H1    H2    H3    H4
+            Marginal power: 0.025 0.025 0.025 0.025
       
             Correlation:    H1 H2 H3 H4
                          H1  1  0  0  0
@@ -125,8 +125,8 @@
       Simulation parameters ($inputs) ------------------------------------------------
             Testing 100 simulations - random seed 51223 & multivariate normal params:
       
-                            H1 H2 H3 H4
-            Marginal power:  0  0  0  0
+                               H1    H2    H3    H4
+            Marginal power: 0.025 0.025 0.025 0.025
       
             Correlation:    H1 H2 H3 H4
                          H1  1  0  0  0
@@ -173,8 +173,8 @@
       Simulation parameters ($inputs) ------------------------------------------------
         Testing 100 simulations - random seed 51223 & multivariate normal params:
       
-                        H1 H2 H3 H4
-        Marginal power:  0  0  0  0
+                           H1    H2    H3    H4
+        Marginal power: 0.025 0.025 0.025 0.025
       
         Correlation:    H1 H2 H3 H4
                      H1  1  0  0  0
@@ -222,8 +222,8 @@
       Simulation parameters ($inputs) ------------------------------------------------
             Testing 100 simulations - random seed 51223 & multivariate normal params:
       
-                            H1 H2 H3 H4
-            Marginal power:  0  0  0  0
+                               H1    H2    H3    H4
+            Marginal power: 0.025 0.025 0.025 0.025
       
             Correlation:    H1 H2 H3 H4
                          H1  1  0  0  0
@@ -276,8 +276,8 @@
       Simulation parameters ($inputs) ------------------------------------------------
         Testing 100 simulations - random seed 51223 & multivariate normal params:
       
-                        H1 H2 H3 H4
-        Marginal power:  0  0  0  0
+                           H1    H2    H3    H4
+        Marginal power: 0.025 0.025 0.025 0.025
       
         Correlation:    H1 H2 H3 H4
                      H1  1  0  0  0
@@ -331,8 +331,8 @@
       Simulation parameters ($inputs) ------------------------------------------------
             Testing 100 simulations - random seed 51223 & multivariate normal params:
       
-                            H1 H2 H3 H4
-            Marginal power:  0  0  0  0
+                               H1    H2    H3    H4
+            Marginal power: 0.025 0.025 0.025 0.025
       
             Correlation:    H1 H2 H3 H4
                          H1  1  0  0  0
@@ -398,31 +398,31 @@
       Marginal power: 0.1241736227 0.1019997615
       
        Correlation:              H1           H2           H3           H4
-                    H1 1.0000000000 0.6283185307 0.6283185307 0.6283185307
-                    H2 0.6283185307 1.0000000000 0.6283185307 0.6283185307
-                    H3 0.6283185307 0.6283185307 1.0000000000 0.6283185307
-                    H4 0.6283185307 0.6283185307 0.6283185307 1.0000000000
-                    H5 0.6283185307 0.6283185307 0.6283185307 0.6283185307
-                    H6 0.6283185307 0.6283185307 0.6283185307 0.6283185307
+                    H1 1.0000000000 0.7853981634 0.7853981634 0.7853981634
+                    H2 0.7853981634 1.0000000000 0.7853981634 0.7853981634
+                    H3 0.7853981634 0.7853981634 1.0000000000 0.7853981634
+                    H4 0.7853981634 0.7853981634 0.7853981634 1.0000000000
+                    H5 0.7853981634 0.7853981634 0.7853981634 0.7853981634
+                    H6 0.7853981634 0.7853981634 0.7853981634 0.7853981634
                  H5           H6
-       0.6283185307 0.6283185307
-       0.6283185307 0.6283185307
-       0.6283185307 0.6283185307
-       0.6283185307 0.6283185307
-       1.0000000000 0.6283185307
-       0.6283185307 1.0000000000
+       0.7853981634 0.7853981634
+       0.7853981634 0.7853981634
+       0.7853981634 0.7853981634
+       0.7853981634 0.7853981634
+       1.0000000000 0.7853981634
+       0.7853981634 1.0000000000
       
       Power calculation ($power) -----------------------------------------------------
-                                              H1             H2             H3
-                     Local power: 0.048945783133 0.015813253012 0.008283132530
-                                              H4             H5             H6
-                     Local power: 0.009789156627 0.009036144578 0.008283132530
+                                             H1            H2            H3
+                     Local power: 0.84036144578 0.20256024096 0.08960843373
+                                             H4            H5            H6
+                     Local power: 0.07304216867 0.06325301205 0.05346385542
       
-      Expected no. of rejections: 0.1001506024
-       Power to reject 1 or more: 0.06475903614
-             Power to reject all: 0.001506024096
+      Expected no. of rejections: 1.322289157
+       Power to reject 1 or more: 0.8403614458
+             Power to reject all: 0.0406626506
       
                   Power to reject:    .[1] || .[5] || .[6]   .[2] && (.[5] || .[6])
-                                            0.054216867470           0.004518072289
+                                             0.84036144578            0.07003012048
       
 

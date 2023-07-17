@@ -58,7 +58,7 @@ test_that("printing blended power", {
   t_corr <- matrix(pi / 4, nrow = 6, ncol = 6)
   diag(t_corr) <- 1
 
-  s_corr <- matrix(pi / 5, nrow = 6, ncol = 6)
+  s_corr <- matrix(pi / 4, nrow = 6, ncol = 6)
   diag(s_corr) <- 1
 
   expect_snapshot(
