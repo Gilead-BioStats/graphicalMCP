@@ -118,7 +118,7 @@ gt_display_table_1 <- function(df) {
 
 This vignette demonstrates re-creating table 1 from Bretz et al. (2011) using {graphicalMCP}. Here is the target output
 
-![Table 1 from Bretz et al. (2011)](img/table_1.png)
+![Table 1 from Bretz et al. (2011)](images/table_1.png)
 
 ```{r target}
 table_1_target <- readRDS(here("vignettes/data/test-power-2011_t1-target.rds"))
@@ -270,7 +270,7 @@ gt_display_table_1(as.data.frame(table_1[, c(1:3, 6:7, 10:19)]))
 
 And the target again for reference
 
-![Table 1 from Bretz et al. (2011)](img/table_1.png)
+![Table 1 from Bretz et al. (2011)](images/table_1.png)
 
 Power values will differ slightly due to different simulations, but on the whole they are very similar.
 

@@ -3,7 +3,7 @@
 ^README\.Rmd$
 ^LICENSE\.md$
 ^LICENSE$
-^perf-tests$
+^misc$
 ^cache$
 ^docs$
 ^_pkgdown\.yml$
