@@ -1,10 +1,10 @@
 test_that("printing Bonferroni power - sequential & closure", {
   g <- huque_alosh_bhore_2011()
 
-  expect_snapshot(calculate_power(g, sim_seed = 51223))
+  expect_snapshot(graph_calculate_power(g, sim_seed = 51223))
   expect_snapshot(
     print(
-      calculate_power(g, sim_seed = 51223),
+      graph_calculate_power(g, sim_seed = 51223),
       indent = 6,
       precision = 3
     )
@@ -12,7 +12,7 @@ test_that("printing Bonferroni power - sequential & closure", {
 
   expect_snapshot(
     print(
-      calculate_power(g, sim_seed = 51223, force_closure = TRUE),
+      graph_calculate_power(g, sim_seed = 51223, force_closure = TRUE),
       indent = 6,
       precision = 3
     )
@@ -22,10 +22,10 @@ test_that("printing Bonferroni power - sequential & closure", {
 test_that("printing Simes power", {
   g <- simple_successive_1()
 
-  expect_snapshot(calculate_power(g, sim_seed = 51223, test_types = "s"))
+  expect_snapshot(graph_calculate_power(g, sim_seed = 51223, test_types = "s"))
   expect_snapshot(
     print(
-      calculate_power(g, sim_seed = 51223, test_types = "s"),
+      graph_calculate_power(g, sim_seed = 51223, test_types = "s"),
       indent = 6,
       precision = 3
     )
@@ -36,11 +36,11 @@ test_that("printing parametric power", {
   g <- fixed_sequence(4)
 
   expect_snapshot(
-    calculate_power(g, sim_seed = 51223, test_types = "p", test_corr = diag(4))
+    graph_calculate_power(g, sim_seed = 51223, test_types = "p", test_corr = diag(4))
   )
   expect_snapshot(
     print(
-      calculate_power(
+      graph_calculate_power(
         g,
         sim_seed = 51223,
         test_types = "p",
@@ -63,7 +63,7 @@ test_that("printing blended power", {
 
   expect_snapshot(
     print(
-      calculate_power(
+      graph_calculate_power(
         g,
         .0254871,
         list(4:3, c(6, 1), c(2, 5)),

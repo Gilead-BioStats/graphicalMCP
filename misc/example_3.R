@@ -13,7 +13,7 @@ transitions <- rbind(
   c(0, 1, 0, 0),
   c(1, 0, 0, 0)
 )
-g <- create_graph(hypotheses, transitions)
+g <- graph_create(hypotheses, transitions)
 
 alpha <- .025
 
@@ -30,7 +30,7 @@ corr <- rbind(
   c(.5,  1, .5,  1)
 )
 
-gw <- generate_weights(g)
+gw <- graph_generate_weights(g)
 gw_weights <- gw[, 5:8]
 
 # I thought this was the way gMCP calculated cJ in a doc (gMCP vignette
@@ -55,13 +55,13 @@ cbind(gw, cJ)
 
 # Reject H1, H3, H2
 # The paper does it sequentially because consonance is satisfied, but
-# `test_graph_closure()` handles this case fine using the whole closure tree and the cJ
+# `graph_test_closure()` handles this case fine using the whole closure tree and the cJ
 # calculation above
 p_vals <- c(.01, .02, .005, .5)
 
 gMCP(as_gmcp_graph(g), p_vals, alpha = alpha, correlation = corr,
      test = "parametric")@rejected
-test_graph_closure(g, p_vals, alpha = alpha, corr = corr,
+graph_test_closure(g, p_vals, alpha = alpha, corr = corr,
            tests = list(parametric = list(1:4)))$hypotheses_rejected
 
 # Part 2 -----------------------------------------------------------------------
@@ -111,7 +111,7 @@ part2 <- function(n0 = 1000, n1 = n0, n2 = n0, p_vals = c(.01, .02, .005, .05),
   if (print) cat("\nrho ---------------------------------------------------------------\n")
   if (print) print(rho)
 
-  gw <- generate_weights(g)
+  gw <- graph_generate_weights(g)
   gw_weights <- gw[, 5:8]
 
   for (i in seq_len(nrow(gw))) {
@@ -137,7 +137,7 @@ part2 <- function(n0 = 1000, n1 = n0, n2 = n0, p_vals = c(.01, .02, .005, .05),
        test = "parametric")@rejected)
 
   if (print) cat("\ngraphicalMCP ------------------------------------------------------\n")
-  graphical <- test_graph_closure(g, p_vals, alpha = alpha, corr = rho,
+  graphical <- graph_test_closure(g, p_vals, alpha = alpha, corr = rho,
                           tests = list(parametric = list(1:4)))$hypotheses_rejected
 
   if (print) print(graphical)
@@ -181,7 +181,7 @@ part2(n1 = 500, n2 = 500, p_vals = c(.01, p, p, .5))
 # simulation, huh? Wait, is a power simulation just simulating p-values from a
 # known distribution and testing each one?
 #
-# Also, how cool is it that gMCP and test_graph_closure always match for all these?
+# Also, how cool is it that gMCP and graph_test_closure always match for all these?
 # Pretty baller! ⛹️
 
 # Okay, so the sample sizes can't have a huge effect on c-values, but the

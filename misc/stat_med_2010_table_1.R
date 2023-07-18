@@ -138,14 +138,14 @@ sim_func <- function(sim_n,
                      theta) {
   new_transitions <- transitions + gamma * gamma_props
 
-  graph <- create_graph(hypotheses, new_transitions)
+  graph <- graph_create(hypotheses, new_transitions)
 
   sim_corr <- rbind(c(1, 0.5, rho, rho / 2),
                     c(0.5, 1, rho / 2, rho),
                     c(rho, rho / 2, 1, 0.5),
                     c(rho / 2, rho, 0.5, 1))
 
-  calculate_power(
+  graph_calculate_power(
     graph = graph,
     alpha = 0.025,
     # test_types = "p",

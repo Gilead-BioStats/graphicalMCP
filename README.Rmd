@@ -105,35 +105,35 @@ transitions <- rbind(
   c(1, 0, 0, 0)
 )
 names <- c("A1", "A2", "B1", "B2")
-g_dose <- create_graph(hypotheses, transitions, names)
+g_dose <- graph_create(hypotheses, transitions, names)
 
 g_dose
 ```
 
 ### Update graph
 
-Hypotheses can be rejected from the MCP using `update_graph()`. Updated weights and transitions are calculated according to the weighting strategy in [Bretz et al (2011)](https://onlinelibrary.wiley.com/doi/10.1002/bimj.201000239)
+Hypotheses can be rejected from the MCP using `graph_update()`. Updated weights and transitions are calculated according to the weighting strategy in [Bretz et al (2011)](https://onlinelibrary.wiley.com/doi/10.1002/bimj.201000239)
 
 ```{r update-graph}
-update_graph(g_dose, c(TRUE, FALSE, FALSE, TRUE))
+graph_update(g_dose, c(TRUE, FALSE, FALSE, TRUE))
 ```
 
 ### Generate weights
 
-The weights of all sub-graphs can be calculated with `generate_weights()`. This uses more efficient code under the hood than `update_graph()` in order to be performant for larger graphs.
+The weights of all sub-graphs can be calculated with `graph_generate_weights()`. This uses more efficient code under the hood than `graph_update()` in order to be performant for larger graphs.
 
 ```{r generate-weights}
-generate_weights(g_dose)
+graph_generate_weights(g_dose)
 ```
 
 ### Test hypotheses
 
-A mixture of statistical tests are supported in graphicalMCP. A graph can be tested against a given alpha with `test_graph_closure()`. A report is then generated, showing the graph & test results.
+A mixture of statistical tests are supported in graphicalMCP. A graph can be tested against a given alpha with `graph_test_closure()`. A report is then generated, showing the graph & test results.
 
 In this example, a weighted Bonferroni test is applied to all hypotheses, with a threshold of 0.05. We can reject a given intersection hypothesis if any of the individual hypotheses within that sub-graph passes the test assigned to it. We can then reject a hypothesis globally if all intersection hypotheses containing that hypothesis are rejected. For instance, in this example we can reject every intersection hypothesis except the one containing only B1 & B2 (Row 3 of `test_results`). Thus, we can reject the null hypotheses for A1 & A2, but we cannot reject the null hypotheses for B1 & B2.
 
 ```{r test-graph}
-test_graph_closure(
+graph_test_closure(
   g_dose,
   p = c(.01, .02, .03, .05),
   alpha = .05,
@@ -145,7 +145,7 @@ test_graph_closure(
 Simes and parametric testing methods are also supported, using the `test_types` argument. Try setting the `verbose` and `critical` flags for a more detailed report on testing.
 
 ```{r test-graph-blend}
-test_graph_closure(
+graph_test_closure(
   g_dose,
   p = c(.01, .02, .03, .05),
   alpha = .05,
@@ -169,7 +169,7 @@ It's not always obvious from a given graph structure how easy or difficult it wi
 ### Bonferroni
 
 ```{r power-1}
-calculate_power(
+graph_calculate_power(
   g_dose,
   sim_n = 1e5,
   marginal_power = c(.1, .1, .1, .1)
@@ -181,7 +181,7 @@ The `simple_successive_2()` function creates a parallel gate-keeping graph, but 
 ```{r power-2}
 g_dose_2 <- simple_successive_2(names)
 
-calculate_power(
+graph_calculate_power(
   g_dose_2,
   sim_n = 1e5,
   marginal_power = c(.1, .1, .1, .1)
@@ -193,7 +193,7 @@ calculate_power(
 Bonferroni testing uses a shortcut to make testing, and therefore power, run very fast (\<1s up to a 10-graph/100K-simulation). However, power simulations can be run with any test strategy. Note that other testing strategies will cause a substantial increase in the time a power simulation takes. In rough ascending order of time impact: parametric tests, multiple groups, Simes tests.
 
 ```{r power-4}
-calculate_power(
+graph_calculate_power(
   g_dose_2,
   sim_n = 1e5,
   marginal_power = c(.1, .1, .1, .1),

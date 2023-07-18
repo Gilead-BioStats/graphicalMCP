@@ -52,9 +52,9 @@ for (i in 1:nsim) {
   gmcp_transition <- mtp.edges(h,g,w)
 
   # graphicalMCP
-  graph <- create_graph(w, g)
-  graphicalmcp_weight <- update_graph(graph, h)$updated_graph$hypotheses
-  graphicalmcp_transition <- update_graph(graph, h)$updated_graph$transitions
+  graph <- graph_create(w, g)
+  graphicalmcp_weight <- graph_update(graph, h)$updated_graph$hypotheses
+  graphicalmcp_transition <- graph_update(graph, h)$updated_graph$transitions
 
   diff_weight <- c(diff_weight, max(abs(gmcp_weight - graphicalmcp_weight)))
   diff_transition <- c(diff_transition, max(abs(gmcp_transition - graphicalmcp_transition)))

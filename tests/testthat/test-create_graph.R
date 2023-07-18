@@ -57,53 +57,53 @@ g_eps <- rbind(
 # tests ------------------------------------------------------------------------
 
 test_that("create a trivial graph", {
-  expect_true(inherits(create_graph(w_1, g_1), "initial_graph"))
+  expect_true(inherits(graph_create(w_1, g_1), "initial_graph"))
 })
 
 test_that("size of w & g differ", {
-  expect_error(create_graph(w_2, g_1))
+  expect_error(graph_create(w_2, g_1))
 })
 
 test_that("transition/hypothesis weights must be numeric", {
-  expect_error(create_graph("1", g_1))
-  expect_error(create_graph(w_1, matrix("0")))
+  expect_error(graph_create("1", g_1))
+  expect_error(graph_create(w_1, matrix("0")))
 })
 
 test_that("hypothesis weights range and sum", {
-  expect_error(create_graph(w_under, g_2))
-  expect_error(create_graph(w_over, g_2))
-  expect_error(create_graph(w_sum_over, g_2))
+  expect_error(graph_create(w_under, g_2))
+  expect_error(graph_create(w_over, g_2))
+  expect_error(graph_create(w_sum_over, g_2))
 })
 
 test_that("transition weights range, sum, and diagonal", {
-  expect_error(create_graph(w_3, g_under))
-  expect_error(create_graph(w_3, g_over))
-  expect_error(create_graph(w_3, g_diag))
-  expect_error(create_graph(w_3, g_sum_over))
+  expect_error(graph_create(w_3, g_under))
+  expect_error(graph_create(w_3, g_over))
+  expect_error(graph_create(w_3, g_diag))
+  expect_error(graph_create(w_3, g_sum_over))
 })
 
 test_that("names validation", {
-  expect_true(inherits(create_graph(w_1, g_1, "node"), "initial_graph"))
-  expect_warning(create_graph(w_1_nm, g_1, "node"))
-  expect_error(create_graph(w_1_nm, g_1_rnm))
-  expect_equal(names(create_graph(w_1, g_1)$hypotheses), "H1")
-  expect_equal(names(create_graph(w_1, g_1_cnm)$hypotheses), "col_node")
-  expect_equal(names(create_graph(w_1, g_1_rnm)$hypotheses), "row_node")
-  expect_equal(names(create_graph(w_1_nm, g_1)$hypotheses), "my_node")
-  expect_equal(names(create_graph(w_1_nm, g_1_nm)$hypotheses), "my_node")
+  expect_true(inherits(graph_create(w_1, g_1, "node"), "initial_graph"))
+  expect_warning(graph_create(w_1_nm, g_1, "node"))
+  expect_error(graph_create(w_1_nm, g_1_rnm))
+  expect_equal(names(graph_create(w_1, g_1)$hypotheses), "H1")
+  expect_equal(names(graph_create(w_1, g_1_cnm)$hypotheses), "col_node")
+  expect_equal(names(graph_create(w_1, g_1_rnm)$hypotheses), "row_node")
+  expect_equal(names(graph_create(w_1_nm, g_1)$hypotheses), "my_node")
+  expect_equal(names(graph_create(w_1_nm, g_1_nm)$hypotheses), "my_node")
 })
 
 test_that("floating point accuracy - errors", {
-  expect_error(create_graph(c(1 + 2 * epsilon), g_1))
-  expect_error(create_graph(rep(.5 + epsilon, 2), g_2))
+  expect_error(graph_create(c(1 + 2 * epsilon), g_1))
+  expect_error(graph_create(rep(.5 + epsilon, 2), g_2))
   expect_error(
-    create_graph(
+    graph_create(
       w_2,
       matrix(c(0, 1, 1 + 2 * epsilon, 0), nrow = 2)
     )
   )
   expect_error(
-    create_graph(
+    graph_create(
       w_3,
       matrix(
         c(
@@ -115,21 +115,21 @@ test_that("floating point accuracy - errors", {
       )
     )
   )
-  expect_error(create_graph(w_1, matrix(0 + 2 * epsilon)))
+  expect_error(graph_create(w_1, matrix(0 + 2 * epsilon)))
 })
 
 test_that("floating point accuracy - passing", {
-  expect_s3_class(create_graph(c(1 + epsilon^2 / 2), g_1), "initial_graph")
-  expect_s3_class(create_graph(rep(.5 + epsilon / 2, 2), g_2), "initial_graph")
+  expect_s3_class(graph_create(c(1 + epsilon^2 / 2), g_1), "initial_graph")
+  expect_s3_class(graph_create(rep(.5 + epsilon / 2, 2), g_2), "initial_graph")
   expect_s3_class(
-    create_graph(
+    graph_create(
       w_2,
       matrix(c(0, 1, 1 + epsilon^2 / 2, 0), nrow = 2)
     ),
     "initial_graph"
   )
   expect_s3_class(
-    create_graph(
+    graph_create(
       w_3,
       matrix(
         c(
@@ -142,24 +142,24 @@ test_that("floating point accuracy - passing", {
     ),
     "initial_graph"
   )
-  expect_s3_class(create_graph(w_1, matrix(0 + epsilon / 2)), "initial_graph")
+  expect_s3_class(graph_create(w_1, matrix(0 + epsilon / 2)), "initial_graph")
 })
 
 test_that("rowSums() endpoint - mixed floating point and less than 1", {
-  expect_s3_class(create_graph(w_eps, g_eps), "initial_graph")
+  expect_s3_class(graph_create(w_eps, g_eps), "initial_graph")
 })
 
 test_that("floating point accuracy - errors", {
-  expect_error(create_graph(c(1 + 2 * epsilon), g_1))
-  expect_error(create_graph(rep(.5 + epsilon, 2), g_2))
+  expect_error(graph_create(c(1 + 2 * epsilon), g_1))
+  expect_error(graph_create(rep(.5 + epsilon, 2), g_2))
   expect_error(
-    create_graph(
+    graph_create(
       w_2,
       matrix(c(0, 1, 1 + 2 * epsilon, 0), nrow = 2)
     )
   )
   expect_error(
-    create_graph(
+    graph_create(
       w_3,
       matrix(
         c(
@@ -171,21 +171,21 @@ test_that("floating point accuracy - errors", {
       )
     )
   )
-  expect_error(create_graph(w_1, matrix(0 + 2 * epsilon)))
+  expect_error(graph_create(w_1, matrix(0 + 2 * epsilon)))
 })
 
 test_that("floating point accuracy - passing", {
-  expect_s3_class(create_graph(c(1 + epsilon^2 / 2), g_1), "initial_graph")
-  expect_s3_class(create_graph(rep(.5 + epsilon / 2, 2), g_2), "initial_graph")
+  expect_s3_class(graph_create(c(1 + epsilon^2 / 2), g_1), "initial_graph")
+  expect_s3_class(graph_create(rep(.5 + epsilon / 2, 2), g_2), "initial_graph")
   expect_s3_class(
-    create_graph(
+    graph_create(
       w_2,
       matrix(c(0, 1, 1 + epsilon^2 / 2, 0), nrow = 2)
     ),
     "initial_graph"
   )
   expect_s3_class(
-    create_graph(
+    graph_create(
       w_3,
       matrix(
         c(
@@ -198,9 +198,9 @@ test_that("floating point accuracy - passing", {
     ),
     "initial_graph"
   )
-  expect_s3_class(create_graph(w_1, matrix(0 + epsilon / 2)), "initial_graph")
+  expect_s3_class(graph_create(w_1, matrix(0 + epsilon / 2)), "initial_graph")
 })
 
 test_that("rowSums() endpoint - mixed floating point and less than 1", {
-  expect_s3_class(create_graph(w_eps, g_eps), "initial_graph")
+  expect_s3_class(graph_create(w_eps, g_eps), "initial_graph")
 })

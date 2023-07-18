@@ -4,7 +4,7 @@
 #' hypotheses, of a graph. Weights for each sub-graph are calculated using the
 #' weighting strategy defined in Bretz et al (2011).
 #'
-#' @param graph An initial graph as returned by [create_graph()]
+#' @param graph An initial graph as returned by [graph_create()]
 #'
 #' @return A numeric matrix of all intersection hypothesis weights. Each row
 #'   corresponds to a single intersection hypothesis. The first half of the
@@ -27,7 +27,7 @@
 #'
 #' @examples
 #'
-#' par_gate <- create_graph(
+#' par_gate <- graph_create(
 #'   hypotheses = c(.5, .5, 0, 0),
 #'   transitions = rbind(
 #'     c(0, 0, 1, 0),
@@ -37,9 +37,9 @@
 #'   )
 #' )
 #'
-#' generate_weights(par_gate)
+#' graph_generate_weights(par_gate)
 #'
-generate_weights <- function(graph) {
+graph_generate_weights <- function(graph) {
   hyp_names <- names(graph$hypotheses)
   num_hyps <- length(graph$hypotheses)
 

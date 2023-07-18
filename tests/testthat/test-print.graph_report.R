@@ -1,22 +1,22 @@
 test_that("printing Bonferroni/Simes closure test", {
   par_gate <- simple_successive_1()
 
-  expect_snapshot(test_graph_closure(par_gate, rep(.01, 4), test_types = "s"))
+  expect_snapshot(graph_test_closure(par_gate, rep(.01, 4), test_types = "s"))
 
-  expect_snapshot(test_graph_closure(par_gate, rep(.01, 4), verbose = TRUE))
+  expect_snapshot(graph_test_closure(par_gate, rep(.01, 4), verbose = TRUE))
 
-  expect_snapshot(test_graph_closure(par_gate, rep(.01, 4), critical = TRUE))
+  expect_snapshot(graph_test_closure(par_gate, rep(.01, 4), critical = TRUE))
 })
 
 test_that("printing parametric closure test", {
   par_gate <- simple_successive_1()
 
   expect_snapshot(
-    test_graph_closure(par_gate, rep(.01, 4), test_types = "p", corr = diag(4))
+    graph_test_closure(par_gate, rep(.01, 4), test_types = "p", corr = diag(4))
   )
 
   expect_snapshot(
-    test_graph_closure(
+    graph_test_closure(
       par_gate,
       rep(.01, 4),
       groups = list(1:2, 3:4),
@@ -28,7 +28,7 @@ test_that("printing parametric closure test", {
   )
 
   expect_snapshot(
-    test_graph_closure(
+    graph_test_closure(
       par_gate,
       rep(.01, 4),
       groups = list(1:2, 3:4),
@@ -41,7 +41,7 @@ test_that("printing parametric closure test", {
 })
 
 test_that("printing Bonferroni sequential results", {
-  expect_snapshot(test_graph_shortcut(simple_successive_1(), rep(.01, 4)))
+  expect_snapshot(graph_test_shortcut(simple_successive_1(), rep(.01, 4)))
 })
 
 test_that("additional printing options for graph report", {
@@ -49,7 +49,7 @@ test_that("additional printing options for graph report", {
 
   expect_snapshot(
     print(
-      test_graph_closure(
+      graph_test_closure(
         par_gate,
         rep(.01, 4),
         verbose = TRUE,
@@ -62,7 +62,7 @@ test_that("additional printing options for graph report", {
 
   expect_snapshot(
     print(
-      test_graph_shortcut(
+      graph_test_shortcut(
         simple_successive_1(),
         rep(.01, 4),
         verbose = TRUE,
@@ -75,7 +75,7 @@ test_that("additional printing options for graph report", {
 
   expect_snapshot(
     print(
-      test_graph_shortcut(
+      graph_test_shortcut(
         complex_example_1(),
         5:0 / 200,
         verbose = TRUE,

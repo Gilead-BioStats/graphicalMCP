@@ -240,7 +240,7 @@ transitions <- rbind(
   c(1, 0, 0, 0)
 )
 names <- c("A1", "A2", "B1", "B2")
-g_dose <- create_graph(hypotheses, transitions, names)
+g_dose <- graph_create(hypotheses, transitions, names)
 
 g_dose
 #> Initial graph
@@ -261,13 +261,13 @@ g_dose
 
 ### Update graph
 
-Hypotheses can be rejected from the MCP using `update_graph()`. Updated
+Hypotheses can be rejected from the MCP using `graph_update()`. Updated
 weights and transitions are calculated according to the weighting
 strategy in [Bretz et al
 (2011)](https://onlinelibrary.wiley.com/doi/10.1002/bimj.201000239)
 
 ``` r
-update_graph(g_dose, c(TRUE, FALSE, FALSE, TRUE))
+graph_update(g_dose, c(TRUE, FALSE, FALSE, TRUE))
 #> Initial graph
 #> 
 #> --- Hypothesis weights ---
@@ -310,11 +310,11 @@ update_graph(g_dose, c(TRUE, FALSE, FALSE, TRUE))
 ### Generate weights
 
 The weights of all sub-graphs can be calculated with
-`generate_weights()`. This uses more efficient code under the hood than
-`update_graph()` in order to be performant for larger graphs.
+`graph_generate_weights()`. This uses more efficient code under the hood
+than `graph_update()` in order to be performant for larger graphs.
 
 ``` r
-generate_weights(g_dose)
+graph_generate_weights(g_dose)
 #>    A1 A2 B1 B2  A1  A2  B1  B2
 #> 1   1  1  1  1 0.5 0.5 0.0 0.0
 #> 2   1  1  1  0 0.5 0.5 0.0 0.0
@@ -336,7 +336,7 @@ generate_weights(g_dose)
 ### Test hypotheses
 
 A mixture of statistical tests are supported in graphicalMCP. A graph
-can be tested against a given alpha with `test_graph_closure()`. A
+can be tested against a given alpha with `graph_test_closure()`. A
 report is then generated, showing the graph & test results.
 
 In this example, a weighted Bonferroni test is applied to all
@@ -350,7 +350,7 @@ hypothesis except the one containing only B1 & B2 (Row 3 of
 but we cannot reject the null hypotheses for B1 & B2.
 
 ``` r
-test_graph_closure(
+graph_test_closure(
   g_dose,
   p = c(.01, .02, .03, .05),
   alpha = .05,
@@ -380,7 +380,7 @@ test_graph_closure(
 #>   Unadjusted p-values: 0.01 0.02 0.03 0.05
 #> 
 #>   Test types
-#>   bonferroni: (A1-A2-B1-B2)
+#>   bonferroni: (A1, A2, B1, B2)
 #> 
 #> Test summary ($outputs) --------------------------------------------------------
 #>   Hypothesis Adj. P-value Reject
@@ -389,7 +389,7 @@ test_graph_closure(
 #>           B1         0.06  FALSE
 #>           B2         0.06  FALSE
 #> 
-#>   Updated graph after rejections
+#>   Final updated graph after removing rejected hypotheses
 #> 
 #>   --- Hypothesis weights ---
 #>   A1: 0.0
@@ -410,7 +410,7 @@ Simes and parametric testing methods are also supported, using the
 for a more detailed report on testing.
 
 ``` r
-test_graph_closure(
+graph_test_closure(
   g_dose,
   p = c(.01, .02, .03, .05),
   alpha = .05,
@@ -447,15 +447,13 @@ test_graph_closure(
 #>                          A1   A2   B1   B2
 #>   Unadjusted p-values: 0.01 0.02 0.03 0.05
 #> 
-#>   Correlation matrix:     A1  A2  B1  B2
-#>                       A1 1.0 0.5  NA  NA
-#>                       A2 0.5 1.0  NA  NA
-#>                       B1  NA  NA  NA  NA
-#>                       B2  NA  NA  NA  NA
+#>   Correlation matrix:     A1  A2
+#>                       A1 1.0 0.5
+#>                       A2 0.5 1.0
 #> 
 #>   Test types
-#>   parametric: (A1-A2)
-#>        simes: (B1-B2)
+#>   parametric: (A1, A2)
+#>        simes: (B1, B2)
 #> 
 #> Test summary ($outputs) --------------------------------------------------------
 #>   Hypothesis Adj. P-value Reject
@@ -464,7 +462,7 @@ test_graph_closure(
 #>           B1         0.05   TRUE
 #>           B2         0.05   TRUE
 #> 
-#>   Updated graph after rejections
+#>   Final updated graph after removing rejected hypotheses
 #> 
 #>   --- Hypothesis weights ---
 #>   A1: 0
@@ -480,43 +478,43 @@ test_graph_closure(
 #>   B2  0  0  0  0
 #> 
 #> Test details - Adjusted p ($details) -------------------------------------------
-#>             A1        A2        B1        B2 adj_p_grp1 adj_p_grp2 adj_p_inter
-#>   1  0.5000000 0.5000000 0.0000000 0.0000000  0.0187061  1.0000000   0.0187061
-#>   2  0.5000000 0.5000000 0.0000000        NA  0.0187061  1.0000000   0.0187061
-#>   3  0.5000000 0.5000000        NA 0.0000000  0.0187061  1.0000000   0.0187061
-#>   4  0.5000000 0.5000000        NA        NA  0.0187061  1.0000000   0.0187061
-#>   5  0.5000000        NA 0.0000000 0.5000000  0.0200000  0.1000000   0.0200000
-#>   6  1.0000000        NA 0.0000000        NA  0.0100000  1.0000000   0.0100000
-#>   7  0.5000000        NA        NA 0.5000000  0.0200000  0.1000000   0.0200000
-#>   8  1.0000000        NA        NA        NA  0.0100000  1.0000000   0.0100000
-#>   9         NA 0.5000000 0.5000000 0.0000000  0.0400000  0.0600000   0.0400000
-#>   10        NA 0.5000000 0.5000000        NA  0.0400000  0.0600000   0.0400000
-#>      reject
-#>   1    TRUE
-#>   2    TRUE
-#>   3    TRUE
-#>   4    TRUE
-#>   5    TRUE
-#>   6    TRUE
-#>   7    TRUE
-#>   8    TRUE
-#>   9    TRUE
-#>   10   TRUE
-#>   ... (Use `rows = <xx>` for more)
+#>   Intersection        A1        A2        B1        B2 adj_p_grp1 adj_p_grp2
+#>              1 0.5000000 0.5000000 0.0000000 0.0000000  0.0187061  1.0000000
+#>              2 0.5000000 0.5000000 0.0000000        NA  0.0187061  1.0000000
+#>              3 0.5000000 0.5000000        NA 0.0000000  0.0187061  1.0000000
+#>              4 0.5000000 0.5000000        NA        NA  0.0187061  1.0000000
+#>              5 0.5000000        NA 0.0000000 0.5000000  0.0200000  0.1000000
+#>              6 1.0000000        NA 0.0000000        NA  0.0100000  1.0000000
+#>              7 0.5000000        NA        NA 0.5000000  0.0200000  0.1000000
+#>              8 1.0000000        NA        NA        NA  0.0100000  1.0000000
+#>              9        NA 0.5000000 0.5000000 0.0000000  0.0400000  0.0600000
+#>             10        NA 0.5000000 0.5000000        NA  0.0400000  0.0600000
+#>   adj_p_inter reject
+#>     0.0187061   TRUE
+#>     0.0187061   TRUE
+#>     0.0187061   TRUE
+#>     0.0187061   TRUE
+#>     0.0200000   TRUE
+#>     0.0100000   TRUE
+#>     0.0200000   TRUE
+#>     0.0100000   TRUE
+#>     0.0400000   TRUE
+#>     0.0400000   TRUE
+#>   ... (Use `print(x, rows = <nn>)` for more)
 #> 
 #> Test details - Critical values ($critical) -------------------------------------
-#>    Intersection Hypothesis       Test    p <= c_value * Critical * Alpha Reject
-#>               1         A1 parametric 0.01 <= 1.10646 *      0.5 *  0.05   TRUE
-#>               1         A2 parametric 0.02 <= 1.10646 *      0.5 *  0.05   TRUE
-#>               1         B1      simes 0.03 <=      NA        0.0 *  0.05  FALSE
-#>               1         B2      simes 0.05 <=      NA        0.0 *  0.05  FALSE
-#>               2         A1 parametric 0.01 <= 1.10646 *      0.5 *  0.05   TRUE
-#>               2         A2 parametric 0.02 <= 1.10646 *      0.5 *  0.05   TRUE
-#>               2         B1      simes 0.03 <=      NA        0.0 *  0.05  FALSE
-#>               3         A1 parametric 0.01 <= 1.10646 *      0.5 *  0.05   TRUE
-#>               3         A2 parametric 0.02 <= 1.10646 *      0.5 *  0.05   TRUE
-#>               3         B2      simes 0.05 <=      NA        0.0 *  0.05  FALSE
-#>   ... (Use `rows = <xx>` for more)
+#>   Intersection Hypothesis       Test    p <= c_value * Weight * Alpha Reject
+#>              1         A1 parametric 0.01 <= 1.10646 *    0.5 *  0.05   TRUE
+#>              1         A2 parametric 0.02 <= 1.10646 *    0.5 *  0.05   TRUE
+#>              1         B1      simes 0.03 <=      NA      0.0 *  0.05  FALSE
+#>              1         B2      simes 0.05 <=      NA      0.0 *  0.05  FALSE
+#>              2         A1 parametric 0.01 <= 1.10646 *    0.5 *  0.05   TRUE
+#>              2         A2 parametric 0.02 <= 1.10646 *    0.5 *  0.05   TRUE
+#>              2         B1      simes 0.03 <=      NA      0.0 *  0.05  FALSE
+#>              3         A1 parametric 0.01 <= 1.10646 *    0.5 *  0.05   TRUE
+#>              3         A2 parametric 0.02 <= 1.10646 *    0.5 *  0.05   TRUE
+#>              3         B2      simes 0.05 <=      NA      0.0 *  0.05  FALSE
+#>   ... (Use `print(x, rows = <nn>)` for more)
 ```
 
 ## Power simulations
@@ -531,7 +529,7 @@ how it performs.
 ### Bonferroni
 
 ``` r
-calculate_power(
+graph_calculate_power(
   g_dose,
   sim_n = 1e5,
   marginal_power = c(.1, .1, .1, .1)
@@ -553,10 +551,10 @@ calculate_power(
 #>   B1  0  1  0  0
 #>   B2  1  0  0  0
 #> 
-#>   Alpha = 0.05
+#>   Alpha = 0.025
 #> 
 #>   Test types
-#>   bonferroni: (A1-A2-B1-B2)
+#>   bonferroni: (A1, A2, B1, B2)
 #> 
 #> Simulation parameters ($inputs) ------------------------------------------------
 #>   Testing 100,000 simulations with multivariate normal params:
@@ -571,12 +569,12 @@ calculate_power(
 #>                B2  0  0  0  1
 #> 
 #> Power calculation ($power) -----------------------------------------------------
-#>                                   A1      A2      B1      B2
-#>        Power to reject each: 0.03130 0.03197 0.00100 0.00102
+#>                                    A1      A2      B1      B2
+#>                  Local power: 0.05994 0.05899 0.00376 0.00349
 #> 
-#>         Expected rejections: 0.06529
-#>   Power to reject 1 or more: 0.06217
-#>         Power to reject all: 0
+#>   Expected no. of rejections: 0.12618
+#>    Power to reject 1 or more: 0.11532
+#>          Power to reject all: 5e-05
 ```
 
 The `simple_successive_2()` function creates a parallel gate-keeping
@@ -588,7 +586,7 @@ more often, and the secondary hypotheses less often.
 ``` r
 g_dose_2 <- simple_successive_2(names)
 
-calculate_power(
+graph_calculate_power(
   g_dose_2,
   sim_n = 1e5,
   marginal_power = c(.1, .1, .1, .1)
@@ -610,10 +608,10 @@ calculate_power(
 #>   B1 0.0 1.0 0.0 0.0
 #>   B2 1.0 0.0 0.0 0.0
 #> 
-#>   Alpha = 0.05
+#>   Alpha = 0.025
 #> 
 #>   Test types
-#>   bonferroni: (A1-A2-B1-B2)
+#>   bonferroni: (A1, A2, B1, B2)
 #> 
 #> Simulation parameters ($inputs) ------------------------------------------------
 #>   Testing 100,000 simulations with multivariate normal params:
@@ -628,12 +626,12 @@ calculate_power(
 #>                B2  0  0  0  1
 #> 
 #> Power calculation ($power) -----------------------------------------------------
-#>                                   A1      A2      B1      B2
-#>        Power to reject each: 0.03208 0.03275 0.00085 0.00048
+#>                                    A1      A2      B1      B2
+#>                  Local power: 0.06016 0.05890 0.00220 0.00196
 #> 
-#>         Expected rejections: 0.06616
-#>   Power to reject 1 or more: 0.06287
-#>         Power to reject all: 0
+#>   Expected no. of rejections: 0.12322
+#>    Power to reject 1 or more: 0.11321
+#>          Power to reject all: 4e-05
 ```
 
 ### Other tests
@@ -646,7 +644,7 @@ simulation takes. In rough ascending order of time impact: parametric
 tests, multiple groups, Simes tests.
 
 ``` r
-calculate_power(
+graph_calculate_power(
   g_dose_2,
   sim_n = 1e5,
   marginal_power = c(.1, .1, .1, .1),
@@ -671,17 +669,15 @@ calculate_power(
 #>   B1 0.0 1.0 0.0 0.0
 #>   B2 1.0 0.0 0.0 0.0
 #> 
-#>   Alpha = 0.05
+#>   Alpha = 0.025
 #> 
-#>   Parametric testing correlation:    A1 A2 B1 B2
-#>                                   A1  1  0  0  0
-#>                                   A2  0  1  0  0
-#>                                   B1  0  0  1  0
-#>                                   B2  0  0  0  1
+#>   Parametric testing correlation:    B1 B2
+#>                                   B1  1  0
+#>                                   B2  0  1
 #> 
 #>   Test types
-#>        simes: (A1-A2)
-#>   parametric: (B1-B2)
+#>        simes: (A1, A2)
+#>   parametric: (B1, B2)
 #> 
 #> Simulation parameters ($inputs) ------------------------------------------------
 #>   Testing 100,000 simulations with multivariate normal params:
@@ -696,12 +692,12 @@ calculate_power(
 #>                B2  0  0  0  1
 #> 
 #> Power calculation ($power) -----------------------------------------------------
-#>                                   A1      A2      B1      B2
-#>        Power to reject each: 0.03184 0.03235 0.00048 0.00055
+#>                                    A1      A2      B1      B2
+#>                  Local power: 0.06204 0.06065 0.00219 0.00212
 #> 
-#>         Expected rejections: 0.06522
-#>   Power to reject 1 or more: 0.062
-#>         Power to reject all: 0
+#>   Expected no. of rejections: 0.127
+#>    Power to reject 1 or more: 0.1158
+#>          Power to reject all: 5e-05
 ```
 
 ## Related work

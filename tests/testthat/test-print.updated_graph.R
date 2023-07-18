@@ -6,8 +6,8 @@ transitions <- rbind(
   c(1, 0, 0, 0)
 )
 names <- c("H1", "H2", "H3", "H4")
-g <- create_graph(hypotheses, transitions, names)
+g <- graph_create(hypotheses, transitions, names)
 
 test_that("snapshot print method", {
-  expect_snapshot(update_graph(g, c(TRUE, TRUE, TRUE, FALSE)))
+  expect_snapshot(graph_update(g, c(TRUE, TRUE, TRUE, FALSE)))
 })

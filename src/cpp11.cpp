@@ -6,10 +6,10 @@
 #include <R_ext/Visibility.h>
 
 // power_bonferroni.cpp
-writable::integers test_graph_shortcut_cpp_(writable::doubles hypotheses, writable::doubles_matrix<> transitions, doubles p, double alpha);
-extern "C" SEXP _graphicalMCP_test_graph_shortcut_cpp_(SEXP hypotheses, SEXP transitions, SEXP p, SEXP alpha) {
+writable::integers graph_test_shortcut_cpp_(writable::doubles hypotheses, writable::doubles_matrix<> transitions, doubles p, double alpha);
+extern "C" SEXP _graphicalMCP_graph_test_shortcut_cpp_(SEXP hypotheses, SEXP transitions, SEXP p, SEXP alpha) {
   BEGIN_CPP11
-    return cpp11::as_sexp(test_graph_shortcut_cpp_(cpp11::as_cpp<cpp11::decay_t<writable::doubles>>(hypotheses), cpp11::as_cpp<cpp11::decay_t<writable::doubles_matrix<>>>(transitions), cpp11::as_cpp<cpp11::decay_t<doubles>>(p), cpp11::as_cpp<cpp11::decay_t<double>>(alpha)));
+    return cpp11::as_sexp(graph_test_shortcut_cpp_(cpp11::as_cpp<cpp11::decay_t<writable::doubles>>(hypotheses), cpp11::as_cpp<cpp11::decay_t<writable::doubles_matrix<>>>(transitions), cpp11::as_cpp<cpp11::decay_t<doubles>>(p), cpp11::as_cpp<cpp11::decay_t<double>>(alpha)));
   END_CPP11
 }
 // power_bonferroni.cpp
@@ -22,8 +22,8 @@ extern "C" SEXP _graphicalMCP_power_shortcut_cpp(SEXP hypotheses, SEXP transitio
 
 extern "C" {
 static const R_CallMethodDef CallEntries[] = {
+    {"_graphicalMCP_graph_test_shortcut_cpp_", (DL_FUNC) &_graphicalMCP_graph_test_shortcut_cpp_, 4},
     {"_graphicalMCP_power_shortcut_cpp",       (DL_FUNC) &_graphicalMCP_power_shortcut_cpp,       4},
-    {"_graphicalMCP_test_graph_shortcut_cpp_", (DL_FUNC) &_graphicalMCP_test_graph_shortcut_cpp_, 4},
     {NULL, NULL, 0}
 };
 }

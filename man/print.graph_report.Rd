@@ -26,6 +26,6 @@ A graph report displays
 \item p-values & alpha used for tests,
 \item Which hypotheses can be rejected, and
 \item Detailed test results matrix, including the results of
-\code{\link[=generate_weights]{generate_weights()}} & test results for each intersection hypothesis
+\code{\link[=graph_generate_weights]{graph_generate_weights()}} & test results for each intersection hypothesis
 }
 }

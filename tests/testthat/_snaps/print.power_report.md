@@ -1,7 +1,7 @@
 # printing Bonferroni power - sequential & closure
 
     Code
-      calculate_power(g, sim_seed = 51223)
+      graph_calculate_power(g, sim_seed = 51223)
     Output
       
       Test parameters ($inputs) ------------------------------------------------------
@@ -49,7 +49,7 @@
 ---
 
     Code
-      print(calculate_power(g, sim_seed = 51223), indent = 6, precision = 3)
+      print(graph_calculate_power(g, sim_seed = 51223), indent = 6, precision = 3)
     Output
       
       Test parameters ($inputs) ------------------------------------------------------
@@ -97,7 +97,7 @@
 ---
 
     Code
-      print(calculate_power(g, sim_seed = 51223, force_closure = TRUE), indent = 6,
+      print(graph_calculate_power(g, sim_seed = 51223, force_closure = TRUE), indent = 6,
       precision = 3)
     Output
       
@@ -146,7 +146,7 @@
 # printing Simes power
 
     Code
-      calculate_power(g, sim_seed = 51223, test_types = "s")
+      graph_calculate_power(g, sim_seed = 51223, test_types = "s")
     Output
       
       Test parameters ($inputs) ------------------------------------------------------
@@ -194,7 +194,7 @@
 ---
 
     Code
-      print(calculate_power(g, sim_seed = 51223, test_types = "s"), indent = 6,
+      print(graph_calculate_power(g, sim_seed = 51223, test_types = "s"), indent = 6,
       precision = 3)
     Output
       
@@ -243,7 +243,7 @@
 # printing parametric power
 
     Code
-      calculate_power(g, sim_seed = 51223, test_types = "p", test_corr = diag(4))
+      graph_calculate_power(g, sim_seed = 51223, test_types = "p", test_corr = diag(4))
     Output
       
       Test parameters ($inputs) ------------------------------------------------------
@@ -297,8 +297,8 @@
 ---
 
     Code
-      print(calculate_power(g, sim_seed = 51223, test_types = "p", test_corr = diag(4)),
-      indent = 6, precision = 3)
+      print(graph_calculate_power(g, sim_seed = 51223, test_types = "p", test_corr = diag(
+        4)), indent = 6, precision = 3)
     Output
       
       Test parameters ($inputs) ------------------------------------------------------
@@ -352,10 +352,10 @@
 # printing blended power
 
     Code
-      print(calculate_power(g, 0.0254871, list(4:3, c(6, 1), c(2, 5)), c("b", "s",
-        "p"), t_corr, 1328, pi / seq(0.3, 2.8, by = 0.5) / 11, s_corr, list(function(
-        .) .[1] || .[5] || .[6], function(.) .[2] && (.[5] || .[6])), 51223), indent = 0,
-      precision = 10)
+      print(graph_calculate_power(g, 0.0254871, list(4:3, c(6, 1), c(2, 5)), c("b",
+        "s", "p"), t_corr, 1328, pi / seq(0.3, 2.8, by = 0.5) / 11, s_corr, list(
+        function(.) .[1] || .[5] || .[6], function(.) .[2] && (.[5] || .[6])), 51223),
+      indent = 0, precision = 10)
     Output
       
       Test parameters ($inputs) ------------------------------------------------------

@@ -17,9 +17,9 @@ solve_c_parametric(hypotheses, corr, alpha)
 }
 \arguments{
 \item{weighting_strategy}{For parametric, a compact representation of
-\code{\link[=generate_weights]{generate_weights()}} output, where missing hypotheses get a missing value
+\code{\link[=graph_generate_weights]{graph_generate_weights()}} output, where missing hypotheses get a missing value
 for weights, and h-vectors are dropped. For Simes, just the weights from
-\code{\link[=generate_weights]{generate_weights()}} output}
+\code{\link[=graph_generate_weights]{graph_generate_weights()}} output}
 
 \item{corr}{A numeric matrix of correlations between hypotheses' test
 statistics}
@@ -46,7 +46,7 @@ specified adjustment method
 }
 }
 \description{
-The weights created by \code{\link[=generate_weights]{generate_weights()}} work immediately for Bonferroni
+The weights created by \code{\link[=graph_generate_weights]{graph_generate_weights()}} work immediately for Bonferroni
 testing, but parametric and Simes testing require additional calculations.
 The \verb{calculate_critical_*()} functions apply parametric or Simes weight
 increases to get updated weights for testing. They also subset the weights
@@ -56,7 +56,7 @@ columns by the appropriate groups
 p <- 1:6 / 200
 
 g <- bonferroni_holm(6)
-gw_large <- generate_weights(g)
+gw_large <- graph_generate_weights(g)
 
 gw_0 <- gw_large[, 7:12]
 gw <- ifelse(gw_large[, 1:6], gw_0, NA)

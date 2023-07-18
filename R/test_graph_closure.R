@@ -6,7 +6,7 @@
 #' The functions include options for reporting details using the adjusted
 #' p-value method or critical value method.
 #'
-#' @param graph An initial graph as returned by [create_graph()]
+#' @param graph An initial graph as returned by [graph_create()]
 #' @param p A numeric vector of p-values
 #' @param alpha A numeric scalar specifying the global significance level for
 #'   testing
@@ -31,7 +31,7 @@
 #'   intersection (each step for shortcut testing)
 #'
 #' @rdname testing
-#' @seealso [test_graph_fast()], [test_graph_shortcut_cpp()]
+#' @seealso [graph_test_fast()], [graph_test_shortcut_cpp()]
 #' @export
 #'
 #' @template references
@@ -46,7 +46,7 @@
 #'   c(1, 0, 0, 0)
 #' )
 #'
-#' g <- create_graph(hypotheses, transitions)
+#' g <- graph_create(hypotheses, transitions)
 #' p <- c(.01, .005, .015, .022)
 #'
 #' corr <- matrix(nrow = 4, ncol = 4)
@@ -57,10 +57,10 @@
 #' diag(corr2) <- 1
 #'
 #' # The default is all Bonferroni with alpha = .025
-#' test_graph_closure(g, p)
+#' graph_test_closure(g, p)
 #'
 #' # But tests can be specified at the hypothesis-level
-#' test_graph_closure(
+#' graph_test_closure(
 #'   graph = g,
 #'   p = p,
 #'   alpha = .025,
@@ -68,7 +68,7 @@
 #'   test_types = c("bonferroni", "simes", "parametric"),
 #'   corr = corr
 #' )
-test_graph_closure <- function(graph,
+graph_test_closure <- function(graph,
                                p,
                                alpha = .025,
                                groups = list(seq_along(graph$hypotheses)),
@@ -101,7 +101,7 @@ test_graph_closure <- function(graph,
   if (!is.null(corr)) dimnames(corr) <- list(hyp_names, hyp_names)
 
   # Generate weights of the closure --------------------------------------------
-  weighting_strategy <- generate_weights(graph)
+  weighting_strategy <- graph_generate_weights(graph)
   matrix_intersections <- weighting_strategy[, seq_len(num_hyps), drop = FALSE]
 
   # "Compact" representation shows hypothesis weights where a hypothesis is
@@ -269,7 +269,7 @@ test_graph_closure <- function(graph,
       outputs = list(
         adjusted_p = pmin(adjusted_p_hypothesis, 1 + 1e-8), # Cap reported at 1
         rejected = reject_hypothesis,
-        graph = update_graph(graph, !reject_hypothesis)$updated_graph
+        graph = graph_update(graph, !reject_hypothesis)$updated_graph
       ),
       details = if (verbose) detail_results,
       critical = if (critical) list(results = df_critical_results)

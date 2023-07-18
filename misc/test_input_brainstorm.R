@@ -5,7 +5,7 @@ g <- bonferroni_holm(10)
 corr <- diag(10)
 
 # Option 1, nested lists
-test_graph_closure(
+graph_test_closure(
   g,
   p_values = .05 / 1:10,
   alpha = .05,
@@ -18,7 +18,7 @@ test_graph_closure(
 )
 
 # Option 2, named parameters
-test_graph_closure(
+graph_test_closure(
   g,
   p_values = .05 / 1:10,
   alpha = .05,
@@ -29,7 +29,7 @@ test_graph_closure(
 )
 
 # Option 3, the three dots
-test_graph_closure(
+graph_test_closure(
   g,
   p_values = .05 / 1:10,
   alpha = .05,
@@ -41,7 +41,7 @@ test_graph_closure(
 )
 
 # Option 4, positional
-test_graph_closure(
+graph_test_closure(
   g,
   p_values = .05 / 1:10,
   alpha = .05,
@@ -49,7 +49,7 @@ test_graph_closure(
   corr = corr
 )
 
-test_graph_closure(
+graph_test_closure(
   g,
   p_values = .05 / 1:10,
   alpha = .05,
@@ -58,7 +58,7 @@ test_graph_closure(
 )
 
 # Option 5, separate
-test_graph_closure(
+graph_test_closure(
   g,
   p_values = .05 / 1:10,
   alpha = .05,

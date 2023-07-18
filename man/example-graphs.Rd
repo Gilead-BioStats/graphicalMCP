@@ -42,7 +42,7 @@ complex_example_2(hyp_names = NULL)
 \item{hypotheses}{Hypothesis weights in a fallback procedure}
 }
 \value{
-An S3 object as returned by \code{\link[=create_graph]{create_graph()}}
+An S3 object as returned by \code{\link[=graph_create]{graph_create()}}
 }
 \description{
 Example graphs from a selection of papers

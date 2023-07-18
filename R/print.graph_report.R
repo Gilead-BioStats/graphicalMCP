@@ -5,7 +5,7 @@
 #'   * p-values & alpha used for tests,
 #'   * Which hypotheses can be rejected, and
 #'   * Detailed test results matrix, including the results of
-#' [generate_weights()] & test results for each intersection hypothesis
+#' [graph_generate_weights()] & test results for each intersection hypothesis
 #'
 #' @param x An object of class `graph_report` to print
 #' @param ... Other values passed on to other methods (currently unused)

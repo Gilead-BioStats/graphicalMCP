@@ -1,11 +1,11 @@
 #' Delete hypotheses from a graph
 #'
 #' It is not always obvious what a graph's weights will look like after deleting
-#' one or more hypotheses. While [`generate_weights()`] calculates all
-#' sub-graphs' hypothesis weights, `update_graph()` gives a more detailed view
+#' one or more hypotheses. While [`graph_generate_weights()`] calculates all
+#' sub-graphs' hypothesis weights, `graph_update()` gives a more detailed view
 #' for a single set of deletions, including transition weights as well.
 #'
-#' @param graph An initial graph as returned by [create_graph()]
+#' @param graph An initial graph as returned by [graph_create()]
 #' @param keep A logical or integer vector, denoting which hypotheses to
 #'   keep/delete. An entry of `FALSE` (or 0) corresponds to a deletion, and
 #'   `TRUE` (or 1) corresponds to keeping a hypothesis
@@ -27,14 +27,14 @@
 #'   c(0, 1, 0, 0),
 #'   c(1, 0, 0, 0)
 #' )
-#' g <- create_graph(hypotheses, transitions)
+#' g <- graph_create(hypotheses, transitions)
 #'
 #' # Delete the second hypothesis
-#' update_graph(g, c(TRUE, FALSE, TRUE, TRUE))
+#' graph_update(g, c(TRUE, FALSE, TRUE, TRUE))
 #' # Equivalent
-#' # update_graph(g, c(1, 0, 1, 1))
+#' # graph_update(g, c(1, 0, 1, 1))
 #'
-update_graph <- function(graph, keep) {
+graph_update <- function(graph, keep) {
   stopifnot(
     "Please update an `initial_graph` object" = class(graph) == "initial_graph",
     "Hypothesis index must be a logical or integer vector" =
@@ -93,7 +93,7 @@ update_graph <- function(graph, keep) {
     # At this point, a single hypothesis has been removed from the graph.
     # Assign the newly calculated hypotheses and transitions to `graph`, and
     # loop to the next hypothesis to delete
-    graph <- create_graph(hypotheses, transitions)
+    graph <- graph_create(hypotheses, transitions)
   }
 
   structure(

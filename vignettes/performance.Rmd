@@ -79,7 +79,7 @@ plot_benchmarks <- function(df_benchmarks,
 
 ## Introduction
 
-An emphasis of the graphicalMCP package is performance, and one place where improved performance was especially needed was the function to generate weights of all sub-graphs for an MCP graph - `gMCP::generateWeights()` or `graphicalMCP::generate_weights()`. We attempted to create this function using three main strategies, and compared their speed and memory performance with each other, as well as with the gMCP implementation.
+An emphasis of the graphicalMCP package is performance, and one place where improved performance was especially needed was the function to generate weights of all sub-graphs for an MCP graph - `gMCP::generateWeights()` or `graphicalMCP::graph_generate_weights()`. We attempted to create this function using three main strategies, and compared their speed and memory performance with each other, as well as with the gMCP implementation.
 
 ## Methodology
 
@@ -87,11 +87,11 @@ The sub-graphs of a graph can be thought of as a tree structure, where each vert
 
 ### Each-from-initial - `gw_original()`
 
-The first and simplest method of generating sub-graph weights builds on the exported `update_graph()` function, which takes a graph and logical vector (h-vector) as arguments and deletes all the hypotheses from the graph corresponding to the `FALSE` entries in the h-vector. In this case, the whole closure of a graph is generated as `2^n - 1` h-vectors. This can be done efficiently with `expand.grid(rep(list(1:0), n))[-2^n, ]`, where `n` is the number of hypotheses in the graph. Then the initial graph is passed to `update_graph()` along with each h-vector to determine the weights for each sub-graph.
+The first and simplest method of generating sub-graph weights builds on the exported `graph_update()` function, which takes a graph and logical vector (h-vector) as arguments and deletes all the hypotheses from the graph corresponding to the `FALSE` entries in the h-vector. In this case, the whole closure of a graph is generated as `2^n - 1` h-vectors. This can be done efficiently with `expand.grid(rep(list(1:0), n))[-2^n, ]`, where `n` is the number of hypotheses in the graph. Then the initial graph is passed to `graph_update()` along with each h-vector to determine the weights for each sub-graph.
 
 This method is very straightforward, and the steps are clear. However, it is not efficient because each element of the closure starts with the full graph before deleting appropriate hypotheses. This means that for a graph of size 5, hypothesis e.g. `3` gets deleted to get to the `1-2-4-5` graph, and then again to get to the `2-4-5` graph, and so on.
 
-### Parent-child recursive - `generate_weights_recursive()`
+### Parent-child recursive - `graph_generate_weights_recursive()`
 
 Because of the tree structure of the closure of a graph, recursion is a logical candidate for traversing it. In the recursive method, the initial graph is the starting point still. Each hypothesis is deleted from the initial graph, and the recursion is called on each of these smaller graphs as a new starting point. This means that to get to a sub-graph of size 2, it won't start at size 5 and delete 3 hypotheses; it will start at size 3 and delete a single hypothesis. For each level of the recursion, the starting graph & all sub-graphs are returned in a list where each element is a graph. If the graph is an endpoint of the recursion, just the graph is returned.
 
@@ -101,7 +101,7 @@ Furthermore, the recursive algorithm has a way to remember what the last hypothe
 
 This method is quite fast, but still not the fastest. It is the most memory-efficient.
 
-### Parent-child formula - `generate_weights()`
+### Parent-child formula - `graph_generate_weights()`
 
 Using the recursive method created significant gains in speed and memory efficiency, but one other way is even faster. The recursive method generates a list of all sub-graphs, where each graph occurs after its parent. This means that if there's a formulaic way to find a graph's parent given the graph's location in the list, the parent-child location relationship could be calculated rather than generated with recursion.
 
@@ -180,7 +180,7 @@ if (file.exists(here("vignettes/data/df_benchmarks_gw.rds"))) {
 
       speed_comp <- mark(
         `gMCP (R)` = generateWeights(trn, hyp),
-        `graphicalMCP (R)` = generate_weights(rando),
+        `graphicalMCP (R)` = graph_generate_weights(rando),
         `lrstat (C++)` = fwgtmat(hyp, trn),
         check = FALSE,
         min_iterations = 5,
@@ -259,16 +259,16 @@ if (file.exists(here("vignettes/data/df_benchmarks_seqtest.rds"))) {
       speed_comp <- mark(
         `gMCP shortcut (C)` =
           gMCP(as_gmcp_graph(rando), p, alpha = .025)@rejected,
-        `graphicalMCP shortcut (R)` = test_graph_shortcut(rando, p),
+        `graphicalMCP shortcut (R)` = graph_test_shortcut(rando, p),
         `lrstat Bonferroni (C++)` = fadjpbon(hyp, trn, p) <= .025,
         `gMCP closure parametric (R)` =
           gMCP(as_gmcp_graph(rando), p, alpha = .025, corr = diag(size)),
         `graphicalMCP closure parametric (R)` =
-          test_graph_closure(rando, p, corr = diag(size)),
+          graph_test_closure(rando, p, corr = diag(size)),
         `lrstat Simes (C++)` =
           fadjpsim(fwgtmat(hyp, trn), p, matrix(1, ncol = size)) <= .025,
         `graphicalMCP closure Simes (R)` =
-          test_graph_closure(rando, p, test_types = "s"),
+          graph_test_closure(rando, p, test_types = "s"),
         check = FALSE,
         min_iterations = 5,
         time_unit = "ms"
@@ -328,7 +328,7 @@ if (file.exists(here("vignettes/data/df_benchmarks_power.rds"))) {
         `gMCP shortcut (C)` =
           calcPower(hyp, .025, trn, marg_pow, s_corr, n.sim = sims),
         `graphicalMCP shortcut (C++)` =
-          calculate_power(rando,
+          graph_calculate_power(rando,
             sim_n = sims, marginal_power = marg_pow,
             sim_corr = s_corr
           ),
@@ -340,13 +340,13 @@ if (file.exists(here("vignettes/data/df_benchmarks_power.rds"))) {
             )
           },
         `graphicalMCP closure parametric (R)` =
-          calculate_power(rando,
+          graph_calculate_power(rando,
             sim_n = sims, marginal_power = marg_pow,
             sim_corr = s_corr, test_types = "parametric",
             test_corr = t_corr
           ),
         `graphicalMCP closure Simes (R)` =
-          calculate_power(rando,
+          graph_calculate_power(rando,
             sim_n = sims, marginal_power = marg_pow,
             sim_corr = s_corr, test_types = "simes"
           ),
@@ -377,7 +377,7 @@ df_benchmarks_power %>%
   plot_benchmarks("Power: 100,000 simulations", scale = TRUE)
 ```
 
-All methods increase in time by `O(2^n)`, but the starting point is lowest for `generate_weights()`.
+All methods increase in time by `O(2^n)`, but the starting point is lowest for `graph_generate_weights()`.
 
 ```{r gg-benchmarks-runtime, fig.width = 7, fig.height=5}
 gg_benchmarks <- ggplot(df_benchmarks_gw) +
@@ -452,14 +452,14 @@ check_methods <- xfun::cache_rds(
     g <- g / rowSums(g)
 
     graph <- new("graphMCP", m = g, weights = w)
-    graph2 <- create_graph(w, g)
+    graph2 <- graph_create(w, g)
 
     tic("gMCP::generateWeights()")
     gmcp_weights <- generateWeights(graph)
     tictoc_gmcp <- toc(quiet = TRUE)$callback_msg
 
-    tic("graphicalMCP::generate_weights()")
-    graphicalmcp_weights <- generate_weights(graph2)
+    tic("graphicalMCP::graph_generate_weights()")
+    graphicalmcp_weights <- graph_generate_weights(graph2)
     tictoc_graphicalmcp <- toc(quiet = TRUE)$callback_msg
 
     # Order of results is reversed between packages, and column names differ,

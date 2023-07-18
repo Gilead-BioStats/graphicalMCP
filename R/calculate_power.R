@@ -14,7 +14,7 @@
 #' parameter. The correlation between test statistics is induced by the study
 #' design.
 #'
-#' @param graph An initial graph as returned by [create_graph()]
+#' @param graph An initial graph as returned by [graph_create()]
 #' @param alpha A numeric scalar specifying the global significance level for
 #'   testing
 #' @param test_groups A list of numeric vectors specifying hypotheses to test
@@ -71,11 +71,11 @@
 #' # level .025, 0 mean under the alternative, and 0 correlation between
 #' # hypotheses under the alternative
 #' # The default of 100 simulations will usually need to be increased
-#' calculate_power(par_gate, sim_n = 1e5)
+#' graph_calculate_power(par_gate, sim_n = 1e5)
 #'
-#' # But any test group/type combination that works for [test_graph_closure()]
+#' # But any test group/type combination that works for [graph_test_closure()]
 #' # can be used
-#' calculate_power(
+#' graph_calculate_power(
 #'   par_gate,
 #'   alpha = .025,
 #'   test_groups = list(1:2, 3:4),
@@ -88,7 +88,7 @@
 #'   )
 #' )
 #'
-calculate_power <- function(graph,
+graph_calculate_power <- function(graph,
                             alpha = .025,
                             test_groups = list(seq_along(graph$hypotheses)),
                             test_types = c("bonferroni"),
@@ -186,7 +186,7 @@ calculate_power <- function(graph,
     rownames(simulation_test_results) <- seq_len(sim_n)
   } else {
     # Calculate weights for each intersection in the closure -------------------
-    weighting_strategy <- generate_weights(graph)
+    weighting_strategy <- graph_generate_weights(graph)
     matrix_intersections <- weighting_strategy[, seq_len(num_hyps)]
     weighting_strategy_compact <- ifelse(
       matrix_intersections,
@@ -267,7 +267,7 @@ calculate_power <- function(graph,
         # them. These incorrect values are then replaced with zeroes for testing
       }
 
-      # `test_graph_fast()` requires hypotheses, p-values, and the intersections
+      # `graph_test_fast()` requires hypotheses, p-values, and the intersections
       # matrix to all have hypotheses/columns in the same order. P-values and
       # the intersections matrix are already in the original order, so order the
       # critical values back in original hypothesis order.
@@ -283,7 +283,7 @@ calculate_power <- function(graph,
       critical_values_all[!matrix_intersections] <- 0
 
       # Record test results for one simulation, all groups
-      simulation_test_results[row, ] <- test_graph_fast(
+      simulation_test_results[row, ] <- graph_test_fast(
         p_sim[row, ],
         alpha,
         critical_values_all,

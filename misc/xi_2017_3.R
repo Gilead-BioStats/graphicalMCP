@@ -12,7 +12,7 @@ m <- rbind(
   c(.5, .5,  0,  0,  0,  0)
 )
 
-g <- create_graph(w, m)
+g <- graph_create(w, m)
 G <- as_gmcp_graph(g)
 
 alpha <- .025
@@ -23,8 +23,8 @@ diag(rho) <- 1
 
 p_vals <- c(.9, 1.1, .9, 1.3, 1.6, .4)
 
-g_234 <- update_graph(g, c(F, T, T, T, F, F))
+g_234 <- graph_update(g, c(F, T, T, T, F, F))
 
 gMCP(G, p_vals, "parametric", rho, alpha)
-test_graph_closure(g, p_vals, 2.5, rho,
+graph_test_closure(g, p_vals, 2.5, rho,
            tests = list(parametric = list(1:6)))

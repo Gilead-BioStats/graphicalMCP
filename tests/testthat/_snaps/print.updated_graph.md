@@ -1,7 +1,7 @@
 # snapshot print method
 
     Code
-      update_graph(g, c(TRUE, TRUE, TRUE, FALSE))
+      graph_update(g, c(TRUE, TRUE, TRUE, FALSE))
     Output
       Initial graph
       

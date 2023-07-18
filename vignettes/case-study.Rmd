@@ -54,7 +54,7 @@ motivating_example <- function(hyp_1, gamma, names = hyp_names) {
     c(0, 0, 0, 1, 0, 0)
   )
 
-  create_graph(hypotheses, transitions, hyp_names)
+  graph_create(hypotheses, transitions, hyp_names)
 }
 
 g_complex <- motivating_example(.75, .99)
@@ -130,7 +130,7 @@ In order to run a power simulation, several parameters must be set. We'll divide
 For our hypothetical study, here are the static parameters using the parametric-Simes testing strategy. We also set the random seed, `sim_seed`, for reproducibility.
 
 ```{r power, eval=FALSE}
-calculate_power(
+graph_calculate_power(
   # graph = <variable graph>,
   alpha = .025,
   test_groups = list(1:2, c(3, 5), c(4, 6)),
@@ -208,7 +208,7 @@ Now bring all the assumptions together and calculate power for each scenario. [P
 
 ```{r power-results}
 power_scenario <- function(hyp_1, gamma, s_corr, marginal_power) {
-  calculate_power(
+  graph_calculate_power(
     graph = motivating_example(hyp_1, gamma),
     alpha = .025,
     test_groups = list(1:2, c(3, 5), c(4, 6)),
@@ -338,13 +338,13 @@ names(p_mean_diff_from_placebo) <- hyp_names
 When testing with the [first strategy](#test-design-bonferroni), no hypotheses can be considered significant.
 
 ```{r test-bonferroni}
-test_graph_shortcut(example_.5_.5, p_mean_diff_from_placebo, alpha = .025)
+graph_test_shortcut(example_.5_.5, p_mean_diff_from_placebo, alpha = .025)
 ```
 
 Using the [second strategy](#test-design-parametric-bonferroni), the increased power from parametric testing allows the rejection of hypotheses 1 and 4.
 
 ```{r test-para-bonf}
-test_graph_closure(
+graph_test_closure(
   example_.5_.5,
   p_mean_diff_from_placebo,
   alpha = .025,
@@ -357,7 +357,7 @@ test_graph_closure(
 Finally, using our chosen strategy for testing, the Simes grouping allows some secondary hypotheses to be rejected as well.
 
 ```{r test-para-simes}
-test_graph_closure(
+graph_test_closure(
   example_.5_.5,
   p_mean_diff_from_placebo,
   alpha = .025,
@@ -380,7 +380,7 @@ names(example_.5_.5$hypotheses) <-
   rownames(example_.5_.5$transitions) <-
   colnames(example_.5_.5$transitions) <- paste0("H", 1:6)
 
-shortcut_example <- test_graph_shortcut(
+shortcut_example <- graph_test_shortcut(
   example_.5_.5,
   c(.0123, .0132, .026, .007, .012, .012),
   alpha = .025,
@@ -392,7 +392,7 @@ shortcut_example
 ```
 
 ```{r pres-examples-2}
-closure_example <- test_graph_closure(
+closure_example <- graph_test_closure(
   example_.5_.5,
   c(.0129, .0132, .026, .007, .012, .012),
   alpha = .025,
@@ -420,7 +420,7 @@ s_corr <- rbind(
 
 marginal_power <- c(.9, .9, .8, .8, .7, .7)
 
-power_example <- calculate_power(
+power_example <- graph_calculate_power(
   example_.5_.5,
   alpha = .025,
   test_groups = list(1:2, c(3, 5), c(4, 6)),
@@ -455,12 +455,12 @@ if (file.exists(here("vignettes/data/power_timing.rds"))) {
       mean = marginal_power, corr.sim = s_corr,
       n.sim = 2^13
     ),
-    `graphicalMCP shortcut` = calculate_power(example_.5_.5,
+    `graphicalMCP shortcut` = graph_calculate_power(example_.5_.5,
       sim_n = 2^13,
       marginal_power = marginal_power,
       sim_corr = s_corr
     ),
-    `graphicalMCP closure` = calculate_power(example_.5_.5,
+    `graphicalMCP closure` = graph_calculate_power(example_.5_.5,
       test_groups = list(1:2, 3:6),
       test_types = c("p", "b"),
       test_corr = t_corr,

@@ -1,6 +1,6 @@
 #' @rdname testing
 #' @export
-test_graph_shortcut <- function(graph,
+graph_test_shortcut <- function(graph,
                                 p,
                                 alpha = .025,
                                 verbose = FALSE,
@@ -73,7 +73,7 @@ test_graph_shortcut <- function(graph,
 
     # Update graph to delete a hypothesis
     graph <-
-      update_graph(graph, !hyp_names %in% hyps_deleted_sequence)$updated_graph
+      graph_update(graph, !hyp_names %in% hyps_deleted_sequence)$updated_graph
   }
 
   # Testing should be done *before* capping adjusted p-values
@@ -103,7 +103,7 @@ test_graph_shortcut <- function(graph,
         verbose_keep[[hyp_name_to_reject]] <- FALSE
 
         # Update a graph to delete a hypothesis. Record the resulting graph
-        graph_sequence[[hyp_num_to_reject + 1]] <- update_graph(
+        graph_sequence[[hyp_num_to_reject + 1]] <- graph_update(
           graph_sequence[[hyp_num_to_reject]],
           verbose_keep
         )$updated_graph
@@ -117,7 +117,7 @@ test_graph_shortcut <- function(graph,
   if (critical) {
     # Record the final graph after all rejected hypotheses have been deleted
     graph_after_rejections <-
-      update_graph(initial_graph, !rejected)$updated_graph
+      graph_update(initial_graph, !rejected)$updated_graph
 
     df_critical <- NULL
 
@@ -158,7 +158,7 @@ test_graph_shortcut <- function(graph,
       if (hyp_name_for_critical_is_rejected) {
         step_num <- step_num + 1
 
-        step_graph <- update_graph(
+        step_graph <- graph_update(
           step_graph,
           !hyp_names == hyp_name_for_critical
         )$updated_graph
@@ -186,7 +186,7 @@ test_graph_shortcut <- function(graph,
       outputs = list(
         adjusted_p = adjusted_p,
         rejected = rejected,
-        graph = update_graph(initial_graph, !rejected)$updated_graph
+        graph = graph_update(initial_graph, !rejected)$updated_graph
       ),
       details = if (verbose) details,
       critical = if (critical) list(results = df_critical)

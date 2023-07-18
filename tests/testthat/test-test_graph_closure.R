@@ -26,7 +26,7 @@ meta_test_graph <- function(...) {
     spliced_inputs <- valid_inputs
   }
 
-  do.call(test_graph_closure, spliced_inputs)
+  do.call(graph_test_closure, spliced_inputs)
 }
 
 test_that("invalid test inputs throw errors", {
@@ -101,7 +101,7 @@ test_that("invalid test inputs throw errors", {
 
 test_that("adjusted p-values are capped at 1", {
   expect_equal(
-    test_graph_closure(random_graph(2), c(1, 1))$outputs$adjusted_p,
+    graph_test_closure(random_graph(2), c(1, 1))$outputs$adjusted_p,
     c(H1 = 1, H2 = 1)
   )
 })
@@ -111,8 +111,8 @@ test_that("Simes & parametric adjusted p-values are less than Bonferroni", {
 
   expect_true(
     all(
-      test_graph_closure(rando, rep(.01, 4))$outputs$adjusted_p >=
-        test_graph_closure(
+      graph_test_closure(rando, rep(.01, 4))$outputs$adjusted_p >=
+        graph_test_closure(
           rando,
           rep(.01, 4),
           test_types = "s"
@@ -122,8 +122,8 @@ test_that("Simes & parametric adjusted p-values are less than Bonferroni", {
 
   expect_true(
     all(
-      test_graph_closure(rando, rep(.01, 4))$outputs$adjusted_p >=
-        test_graph_closure(
+      graph_test_closure(rando, rep(.01, 4))$outputs$adjusted_p >=
+        graph_test_closure(
           rando,
           rep(.01, 4),
           test_types = "p",
@@ -136,15 +136,15 @@ test_that("Simes & parametric adjusted p-values are less than Bonferroni", {
 test_that("verbose/critical output is only present when asked for", {
   rando <- random_graph(6)
 
-  expect_null(test_graph_closure(rando, rep(.01, 6))$details)
-  expect_null(test_graph_closure(rando, rep(.01, 6))$critical)
+  expect_null(graph_test_closure(rando, rep(.01, 6))$details)
+  expect_null(graph_test_closure(rando, rep(.01, 6))$critical)
 
   expect_type(
-    test_graph_closure(rando, rep(.01, 6), verbose = TRUE)$details$results,
+    graph_test_closure(rando, rep(.01, 6), verbose = TRUE)$details$results,
     "double"
   )
   expect_s3_class(
-    test_graph_closure(rando, rep(.01, 6), critical = TRUE)$critical$results,
+    graph_test_closure(rando, rep(.01, 6), critical = TRUE)$critical$results,
     "data.frame"
   )
 })
@@ -154,17 +154,17 @@ test_that("check assertions in testing vignette", {
   pvals <- c(.024, .01, .026, .027)
 
   expect_equal(
-    test_graph_closure(par_gate, p = pvals, alpha = .05)$outputs,
+    graph_test_closure(par_gate, p = pvals, alpha = .05)$outputs,
     list(
       adjusted_p = c(.048, .02, .052, .052),
       rejected = c(TRUE, TRUE, FALSE, FALSE),
-      graph = update_graph(par_gate, c(FALSE, FALSE, TRUE, TRUE))$updated_graph
+      graph = graph_update(par_gate, c(FALSE, FALSE, TRUE, TRUE))$updated_graph
     ),
     ignore_attr = TRUE
   )
 
   expect_equal(
-    test_graph_closure(
+    graph_test_closure(
       par_gate,
       p = pvals,
       alpha = .05,
@@ -173,7 +173,7 @@ test_that("check assertions in testing vignette", {
     list(
       adjusted_p = c(.027, .02, .027, .027),
       rejected = rep(TRUE, 4),
-      graph = update_graph(par_gate, rep(FALSE, 4))$updated_graph
+      graph = graph_update(par_gate, rep(FALSE, 4))$updated_graph
     ),
     ignore_attr = TRUE
   )
@@ -183,7 +183,7 @@ test_that("check assertions in testing vignette", {
   diag(corr1) <- 1
 
   expect_equal(
-    test_graph_closure(
+    graph_test_closure(
       par_gate,
       pvals,
       .05,
@@ -194,7 +194,7 @@ test_that("check assertions in testing vignette", {
     list(
       adjusted_p = c(.048, .02, .048, .048),
       rejected = rep(TRUE, 4),
-      graph = update_graph(par_gate, rep(FALSE, 4))$updated_graph
+      graph = graph_update(par_gate, rep(FALSE, 4))$updated_graph
     ),
     ignore_attr = TRUE
   )
@@ -203,7 +203,7 @@ test_that("check assertions in testing vignette", {
   diag(corr3) <- 1
 
   expect_equal(
-    test_graph_closure(
+    graph_test_closure(
       par_gate,
       pvals,
       .05,
@@ -211,7 +211,7 @@ test_that("check assertions in testing vignette", {
       rep("p", 4),
       corr3
     )$outputs,
-    test_graph_closure(par_gate, pvals, .05)$outputs
+    graph_test_closure(par_gate, pvals, .05)$outputs
   )
 })
 
@@ -223,17 +223,17 @@ test_that("compare adjusted p-values to gMCP - Bonferroni & parametric", {
     gmcp_g <- as_gmcp_graph(g)
 
     expect_equal(
-      test_graph_shortcut(g, p)$outputs$adjusted_p,
+      graph_test_shortcut(g, p)$outputs$adjusted_p,
       gMCP::gMCP(gmcp_g, p, "Bonferroni")@adjPValues
     )
 
     expect_equal(
-      test_graph_closure(g, p)$outputs$adjusted_p,
+      graph_test_closure(g, p)$outputs$adjusted_p,
       gMCP::gMCP(gmcp_g, p, "Bonferroni")@adjPValues
     )
 
     expect_equal(
-      test_graph_closure(
+      graph_test_closure(
         g,
         p,
         test_types = "p",
@@ -261,25 +261,25 @@ test_that("compare adjusted p-values to lrstat - Bonferroni & Simes", {
     fam2 <- rbind(c(1, 1, 1, 0, 0, 0), c(0, 0, 0, 1, 1, 1))
 
     expect_equal(
-      test_graph_shortcut(g, p)$outputs$adjusted_p,
+      graph_test_shortcut(g, p)$outputs$adjusted_p,
       lrstat::fadjpbon(g$hypotheses, g$transitions, matrix(p, ncol = 6)),
       ignore_attr = TRUE
     )
 
     expect_equal(
-      test_graph_closure(g, p)$outputs$adjusted_p,
+      graph_test_closure(g, p)$outputs$adjusted_p,
       lrstat::fadjpbon(g$hypotheses, g$transitions, matrix(p, ncol = 6)),
       ignore_attr = TRUE
     )
 
     expect_equal(
-      test_graph_closure(g, p, test_types = "s")$outputs$adjusted_p,
+      graph_test_closure(g, p, test_types = "s")$outputs$adjusted_p,
       lrstat::fadjpsim(gw, p, fam1),
       ignore_attr = TRUE
     )
 
     expect_equal(
-      test_graph_closure(
+      graph_test_closure(
         g,
         p,
         groups = list(1:3, 4:6),
@@ -293,7 +293,7 @@ test_that("compare adjusted p-values to lrstat - Bonferroni & Simes", {
 
 test_that("closure testing rejects none when adjusted p-values exceed 1", {
   expect_equal(
-    test_graph_closure(random_graph(6), rep(1, 6), 1)$outputs$rejected,
+    graph_test_closure(random_graph(6), rep(1, 6), 1)$outputs$rejected,
     rep(FALSE, 6),
     ignore_attr = TRUE
   )
@@ -303,7 +303,7 @@ test_that("closure internal consistency", {
   rando <- random_graph(6)
   p <- pnorm(rnorm(6, 2), lower.tail = FALSE)
 
-  closure_results <- test_graph_closure(
+  closure_results <- graph_test_closure(
     rando,
     p,
     .025,
@@ -367,7 +367,7 @@ test_that("parametric floating point errors", {
 
   t_corr <- matrix(1, 3, 3)
 
-  res_para <- test_graph_closure(
+  res_para <- graph_test_closure(
     bh,
     p,
     .025,

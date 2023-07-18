@@ -41,7 +41,7 @@
 #'   c(1, 0, 0, 0)
 #' )
 #' hyp_names <- c("H1", "H2", "H3", "H4")
-#' g <- create_graph(hypotheses, transitions, hyp_names)
+#' g <- graph_create(hypotheses, transitions, hyp_names)
 #' g
 #'
 #' # Explicit names override names in `hypotheses` (with a warning)
@@ -53,7 +53,7 @@
 #'   c(1, 0, 0, 0)
 #' )
 #'
-#' g <- create_graph(hypotheses, transitions, hyp_names)
+#' g <- graph_create(hypotheses, transitions, hyp_names)
 #' g
 #'
 #' # Explicit names override names in `transitions` (with a warning)
@@ -65,7 +65,7 @@
 #'   h4 = c(1, 0, 0, 0)
 #' )
 #'
-#' g <- create_graph(hypotheses, transitions, hyp_names)
+#' g <- graph_create(hypotheses, transitions, hyp_names)
 #' g
 #'
 #' # Use names in `hypotheses`
@@ -76,7 +76,7 @@
 #'   c(0, 1, 0, 0),
 #'   c(1, 0, 0, 0)
 #' )
-#' g <- create_graph(hypotheses, transitions)
+#' g <- graph_create(hypotheses, transitions)
 #' g
 #'
 #' # Use names in `transitions`
@@ -87,7 +87,7 @@
 #'   H3 = c(0, 1, 0, 0),
 #'   H4 = c(1, 0, 0, 0)
 #' )
-#' g <- create_graph(hypotheses, transitions)
+#' g <- graph_create(hypotheses, transitions)
 #' g
 #'
 #' # When names are not specified, hypotheses are numbered sequentially as
@@ -99,9 +99,9 @@
 #'   c(0, 1, 0, 0),
 #'   c(1, 0, 0, 0)
 #' )
-#' g <- create_graph(hypotheses, transitions)
+#' g <- graph_create(hypotheses, transitions)
 #' g
-create_graph <- function(hypotheses, transitions, hyp_names = NULL) {
+graph_create <- function(hypotheses, transitions, hyp_names = NULL) {
   # Basic input validation -----------------------------------------------------
   stopifnot(
     "Hypothesis weights must be numeric" = is.numeric(hypotheses),

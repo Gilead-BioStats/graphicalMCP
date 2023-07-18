@@ -10,7 +10,7 @@ as_gmcp_graph(graph)
 as_graph(gmcp_graph)
 }
 \arguments{
-\item{graph}{An initial graph as returned by \code{\link[=create_graph]{create_graph()}}}
+\item{graph}{An initial graph as returned by \code{\link[=graph_create]{graph_create()}}}
 
 \item{gmcp_graph}{A gMCP graph}
 }

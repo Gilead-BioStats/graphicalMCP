@@ -25,14 +25,14 @@ g <- as_graph(G)
 alpha <- .05
 
 gMCP(G, p)
-test_graph_closure(g, alpha = .05, p_values = p)
+graph_test_closure(g, alpha = .05, p_values = p)
 
 gMCP(G, p, corr=Cm2, test="parametric")
-test_graph_closure(g, alpha = .05, p_values = p, corr = Cm2,
+graph_test_closure(g, alpha = .05, p_values = p, corr = Cm2,
            tests = list(parametric = list(1:4)))
 
 # cJ exploration
-gw <- generate_weights(g)
+gw <- graph_generate_weights(g)
 gw_weights <- gw[, 5:8]
 
 cJ <- vector("numeric", nrow(gw_weights))

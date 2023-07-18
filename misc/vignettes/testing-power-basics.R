@@ -21,17 +21,17 @@ pvals <- c(.024, .01, .026, .027)
 ss_graph
 
 ## ----bonferroni-mix-1---------------------------------------------------------
-test_graph_closure(ss_graph, p = pvals, alpha = .05)
+graph_test_closure(ss_graph, p = pvals, alpha = .05)
 
 ## ----simes-all-1--------------------------------------------------------------
-test_graph_closure(ss_graph, p = pvals, alpha = .05, test_types = "s")
+graph_test_closure(ss_graph, p = pvals, alpha = .05, test_types = "s")
 
 ## ----parametric-1-------------------------------------------------------------
 corr1 <- matrix(nrow = 4, ncol = 4)
 corr1[3:4, 3:4] <- .5
 diag(corr1) <- 1
 
-test_graph_closure(ss_graph,
+graph_test_closure(ss_graph,
   p = pvals,
   alpha = .05,
   groups = list(1:2, 3:4),
@@ -40,7 +40,7 @@ test_graph_closure(ss_graph,
 )
 
 ## ----verbose------------------------------------------------------------------
-test_graph_closure(
+graph_test_closure(
   ss_graph,
   p = pvals,
   alpha = .05,
@@ -51,7 +51,7 @@ test_graph_closure(
 )
 
 ## ----critical-----------------------------------------------------------------
-test_graph_closure(
+graph_test_closure(
   ss_graph,
   p = pvals,
   alpha = .05,
@@ -63,7 +63,7 @@ test_graph_closure(
 )
 
 ## ----sequential---------------------------------------------------------------
-test_graph_shortcut(ss_graph, p = pvals, alpha = .05, critical = TRUE)
+graph_test_shortcut(ss_graph, p = pvals, alpha = .05, critical = TRUE)
 
 ## ----print-indent-------------------------------------------------------------
 set.seed(3123)
@@ -75,12 +75,12 @@ g <- replicate(m, sample(1:m, replace = TRUE), simplify = TRUE)
 diag(g) <- 0
 g <- g / rowSums(g)
 graph <- new("graphMCP", m = g, weights = w)
-graph2 <- create_graph(w, g)
+graph2 <- graph_create(w, g)
 
 p <- runif(m, .0001, .05)
 sim_corr <- diag(m)
 
-mix_test <- test_graph_closure(
+mix_test <- graph_test_closure(
   graph2,
   p = p,
   alpha = .05,
@@ -96,13 +96,13 @@ print(mix_test)
 print(mix_test, indent = 6, precision = 10)
 
 ## ----power-bonf---------------------------------------------------------------
-calculate_power(ss_graph, sim_n = 1e5)
+graph_calculate_power(ss_graph, sim_n = 1e5)
 
 ## ----power-mix----------------------------------------------------------------
 corr2 <- matrix(.5, nrow = 4, ncol = 4)
 diag(corr2) <- 1
 
-calculate_power(
+graph_calculate_power(
   ss_graph,
   test_groups = list(1:4),
   test_types = c("p"),
@@ -118,7 +118,7 @@ s_corr1 <- rbind(
   c(.25, .5, .5, 1)
 )
 
-calculate_power(
+graph_calculate_power(
   ss_graph,
   test_groups = list(1:4),
   test_types = c("p"),

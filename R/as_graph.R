@@ -1,6 +1,6 @@
 #' Convert between gMCP and graphicalMCP graph classes
 #'
-#' @param graph An initial graph as returned by [create_graph()]
+#' @param graph An initial graph as returned by [graph_create()]
 #' @param gmcp_graph A gMCP graph
 #'
 #' @return For `as_gmcp_graph()`, a gMCP graph object, and for `as_graph()`, a
@@ -27,5 +27,5 @@ as_gmcp_graph <- function(graph) {
 #' @rdname as-graph
 #' @export
 as_graph <- function(gmcp_graph) {
-  create_graph(gmcp_graph@weights, gmcp_graph@m)
+  graph_create(gmcp_graph@weights, gmcp_graph@m)
 }

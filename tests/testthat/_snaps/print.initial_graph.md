@@ -1,7 +1,7 @@
 # snapshot print method
 
     Code
-      create_graph(c(0.5, 0.5), matrix(c(0, 1, 1, 0), nrow = 2))
+      graph_create(c(0.5, 0.5), matrix(c(0, 1, 1, 0), nrow = 2))
     Output
       Initial graph
       
@@ -17,7 +17,7 @@
 ---
 
     Code
-      update_graph(create_graph(1, matrix(0, nrow = 1)), FALSE)$updated_graph
+      graph_update(graph_create(1, matrix(0, nrow = 1)), FALSE)$updated_graph
     Output
       Initial graph
       

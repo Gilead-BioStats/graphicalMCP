@@ -7,13 +7,13 @@ devtools::check(quiet = FALSE, vignettes = FALSE)
 #   g <- replicate(m, sample(1:m, replace = TRUE), simplify = TRUE)
 #   diag(g) <- 0
 #   g <- g / rowSums(g)
-#   graph2 <- create_graph(w, g)
+#   graph2 <- graph_create(w, g)
 #
 #   p <- runif(m, .0001, .05)
 #   sim_corr <- diag(m)
 #
 #   bench::mark(
-#     test_graph_closure(
+#     graph_test_closure(
 #       graph2,
 #       p = p,
 #       alpha = .05,

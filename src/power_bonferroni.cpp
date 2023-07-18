@@ -32,7 +32,7 @@ using namespace cpp11;
 // }
 
 [[cpp11::register]]
-writable::integers test_graph_shortcut_cpp_(
+writable::integers graph_test_shortcut_cpp_(
   writable::doubles hypotheses,
   writable::doubles_matrix<> transitions,
   doubles p,
@@ -156,7 +156,7 @@ integers_matrix<> power_shortcut_cpp(
     }
 
     // test that row
-    rejected = test_graph_shortcut_cpp_(hypotheses, transitions, p, alpha);
+    rejected = graph_test_shortcut_cpp_(hypotheses, transitions, p, alpha);
 
     // insert results into results matrix
     for (col = 0; col < num_hyps; col++) {

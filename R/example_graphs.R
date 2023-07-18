@@ -5,7 +5,7 @@
 #' @param hyp_names Optional names for the hypotheses (Must have length
 #'   `num_hyps` or be NULL)
 #'
-#' @return An S3 object as returned by [create_graph()]
+#' @return An S3 object as returned by [graph_create()]
 #'
 #' @export
 #'
@@ -27,13 +27,13 @@ bonferroni_holm <- function(num_hyps, hyp_names = NULL) {
 
   hypotheses <- rep(1 / num_hyps, num_hyps)
 
-  create_graph(hypotheses, transitions, hyp_names = hyp_names)
+  graph_create(hypotheses, transitions, hyp_names = hyp_names)
 }
 
 #' @export
 #' @rdname example-graphs
 huque_alosh_bhore_2011 <- function(hyp_names = NULL) {
-  create_graph(
+  graph_create(
     c(1, 0, 0, 0),
     matrix(
       c(
@@ -52,7 +52,7 @@ huque_alosh_bhore_2011 <- function(hyp_names = NULL) {
 #' @export
 #' @rdname example-graphs
 wiens_dmitrienko_2005 <- function(hyp_names = NULL) {
-  create_graph(
+  graph_create(
     c(1 / 3, 1 / 3, 1 / 3),
     matrix(
       c(
@@ -76,7 +76,7 @@ fixed_sequence <- function(num_hyps = 3, hyp_names = NULL) {
 
   for (i in seq_len(num_hyps - 1)) transitions[i, i + 1] <- 1
 
-  create_graph(hypotheses, transitions, hyp_names)
+  graph_create(hypotheses, transitions, hyp_names)
 }
 
 #' @export
@@ -90,7 +90,7 @@ fallback <- function(hypotheses = c(1, 0, 0), hyp_names = NULL) {
     c(1 - r, r, 0)
   )
 
-  create_graph(hypotheses, transitions, hyp_names)
+  graph_create(hypotheses, transitions, hyp_names)
 }
 
 #' @export
@@ -104,7 +104,7 @@ simple_successive_1 <- function(hyp_names = NULL) {
     c(1, 0, 0, 0)
   )
 
-  create_graph(hypotheses, transitions, hyp_names)
+  graph_create(hypotheses, transitions, hyp_names)
 }
 
 #' @export
@@ -118,7 +118,7 @@ simple_successive_2 <- function(hyp_names = NULL) {
     c(1, 0, 0, 0)
   )
 
-  create_graph(hypotheses, transitions, hyp_names)
+  graph_create(hypotheses, transitions, hyp_names)
 }
 
 #' @export
@@ -135,7 +135,7 @@ random_graph <- function(num_hyps, hyp_names = NULL) {
   diag(transitions) <- 0
   transitions <- transitions / rowSums(transitions)
 
-  create_graph(hypotheses, transitions, hyp_names)
+  graph_create(hypotheses, transitions, hyp_names)
 }
 
 #' @export
@@ -153,7 +153,7 @@ complex_example_1 <- function(hyp_names = NULL) {
     c(eps, 0, 0, 0, 1 - eps, 0)
   )
 
-  create_graph(weights, transitions, hyp_names = hyp_names)
+  graph_create(weights, transitions, hyp_names = hyp_names)
 }
 
 #' @export
@@ -174,5 +174,5 @@ complex_example_2 <- function(hyp_names = NULL) {
     c(eps / 2, 0, 0, eps / 2, 0, 0, 0, 1 - eps, 0) # 9 --> 8, 9 - - > 1 & 4
   )
 
-  create_graph(weights, transitions, hyp_names = hyp_names)
+  graph_create(weights, transitions, hyp_names = hyp_names)
 }

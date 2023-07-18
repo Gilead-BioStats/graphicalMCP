@@ -4,7 +4,7 @@ test_that("vectorized testing matches standard testing (single-group)", {
   hyp_names <- names(rando$hypotheses)
 
   p <- pnorm(rnorm(m, 2), lower.tail = FALSE)
-  gw <- generate_weights(rando)
+  gw <- graph_generate_weights(rando)
   gw_h <- gw[, seq_len(m)]
   gw_weights <- gw[, seq_len(m) + m]
 
@@ -26,25 +26,25 @@ test_that("vectorized testing matches standard testing (single-group)", {
   )
 
   expect_equal(
-    graphicalMCP:::test_graph_fast(p, .025, gw_compact_bonf, gw_h),
-    test_graph_closure(rando, p)$outputs$rejected,
+    graphicalMCP:::graph_test_fast(p, .025, gw_compact_bonf, gw_h),
+    graph_test_closure(rando, p)$outputs$rejected,
     ignore_attr = TRUE
   )
 
   expect_equal(
-    graphicalMCP:::test_graph_fast(
+    graphicalMCP:::graph_test_fast(
       p,
       .025,
       gw_compact_simes[, hyp_names],
       gw_h
     ),
-    test_graph_closure(rando, p, test_types = "s")$outputs$rejected,
+    graph_test_closure(rando, p, test_types = "s")$outputs$rejected,
     ignore_attr = TRUE
   )
 
   expect_equal(
-    graphicalMCP:::test_graph_fast(p, .025, gw_compact_parametric, gw_h),
-    test_graph_closure(
+    graphicalMCP:::graph_test_fast(p, .025, gw_compact_parametric, gw_h),
+    graph_test_closure(
       rando,
       p,
       test_types = "p",
@@ -60,7 +60,7 @@ test_that("vectorized testing matches standard testing (multi-group)", {
   hyp_names <- names(rando$hypotheses)
 
   p <- pnorm(rnorm(m, 2), lower.tail = FALSE)
-  gw <- generate_weights(rando)
+  gw <- graph_generate_weights(rando)
   gw_h <- gw[, seq_len(m)]
   gw_weights <- gw[, seq_len(m) + m]
 
@@ -87,13 +87,13 @@ test_that("vectorized testing matches standard testing (multi-group)", {
   gw_compact_bonf <- gw_compact_bonf[, unlist(bonf_groups)]
 
   expect_equal(
-    graphicalMCP:::test_graph_fast(
+    graphicalMCP:::graph_test_fast(
       p,
       .025,
       cbind(gw_compact_bonf, gw_compact_simes, gw_compact_para)[, hyp_names],
       gw_h
     ),
-    test_graph_closure(
+    graph_test_closure(
       rando,
       p,
       groups = list(1:2, 4:3, 5:m),
