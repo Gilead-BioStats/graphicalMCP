@@ -7,38 +7,38 @@ reference:
 - title: Creating an initial graph
 - desc: Functions for creating a multiple comparison procedure graph
 - contents:
-  - create_graph
+  - graph_create
   - print.initial_graph
   - as_graph
   - as_gmcp_graph
 - title: Updating a graph
 - desc: Functions for removing hypotheses from a graph
 - contents:
-  - update_graph
+  - graph_update
   - print.updated_graph
 - title: Calculating sub-graph weights
 - desc: Functions for generating the weights of the closure
 - contents:
-  - generate_weights
+  - graph_generate_weights
 - title: Test a graph
 - desc: Functions for running Bonferroni, parametric, and Simes tests
 - contents:
-  - test_graph_closure
-  - test_graph_shortcut
+  - graph_test_closure
+  - graph_test_shortcut
   - print.graph_report
 - title: Run a power simulation
 - desc: Functions for running power simulations
 - contents:
-  - calculate_power
+  - graph_calculate_power
   - print.power_report
 - title: Example graphs
 - desc: Functions for creating example graphs from a variety of papers
 - contents:
   - bonferroni_holm
-  - huque_alosh_bhore_2011
-  - wiens_dmitrienko_2005
-  - fixed_sequence
   - fallback
+  - fixed_sequence
+  - huque_alosh_bhore_2011
+  - random_graph
   - simple_successive_1
   - simple_successive_2
-  - random_graph
+  - wiens_dmitrienko_2005
