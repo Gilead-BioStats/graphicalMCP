@@ -1,15 +1,15 @@
 graph_calculate_power_r <- function(graph,
-                                  alpha = .025,
-                                  test_groups = list(seq_along(graph$hypotheses)),
-                                  test_types = c("bonferroni"),
-                                  test_corr = NULL,
-                                  sim_n = 100,
-                                  marginal_power = NULL,
-                                  sim_corr = diag(length(graph$hypotheses)),
-                                  sim_success = NULL,
-                                  sim_seed = NULL,
-                                  force_closure = FALSE,
-                                  verbose = FALSE) {
+                                    alpha = .025,
+                                    test_groups = list(seq_along(graph$hypotheses)),
+                                    test_types = c("bonferroni"),
+                                    test_corr = NULL,
+                                    sim_n = 100,
+                                    marginal_power = NULL,
+                                    sim_corr = diag(length(graph$hypotheses)),
+                                    sim_success = NULL,
+                                    sim_seed = NULL,
+                                    force_closure = FALSE,
+                                    verbose = FALSE) {
   if (is.null(marginal_power)) {
     marginal_power <- rep(alpha, length(graph$hypotheses))
   }
@@ -82,9 +82,10 @@ graph_calculate_power_r <- function(graph,
   if (all(test_types == "bonferroni") && !force_closure) {
     weighting_strategy <- graph_generate_weights(graph)
     # matrix_intersections <- weighting_strategy[, seq_len(num_hyps)]
-    critical_values <- weighting_strategy[, seq_len(num_hyps) + num_hyps]
+    critical_values <- weighting_strategy[, seq_len(num_hyps) + num_hyps] * alpha
 
     nrow_critical <- nrow(critical_values)
+    bin_slots <- 2^(num_hyps:1 - 1)
 
     # weights_names <- apply(matrix_intersections, 1, paste, collapse = "")
     # rownames(critical_values) <- weights_names
@@ -92,9 +93,9 @@ graph_calculate_power_r <- function(graph,
     for (row in seq_len(sim_n)) {
       simulation_test_results[row, ] <- graph_test_shortcut_r3(
         p_sim[row, ],
-        alpha,
         critical_values,
         num_hyps,
+        bin_slots,
         nrow_critical
       )
 

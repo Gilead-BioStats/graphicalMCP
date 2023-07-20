@@ -35,18 +35,18 @@ graph_test_shortcut_r2 <- function(p, alpha = .025, critical_values) {
   rejected
 }
 
-graph_test_shortcut_r3 <- function(p, alpha = .025, critical_values, num_hyps, nrow_critical) {
+graph_test_shortcut_r3 <- function(p, critical_values, num_hyps, bin_slots, nrow_critical) {
   rejected <- vector("logical", num_hyps)
 
   while (!all(rejected)) {
     intersection_num <-
-      nrow_critical - sum(2^(num_hyps:1 - 1) * !rejected) + 1
-    rejected_step <- p <= critical_values[intersection_num, ] * alpha
+      nrow_critical - sum(bin_slots * !rejected) + 1
+    rejected_step <- p <= critical_values[intersection_num, ]
 
     if (!any(rejected_step)) {
       break
     } else {
-      rejected[which(rejected_step)] <- TRUE
+      rejected <- rejected | rejected_step
     }
   }
 
