@@ -187,22 +187,23 @@ graph_calculate_power <- function(graph,
   } else {
     # Calculate weights for each intersection in the closure -------------------
     weighting_strategy <- graph_generate_weights(graph)
-    matrix_intersections <- weighting_strategy[, seq_len(num_hyps)]
+    matrix_intersections <-
+      weighting_strategy[, seq_len(num_hyps), drop = FALSE]
     weighting_strategy_compact <- ifelse(
       matrix_intersections,
-      weighting_strategy[, seq_len(num_hyps) + num_hyps],
+      weighting_strategy[, seq_len(num_hyps) + num_hyps, drop = FALSE],
       NA
     )
 
     # Calculate Bonferroni critical values -------------------------------------
-    groups_bonferroni <- test_groups[test_types == "bonferroni", drop = FALSE]
+    groups_bonferroni <- test_groups[test_types == "bonferroni"]
 
     # Bonferroni critical values are just the weights from the closure
     critical_values_bonferroni <-
       weighting_strategy_compact[, unlist(groups_bonferroni), drop = FALSE]
 
     # Calculate parametric critical values -------------------------------------
-    groups_parametric <- test_groups[test_types == "parametric", drop = FALSE]
+    groups_parametric <- test_groups[test_types == "parametric"]
 
     # Parametric critical values depend only on the joint distribution and
     # alpha. This allows critical values to be calculated once, rather than
@@ -215,7 +216,7 @@ graph_calculate_power <- function(graph,
     )
 
     # Separate Simes weighting strategy ----------------------------------------
-    groups_simes <- test_groups[test_types == "simes", drop = FALSE]
+    groups_simes <- test_groups[test_types == "simes"]
 
     # The fastest option found for calculating Simes critical values requires
     # missing hypotheses' weights to be 0, rather than NA
@@ -256,7 +257,7 @@ graph_calculate_power <- function(graph,
         # calculated for each simulation.
         critical_values_simes <- calculate_critical_simes(
           weighting_strategy_simes,
-          p_sim_simes[row, ],
+          p_sim_simes[row, , drop = TRUE],
           groups_simes_reduce
         )
 
@@ -284,7 +285,7 @@ graph_calculate_power <- function(graph,
 
       # Record test results for one simulation, all groups
       simulation_test_results[row, ] <- graph_test_fast(
-        p_sim[row, ],
+        p_sim[row, , drop = TRUE],
         alpha,
         critical_values_all,
         matrix_intersections

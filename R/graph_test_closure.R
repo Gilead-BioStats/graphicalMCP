@@ -126,8 +126,9 @@ graph_test_closure <- function(graph,
   # Adjusted p-values are calculated for each group in each intersection of the
   # closure
   for (intersection_index in seq_len(num_intersections)) {
-    vec_intersection <- matrix_intersections[intersection_index, ]
-    vec_weights <- weighting_strategy_compact[intersection_index, ]
+    vec_intersection <- matrix_intersections[intersection_index, , drop = TRUE]
+    vec_weights <-
+      weighting_strategy_compact[intersection_index,  , drop = TRUE]
 
     for (group_index in seq_len(num_groups)) {
       group <- groups[[group_index]]
@@ -154,7 +155,7 @@ graph_test_closure <- function(graph,
         adjusted_p[[intersection_index, group_index]] <- adjust_p_parametric(
           p[group_by_intersection],
           vec_weights[group_by_intersection],
-          corr[group_by_intersection, group_by_intersection]
+          corr[group_by_intersection, group_by_intersection, drop = FALSE]
         )
       } else {
         stop(paste(test, "testing is not supported at this time"))
@@ -197,8 +198,10 @@ graph_test_closure <- function(graph,
     # Critical values are calculated for each group in each intersection of the
     # closure
     for (intersection_index in seq_len(num_intersections)) {
-      vec_intersection <- matrix_intersections[intersection_index, ]
-      vec_weights <- weighting_strategy_compact[intersection_index, ]
+      vec_intersection <-
+        matrix_intersections[intersection_index, , drop = TRUE]
+      vec_weights <-
+        weighting_strategy_compact[intersection_index, , drop = TRUE]
 
       for (group_index in seq_len(num_groups)) {
         group <- groups[[group_index]]
@@ -232,7 +235,7 @@ graph_test_closure <- function(graph,
             vec_weights[group_by_intersection],
             alpha,
             intersection_index,
-            corr[group_by_intersection, group_by_intersection]
+            corr[group_by_intersection, group_by_intersection, drop = FALSE]
           )
         } else {
           stop(paste(test, "testing is not supported at this time"))

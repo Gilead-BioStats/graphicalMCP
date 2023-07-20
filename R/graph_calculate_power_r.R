@@ -82,7 +82,8 @@ graph_calculate_power_r <- function(graph,
   if (all(test_types == "bonferroni") && !force_closure) {
     weighting_strategy <- graph_generate_weights(graph)
     # matrix_intersections <- weighting_strategy[, seq_len(num_hyps)]
-    critical_values <- weighting_strategy[, seq_len(num_hyps) + num_hyps] * alpha
+    critical_values <-
+      weighting_strategy[, seq_len(num_hyps) + num_hyps, drop = FALSE] * alpha
 
     nrow_critical <- nrow(critical_values)
     bin_slots <- 2^(num_hyps:1 - 1)

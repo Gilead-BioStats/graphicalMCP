@@ -58,16 +58,16 @@ calculate_critical_parametric <- function(weighting_strategy,
   for (group in groups) {
     for (row in seq_len(nrow(weighting_strategy))) {
       group_by_intersection <-
-        group[as.logical(matrix_intersections[row, ][group])]
+        group[as.logical(matrix_intersections[row, , drop = TRUE][group])]
 
       group_c_value <- solve_c_parametric(
-        weighting_strategy[row, group_by_intersection],
-        corr[group_by_intersection, group_by_intersection],
+        weighting_strategy[row, group_by_intersection, drop = TRUE],
+        corr[group_by_intersection, group_by_intersection, drop = FALSE],
         alpha
       )
 
       c_values[row, group] <-
-        group_c_value * matrix_intersections[row, group]
+        group_c_value * matrix_intersections[row, group, drop = TRUE]
     }
   }
 
@@ -80,7 +80,7 @@ calculate_critical_parametric <- function(weighting_strategy,
 calculate_critical_simes <- function(weighting_strategy, p, groups) {
   ordered_p <- order(p)
 
-  weighting_strategy <- weighting_strategy[, ordered_p]
+  weighting_strategy <- weighting_strategy[, ordered_p, drop = FALSE]
 
   group_critical_values <- vector("list", length(groups))
 
@@ -104,7 +104,7 @@ c_value_function <- function(x, hypotheses, corr, alpha) {
     1 - mvtnorm::pmvnorm(
       lower = -Inf,
       upper = z,
-      corr = corr[hyps_nonzero, hyps_nonzero],
+      corr = corr[hyps_nonzero, hyps_nonzero, drop = FALSE],
       algorithm = mvtnorm::GenzBretz(maxpts = 25000, abseps = 1e-6, releps = 0)
     )[[1]]
   )

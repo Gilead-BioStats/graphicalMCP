@@ -23,7 +23,8 @@ graph_test_shortcut_r2 <- function(p, alpha = .025, critical_values) {
 
   while (!all(rejected)) {
     intersection_num <- paste(1 - rejected, collapse = "")
-    rejected_step <- p <= critical_values[intersection_num, ] * alpha
+    rejected_step <-
+      p <= critical_values[intersection_num, , drop = TRUE] * alpha
 
     if (!any(rejected_step)) {
       break
@@ -41,7 +42,7 @@ graph_test_shortcut_r3 <- function(p, critical_values, num_hyps, bin_slots, nrow
   while (!all(rejected)) {
     intersection_num <-
       nrow_critical - sum(bin_slots * !rejected) + 1
-    rejected_step <- p <= critical_values[intersection_num, ]
+    rejected_step <- p <= critical_values[intersection_num, , drop = TRUE]
 
     if (!any(rejected_step)) {
       break

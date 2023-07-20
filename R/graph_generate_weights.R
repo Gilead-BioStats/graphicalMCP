@@ -87,7 +87,8 @@ graph_generate_weights <- function(graph) {
     graphs[[i + 1]] <- structure(
       list(
         hypotheses = hypotheses[-del_index],
-        transitions = as.matrix(transitions[-del_index, -del_index])
+        transitions =
+          as.matrix(transitions[-del_index, -del_index, drop = FALSE])
       ),
       class = "initial_graph"
     )

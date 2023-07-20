@@ -167,7 +167,7 @@ graph_create <- function(hypotheses, transitions, hyp_names = NULL) {
   }
 
   if (any(transitions < 0 | transitions > 1)) {
-    offending <- transitions[transitions < 0 | transitions > 1]
+    offending <- transitions[transitions < 0 | transitions > 1, drop = TRUE]
     not_zero_float <- sapply(offending, function(x) !isTRUE(all.equal(0, x)))
     not_one_float <- sapply(offending, function(x) !isTRUE(all.equal(1, x)))
 
