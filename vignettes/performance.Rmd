@@ -183,7 +183,7 @@ if (file.exists(here("vignettes/data/df_benchmarks_gw.rds"))) {
         `graphicalMCP (R)` = graph_generate_weights(rando),
         `lrstat (C++)` = fwgtmat(hyp, trn),
         check = FALSE,
-        min_iterations = 5,
+        min_iterations = 25,
         time_unit = "ms"
       )
 
@@ -213,7 +213,7 @@ df_benchmarks_gw %>%
   pivot_wider(names_from = size, values_from = median) %>%
   gt() %>%
   tab_header("Generate weights of the closure") %>%
-  fmt_number(pattern = "{x}s") %>%
+  fmt_number(pattern = "{x}ms") %>%
   tab_spanner("Number of hypotheses", 2:10) %>%
   cols_label(char_expression = "Package") %>%
   tab_options(table.font.size = 24)

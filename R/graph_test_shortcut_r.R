@@ -1,4 +1,5 @@
-graph_test_shortcut_r <- function(graph, p, alpha = .025, weighting_strategy) {
+# update graph method
+graph_test_shortcut_r <- function(graph, p, alpha = .025) {
   rejected <- vector("logical", length(graph$hypotheses))
 
   for (i in seq_along(graph$hypotheses)) {
@@ -36,6 +37,7 @@ graph_test_shortcut_r2 <- function(p, alpha = .025, critical_values) {
   rejected
 }
 
+# generate weights method, calculate row number
 graph_test_shortcut_r3 <- function(p, critical_values, num_hyps, bin_slots, nrow_critical) {
   rejected <- vector("logical", num_hyps)
 
