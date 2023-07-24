@@ -142,3 +142,24 @@ test_that("shortcut internal consistency", {
     ignore_attr = TRUE
   )
 })
+
+test_that("adjusted p that exceeds alpha by floating point diff is rejected", {
+  g <- graph_create(
+    c(.5, .5, 0, 0, 0, 0),
+    rbind(
+      c(0.0000, 0.5000, 0.2500, 0.0000, 0.2500, 0.0000),
+      c(0.5000, 0.0000, 0.0000, 0.2500, 0.0000, 0.2500),
+      c(0.0000, 0.0000, 0.0000, 0.0000, 1.0000, 0.0000),
+      c(0.0001, 0.0000, 0.0000, 0.0000, 0.0000, 0.9999),
+      c(0.0000, 0.0001, 0.9999, 0.0000, 0.0000, 0.0000),
+      c(0.0000, 0.0000, 0.0000, 1.0000, 0.0000, 0.0000)
+    )
+  )
+
+  p <- c(0.001, 0.01875, 0.013, .0002, 0.03, 0.04)
+
+  expect_equal(
+    graph_test_shortcut(g, p)$outputs$rejected,
+    c(H1 = TRUE, H2 = TRUE, H3 = FALSE, H4 = TRUE, H5 = FALSE, H6 = FALSE)
+  )
+})

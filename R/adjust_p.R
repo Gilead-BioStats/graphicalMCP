@@ -41,7 +41,7 @@ adjust_p_bonferroni <- function(p, hypotheses) {
   # and weights by keeping only indices where `!(p == 0 & weights == 0)`.
   # Considering that p-values are validated in the test function, this should be
   # safe
-  min(p / hypotheses, na.rm = TRUE)
+  round(min(p / hypotheses, na.rm = TRUE), 10)
 }
 
 #' @rdname adjust_p
@@ -66,6 +66,8 @@ adjust_p_parametric <- function(p, hypotheses, corr = NULL) {
   )
 
   # Occasionally off by floating point differences, so round at some high detail
+  # This level of detail should always remove floating point differences
+  # appropriately, as they're typically 10^(<=-15). Conversely, this
   round(1 / sum(hypotheses) * prob_less_than_z, 10)
 }
 
@@ -102,5 +104,5 @@ adjust_p_simes <- function(p, hypotheses) {
     )
   }
 
-  adjusted_p
+  round(adjusted_p, 10)
 }
