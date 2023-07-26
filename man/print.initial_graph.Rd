@@ -4,8 +4,7 @@
 \alias{print.initial_graph}
 \title{S3 print method for the class \code{initial_graph}}
 \usage{
-\method{print}{initial_graph}(x, ..., precision = 4, indent = 0,
-  title = "Initial graph")
+\method{print}{initial_graph}(x, ..., precision = 4, indent = 0, title = "Initial graph")
 }
 \arguments{
 \item{x}{An object of class \code{initial_graph} to print}

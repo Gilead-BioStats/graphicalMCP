@@ -1,6 +1,7 @@
 test_that("results match graph_test_closure()", {
   rando <- random_graph(4)
   p <- pnorm(rnorm(4, 2), lower.tail = FALSE)
+  names(p) <- names(rando$hypotheses)
 
   expect_equal(
     graph_test_shortcut(rando, p),
@@ -9,8 +10,24 @@ test_that("results match graph_test_closure()", {
   )
 
   expect_equal(
-    as.integer(graph_test_shortcut(rando, p)$outputs$rejected),
-    graph_test_shortcut_cpp(rando, p)
+    graph_test_shortcut(rando, p)$outputs$rejected,
+    graph_test_shortcut_fast(
+      p,
+      graph_generate_weights(rando)[, 5:8, drop = FALSE] * .025,
+      4,
+      2^(3:0),
+      2^4 - 1
+    )
+  )
+
+  expect_equal(
+    graph_test_shortcut(rando, p)$outputs$rejected,
+    graph_test_closure_fast(
+      p,
+      .025,
+      graph_generate_weights(rando)[, 5:8, drop = FALSE],
+      graph_generate_weights(rando)[, 1:4, drop = FALSE]
+    )
   )
 
   expect_s3_class(
@@ -32,7 +49,7 @@ test_that("adjusted p-values are capped at 1", {
   )
 })
 
-test_that("C++ sequential properly assigns new hypotheses each round", {
+test_that("fast shortcut testing matches closure testing", {
   g <- simple_successive_2()
   p <- c(
     3.51345772970616e-08,
@@ -41,8 +58,10 @@ test_that("C++ sequential properly assigns new hypotheses each round", {
     1.23186608577966e-05
   )
 
+  critical_values <- graph_generate_weights(g)[, 5:8, drop = FALSE]
+
   expect_equal(
-    as.logical(graph_test_shortcut_cpp(g, p)),
+    as.logical(graph_test_shortcut_fast(p, critical_values, 4, 2^(3:0), 15)),
     unname(graph_test_closure(g, p)$outputs$rejected)
   )
 })

@@ -222,7 +222,7 @@ df_benchmarks_gw %>%
 ```{r df-benchmarks-seqtest, fig.width=7, fig.height=5, warning=FALSE}
 set.seed(7523)
 
-sizes <- 2:10
+sizes <- seq(2, 12, by = 2)
 
 if (file.exists(here("vignettes/data/df_benchmarks_seqtest.rds"))) {
   df_benchmarks_seqtest <-
@@ -306,7 +306,7 @@ df_benchmarks_seqtest %>%
 ```{r df-benchmarks-power, fig.width=7, fig.height=5, warning=FALSE}
 set.seed(7523)
 
-sizes <- 2:10
+sizes <- seq(2, 12, by = 2)
 sims <- 1e5
 
 if (file.exists(here("vignettes/data/df_benchmarks_power.rds"))) {
@@ -317,20 +317,25 @@ if (file.exists(here("vignettes/data/df_benchmarks_power.rds"))) {
   list_benchmarks_power <- lapply(
     sizes,
     function(size) {
-      cat(size, "|", format(Sys.time()), "\n", file = here::here("vignettes/log.txt"), append = TRUE)
+      cat(
+        size, "|", format(Sys.time()), "\n",
+        file = here::here("vignettes/log.txt"),
+        append = TRUE
+      )
 
       rando <- random_graph(size)
       trn <- rando$transitions
       hyp <- rando$hypotheses
 
       marg_pow <- rep(.8, size)
+      ncp <- qnorm(1 - .025) - qnorm(1 - marg_pow)
       t_corr <- s_corr <- diag(size)
 
       speed_comp <- mark(
         `gMCP shortcut (C)` =
-          calcPower(hyp, .025, trn, marg_pow, s_corr, n.sim = sims),
+          calcPower(hyp, .025, trn, ncp, s_corr, n.sim = sims),
         `graphicalMCP shortcut (R)` =
-          graph_calculate_power_r3(rando,
+          graph_calculate_power(rando,
             sim_n = sims, marginal_power = marg_pow,
             sim_corr = s_corr
           ),
@@ -341,19 +346,25 @@ if (file.exists(here("vignettes/data/df_benchmarks_power.rds"))) {
         #       marg_pow, s_corr, t_corr, sims
         #     )
         #   },
-        `graphicalMCP closure parametric (R)` =
-          graph_calculate_power(rando,
-            sim_n = sims, marginal_power = marg_pow,
-            sim_corr = s_corr, test_types = "parametric",
-            test_corr = t_corr
-          ),
-        `graphicalMCP closure Simes (R)` =
-          graph_calculate_power(rando,
-            sim_n = sims, marginal_power = marg_pow,
-            sim_corr = s_corr, test_types = "simes"
-          ),
+        # `graphicalMCP closure Bonferroni (R)` =
+        #   graph_calculate_power(rando,
+        #     sim_n = sims, marginal_power = marg_pow,
+        #     sim_corr = s_corr,
+        #     force_closure = TRUE
+        #   ),
+        # `graphicalMCP closure parametric (R)` =
+        #   graph_calculate_power(rando,
+        #     sim_n = sims, marginal_power = marg_pow,
+        #     sim_corr = s_corr, test_types = "parametric",
+        #     test_corr = t_corr
+        #   ),
+        # `graphicalMCP closure Simes (R)` =
+        #   graph_calculate_power(rando,
+        #     sim_n = sims, marginal_power = marg_pow,
+        #     sim_corr = s_corr, test_types = "simes"
+        #   ),
         check = FALSE,
-        min_iterations = 1,
+        min_iterations = 3,
         time_unit = "s"
       )
 
@@ -363,6 +374,12 @@ if (file.exists(here("vignettes/data/df_benchmarks_power.rds"))) {
 
       speed_comp
     }
+  )
+  
+  cat(
+    format(Sys.time()), "\n",
+    file = here::here("vignettes/log.txt"),
+    append = TRUE
   )
 
   df_benchmarks_power <- do.call(rbind, list_benchmarks_power)[keep_cols] %>%

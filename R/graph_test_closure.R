@@ -31,7 +31,7 @@
 #'   intersection (each step for shortcut testing)
 #'
 #' @rdname testing
-#' @seealso [graph_test_fast()], [graph_test_shortcut_cpp()]
+#' @seealso [graph_test_closure_fast()], [graph_test_shortcut_fast()]
 #' @export
 #'
 #' @template references

@@ -90,20 +90,18 @@
 #'
 graph_calculate_power <- function(graph,
                                   alpha = .025,
-                                  test_groups = list(seq_along(graph$hypotheses)),
+                                  test_groups =
+                                    list(seq_along(graph$hypotheses)),
                                   test_types = c("bonferroni"),
                                   test_corr = NULL,
                                   sim_n = 100,
-                                  marginal_power = NULL,
+                                  marginal_power =
+                                    rep(alpha, length(graph$hypotheses)),
                                   sim_corr = diag(length(graph$hypotheses)),
                                   sim_success = NULL,
                                   sim_seed = NULL,
                                   force_closure = FALSE,
                                   verbose = FALSE) {
-  if (is.null(marginal_power)) {
-    marginal_power <- rep(alpha, length(graph$hypotheses))
-  }
-
   # Input sanitization ---------------------------------------------------------
   # Test types should be passed as full names or first letter, case-insensitive,
   # and a single provided type should get expanded to all groups
@@ -182,7 +180,7 @@ graph_calculate_power <- function(graph,
     # rownames(critical_values) <- weights_names
 
     for (row in seq_len(sim_n)) {
-      simulation_test_results[row, ] <- graph_test_shortcut_r3(
+      simulation_test_results[row, ] <- graph_test_shortcut_fast(
         p_sim[row, ],
         critical_values,
         num_hyps,
@@ -276,10 +274,10 @@ graph_calculate_power <- function(graph,
         # them. These incorrect values are then replaced with zeroes for testing
       }
 
-      # `graph_test_fast()` requires hypotheses, p-values, and the intersections
-      # matrix to all have hypotheses/columns in the same order. P-values and
-      # the intersections matrix are already in the original order, so order the
-      # critical values back in original hypothesis order.
+      # `graph_test_closure_fast()` requires hypotheses, p-values, and the
+      # intersections matrix to all have hypotheses/columns in the same order.
+      # P-values and the intersections matrix are already in the original order,
+      # so order the critical values back in original hypothesis order.
       critical_values_all <- cbind(
         critical_values_bonferroni,
         critical_values_simes,
@@ -292,7 +290,7 @@ graph_calculate_power <- function(graph,
       critical_values_all[!matrix_intersections] <- 0
 
       # Record test results for one simulation, all groups
-      simulation_test_results[row, ] <- graph_test_fast(
+      simulation_test_results[row, ] <- graph_test_closure_fast(
         p_sim[row, ],
         alpha,
         critical_values_all,

@@ -26,13 +26,13 @@ test_that("vectorized testing matches standard testing (single-group)", {
   )
 
   expect_equal(
-    graphicalMCP:::graph_test_fast(p, .025, gw_compact_bonf, gw_h),
+    graphicalMCP:::graph_test_closure_fast(p, .025, gw_compact_bonf, gw_h),
     graph_test_closure(rando, p)$outputs$rejected,
     ignore_attr = TRUE
   )
 
   expect_equal(
-    graphicalMCP:::graph_test_fast(
+    graphicalMCP:::graph_test_closure_fast(
       p,
       .025,
       gw_compact_simes[, hyp_names],
@@ -43,7 +43,12 @@ test_that("vectorized testing matches standard testing (single-group)", {
   )
 
   expect_equal(
-    graphicalMCP:::graph_test_fast(p, .025, gw_compact_parametric, gw_h),
+    graphicalMCP:::graph_test_closure_fast(
+      p,
+      .025,
+      gw_compact_parametric,
+      gw_h
+    ),
     graph_test_closure(
       rando,
       p,
@@ -87,7 +92,7 @@ test_that("vectorized testing matches standard testing (multi-group)", {
   gw_compact_bonf <- gw_compact_bonf[, unlist(bonf_groups)]
 
   expect_equal(
-    graphicalMCP:::graph_test_fast(
+    graphicalMCP:::graph_test_closure_fast(
       p,
       .025,
       cbind(gw_compact_bonf, gw_compact_simes, gw_compact_para)[, hyp_names],
