@@ -51,6 +51,24 @@ graph_test_fast <- function(p, alpha, critical_values, intersections) {
 }
 
 #' @rdname testing-fast
-graph_test_shortcut_cpp <- function(graph, p, alpha = .025) {
-  graph_test_shortcut_cpp_(graph$hypotheses, graph$transitions, p, alpha)
+graph_test_shortcut_r3 <- function(p,
+                                   critical_values,
+                                   num_hyps,
+                                   bin_slots,
+                                   nrow_critical) {
+  rejected <- vector("logical", num_hyps)
+
+  while (!all(rejected)) {
+    intersection_num <-
+      nrow_critical - sum(bin_slots * !rejected) + 1
+    rejected_step <- p <= critical_values[intersection_num, , drop = TRUE]
+
+    if (!any(rejected_step)) {
+      break
+    } else {
+      rejected <- rejected | rejected_step
+    }
+  }
+
+  rejected
 }

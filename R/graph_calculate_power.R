@@ -89,17 +89,17 @@
 #' )
 #'
 graph_calculate_power <- function(graph,
-                            alpha = .025,
-                            test_groups = list(seq_along(graph$hypotheses)),
-                            test_types = c("bonferroni"),
-                            test_corr = NULL,
-                            sim_n = 100,
-                            marginal_power = NULL,
-                            sim_corr = diag(length(graph$hypotheses)),
-                            sim_success = NULL,
-                            sim_seed = NULL,
-                            force_closure = FALSE,
-                            verbose = FALSE) {
+                                  alpha = .025,
+                                  test_groups = list(seq_along(graph$hypotheses)),
+                                  test_types = c("bonferroni"),
+                                  test_corr = NULL,
+                                  sim_n = 100,
+                                  marginal_power = NULL,
+                                  sim_corr = diag(length(graph$hypotheses)),
+                                  sim_success = NULL,
+                                  sim_seed = NULL,
+                                  force_closure = FALSE,
+                                  verbose = FALSE) {
   if (is.null(marginal_power)) {
     marginal_power <- rep(alpha, length(graph$hypotheses))
   }
@@ -170,40 +170,48 @@ graph_calculate_power <- function(graph,
   )
 
   if (all(test_types == "bonferroni") && !force_closure) {
-    # Test each simulation with shortcut testing -------------------------------
-    # The much faster shortcut testing should always be used if possible. This
-    # includes when there are other tests specified, but they have a group of
-    # only size one. The default to use shortcut testing when possible can be
-    # overridden with `force_closure = TRUE`
-    simulation_test_results <- power_shortcut_cpp(
-      graph$hypotheses,
-      graph$transitions,
-      p_sim,
-      alpha
-    ) == 1
+    weighting_strategy <- graph_generate_weights(graph)
+    # matrix_intersections <- weighting_strategy[, seq_len(num_hyps)]
+    critical_values <-
+      weighting_strategy[, seq_len(num_hyps) + num_hyps, drop = FALSE] * alpha
+
+    nrow_critical <- nrow(critical_values)
+    bin_slots <- 2^(num_hyps:1 - 1)
+
+    # weights_names <- apply(matrix_intersections, 1, paste, collapse = "")
+    # rownames(critical_values) <- weights_names
+
+    for (row in seq_len(sim_n)) {
+      simulation_test_results[row, ] <- graph_test_shortcut_r3(
+        p_sim[row, ],
+        critical_values,
+        num_hyps,
+        bin_slots,
+        nrow_critical
+      )
+    }
 
     colnames(simulation_test_results) <- hyp_names
     rownames(simulation_test_results) <- seq_len(sim_n)
   } else {
     # Calculate weights for each intersection in the closure -------------------
     weighting_strategy <- graph_generate_weights(graph)
-    matrix_intersections <-
-      weighting_strategy[, seq_len(num_hyps), drop = FALSE]
+    matrix_intersections <- weighting_strategy[, seq_len(num_hyps)]
     weighting_strategy_compact <- ifelse(
       matrix_intersections,
-      weighting_strategy[, seq_len(num_hyps) + num_hyps, drop = FALSE],
+      weighting_strategy[, seq_len(num_hyps) + num_hyps],
       NA
     )
 
     # Calculate Bonferroni critical values -------------------------------------
-    groups_bonferroni <- test_groups[test_types == "bonferroni"]
+    groups_bonferroni <- test_groups[test_types == "bonferroni", drop = FALSE]
 
     # Bonferroni critical values are just the weights from the closure
     critical_values_bonferroni <-
       weighting_strategy_compact[, unlist(groups_bonferroni), drop = FALSE]
 
     # Calculate parametric critical values -------------------------------------
-    groups_parametric <- test_groups[test_types == "parametric"]
+    groups_parametric <- test_groups[test_types == "parametric", drop = FALSE]
 
     # Parametric critical values depend only on the joint distribution and
     # alpha. This allows critical values to be calculated once, rather than
@@ -216,7 +224,7 @@ graph_calculate_power <- function(graph,
     )
 
     # Separate Simes weighting strategy ----------------------------------------
-    groups_simes <- test_groups[test_types == "simes"]
+    groups_simes <- test_groups[test_types == "simes", drop = FALSE]
 
     # The fastest option found for calculating Simes critical values requires
     # missing hypotheses' weights to be 0, rather than NA
@@ -257,7 +265,7 @@ graph_calculate_power <- function(graph,
         # calculated for each simulation.
         critical_values_simes <- calculate_critical_simes(
           weighting_strategy_simes,
-          p_sim_simes[row, , drop = TRUE],
+          p_sim_simes[row, ],
           groups_simes_reduce
         )
 
@@ -285,7 +293,7 @@ graph_calculate_power <- function(graph,
 
       # Record test results for one simulation, all groups
       simulation_test_results[row, ] <- graph_test_fast(
-        p_sim[row, , drop = TRUE],
+        p_sim[row, ],
         alpha,
         critical_values_all,
         matrix_intersections

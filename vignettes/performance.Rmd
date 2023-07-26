@@ -134,7 +134,7 @@ We analyzed performance of the various methods using the bench package.
 ```{r df-benchmarks-gw, fig.width=7, fig.height=5, warning=FALSE}
 set.seed(7523)
 
-sizes <- 2:10
+sizes <- seq(2, 12, by = 2)
 
 keep_cols <-
   c(
@@ -183,7 +183,7 @@ if (file.exists(here("vignettes/data/df_benchmarks_gw.rds"))) {
         `graphicalMCP (R)` = graph_generate_weights(rando),
         `lrstat (C++)` = fwgtmat(hyp, trn),
         check = FALSE,
-        min_iterations = 25,
+        min_iterations = 1,
         time_unit = "ms"
       )
 
@@ -214,7 +214,7 @@ df_benchmarks_gw %>%
   gt() %>%
   tab_header("Generate weights of the closure") %>%
   fmt_number(pattern = "{x}ms") %>%
-  tab_spanner("Number of hypotheses", 2:10) %>%
+  tab_spanner("Number of hypotheses", 2:7) %>%
   cols_label(char_expression = "Package") %>%
   tab_options(table.font.size = 24)
 ```
@@ -242,20 +242,22 @@ if (file.exists(here("vignettes/data/df_benchmarks_seqtest.rds"))) {
       # lrstat::fwgtmat() errors out due to weights not summing to 1, sometimes
       # even when they seem to sum to 1 exactly. This loop tests whether
       # fwgtmat() will run successfully, and updates weights if not
-      i <- 0
-      res_is_error <- TRUE
-      while (res_is_error) {
-        if (i > 0) {
-          hyp[seq_len(size - i)] <- round(hyp[seq_len(size - i)], 6)
-          hyp[(size - i + 1):size] <- (1 - sum(hyp[seq_len(size - i)])) / i
+      if (size != 2) {
+        i <- 0
+        res_is_error <- TRUE
+        while (res_is_error) {
+          if (i > 0) {
+            hyp[seq_len(size - i)] <- round(hyp[seq_len(size - i)], 6)
+            hyp[(size - i + 1):size] <- (1 - sum(hyp[seq_len(size - i)])) / i
+          }
+  
+          res <- try(fwgtmat(hyp, trn), silent = TRUE)
+          res_is_error <- inherits(res, "try-error")
+  
+          i <- i + 1
         }
-
-        res <- try(fwgtmat(hyp, trn), silent = TRUE)
-        res_is_error <- inherits(res, "try-error")
-
-        i <- i + 1
       }
-
+      
       speed_comp <- mark(
         `gMCP shortcut (C)` =
           gMCP(as_gmcp_graph(rando), p, alpha = .025)@rejected,
@@ -305,7 +307,7 @@ df_benchmarks_seqtest %>%
 set.seed(7523)
 
 sizes <- 2:10
-sims <- 2^13
+sims <- 1e5
 
 if (file.exists(here("vignettes/data/df_benchmarks_power.rds"))) {
   df_benchmarks_power <-
@@ -315,7 +317,7 @@ if (file.exists(here("vignettes/data/df_benchmarks_power.rds"))) {
   list_benchmarks_power <- lapply(
     sizes,
     function(size) {
-      cat(size, "\n", file = here::here("vignettes/log.txt"), append = TRUE)
+      cat(size, "|", format(Sys.time()), "\n", file = here::here("vignettes/log.txt"), append = TRUE)
 
       rando <- random_graph(size)
       trn <- rando$transitions
@@ -327,18 +329,18 @@ if (file.exists(here("vignettes/data/df_benchmarks_power.rds"))) {
       speed_comp <- mark(
         `gMCP shortcut (C)` =
           calcPower(hyp, .025, trn, marg_pow, s_corr, n.sim = sims),
-        `graphicalMCP shortcut (C++)` =
-          graph_calculate_power(rando,
+        `graphicalMCP shortcut (R)` =
+          graph_calculate_power_r3(rando,
             sim_n = sims, marginal_power = marg_pow,
             sim_corr = s_corr
           ),
-        `gMCP closure parametric (R)` =
-          if (size < 6) {
-            calcPower(
-              hyp, .025, trn,
-              marg_pow, s_corr, t_corr, sims
-            )
-          },
+        # `gMCP closure parametric (R)` =
+        #   if (size < 6) {
+        #     calcPower(
+        #       hyp, .025, trn,
+        #       marg_pow, s_corr, t_corr, sims
+        #     )
+        #   },
         `graphicalMCP closure parametric (R)` =
           graph_calculate_power(rando,
             sim_n = sims, marginal_power = marg_pow,
@@ -373,7 +375,7 @@ if (file.exists(here("vignettes/data/df_benchmarks_power.rds"))) {
 }
 
 df_benchmarks_power %>%
-  filter(char_expression != "graphicalMCP closure Simes (R)") %>%
+  # filter(char_expression != "graphicalMCP closure Simes (R)") %>%
   plot_benchmarks("Power: 100,000 simulations", scale = TRUE)
 ```
 

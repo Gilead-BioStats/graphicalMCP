@@ -36,22 +36,3 @@ graph_test_shortcut_r2 <- function(p, alpha = .025, critical_values) {
 
   rejected
 }
-
-# generate weights method, calculate row number
-graph_test_shortcut_r3 <- function(p, critical_values, num_hyps, bin_slots, nrow_critical) {
-  rejected <- vector("logical", num_hyps)
-
-  while (!all(rejected)) {
-    intersection_num <-
-      nrow_critical - sum(bin_slots * !rejected) + 1
-    rejected_step <- p <= critical_values[intersection_num, , drop = TRUE]
-
-    if (!any(rejected_step)) {
-      break
-    } else {
-      rejected <- rejected | rejected_step
-    }
-  }
-
-  rejected
-}
