@@ -125,5 +125,5 @@ Procedures}. R package version 0.8-15,
 \url{https://cran.r-project.org/package=gMCP}.
 }
 \seealso{
-\code{\link[=graph_test_fast]{graph_test_fast()}}, \code{\link[=graph_test_shortcut_cpp]{graph_test_shortcut_cpp()}}
+\code{\link[=graph_test_closure_fast]{graph_test_closure_fast()}}, \code{\link[=graph_test_shortcut_fast]{graph_test_shortcut_fast()}}
 }

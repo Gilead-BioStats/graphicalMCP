@@ -1,15 +1,15 @@
 #' Calculate updated hypothesis weights for the closure of a graph
 #'
-#' The weights created by [graph_generate_weights()] work immediately for Bonferroni
-#' testing, but parametric and Simes testing require additional calculations.
-#' The `calculate_critical_*()` functions apply parametric or Simes weight
-#' increases to get updated weights for testing. They also subset the weights
-#' columns by the appropriate groups
+#' The weights created by [graph_generate_weights()] work immediately for
+#' Bonferroni testing, but parametric and Simes testing require additional
+#' calculations. The `calculate_critical_*()` functions apply parametric or
+#' Simes weight increases to get updated weights for testing. They also subset
+#' the weights columns by the appropriate groups
 #'
 #' @param weighting_strategy For parametric, a compact representation of
-#'   [graph_generate_weights()] output, where missing hypotheses get a missing value
-#'   for weights, and h-vectors are dropped. For Simes, just the weights from
-#'   [graph_generate_weights()] output
+#'   [graph_generate_weights()] output, where missing hypotheses get a missing
+#'   value for weights, and h-vectors are dropped. For Simes, just the weights
+#'   from [graph_generate_weights()] output
 #' @param corr A numeric matrix of correlations between hypotheses' test
 #'   statistics
 #' @param alpha A numeric scalar specifying the global significance level for

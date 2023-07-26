@@ -40,8 +40,6 @@ Suggests:
     tictoc,
     tidyr,
     xfun
-LinkingTo: 
-    cpp11
 VignetteBuilder: 
     knitr
 Config/testthat/edition: 3

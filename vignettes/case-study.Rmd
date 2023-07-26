@@ -375,36 +375,56 @@ Re-run any of the tests above with `verbose = TRUE` or `critical = TRUE` to get 
 
 The {graphicalMCP} package can help design a study for new therapeutic treatments. Several different testing designs are supported, and power calculations can be used to understand the potential study result space in an efficient way. The testing functions can be used to test study results, and the verbose/critical output gives rich information about why a hypothesis was rejected or not.
 
+# Slides
+
 ```{r pres-examples-1}
 names(example_.5_.5$hypotheses) <-
   rownames(example_.5_.5$transitions) <-
   colnames(example_.5_.5$transitions) <- paste0("H", 1:6)
 
-shortcut_example <- graph_test_shortcut(
-  example_.5_.5,
-  c(.0123, .0132, .026, .007, .012, .012),
+graph_test_shortcut(
+  graph = example_.5_.5,
+  p = c(.0123, .0132, .026, .007, .012, .012),
   alpha = .025,
   verbose = TRUE,
   critical = TRUE
 )
-
-shortcut_example
 ```
 
 ```{r pres-examples-2}
-closure_example <- graph_test_closure(
-  example_.5_.5,
-  c(.0129, .0132, .026, .007, .012, .012),
+t_corr <- rbind(
+  c(1, rho_com_end, NA, NA, NA, NA),
+  c(rho_com_end, 1, NA, NA, NA, NA),
+  c(NA, NA, 1, rho_com_end, NA, NA),
+  c(NA, NA, rho_com_end, 1, NA, NA),
+  c(NA, NA, NA, NA, 1, rho_com_end),
+  c(NA, NA, NA, NA, rho_com_end, 1)
+)
+
+graph_test_closure(
+  graph = example_.5_.5,
+  p = c(.0129,
+        .0132,
+        .026,
+        .007,
+        .012,
+        .012),
   alpha = .025,
-  groups = list(1:2, c(3, 5), c(4, 6)),
-  test_types = c("parametric", "simes", "simes"),
-  corr = t_corr,
+  groups =
+    list(1:2, c(3, 5), c(4, 6)),
+  test_types =
+    c("parametric", "simes", "simes"),
+  corr = rbind(
+    c(1, rho_com_end, NA, NA, NA, NA),
+    c(rho_com_end, 1, NA, NA, NA, NA),
+    c(NA, NA, 1, rho_com_end, NA, NA),
+    c(NA, NA, rho_com_end, 1, NA, NA),
+    c(NA, NA, NA, NA, 1, rho_com_end),
+    c(NA, NA, NA, NA, rho_com_end, 1)
+  ),
   verbose = TRUE,
   critical = TRUE
 )
-# closure_example2 <- closure_example
-# closure_example2$inputs$corr <- NULL
-print(closure_example, precision = 2)
 ```
 
 ```{r pres-examples-3}
@@ -420,8 +440,8 @@ s_corr <- rbind(
 
 marginal_power <- c(.9, .9, .8, .8, .7, .7)
 
-power_example <- graph_calculate_power(
-  example_.5_.5,
+graph_calculate_power(
+  graph = example_.5_.5,
   alpha = .025,
   test_groups = list(1:2, c(3, 5), c(4, 6)),
   test_types = c("parametric", "simes", "simes"),
@@ -430,76 +450,96 @@ power_example <- graph_calculate_power(
   marginal_power = marginal_power,
   sim_corr = s_corr,
   sim_success = list(
-    `1 and 2` = \(x) x[1] & x[2],
-    `1&3&5 or 2&4&6` = \(x) (x[1] & x[3] & x[5]) | (x[2] & x[4] & x[6])
+    `H1 & H2` =
+      function(x) x[1] & x[2],
+    
+    `(H1 & H3 & H5) | (H2 & H4 & H6)` =
+      function(x) {
+        (x[1] & x[3] & x[5]) | (x[2] & x[4] & x[6])
+      }
   ),
   verbose = TRUE
-)
-
-print(power_example, precision = 4)
+) |> print(precision = 3)
 ```
 
 ```{r performance-comp}
 # gMCP relies on corr.test for group specification
-t_corr_gmcp <- t_corr
-t_corr_gmcp[3:6, 3:6] <- NA
-diag(t_corr_gmcp) <- 1
-
-if (file.exists(here("vignettes/data/power_timing.rds"))) {
-  power_timing <- readRDS(here("vignettes/data/power_timing.rds"))
-} else {
-  power_timing <- bench::mark(
-    `gMCP shortcut` = calcPower(
-      graph = as_gmcp_graph(example_.5_.5),
-      alpha = .025,
-      mean = marginal_power, corr.sim = s_corr,
-      n.sim = 2^13
-    ),
-    `graphicalMCP shortcut` = graph_calculate_power(example_.5_.5,
-      sim_n = 2^13,
-      marginal_power = marginal_power,
-      sim_corr = s_corr
-    ),
-    `graphicalMCP closure` = graph_calculate_power(example_.5_.5,
-      test_groups = list(1:2, 3:6),
-      test_types = c("p", "b"),
-      test_corr = t_corr,
-      sim_n = 2^13,
-      marginal_power = marginal_power,
-      sim_corr = s_corr
-    ),
-    `gMCP closure` = calcPower(
-      graph = as_gmcp_graph(example_.5_.5),
-      alpha = .025,
-      mean = marginal_power, corr.sim = s_corr,
-      n.sim = 2^13,
-      corr.test = t_corr_gmcp
-    ),
-    check = FALSE,
-    min_iterations = 1,
-    time_unit = "s"
-  )
-
-  # We'd like to show time difference for 100,000 simulations, but that just
-  # takes too long for gMCP. So the timing is done for 2^13 simulations, and
-  # results are scaled up.
-  power_timing$median_scale <- power_timing$median * 1e5 / 2^13
-  power_timing$char_expr <- as.character(power_timing$expression)
-
-  saveRDS(power_timing, here("vignettes/data/power_timing.rds"))
-}
-
-power_timing[c("char_expr", "median_scale")] %>%
-  gt() %>%
-  tab_header("Power calculations", "100,000 simulations") %>%
-  cols_label(
-    char_expr = "Package/algorithm",
-    median_scale = "Median runtime (s)"
-  ) %>%
-  tab_footnote(
-    "Shortcut procedures use all Bonferroni testing. Closure procedures use parametric for hypotheses 1&2 and Bonferroni otherwise",
-    cells_column_labels("char_expr")
-  ) %>%
-  fmt_number(median_scale) %>%
-  tab_options(table.font.size = 24)
+# t_corr_gmcp <- t_corr
+# t_corr_gmcp[3:6, 3:6] <- NA
+# diag(t_corr_gmcp) <- 1
+# 
+# if (file.exists(here("vignettes/data/power_timing.rds"))) {
+#   power_timing <- readRDS(here("vignettes/data/power_timing.rds"))
+# } else {
+#   power_timing <- bench::mark(
+#     `gMCP shortcut (C)` = calcPower(
+#       graph = as_gmcp_graph(example_.5_.5),
+#       alpha = .025,
+#       mean = marginal_power, corr.sim = s_corr,
+#       n.sim = 2^13
+#     ),
+#     `graphicalMCP shortcut (R, closure trick)` = graph_calculate_power_r3(
+#       example_.5_.5,
+#       sim_n = 2^13,
+#       marginal_power = marginal_power,
+#       sim_corr = s_corr
+#     ),
+#     `graphicalMCP shortcut (R)` = graph_calculate_power_r(
+#       example_.5_.5,
+#       sim_n = 2^13,
+#       marginal_power = marginal_power,
+#       sim_corr = s_corr
+#     ),
+#     `graphicalMCP closure (R)` = graph_calculate_power_r3(
+#       example_.5_.5,
+#       test_groups = list(1:2, 3:6),
+#       test_types = c("p", "b"),
+#       test_corr = t_corr,
+#       sim_n = 2^13,
+#       marginal_power = marginal_power,
+#       sim_corr = s_corr
+#     ),
+#     # `gMCP closure (R)` = calcPower(
+#     #   graph = as_gmcp_graph(example_.5_.5),
+#     #   alpha = .025,
+#     #   mean = marginal_power, corr.sim = s_corr,
+#     #   n.sim = 2^13,
+#     #   corr.test = t_corr_gmcp
+#     # ),
+#     check = FALSE,
+#     min_iterations = 1,
+#     time_unit = "s"
+#   )
+# 
+#   # We'd like to show time difference for 100,000 simulations, but that just
+#   # takes too long for gMCP. So the timing is done for 2^13 simulations, and
+#   # results are scaled up.
+#   power_timing$median_scale <- power_timing$median * 1e5 / 2^13
+#   power_timing$char_expr <- as.character(power_timing$expression)
+# 
+#   saveRDS(power_timing, here("vignettes/data/power_timing.rds"))
+# }
+# 
+# power_timing <- power_timing[, keep_cols]
+# power_timing_old <- readRDS("vignettes/data/power_timing.rds.bak")[, keep_cols]
+# power_timing <- rbind(power_timing, power_timing_old[4, , drop = FALSE])
+# 
+# power_timing[c("char_expr", "median_scale")] %>%
+#   mutate(
+#     test_types = c("Bonferroni", "Bonferroni", "Bonferroni", "Parametric, Bonferroni", "Parametric, Bonferroni"),
+#     .before = median_scale
+#   ) %>%
+#   gt() %>%
+#   tab_header("Power calculations", "100,000 simulations") %>%
+#   cols_label(
+#     char_expr = "Package/algorithm",
+#     test_types = "Test Types",
+#     median_scale = "Median runtime (s)"
+#   ) %>%
+#   tab_footnote(
+#     "Shortcut procedures use all Bonferroni testing. Closure procedures use parametric for hypotheses 1 & 2, and Bonferroni otherwise",
+#     cells_column_labels("char_expr")
+#   ) %>%
+#   fmt_number(median_scale) %>%
+#   tab_options(table.font.size = 24)
 ```

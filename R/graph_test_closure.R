@@ -31,7 +31,7 @@
 #'   intersection (each step for shortcut testing)
 #'
 #' @rdname testing
-#' @seealso [graph_test_fast()], [graph_test_shortcut_cpp()]
+#' @seealso [graph_test_closure_fast()], [graph_test_shortcut_fast()]
 #' @export
 #'
 #' @template references
@@ -167,7 +167,8 @@ graph_test_closure <- function(graph,
   # The adjusted p-value for an *intersection* is the smallest adjusted p-value
   # for the groups it contains
   adjusted_p_intersection <- apply(adjusted_p, 1, min)
-  reject_intersection <- adjusted_p_intersection <= alpha
+  reject_intersection <-
+    adjusted_p_intersection <= (alpha + .Machine$double.eps)
 
   # The adjusted p-value for a *hypothesis* is the largest adjusted p-value for
   # the intersections containing that hypothesis

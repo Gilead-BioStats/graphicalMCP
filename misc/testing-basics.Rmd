@@ -208,7 +208,7 @@ bonf_bench <- bench::mark(
   `C++ sequential` =
     as.logical(graphicalMCP:::graph_test_shortcut_cpp(graph2, p)),
   `closure (vec/matrixStats)` =
-    as.logical(graphicalMCP:::graph_test_fast(p, .05, gw_bonf, inter_h)),
+    as.logical(graphicalMCP:::graph_test_closure_fast(p, .05, gw_bonf, inter_h)),
   `gMCP, raw C` =
     .C("graphproc", h = h, a = a, G = gmcp_g, p, m, gmcp_g, 1, 0, 0)$h,
   `gMCP::gMCP` =
@@ -225,7 +225,7 @@ gt(bonf_bench[1:9]) %>%
 # Simes
 simes_bench <- bench::mark(
   `graphicalMCP` =
-    graphicalMCP:::graph_test_fast(
+    graphicalMCP:::graph_test_closure_fast(
       p,
       .05,
       graphicalMCP:::calculate_critical_simes(gw_bonf, p, list(1:m)),
@@ -246,7 +246,7 @@ p_mat <- rbind(p)
 
 para_bench <- bench::mark(
   `vec/matrixStats (no critical)` =
-    graphicalMCP:::graph_test_fast(p, alpha = .05, gw_para, inter_h),
+    graphicalMCP:::graph_test_closure_fast(p, alpha = .05, gw_para, inter_h),
   `gMCP::graphTest` =
     graphTest(p_mat, graph = graph, test = "parametric", cr = sim_corr)[1, ],
   `gMCP::gMCP` =
