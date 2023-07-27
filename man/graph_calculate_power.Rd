@@ -11,7 +11,7 @@ graph_calculate_power(
   test_types = c("bonferroni"),
   test_corr = NULL,
   sim_n = 100,
-  marginal_power = NULL,
+  marginal_power = rep(alpha, length(graph$hypotheses)),
   sim_corr = diag(length(graph$hypotheses)),
   sim_success = NULL,
   sim_seed = NULL,

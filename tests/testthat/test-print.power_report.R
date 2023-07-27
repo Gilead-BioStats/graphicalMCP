@@ -36,7 +36,12 @@ test_that("printing parametric power", {
   g <- fixed_sequence(4)
 
   expect_snapshot(
-    graph_calculate_power(g, sim_seed = 51223, test_types = "p", test_corr = diag(4))
+    graph_calculate_power(
+      g,
+      sim_seed = 51223,
+      test_types = "p",
+      test_corr = diag(4)
+    )
   )
   expect_snapshot(
     print(
