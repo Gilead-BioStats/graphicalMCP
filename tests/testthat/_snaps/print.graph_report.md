@@ -38,17 +38,17 @@
         Final updated graph after removing rejected hypotheses
       
         --- Hypothesis weights ---
-        H1: 0
-        H2: 0
-        H3: 0
-        H4: 0
+        H1: NA
+        H2: NA
+        H3: NA
+        H4: NA
       
         --- Transition weights ---
            H1 H2 H3 H4
-        H1  0  0  0  0
-        H2  0  0  0  0
-        H3  0  0  0  0
-        H4  0  0  0  0
+        H1 NA NA NA NA
+        H2 NA NA NA NA
+        H3 NA NA NA NA
+        H4 NA NA NA NA
       
 
 ---
@@ -91,17 +91,17 @@
         Final updated graph after removing rejected hypotheses
       
         --- Hypothesis weights ---
-        H1: 0
-        H2: 0
-        H3: 0
-        H4: 0
+        H1: NA
+        H2: NA
+        H3: NA
+        H4: NA
       
         --- Transition weights ---
            H1 H2 H3 H4
-        H1  0  0  0  0
-        H2  0  0  0  0
-        H3  0  0  0  0
-        H4  0  0  0  0
+        H1 NA NA NA NA
+        H2 NA NA NA NA
+        H3 NA NA NA NA
+        H4 NA NA NA NA
       
       Test details - Adjusted p ($details) -------------------------------------------
         Intersection   H1   H2   H3   H4 adj_p_grp1 adj_p_inter reject
@@ -158,17 +158,17 @@
         Final updated graph after removing rejected hypotheses
       
         --- Hypothesis weights ---
-        H1: 0
-        H2: 0
-        H3: 0
-        H4: 0
+        H1: NA
+        H2: NA
+        H3: NA
+        H4: NA
       
         --- Transition weights ---
            H1 H2 H3 H4
-        H1  0  0  0  0
-        H2  0  0  0  0
-        H3  0  0  0  0
-        H4  0  0  0  0
+        H1 NA NA NA NA
+        H2 NA NA NA NA
+        H3 NA NA NA NA
+        H4 NA NA NA NA
       
       Test details - Critical values ($critical) -------------------------------------
         Intersection Hypothesis       Test    p <= Weight * Alpha Reject
@@ -231,17 +231,17 @@
         Final updated graph after removing rejected hypotheses
       
         --- Hypothesis weights ---
-        H1: 0
-        H2: 0
-        H3: 0
-        H4: 0
+        H1: NA
+        H2: NA
+        H3: NA
+        H4: NA
       
         --- Transition weights ---
            H1 H2 H3 H4
-        H1  0  0  0  0
-        H2  0  0  0  0
-        H3  0  0  0  0
-        H4  0  0  0  0
+        H1 NA NA NA NA
+        H2 NA NA NA NA
+        H3 NA NA NA NA
+        H4 NA NA NA NA
       
 
 ---
@@ -290,17 +290,17 @@
         Final updated graph after removing rejected hypotheses
       
         --- Hypothesis weights ---
-        H1: 0
-        H2: 0
-        H3: 0
-        H4: 0
+        H1: NA
+        H2: NA
+        H3: NA
+        H4: NA
       
         --- Transition weights ---
            H1 H2 H3 H4
-        H1  0  0  0  0
-        H2  0  0  0  0
-        H3  0  0  0  0
-        H4  0  0  0  0
+        H1 NA NA NA NA
+        H2 NA NA NA NA
+        H3 NA NA NA NA
+        H4 NA NA NA NA
       
       Test details - Adjusted p ($details) -------------------------------------------
         Intersection     H1     H2     H3     H4 adj_p_grp1 adj_p_grp2 adj_p_inter
@@ -390,17 +390,17 @@
         Final updated graph after removing rejected hypotheses
       
         --- Hypothesis weights ---
-        H1: 0
-        H2: 0
-        H3: 0
-        H4: 0
+        H1: NA
+        H2: NA
+        H3: NA
+        H4: NA
       
         --- Transition weights ---
            H1 H2 H3 H4
-        H1  0  0  0  0
-        H2  0  0  0  0
-        H3  0  0  0  0
-        H4  0  0  0  0
+        H1 NA NA NA NA
+        H2 NA NA NA NA
+        H3 NA NA NA NA
+        H4 NA NA NA NA
       
       Test details - Adjusted p ($details) -------------------------------------------
         Intersection     H1     H2     H3     H4 adj_p_grp1 adj_p_grp2 adj_p_inter
@@ -482,17 +482,17 @@
         Final updated graph after removing rejected hypotheses
       
         --- Hypothesis weights ---
-        H1: 0
-        H2: 0
-        H3: 0
-        H4: 0
+        H1: NA
+        H2: NA
+        H3: NA
+        H4: NA
       
         --- Transition weights ---
            H1 H2 H3 H4
-        H1  0  0  0  0
-        H2  0  0  0  0
-        H3  0  0  0  0
-        H4  0  0  0  0
+        H1 NA NA NA NA
+        H2 NA NA NA NA
+        H3 NA NA NA NA
+        H4 NA NA NA NA
       
 
 # additional printing options for graph report
@@ -536,17 +536,17 @@
           Final updated graph after removing rejected hypotheses
       
           --- Hypothesis weights ---
-          H1: 0
-          H2: 0
-          H3: 0
-          H4: 0
+          H1: NA
+          H2: NA
+          H3: NA
+          H4: NA
       
           --- Transition weights ---
              H1 H2 H3 H4
-          H1  0  0  0  0
-          H2  0  0  0  0
-          H3  0  0  0  0
-          H4  0  0  0  0
+          H1 NA NA NA NA
+          H2 NA NA NA NA
+          H3 NA NA NA NA
+          H4 NA NA NA NA
       
       Test details - Adjusted p ($details) -------------------------------------------
           Intersection   H1   H2   H3   H4 adj_p_grp1 adj_p_inter reject
@@ -618,17 +618,17 @@
                Final updated graph after removing rejected hypotheses
       
                --- Hypothesis weights ---
-               H1: 0
-               H2: 0
-               H3: 0
-               H4: 0
+               H1: NA
+               H2: NA
+               H3: NA
+               H4: NA
       
                --- Transition weights ---
                   H1 H2 H3 H4
-               H1  0  0  0  0
-               H2  0  0  0  0
-               H3  0  0  0  0
-               H4  0  0  0  0
+               H1 NA NA NA NA
+               H2 NA NA NA NA
+               H3 NA NA NA NA
+               H4 NA NA NA NA
       
       Test details - Rejection sequence ($details) -----------------------------------
                Initial graph
@@ -649,77 +649,77 @@
                         Step 1: Updated graph after removing hypothesis H1
       
                         --- Hypothesis weights ---
-                        H1: 0.0
+                        H1:  NA
                         H2: 0.5
                         H3: 0.5
                         H4: 0.0
       
                         --- Transition weights ---
                            H1 H2 H3 H4
-                        H1  0  0  0  0
-                        H2  0  0  0  1
-                        H3  0  1  0  0
-                        H4  0  0  1  0
+                        H1 NA NA NA NA
+                        H2 NA  0  0  1
+                        H3 NA  1  0  0
+                        H4 NA  0  1  0
       
                                  Step 2: Updated graph after removing hypotheses H1, H2
       
                                  --- Hypothesis weights ---
-                                 H1: 0.0
-                                 H2: 0.0
+                                 H1:  NA
+                                 H2:  NA
                                  H3: 0.5
                                  H4: 0.5
       
                                  --- Transition weights ---
                                     H1 H2 H3 H4
-                                 H1  0  0  0  0
-                                 H2  0  0  0  0
-                                 H3  0  0  0  1
-                                 H4  0  0  1  0
+                                 H1 NA NA NA NA
+                                 H2 NA NA NA NA
+                                 H3 NA NA  0  1
+                                 H4 NA NA  1  0
       
                                           Step 3: Updated graph after removing hypotheses H1, H2, H3
       
                                           --- Hypothesis weights ---
-                                          H1: 0
-                                          H2: 0
-                                          H3: 0
-                                          H4: 1
+                                          H1: NA
+                                          H2: NA
+                                          H3: NA
+                                          H4:  1
       
                                           --- Transition weights ---
                                              H1 H2 H3 H4
-                                          H1  0  0  0  0
-                                          H2  0  0  0  0
-                                          H3  0  0  0  0
-                                          H4  0  0  0  0
+                                          H1 NA NA NA NA
+                                          H2 NA NA NA NA
+                                          H3 NA NA NA NA
+                                          H4 NA NA NA  0
       
                                                    Step 4: Updated graph after removing hypotheses H1, H2, H3, H4
       
                                                    --- Hypothesis weights ---
-                                                   H1: 0
-                                                   H2: 0
-                                                   H3: 0
-                                                   H4: 0
+                                                   H1: NA
+                                                   H2: NA
+                                                   H3: NA
+                                                   H4: NA
       
                                                    --- Transition weights ---
                                                       H1 H2 H3 H4
-                                                   H1  0  0  0  0
-                                                   H2  0  0  0  0
-                                                   H3  0  0  0  0
-                                                   H4  0  0  0  0
+                                                   H1 NA NA NA NA
+                                                   H2 NA NA NA NA
+                                                   H3 NA NA NA NA
+                                                   H4 NA NA NA NA
       
                Final updated graph after removing rejected hypotheses
       
                --- Hypothesis weights ---
-               H1: 0
-               H2: 0
-               H3: 0
-               H4: 0
+               H1: NA
+               H2: NA
+               H3: NA
+               H4: NA
       
                --- Transition weights ---
                   H1 H2 H3 H4
-               H1  0  0  0  0
-               H2  0  0  0  0
-               H3  0  0  0  0
-               H4  0  0  0  0
+               H1 NA NA NA NA
+               H2 NA NA NA NA
+               H3 NA NA NA NA
+               H4 NA NA NA NA
       
       Test details - Critical values ($critical) -------------------------------------
                Step Hypothesis    p <= Weight * Alpha Reject
@@ -776,21 +776,21 @@
         Final updated graph after removing rejected hypotheses
       
         --- Hypothesis weights ---
-        H1: 0.0
+        H1:  NA
         H2: 0.5
         H3: 0.5
-        H4: 0.0
-        H5: 0.0
-        H6: 0.0
+        H4:  NA
+        H5:  NA
+        H6:  NA
       
         --- Transition weights ---
            H1 H2 H3 H4 H5 H6
-        H1  0  0  0  0  0  0
-        H2  0  0  1  0  0  0
-        H3  0  1  0  0  0  0
-        H4  0  0  0  0  0  0
-        H5  0  0  0  0  0  0
-        H6  0  0  0  0  0  0
+        H1 NA NA NA NA NA NA
+        H2 NA  0  1 NA NA NA
+        H3 NA  1  0 NA NA NA
+        H4 NA NA NA NA NA NA
+        H5 NA NA NA NA NA NA
+        H6 NA NA NA NA NA NA
       
       Test details - Rejection sequence ($details) -----------------------------------
         Initial graph
@@ -818,18 +818,18 @@
           H1: 0.50
           H2: 0.00
           H3: 0.00
-          H4: 0.00
+          H4:   NA
           H5: 0.25
           H6: 0.25
       
           --- Transition weights ---
                   H1      H2      H3      H4      H5      H6
-          H1 0.00000 0.50000 0.50000 0.00000 0.00000 0.00000
-          H2 0.00000 0.00000 1.00000 0.00000 0.00000 0.00000
-          H3 0.00000 0.99990 0.00000 0.00000 0.00005 0.00005
-          H4 0.00000 0.00000 0.00000 0.00000 0.00000 0.00000
-          H5 0.00000 0.00000 0.00000 0.00000 0.00000 1.00000
-          H6 0.00010 0.00000 0.00000 0.00000 0.99990 0.00000
+          H1 0.00000 0.50000 0.50000      NA 0.00000 0.00000
+          H2 0.00000 0.00000 1.00000      NA 0.00000 0.00000
+          H3 0.00000 0.99990 0.00000      NA 0.00005 0.00005
+          H4      NA      NA      NA      NA      NA      NA
+          H5 0.00000 0.00000 0.00000      NA 0.00000 1.00000
+          H6 0.00010 0.00000 0.00000      NA 0.99990 0.00000
       
             Step 2: Updated graph after removing hypotheses H4, H6
       
@@ -837,82 +837,82 @@
             H1: 0.500025
             H2: 0.000000
             H3: 0.000000
-            H4: 0.000000
+            H4:       NA
             H5: 0.499975
-            H6: 0.000000
+            H6:       NA
       
             --- Transition weights ---
                         H1          H2          H3          H4          H5
-            H1 0.000000000 0.500000000 0.500000000 0.000000000 0.000000000
-            H2 0.000000000 0.000000000 1.000000000 0.000000000 0.000000000
-            H3 0.000000005 0.999900000 0.000000000 0.000000000 0.000099995
-            H4 0.000000000 0.000000000 0.000000000 0.000000000 0.000000000
-            H5 1.000000000 0.000000000 0.000000000 0.000000000 0.000000000
-            H6 0.000000000 0.000000000 0.000000000 0.000000000 0.000000000
+            H1 0.000000000 0.500000000 0.500000000          NA 0.000000000
+            H2 0.000000000 0.000000000 1.000000000          NA 0.000000000
+            H3 0.000000005 0.999900000 0.000000000          NA 0.000099995
+            H4          NA          NA          NA          NA          NA
+            H5 1.000000000 0.000000000 0.000000000          NA 0.000000000
+            H6          NA          NA          NA          NA          NA
                 H6
-       0.000000000
-       0.000000000
-       0.000000000
-       0.000000000
-       0.000000000
-       0.000000000
+                NA
+                NA
+                NA
+                NA
+                NA
+                NA
       
               Step 3: Updated graph after removing hypotheses H4, H6, H5
       
               --- Hypothesis weights ---
-              H1: 1
-              H2: 0
-              H3: 0
-              H4: 0
-              H5: 0
-              H6: 0
+              H1:  1
+              H2:  0
+              H3:  0
+              H4: NA
+              H5: NA
+              H6: NA
       
               --- Transition weights ---
                      H1     H2     H3     H4     H5     H6
-              H1 0.0000 0.5000 0.5000 0.0000 0.0000 0.0000
-              H2 0.0000 0.0000 1.0000 0.0000 0.0000 0.0000
-              H3 0.0001 0.9999 0.0000 0.0000 0.0000 0.0000
-              H4 0.0000 0.0000 0.0000 0.0000 0.0000 0.0000
-              H5 0.0000 0.0000 0.0000 0.0000 0.0000 0.0000
-              H6 0.0000 0.0000 0.0000 0.0000 0.0000 0.0000
+              H1 0.0000 0.5000 0.5000     NA     NA     NA
+              H2 0.0000 0.0000 1.0000     NA     NA     NA
+              H3 0.0001 0.9999 0.0000     NA     NA     NA
+              H4     NA     NA     NA     NA     NA     NA
+              H5     NA     NA     NA     NA     NA     NA
+              H6     NA     NA     NA     NA     NA     NA
       
                 Step 4: Updated graph after removing hypotheses H4, H6, H5, H1
       
                 --- Hypothesis weights ---
-                H1: 0.0
+                H1:  NA
                 H2: 0.5
                 H3: 0.5
-                H4: 0.0
-                H5: 0.0
-                H6: 0.0
+                H4:  NA
+                H5:  NA
+                H6:  NA
       
                 --- Transition weights ---
                    H1 H2 H3 H4 H5 H6
-                H1  0  0  0  0  0  0
-                H2  0  0  1  0  0  0
-                H3  0  1  0  0  0  0
-                H4  0  0  0  0  0  0
-                H5  0  0  0  0  0  0
-                H6  0  0  0  0  0  0
+                H1 NA NA NA NA NA NA
+                H2 NA  0  1 NA NA NA
+                H3 NA  1  0 NA NA NA
+                H4 NA NA NA NA NA NA
+                H5 NA NA NA NA NA NA
+                H6 NA NA NA NA NA NA
       
         Final updated graph after removing rejected hypotheses
       
         --- Hypothesis weights ---
-        H1: 0.0
+        H1:  NA
         H2: 0.5
         H3: 0.5
-        H4: 0.0
-        H5: 0.0
-        H6: 0.0
+        H4:  NA
+        H5:  NA
+        H6:  NA
       
         --- Transition weights ---
            H1 H2 H3 H4 H5 H6
-        H1  0  0  0  0  0  0
-        H2  0  0  1  0  0  0
-        H3  0  1  0  0  0  0
-        H4  0  0  0  0  0  0
-        H5  0  0  0  0  0  0
-        H6  0  0  0  0  0  0
+        H1 NA NA NA NA NA NA
+        H2 NA  0  1 NA NA NA
+        H3 NA  1  0 NA NA NA
+        H4 NA NA NA NA NA NA
+        H5 NA NA NA NA NA NA
+        H6 NA NA NA NA NA NA
       
       Test details - Critical values ($critical) -------------------------------------
         Step Hypothesis     p <=   Weight * Alpha Reject
