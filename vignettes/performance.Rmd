@@ -77,7 +77,7 @@ plot_benchmarks <- function(df_benchmarks,
 }
 
 table_benchmarks <- function(df, title, unit) {
-  df_benchmarks_gw %>%
+  df %>%
     select(char_expression, size, median) %>%
     pivot_wider(names_from = size, values_from = median) %>%
     gt() %>%
@@ -318,7 +318,7 @@ df_benchmarks_seqtest %>%
 ```{r df-benchmarks-power-shortcut, fig.width=7, fig.height=5, warning=FALSE}
 set.seed(7523)
 
-sizes <- seq(2, 16, by = 2)
+sizes <- seq(2, 18, by = 2)
 sims <- 2^17
 
 if (file.exists(here("vignettes/data/df_benchmarks_power_shortcut.rds"))) {
@@ -396,14 +396,14 @@ df_benchmarks_power_shortcut %>%
   # filter(char_expression != "graphicalMCP closure Simes (R)") %>%
   plot_benchmarks("Power: 131,072 simulations", scale = TRUE)
 
-df_benchmarks_power_cshortcut %>%
+df_benchmarks_power_shortcut %>%
   table_benchmarks("Power: 131,072 simulations", "s")
 ```
 
 ```{r df-benchmarks-power-closure, fig.width=7, fig.height=5, warning=FALSE}
 set.seed(7523)
 
-sizes <- seq(2, 10, by = 2)
+sizes <- seq(2, 14, by = 2)
 sims <- 2^13
 
 if (file.exists(here("vignettes/data/df_benchmarks_power_closure.rds"))) {
