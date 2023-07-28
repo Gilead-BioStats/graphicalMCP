@@ -27,7 +27,8 @@ test_that("results match graph_test_closure()", {
       .025,
       graph_generate_weights(rando)[, 5:8, drop = FALSE],
       graph_generate_weights(rando)[, 1:4, drop = FALSE]
-    )
+    ),
+    ignore_attr = TRUE
   )
 
   expect_s3_class(

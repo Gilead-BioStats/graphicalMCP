@@ -82,7 +82,7 @@ table_benchmarks <- function(df, title, unit) {
     pivot_wider(names_from = size, values_from = median) %>%
     gt() %>%
     tab_header(title) %>%
-    fmt_number(pattern = paste0("{x}", unit)) %>%
+    fmt_number(pattern = paste0("{x}", unit), seq_along(unique(df$size)) + 1) %>%
     tab_spanner("Number of hypotheses", seq_along(unique(df$size)) + 1) %>%
     cols_label(char_expression = "Algorithm") %>%
     tab_options(table.font.size = 24)
@@ -225,7 +225,7 @@ df_benchmarks_gw %>%
   pivot_wider(names_from = size, values_from = median) %>%
   gt() %>%
   tab_header("Generate weights of the closure") %>%
-  fmt_number(pattern = "{x}ms") %>%
+  fmt_number(pattern = "{x}ms", 2:7) %>%
   tab_spanner("Number of hypotheses", 2:7) %>%
   cols_label(char_expression = "Package") %>%
   tab_options(table.font.size = 24)
@@ -318,7 +318,7 @@ df_benchmarks_seqtest %>%
 ```{r df-benchmarks-power-shortcut, fig.width=7, fig.height=5, warning=FALSE}
 set.seed(7523)
 
-sizes <- seq(2, 18, by = 2)
+sizes <- seq(2, 16, by = 2)
 sims <- 2^17
 
 if (file.exists(here("vignettes/data/df_benchmarks_power_shortcut.rds"))) {
@@ -403,8 +403,8 @@ df_benchmarks_power_shortcut %>%
 ```{r df-benchmarks-power-closure, fig.width=7, fig.height=5, warning=FALSE}
 set.seed(7523)
 
-sizes <- seq(2, 14, by = 2)
-sims <- 2^13
+sizes <- seq(2, 12, by = 2)
+sims <- 2^16
 
 if (file.exists(here("vignettes/data/df_benchmarks_power_closure.rds"))) {
   df_benchmarks_power_closure <- readRDS(
@@ -486,10 +486,10 @@ if (file.exists(here("vignettes/data/df_benchmarks_power_closure.rds"))) {
 
 df_benchmarks_power_closure %>%
   # filter(char_expression != "graphicalMCP closure Simes (R)") %>%
-  plot_benchmarks("Power: 8,192 simulations", scale = TRUE)
+  plot_benchmarks("Power: 65,536 simulations", scale = TRUE)
 
 df_benchmarks_power_closure %>%
-  table_benchmarks("Power: 8,192 simulations", "s")
+  table_benchmarks("Power: 65,536 simulations", "s")
 ```
 
 All methods increase in time by `O(2^n)`, but the starting point is lowest for `graph_generate_weights()`.
