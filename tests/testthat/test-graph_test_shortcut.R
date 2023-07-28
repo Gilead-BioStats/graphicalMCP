@@ -145,15 +145,15 @@ test_that("shortcut internal consistency", {
     ignore_attr = TRUE
   )
 
-    steps <- seq_along(which(shortcut_results$outputs$rejected))
-    expect_equal(
-      if (any(shortcut_results$outputs$rejected)) {
-        c(steps, rep(max(steps) + 1, length(rando$hypotheses) - length(steps)))
-      } else {
-        rep(1, length(rando$hypotheses)) # All step 1 if non rejected
-      },
-      shortcut_results$test_values$results$Step
-    )
+  steps <- seq_along(which(shortcut_results$outputs$rejected))
+  expect_equal(
+    if (any(shortcut_results$outputs$rejected)) {
+      c(steps, rep(max(steps) + 1, length(rando$hypotheses) - length(steps)))
+    } else {
+      rep(1, length(rando$hypotheses)) # All step 1 if non rejected
+    },
+    shortcut_results$test_values$results$Step
+  )
 
   last_graph_index <- length(shortcut_results$details$results)
   expect_equal(

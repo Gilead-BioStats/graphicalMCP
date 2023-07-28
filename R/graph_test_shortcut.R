@@ -135,15 +135,15 @@ graph_test_shortcut <- function(graph,
       hyp_name_for_test_values <- hyps_deleted_sequence[[i]]
 
       # Record adjusted weights
-      test_values_step <- bonferroni_test_values(
+      test_values_step <- test_values_bonferroni(
         p[hyp_name_for_test_values],
         step_graph$hypotheses[hyp_name_for_test_values],
         alpha
       )
 
-      # Normally the first column of `*_test_values()` is an intersection counter.
-      # Since shortcut testing doesn't track intersections, re-purpose that
-      # column as a step counter. Steps count up one at a time for each
+      # Normally the first column of `*_test_values()` is an intersection
+      # counter. Since shortcut testing doesn't track intersections, re-purpose
+      # that column as a step counter. Steps count up one at a time for each
       # hypothesis rejected, then switch to NA for non-rejected hypotheses (i.e.
       # "These rows represent steps that are not taken by the shortcut rejection
       # algorithm")

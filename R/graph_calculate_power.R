@@ -169,7 +169,6 @@ graph_calculate_power <- function(graph,
 
   if (all(test_types == "bonferroni") && !force_closure) {
     weighting_strategy <- graph_generate_weights(graph)
-    # matrix_intersections <- weighting_strategy[, seq_len(num_hyps)]
     adjusted_weights <-
       weighting_strategy[, seq_len(num_hyps) + num_hyps, drop = FALSE] * alpha
 
@@ -267,8 +266,9 @@ graph_calculate_power <- function(graph,
         # *Note:* The Simes adjusted weights are incorrect for missing Simes
         # hypotheses. To improve performance, missing hypotheses are given a
         # zero value rather than NA before calculating adjusted weights. This
-        # results in missing hypotheses getting an adjusted weight calculated for
-        # them. These incorrect values are then replaced with zeroes for testing
+        # results in missing hypotheses getting an adjusted weight calculated
+        # for them. These incorrect values are then replaced with zeroes for
+        # testing
       }
 
       # `graph_test_closure_fast()` requires hypotheses, p-values, and the

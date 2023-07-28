@@ -144,7 +144,11 @@ test_that("verbose/test values output is only present when asked for", {
     "double"
   )
   expect_s3_class(
-    graph_test_closure(rando, rep(.01, 6), test_values = TRUE)$test_values$results,
+    graph_test_closure(
+      rando,
+      rep(.01, 6),
+      test_values = TRUE
+    )$test_values$results,
     "data.frame"
   )
 })
@@ -329,7 +333,7 @@ test_that("closure internal consistency", {
   )
 
   if (requireNamespace("dplyr", quietly = TRUE)) {
-    df_test_values_intersect_reject <- dplyr::mutate(
+    df_test_values_inter_reject <- dplyr::mutate(
       dplyr::group_by(
         tibble::as_tibble(closure_results$test_values$results[-c(7, 9)]),
         Intersection
@@ -339,17 +343,17 @@ test_that("closure internal consistency", {
       .keep = "used"
     )
 
-    df_test_values_hypothesis_reject <- dplyr::summarise(
+    df_test_values_hyp_reject <- dplyr::summarise(
       dplyr::group_by(
-        df_test_values_intersect_reject,
+        df_test_values_inter_reject,
         Hypothesis
       ),
       Inequality_holds = min(Inequality_holds)
     )
 
     test_values_hypothesis_reject <- !!setNames(
-      df_test_values_hypothesis_reject$Inequality_holds,
-      df_test_values_hypothesis_reject$Hypothesis
+      df_test_values_hyp_reject$Inequality_holds,
+      df_test_values_hyp_reject$Hypothesis
     )
 
     expect_equal(

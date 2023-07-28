@@ -82,7 +82,10 @@ table_benchmarks <- function(df, title, unit) {
     pivot_wider(names_from = size, values_from = median) %>%
     gt() %>%
     tab_header(title) %>%
-    fmt_number(pattern = paste0("{x}", unit), seq_along(unique(df$size)) + 1) %>%
+    fmt_number(
+      pattern = paste0("{x}", unit),
+      seq_along(unique(df$size)) + 1
+    ) %>%
     tab_spanner("Number of hypotheses", seq_along(unique(df$size)) + 1) %>%
     cols_label(char_expression = "Algorithm") %>%
     tab_options(table.font.size = 12)
@@ -174,8 +177,8 @@ if (file.exists(here("vignettes/data/df_benchmarks_gw.rds"))) {
       hyp <- rando$hypotheses
 
       # lrstat::fwgtmat() errors out due to weights not summing to 1, sometimes
-      # even when they seem to sum to 1 exactly. This loop tests whether fwgtmat()
-      # will run successfully, and updates weights if not
+      # even when they seem to sum to 1 exactly. This loop tests whether
+      # fwgtmat() will run successfully, and updates weights if not
       i <- 0
       res_is_error <- TRUE
       while (res_is_error) {
@@ -262,14 +265,14 @@ if (file.exists(here("vignettes/data/df_benchmarks_seqtest.rds"))) {
             hyp[seq_len(size - i)] <- round(hyp[seq_len(size - i)], 6)
             hyp[(size - i + 1):size] <- (1 - sum(hyp[seq_len(size - i)])) / i
           }
-  
+
           res <- try(fwgtmat(hyp, trn), silent = TRUE)
           res_is_error <- inherits(res, "try-error")
-  
+
           i <- i + 1
         }
       }
-      
+
       speed_comp <- mark(
         `gMCP shortcut (C)` =
           gMCP(as_gmcp_graph(rando), p, alpha = .025)@rejected,
@@ -323,12 +326,12 @@ sims <- 2^17
 
 if (file.exists(here("vignettes/data/df_benchmarks_power_shortcut.rds"))) {
   df_benchmarks_power_shortcut <- readRDS(
-      here("vignettes/data/df_benchmarks_power_shortcut.rds")
-    )[keep_cols] %>%
+    here("vignettes/data/df_benchmarks_power_shortcut.rds")
+  )[keep_cols] %>%
     filter(!(char_expression == "gMCP closure parametric (R)" & size > 5))
 } else {
   cat("", file = here::here("vignettes/log/pwr_short.log"), append = FALSE)
-  
+
   list_benchmarks_power_shortcut <- lapply(
     sizes,
     function(size) {
@@ -376,7 +379,7 @@ if (file.exists(here("vignettes/data/df_benchmarks_power_shortcut.rds"))) {
       speed_comp
     }
   )
-  
+
   cat(
     format(Sys.time()), "\n",
     file = here::here("vignettes/log/pwr_short.log"),
@@ -408,12 +411,12 @@ sims <- 2^16
 
 if (file.exists(here("vignettes/data/df_benchmarks_power_closure.rds"))) {
   df_benchmarks_power_closure <- readRDS(
-      here("vignettes/data/df_benchmarks_power_closure.rds")
-    )[keep_cols] %>%
+    here("vignettes/data/df_benchmarks_power_closure.rds")
+  )[keep_cols] %>%
     filter(!(char_expression == "gMCP closure parametric (R)" & size > 5))
 } else {
   cat("", file = here::here("vignettes/log/pwr_clos.log"), append = FALSE)
-  
+
   list_benchmarks_power_closure <- lapply(
     sizes,
     function(size) {
@@ -468,14 +471,15 @@ if (file.exists(here("vignettes/data/df_benchmarks_power_closure.rds"))) {
       speed_comp
     }
   )
-  
+
   cat(
     format(Sys.time()), "\n",
     file = here::here("vignettes/log/pwr_clos.log"),
     append = TRUE
   )
 
-  df_benchmarks_power_closure <- do.call(rbind, list_benchmarks_power_closure)[keep_cols] %>%
+  df_benchmarks_power_closure <-
+    do.call(rbind, list_benchmarks_power_closure)[keep_cols] %>%
     filter(!(char_expression == "gMCP closure parametric (R)" & size > 5))
 
   saveRDS(

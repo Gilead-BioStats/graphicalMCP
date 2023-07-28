@@ -6,7 +6,7 @@
 status](https://www.r-pkg.org/badges/version/graphicalMCP)](https://cran.r-project.org/package=graphicalMCP)
 [![Codecov test
 coverage](https://codecov.io/gh/Gilead-BioStats/graphicalMCP/branch/s3-graph_mcp/graph/badge.svg)](https://app.codecov.io/gh/Gilead-BioStats/graphicalMCP?branch=s3-graph_mcp)
-[![R-CMD-check](https://github.com/Gilead-BioStats/graphicalMCP/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/Gilead-BioStats/graphicalMCP/actions/workflows/R-CMD-check.yaml)
+[![R-CMD-check](https://github.com/Gilead-BioStats/graphicalMCP/actions/workflows/R-CMD-check.yaml/badge.svg?branch=feature-power)](https://github.com/Gilead-BioStats/graphicalMCP/actions/workflows/R-CMD-check.yaml)
 
 <!-- badges: end -->
 
@@ -583,10 +583,10 @@ graph_calculate_power(
 #> 
 #> Power calculation ($power) -----------------------------------------------------
 #>                                    A1      A2      B1      B2
-#>                  Local power: 0.05814 0.06018 0.00349 0.00370
+#>                  Local power: 0.05748 0.05962 0.00347 0.00361
 #> 
-#>   Expected no. of rejections: 0.12551
-#>    Power to reject 1 or more: 0.11463
+#>   Expected no. of rejections: 0.12418
+#>    Power to reject 1 or more: 0.11306
 #>          Power to reject all: 6e-05
 ```
 
@@ -640,11 +640,11 @@ graph_calculate_power(
 #> 
 #> Power calculation ($power) -----------------------------------------------------
 #>                                    A1      A2      B1      B2
-#>                  Local power: 0.05990 0.06075 0.00227 0.00224
+#>                  Local power: 0.06149 0.06131 0.00216 0.00243
 #> 
-#>   Expected no. of rejections: 0.12516
-#>    Power to reject 1 or more: 0.11467
-#>          Power to reject all: 4e-05
+#>   Expected no. of rejections: 0.12739
+#>    Power to reject 1 or more: 0.11636
+#>          Power to reject all: 8e-05
 ```
 
 ### Other tests
@@ -706,11 +706,11 @@ graph_calculate_power(
 #> 
 #> Power calculation ($power) -----------------------------------------------------
 #>                                    A1      A2      B1      B2
-#>                  Local power: 0.06178 0.06121 0.00217 0.00231
+#>                  Local power: 0.06047 0.06046 0.00223 0.00240
 #> 
-#>   Expected no. of rejections: 0.12747
-#>    Power to reject 1 or more: 0.1161
-#>          Power to reject all: 5e-05
+#>   Expected no. of rejections: 0.12556
+#>    Power to reject 1 or more: 0.11423
+#>          Power to reject all: 1e-04
 ```
 
 ## Related work

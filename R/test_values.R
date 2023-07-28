@@ -23,10 +23,10 @@
 #'
 #' p <- c(.024, .01, .026, .027)
 #'
-#' graphicalMCP:::bonferroni_test_values(p, w, .05)
-#' graphicalMCP:::parametric_test_values(p, w, .05, corr = diag(4))
-#' graphicalMCP:::simes_test_values(p, w, .05)
-bonferroni_test_values <- function(p, hypotheses, alpha, intersection = NA) {
+#' graphicalMCP:::test_values_bonferroni(p, w, .05)
+#' graphicalMCP:::test_values_parametric(p, w, .05, corr = diag(4))
+#' graphicalMCP:::test_values_simes(p, w, .05)
+test_values_bonferroni <- function(p, hypotheses, alpha, intersection = NA) {
   if (length(p) == 0) {
     NULL
   } else {
@@ -52,11 +52,11 @@ bonferroni_test_values <- function(p, hypotheses, alpha, intersection = NA) {
 }
 
 #' @rdname calc-test_values
-parametric_test_values <- function(p,
-                                 hypotheses,
-                                 alpha,
-                                 intersection = NA,
-                                 corr) {
+test_values_parametric <- function(p,
+                                   hypotheses,
+                                   alpha,
+                                   intersection = NA,
+                                   corr) {
   if (length(p) == 0) {
     NULL
   } else {
@@ -84,7 +84,7 @@ parametric_test_values <- function(p,
 }
 
 #' @rdname calc-test_values
-simes_test_values <- function(p, hypotheses, alpha, intersection = NA) {
+test_values_simes <- function(p, hypotheses, alpha, intersection = NA) {
   if (length(p) == 0) {
     NULL
   } else {

@@ -2,9 +2,9 @@
 #'
 #' The slower graph testing functions have design choices made that favor ease
 #' of interpreting results over speed. Results include hypothesis rejection
-#' decisions, but also the test values that led to the final result.
-#' The functions include options for reporting details using the adjusted
-#' p-value method or adjusted weight method.
+#' decisions, but also the test values that led to the final result. The
+#' functions include options for reporting details using the adjusted p-value
+#' method or adjusted weight method.
 #'
 #' @param graph An initial graph as returned by [graph_create()]
 #' @param p A numeric vector of p-values
@@ -17,16 +17,16 @@
 #'   test statistics
 #' @param verbose A logical scalar specifying whether the results for each
 #'   intersection hypothesis should be included
-#' @param test_values A logical scalar specifying whether hypothesis-level detail
-#'   should be included in the results, including calculating adjusted weights
-#'   for parametric tests
+#' @param test_values A logical scalar specifying whether hypothesis-level
+#'   detail should be included in the results, including calculating adjusted
+#'   weights for parametric tests
 #'
 #' @return A `graph_report` object, a list of 4 elements: `inputs`, `outputs`,
 #'   `details`, and `test_values`
 #'   * Inputs - A list of the input parameters used to run the test
 #'   * Outputs - A list of global test results
 #'   * Details - A matrix with detailed adjusted p-value results (graph deletion
-#'     sequence for shortcut testing)
+#'   sequence for shortcut testing)
 #'   * Test values - A data frame with hypothesis-level test details for each
 #'   intersection (each step for shortcut testing)
 #'
@@ -91,7 +91,16 @@ graph_test_closure <- function(graph,
   test_types <- test_opts[tolower(test_types)]
   if (length(test_types) == 1) test_types <- rep(test_types, length(groups))
 
-  test_input_val(graph, p, alpha, groups, test_types, corr, verbose, test_values)
+  test_input_val(
+    graph,
+    p,
+    alpha,
+    groups,
+    test_types,
+    corr,
+    verbose,
+    test_values
+  )
 
   num_hyps <- length(graph$hypotheses)
   num_groups <- length(groups)
@@ -128,7 +137,7 @@ graph_test_closure <- function(graph,
   for (intersection_index in seq_len(num_intersections)) {
     vec_intersection <- matrix_intersections[intersection_index, , drop = TRUE]
     vec_weights <-
-      weighting_strategy_compact[intersection_index,  , drop = TRUE]
+      weighting_strategy_compact[intersection_index, , drop = TRUE]
 
     for (group_index in seq_len(num_groups)) {
       group <- groups[[group_index]]
@@ -217,21 +226,21 @@ graph_test_closure <- function(graph,
         # output is a dataframe containing adjusted weight test information at
         # the hypothesis/operand level.
         if (test == "bonferroni") {
-          test_values_list[[test_values_index]] <- bonferroni_test_values(
+          test_values_list[[test_values_index]] <- test_values_bonferroni(
             p[group_by_intersection],
             vec_weights[group_by_intersection],
             alpha,
             intersection_index
           )
         } else if (test == "simes") {
-          test_values_list[[test_values_index]] <- simes_test_values(
+          test_values_list[[test_values_index]] <- test_values_simes(
             p[group_by_intersection],
             vec_weights[group_by_intersection],
             alpha,
             intersection_index
           )
         } else if (test == "parametric") {
-          test_values_list[[test_values_index]] <- parametric_test_values(
+          test_values_list[[test_values_index]] <- test_values_parametric(
             p[group_by_intersection],
             vec_weights[group_by_intersection],
             alpha,

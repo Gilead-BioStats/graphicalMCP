@@ -5,10 +5,10 @@
 #' for interactive use. However in order to minimize power run time, more
 #' efficient testing functions are available. The power simulation can be
 #' segmented so that certain parts, like generating weights and calculating some
-#' adjusted weights, can be done only a single time. The closure testing function
-#' has been stripped down to just a few vectorized lines for efficiency. A
-#' separate optimized function is available for testing a graph with the
-#' Bonferroni sequential shortcut.
+#' adjusted weights, can be done only a single time. The closure testing
+#' function has been stripped down to just a few vectorized lines for
+#' efficiency. A separate optimized function is available for testing a graph
+#' with the Bonferroni sequential shortcut.
 #'
 #' @param graph An initial graph as returned by [graph_create()]
 #' @param p A numeric vector of p-values

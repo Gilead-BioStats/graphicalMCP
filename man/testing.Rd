@@ -43,9 +43,9 @@ test statistics}
 \item{verbose}{A logical scalar specifying whether the results for each
 intersection hypothesis should be included}
 
-\item{test_values}{A logical scalar specifying whether hypothesis-level detail
-should be included in the results, including calculating adjusted weights
-for parametric tests}
+\item{test_values}{A logical scalar specifying whether hypothesis-level
+detail should be included in the results, including calculating adjusted
+weights for parametric tests}
 }
 \value{
 A \code{graph_report} object, a list of 4 elements: \code{inputs}, \code{outputs},
@@ -62,9 +62,9 @@ intersection (each step for shortcut testing)
 \description{
 The slower graph testing functions have design choices made that favor ease
 of interpreting results over speed. Results include hypothesis rejection
-decisions, but also the test values that led to the final result.
-The functions include options for reporting details using the adjusted
-p-value method or adjusted weight method.
+decisions, but also the test values that led to the final result. The
+functions include options for reporting details using the adjusted p-value
+method or adjusted weight method.
 }
 \examples{
 

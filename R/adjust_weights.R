@@ -45,9 +45,9 @@
 #' graphicalMCP:::adjust_weights_parametric(gw, diag(6), .05, list(1:3))
 #' graphicalMCP:::adjust_weights_simes(gw_0, p, list(4:6))
 adjust_weights_parametric <- function(weighting_strategy,
-                                          corr,
-                                          alpha,
-                                          groups) {
+                                      corr,
+                                      alpha,
+                                      groups) {
   matrix_intersections <- !is.na(weighting_strategy)
 
   c_values <- matrix(
