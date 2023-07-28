@@ -6,7 +6,7 @@
 status](https://www.r-pkg.org/badges/version/graphicalMCP)](https://cran.r-project.org/package=graphicalMCP)
 [![Codecov test
 coverage](https://codecov.io/gh/Gilead-BioStats/graphicalMCP/branch/s3-graph_mcp/graph/badge.svg)](https://app.codecov.io/gh/Gilead-BioStats/graphicalMCP?branch=s3-graph_mcp)
-[![R-CMD-check](https://github.com/Gilead-BioStats/graphicalMCP/actions/workflows/R-CMD-check.yaml/badge.svg?branch=feature-power)](https://github.com/Gilead-BioStats/graphicalMCP/actions/workflows/R-CMD-check.yaml)
+[![R-CMD-check](https://github.com/Gilead-BioStats/graphicalMCP/actions/workflows/R-CMD-check.yaml/badge.svg?branch=%60prompt::git_branch()%60)](https://github.com/Gilead-BioStats/graphicalMCP/actions/workflows/R-CMD-check.yaml)
 
 <!-- badges: end -->
 
@@ -17,17 +17,334 @@ coverage](https://codecov.io/gh/Gilead-BioStats/graphicalMCP/branch/s3-graph_mcp
 A multiple comparison procedure (MCP) is a statistical analysis method
 that allows for assessing the efficacy of multiple endpoints, some of
 which are dependent on each other, in a single clinical trial. Endpoints
-can be different doses, treatment of different conditions, or combined
-superiority & non-inferiority testing.
+can be different doses, treatment of different conditions, combined
+superiority & non-inferiority testing, or many others.
 
 In [Bretz et al
 (2011)](https://onlinelibrary.wiley.com/doi/10.1002/bimj.201000239), a
-graphical method to MCPs was described, which separates the weighting of
+graphical method for MCPs is described, which separates the weighting of
 the dependency graph from the particular statistical test used to assess
 each endpoint. This package is a low-dependency implementation of those
 methods.
 
+## Installation
+
+graphicalMCP is not on CRAN, so install it from GitHub with
+
+``` r
+# install.packages("pak")
+pak::pak("Gilead-BioStats/graphicalMCP")
+```
+
+## Basic usage
+
+### Initial graph
+
+The base object in graphicalMCP is an `initial_graph`, which is a
+weighted, directed graph represented by a matrix of transition (edge)
+weights, and a vector of hypothesis (vertex) weights.
+
+``` r
+library(graphicalMCP)
+
+# A graphical multiple comparison procedure with two primary hypotheses (H1
+# and H2) and two secondary hypotheses (H3 and H4)
+# See Figure 1 in Bretz, F., Posch, M., Glimm, E., Klinglmueller, F., Maurer,
+# W., & Rohmeyer, K. (2011). Graphical approaches for multiple comparison
+# procedures using weighted Bonferroni, Simes, or parametric tests. Biometrical
+# Journal, 53(6), 894-913.
+hypotheses <- c(0.5, 0.5, 0, 0)
+transitions <- rbind(
+  c(0, 0, 1, 0),
+  c(0, 0, 0, 1),
+  c(0, 1, 0, 0),
+  c(1, 0, 0, 0)
+)
+
+hyp_names <- c("H1", "H2", "H3", "H4")
+example_graph <- graph_create(hypotheses, transitions, hyp_names)
+
+example_graph
+#> Initial graph
+#> 
+#> --- Hypothesis weights ---
+#> H1: 0.5
+#> H2: 0.5
+#> H3: 0.0
+#> H4: 0.0
+#> 
+#> --- Transition weights ---
+#>     H1 H2 H3 H4
+#>  H1  0  0  1  0
+#>  H2  0  0  0  1
+#>  H3  0  1  0  0
+#>  H4  1  0  0  0
+```
+
+### Update graph
+
+Hypotheses can be deleted from the MCP using `graph_update()`. Updated
+weights and transitions are calculated according to the weighting
+strategy in Algorithm 1 of [Bretz et al
+(2011)](https://onlinelibrary.wiley.com/doi/10.1002/bimj.201000239). We
+distinguish *deleting* from *rejecting* in the [glossary](#glossary).
+
+``` r
+graph_update(example_graph, c(TRUE, FALSE, FALSE, TRUE))
+#> Initial graph
+#> 
+#> --- Hypothesis weights ---
+#> H1: 0.5
+#> H2: 0.5
+#> H3: 0.0
+#> H4: 0.0
+#> 
+#> --- Transition weights ---
+#>     H1 H2 H3 H4
+#>  H1  0  0  1  0
+#>  H2  0  0  0  1
+#>  H3  0  1  0  0
+#>  H4  1  0  0  0
+#> 
+#> --------------------------------------------------------------------------------
+#> 
+#> --- Hypotheses kept ---
+#>    H1    H2    H3   H4
+#>  TRUE FALSE FALSE TRUE
+#> 
+#> --------------------------------------------------------------------------------
+#> 
+#> Updated graph
+#> 
+#> --- Hypothesis weights ---
+#> H1: 0.5
+#> H2: 0.0
+#> H3: 0.0
+#> H4: 0.5
+#> 
+#> --- Transition weights ---
+#>     H1 H2 H3 H4
+#>  H1  0  0  0  1
+#>  H2  0  0  0  0
+#>  H3  0  0  0  0
+#>  H4  1  0  0  0
+```
+
+### Generate weights
+
+The weights of all sub-graphs can be calculated with
+`graph_generate_weights()`. This uses more efficient code under the hood
+than `graph_update()` in order to be performant for larger graphs.
+
+``` r
+graph_generate_weights(example_graph)
+#>    H1 H2 H3 H4  H1  H2  H3  H4
+#> 1   1  1  1  1 0.5 0.5 0.0 0.0
+#> 2   1  1  1  0 0.5 0.5 0.0 0.0
+#> 3   1  1  0  1 0.5 0.5 0.0 0.0
+#> 4   1  1  0  0 0.5 0.5 0.0 0.0
+#> 5   1  0  1  1 0.5 0.0 0.0 0.5
+#> 6   1  0  1  0 1.0 0.0 0.0 0.0
+#> 7   1  0  0  1 0.5 0.0 0.0 0.5
+#> 8   1  0  0  0 1.0 0.0 0.0 0.0
+#> 9   0  1  1  1 0.0 0.5 0.5 0.0
+#> 10  0  1  1  0 0.0 0.5 0.5 0.0
+#> 11  0  1  0  1 0.0 1.0 0.0 0.0
+#> 12  0  1  0  0 0.0 1.0 0.0 0.0
+#> 13  0  0  1  1 0.0 0.0 0.5 0.5
+#> 14  0  0  1  0 0.0 0.0 1.0 0.0
+#> 15  0  0  0  1 0.0 0.0 0.0 1.0
+```
+
+### Test hypotheses
+
+A mixture of statistical tests are supported in graphicalMCP. A graph
+can be tested against a given significance level with
+`graph_test_closure()`, which generates a report showing the graph &
+test results. In this example, a weighted Bonferroni test is applied to
+all hypotheses, with a significance threshold of 0.025. We can reject
+the null hypotheses for H1 & H2, but we cannot reject the null
+hypotheses for H3 & H4.
+
+``` r
+graph_test_closure(
+  example_graph,
+  p = c(.01, .02, .03, .05),
+  alpha = .025,
+  test_types = "bonferroni",
+  groups = list(1:4)
+)
+#> 
+#> Test parameters ($inputs) ------------------------------------------------------
+#>   Initial graph
+#> 
+#>   --- Hypothesis weights ---
+#>   H1: 0.5
+#>   H2: 0.5
+#>   H3: 0.0
+#>   H4: 0.0
+#> 
+#>   --- Transition weights ---
+#>      H1 H2 H3 H4
+#>   H1  0  0  1  0
+#>   H2  0  0  0  1
+#>   H3  0  1  0  0
+#>   H4  1  0  0  0
+#> 
+#>   Alpha = 0.025
+#> 
+#>                          H1   H2   H3   H4
+#>   Unadjusted p-values: 0.01 0.02 0.03 0.05
+#> 
+#>   Test types
+#>   bonferroni: (H1, H2, H3, H4)
+#> 
+#> Test summary ($outputs) --------------------------------------------------------
+#>   Hypothesis Adj. P-value Reject
+#>           H1         0.02   TRUE
+#>           H2         0.04  FALSE
+#>           H3         0.06  FALSE
+#>           H4         0.06  FALSE
+#> 
+#>   Final updated graph after removing rejected hypotheses
+#> 
+#>   --- Hypothesis weights ---
+#>   H1:  NA
+#>   H2: 0.5
+#>   H3: 0.5
+#>   H4: 0.0
+#> 
+#>   --- Transition weights ---
+#>      H1 H2 H3 H4
+#>   H1 NA NA NA NA
+#>   H2 NA  0  0  1
+#>   H3 NA  1  0  0
+#>   H4 NA  0  1  0
+```
+
+Other tests, such as parametric- and Simes-based testing, can be used in
+addition to, or instead of, Bonferroni. More testing algorithms will be
+added over time. Try setting the `verbose` and `test_values` flags for a
+more detailed report on testing.
+
+## Power simulations
+
+It’s not always obvious from a given graph structure how easy or
+difficult it will be to reject each hypothesis. One way to understand
+this better is to run a power simulation. The essence of a power
+simulation is to generate many different p-values using some chosen
+distribution, then test the graph against each set of p-values to see
+how it performs.
+
+``` r
+graph_calculate_power(
+  example_graph,
+  sim_n = 1e5,
+  marginal_power = c(.9, .9, .8, .8)
+)
+#> 
+#> Test parameters ($inputs) ------------------------------------------------------
+#>   Initial graph
+#> 
+#>   --- Hypothesis weights ---
+#>   H1: 0.5
+#>   H2: 0.5
+#>   H3: 0.0
+#>   H4: 0.0
+#> 
+#>   --- Transition weights ---
+#>      H1 H2 H3 H4
+#>   H1  0  0  1  0
+#>   H2  0  0  0  1
+#>   H3  0  1  0  0
+#>   H4  1  0  0  0
+#> 
+#>   Alpha = 0.025
+#> 
+#>   Test types
+#>   bonferroni: (H1, H2, H3, H4)
+#> 
+#> Simulation parameters ($inputs) ------------------------------------------------
+#>   Testing 100,000 simulations with multivariate normal params:
+#> 
+#>                    H1  H2  H3  H4
+#>   Marginal power: 0.9 0.9 0.8 0.8
+#> 
+#>   Correlation:    H1 H2 H3 H4
+#>                H1  1  0  0  0
+#>                H2  0  1  0  0
+#>                H3  0  0  1  0
+#>                H4  0  0  0  1
+#> 
+#> Power calculation ($power) -----------------------------------------------------
+#>                                    H1      H2      H3      H4
+#>                  Local power: 0.87755 0.87554 0.67220 0.67089
+#> 
+#>   Expected no. of rejections: 3.09618
+#>    Power to reject 1 or more: 0.97437
+#>          Power to reject all: 0.50385
+```
+
+All valid test types are also valid for power simulations.
+
+## Related work
+
+These methods were originally implemented in R after the 2011 paper in
+the [gMCP package](https://github.com/kornl/gMCP), which is still
+available on CRAN today. There is also a lighter version of gMCP
+implemented in [gMCPmini](https://github.com/allenzhuaz/gMCPmini) and
+its successor, [gMCPLite](https://github.com/Merck/gMCPLite). These two
+contain only a subset of the original functionality, but they remove the
+rJava dependency and add plotting functionality based on ggplot2.
+
+However, because development has ceased on the original package, we hope
+to re-implement the methods with a clearer distinction between weighting
+procedures and test procedures; with fewer dependencies, in particular
+shedding the Java dependency; with the simpler, more transparent S3
+class framework; and with improvements to the accuracy of the parametric
+and Simes test methods.
+
+A portion of Simes testing is also implemented in the lrstat package
+(`install.packages("lrstat")`).
+
+## Citation
+
+``` r
+citation("graphicalMCP")
+#> To cite graphicalMCP in publications use:
+#> 
+#>   Xi, D.; Brockmann, E. (2023). graphicalMCP: Graph-based multiple
+#>   comparison procedures. version 0.1.0. Gilead Sciences, Inc. Foster
+#>   City, California. https://github.com/Gilead-BioStats/graphicalMCP
+#> 
+#>   Frank Bretz, Martin Posch, Ekkehard Glimm, Florian Klinglmueller,
+#>   Willi Maurer, Kornelius Rohmeyer (2011), Graphical approaches for
+#>   multiple comparison procedures using weighted Bonferroni, Simes or
+#>   parametric tests. Biometrical Journal 53 (6), pages 894--913, Wiley.
+#> 
+#> To see these entries in BibTeX format, use 'print(<citation>,
+#> bibtex=TRUE)', 'toBibtex(.)', or set
+#> 'options(citation.bibtex.max=999)'.
+```
+
+## Acknowledgments
+
 ## Glossary of terms
+
+This package seeks to be both accurate and performant, of course. But
+beyond that, much thought has been put into the readability of the code.
+Whether being read by a user validating our methods, a developer
+extending the package to new uses, or a contributor helping enhance the
+package, we hope that the code contained here can serve as an
+educational document to grow people’s understanding of the graphical
+approach to multiple comparison procedures.
+
+To that end, there are several entities encountered in the world of
+graphical MCPs that we define here. Some of these are used only in the
+internal code of the package, but most are output from one or more
+exported functions. If you believe any definitions could be clarified or
+improved, please contact the package authors or submit an issue to the
+GitHub repository.
 
 <table style="width:99%;">
 <colgroup>
@@ -49,8 +366,7 @@ methods.
 <tbody>
 <tr class="odd">
 <td><strong>Graph</strong></td>
-<td>A set of nodes and edges representing a potential clinical trial
-design</td>
+<td>A set of nodes and edges representing a clinical trial design</td>
 <td></td>
 <td><code>graph</code></td>
 <td>Hypotheses, Transitions</td>
@@ -67,7 +383,8 @@ number of hypotheses</td>
 <tr class="odd">
 <td><strong>Hypotheses</strong></td>
 <td>The weighted nodes in a <strong>graph</strong>. Each node represents
-a null hypothesis, and its weight the local significance level.</td>
+a null hypothesis corresponding to a treatment endpoint, and its weight
+the local significance level.</td>
 <td>weights, hypothesis weights</td>
 <td><code>hypotheses</code></td>
 <td>Weighting strategy, Transitions</td>
@@ -205,530 +522,23 @@ null hypotheses will be rejected</td>
 <td><code>power_*</code></td>
 <td>Success</td>
 </tr>
+<tr class="odd">
+<td><em>Delete a <strong>hypothesis</strong></em></td>
+<td>Remove a <strong>hypothesis</strong> from a graph, and update the
+graph according to algorithm 1 of Bretz et al. (2011)</td>
+<td></td>
+<td>N/A</td>
+<td>Reject a hypothesis</td>
+</tr>
+<tr class="even">
+<td><em>Reject a <strong>hypothesis</strong></em></td>
+<td>Under a given <strong>graph</strong>, <strong>testing
+strategy</strong>, and <strong>significance level</strong>, find a
+hypothesis (clinical endpoint) to be statistically significant, such
+that the null hypothesis can be rejected</td>
+<td></td>
+<td></td>
+<td>Delete a hypothesis</td>
+</tr>
 </tbody>
 </table>
-
-## Installation
-
-graphicalMCP is not on CRAN, so install it from GitHub with
-
-``` r
-# install.packages("pak")
-pak::pak("Gilead-BioStats/graphicalMCP")
-```
-
-## Basic usage
-
-### Initial graph
-
-The base object in graphicalMCP is an `initial_graph`, which is a
-weighted, directed graph represented by a matrix of transition (edge)
-weights, and a vector of hypothesis (vertex) weights.
-
-``` r
-library(graphicalMCP)
-
-# A graphical multiple comparison procedure with two primary hypotheses (H1
-# and H2) and two secondary hypotheses (H3 and H4)
-# See Figure 1 in Bretz, F., Posch, M., Glimm, E., Klinglmueller, F., Maurer,
-# W., & Rohmeyer, K. (2011). Graphical approaches for multiple comparison
-# procedures using weighted Bonferroni, Simes, or parametric tests. Biometrical
-# Journal, 53(6), 894-913.
-hypotheses <- c(0.5, 0.5, 0, 0)
-transitions <- rbind(
-  c(0, 0, 1, 0),
-  c(0, 0, 0, 1),
-  c(0, 1, 0, 0),
-  c(1, 0, 0, 0)
-)
-names <- c("A1", "A2", "B1", "B2")
-g_dose <- graph_create(hypotheses, transitions, names)
-
-g_dose
-#> Initial graph
-#> 
-#> --- Hypothesis weights ---
-#> A1: 0.5
-#> A2: 0.5
-#> B1: 0.0
-#> B2: 0.0
-#> 
-#> --- Transition weights ---
-#>     A1 A2 B1 B2
-#>  A1  0  0  1  0
-#>  A2  0  0  0  1
-#>  B1  0  1  0  0
-#>  B2  1  0  0  0
-```
-
-### Update graph
-
-Hypotheses can be rejected from the MCP using `graph_update()`. Updated
-weights and transitions are calculated according to the weighting
-strategy in [Bretz et al
-(2011)](https://onlinelibrary.wiley.com/doi/10.1002/bimj.201000239)
-
-``` r
-graph_update(g_dose, c(TRUE, FALSE, FALSE, TRUE))
-#> Initial graph
-#> 
-#> --- Hypothesis weights ---
-#> A1: 0.5
-#> A2: 0.5
-#> B1: 0.0
-#> B2: 0.0
-#> 
-#> --- Transition weights ---
-#>     A1 A2 B1 B2
-#>  A1  0  0  1  0
-#>  A2  0  0  0  1
-#>  B1  0  1  0  0
-#>  B2  1  0  0  0
-#> 
-#> --------------------------------------------------------------------------------
-#> 
-#> --- Hypotheses kept ---
-#>    A1    A2    B1   B2
-#>  TRUE FALSE FALSE TRUE
-#> 
-#> --------------------------------------------------------------------------------
-#> 
-#> Updated graph
-#> 
-#> --- Hypothesis weights ---
-#> A1: 0.5
-#> A2: 0.0
-#> B1: 0.0
-#> B2: 0.5
-#> 
-#> --- Transition weights ---
-#>     A1 A2 B1 B2
-#>  A1  0  0  0  1
-#>  A2  0  0  0  0
-#>  B1  0  0  0  0
-#>  B2  1  0  0  0
-```
-
-### Generate weights
-
-The weights of all sub-graphs can be calculated with
-`graph_generate_weights()`. This uses more efficient code under the hood
-than `graph_update()` in order to be performant for larger graphs.
-
-``` r
-graph_generate_weights(g_dose)
-#>    A1 A2 B1 B2  A1  A2  B1  B2
-#> 1   1  1  1  1 0.5 0.5 0.0 0.0
-#> 2   1  1  1  0 0.5 0.5 0.0 0.0
-#> 3   1  1  0  1 0.5 0.5 0.0 0.0
-#> 4   1  1  0  0 0.5 0.5 0.0 0.0
-#> 5   1  0  1  1 0.5 0.0 0.0 0.5
-#> 6   1  0  1  0 1.0 0.0 0.0 0.0
-#> 7   1  0  0  1 0.5 0.0 0.0 0.5
-#> 8   1  0  0  0 1.0 0.0 0.0 0.0
-#> 9   0  1  1  1 0.0 0.5 0.5 0.0
-#> 10  0  1  1  0 0.0 0.5 0.5 0.0
-#> 11  0  1  0  1 0.0 1.0 0.0 0.0
-#> 12  0  1  0  0 0.0 1.0 0.0 0.0
-#> 13  0  0  1  1 0.0 0.0 0.5 0.5
-#> 14  0  0  1  0 0.0 0.0 1.0 0.0
-#> 15  0  0  0  1 0.0 0.0 0.0 1.0
-```
-
-### Test hypotheses
-
-A mixture of statistical tests are supported in graphicalMCP. A graph
-can be tested against a given alpha with `graph_test_closure()`. A
-report is then generated, showing the graph & test results.
-
-In this example, a weighted Bonferroni test is applied to all
-hypotheses, with a threshold of 0.05. We can reject a given intersection
-hypothesis if any of the individual hypotheses within that sub-graph
-passes the test assigned to it. We can then reject a hypothesis globally
-if all intersection hypotheses containing that hypothesis are rejected.
-For instance, in this example we can reject every intersection
-hypothesis except the one containing only B1 & B2 (Row 3 of
-`test_results`). Thus, we can reject the null hypotheses for A1 & A2,
-but we cannot reject the null hypotheses for B1 & B2.
-
-``` r
-graph_test_closure(
-  g_dose,
-  p = c(.01, .02, .03, .05),
-  alpha = .05,
-  test_types = "b",
-  groups = list(1:4)
-)
-#> 
-#> Test parameters ($inputs) ------------------------------------------------------
-#>   Initial graph
-#> 
-#>   --- Hypothesis weights ---
-#>   A1: 0.5
-#>   A2: 0.5
-#>   B1: 0.0
-#>   B2: 0.0
-#> 
-#>   --- Transition weights ---
-#>      A1 A2 B1 B2
-#>   A1  0  0  1  0
-#>   A2  0  0  0  1
-#>   B1  0  1  0  0
-#>   B2  1  0  0  0
-#> 
-#>   Alpha = 0.05
-#> 
-#>                          A1   A2   B1   B2
-#>   Unadjusted p-values: 0.01 0.02 0.03 0.05
-#> 
-#>   Test types
-#>   bonferroni: (A1, A2, B1, B2)
-#> 
-#> Test summary ($outputs) --------------------------------------------------------
-#>   Hypothesis Adj. P-value Reject
-#>           A1         0.02   TRUE
-#>           A2         0.04   TRUE
-#>           B1         0.06  FALSE
-#>           B2         0.06  FALSE
-#> 
-#>   Final updated graph after removing rejected hypotheses
-#> 
-#>   --- Hypothesis weights ---
-#>   A1:  NA
-#>   A2:  NA
-#>   B1: 0.5
-#>   B2: 0.5
-#> 
-#>   --- Transition weights ---
-#>      A1 A2 B1 B2
-#>   A1 NA NA NA NA
-#>   A2 NA NA NA NA
-#>   B1 NA NA  0  1
-#>   B2 NA NA  1  0
-```
-
-Simes and parametric testing methods are also supported, using the
-`test_types` argument. Try setting the `verbose` and `test_values` flags
-for a more detailed report on testing.
-
-``` r
-graph_test_closure(
-  g_dose,
-  p = c(.01, .02, .03, .05),
-  alpha = .05,
-  test_types = c("p", "s"),
-  groups = list(1:2, 3:4),
-  corr = rbind(
-    c(1, .5, NA, NA),
-    c(.5, 1, NA, NA),
-    c(NA, NA, NA, NA),
-    c(NA, NA, NA, NA)
-  ),
-  verbose = TRUE,
-  test_values = TRUE
-)
-#> 
-#> Test parameters ($inputs) ------------------------------------------------------
-#>   Initial graph
-#> 
-#>   --- Hypothesis weights ---
-#>   A1: 0.5
-#>   A2: 0.5
-#>   B1: 0.0
-#>   B2: 0.0
-#> 
-#>   --- Transition weights ---
-#>      A1 A2 B1 B2
-#>   A1  0  0  1  0
-#>   A2  0  0  0  1
-#>   B1  0  1  0  0
-#>   B2  1  0  0  0
-#> 
-#>   Alpha = 0.05
-#> 
-#>                          A1   A2   B1   B2
-#>   Unadjusted p-values: 0.01 0.02 0.03 0.05
-#> 
-#>   Correlation matrix:     A1  A2
-#>                       A1 1.0 0.5
-#>                       A2 0.5 1.0
-#> 
-#>   Test types
-#>   parametric: (A1, A2)
-#>        simes: (B1, B2)
-#> 
-#> Test summary ($outputs) --------------------------------------------------------
-#>   Hypothesis Adj. P-value Reject
-#>           A1         0.02   TRUE
-#>           A2         0.04   TRUE
-#>           B1         0.05   TRUE
-#>           B2         0.05   TRUE
-#> 
-#>   Final updated graph after removing rejected hypotheses
-#> 
-#>   --- Hypothesis weights ---
-#>   A1: NA
-#>   A2: NA
-#>   B1: NA
-#>   B2: NA
-#> 
-#>   --- Transition weights ---
-#>      A1 A2 B1 B2
-#>   A1 NA NA NA NA
-#>   A2 NA NA NA NA
-#>   B1 NA NA NA NA
-#>   B2 NA NA NA NA
-#> 
-#> Adjusted p details ($details) --------------------------------------------------
-#>   Intersection        A1        A2        B1        B2 adj_p_grp1 adj_p_grp2
-#>              1 0.5000000 0.5000000 0.0000000 0.0000000  0.0187061  1.0000000
-#>              2 0.5000000 0.5000000 0.0000000        NA  0.0187061  1.0000000
-#>              3 0.5000000 0.5000000        NA 0.0000000  0.0187061  1.0000000
-#>              4 0.5000000 0.5000000        NA        NA  0.0187061  1.0000000
-#>              5 0.5000000        NA 0.0000000 0.5000000  0.0200000  0.1000000
-#>              6 1.0000000        NA 0.0000000        NA  0.0100000  1.0000000
-#>              7 0.5000000        NA        NA 0.5000000  0.0200000  0.1000000
-#>              8 1.0000000        NA        NA        NA  0.0100000  1.0000000
-#>              9        NA 0.5000000 0.5000000 0.0000000  0.0400000  0.0600000
-#>             10        NA 0.5000000 0.5000000        NA  0.0400000  0.0600000
-#>   adj_p_inter reject_intersection
-#>     0.0187061                TRUE
-#>     0.0187061                TRUE
-#>     0.0187061                TRUE
-#>     0.0187061                TRUE
-#>     0.0200000                TRUE
-#>     0.0100000                TRUE
-#>     0.0200000                TRUE
-#>     0.0100000                TRUE
-#>     0.0400000                TRUE
-#>     0.0400000                TRUE
-#>   ... (Use `print(x, rows = <nn>)` for more)
-#> 
-#> Detailed test values ($test_values) --------------------------------------------
-#>   Intersection Hypothesis       Test    p <= c_value * Weight * Alpha
-#>              1         A1 parametric 0.01 <= 1.10646 *    0.5 *  0.05
-#>              1         A2 parametric 0.02 <= 1.10646 *    0.5 *  0.05
-#>              1         B1      simes 0.03 <=              0.0 *  0.05
-#>              1         B2      simes 0.05 <=              0.0 *  0.05
-#>              2         A1 parametric 0.01 <= 1.10646 *    0.5 *  0.05
-#>              2         A2 parametric 0.02 <= 1.10646 *    0.5 *  0.05
-#>              2         B1      simes 0.03 <=              0.0 *  0.05
-#>              3         A1 parametric 0.01 <= 1.10646 *    0.5 *  0.05
-#>              3         A2 parametric 0.02 <= 1.10646 *    0.5 *  0.05
-#>              3         B2      simes 0.05 <=              0.0 *  0.05
-#>   Inequality_holds
-#>               TRUE
-#>               TRUE
-#>              FALSE
-#>              FALSE
-#>               TRUE
-#>               TRUE
-#>              FALSE
-#>               TRUE
-#>               TRUE
-#>              FALSE
-#>   ... (Use `print(x, rows = <nn>)` for more)
-```
-
-## Power simulations
-
-It’s not always obvious from a given graph structure how easy or
-difficult it will be to reject each hypothesis. One way to understand
-this better is to run a power simulation. The essence of a power
-simulation is to generate many different p-values using some chosen
-distribution, then test the graph against each set of p-values to see
-how it performs.
-
-### Bonferroni
-
-``` r
-graph_calculate_power(
-  g_dose,
-  sim_n = 1e5,
-  marginal_power = c(.1, .1, .1, .1)
-)
-#> 
-#> Test parameters ($inputs) ------------------------------------------------------
-#>   Initial graph
-#> 
-#>   --- Hypothesis weights ---
-#>   A1: 0.5
-#>   A2: 0.5
-#>   B1: 0.0
-#>   B2: 0.0
-#> 
-#>   --- Transition weights ---
-#>      A1 A2 B1 B2
-#>   A1  0  0  1  0
-#>   A2  0  0  0  1
-#>   B1  0  1  0  0
-#>   B2  1  0  0  0
-#> 
-#>   Alpha = 0.025
-#> 
-#>   Test types
-#>   bonferroni: (A1, A2, B1, B2)
-#> 
-#> Simulation parameters ($inputs) ------------------------------------------------
-#>   Testing 100,000 simulations with multivariate normal params:
-#> 
-#>                    A1  A2  B1  B2
-#>   Marginal power: 0.1 0.1 0.1 0.1
-#> 
-#>   Correlation:    A1 A2 B1 B2
-#>                A1  1  0  0  0
-#>                A2  0  1  0  0
-#>                B1  0  0  1  0
-#>                B2  0  0  0  1
-#> 
-#> Power calculation ($power) -----------------------------------------------------
-#>                                    A1      A2      B1      B2
-#>                  Local power: 0.05748 0.05962 0.00347 0.00361
-#> 
-#>   Expected no. of rejections: 0.12418
-#>    Power to reject 1 or more: 0.11306
-#>          Power to reject all: 6e-05
-```
-
-The `simple_successive_2()` function creates a parallel gate-keeping
-graph, but some weight is transferred between the primary hypotheses,
-rather than each passing weight on to its respective secondary
-hypothesis. This causes the primary hypotheses to be rejected slightly
-more often, and the secondary hypotheses less often.
-
-``` r
-g_dose_2 <- simple_successive_2(names)
-
-graph_calculate_power(
-  g_dose_2,
-  sim_n = 1e5,
-  marginal_power = c(.1, .1, .1, .1)
-)
-#> 
-#> Test parameters ($inputs) ------------------------------------------------------
-#>   Initial graph
-#> 
-#>   --- Hypothesis weights ---
-#>   A1: 0.5
-#>   A2: 0.5
-#>   B1: 0.0
-#>   B2: 0.0
-#> 
-#>   --- Transition weights ---
-#>       A1  A2  B1  B2
-#>   A1 0.0 0.5 0.5 0.0
-#>   A2 0.5 0.0 0.0 0.5
-#>   B1 0.0 1.0 0.0 0.0
-#>   B2 1.0 0.0 0.0 0.0
-#> 
-#>   Alpha = 0.025
-#> 
-#>   Test types
-#>   bonferroni: (A1, A2, B1, B2)
-#> 
-#> Simulation parameters ($inputs) ------------------------------------------------
-#>   Testing 100,000 simulations with multivariate normal params:
-#> 
-#>                    A1  A2  B1  B2
-#>   Marginal power: 0.1 0.1 0.1 0.1
-#> 
-#>   Correlation:    A1 A2 B1 B2
-#>                A1  1  0  0  0
-#>                A2  0  1  0  0
-#>                B1  0  0  1  0
-#>                B2  0  0  0  1
-#> 
-#> Power calculation ($power) -----------------------------------------------------
-#>                                    A1      A2      B1      B2
-#>                  Local power: 0.06149 0.06131 0.00216 0.00243
-#> 
-#>   Expected no. of rejections: 0.12739
-#>    Power to reject 1 or more: 0.11636
-#>          Power to reject all: 8e-05
-```
-
-### Other tests
-
-Bonferroni testing uses a shortcut to make testing, and therefore power,
-run very fast (\<1s up to a 10-graph/100K-simulation). However, power
-simulations can be run with any test strategy. Note that other testing
-strategies will cause a substantial increase in the time a power
-simulation takes. In rough ascending order of time impact: parametric
-tests, multiple groups, Simes tests.
-
-``` r
-graph_calculate_power(
-  g_dose_2,
-  sim_n = 1e5,
-  marginal_power = c(.1, .1, .1, .1),
-  test_types = c("s", "p"),
-  test_groups = list(1:2, 3:4),
-  test_corr = diag(4)
-)
-#> 
-#> Test parameters ($inputs) ------------------------------------------------------
-#>   Initial graph
-#> 
-#>   --- Hypothesis weights ---
-#>   A1: 0.5
-#>   A2: 0.5
-#>   B1: 0.0
-#>   B2: 0.0
-#> 
-#>   --- Transition weights ---
-#>       A1  A2  B1  B2
-#>   A1 0.0 0.5 0.5 0.0
-#>   A2 0.5 0.0 0.0 0.5
-#>   B1 0.0 1.0 0.0 0.0
-#>   B2 1.0 0.0 0.0 0.0
-#> 
-#>   Alpha = 0.025
-#> 
-#>   Parametric testing correlation:    B1 B2
-#>                                   B1  1  0
-#>                                   B2  0  1
-#> 
-#>   Test types
-#>        simes: (A1, A2)
-#>   parametric: (B1, B2)
-#> 
-#> Simulation parameters ($inputs) ------------------------------------------------
-#>   Testing 100,000 simulations with multivariate normal params:
-#> 
-#>                    A1  A2  B1  B2
-#>   Marginal power: 0.1 0.1 0.1 0.1
-#> 
-#>   Correlation:    A1 A2 B1 B2
-#>                A1  1  0  0  0
-#>                A2  0  1  0  0
-#>                B1  0  0  1  0
-#>                B2  0  0  0  1
-#> 
-#> Power calculation ($power) -----------------------------------------------------
-#>                                    A1      A2      B1      B2
-#>                  Local power: 0.06047 0.06046 0.00223 0.00240
-#> 
-#>   Expected no. of rejections: 0.12556
-#>    Power to reject 1 or more: 0.11423
-#>          Power to reject all: 1e-04
-```
-
-## Related work
-
-These methods were originally implemented in R after the 2011 paper in
-the [gMCP package](https://github.com/kornl/gMCP), which is still
-available on CRAN today. There is also a lighter version of gMCP
-implemented in [gMCPmini](https://github.com/allenzhuaz/gMCPmini) and
-its successor, [gMCPLite](https://github.com/Merck/gMCPLite). These two
-contain only a subset of the original functionality, but they remove the
-rJava dependency and add plotting functionality based on ggplot2.
-
-However, because development has ceased on the original package, we hope
-to re-implement the methods with a clearer distinction between weighting
-procedures and test procedures; with fewer dependencies, in particular
-shedding the Java dependency; with the simpler, more transparent S3
-class framework; and with improvements to the accuracy of the parametric
-and Simes test methods.
-
-A portion of Simes testing is also implemented in the lrstat package
-(`install.packages("lrstat")`) with similar speed to graphicalMCP.

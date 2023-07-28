@@ -15,7 +15,7 @@ knitr::opts_chunk$set(
 
 <!-- badges: start -->
 
-[![CRAN status](https://www.r-pkg.org/badges/version/graphicalMCP)](https://cran.r-project.org/package=graphicalMCP) [![Codecov test coverage](https://codecov.io/gh/Gilead-BioStats/graphicalMCP/branch/s3-graph_mcp/graph/badge.svg)](https://app.codecov.io/gh/Gilead-BioStats/graphicalMCP?branch=s3-graph_mcp) [![R-CMD-check](https://github.com/Gilead-BioStats/graphicalMCP/actions/workflows/R-CMD-check.yaml/badge.svg?branch=feature-power)](https://github.com/Gilead-BioStats/graphicalMCP/actions/workflows/R-CMD-check.yaml)
+[![CRAN status](https://www.r-pkg.org/badges/version/graphicalMCP)](https://cran.r-project.org/package=graphicalMCP) [![Codecov test coverage](https://codecov.io/gh/Gilead-BioStats/graphicalMCP/branch/s3-graph_mcp/graph/badge.svg)](https://app.codecov.io/gh/Gilead-BioStats/graphicalMCP?branch=s3-graph_mcp) [![R-CMD-check](https://github.com/Gilead-BioStats/graphicalMCP/actions/workflows/R-CMD-check.yaml/badge.svg?branch=%60prompt::git_branch()%60)](https://github.com/Gilead-BioStats/graphicalMCP/actions/workflows/R-CMD-check.yaml)
 
 <!-- badges: end -->
 
@@ -23,20 +23,124 @@ knitr::opts_chunk$set(
 
 ## Introduction
 
-A multiple comparison procedure (MCP) is a statistical analysis method that allows for assessing the efficacy of multiple endpoints, some of which are dependent on each other, in a single clinical trial. Endpoints can be different doses, treatment of different conditions, or combined superiority & non-inferiority testing.
+A multiple comparison procedure (MCP) is a statistical analysis method that allows for assessing the efficacy of multiple endpoints, some of which are dependent on each other, in a single clinical trial. Endpoints can be different doses, treatment of different conditions, combined superiority & non-inferiority testing, or many others.
 
-In [Bretz et al (2011)](https://onlinelibrary.wiley.com/doi/10.1002/bimj.201000239), a graphical method to MCPs was described, which separates the weighting of the dependency graph from the particular statistical test used to assess each endpoint. This package is a low-dependency implementation of those methods.
+In [Bretz et al (2011)](https://onlinelibrary.wiley.com/doi/10.1002/bimj.201000239), a graphical method for MCPs is described, which separates the weighting of the dependency graph from the particular statistical test used to assess each endpoint. This package is a low-dependency implementation of those methods.
 
-## Glossary of terms
+## Installation
+
+graphicalMCP is not on CRAN, so install it from GitHub with
+
+```{r eval=FALSE}
+# install.packages("pak")
+pak::pak("Gilead-BioStats/graphicalMCP")
+```
+
+## Basic usage
+
+### Initial graph
+
+The base object in graphicalMCP is an `initial_graph`, which is a weighted, directed graph represented by a matrix of transition (edge) weights, and a vector of hypothesis (vertex) weights.
+
+```{r create-graph}
+library(graphicalMCP)
+
+# A graphical multiple comparison procedure with two primary hypotheses (H1
+# and H2) and two secondary hypotheses (H3 and H4)
+# See Figure 1 in Bretz, F., Posch, M., Glimm, E., Klinglmueller, F., Maurer,
+# W., & Rohmeyer, K. (2011). Graphical approaches for multiple comparison
+# procedures using weighted Bonferroni, Simes, or parametric tests. Biometrical
+# Journal, 53(6), 894-913.
+hypotheses <- c(0.5, 0.5, 0, 0)
+transitions <- rbind(
+  c(0, 0, 1, 0),
+  c(0, 0, 0, 1),
+  c(0, 1, 0, 0),
+  c(1, 0, 0, 0)
+)
+
+hyp_names <- c("H1", "H2", "H3", "H4")
+example_graph <- graph_create(hypotheses, transitions, hyp_names)
+
+example_graph
+```
+
+### Update graph
+
+Hypotheses can be deleted from the MCP using `graph_update()`. Updated weights and transitions are calculated according to the weighting strategy in Algorithm 1 of [Bretz et al (2011)](https://onlinelibrary.wiley.com/doi/10.1002/bimj.201000239). We distinguish *deleting* from *rejecting* in the [glossary](#glossary).
+
+```{r update-graph}
+graph_update(example_graph, c(TRUE, FALSE, FALSE, TRUE))
+```
+
+### Generate weights
+
+The weights of all sub-graphs can be calculated with `graph_generate_weights()`. This uses more efficient code under the hood than `graph_update()` in order to be performant for larger graphs.
+
+```{r generate-weights}
+graph_generate_weights(example_graph)
+```
+
+### Test hypotheses
+
+A mixture of statistical tests are supported in graphicalMCP. A graph can be tested against a given significance level with `graph_test_closure()`, which generates a report showing the graph & test results. In this example, a weighted Bonferroni test is applied to all hypotheses, with a significance threshold of 0.025. We can reject the null hypotheses for H1 & H2, but we cannot reject the null hypotheses for H3 & H4.
+
+```{r test-graph}
+graph_test_closure(
+  example_graph,
+  p = c(.01, .02, .03, .05),
+  alpha = .025,
+  test_types = "bonferroni",
+  groups = list(1:4)
+)
+```
+
+Other tests, such as parametric- and Simes-based testing, can be used in addition to, or instead of, Bonferroni. More testing algorithms will be added over time. Try setting the `verbose` and `test_values` flags for a more detailed report on testing.
+
+## Power simulations
+
+It's not always obvious from a given graph structure how easy or difficult it will be to reject each hypothesis. One way to understand this better is to run a power simulation. The essence of a power simulation is to generate many different p-values using some chosen distribution, then test the graph against each set of p-values to see how it performs.
+
+```{r power-1}
+graph_calculate_power(
+  example_graph,
+  sim_n = 1e5,
+  marginal_power = c(.9, .9, .8, .8)
+)
+```
+
+All valid test types are also valid for power simulations.
+
+## Related work
+
+These methods were originally implemented in R after the 2011 paper in the [gMCP package](https://github.com/kornl/gMCP), which is still available on CRAN today. There is also a lighter version of gMCP implemented in [gMCPmini](https://github.com/allenzhuaz/gMCPmini) and its successor, [gMCPLite](https://github.com/Merck/gMCPLite). These two contain only a subset of the original functionality, but they remove the rJava dependency and add plotting functionality based on ggplot2.
+
+However, because development has ceased on the original package, we hope to re-implement the methods with a clearer distinction between weighting procedures and test procedures; with fewer dependencies, in particular shedding the Java dependency; with the simpler, more transparent S3 class framework; and with improvements to the accuracy of the parametric and Simes test methods.
+
+A portion of Simes testing is also implemented in the lrstat package (`install.packages("lrstat")`).
+
+## Citation
+
+```{r citation}
+citation("graphicalMCP")
+```
+
+## Acknowledgments
+
+## Glossary of terms {#glossary}
+
+This package seeks to be both accurate and performant, of course. But beyond that, much thought has been put into the readability of the code. Whether being read by a user validating our methods, a developer extending the package to new uses, or a contributor helping enhance the package, we hope that the code contained here can serve as an educational document to grow people's understanding of the graphical approach to multiple comparison procedures.
+
+To that end, there are several entities encountered in the world of graphical MCPs that we define here. Some of these are used only in the internal code of the package, but most are output from one or more exported functions. If you believe any definitions could be clarified or improved, please contact the package authors or submit an issue to the GitHub repository.
 
 +---------------------------------+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+---------------------------------------+---------------------------------+---------------------------------+
 | Entity                          | Definition                                                                                                                                                                                            | Aliases                               | Variable(s)                     | Related                         |
 +=================================+=======================================================================================================================================================================================================+=======================================+=================================+=================================+
-| **Graph**                       | A set of nodes and edges representing a potential clinical trial design                                                                                                                               |                                       | `graph`                         | Hypotheses, Transitions         |
+| **Graph**                       | A set of nodes and edges representing a clinical trial design                                                                                                                                         |                                       | `graph`                         | Hypotheses, Transitions         |
 +---------------------------------+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+---------------------------------------+---------------------------------+---------------------------------+
 |                                 | **Graphs** are so central that two of their core qualities get their own common variable names: Hypothesis names, and number of hypotheses                                                            |                                       | `hyp_names`, `num_hyps`         |                                 |
 +---------------------------------+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+---------------------------------------+---------------------------------+---------------------------------+
-| **Hypotheses**                  | The weighted nodes in a **graph**. Each node represents a null hypothesis, and its weight the local significance level.                                                                               | weights, hypothesis weights           | `hypotheses`                    | Weighting strategy, Transitions |
+| **Hypotheses**                  | The weighted nodes in a **graph**. Each node represents a null hypothesis corresponding to a treatment endpoint, and its weight the local significance level.                                         | weights, hypothesis weights           | `hypotheses`                    | Weighting strategy, Transitions |
 +---------------------------------+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+---------------------------------------+---------------------------------+---------------------------------+
 | **Transitions**                 | The weighted edges in a **graph**. Each edge defines how to propagate local significance when a source node is deleted.                                                                               |                                       | `transitions`                   | Hypotheses                      |
 +---------------------------------+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+---------------------------------------+---------------------------------+---------------------------------+
@@ -74,141 +178,7 @@ In [Bretz et al (2011)](https://onlinelibrary.wiley.com/doi/10.1002/bimj.2010002
 +---------------------------------+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+---------------------------------------+---------------------------------+---------------------------------+
 | **Power**                       | Under a given **graph**, **testing strategy**, **significance level**, and underlying distribution, the estimated likelihood that a particular combination of null hypotheses will be rejected        |                                       | `power_*`                       | Success                         |
 +---------------------------------+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+---------------------------------------+---------------------------------+---------------------------------+
-
-## Installation
-
-graphicalMCP is not on CRAN, so install it from GitHub with
-
-```{r eval=FALSE}
-# install.packages("pak")
-pak::pak("Gilead-BioStats/graphicalMCP")
-```
-
-## Basic usage
-
-### Initial graph
-
-The base object in graphicalMCP is an `initial_graph`, which is a weighted, directed graph represented by a matrix of transition (edge) weights, and a vector of hypothesis (vertex) weights.
-
-```{r create-graph}
-library(graphicalMCP)
-
-# A graphical multiple comparison procedure with two primary hypotheses (H1
-# and H2) and two secondary hypotheses (H3 and H4)
-# See Figure 1 in Bretz, F., Posch, M., Glimm, E., Klinglmueller, F., Maurer,
-# W., & Rohmeyer, K. (2011). Graphical approaches for multiple comparison
-# procedures using weighted Bonferroni, Simes, or parametric tests. Biometrical
-# Journal, 53(6), 894-913.
-hypotheses <- c(0.5, 0.5, 0, 0)
-transitions <- rbind(
-  c(0, 0, 1, 0),
-  c(0, 0, 0, 1),
-  c(0, 1, 0, 0),
-  c(1, 0, 0, 0)
-)
-names <- c("A1", "A2", "B1", "B2")
-g_dose <- graph_create(hypotheses, transitions, names)
-
-g_dose
-```
-
-### Update graph
-
-Hypotheses can be rejected from the MCP using `graph_update()`. Updated weights and transitions are calculated according to the weighting strategy in [Bretz et al (2011)](https://onlinelibrary.wiley.com/doi/10.1002/bimj.201000239)
-
-```{r update-graph}
-graph_update(g_dose, c(TRUE, FALSE, FALSE, TRUE))
-```
-
-### Generate weights
-
-The weights of all sub-graphs can be calculated with `graph_generate_weights()`. This uses more efficient code under the hood than `graph_update()` in order to be performant for larger graphs.
-
-```{r generate-weights}
-graph_generate_weights(g_dose)
-```
-
-### Test hypotheses
-
-A mixture of statistical tests are supported in graphicalMCP. A graph can be tested against a given alpha with `graph_test_closure()`. A report is then generated, showing the graph & test results.
-
-In this example, a weighted Bonferroni test is applied to all hypotheses, with a threshold of 0.05. We can reject a given intersection hypothesis if any of the individual hypotheses within that sub-graph passes the test assigned to it. We can then reject a hypothesis globally if all intersection hypotheses containing that hypothesis are rejected. For instance, in this example we can reject every intersection hypothesis except the one containing only B1 & B2 (Row 3 of `test_results`). Thus, we can reject the null hypotheses for A1 & A2, but we cannot reject the null hypotheses for B1 & B2.
-
-```{r test-graph}
-graph_test_closure(
-  g_dose,
-  p = c(.01, .02, .03, .05),
-  alpha = .05,
-  test_types = "b",
-  groups = list(1:4)
-)
-```
-
-Simes and parametric testing methods are also supported, using the `test_types` argument. Try setting the `verbose` and `test_values` flags for a more detailed report on testing.
-
-```{r test-graph-blend}
-graph_test_closure(
-  g_dose,
-  p = c(.01, .02, .03, .05),
-  alpha = .05,
-  test_types = c("p", "s"),
-  groups = list(1:2, 3:4),
-  corr = rbind(
-    c(1, .5, NA, NA),
-    c(.5, 1, NA, NA),
-    c(NA, NA, NA, NA),
-    c(NA, NA, NA, NA)
-  ),
-  verbose = TRUE,
-  test_values = TRUE
-)
-```
-
-## Power simulations
-
-It's not always obvious from a given graph structure how easy or difficult it will be to reject each hypothesis. One way to understand this better is to run a power simulation. The essence of a power simulation is to generate many different p-values using some chosen distribution, then test the graph against each set of p-values to see how it performs.
-
-### Bonferroni
-
-```{r power-1}
-graph_calculate_power(
-  g_dose,
-  sim_n = 1e5,
-  marginal_power = c(.1, .1, .1, .1)
-)
-```
-
-The `simple_successive_2()` function creates a parallel gate-keeping graph, but some weight is transferred between the primary hypotheses, rather than each passing weight on to its respective secondary hypothesis. This causes the primary hypotheses to be rejected slightly more often, and the secondary hypotheses less often.
-
-```{r power-2}
-g_dose_2 <- simple_successive_2(names)
-
-graph_calculate_power(
-  g_dose_2,
-  sim_n = 1e5,
-  marginal_power = c(.1, .1, .1, .1)
-)
-```
-
-### Other tests
-
-Bonferroni testing uses a shortcut to make testing, and therefore power, run very fast (\<1s up to a 10-graph/100K-simulation). However, power simulations can be run with any test strategy. Note that other testing strategies will cause a substantial increase in the time a power simulation takes. In rough ascending order of time impact: parametric tests, multiple groups, Simes tests.
-
-```{r power-4}
-graph_calculate_power(
-  g_dose_2,
-  sim_n = 1e5,
-  marginal_power = c(.1, .1, .1, .1),
-  test_types = c("s", "p"),
-  test_groups = list(1:2, 3:4),
-  test_corr = diag(4)
-)
-```
-
-## Related work
-
-These methods were originally implemented in R after the 2011 paper in the [gMCP package](https://github.com/kornl/gMCP), which is still available on CRAN today. There is also a lighter version of gMCP implemented in [gMCPmini](https://github.com/allenzhuaz/gMCPmini) and its successor, [gMCPLite](https://github.com/Merck/gMCPLite). These two contain only a subset of the original functionality, but they remove the rJava dependency and add plotting functionality based on ggplot2.
-
-However, because development has ceased on the original package, we hope to re-implement the methods with a clearer distinction between weighting procedures and test procedures; with fewer dependencies, in particular shedding the Java dependency; with the simpler, more transparent S3 class framework; and with improvements to the accuracy of the parametric and Simes test methods.
-
-A portion of Simes testing is also implemented in the lrstat package (`install.packages("lrstat")`) with similar speed to graphicalMCP.
+| *Delete a **hypothesis***       | Remove a **hypothesis** from a graph, and update the graph according to algorithm 1 of Bretz et al. (2011)                                                                                            |                                       | N/A                             | Reject a hypothesis             |
++---------------------------------+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+---------------------------------------+---------------------------------+---------------------------------+
+| *Reject a **hypothesis***       | Under a given **graph**, **testing strategy**, and **significance level**, find a hypothesis (clinical endpoint) to be statistically significant, such that the null hypothesis can be rejected       |                                       |                                 | Delete a hypothesis             |
++---------------------------------+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+---------------------------------------+---------------------------------+---------------------------------+
