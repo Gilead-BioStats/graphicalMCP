@@ -80,7 +80,7 @@ graph_test_closure(
 )
 ```
 
-The critical value method tests every hypothesis in the closure. Setting `critical = TRUE` displays the values used in each of these tests. This can provide more detailed information about what caused a hypothesis to fail than the adjusted p-values. However, it comes with some cost in computation time.
+The adjusted weight method tests every hypothesis in the closure. Setting `critical = TRUE` displays the values used in each of these tests. This can provide more detailed information about what caused a hypothesis to fail than the adjusted p-values. However, it comes with some cost in computation time.
 
 ```{r critical}
 graph_test_closure(

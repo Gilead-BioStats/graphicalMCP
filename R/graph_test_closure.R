@@ -4,7 +4,7 @@
 #' of interpreting results over speed. Results include hypothesis rejection
 #' decisions, but also the test values that led to the final result.
 #' The functions include options for reporting details using the adjusted
-#' p-value method or critical value method.
+#' p-value method or adjusted weight method.
 #'
 #' @param graph An initial graph as returned by [graph_create()]
 #' @param p A numeric vector of p-values
@@ -18,7 +18,7 @@
 #' @param verbose A logical scalar specifying whether the results for each
 #'   intersection hypothesis should be included
 #' @param critical A logical scalar specifying whether hypothesis-level detail
-#'   should be included in the results, including calculating critical values
+#'   should be included in the results, including calculating adjusted weights
 #'   for parametric tests
 #'
 #' @return A `graph_report` object, a list of 4 elements: `inputs`, `outputs`,
@@ -187,16 +187,16 @@ graph_test_closure <- function(graph,
     )
   )
 
-  # Critical value details -----------------------------------------------------
+  # Adjusted weight details ----------------------------------------------------
   if (critical) {
-    # Critical values are recorded in a dataframe, which doesn't store in a
-    # matrix. So for the critical loops, each group's critical value dataframe
+    # Adjusted weights are recorded in a dataframe, which doesn't store in a
+    # matrix. So for the critical loops, each group's adjusted weight dataframe
     # is stored in a list. These are the initialized list and counter for
     # indexing into it.
     critical_index <- 1
     critical_list <- vector("list", num_intersections * num_groups)
 
-    # Critical values are calculated for each group in each intersection of the
+    # adjusted weights are calculated for each group in each intersection of the
     # closure
     for (intersection_index in seq_len(num_intersections)) {
       vec_intersection <-
@@ -208,13 +208,13 @@ graph_test_closure <- function(graph,
         group <- groups[[group_index]]
         test <- test_types[[group_index]]
 
-        # Hypotheses to include in critical value calculations must be in both
+        # Hypotheses to include in adjusted weight calculations must be in both
         # the current group and the current intersection
         group_by_intersection <- group[as.logical(vec_intersection[group])]
 
-        # Critical values, like adjusted p-values, must be calculated at both
+        # adjusted weights, like adjusted p-values, must be calculated at both
         # the group and intersection level. Inputs are for a single group, and
-        # output is a dataframe containing critical value test information at
+        # output is a dataframe containing adjusted weight test information at
         # the hypothesis/operand level.
         if (test == "bonferroni") {
           critical_list[[critical_index]] <- bonferroni_test_vals(

@@ -5,7 +5,7 @@
 #' for interactive use. However in order to minimize power run time, more
 #' efficient testing functions are available. The power simulation can be
 #' segmented so that certain parts, like generating weights and calculating some
-#' critical values, can be done only a single time. The closure testing function
+#' adjusted weights, can be done only a single time. The closure testing function
 #' has been stripped down to just a few vectorized lines for efficiency. A
 #' separate optimized function is available for testing a graph with the
 #' Bonferroni sequential shortcut.

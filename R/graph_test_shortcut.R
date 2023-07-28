@@ -112,7 +112,7 @@ graph_test_shortcut <- function(graph,
     details <- list(del_seq = rejection_sequence, results = graph_sequence)
   }
 
-  # Critical value details -----------------------------------------------------
+  # Adjusted weight details ----------------------------------------------------
   if (critical) {
     # Record the final graph after all rejected hypotheses have been deleted
     graph_after_rejections <-
@@ -126,15 +126,15 @@ graph_test_shortcut <- function(graph,
     step_graph <- initial_graph
     step_num <- 1
 
-    # Calculate critical values for all hypotheses. For rejected hypotheses,
-    # critical values should come from the last graph they're present in. For
-    # non-rejected hypotheses, critical values should be calculated from the
+    # Calculate adjusted weights for all hypotheses. For rejected hypotheses,
+    # adjusted weights should come from the last graph they're present in. For
+    # non-rejected hypotheses, adjusted weights should be calculated from the
     # graph with all rejected hypotheses deleted.
     for (i in seq_along(hyps_deleted_sequence)) {
       # Follow the same hypothesis order as adjusted p-values
       hyp_name_for_critical <- hyps_deleted_sequence[[i]]
 
-      # Record critical values
+      # Record adjusted weights
       critical_step <- bonferroni_test_vals(
         p[hyp_name_for_critical],
         step_graph$hypotheses[hyp_name_for_critical],

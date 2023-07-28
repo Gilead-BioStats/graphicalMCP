@@ -201,18 +201,18 @@ graph_calculate_power <- function(graph,
       NA
     )
 
-    # Calculate Bonferroni critical values -------------------------------------
+    # Calculate Bonferroni adjusted weights ------------------------------------
     groups_bonferroni <- test_groups[test_types == "bonferroni", drop = FALSE]
 
-    # Bonferroni critical values are just the weights from the closure
+    # Bonferroni adjusted weights are just the weights from the closure
     critical_values_bonferroni <-
       weighting_strategy_compact[, unlist(groups_bonferroni), drop = FALSE]
 
-    # Calculate parametric critical values -------------------------------------
+    # Calculate parametric adjusted weights ------------------------------------
     groups_parametric <- test_groups[test_types == "parametric", drop = FALSE]
 
-    # Parametric critical values depend only on the joint distribution and
-    # alpha. This allows critical values to be calculated once, rather than
+    # Parametric adjusted weights depend only on the joint distribution and
+    # alpha. This allows adjusted weights to be calculated once, rather than
     # re-calculating for each simulation
     critical_values_parametric <- calculate_critical_parametric(
       weighting_strategy_compact,
@@ -224,7 +224,7 @@ graph_calculate_power <- function(graph,
     # Separate Simes weighting strategy ----------------------------------------
     groups_simes <- test_groups[test_types == "simes", drop = FALSE]
 
-    # The fastest option found for calculating Simes critical values requires
+    # The fastest option found for calculating Simes adjusted weights requires
     # missing hypotheses' weights to be 0, rather than NA
     weighting_strategy_simes <-
       weighting_strategy_compact[, unlist(groups_simes), drop = FALSE]
@@ -232,7 +232,7 @@ graph_calculate_power <- function(graph,
     weighting_strategy_simes[is.na(weighting_strategy_simes)] <- 0
     critical_values_simes <- weighting_strategy_simes
 
-    # Unlike Bonferroni and parametric critical values, Simes critical values
+    # Unlike Bonferroni and parametric adjusted weights, Simes adjusted weights
     # depend on the order of p-values. This means they must be re-calculated for
     # each simulation. Because this causes a bottleneck in calculations, Simes
     # testing has been heavily optimized. Fast Simes testing requires Simes
@@ -254,12 +254,12 @@ graph_calculate_power <- function(graph,
 
     # Apply closure testing to each simulation ---------------------------------
     for (row in seq_len(sim_n)) {
-      # If there are no Simes groups, critical values are the Simes weighting
+      # If there are no Simes groups, adjusted weights are the Simes weighting
       # strategy (a matrix with 0 columns)
       if (length(groups_simes) == 0) {
         critical_values_simes <- weighting_strategy_simes
       } else {
-        # Simes testing depends on p-values, so critical values must be
+        # Simes testing depends on p-values, so adjusted weights must be
         # calculated for each simulation.
         critical_values_simes <- calculate_critical_simes(
           weighting_strategy_simes,
@@ -267,26 +267,26 @@ graph_calculate_power <- function(graph,
           groups_simes_reduce
         )
 
-        # *Note:* The Simes critical values are incorrect for missing Simes
+        # *Note:* The Simes adjusted weights are incorrect for missing Simes
         # hypotheses. To improve performance, missing hypotheses are given a
-        # zero value rather than NA before calculating critical values. This
-        # results in missing hypotheses getting a critical value calculated for
+        # zero value rather than NA before calculating adjusted weights. This
+        # results in missing hypotheses getting an adjusted weight calculated for
         # them. These incorrect values are then replaced with zeroes for testing
       }
 
       # `graph_test_closure_fast()` requires hypotheses, p-values, and the
       # intersections matrix to all have hypotheses/columns in the same order.
       # P-values and the intersections matrix are already in the original order,
-      # so order the critical values back in original hypothesis order.
+      # so order the adjusted weights back in original hypothesis order.
       critical_values_all <- cbind(
         critical_values_bonferroni,
         critical_values_simes,
         critical_values_parametric
       )[, hyp_names, drop = FALSE]
 
-      # Similar to Simes critical values, the optimized testing function
+      # Similar to Simes adjusted weights, the optimized testing function
       # requires missing values to be replaced by zero. This line also replaces
-      # the incorrect Simes critical values with zero.
+      # the incorrect Simes adjusted weights with zero.
       critical_values_all[!matrix_intersections] <- 0
 
       # Record test results for one simulation, all groups

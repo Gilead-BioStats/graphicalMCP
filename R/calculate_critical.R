@@ -24,7 +24,8 @@
 #' * For `calculate_critical_*()`, a matrix with the same shape as
 #'   `weighting_strategy`, where the weights have been adjusted according to the
 #'   specified adjustment method
-#' * For `c_value_function()`, the critical value for the given group
+#' * For `c_value_function()`, the \eqn{c_{J_h}} value for the given group,
+#'   according to Formula 6 of Xi et al. (2017).
 #'
 #' @rdname critical-vals
 #'

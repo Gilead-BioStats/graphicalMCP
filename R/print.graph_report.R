@@ -190,7 +190,7 @@ print.graph_report <- function(x, ..., precision = 6, indent = 2, rows = 10) {
 
   # Critical details -----------------------------------------------------------
   if (!is.null(x$critical)) {
-    section_break("Test details - Critical values ($critical)")
+    section_break("Test details - Adjusted weights ($critical)")
 
     if (any(x$inputs$test_types == "parametric")) {
       num_cols <- c("p", "c_value", "Weight", "Alpha")

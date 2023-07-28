@@ -170,7 +170,7 @@
         H3 NA NA NA NA
         H4 NA NA NA NA
       
-      Test details - Critical values ($critical) -------------------------------------
+      Test details - Adjusted weights ($critical) ------------------------------------
         Intersection Hypothesis       Test    p <= Weight * Alpha Inequality_holds
                    1         H1 bonferroni 0.01 <=    0.5 * 0.025             TRUE
                    1         H2 bonferroni 0.01 <=    0.5 * 0.025             TRUE
@@ -327,7 +327,7 @@
                        TRUE
         ... (Use `print(x, rows = <nn>)` for more)
       
-      Test details - Critical values ($critical) -------------------------------------
+      Test details - Adjusted weights ($critical) ------------------------------------
         Intersection Hypothesis       Test    p <= c_value * Weight * Alpha
                    1         H1 parametric 0.01 <= 1.00633 *    0.5 * 0.025
                    1         H2 parametric 0.01 <= 1.00633 *    0.5 * 0.025
@@ -438,7 +438,7 @@
                        TRUE
         ... (Use `print(x, rows = <nn>)` for more)
       
-      Test details - Critical values ($critical) -------------------------------------
+      Test details - Adjusted weights ($critical) ------------------------------------
         Intersection Hypothesis       Test    p <= c_value * Weight * Alpha
                    1         H1 parametric 0.01 <= 1.00633 *    0.5 * 0.025
                    1         H2 parametric 0.01 <= 1.00633 *    0.5 * 0.025
@@ -584,7 +584,7 @@
                     10   NA 0.50 0.50   NA       0.02        0.02                TRUE
           ... (Use `print(x, rows = <nn>)` for more)
       
-      Test details - Critical values ($critical) -------------------------------------
+      Test details - Adjusted weights ($critical) ------------------------------------
           Intersection Hypothesis       Test    p <= Weight * Alpha Inequality_holds
                      1         H1 bonferroni 0.01 <=    0.5 * 0.025             TRUE
                      1         H2 bonferroni 0.01 <=    0.5 * 0.025             TRUE
@@ -743,7 +743,7 @@
                H3 NA NA NA NA
                H4 NA NA NA NA
       
-      Test details - Critical values ($critical) -------------------------------------
+      Test details - Adjusted weights ($critical) ------------------------------------
                Step Hypothesis    p <= Weight * Alpha Inequality_holds
                   1         H1 0.01 <=    0.5 * 0.025             TRUE
                   2         H2 0.01 <=    0.5 * 0.025             TRUE
@@ -936,7 +936,7 @@
         H5 NA NA NA NA NA NA
         H6 NA NA NA NA NA NA
       
-      Test details - Critical values ($critical) -------------------------------------
+      Test details - Adjusted weights ($critical) ------------------------------------
         Step Hypothesis     p <=   Weight * Alpha Inequality_holds
            1         H4 0.010 <= 0.500000 * 0.025             TRUE
            2         H6 0.000 <= 0.250000 * 0.025             TRUE

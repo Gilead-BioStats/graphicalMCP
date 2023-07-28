@@ -127,9 +127,9 @@ distribution</li>
 </tr>
 <tr class="even">
 <td><strong>Adjusted p-values</strong></td>
-<td><strong>P-values</strong> that have been divided by <strong>critical
-values</strong>, allowing direct comparison to <strong>alpha</strong> to
-determine significance</td>
+<td><strong>P-values</strong> that have been divided by <strong>adjusted
+weights</strong>, allowing direct comparison to <strong>alpha</strong>
+to determine significance</td>
 <td></td>
 <td><code>adjusted_p</code></td>
 <td>(Ordered) P-values</td>
@@ -572,11 +572,11 @@ graph_calculate_power(
 #> 
 #> Power calculation ($power) -----------------------------------------------------
 #>                                    A1      A2      B1      B2
-#>                  Local power: 0.05872 0.05840 0.00358 0.00379
+#>                  Local power: 0.06017 0.05937 0.00344 0.00348
 #> 
-#>   Expected no. of rejections: 0.12449
-#>    Power to reject 1 or more: 0.11346
-#>          Power to reject all: 1e-04
+#>   Expected no. of rejections: 0.12646
+#>    Power to reject 1 or more: 0.11555
+#>          Power to reject all: 5e-05
 ```
 
 The `simple_successive_2()` function creates a parallel gate-keeping
@@ -629,11 +629,11 @@ graph_calculate_power(
 #> 
 #> Power calculation ($power) -----------------------------------------------------
 #>                                    A1      A2      B1      B2
-#>                  Local power: 0.06035 0.06008 0.00255 0.00223
+#>                  Local power: 0.06156 0.06015 0.00226 0.00221
 #> 
-#>   Expected no. of rejections: 0.12521
-#>    Power to reject 1 or more: 0.11419
-#>          Power to reject all: 7e-05
+#>   Expected no. of rejections: 0.12618
+#>    Power to reject 1 or more: 0.11589
+#>          Power to reject all: 0
 ```
 
 ### Other tests
@@ -695,11 +695,11 @@ graph_calculate_power(
 #> 
 #> Power calculation ($power) -----------------------------------------------------
 #>                                    A1      A2      B1      B2
-#>                  Local power: 0.06047 0.06086 0.00209 0.00203
+#>                  Local power: 0.06027 0.06068 0.00227 0.00228
 #> 
-#>   Expected no. of rejections: 0.12545
-#>    Power to reject 1 or more: 0.11523
-#>          Power to reject all: 6e-05
+#>   Expected no. of rejections: 0.1255
+#>    Power to reject 1 or more: 0.11443
+#>          Power to reject all: 2e-05
 ```
 
 ## Related work

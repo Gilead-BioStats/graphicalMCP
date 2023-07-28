@@ -1,4 +1,4 @@
-#' Test hypotheses with the critical values method
+#' Test hypotheses with the adjusted significance method
 #'
 #' @param p A numeric vector of p-values
 #' @param hypotheses A numeric vector of hypothesis hypotheses

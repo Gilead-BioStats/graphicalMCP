@@ -42,7 +42,8 @@ Outputs:
 \item For \verb{calculate_critical_*()}, a matrix with the same shape as
 \code{weighting_strategy}, where the weights have been adjusted according to the
 specified adjustment method
-\item For \code{c_value_function()}, the critical value for the given group
+\item For \code{c_value_function()}, the \eqn{c_{J_h}} value for the given group,
+according to Formula 6 of Xi et al. (2017).
 }
 }
 \description{

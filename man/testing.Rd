@@ -38,7 +38,7 @@ test statistics}
 intersection hypothesis should be included}
 
 \item{critical}{A logical scalar specifying whether hypothesis-level detail
-should be included in the results, including calculating critical values
+should be included in the results, including calculating adjusted weights
 for parametric tests}
 }
 \value{
@@ -58,7 +58,7 @@ The slower graph testing functions have design choices made that favor ease
 of interpreting results over speed. Results include hypothesis rejection
 decisions, but also the test values that led to the final result.
 The functions include options for reporting details using the adjusted
-p-value method or critical value method.
+p-value method or adjusted weight method.
 }
 \examples{
 

@@ -80,22 +80,22 @@ adjust_p_simes <- function(p, hypotheses) {
   adjusted_p <- Inf
   for (i in seq_along(hypotheses)) {
     # This demonstrates a different and slightly more accurate way of
-    # calculating Simes critical values/adjusted p-values compared to the method
-    # used in [calculate_critical_simes()]. In this function (and
+    # calculating Simes adjusted weights/adjusted p-values compared to the
+    # method used in [calculate_critical_simes()]. In this function (and
     # [simes_test_vals()]), we add all hypothesis weights for hypotheses with a
     # smaller p-value than hypothesis_j, for all j in J. In the case that two
     # p-values are identical, the corresponding hypotheses will get identical
-    # critical values/adjusted p-values. [calculate_critical_simes()], on the
+    # adjusted weights/adjusted p-values. [calculate_critical_simes()], on the
     # other hand, uses an alternate method that's faster: First order hypotheses
     # according to their p-values in ascending order, then take the cumulative
     # sum. In the case that two p-values are identical, they will be sorted
     # sequentially, and the hypothesis that happens to come first will get a
-    # smaller, incorrect critical value (larger, incorrect adjusted p-value).
+    # smaller, incorrect adjusted weight (larger, incorrect adjusted p-value).
     # The hypothesis that comes second will be correct.
     # [calculate_critical_simes()] is only used in power calculations where it
     # should not be possible to have identical p-values, since they are sampled
     # randomly (unless `all(corr == 1)`). Furthermore, even when there are
-    # incorrect critical values, it cannot affect the hypothesis rejections. See
+    # incorrect adjusted weights, it cannot affect the hypothesis rejections. See
     # Bonferroni function above for na.rm reasoning
     adjusted_p <- min(
       adjusted_p,

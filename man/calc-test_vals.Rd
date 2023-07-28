@@ -4,7 +4,7 @@
 \alias{bonferroni_test_vals}
 \alias{parametric_test_vals}
 \alias{simes_test_vals}
-\title{Test hypotheses with the critical values method}
+\title{Test hypotheses with the adjusted significance method}
 \usage{
 bonferroni_test_vals(p, hypotheses, alpha, intersection = NA)
 
@@ -31,7 +31,7 @@ A data frame with columns specifying the values used to calculate
 each hypothesis test
 }
 \description{
-Test hypotheses with the critical values method
+Test hypotheses with the adjusted significance method
 }
 \examples{
 w <- c(H1 = .5, H2 = .5, H3 = 0, H4 = 0)
