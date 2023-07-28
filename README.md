@@ -18,7 +18,8 @@ A multiple comparison procedure (MCP) is a statistical analysis method
 that allows for assessing the efficacy of multiple endpoints, some of
 which are dependent on each other, in a single clinical trial. Endpoints
 can be different doses, treatment of different conditions, combined
-superiority & non-inferiority testing, or many others.
+superiority & non-inferiority testing, or many others. A key feature is
+that MCPs strongly control the family-wise error rate at level alpha.
 
 In [Bretz et al
 (2011)](https://onlinelibrary.wiley.com/doi/10.1002/bimj.201000239), a
@@ -33,7 +34,7 @@ graphicalMCP is not on CRAN, so install it from GitHub with
 
 ``` r
 # install.packages("pak")
-pak::pak("Gilead-BioStats/graphicalMCP")
+pak::pak("Gilead-BioStats/graphicalMCP@dev")
 ```
 
 ## Basic usage
@@ -278,11 +279,11 @@ graph_calculate_power(
 #> 
 #> Power calculation ($power) -----------------------------------------------------
 #>                                    H1      H2      H3      H4
-#>                  Local power: 0.87755 0.87554 0.67220 0.67089
+#>                  Local power: 0.87614 0.87790 0.66966 0.67003
 #> 
-#>   Expected no. of rejections: 3.09618
+#>   Expected no. of rejections: 3.09373
 #>    Power to reject 1 or more: 0.97437
-#>          Power to reject all: 0.50385
+#>          Power to reject all: 0.50019
 ```
 
 All valid test types are also valid for power simulations.
