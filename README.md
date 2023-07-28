@@ -84,7 +84,7 @@ how to propagate local significance when a source node is deleted.</td>
 <td><strong>Intersection</strong> <strong>hypothesis</strong></td>
 <td>A subset of <strong>hypotheses</strong> from a
 <strong>graph</strong>. Plural often implies all such subsets.</td>
-<td>intersection,sub-graphs, closure</td>
+<td>intersection, sub-graph(s), closure</td>
 <td><code>intersections</code></td>
 <td>Weighting strategy</td>
 </tr>
@@ -98,7 +98,7 @@ how to propagate local significance when a source node is deleted.</td>
 <td></td>
 </tr>
 <tr class="odd">
-<td><strong>Critical values</strong></td>
+<td><strong>Adjusted weights</strong></td>
 <td><p>The set of <strong>weights</strong>, adjusted according to a
 testing algorithm:</p>
 <ul>
@@ -108,7 +108,7 @@ testing algorithm:</p>
 distribution</li>
 </ul></td>
 <td></td>
-<td><code>critical_values</code></td>
+<td><code>adjusted_weights</code></td>
 <td></td>
 </tr>
 <tr class="even">
@@ -168,8 +168,10 @@ combined</td>
 </tr>
 <tr class="odd">
 <td><strong>Marginal power</strong></td>
-<td>The mean of each null <strong>hypothesis</strong> in the underlying
-multivariate normal distribution of the null hypotheses</td>
+<td><p>The mean of each null <strong>hypothesis</strong> in the
+underlying multivariate normal distribution of the null hypotheses.
+Closely related to the non-centrality parameter:</p>
+<p><code>ncp =``qnorm(1 - alpha) -``qnorm(1 - marginal_power)</code></p></td>
 <td></td>
 <td><code>marginal_power</code></td>
 <td>Correlation matrix</td>
@@ -392,17 +394,17 @@ graph_test_closure(
 #>   Final updated graph after removing rejected hypotheses
 #> 
 #>   --- Hypothesis weights ---
-#>   A1: 0.0
-#>   A2: 0.0
+#>   A1:  NA
+#>   A2:  NA
 #>   B1: 0.5
 #>   B2: 0.5
 #> 
 #>   --- Transition weights ---
 #>      A1 A2 B1 B2
-#>   A1  0  0  0  0
-#>   A2  0  0  0  0
-#>   B1  0  0  0  1
-#>   B2  0  0  1  0
+#>   A1 NA NA NA NA
+#>   A2 NA NA NA NA
+#>   B1 NA NA  0  1
+#>   B2 NA NA  1  0
 ```
 
 Simes and parametric testing methods are also supported, using the
@@ -465,17 +467,17 @@ graph_test_closure(
 #>   Final updated graph after removing rejected hypotheses
 #> 
 #>   --- Hypothesis weights ---
-#>   A1: 0
-#>   A2: 0
-#>   B1: 0
-#>   B2: 0
+#>   A1: NA
+#>   A2: NA
+#>   B1: NA
+#>   B2: NA
 #> 
 #>   --- Transition weights ---
 #>      A1 A2 B1 B2
-#>   A1  0  0  0  0
-#>   A2  0  0  0  0
-#>   B1  0  0  0  0
-#>   B2  0  0  0  0
+#>   A1 NA NA NA NA
+#>   A2 NA NA NA NA
+#>   B1 NA NA NA NA
+#>   B2 NA NA NA NA
 #> 
 #> Test details - Adjusted p ($details) -------------------------------------------
 #>   Intersection        A1        A2        B1        B2 adj_p_grp1 adj_p_grp2
@@ -570,11 +572,11 @@ graph_calculate_power(
 #> 
 #> Power calculation ($power) -----------------------------------------------------
 #>                                    A1      A2      B1      B2
-#>                  Local power: 0.05994 0.05899 0.00376 0.00349
+#>                  Local power: 0.05872 0.05840 0.00358 0.00379
 #> 
-#>   Expected no. of rejections: 0.12618
-#>    Power to reject 1 or more: 0.11532
-#>          Power to reject all: 5e-05
+#>   Expected no. of rejections: 0.12449
+#>    Power to reject 1 or more: 0.11346
+#>          Power to reject all: 1e-04
 ```
 
 The `simple_successive_2()` function creates a parallel gate-keeping
@@ -627,11 +629,11 @@ graph_calculate_power(
 #> 
 #> Power calculation ($power) -----------------------------------------------------
 #>                                    A1      A2      B1      B2
-#>                  Local power: 0.06016 0.05890 0.00220 0.00196
+#>                  Local power: 0.06035 0.06008 0.00255 0.00223
 #> 
-#>   Expected no. of rejections: 0.12322
-#>    Power to reject 1 or more: 0.11321
-#>          Power to reject all: 4e-05
+#>   Expected no. of rejections: 0.12521
+#>    Power to reject 1 or more: 0.11419
+#>          Power to reject all: 7e-05
 ```
 
 ### Other tests
@@ -693,11 +695,11 @@ graph_calculate_power(
 #> 
 #> Power calculation ($power) -----------------------------------------------------
 #>                                    A1      A2      B1      B2
-#>                  Local power: 0.06204 0.06065 0.00219 0.00212
+#>                  Local power: 0.06047 0.06086 0.00209 0.00203
 #> 
-#>   Expected no. of rejections: 0.127
-#>    Power to reject 1 or more: 0.1158
-#>          Power to reject all: 5e-05
+#>   Expected no. of rejections: 0.12545
+#>    Power to reject 1 or more: 0.11523
+#>          Power to reject all: 6e-05
 ```
 
 ## Related work

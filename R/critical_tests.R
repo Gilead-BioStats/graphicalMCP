@@ -41,7 +41,7 @@ bonferroni_test_vals <- function(p, hypotheses, alpha, intersection = NA) {
       Weight = hypotheses,
       "*" = "*",
       Alpha = alpha,
-      Reject = ifelse(
+      Inequality_holds = ifelse(
         p == 0 & hypotheses == 0,
         NA,
         p <= hypotheses * alpha
@@ -73,7 +73,7 @@ parametric_test_vals <- function(p,
       Weight = hypotheses,
       "*" = "*",
       Alpha = alpha,
-      Reject = ifelse(
+      Inequality_holds = ifelse(
         p == 0 & hypotheses == 0,
         NA,
         p <= c_value * hypotheses * alpha
@@ -107,7 +107,7 @@ simes_test_vals <- function(p, hypotheses, alpha, intersection = NA) {
       Weight = w_sum,
       "*" = "*",
       Alpha = alpha,
-      Reject = ifelse(
+      Inequality_holds = ifelse(
         p == 0 & w_sum == 0,
         NA,
         vec_res

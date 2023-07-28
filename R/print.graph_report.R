@@ -123,7 +123,8 @@ print.graph_report <- function(x, ..., precision = 6, indent = 2, rows = 10) {
   if (!is.null(x$details)) {
     if (is.matrix(x$details$results)) {
       df_details <- as.data.frame(format(x$details$results, digits = precision))
-      df_details$reject <- as.logical(as.numeric(df_details$reject))
+      df_details$reject_intersection <-
+        as.logical(as.numeric(df_details$reject_intersection))
       df_details <- cbind(Intersection = rownames(df_details), df_details)
 
       max_print_old <- getOption("max.print")
@@ -206,7 +207,11 @@ print.graph_report <- function(x, ..., precision = 6, indent = 2, rows = 10) {
       }
     )
     if (any(x$inputs$test_types == "parametric")) {
-      crit_res$c_value <- ifelse(is.na(crit_res$c_value), "", crit_res$c_value)
+      crit_res$c_value <- ifelse(
+        trimws(crit_res$c_value) == "NA",
+        "",
+        crit_res$c_value
+      )
     }
 
     max_print_old <- getOption("max.print")

@@ -183,7 +183,7 @@ graph_test_closure <- function(graph,
       weighting_strategy_compact,
       pmin(adjusted_p, 1 + 1e-8),
       adj_p_inter = pmin(adjusted_p_intersection, 1 + 1e-8),
-      reject = reject_intersection
+      reject_intersection = reject_intersection
     )
   )
 

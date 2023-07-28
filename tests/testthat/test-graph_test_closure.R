@@ -335,7 +335,7 @@ test_that("closure internal consistency", {
         Intersection
       ),
       Hypothesis = Hypothesis,
-      Reject = max(Reject),
+      Inequality_holds = max(Inequality_holds),
       .keep = "used"
     )
 
@@ -344,11 +344,11 @@ test_that("closure internal consistency", {
         df_critical_intersect_reject,
         Hypothesis
       ),
-      Reject = min(Reject)
+      Inequality_holds = min(Inequality_holds)
     )
 
     critical_hypothesis_reject <- !!setNames(
-      df_critical_hypothesis_reject$Reject,
+      df_critical_hypothesis_reject$Inequality_holds,
       df_critical_hypothesis_reject$Hypothesis
     )
 
@@ -383,12 +383,12 @@ test_that("parametric floating point errors", {
   )
 
   expect_equal(
-    res_para$details$results[, "reject"],
+    res_para$details$results[, "reject_intersection"],
     setNames(rep(1, 7), seq_len(7))
   )
 
   expect_equal(
-    res_para$critical$results$Reject,
+    res_para$critical$results$Inequality_holds,
     rep(TRUE, 12)
   )
 })

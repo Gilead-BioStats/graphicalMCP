@@ -83,7 +83,7 @@ table_benchmarks <- function(df, title, unit) {
     gt() %>%
     tab_header(title) %>%
     fmt_number(pattern = paste0("{x}", unit)) %>%
-    tab_spanner("Number of hypotheses", 2:ncol(df)) %>%
+    tab_spanner("Number of hypotheses", seq_along(unique(df$size)) + 1) %>%
     cols_label(char_expression = "Algorithm") %>%
     tab_options(table.font.size = 24)
 }

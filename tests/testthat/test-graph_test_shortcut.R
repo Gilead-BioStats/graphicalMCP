@@ -140,7 +140,7 @@ test_that("shortcut internal consistency", {
 
   expect_equal(
     shortcut_results$outputs$rejected[critical_sequence],
-    shortcut_results$critical$results$Reject,
+    shortcut_results$critical$results$Inequality_holds,
     ignore_attr = TRUE
   )
 

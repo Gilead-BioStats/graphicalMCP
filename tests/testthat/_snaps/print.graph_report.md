@@ -104,17 +104,17 @@
         H4 NA NA NA NA
       
       Test details - Adjusted p ($details) -------------------------------------------
-        Intersection   H1   H2   H3   H4 adj_p_grp1 adj_p_inter reject
-                   1 0.50 0.50 0.00 0.00       0.02        0.02   TRUE
-                   2 0.50 0.50 0.00   NA       0.02        0.02   TRUE
-                   3 0.50 0.50   NA 0.00       0.02        0.02   TRUE
-                   4 0.50 0.50   NA   NA       0.02        0.02   TRUE
-                   5 0.50   NA 0.00 0.50       0.02        0.02   TRUE
-                   6 1.00   NA 0.00   NA       0.01        0.01   TRUE
-                   7 0.50   NA   NA 0.50       0.02        0.02   TRUE
-                   8 1.00   NA   NA   NA       0.01        0.01   TRUE
-                   9   NA 0.50 0.50 0.00       0.02        0.02   TRUE
-                  10   NA 0.50 0.50   NA       0.02        0.02   TRUE
+        Intersection   H1   H2   H3   H4 adj_p_grp1 adj_p_inter reject_intersection
+                   1 0.50 0.50 0.00 0.00       0.02        0.02                TRUE
+                   2 0.50 0.50 0.00   NA       0.02        0.02                TRUE
+                   3 0.50 0.50   NA 0.00       0.02        0.02                TRUE
+                   4 0.50 0.50   NA   NA       0.02        0.02                TRUE
+                   5 0.50   NA 0.00 0.50       0.02        0.02                TRUE
+                   6 1.00   NA 0.00   NA       0.01        0.01                TRUE
+                   7 0.50   NA   NA 0.50       0.02        0.02                TRUE
+                   8 1.00   NA   NA   NA       0.01        0.01                TRUE
+                   9   NA 0.50 0.50 0.00       0.02        0.02                TRUE
+                  10   NA 0.50 0.50   NA       0.02        0.02                TRUE
         ... (Use `print(x, rows = <nn>)` for more)
       
 
@@ -171,17 +171,17 @@
         H4 NA NA NA NA
       
       Test details - Critical values ($critical) -------------------------------------
-        Intersection Hypothesis       Test    p <= Weight * Alpha Reject
-                   1         H1 bonferroni 0.01 <=    0.5 * 0.025   TRUE
-                   1         H2 bonferroni 0.01 <=    0.5 * 0.025   TRUE
-                   1         H3 bonferroni 0.01 <=    0.0 * 0.025  FALSE
-                   1         H4 bonferroni 0.01 <=    0.0 * 0.025  FALSE
-                   2         H1 bonferroni 0.01 <=    0.5 * 0.025   TRUE
-                   2         H2 bonferroni 0.01 <=    0.5 * 0.025   TRUE
-                   2         H3 bonferroni 0.01 <=    0.0 * 0.025  FALSE
-                   3         H1 bonferroni 0.01 <=    0.5 * 0.025   TRUE
-                   3         H2 bonferroni 0.01 <=    0.5 * 0.025   TRUE
-                   3         H4 bonferroni 0.01 <=    0.0 * 0.025  FALSE
+        Intersection Hypothesis       Test    p <= Weight * Alpha Inequality_holds
+                   1         H1 bonferroni 0.01 <=    0.5 * 0.025             TRUE
+                   1         H2 bonferroni 0.01 <=    0.5 * 0.025             TRUE
+                   1         H3 bonferroni 0.01 <=    0.0 * 0.025            FALSE
+                   1         H4 bonferroni 0.01 <=    0.0 * 0.025            FALSE
+                   2         H1 bonferroni 0.01 <=    0.5 * 0.025             TRUE
+                   2         H2 bonferroni 0.01 <=    0.5 * 0.025             TRUE
+                   2         H3 bonferroni 0.01 <=    0.0 * 0.025            FALSE
+                   3         H1 bonferroni 0.01 <=    0.5 * 0.025             TRUE
+                   3         H2 bonferroni 0.01 <=    0.5 * 0.025             TRUE
+                   3         H4 bonferroni 0.01 <=    0.0 * 0.025            FALSE
         ... (Use `print(x, rows = <nn>)` for more)
       
 
@@ -314,31 +314,42 @@
                    8 1.0000     NA     NA     NA     0.0100     1.0000      0.0100
                    9     NA 0.5000 0.5000 0.0000     0.0200     0.0200      0.0200
                   10     NA 0.5000 0.5000     NA     0.0200     0.0200      0.0200
-        reject
-          TRUE
-          TRUE
-          TRUE
-          TRUE
-          TRUE
-          TRUE
-          TRUE
-          TRUE
-          TRUE
-          TRUE
+        reject_intersection
+                       TRUE
+                       TRUE
+                       TRUE
+                       TRUE
+                       TRUE
+                       TRUE
+                       TRUE
+                       TRUE
+                       TRUE
+                       TRUE
         ... (Use `print(x, rows = <nn>)` for more)
       
       Test details - Critical values ($critical) -------------------------------------
-        Intersection Hypothesis       Test    p <= c_value * Weight * Alpha Reject
-                   1         H1 parametric 0.01 <= 1.00633 *    0.5 * 0.025   TRUE
-                   1         H2 parametric 0.01 <= 1.00633 *    0.5 * 0.025   TRUE
-                   1         H3      simes 0.01 <=      NA      0.0 * 0.025  FALSE
-                   1         H4      simes 0.01 <=      NA      0.0 * 0.025  FALSE
-                   2         H1 parametric 0.01 <= 1.00633 *    0.5 * 0.025   TRUE
-                   2         H2 parametric 0.01 <= 1.00633 *    0.5 * 0.025   TRUE
-                   2         H3      simes 0.01 <=      NA      0.0 * 0.025  FALSE
-                   3         H1 parametric 0.01 <= 1.00633 *    0.5 * 0.025   TRUE
-                   3         H2 parametric 0.01 <= 1.00633 *    0.5 * 0.025   TRUE
-                   3         H4      simes 0.01 <=      NA      0.0 * 0.025  FALSE
+        Intersection Hypothesis       Test    p <= c_value * Weight * Alpha
+                   1         H1 parametric 0.01 <= 1.00633 *    0.5 * 0.025
+                   1         H2 parametric 0.01 <= 1.00633 *    0.5 * 0.025
+                   1         H3      simes 0.01 <=              0.0 * 0.025
+                   1         H4      simes 0.01 <=              0.0 * 0.025
+                   2         H1 parametric 0.01 <= 1.00633 *    0.5 * 0.025
+                   2         H2 parametric 0.01 <= 1.00633 *    0.5 * 0.025
+                   2         H3      simes 0.01 <=              0.0 * 0.025
+                   3         H1 parametric 0.01 <= 1.00633 *    0.5 * 0.025
+                   3         H2 parametric 0.01 <= 1.00633 *    0.5 * 0.025
+                   3         H4      simes 0.01 <=              0.0 * 0.025
+        Inequality_holds
+                    TRUE
+                    TRUE
+                   FALSE
+                   FALSE
+                    TRUE
+                    TRUE
+                   FALSE
+                    TRUE
+                    TRUE
+                   FALSE
         ... (Use `print(x, rows = <nn>)` for more)
       
 
@@ -414,31 +425,42 @@
                    8 1.0000     NA     NA     NA     0.0100     1.0000      0.0100
                    9     NA 0.5000 0.5000 0.0000     0.0200     0.0200      0.0200
                   10     NA 0.5000 0.5000     NA     0.0200     0.0200      0.0200
-        reject
-          TRUE
-          TRUE
-          TRUE
-          TRUE
-          TRUE
-          TRUE
-          TRUE
-          TRUE
-          TRUE
-          TRUE
+        reject_intersection
+                       TRUE
+                       TRUE
+                       TRUE
+                       TRUE
+                       TRUE
+                       TRUE
+                       TRUE
+                       TRUE
+                       TRUE
+                       TRUE
         ... (Use `print(x, rows = <nn>)` for more)
       
       Test details - Critical values ($critical) -------------------------------------
-        Intersection Hypothesis       Test    p <= c_value * Weight * Alpha Reject
-                   1         H1 parametric 0.01 <= 1.00633 *    0.5 * 0.025   TRUE
-                   1         H2 parametric 0.01 <= 1.00633 *    0.5 * 0.025   TRUE
-                   1         H3 parametric 0.01 <= 1.00000 *    0.0 * 0.025  FALSE
-                   1         H4 parametric 0.01 <= 1.00000 *    0.0 * 0.025  FALSE
-                   2         H1 parametric 0.01 <= 1.00633 *    0.5 * 0.025   TRUE
-                   2         H2 parametric 0.01 <= 1.00633 *    0.5 * 0.025   TRUE
-                   2         H3 parametric 0.01 <= 1.00000 *    0.0 * 0.025  FALSE
-                   3         H1 parametric 0.01 <= 1.00633 *    0.5 * 0.025   TRUE
-                   3         H2 parametric 0.01 <= 1.00633 *    0.5 * 0.025   TRUE
-                   3         H4 parametric 0.01 <= 1.00000 *    0.0 * 0.025  FALSE
+        Intersection Hypothesis       Test    p <= c_value * Weight * Alpha
+                   1         H1 parametric 0.01 <= 1.00633 *    0.5 * 0.025
+                   1         H2 parametric 0.01 <= 1.00633 *    0.5 * 0.025
+                   1         H3 parametric 0.01 <= 1.00000 *    0.0 * 0.025
+                   1         H4 parametric 0.01 <= 1.00000 *    0.0 * 0.025
+                   2         H1 parametric 0.01 <= 1.00633 *    0.5 * 0.025
+                   2         H2 parametric 0.01 <= 1.00633 *    0.5 * 0.025
+                   2         H3 parametric 0.01 <= 1.00000 *    0.0 * 0.025
+                   3         H1 parametric 0.01 <= 1.00633 *    0.5 * 0.025
+                   3         H2 parametric 0.01 <= 1.00633 *    0.5 * 0.025
+                   3         H4 parametric 0.01 <= 1.00000 *    0.0 * 0.025
+        Inequality_holds
+                    TRUE
+                    TRUE
+                   FALSE
+                   FALSE
+                    TRUE
+                    TRUE
+                   FALSE
+                    TRUE
+                    TRUE
+                   FALSE
         ... (Use `print(x, rows = <nn>)` for more)
       
 
@@ -549,31 +571,31 @@
           H4 NA NA NA NA
       
       Test details - Adjusted p ($details) -------------------------------------------
-          Intersection   H1   H2   H3   H4 adj_p_grp1 adj_p_inter reject
-                     1 0.50 0.50 0.00 0.00       0.02        0.02   TRUE
-                     2 0.50 0.50 0.00   NA       0.02        0.02   TRUE
-                     3 0.50 0.50   NA 0.00       0.02        0.02   TRUE
-                     4 0.50 0.50   NA   NA       0.02        0.02   TRUE
-                     5 0.50   NA 0.00 0.50       0.02        0.02   TRUE
-                     6 1.00   NA 0.00   NA       0.01        0.01   TRUE
-                     7 0.50   NA   NA 0.50       0.02        0.02   TRUE
-                     8 1.00   NA   NA   NA       0.01        0.01   TRUE
-                     9   NA 0.50 0.50 0.00       0.02        0.02   TRUE
-                    10   NA 0.50 0.50   NA       0.02        0.02   TRUE
+          Intersection   H1   H2   H3   H4 adj_p_grp1 adj_p_inter reject_intersection
+                     1 0.50 0.50 0.00 0.00       0.02        0.02                TRUE
+                     2 0.50 0.50 0.00   NA       0.02        0.02                TRUE
+                     3 0.50 0.50   NA 0.00       0.02        0.02                TRUE
+                     4 0.50 0.50   NA   NA       0.02        0.02                TRUE
+                     5 0.50   NA 0.00 0.50       0.02        0.02                TRUE
+                     6 1.00   NA 0.00   NA       0.01        0.01                TRUE
+                     7 0.50   NA   NA 0.50       0.02        0.02                TRUE
+                     8 1.00   NA   NA   NA       0.01        0.01                TRUE
+                     9   NA 0.50 0.50 0.00       0.02        0.02                TRUE
+                    10   NA 0.50 0.50   NA       0.02        0.02                TRUE
           ... (Use `print(x, rows = <nn>)` for more)
       
       Test details - Critical values ($critical) -------------------------------------
-          Intersection Hypothesis       Test    p <= Weight * Alpha Reject
-                     1         H1 bonferroni 0.01 <=    0.5 * 0.025   TRUE
-                     1         H2 bonferroni 0.01 <=    0.5 * 0.025   TRUE
-                     1         H3 bonferroni 0.01 <=    0.0 * 0.025  FALSE
-                     1         H4 bonferroni 0.01 <=    0.0 * 0.025  FALSE
-                     2         H1 bonferroni 0.01 <=    0.5 * 0.025   TRUE
-                     2         H2 bonferroni 0.01 <=    0.5 * 0.025   TRUE
-                     2         H3 bonferroni 0.01 <=    0.0 * 0.025  FALSE
-                     3         H1 bonferroni 0.01 <=    0.5 * 0.025   TRUE
-                     3         H2 bonferroni 0.01 <=    0.5 * 0.025   TRUE
-                     3         H4 bonferroni 0.01 <=    0.0 * 0.025  FALSE
+          Intersection Hypothesis       Test    p <= Weight * Alpha Inequality_holds
+                     1         H1 bonferroni 0.01 <=    0.5 * 0.025             TRUE
+                     1         H2 bonferroni 0.01 <=    0.5 * 0.025             TRUE
+                     1         H3 bonferroni 0.01 <=    0.0 * 0.025            FALSE
+                     1         H4 bonferroni 0.01 <=    0.0 * 0.025            FALSE
+                     2         H1 bonferroni 0.01 <=    0.5 * 0.025             TRUE
+                     2         H2 bonferroni 0.01 <=    0.5 * 0.025             TRUE
+                     2         H3 bonferroni 0.01 <=    0.0 * 0.025            FALSE
+                     3         H1 bonferroni 0.01 <=    0.5 * 0.025             TRUE
+                     3         H2 bonferroni 0.01 <=    0.5 * 0.025             TRUE
+                     3         H4 bonferroni 0.01 <=    0.0 * 0.025            FALSE
           ... (Use `print(x, rows = <nn>)` for more)
       
 
@@ -722,11 +744,11 @@
                H4 NA NA NA NA
       
       Test details - Critical values ($critical) -------------------------------------
-               Step Hypothesis    p <= Weight * Alpha Reject
-                  1         H1 0.01 <=    0.5 * 0.025   TRUE
-                  2         H2 0.01 <=    0.5 * 0.025   TRUE
-                  3         H3 0.01 <=    0.5 * 0.025   TRUE
-                  4         H4 0.01 <=    1.0 * 0.025   TRUE
+               Step Hypothesis    p <= Weight * Alpha Inequality_holds
+                  1         H1 0.01 <=    0.5 * 0.025             TRUE
+                  2         H2 0.01 <=    0.5 * 0.025             TRUE
+                  3         H3 0.01 <=    0.5 * 0.025             TRUE
+                  4         H4 0.01 <=    1.0 * 0.025             TRUE
       
 
 ---
@@ -915,12 +937,12 @@
         H6 NA NA NA NA NA NA
       
       Test details - Critical values ($critical) -------------------------------------
-        Step Hypothesis     p <=   Weight * Alpha Reject
-           1         H4 0.010 <= 0.500000 * 0.025   TRUE
-           2         H6 0.000 <= 0.250000 * 0.025   TRUE
-           3         H5 0.005 <= 0.499975 * 0.025   TRUE
-           4         H1 0.025 <= 1.000000 * 0.025   TRUE
-           5         H3 0.015 <= 0.500000 * 0.025  FALSE
-           5         H2 0.020 <= 0.500000 * 0.025  FALSE
+        Step Hypothesis     p <=   Weight * Alpha Inequality_holds
+           1         H4 0.010 <= 0.500000 * 0.025             TRUE
+           2         H6 0.000 <= 0.250000 * 0.025             TRUE
+           3         H5 0.005 <= 0.499975 * 0.025             TRUE
+           4         H1 0.025 <= 1.000000 * 0.025             TRUE
+           5         H3 0.015 <= 0.500000 * 0.025            FALSE
+           5         H2 0.020 <= 0.500000 * 0.025            FALSE
       
 

@@ -159,7 +159,7 @@ print.power_report <- function(x, ..., precision = 6, indent = 2, rows = 10) {
       dimnames = list(
         "",
         c(
-          paste0(pad, "           Power to reject: "),
+          paste0(pad, "          Power to reject: "),
           paste0("  ", names(x$power$power_success))
         )
       ),
