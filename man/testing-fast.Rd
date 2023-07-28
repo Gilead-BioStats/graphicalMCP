@@ -5,11 +5,11 @@
 \alias{graph_test_shortcut_fast}
 \title{Calculate hypothesis rejection results efficiently}
 \usage{
-graph_test_closure_fast(p, alpha, critical_values, intersections)
+graph_test_closure_fast(p, alpha, adjusted_weights, intersections)
 
 graph_test_shortcut_fast(
   p,
-  critical_values,
+  adjusted_weights,
   num_hyps,
   bin_slots,
   nrow_critical
@@ -21,7 +21,7 @@ graph_test_shortcut_fast(
 \item{alpha}{A numeric scalar specifying the global significance level for
 testing}
 
-\item{critical_values}{The weights (second half of columns) from
+\item{adjusted_weights}{The weights (second half of columns) from
 \code{\link[=graph_generate_weights]{graph_generate_weights()}} output, adjusted by the appropriate testing
 algorithm (Bonferroni, Simes, or parametric)}
 
@@ -54,18 +54,18 @@ p <- c(.001, .02, .002, .03)
 
 weighting_strategy <- graph_generate_weights(par_gate)
 intersections <- weighting_strategy[, seq_len(num_hyps), drop = FALSE]
-critical_values <-
+adjusted_weights <-
   weighting_strategy[, seq_len(num_hyps) + num_hyps, drop = FALSE]
 
 graphicalMCP:::graph_test_closure_fast(
   p,
   .025,
-  critical_values,
+  adjusted_weights,
   intersections
 )
 graphicalMCP:::graph_test_shortcut_fast(
   p,
-  critical_values * .025,
+  adjusted_weights * .025,
   length(par_gate$hypotheses),
   2^(length(par_gate$hypotheses):1 - 1),
   2^length(par_gate$hypotheses) - 1

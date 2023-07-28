@@ -12,7 +12,7 @@
 #' @return A data frame with columns specifying the values used to calculate
 #'   each hypothesis test
 #'
-#' @rdname calc-test_vals
+#' @rdname calc-test_values
 #'
 #' @keywords internal
 #'
@@ -23,10 +23,10 @@
 #'
 #' p <- c(.024, .01, .026, .027)
 #'
-#' graphicalMCP:::bonferroni_test_vals(p, w, .05)
-#' graphicalMCP:::parametric_test_vals(p, w, .05, corr = diag(4))
-#' graphicalMCP:::simes_test_vals(p, w, .05)
-bonferroni_test_vals <- function(p, hypotheses, alpha, intersection = NA) {
+#' graphicalMCP:::bonferroni_test_values(p, w, .05)
+#' graphicalMCP:::parametric_test_values(p, w, .05, corr = diag(4))
+#' graphicalMCP:::simes_test_values(p, w, .05)
+bonferroni_test_values <- function(p, hypotheses, alpha, intersection = NA) {
   if (length(p) == 0) {
     NULL
   } else {
@@ -51,8 +51,8 @@ bonferroni_test_vals <- function(p, hypotheses, alpha, intersection = NA) {
   }
 }
 
-#' @rdname calc-test_vals
-parametric_test_vals <- function(p,
+#' @rdname calc-test_values
+parametric_test_values <- function(p,
                                  hypotheses,
                                  alpha,
                                  intersection = NA,
@@ -83,8 +83,8 @@ parametric_test_vals <- function(p,
   }
 }
 
-#' @rdname calc-test_vals
-simes_test_vals <- function(p, hypotheses, alpha, intersection = NA) {
+#' @rdname calc-test_values
+simes_test_values <- function(p, hypotheses, alpha, intersection = NA) {
   if (length(p) == 0) {
     NULL
   } else {

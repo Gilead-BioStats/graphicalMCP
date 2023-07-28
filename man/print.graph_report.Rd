@@ -17,7 +17,7 @@ to include in numeric values}
 \item{indent}{An integer scalar indicating how many spaces to indent results}
 
 \item{rows}{An integer scalar indicating how many rows of verbose and
-critical output to print}
+test values output to print}
 }
 \description{
 A graph report displays

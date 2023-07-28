@@ -14,7 +14,7 @@
 #' @param p A numeric vector of p-values
 #' @param alpha A numeric scalar specifying the global significance level for
 #'   testing
-#' @param critical_values The weights (second half of columns) from
+#' @param adjusted_weights The weights (second half of columns) from
 #'   [graph_generate_weights()] output, adjusted by the appropriate testing
 #'   algorithm (Bonferroni, Simes, or parametric)
 #' @param intersections The first half of columns from
@@ -40,33 +40,33 @@
 #'
 #' weighting_strategy <- graph_generate_weights(par_gate)
 #' intersections <- weighting_strategy[, seq_len(num_hyps), drop = FALSE]
-#' critical_values <-
+#' adjusted_weights <-
 #'   weighting_strategy[, seq_len(num_hyps) + num_hyps, drop = FALSE]
 #'
 #' graphicalMCP:::graph_test_closure_fast(
 #'   p,
 #'   .025,
-#'   critical_values,
+#'   adjusted_weights,
 #'   intersections
 #' )
 #' graphicalMCP:::graph_test_shortcut_fast(
 #'   p,
-#'   critical_values * .025,
+#'   adjusted_weights * .025,
 #'   length(par_gate$hypotheses),
 #'   2^(length(par_gate$hypotheses):1 - 1),
 #'   2^length(par_gate$hypotheses) - 1
 #' )
-graph_test_closure_fast <- function(p, alpha, critical_values, intersections) {
-  rej_hyps <- t(p <= alpha * t(critical_values))
+graph_test_closure_fast <- function(p, alpha, adjusted_weights, intersections) {
+  rej_hyps <- t(p <= alpha * t(adjusted_weights))
 
   # "+ 0" converts to integer from logical
   matrixStats::colSums2(intersections * matrixStats::rowMaxs(rej_hyps + 0)) ==
-    2^(ncol(critical_values) - 1)
+    2^(ncol(adjusted_weights) - 1)
 }
 
 #' @rdname testing-fast
 graph_test_shortcut_fast <- function(p,
-                                     critical_values,
+                                     adjusted_weights,
                                      num_hyps,
                                      bin_slots,
                                      nrow_critical) {
@@ -75,7 +75,7 @@ graph_test_shortcut_fast <- function(p,
   while (!all(rejected)) {
     intersection_num <-
       nrow_critical - sum(bin_slots * !rejected) + 1
-    rejected_step <- p <= critical_values[intersection_num, , drop = TRUE]
+    rejected_step <- p <= adjusted_weights[intersection_num, , drop = TRUE]
 
     if (!any(rejected_step)) {
       break

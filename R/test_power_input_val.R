@@ -5,7 +5,7 @@ test_input_val <- function(graph,
                            test_types = c("bonferroni"),
                            corr,
                            verbose,
-                           critical) {
+                           test_values) {
   test_opts <- c(
     bonferroni = "bonferroni",
     parametric = "parametric",
@@ -34,8 +34,8 @@ test_input_val <- function(graph,
       unique(length(p), length(unlist(groups))) == length(graph$hypotheses),
     "Verbose flag must be a length one logical" =
       is.logical(verbose) && length(verbose) == 1,
-    "Critical flag must be a length one logical" =
-      is.logical(critical) && length(critical) == 1
+    "Test values flag must be a length one logical" =
+      is.logical(test_values) && length(test_values) == 1
   )
 
   missing_corr <- any(

@@ -32,7 +32,7 @@ test_that("results match graph_test_closure()", {
   )
 
   expect_s3_class(
-    graph_test_shortcut(rando, p, critical = TRUE)$critical$results,
+    graph_test_shortcut(rando, p, test_values = TRUE)$test_values$results,
     "data.frame"
   )
 
@@ -59,10 +59,10 @@ test_that("fast shortcut testing matches closure testing", {
     1.23186608577966e-05
   )
 
-  critical_values <- graph_generate_weights(g)[, 5:8, drop = FALSE]
+  adjusted_weights <- graph_generate_weights(g)[, 5:8, drop = FALSE]
 
   expect_equal(
-    as.logical(graph_test_shortcut_fast(p, critical_values, 4, 2^(3:0), 15)),
+    as.logical(graph_test_shortcut_fast(p, adjusted_weights, 4, 2^(3:0), 15)),
     unname(graph_test_closure(g, p)$outputs$rejected)
   )
 })
@@ -126,22 +126,22 @@ test_that("shortcut internal consistency", {
     ignore_attr = TRUE
   )
 
-  critical_sequence <- shortcut_results$critical$results$Hypothesis
+  test_values_sequence <- shortcut_results$test_values$results$Hypothesis
   expect_equal(
-    shortcut_results$inputs$p[critical_sequence],
-    shortcut_results$critical$results$p,
+    shortcut_results$inputs$p[test_values_sequence],
+    shortcut_results$test_values$results$p,
     ignore_attr = TRUE
   )
 
   expect_equal(
     shortcut_results$inputs$alpha,
-    shortcut_results$critical$results$Alpha[[1]],
+    shortcut_results$test_values$results$Alpha[[1]],
     ignore_attr = TRUE
   )
 
   expect_equal(
-    shortcut_results$outputs$rejected[critical_sequence],
-    shortcut_results$critical$results$Inequality_holds,
+    shortcut_results$outputs$rejected[test_values_sequence],
+    shortcut_results$test_values$results$Inequality_holds,
     ignore_attr = TRUE
   )
 
@@ -152,7 +152,7 @@ test_that("shortcut internal consistency", {
       } else {
         rep(1, length(rando$hypotheses)) # All step 1 if non rejected
       },
-      shortcut_results$critical$results$Step
+      shortcut_results$test_values$results$Step
     )
 
   last_graph_index <- length(shortcut_results$details$results)

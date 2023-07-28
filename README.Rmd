@@ -144,7 +144,7 @@ graph_test_closure(
 )
 ```
 
-Simes and parametric testing methods are also supported, using the `test_types` argument. Try setting the `verbose` and `critical` flags for a more detailed report on testing.
+Simes and parametric testing methods are also supported, using the `test_types` argument. Try setting the `verbose` and `test_values` flags for a more detailed report on testing.
 
 ```{r test-graph-blend}
 graph_test_closure(
@@ -160,7 +160,7 @@ graph_test_closure(
     c(NA, NA, NA, NA)
   ),
   verbose = TRUE,
-  critical = TRUE
+  test_values = TRUE
 )
 ```
 

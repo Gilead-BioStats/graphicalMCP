@@ -5,7 +5,7 @@ test_that("printing Bonferroni/Simes closure test", {
 
   expect_snapshot(graph_test_closure(par_gate, rep(.01, 4), verbose = TRUE))
 
-  expect_snapshot(graph_test_closure(par_gate, rep(.01, 4), critical = TRUE))
+  expect_snapshot(graph_test_closure(par_gate, rep(.01, 4), test_values = TRUE))
 })
 
 test_that("printing parametric closure test", {
@@ -22,7 +22,7 @@ test_that("printing parametric closure test", {
       groups = list(1:2, 3:4),
       test_types = c("p", "s"),
       corr = diag(4),
-      critical = TRUE,
+      test_values = TRUE,
       verbose = TRUE
     )
   )
@@ -34,7 +34,7 @@ test_that("printing parametric closure test", {
       groups = list(1:2, 3:4),
       test_types = c("p", "p"),
       corr = diag(4),
-      critical = TRUE,
+      test_values = TRUE,
       verbose = TRUE
     )
   )
@@ -53,7 +53,7 @@ test_that("additional printing options for graph report", {
         par_gate,
         rep(.01, 4),
         verbose = TRUE,
-        critical = TRUE
+        test_values = TRUE
       ),
       precison = 4,
       indent = 4
@@ -66,7 +66,7 @@ test_that("additional printing options for graph report", {
         simple_successive_1(),
         rep(.01, 4),
         verbose = TRUE,
-        critical = TRUE
+        test_values = TRUE
       ),
       precision = 7,
       indent = 9
@@ -79,7 +79,7 @@ test_that("additional printing options for graph report", {
         complex_example_1(),
         5:0 / 200,
         verbose = TRUE,
-        critical = TRUE
+        test_values = TRUE
       )
     )
   )

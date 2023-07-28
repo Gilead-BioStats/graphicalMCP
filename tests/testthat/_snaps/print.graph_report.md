@@ -103,7 +103,7 @@
         H3 NA NA NA NA
         H4 NA NA NA NA
       
-      Test details - Adjusted p ($details) -------------------------------------------
+      Adjusted p details ($details) --------------------------------------------------
         Intersection   H1   H2   H3   H4 adj_p_grp1 adj_p_inter reject_intersection
                    1 0.50 0.50 0.00 0.00       0.02        0.02                TRUE
                    2 0.50 0.50 0.00   NA       0.02        0.02                TRUE
@@ -121,7 +121,7 @@
 ---
 
     Code
-      graph_test_closure(par_gate, rep(0.01, 4), critical = TRUE)
+      graph_test_closure(par_gate, rep(0.01, 4), test_values = TRUE)
     Output
       
       Test parameters ($inputs) ------------------------------------------------------
@@ -170,7 +170,7 @@
         H3 NA NA NA NA
         H4 NA NA NA NA
       
-      Test details - Adjusted weights ($critical) ------------------------------------
+      Detailed test values ($test_values) --------------------------------------------
         Intersection Hypothesis       Test    p <= Weight * Alpha Inequality_holds
                    1         H1 bonferroni 0.01 <=    0.5 * 0.025             TRUE
                    1         H2 bonferroni 0.01 <=    0.5 * 0.025             TRUE
@@ -248,7 +248,7 @@
 
     Code
       graph_test_closure(par_gate, rep(0.01, 4), groups = list(1:2, 3:4), test_types = c(
-        "p", "s"), corr = diag(4), critical = TRUE, verbose = TRUE)
+        "p", "s"), corr = diag(4), test_values = TRUE, verbose = TRUE)
     Output
       
       Test parameters ($inputs) ------------------------------------------------------
@@ -302,7 +302,7 @@
         H3 NA NA NA NA
         H4 NA NA NA NA
       
-      Test details - Adjusted p ($details) -------------------------------------------
+      Adjusted p details ($details) --------------------------------------------------
         Intersection     H1     H2     H3     H4 adj_p_grp1 adj_p_grp2 adj_p_inter
                    1 0.5000 0.5000 0.0000 0.0000     0.0199     1.0000      0.0199
                    2 0.5000 0.5000 0.0000     NA     0.0199     1.0000      0.0199
@@ -327,7 +327,7 @@
                        TRUE
         ... (Use `print(x, rows = <nn>)` for more)
       
-      Test details - Adjusted weights ($critical) ------------------------------------
+      Detailed test values ($test_values) --------------------------------------------
         Intersection Hypothesis       Test    p <= c_value * Weight * Alpha
                    1         H1 parametric 0.01 <= 1.00633 *    0.5 * 0.025
                    1         H2 parametric 0.01 <= 1.00633 *    0.5 * 0.025
@@ -357,7 +357,7 @@
 
     Code
       graph_test_closure(par_gate, rep(0.01, 4), groups = list(1:2, 3:4), test_types = c(
-        "p", "p"), corr = diag(4), critical = TRUE, verbose = TRUE)
+        "p", "p"), corr = diag(4), test_values = TRUE, verbose = TRUE)
     Output
       
       Test parameters ($inputs) ------------------------------------------------------
@@ -413,7 +413,7 @@
         H3 NA NA NA NA
         H4 NA NA NA NA
       
-      Test details - Adjusted p ($details) -------------------------------------------
+      Adjusted p details ($details) --------------------------------------------------
         Intersection     H1     H2     H3     H4 adj_p_grp1 adj_p_grp2 adj_p_inter
                    1 0.5000 0.5000 0.0000 0.0000     0.0199     1.0000      0.0199
                    2 0.5000 0.5000 0.0000     NA     0.0199     1.0000      0.0199
@@ -438,7 +438,7 @@
                        TRUE
         ... (Use `print(x, rows = <nn>)` for more)
       
-      Test details - Adjusted weights ($critical) ------------------------------------
+      Detailed test values ($test_values) --------------------------------------------
         Intersection Hypothesis       Test    p <= c_value * Weight * Alpha
                    1         H1 parametric 0.01 <= 1.00633 *    0.5 * 0.025
                    1         H2 parametric 0.01 <= 1.00633 *    0.5 * 0.025
@@ -520,7 +520,7 @@
 # additional printing options for graph report
 
     Code
-      print(graph_test_closure(par_gate, rep(0.01, 4), verbose = TRUE, critical = TRUE),
+      print(graph_test_closure(par_gate, rep(0.01, 4), verbose = TRUE, test_values = TRUE),
       precison = 4, indent = 4)
     Output
       
@@ -570,7 +570,7 @@
           H3 NA NA NA NA
           H4 NA NA NA NA
       
-      Test details - Adjusted p ($details) -------------------------------------------
+      Adjusted p details ($details) --------------------------------------------------
           Intersection   H1   H2   H3   H4 adj_p_grp1 adj_p_inter reject_intersection
                      1 0.50 0.50 0.00 0.00       0.02        0.02                TRUE
                      2 0.50 0.50 0.00   NA       0.02        0.02                TRUE
@@ -584,7 +584,7 @@
                     10   NA 0.50 0.50   NA       0.02        0.02                TRUE
           ... (Use `print(x, rows = <nn>)` for more)
       
-      Test details - Adjusted weights ($critical) ------------------------------------
+      Detailed test values ($test_values) --------------------------------------------
           Intersection Hypothesis       Test    p <= Weight * Alpha Inequality_holds
                      1         H1 bonferroni 0.01 <=    0.5 * 0.025             TRUE
                      1         H2 bonferroni 0.01 <=    0.5 * 0.025             TRUE
@@ -603,7 +603,7 @@
 
     Code
       print(graph_test_shortcut(simple_successive_1(), rep(0.01, 4), verbose = TRUE,
-      critical = TRUE), precision = 7, indent = 9)
+      test_values = TRUE), precision = 7, indent = 9)
     Output
       
       Test parameters ($inputs) ------------------------------------------------------
@@ -652,7 +652,7 @@
                H3 NA NA NA NA
                H4 NA NA NA NA
       
-      Test details - Rejection sequence ($details) -----------------------------------
+      Rejection sequence details ($details) ------------------------------------------
                Initial graph
       
                --- Hypothesis weights ---
@@ -743,7 +743,7 @@
                H3 NA NA NA NA
                H4 NA NA NA NA
       
-      Test details - Adjusted weights ($critical) ------------------------------------
+      Detailed test values ($test_values) --------------------------------------------
                Step Hypothesis    p <= Weight * Alpha Inequality_holds
                   1         H1 0.01 <=    0.5 * 0.025             TRUE
                   2         H2 0.01 <=    0.5 * 0.025             TRUE
@@ -755,7 +755,7 @@
 
     Code
       print(graph_test_shortcut(complex_example_1(), 5:0 / 200, verbose = TRUE,
-      critical = TRUE))
+      test_values = TRUE))
     Output
       
       Test parameters ($inputs) ------------------------------------------------------
@@ -814,7 +814,7 @@
         H5 NA NA NA NA NA NA
         H6 NA NA NA NA NA NA
       
-      Test details - Rejection sequence ($details) -----------------------------------
+      Rejection sequence details ($details) ------------------------------------------
         Initial graph
       
         --- Hypothesis weights ---
@@ -936,7 +936,7 @@
         H5 NA NA NA NA NA NA
         H6 NA NA NA NA NA NA
       
-      Test details - Adjusted weights ($critical) ------------------------------------
+      Detailed test values ($test_values) --------------------------------------------
         Step Hypothesis     p <=   Weight * Alpha Inequality_holds
            1         H4 0.010 <= 0.500000 * 0.025             TRUE
            2         H6 0.000 <= 0.250000 * 0.025             TRUE

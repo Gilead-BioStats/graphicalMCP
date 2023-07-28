@@ -4,7 +4,7 @@ graph_test_shortcut <- function(graph,
                                 p,
                                 alpha = .025,
                                 verbose = FALSE,
-                                critical = FALSE) {
+                                test_values = FALSE) {
   # Input validation -----------------------------------------------------------
   test_input_val(
     graph,
@@ -14,7 +14,7 @@ graph_test_shortcut <- function(graph,
     test_types = "bonferroni",
     corr = NULL,
     verbose = verbose,
-    critical = critical
+    test_values = test_values
   )
 
   initial_graph <- graph
@@ -113,15 +113,15 @@ graph_test_shortcut <- function(graph,
   }
 
   # Adjusted weight details ----------------------------------------------------
-  if (critical) {
+  if (test_values) {
     # Record the final graph after all rejected hypotheses have been deleted
     graph_after_rejections <-
       graph_update(initial_graph, !rejected)$updated_graph
 
-    df_critical <- NULL
+    df_test_values <- NULL
 
-    critical_keep <- rep(TRUE, num_hyps)
-    names(critical_keep) <- hyp_names
+    test_values_keep <- rep(TRUE, num_hyps)
+    names(test_values_keep) <- hyp_names
 
     step_graph <- initial_graph
     step_num <- 1
@@ -132,34 +132,33 @@ graph_test_shortcut <- function(graph,
     # graph with all rejected hypotheses deleted.
     for (i in seq_along(hyps_deleted_sequence)) {
       # Follow the same hypothesis order as adjusted p-values
-      hyp_name_for_critical <- hyps_deleted_sequence[[i]]
+      hyp_name_for_test_values <- hyps_deleted_sequence[[i]]
 
       # Record adjusted weights
-      critical_step <- bonferroni_test_vals(
-        p[hyp_name_for_critical],
-        step_graph$hypotheses[hyp_name_for_critical],
+      test_values_step <- bonferroni_test_values(
+        p[hyp_name_for_test_values],
+        step_graph$hypotheses[hyp_name_for_test_values],
         alpha
       )
 
-      # Normally the first column of `*_test_vals()` is an intersection counter.
+      # Normally the first column of `*_test_values()` is an intersection counter.
       # Since shortcut testing doesn't track intersections, re-purpose that
       # column as a step counter. Steps count up one at a time for each
       # hypothesis rejected, then switch to NA for non-rejected hypotheses (i.e.
       # "These rows represent steps that are not taken by the shortcut rejection
       # algorithm")
-      names(critical_step)[[1]] <- "Step"
-      critical_step$Step <- step_num
-      critical_step[c("Test", "c_value", "*")] <- NULL
+      names(test_values_step)[[1]] <- "Step"
+      test_values_step$Step <- step_num
+      test_values_step[c("Test", "c_value", "*")] <- NULL
 
-      df_critical <- rbind(df_critical, critical_step)
+      df_test_values <- rbind(df_test_values, test_values_step)
 
-      hyp_name_for_critical_is_rejected <- rejected[hyp_name_for_critical]
-      if (hyp_name_for_critical_is_rejected) {
+      if (rejected[hyp_name_for_test_values]) {
         step_num <- step_num + 1
 
         step_graph <- graph_update(
           step_graph,
-          !hyp_names == hyp_name_for_critical
+          !hyp_names == hyp_name_for_test_values
         )$updated_graph
       } else {
         step_graph <- graph_after_rejections
@@ -170,7 +169,7 @@ graph_test_shortcut <- function(graph,
   # Build the report -----------------------------------------------------------
   # The core output of a test report is the adjusted p-values, rejection
   # decisions, and resulting graph after deleting all rejected hypotheses.
-  # Inputs are recorded as well. Details about adjusted p-values and critical
+  # Inputs are recorded as well. Details about adjusted p-values and test
   # values are optionally available.
   structure(
     list(
@@ -188,7 +187,7 @@ graph_test_shortcut <- function(graph,
         graph = graph_update(initial_graph, !rejected)$updated_graph
       ),
       details = if (verbose) details,
-      critical = if (critical) list(results = df_critical)
+      test_values = if (test_values) list(results = df_test_values)
     ),
     class = "graph_report"
   )

@@ -170,22 +170,19 @@ graph_calculate_power <- function(graph,
   if (all(test_types == "bonferroni") && !force_closure) {
     weighting_strategy <- graph_generate_weights(graph)
     # matrix_intersections <- weighting_strategy[, seq_len(num_hyps)]
-    critical_values <-
+    adjusted_weights <-
       weighting_strategy[, seq_len(num_hyps) + num_hyps, drop = FALSE] * alpha
 
-    nrow_critical <- nrow(critical_values)
+    nrow_weights <- nrow(adjusted_weights)
     bin_slots <- 2^(num_hyps:1 - 1)
-
-    # weights_names <- apply(matrix_intersections, 1, paste, collapse = "")
-    # rownames(critical_values) <- weights_names
 
     for (row in seq_len(sim_n)) {
       simulation_test_results[row, ] <- graph_test_shortcut_fast(
         p_sim[row, ],
-        critical_values,
+        adjusted_weights,
         num_hyps,
         bin_slots,
-        nrow_critical
+        nrow_weights
       )
     }
 
@@ -205,7 +202,7 @@ graph_calculate_power <- function(graph,
     groups_bonferroni <- test_groups[test_types == "bonferroni", drop = FALSE]
 
     # Bonferroni adjusted weights are just the weights from the closure
-    critical_values_bonferroni <-
+    adjusted_weights_bonferroni <-
       weighting_strategy_compact[, unlist(groups_bonferroni), drop = FALSE]
 
     # Calculate parametric adjusted weights ------------------------------------
@@ -214,7 +211,7 @@ graph_calculate_power <- function(graph,
     # Parametric adjusted weights depend only on the joint distribution and
     # alpha. This allows adjusted weights to be calculated once, rather than
     # re-calculating for each simulation
-    critical_values_parametric <- calculate_critical_parametric(
+    adjusted_weights_parametric <- adjust_weights_parametric(
       weighting_strategy_compact,
       test_corr,
       alpha,
@@ -230,7 +227,7 @@ graph_calculate_power <- function(graph,
       weighting_strategy_compact[, unlist(groups_simes), drop = FALSE]
 
     weighting_strategy_simes[is.na(weighting_strategy_simes)] <- 0
-    critical_values_simes <- weighting_strategy_simes
+    adjusted_weights_simes <- weighting_strategy_simes
 
     # Unlike Bonferroni and parametric adjusted weights, Simes adjusted weights
     # depend on the order of p-values. This means they must be re-calculated for
@@ -257,11 +254,11 @@ graph_calculate_power <- function(graph,
       # If there are no Simes groups, adjusted weights are the Simes weighting
       # strategy (a matrix with 0 columns)
       if (length(groups_simes) == 0) {
-        critical_values_simes <- weighting_strategy_simes
+        adjusted_weights_simes <- weighting_strategy_simes
       } else {
         # Simes testing depends on p-values, so adjusted weights must be
         # calculated for each simulation.
-        critical_values_simes <- calculate_critical_simes(
+        adjusted_weights_simes <- adjust_weights_simes(
           weighting_strategy_simes,
           p_sim_simes[row, ],
           groups_simes_reduce
@@ -278,22 +275,22 @@ graph_calculate_power <- function(graph,
       # intersections matrix to all have hypotheses/columns in the same order.
       # P-values and the intersections matrix are already in the original order,
       # so order the adjusted weights back in original hypothesis order.
-      critical_values_all <- cbind(
-        critical_values_bonferroni,
-        critical_values_simes,
-        critical_values_parametric
+      adjusted_weights_all <- cbind(
+        adjusted_weights_bonferroni,
+        adjusted_weights_simes,
+        adjusted_weights_parametric
       )[, hyp_names, drop = FALSE]
 
       # Similar to Simes adjusted weights, the optimized testing function
       # requires missing values to be replaced by zero. This line also replaces
       # the incorrect Simes adjusted weights with zero.
-      critical_values_all[!matrix_intersections] <- 0
+      adjusted_weights_all[!matrix_intersections] <- 0
 
       # Record test results for one simulation, all groups
       simulation_test_results[row, ] <- graph_test_closure_fast(
         p_sim[row, ],
         alpha,
-        critical_values_all,
+        adjusted_weights_all,
         matrix_intersections
       )
     }

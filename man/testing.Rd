@@ -13,10 +13,16 @@ graph_test_closure(
   test_types = c("bonferroni"),
   corr = NULL,
   verbose = FALSE,
-  critical = FALSE
+  test_values = FALSE
 )
 
-graph_test_shortcut(graph, p, alpha = 0.025, verbose = FALSE, critical = FALSE)
+graph_test_shortcut(
+  graph,
+  p,
+  alpha = 0.025,
+  verbose = FALSE,
+  test_values = FALSE
+)
 }
 \arguments{
 \item{graph}{An initial graph as returned by \code{\link[=graph_create]{graph_create()}}}
@@ -37,19 +43,19 @@ test statistics}
 \item{verbose}{A logical scalar specifying whether the results for each
 intersection hypothesis should be included}
 
-\item{critical}{A logical scalar specifying whether hypothesis-level detail
+\item{test_values}{A logical scalar specifying whether hypothesis-level detail
 should be included in the results, including calculating adjusted weights
 for parametric tests}
 }
 \value{
 A \code{graph_report} object, a list of 4 elements: \code{inputs}, \code{outputs},
-\code{details}, and \code{critical}
+\code{details}, and \code{test_values}
 \itemize{
 \item Inputs - A list of the input parameters used to run the test
 \item Outputs - A list of global test results
 \item Details - A matrix with detailed adjusted p-value results (graph deletion
 sequence for shortcut testing)
-\item Critical - A data frame with hypothesis-level test details for each
+\item Test values - A data frame with hypothesis-level test details for each
 intersection (each step for shortcut testing)
 }
 }

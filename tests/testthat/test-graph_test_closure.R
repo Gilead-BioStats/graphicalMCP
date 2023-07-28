@@ -14,7 +14,7 @@ meta_test_graph <- function(...) {
       c(NA, NA, 0, 1)
     ),
     verbose = TRUE,
-    critical = TRUE
+    test_values = TRUE
   )
 
   if (length(args) > 0) {
@@ -51,7 +51,7 @@ test_that("invalid test inputs throw errors", {
 
   verbose_inval <- c(TRUE, FALSE)
 
-  critical_inval <- 1
+  test_values_inval <- 1
 
   corr_inval1 <- rbind(
     c(NA, NA, NA, NA),
@@ -87,7 +87,7 @@ test_that("invalid test inputs throw errors", {
   )
   expect_error(meta_test_graph(groups = groups_inval3))
   expect_error(meta_test_graph(verbose = verbose_inval))
-  expect_error(meta_test_graph(critical = critical_inval))
+  expect_error(meta_test_graph(test_values = test_values_inval))
   expect_error(meta_test_graph(corr = corr_inval1))
   expect_error(meta_test_graph(corr = corr_inval2))
   expect_error(
@@ -133,18 +133,18 @@ test_that("Simes & parametric adjusted p-values are less than Bonferroni", {
   )
 })
 
-test_that("verbose/critical output is only present when asked for", {
+test_that("verbose/test values output is only present when asked for", {
   rando <- random_graph(6)
 
   expect_null(graph_test_closure(rando, rep(.01, 6))$details)
-  expect_null(graph_test_closure(rando, rep(.01, 6))$critical)
+  expect_null(graph_test_closure(rando, rep(.01, 6))$test_values)
 
   expect_type(
     graph_test_closure(rando, rep(.01, 6), verbose = TRUE)$details$results,
     "double"
   )
   expect_s3_class(
-    graph_test_closure(rando, rep(.01, 6), critical = TRUE)$critical$results,
+    graph_test_closure(rando, rep(.01, 6), test_values = TRUE)$test_values$results,
     "data.frame"
   )
 })
@@ -318,20 +318,20 @@ test_that("closure internal consistency", {
 
   expect_equal(
     closure_results$inputs$p,
-    closure_results$critical$results$p[seq_len(num_hyps)],
+    closure_results$test_values$results$p[seq_len(num_hyps)],
     ignore_attr = TRUE
   )
 
   expect_equal(
     closure_results$inputs$alpha,
-    closure_results$critical$results$Alpha[[1]],
+    closure_results$test_values$results$Alpha[[1]],
     ignore_attr = TRUE
   )
 
   if (requireNamespace("dplyr", quietly = TRUE)) {
-    df_critical_intersect_reject <- dplyr::mutate(
+    df_test_values_intersect_reject <- dplyr::mutate(
       dplyr::group_by(
-        tibble::as_tibble(closure_results$critical$results[-c(7, 9)]),
+        tibble::as_tibble(closure_results$test_values$results[-c(7, 9)]),
         Intersection
       ),
       Hypothesis = Hypothesis,
@@ -339,22 +339,22 @@ test_that("closure internal consistency", {
       .keep = "used"
     )
 
-    df_critical_hypothesis_reject <- dplyr::summarise(
+    df_test_values_hypothesis_reject <- dplyr::summarise(
       dplyr::group_by(
-        df_critical_intersect_reject,
+        df_test_values_intersect_reject,
         Hypothesis
       ),
       Inequality_holds = min(Inequality_holds)
     )
 
-    critical_hypothesis_reject <- !!setNames(
-      df_critical_hypothesis_reject$Inequality_holds,
-      df_critical_hypothesis_reject$Hypothesis
+    test_values_hypothesis_reject <- !!setNames(
+      df_test_values_hypothesis_reject$Inequality_holds,
+      df_test_values_hypothesis_reject$Hypothesis
     )
 
     expect_equal(
       closure_results$outputs$rejected,
-      critical_hypothesis_reject
+      test_values_hypothesis_reject
     )
   }
 })
@@ -374,7 +374,7 @@ test_that("parametric floating point errors", {
     test_types = "p",
     corr = t_corr,
     verbose = TRUE,
-    critical = TRUE
+    test_values = TRUE
   )
 
   expect_equal(
@@ -388,7 +388,7 @@ test_that("parametric floating point errors", {
   )
 
   expect_equal(
-    res_para$critical$results$Inequality_holds,
+    res_para$test_values$results$Inequality_holds,
     rep(TRUE, 12)
   )
 })

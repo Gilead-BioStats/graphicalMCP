@@ -2,7 +2,7 @@
 #'
 #' The weights created by [graph_generate_weights()] work immediately for
 #' Bonferroni testing, but parametric and Simes testing require additional
-#' calculations. The `calculate_critical_*()` functions apply parametric or
+#' calculations. The `adjust_weights_*()` functions apply parametric or
 #' Simes weight increases to get updated weights for testing. They also subset
 #' the weights columns by the appropriate groups
 #'
@@ -21,13 +21,13 @@
 #' @param x The root to solve for with [stats::uniroot()]
 #'
 #' @return Outputs:
-#' * For `calculate_critical_*()`, a matrix with the same shape as
+#' * For `adjust_weights_*()`, a matrix with the same shape as
 #'   `weighting_strategy`, where the weights have been adjusted according to the
 #'   specified adjustment method
 #' * For `c_value_function()`, the \eqn{c_{J_h}} value for the given group,
 #'   according to Formula 6 of Xi et al. (2017).
 #'
-#' @rdname critical-vals
+#' @rdname adjusted-weights
 #'
 #' @keywords internal
 #'
@@ -42,9 +42,9 @@
 #' gw_0 <- gw_large[, 7:12]
 #' gw <- ifelse(gw_large[, 1:6], gw_0, NA)
 #'
-#' graphicalMCP:::calculate_critical_parametric(gw, diag(6), .05, list(1:3))
-#' graphicalMCP:::calculate_critical_simes(gw_0, p, list(4:6))
-calculate_critical_parametric <- function(weighting_strategy,
+#' graphicalMCP:::adjust_weights_parametric(gw, diag(6), .05, list(1:3))
+#' graphicalMCP:::adjust_weights_simes(gw_0, p, list(4:6))
+adjust_weights_parametric <- function(weighting_strategy,
                                           corr,
                                           alpha,
                                           groups) {
@@ -72,30 +72,30 @@ calculate_critical_parametric <- function(weighting_strategy,
     }
   }
 
-  critical_values <- c_values * weighting_strategy
+  adjusted_weights <- c_values * weighting_strategy
 
-  critical_values[, unlist(groups), drop = FALSE]
+  adjusted_weights[, unlist(groups), drop = FALSE]
 }
 
-#' @rdname critical-vals
-calculate_critical_simes <- function(weighting_strategy, p, groups) {
+#' @rdname adjusted-weights
+adjust_weights_simes <- function(weighting_strategy, p, groups) {
   ordered_p <- order(p)
 
   weighting_strategy <- weighting_strategy[, ordered_p, drop = FALSE]
 
-  group_critical_values <- vector("list", length(groups))
+  group_adjusted_weights <- vector("list", length(groups))
 
   for (i in seq_along(groups)) {
-    group_critical_values[[i]] <- matrixStats::rowCumsums(
+    group_adjusted_weights[[i]] <- matrixStats::rowCumsums(
       weighting_strategy[, ordered_p %in% groups[[i]], drop = FALSE],
       useNames = TRUE
     )
   }
 
-  do.call(cbind, group_critical_values)
+  do.call(cbind, group_adjusted_weights)
 }
 
-#' @rdname critical-vals
+#' @rdname adjusted-weights
 c_value_function <- function(x, hypotheses, corr, alpha) {
   hyps_nonzero <- which(hypotheses > 0)
   z <- stats::qnorm(x * hypotheses[hyps_nonzero] * alpha, lower.tail = FALSE)
@@ -113,7 +113,7 @@ c_value_function <- function(x, hypotheses, corr, alpha) {
   y - alpha * sum(hypotheses)
 }
 
-#' @rdname critical-vals
+#' @rdname adjusted-weights
 solve_c_parametric <- function(hypotheses, corr, alpha) {
   num_hyps <- seq_along(hypotheses)
   c_value <- ifelse(

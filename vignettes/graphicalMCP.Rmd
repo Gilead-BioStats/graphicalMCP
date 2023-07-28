@@ -80,9 +80,9 @@ graph_test_closure(
 )
 ```
 
-The adjusted weight method tests every hypothesis in the closure. Setting `critical = TRUE` displays the values used in each of these tests. This can provide more detailed information about what caused a hypothesis to fail than the adjusted p-values. However, it comes with some cost in computation time.
+The adjusted weight method tests every hypothesis in the closure. Setting `test_values = TRUE` displays the values used in each of these tests. This can provide more detailed information about what caused a hypothesis to fail than the adjusted p-values. However, it comes with some cost in computation time.
 
-```{r critical}
+```{r test_values}
 graph_test_closure(
   ss_graph,
   p = pvals,
@@ -91,14 +91,14 @@ graph_test_closure(
   groups = list(1:2, 3:4),
   test_types = c("s", "p"),
   verbose = TRUE,
-  critical = TRUE
+  test_values = TRUE
 )
 ```
 
-When using only Bonferroni testing, there is a shortcut in testing which allows us to not test the full closure of a graph. Use [graph_test_shortcut()] to call this shortcut method. In this case, `critical = TRUE` instead gives information about the order in which hypotheses are deleted. Note that the `res` column of the critical output here tells **what would have happened if sequential testing reached a given point**. However, sequential testing stops at the first non-rejected hypothesis. Global rejection results can be found in the `Global test summary` section.
+When using only Bonferroni testing, there is a shortcut in testing which allows us to not test the full closure of a graph. Use [graph_test_shortcut()] to call this shortcut method. In this case, `test_values = TRUE` instead gives information about the order in which hypotheses are deleted. Note that the `res` column of the test values output here tells **what would have happened if sequential testing reached a given point**. However, sequential testing stops at the first non-rejected hypothesis. Global rejection results can be found in the `Global test summary` section.
 
 ```{r sequential}
-graph_test_shortcut(ss_graph, p = pvals, alpha = .05, critical = TRUE)
+graph_test_shortcut(ss_graph, p = pvals, alpha = .05, test_values = TRUE)
 ```
 
 ## Print options
@@ -128,7 +128,7 @@ mix_test <- graph_test_closure(
   groups = list(1, 2:3, 4:5),
   test_types = c("b", "s", "p"),
   verbose = TRUE,
-  critical = TRUE
+  test_values = TRUE
 )
 
 print(mix_test)

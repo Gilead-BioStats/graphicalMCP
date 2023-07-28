@@ -365,15 +365,15 @@ graph_test_closure(
   test_types = c("p", "s", "s"),
   corr = t_corr,
   verbose = TRUE,
-  critical = TRUE
+  test_values = TRUE
 )
 ```
 
-Re-run any of the tests above with `verbose = TRUE` or `critical = TRUE` to get more granular insight into each rejection determination.
+Re-run any of the tests above with `verbose = TRUE` or `test_values = TRUE` to get more granular insight into each rejection determination.
 
 # Conclusion
 
-The {graphicalMCP} package can help design a study for new therapeutic treatments. Several different testing designs are supported, and power calculations can be used to understand the potential study result space in an efficient way. The testing functions can be used to test study results, and the verbose/critical output gives rich information about why a hypothesis was rejected or not.
+The {graphicalMCP} package can help design a study for new therapeutic treatments. Several different testing designs are supported, and power calculations can be used to understand the potential study result space in an efficient way. The testing functions can be used to test study results, and the verbose/test values output gives rich information about why a hypothesis was rejected or not.
 
 # Slides
 
@@ -387,7 +387,7 @@ graph_test_shortcut(
   p = c(.0123, .0132, .026, .007, .012, .012),
   alpha = .025,
   verbose = TRUE,
-  critical = TRUE
+  test_values = TRUE
 )
 ```
 
@@ -423,7 +423,7 @@ graph_test_closure(
     c(NA, NA, NA, NA, rho_com_end, 1)
   ),
   verbose = TRUE,
-  critical = TRUE
+  test_values = TRUE
 )
 ```
 

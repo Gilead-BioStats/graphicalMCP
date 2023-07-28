@@ -17,17 +17,17 @@
 #'   test statistics
 #' @param verbose A logical scalar specifying whether the results for each
 #'   intersection hypothesis should be included
-#' @param critical A logical scalar specifying whether hypothesis-level detail
+#' @param test_values A logical scalar specifying whether hypothesis-level detail
 #'   should be included in the results, including calculating adjusted weights
 #'   for parametric tests
 #'
 #' @return A `graph_report` object, a list of 4 elements: `inputs`, `outputs`,
-#'   `details`, and `critical`
+#'   `details`, and `test_values`
 #'   * Inputs - A list of the input parameters used to run the test
 #'   * Outputs - A list of global test results
 #'   * Details - A matrix with detailed adjusted p-value results (graph deletion
 #'     sequence for shortcut testing)
-#'   * Critical - A data frame with hypothesis-level test details for each
+#'   * Test values - A data frame with hypothesis-level test details for each
 #'   intersection (each step for shortcut testing)
 #'
 #' @rdname testing
@@ -75,7 +75,7 @@ graph_test_closure <- function(graph,
                                test_types = c("bonferroni"),
                                corr = NULL,
                                verbose = FALSE,
-                               critical = FALSE) {
+                               test_values = FALSE) {
   # Input validation & sanitization --------------------------------------------
   # Test types should be specified as full names or first initial,
   # case-insensitive. A single provided test type should be applied to all
@@ -91,7 +91,7 @@ graph_test_closure <- function(graph,
   test_types <- test_opts[tolower(test_types)]
   if (length(test_types) == 1) test_types <- rep(test_types, length(groups))
 
-  test_input_val(graph, p, alpha, groups, test_types, corr, verbose, critical)
+  test_input_val(graph, p, alpha, groups, test_types, corr, verbose, test_values)
 
   num_hyps <- length(graph$hypotheses)
   num_groups <- length(groups)
@@ -188,13 +188,13 @@ graph_test_closure <- function(graph,
   )
 
   # Adjusted weight details ----------------------------------------------------
-  if (critical) {
+  if (test_values) {
     # Adjusted weights are recorded in a dataframe, which doesn't store in a
-    # matrix. So for the critical loops, each group's adjusted weight dataframe
-    # is stored in a list. These are the initialized list and counter for
-    # indexing into it.
-    critical_index <- 1
-    critical_list <- vector("list", num_intersections * num_groups)
+    # matrix. So for the test values loops, each group's adjusted weight
+    # dataframe is stored in a list. These are the initialized list and counter
+    # for indexing into it.
+    test_values_index <- 1
+    test_values_list <- vector("list", num_intersections * num_groups)
 
     # adjusted weights are calculated for each group in each intersection of the
     # closure
@@ -217,21 +217,21 @@ graph_test_closure <- function(graph,
         # output is a dataframe containing adjusted weight test information at
         # the hypothesis/operand level.
         if (test == "bonferroni") {
-          critical_list[[critical_index]] <- bonferroni_test_vals(
+          test_values_list[[test_values_index]] <- bonferroni_test_values(
             p[group_by_intersection],
             vec_weights[group_by_intersection],
             alpha,
             intersection_index
           )
         } else if (test == "simes") {
-          critical_list[[critical_index]] <- simes_test_vals(
+          test_values_list[[test_values_index]] <- simes_test_values(
             p[group_by_intersection],
             vec_weights[group_by_intersection],
             alpha,
             intersection_index
           )
         } else if (test == "parametric") {
-          critical_list[[critical_index]] <- parametric_test_vals(
+          test_values_list[[test_values_index]] <- parametric_test_values(
             p[group_by_intersection],
             vec_weights[group_by_intersection],
             alpha,
@@ -242,23 +242,23 @@ graph_test_closure <- function(graph,
           stop(paste(test, "testing is not supported at this time"))
         }
 
-        critical_index <- critical_index + 1
+        test_values_index <- test_values_index + 1
       }
     }
 
-    df_critical_results <- do.call(rbind, critical_list)
+    df_test_values <- do.call(rbind, test_values_list)
 
     # "c" value is only used in parametric testing, so there's no need to
     # include this column when there are no parametric groups
     if (!any(test_types == "parametric")) {
-      df_critical_results[c("c_value", "*")] <- NULL
+      df_test_values[c("c_value", "*")] <- NULL
     }
   }
 
   # Build the report -----------------------------------------------------------
   # The core output of a test report is the adjusted p-values, rejection
   # decisions, and resulting graph after deleting all rejected hypotheses.
-  # Inputs are recorded as well. Details about adjusted p-values and critical
+  # Inputs are recorded as well. Details about adjusted p-values and test
   # values are optionally available.
   structure(
     list(
@@ -276,7 +276,7 @@ graph_test_closure <- function(graph,
         graph = graph_update(graph, !reject_hypothesis)$updated_graph
       ),
       details = if (verbose) detail_results,
-      critical = if (critical) list(results = df_critical_results)
+      test_values = if (test_values) list(results = df_test_values)
     ),
     class = "graph_report"
   )

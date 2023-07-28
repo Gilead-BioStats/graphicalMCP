@@ -13,7 +13,7 @@
 #'   to include in numeric values
 #' @param indent An integer scalar indicating how many spaces to indent results
 #' @param rows An integer scalar indicating how many rows of verbose and
-#'   critical output to print
+#'   test values output to print
 #'
 #' @export
 print.graph_report <- function(x, ..., precision = 6, indent = 2, rows = 10) {
@@ -130,7 +130,7 @@ print.graph_report <- function(x, ..., precision = 6, indent = 2, rows = 10) {
       max_print_old <- getOption("max.print")
       options(max.print = 99999)
 
-      section_break("Test details - Adjusted p ($details)")
+      section_break("Adjusted p details ($details)")
       detail_results_out <- utils::capture.output(
         print(utils::head(df_details, rows), row.names = FALSE)
       )
@@ -147,7 +147,7 @@ print.graph_report <- function(x, ..., precision = 6, indent = 2, rows = 10) {
       graph_seq <- x$details$results
       del_seq <- x$details$del_seq
 
-      section_break("Test details - Rejection sequence ($details)")
+      section_break("Rejection sequence details ($details)")
       for (i in seq_along(graph_seq) - 1) {
         if (i == 0) {
           print(graph_seq[[i + 1]], precision = precision, indent = indent)
@@ -188,9 +188,9 @@ print.graph_report <- function(x, ..., precision = 6, indent = 2, rows = 10) {
     }
   }
 
-  # Critical details -----------------------------------------------------------
-  if (!is.null(x$critical)) {
-    section_break("Test details - Adjusted weights ($critical)")
+  # Test values details --------------------------------------------------------
+  if (!is.null(x$test_values)) {
+    section_break("Detailed test values ($test_values)")
 
     if (any(x$inputs$test_types == "parametric")) {
       num_cols <- c("p", "c_value", "Weight", "Alpha")
@@ -198,7 +198,7 @@ print.graph_report <- function(x, ..., precision = 6, indent = 2, rows = 10) {
       num_cols <- c("p", "Weight", "Alpha")
     }
 
-    crit_res <- x$critical$results
+    crit_res <- x$test_values$results
     crit_res[num_cols] <- apply(
       crit_res[num_cols],
       2,
@@ -217,10 +217,10 @@ print.graph_report <- function(x, ..., precision = 6, indent = 2, rows = 10) {
     max_print_old <- getOption("max.print")
     options(max.print = 99999)
 
-    critical_results_out <- utils::capture.output(
+    test_values_results_out <- utils::capture.output(
       print(utils::head(crit_res, rows), row.names = FALSE)
     )
-    cat(paste0(pad_less_1, critical_results_out), sep = "\n")
+    cat(paste0(pad_less_1, test_values_results_out), sep = "\n")
 
     options(max.print = max_print_old)
 

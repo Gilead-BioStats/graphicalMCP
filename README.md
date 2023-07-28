@@ -408,7 +408,7 @@ graph_test_closure(
 ```
 
 Simes and parametric testing methods are also supported, using the
-`test_types` argument. Try setting the `verbose` and `critical` flags
+`test_types` argument. Try setting the `verbose` and `test_values` flags
 for a more detailed report on testing.
 
 ``` r
@@ -425,7 +425,7 @@ graph_test_closure(
     c(NA, NA, NA, NA)
   ),
   verbose = TRUE,
-  critical = TRUE
+  test_values = TRUE
 )
 #> 
 #> Test parameters ($inputs) ------------------------------------------------------
@@ -479,7 +479,7 @@ graph_test_closure(
 #>   B1 NA NA NA NA
 #>   B2 NA NA NA NA
 #> 
-#> Test details - Adjusted p ($details) -------------------------------------------
+#> Adjusted p details ($details) --------------------------------------------------
 #>   Intersection        A1        A2        B1        B2 adj_p_grp1 adj_p_grp2
 #>              1 0.5000000 0.5000000 0.0000000 0.0000000  0.0187061  1.0000000
 #>              2 0.5000000 0.5000000 0.0000000        NA  0.0187061  1.0000000
@@ -491,31 +491,42 @@ graph_test_closure(
 #>              8 1.0000000        NA        NA        NA  0.0100000  1.0000000
 #>              9        NA 0.5000000 0.5000000 0.0000000  0.0400000  0.0600000
 #>             10        NA 0.5000000 0.5000000        NA  0.0400000  0.0600000
-#>   adj_p_inter reject
-#>     0.0187061   TRUE
-#>     0.0187061   TRUE
-#>     0.0187061   TRUE
-#>     0.0187061   TRUE
-#>     0.0200000   TRUE
-#>     0.0100000   TRUE
-#>     0.0200000   TRUE
-#>     0.0100000   TRUE
-#>     0.0400000   TRUE
-#>     0.0400000   TRUE
+#>   adj_p_inter reject_intersection
+#>     0.0187061                TRUE
+#>     0.0187061                TRUE
+#>     0.0187061                TRUE
+#>     0.0187061                TRUE
+#>     0.0200000                TRUE
+#>     0.0100000                TRUE
+#>     0.0200000                TRUE
+#>     0.0100000                TRUE
+#>     0.0400000                TRUE
+#>     0.0400000                TRUE
 #>   ... (Use `print(x, rows = <nn>)` for more)
 #> 
-#> Test details - Critical values ($critical) -------------------------------------
-#>   Intersection Hypothesis       Test    p <= c_value * Weight * Alpha Reject
-#>              1         A1 parametric 0.01 <= 1.10646 *    0.5 *  0.05   TRUE
-#>              1         A2 parametric 0.02 <= 1.10646 *    0.5 *  0.05   TRUE
-#>              1         B1      simes 0.03 <=      NA      0.0 *  0.05  FALSE
-#>              1         B2      simes 0.05 <=      NA      0.0 *  0.05  FALSE
-#>              2         A1 parametric 0.01 <= 1.10646 *    0.5 *  0.05   TRUE
-#>              2         A2 parametric 0.02 <= 1.10646 *    0.5 *  0.05   TRUE
-#>              2         B1      simes 0.03 <=      NA      0.0 *  0.05  FALSE
-#>              3         A1 parametric 0.01 <= 1.10646 *    0.5 *  0.05   TRUE
-#>              3         A2 parametric 0.02 <= 1.10646 *    0.5 *  0.05   TRUE
-#>              3         B2      simes 0.05 <=      NA      0.0 *  0.05  FALSE
+#> Detailed test values ($test_values) --------------------------------------------
+#>   Intersection Hypothesis       Test    p <= c_value * Weight * Alpha
+#>              1         A1 parametric 0.01 <= 1.10646 *    0.5 *  0.05
+#>              1         A2 parametric 0.02 <= 1.10646 *    0.5 *  0.05
+#>              1         B1      simes 0.03 <=              0.0 *  0.05
+#>              1         B2      simes 0.05 <=              0.0 *  0.05
+#>              2         A1 parametric 0.01 <= 1.10646 *    0.5 *  0.05
+#>              2         A2 parametric 0.02 <= 1.10646 *    0.5 *  0.05
+#>              2         B1      simes 0.03 <=              0.0 *  0.05
+#>              3         A1 parametric 0.01 <= 1.10646 *    0.5 *  0.05
+#>              3         A2 parametric 0.02 <= 1.10646 *    0.5 *  0.05
+#>              3         B2      simes 0.05 <=              0.0 *  0.05
+#>   Inequality_holds
+#>               TRUE
+#>               TRUE
+#>              FALSE
+#>              FALSE
+#>               TRUE
+#>               TRUE
+#>              FALSE
+#>               TRUE
+#>               TRUE
+#>              FALSE
 #>   ... (Use `print(x, rows = <nn>)` for more)
 ```
 
@@ -572,11 +583,11 @@ graph_calculate_power(
 #> 
 #> Power calculation ($power) -----------------------------------------------------
 #>                                    A1      A2      B1      B2
-#>                  Local power: 0.06017 0.05937 0.00344 0.00348
+#>                  Local power: 0.05814 0.06018 0.00349 0.00370
 #> 
-#>   Expected no. of rejections: 0.12646
-#>    Power to reject 1 or more: 0.11555
-#>          Power to reject all: 5e-05
+#>   Expected no. of rejections: 0.12551
+#>    Power to reject 1 or more: 0.11463
+#>          Power to reject all: 6e-05
 ```
 
 The `simple_successive_2()` function creates a parallel gate-keeping
@@ -629,11 +640,11 @@ graph_calculate_power(
 #> 
 #> Power calculation ($power) -----------------------------------------------------
 #>                                    A1      A2      B1      B2
-#>                  Local power: 0.06156 0.06015 0.00226 0.00221
+#>                  Local power: 0.05990 0.06075 0.00227 0.00224
 #> 
-#>   Expected no. of rejections: 0.12618
-#>    Power to reject 1 or more: 0.11589
-#>          Power to reject all: 0
+#>   Expected no. of rejections: 0.12516
+#>    Power to reject 1 or more: 0.11467
+#>          Power to reject all: 4e-05
 ```
 
 ### Other tests
@@ -695,11 +706,11 @@ graph_calculate_power(
 #> 
 #> Power calculation ($power) -----------------------------------------------------
 #>                                    A1      A2      B1      B2
-#>                  Local power: 0.06027 0.06068 0.00227 0.00228
+#>                  Local power: 0.06178 0.06121 0.00217 0.00231
 #> 
-#>   Expected no. of rejections: 0.1255
-#>    Power to reject 1 or more: 0.11443
-#>          Power to reject all: 2e-05
+#>   Expected no. of rejections: 0.12747
+#>    Power to reject 1 or more: 0.1161
+#>          Power to reject all: 5e-05
 ```
 
 ## Related work
