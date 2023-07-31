@@ -321,7 +321,7 @@ df_benchmarks_seqtest %>%
 ```{r df-benchmarks-power-shortcut, fig.width=7, fig.height=5, warning=FALSE}
 set.seed(7523)
 
-sizes <- seq(2, 16, by = 2)
+sizes <- seq(4, 20, by = 4)
 sims <- 2^17
 
 if (file.exists(here("vignettes/data/df_benchmarks_power_shortcut.rds"))) {
@@ -369,7 +369,8 @@ if (file.exists(here("vignettes/data/df_benchmarks_power_shortcut.rds"))) {
           ),
         check = FALSE,
         min_iterations = 3,
-        time_unit = "s"
+        time_unit = "s",
+        memory = FALSE
       )
 
       speed_comp$size <- size
@@ -406,7 +407,7 @@ df_benchmarks_power_shortcut %>%
 ```{r df-benchmarks-power-closure, fig.width=7, fig.height=5, warning=FALSE}
 set.seed(7523)
 
-sizes <- seq(2, 12, by = 2)
+sizes <- seq(2, 14, by = 2)
 sims <- 2^16
 
 if (file.exists(here("vignettes/data/df_benchmarks_power_closure.rds"))) {
