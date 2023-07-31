@@ -80,7 +80,7 @@
 #'   alpha = .025,
 #'   test_groups = list(1:2, 3:4),
 #'   test_types = c("s", "p"),
-#'   test_corr = diag(4),
+#'   test_corr = list(NA, diag(2)),
 #'   sim_n = 1e5,
 #'   sim_success = list(
 #'     function(.) .[1] || .[2],
@@ -93,7 +93,7 @@ graph_calculate_power <- function(graph,
                                   test_groups =
                                     list(seq_along(graph$hypotheses)),
                                   test_types = c("bonferroni"),
-                                  test_corr = NULL,
+                                  test_corr = rep(list(NA), length(test_types)),
                                   sim_n = 100,
                                   marginal_power =
                                     rep(alpha, length(graph$hypotheses)),
@@ -139,6 +139,19 @@ graph_calculate_power <- function(graph,
     FALSE,
     FALSE
   )
+
+  # Correlation matrix input is easier for end users to input as a list, but
+  # it's easier to work with internally as a full matrix, potentially with
+  # missing values. This puts all the correlation pieces into one matrix
+  new_corr <- matrix(NA, num_hyps, num_hyps)
+
+  for (group_num in seq_along(test_groups)) {
+    test_group <- test_groups[[group_num]]
+
+    new_corr[test_group, test_group] <- test_corr[[group_num]]
+  }
+  diag(new_corr) <- 1
+  test_corr <- if (any(test_types == "parametric")) new_corr else NULL
 
   power_input_val(graph, sim_n, marginal_power, sim_corr, sim_success)
 

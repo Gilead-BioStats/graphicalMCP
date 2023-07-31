@@ -453,7 +453,7 @@ if (file.exists(here("vignettes/data/df_benchmarks_power_closure.rds"))) {
           graph_calculate_power(rando,
             sim_n = sims, marginal_power = marg_pow,
             sim_corr = s_corr, test_types = "parametric",
-            test_corr = t_corr
+            test_corr = list(t_corr)
           ),
         `graphicalMCP closure Simes (R)` =
           graph_calculate_power(rando,

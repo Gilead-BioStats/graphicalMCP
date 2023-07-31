@@ -48,7 +48,7 @@ print.graph_report <- function(x, ..., precision = 6, indent = 2, rows = 10) {
     ),
   )
 
-  if (!is.null(x$inputs$corr)) {
+  if (any(x$inputs$test_types == "parametric")) {
     para_hyps <- unlist(x$inputs$groups[x$inputs$test_types == "parametric"])
     dimnames(x$inputs$corr) <- dimnames(x$inputs$graph$transitions)
     colname_pad <- format(
@@ -71,7 +71,7 @@ print.graph_report <- function(x, ..., precision = 6, indent = 2, rows = 10) {
   cat("\n\n")
   print(as.data.frame(format(p_mat, digits = precision)))
   cat("\n")
-  if (!is.null(x$inputs$corr)) {
+  if (any(x$inputs$test_types == "parametric")) {
     print(df_corr, row.names = FALSE)
     cat("\n")
   }

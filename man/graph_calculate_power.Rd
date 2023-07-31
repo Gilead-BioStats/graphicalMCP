@@ -9,7 +9,7 @@ graph_calculate_power(
   alpha = 0.025,
   test_groups = list(seq_along(graph$hypotheses)),
   test_types = c("bonferroni"),
-  test_corr = NULL,
+  test_corr = rep(list(NA), length(test_types)),
   sim_n = 100,
   marginal_power = rep(alpha, length(graph$hypotheses)),
   sim_corr = diag(length(graph$hypotheses)),
@@ -113,7 +113,7 @@ graph_calculate_power(
   alpha = .025,
   test_groups = list(1:2, 3:4),
   test_types = c("s", "p"),
-  test_corr = diag(4),
+  test_corr = list(NA, diag(2)),
   sim_n = 1e5,
   sim_success = list(
     function(.) .[1] || .[2],

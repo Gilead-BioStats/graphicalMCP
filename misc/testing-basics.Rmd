@@ -65,29 +65,23 @@ graph_test_closure(par_gate, p = pvals, alpha = .05, test_types = "s")
 If a correlation matrix for the test statistics is partially or fully known, a parametric test can be used for any subsets whose correlation matrix is fully known. Here B1 & B2 get a `c` value calculated that boosts their testing threshold slightly higher. 
 
 ```{r parametric-1}
-corr1 <- matrix(nrow = 4, ncol = 4)
-corr1[3:4, 3:4] <- .5
-diag(corr1) <- 1
-
 graph_test_closure(par_gate,
   p = pvals,
   alpha = .05,
   groups = list(1, 2, 3:4),
   test_types = c("b", "b", "p"),
-  corr = corr1
+  corr = list(NA, NA, rbind(c(1, .5), c(.5, 1)))
 )
 ```
 
  ~~The parametric test reduces to Bonferroni when there is no correlation between any test statistics.~~ (This doesn't look like it's true, actually)
 
 ```{r parametric-2}
-corr2 <- diag(4)
-
 graph_test_closure(
   par_gate,
   p = pvals,
   alpha = .05,
-  corr = diag(4),
+  corr = list(diag(4)),
   test_types = "p"
 )
 ```
@@ -95,14 +89,11 @@ graph_test_closure(
 The null case of this is when a parametric group is size 1 (Each correlation matrix is a 1x1 with value 1)
 
 ```{r parametric-3}
-corr3 <- matrix(nrow = 4, ncol = 4)
-diag(corr3) <- 1
-
 graph_test_closure(
   par_gate,
   p = pvals,
   alpha = .05,
-  corr = corr3, # Correlation matrix doesn't matter when each group is size 1
+  corr = rep(list(matrix(1, 1, 1)), 4), # Correlation matrix doesn't matter when each group is size 1
   groups = list(1, 2, 3, 4),
   test_types = rep("p", 4)
 )
@@ -115,7 +106,7 @@ graph_test_closure(
   par_gate,
   p = pvals,
   alpha = .05,
-  corr = corr1,
+  corr = list(NA, rbind(c(1, .5), c(.5, 1))),
   groups = list(1:2, 3:4),
   test_types = c("s", "p")
 )
@@ -128,7 +119,7 @@ graph_test_closure(
   par_gate,
   p = pvals,
   alpha = .05,
-  corr = corr1,
+  corr = list(NA, rbind(c(1, .5), c(.5, 1))),
   groups = list(1:2, 3:4),
   test_types = c("s", "p"),
   verbose = TRUE
@@ -142,11 +133,11 @@ graph_test_closure(
   par_gate,
   p = pvals,
   alpha = .05,
-  corr = corr1,
+  corr = list(NA, rbind(c(1, .5), c(.5, 1))),
   groups = list(1:2, 3:4),
   test_types = c("s", "p"),
   verbose = TRUE,
-  critical = TRUE
+  test_values = TRUE
 )
 ```
 
@@ -308,7 +299,7 @@ power_bench <- bench::mark(
       graph2,
       sim_n = sims,
       test_types = "p",
-      test_corr = diag(m)
+      test_corr = list(diag(m))
     ),
   min_iterations = 3,
   filter_gc = FALSE,
@@ -397,11 +388,11 @@ mix_test <- graph_test_closure(
   graph2,
   p = p,
   alpha = .05,
-  corr = sim_corr,
+  corr = list(NA, NA, diag(2)),
   groups = list(1, 2:3, 4:5),
   test_types = c("b", "s", "p"),
   verbose = TRUE,
-  critical = TRUE
+  test_values = TRUE
 )
 
 print(mix_test)

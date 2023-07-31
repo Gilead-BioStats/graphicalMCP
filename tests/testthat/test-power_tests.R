@@ -53,7 +53,7 @@ test_that("vectorized testing matches standard testing (single-group)", {
       rando,
       p,
       test_types = "p",
-      corr = diag(m)
+      corr = list(diag(m))
     )$outputs$rejected,
     ignore_attr = TRUE
   )
@@ -103,7 +103,7 @@ test_that("vectorized testing matches standard testing (multi-group)", {
       p,
       groups = list(1:2, 4:3, 5:m),
       test_types = c("b", "s", "p"),
-      corr = diag(m)
+      corr = list(NA, NA, diag(m - 4))
     )$outputs$rejected,
     ignore_attr = TRUE
   )

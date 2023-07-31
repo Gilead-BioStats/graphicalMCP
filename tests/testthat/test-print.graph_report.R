@@ -12,7 +12,12 @@ test_that("printing parametric closure test", {
   par_gate <- simple_successive_1()
 
   expect_snapshot(
-    graph_test_closure(par_gate, rep(.01, 4), test_types = "p", corr = diag(4))
+    graph_test_closure(
+      par_gate,
+      rep(.01, 4),
+      test_types = "p",
+      corr = list(diag(4))
+    )
   )
 
   expect_snapshot(
@@ -21,7 +26,7 @@ test_that("printing parametric closure test", {
       rep(.01, 4),
       groups = list(1:2, 3:4),
       test_types = c("p", "s"),
-      corr = diag(4),
+      corr = list(diag(2), NA),
       test_values = TRUE,
       verbose = TRUE
     )
@@ -33,7 +38,7 @@ test_that("printing parametric closure test", {
       rep(.01, 4),
       groups = list(1:2, 3:4),
       test_types = c("p", "p"),
-      corr = diag(4),
+      corr = list(diag(2), diag(2)),
       test_values = TRUE,
       verbose = TRUE
     )

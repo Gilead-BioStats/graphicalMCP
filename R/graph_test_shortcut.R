@@ -12,7 +12,7 @@ graph_test_shortcut <- function(graph,
     alpha,
     groups = list(seq_along(graph$hypotheses)),
     test_types = "bonferroni",
-    corr = NULL,
+    corr = list(NA),
     verbose = verbose,
     test_values = test_values
   )

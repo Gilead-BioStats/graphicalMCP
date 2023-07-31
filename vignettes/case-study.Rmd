@@ -83,14 +83,7 @@ We can take advantage of the correlation between doses by testing the primary hy
 ```{r test-corr}
 rho_com_end <- .5
 
-t_corr <- rbind(
-  c(1, rho_com_end, NA, NA, NA, NA),
-  c(rho_com_end, 1, NA, NA, NA, NA),
-  c(NA, NA, 1, rho_com_end, NA, NA),
-  c(NA, NA, rho_com_end, 1, NA, NA),
-  c(NA, NA, NA, NA, 1, rho_com_end),
-  c(NA, NA, NA, NA, rho_com_end, 1)
-)
+t_corr <- rep(list(rbind(c(1, rho_com_end), c(rho_com_end, 1))), 3)
 ```
 
 Using testing methods other than Bonferroni adds power to reject more hypotheses as a result of these other methods being less conservative in controlling the Type-I error rate, but they comes with a speed cost. This is barely noticeable for a single test, but it does slow things down for power calculations. [link to speed vignette, if we keep it around]
@@ -350,7 +343,7 @@ graph_test_closure(
   alpha = .025,
   groups = list(1:2, 3:6),
   test_types = c("p", "b"),
-  corr = t_corr
+  corr = list(t_corr[[1]], NA)
 )
 ```
 
@@ -392,14 +385,7 @@ graph_test_shortcut(
 ```
 
 ```{r pres-examples-2}
-t_corr <- rbind(
-  c(1, rho_com_end, NA, NA, NA, NA),
-  c(rho_com_end, 1, NA, NA, NA, NA),
-  c(NA, NA, 1, rho_com_end, NA, NA),
-  c(NA, NA, rho_com_end, 1, NA, NA),
-  c(NA, NA, NA, NA, 1, rho_com_end),
-  c(NA, NA, NA, NA, rho_com_end, 1)
-)
+t_corr <- rep(list(rbind(c(1, rho_com_end), c(rho_com_end, 1))), 3)
 
 graph_test_closure(
   graph = example_.5_.5,
@@ -416,14 +402,7 @@ graph_test_closure(
     list(1:2, c(3, 5), c(4, 6)),
   test_types =
     c("parametric", "simes", "simes"),
-  corr = rbind(
-    c(1, rho_com_end, NA, NA, NA, NA),
-    c(rho_com_end, 1, NA, NA, NA, NA),
-    c(NA, NA, 1, rho_com_end, NA, NA),
-    c(NA, NA, rho_com_end, 1, NA, NA),
-    c(NA, NA, NA, NA, 1, rho_com_end),
-    c(NA, NA, NA, NA, rho_com_end, 1)
-  ),
+  corr = t_corr,
   verbose = TRUE,
   test_values = TRUE
 )

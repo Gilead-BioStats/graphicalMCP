@@ -45,15 +45,15 @@ test_that("power results are identical under a given seed", {
     graph_calculate_power(
       rando,
       test_types = "p",
-      test_corr = diag(2),
-      sim_n = 1e5,
+      test_corr = list(diag(2)),
+      sim_n = 1e4,
       sim_seed = 42823
     ),
     graph_calculate_power(
       rando,
       test_types = "p",
-      test_corr = diag(2),
-      sim_n = 1e5,
+      test_corr = list(diag(2)),
+      sim_n = 1e4,
       sim_seed = 42823
     )
   )
@@ -99,7 +99,7 @@ test_that("multi-group/multi-test type runs without error", {
       random_graph(4),
       test_groups = list(c(3, 1), c(2, 4)),
       test_types = "p",
-      test_corr = diag(4)
+      test_corr = list(diag(2), diag(2))
     )
   )
 })
@@ -110,6 +110,7 @@ test_that("complex example runs without error", {
   t_corr <- matrix(abs(stats::rWishart(1, 9, diag(9))), 9, 9)
   t_corr <- t_corr / max(t_corr)
   diag(t_corr) <- 1
+  t_corr_para <- t_corr[c(1, 4, 7), c(1, 4, 7)]
 
   expect_no_error(
     graph_calculate_power(
@@ -117,7 +118,7 @@ test_that("complex example runs without error", {
       alpha = .025,
       test_groups = list(c(1, 4, 7), 2:3, 5:6, 8:9),
       test_types = c("p", "s", "s", "s"),
-      test_corr = t_corr,
+      test_corr = list(t_corr_para, NA, NA, NA),
       sim_n = 1e4,
       marginal_power = runif(9, min = 0, max = 1),
       sim_corr = diag(9),

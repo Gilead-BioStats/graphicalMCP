@@ -15,6 +15,9 @@ test_input_val <- function(graph,
     s = "simes"
   )
 
+  corr_is_matrix_list <- is.list(corr) &&
+    all(vapply(corr, function(elt) is.matrix(elt) || is.na(elt), logical(1)))
+
   stopifnot(
     "Please test an `initial_graph` object" = class(graph) == "initial_graph",
     "P-values must be numeric" = is.numeric(p),
@@ -28,8 +31,10 @@ test_input_val <- function(graph,
     "Please include each hypothesis in exactly one group" =
       setequal(seq_along(graph$hypotheses), unlist(groups)) &&
         length(graph$hypotheses) == length(unlist(groups)),
-    "Number of test types should match the number of test groups" =
-      length(test_types) == length(groups),
+    "Correlation matrix should be a list of matrices or missing values" =
+      corr_is_matrix_list,
+    "Number of test types, groups, and correlation matrices should match" =
+      unique(length(test_types), length(groups)) == length(corr),
     "Length of p-values & groups must match the number of hypotheses" =
       unique(length(p), length(unlist(groups))) == length(graph$hypotheses),
     "Verbose flag must be a length one logical" =
@@ -38,36 +43,27 @@ test_input_val <- function(graph,
       is.logical(test_values) && length(test_values) == 1
   )
 
+  # Additional correlation matrix checks ---------------------------------------
+  corr_parametric <- corr[test_types == "parametric"]
+
   missing_corr <- any(
-    vapply(
-      seq_along(test_types),
-      function(i) {
-        if (test_types[[i]] == "parametric") {
-          group <- groups[[i]]
-          missing <- any(is.na(corr[group, group])) || is.null(corr)
-          return(missing)
-        } else {
-          return(FALSE)
-        }
-      },
-      logical(1)
-    )
+    vapply(corr_parametric, function(cr) any(is.na(cr)), logical(1))
   )
 
+  symmetric_corr <- all(vapply(corr_parametric, isSymmetric.matrix, logical(1)))
+
+  bounded_corr <- all(
+    vapply(corr_parametric, function(cr) all(cr >= 0 & cr <= 1), logical(1))
+  )
+
+  # Positive definite-ness is irrelevant if there are missing values, and
+  # testing for it will throw an error
   positive_definite_corr <- ifelse(
     !missing_corr,
     all(
       vapply(
-        seq_along(test_types),
-        function(i) {
-          if (test_types[[i]] == "parametric") {
-            group <- groups[[i]]
-            pos_def <- all(round(eigen(corr[group, group])$values, 10) >= 0)
-            return(pos_def)
-          } else {
-            return(TRUE)
-          }
-        },
+        corr_parametric,
+        function(cr) all(round(eigen(cr)$values, 10) >= 0),
         logical(1)
       )
     ),
@@ -75,16 +71,16 @@ test_input_val <- function(graph,
   )
 
   stopifnot(
-    "Correlation sub-matrix for each parametric test group must be fully specified" =
+    "Correlation matrix for parametric test groups must be fully specified" =
       !missing_corr,
-    "Correlation matrix must be symmetric" =
-      isSymmetric.matrix(corr) || is.null(corr),
-    "Dimensions of correlation matrix must match the number of hypotheses" =
-      unique(nrow(corr), ncol(corr)) == length(graph$hypotheses) ||
-        is.null(corr),
-    "Correlation values must be between 0 & 1" =
-      all((corr >= 0 & corr <= 1) | is.na(corr)) || is.null(corr),
-    "Correlation matrix must be positive definite for each parametric test group" =
+    "Correlation matrix must be symmetric" = symmetric_corr,
+    "Dimensions of correlation matrices must match the parametric test groups" =
+      all(
+        lengths(corr[test_types == "parametric"]) ==
+          lengths(groups[test_types == "parametric"])^2
+      ),
+    "Correlation values must be between 0 & 1" = bounded_corr,
+    "Correlation matrix must be positive definite for parametric test groups" =
       positive_definite_corr
   )
 
@@ -101,8 +97,10 @@ power_input_val <- function(graph, sim_n, marginal_power, corr, success) {
       all(marginal_power >= 0 & marginal_power <= 1),
     "Marginal power and correlation parameters must be numeric" =
       is.numeric(marginal_power) && is.numeric(corr),
-    "Lengths of marginal power and Correlation matrix for simulating p-values must match number of hypotheses" =
-      unique(length(marginal_power), nrow(corr), ncol(corr)) == num_hyps,
+    "Lengths of marginal power must match number of hypotheses" =
+      length(marginal_power) == num_hyps,
+    "Correlation matrix for simulating p-values must match no. of hypotheses" =
+      unique(nrow(corr), ncol(corr)) == num_hyps,
     "Correlation matrix for simulating p-values cannot have missing values" =
       !any(is.na(corr)),
     "Correlation matrix for simulating p-values must be symmetric" =

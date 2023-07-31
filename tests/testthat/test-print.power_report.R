@@ -40,7 +40,7 @@ test_that("printing parametric power", {
       g,
       sim_seed = 51223,
       test_types = "p",
-      test_corr = diag(4)
+      test_corr = list(diag(4))
     )
   )
   expect_snapshot(
@@ -49,7 +49,7 @@ test_that("printing parametric power", {
         g,
         sim_seed = 51223,
         test_types = "p",
-        test_corr = diag(4)
+        test_corr = list(diag(4))
       ),
       indent = 6,
       precision = 3
@@ -73,7 +73,7 @@ test_that("printing blended power", {
         .0254871,
         list(4:3, c(6, 1), c(2, 5)),
         c("b", "s", "p"),
-        t_corr,
+        list(NA, NA, t_corr[c(2, 5), c(2, 5)]),
         1328,
         pi / seq(.3, 2.8, by = .5) / 11,
         s_corr,

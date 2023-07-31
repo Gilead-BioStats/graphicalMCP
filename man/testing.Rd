@@ -11,7 +11,7 @@ graph_test_closure(
   alpha = 0.025,
   groups = list(seq_along(graph$hypotheses)),
   test_types = c("bonferroni"),
-  corr = NULL,
+  corr = rep(list(NA), length(test_types)),
   verbose = FALSE,
   test_values = FALSE
 )
@@ -79,12 +79,7 @@ transitions <- rbind(
 g <- graph_create(hypotheses, transitions)
 p <- c(.01, .005, .015, .022)
 
-corr <- matrix(nrow = 4, ncol = 4)
-corr[3:4, 3:4] <- .9
-diag(corr) <- 1
-
-corr2 <- matrix(.5, nrow = 4, ncol = 4)
-diag(corr2) <- 1
+corr <- list(NA, matrix(c(1, .5, .5, 1), nrow = 2, byrow = TRUE))
 
 # The default is all Bonferroni with alpha = .025
 graph_test_closure(g, p)
@@ -94,8 +89,8 @@ graph_test_closure(
   graph = g,
   p = p,
   alpha = .025,
-  groups = list(1, 2, 3:4),
-  test_types = c("bonferroni", "simes", "parametric"),
+  groups = list(1:2, 3:4),
+  test_types = c("bonferroni", "parametric"),
   corr = corr
 )
 }

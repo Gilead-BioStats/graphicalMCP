@@ -188,7 +188,7 @@
 # printing parametric closure test
 
     Code
-      graph_test_closure(par_gate, rep(0.01, 4), test_types = "p", corr = diag(4))
+      graph_test_closure(par_gate, rep(0.01, 4), test_types = "p", corr = list(diag(4)))
     Output
       
       Test parameters ($inputs) ------------------------------------------------------
@@ -248,7 +248,7 @@
 
     Code
       graph_test_closure(par_gate, rep(0.01, 4), groups = list(1:2, 3:4), test_types = c(
-        "p", "s"), corr = diag(4), test_values = TRUE, verbose = TRUE)
+        "p", "s"), corr = list(diag(2), NA), test_values = TRUE, verbose = TRUE)
     Output
       
       Test parameters ($inputs) ------------------------------------------------------
@@ -357,7 +357,7 @@
 
     Code
       graph_test_closure(par_gate, rep(0.01, 4), groups = list(1:2, 3:4), test_types = c(
-        "p", "p"), corr = diag(4), test_values = TRUE, verbose = TRUE)
+        "p", "p"), corr = list(diag(2), diag(2)), test_values = TRUE, verbose = TRUE)
     Output
       
       Test parameters ($inputs) ------------------------------------------------------
@@ -382,10 +382,10 @@
         Unadjusted p-values: 0.01 0.01 0.01 0.01
       
         Correlation matrix:    H1 H2 H3 H4
-                            H1  1  0  0  0
-                            H2  0  1  0  0
-                            H3  0  0  1  0
-                            H4  0  0  0  1
+                            H1  1  0 NA NA
+                            H2  0  1 NA NA
+                            H3 NA NA  1  0
+                            H4 NA NA  0  1
       
         Test types
         parametric: (H1, H2)

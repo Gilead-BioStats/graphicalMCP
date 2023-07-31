@@ -49,12 +49,7 @@
 #' g <- graph_create(hypotheses, transitions)
 #' p <- c(.01, .005, .015, .022)
 #'
-#' corr <- matrix(nrow = 4, ncol = 4)
-#' corr[3:4, 3:4] <- .9
-#' diag(corr) <- 1
-#'
-#' corr2 <- matrix(.5, nrow = 4, ncol = 4)
-#' diag(corr2) <- 1
+#' corr <- list(NA, matrix(c(1, .5, .5, 1), nrow = 2, byrow = TRUE))
 #'
 #' # The default is all Bonferroni with alpha = .025
 #' graph_test_closure(g, p)
@@ -64,8 +59,8 @@
 #'   graph = g,
 #'   p = p,
 #'   alpha = .025,
-#'   groups = list(1, 2, 3:4),
-#'   test_types = c("bonferroni", "simes", "parametric"),
+#'   groups = list(1:2, 3:4),
+#'   test_types = c("bonferroni", "parametric"),
 #'   corr = corr
 #' )
 graph_test_closure <- function(graph,
@@ -73,7 +68,7 @@ graph_test_closure <- function(graph,
                                alpha = .025,
                                groups = list(seq_along(graph$hypotheses)),
                                test_types = c("bonferroni"),
-                               corr = NULL,
+                               corr = rep(list(NA), length(test_types)),
                                verbose = FALSE,
                                test_values = FALSE) {
   # Input validation & sanitization --------------------------------------------
@@ -107,6 +102,18 @@ graph_test_closure <- function(graph,
 
   hyp_names <- names(graph$hypotheses)
   names(p) <- hyp_names
+
+  # Correlation matrix input is easier for end users to input as a list, but
+  # it's easier to work with internally as a full matrix, potentially with
+  # missing values. This puts all the correlation pieces into one matrix
+  new_corr <- matrix(NA, num_hyps, num_hyps)
+
+  for (group_num in seq_along(groups)) {
+    new_corr[groups[[group_num]], groups[[group_num]]] <- corr[[group_num]]
+  }
+  diag(new_corr) <- 1
+  corr <- if (any(test_types == "parametric")) new_corr else NULL
+
   if (!is.null(corr)) dimnames(corr) <- list(hyp_names, hyp_names)
 
   # Generate weights of the closure --------------------------------------------
@@ -290,3 +297,4 @@ graph_test_closure <- function(graph,
     class = "graph_report"
   )
 }
+

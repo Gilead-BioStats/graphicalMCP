@@ -70,9 +70,7 @@ graph_test_closure(ss_graph, p = p_values, alpha = .025, test_types = "s")
 If a correlation matrix for the test statistics is partially or fully known, a parametric test can be used for any subsets whose correlation matrix is fully known. Here B1 & B2 get a `c` value calculated that boosts their testing threshold slightly higher. This also demonstrates how to use different test types for different groups of hypotheses.
 
 ```{r parametric-1}
-corr1 <- matrix(nrow = 4, ncol = 4)
-corr1[3:4, 3:4] <- .5
-diag(corr1) <- 1
+corr1 <- list(NA, rbind(c(1, .5), c(.5, 1)))
 
 graph_test_closure(ss_graph,
   p = p_values,
@@ -167,11 +165,12 @@ All valid testing strategies are available for power calculations as well - Sime
 ```{r power-mix}
 corr2 <- matrix(.5, nrow = 4, ncol = 4)
 diag(corr2) <- 1
+corr2 <- list(corr2)
 
 graph_calculate_power(
   ss_graph,
   test_groups = list(1:4),
-  test_types = c("p"),
+  test_types = "p",
   test_corr = corr2,
   sim_n = 1e5
 )
@@ -192,7 +191,7 @@ s_corr1 <- rbind(
 graph_calculate_power(
   ss_graph,
   test_groups = list(1:4),
-  test_types = c("p"),
+  test_types = "p",
   test_corr = corr2,
   marginal_power = c(.4, .4, .9, .9),
   sim_corr = s_corr1,
@@ -215,7 +214,7 @@ In addition to these standard calculations, a user can define arbitrary "success
 graph_calculate_power(
   ss_graph,
   test_groups = list(1:4),
-  test_types = c("p"),
+  test_types = "p",
   test_corr = corr2,
   marginal_power = c(.4, .4, .9, .9),
   sim_corr = s_corr1,
@@ -233,7 +232,7 @@ Here are a few more success function examples, some of which imitate the standar
 graph_calculate_power(
   ss_graph,
   test_groups = list(1:4),
-  test_types = c("p"),
+  test_types = "p",
   test_corr = corr2,
   marginal_power = c(.4, .4, .9, .9),
   sim_corr = s_corr1,
@@ -259,7 +258,7 @@ Finally, power output has a `verbose` option, which opts in to include the full 
 graph_calculate_power(
   ss_graph,
   test_groups = list(1:4),
-  test_types = c("p"),
+  test_types = "p",
   test_corr = corr2,
   marginal_power = c(.4, .4, .9, .9),
   sim_corr = s_corr1,
