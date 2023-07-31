@@ -77,7 +77,7 @@ graph_test_shortcut <- function(graph,
   }
 
   rejected <- round(adjusted_p, 10) <= alpha
-  adjusted_p <- pmin(adjusted_p, 1 + 1e-8) # adj p-values should not exceed 1
+  adjusted_p <- pmin(adjusted_p, 1 + 1e-14) # adj p-values should not exceed 1
 
   # Adjusted p-value details (sequence of graphs) ------------------------------
   if (verbose) {

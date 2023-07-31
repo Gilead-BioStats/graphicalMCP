@@ -42,7 +42,7 @@ Start testing with a simple successive graph with two primary and two secondary 
 ```{r create-graph-1}
 ss_graph <- simple_successive_2(c("A1", "B1", "A2", "B2"))
 
-pvals <- c(.012, .005, .013, .0135)
+p_values <- c(.012, .005, .013, .0135)
 
 ss_graph
 ```
@@ -52,15 +52,17 @@ ss_graph
 This graph can be tested most simply with the default weighted Bonferroni test. When testing at the global alpha level 0.025, we can reject hypotheses A1 and B1, but not A2 or B2.
 
 ```{r bonferroni-mix-1}
-graph_test_closure(ss_graph, p = pvals, alpha = .025)
+graph_test_closure(ss_graph, p = p_values, alpha = .025)
 ```
 
 ### Simes
 
+[This paragraph needs work]
+
 Simes testing relies on non-negative dependency between hypotheses to increase the weights of some hypotheses. The strength of the Simes test is most apparent when multiple p-values fall below the global alpha level, but above their local alpha in some intersection(s). In the following case, B1 & B2 are rejected in the Bonferroni testing procedure for intersection `B1 ∩ B2` because the p-value is greater than `alpha * w` for each hypothesis in that case. However, the Simes test rejects `B1 ∩ B2` because the weight from B1 is added to the weight for B2.
 
 ```{r simes-all-1}
-graph_test_closure(ss_graph, p = pvals, alpha = .025, test_types = "s")
+graph_test_closure(ss_graph, p = p_values, alpha = .025, test_types = "s")
 ```
 
 ### Parametric
@@ -73,7 +75,7 @@ corr1[3:4, 3:4] <- .5
 diag(corr1) <- 1
 
 graph_test_closure(ss_graph,
-  p = pvals,
+  p = p_values,
   alpha = .025,
   groups = list(1:2, 3:4),
   test_types = c("b", "p"),
@@ -81,14 +83,14 @@ graph_test_closure(ss_graph,
 )
 ```
 
-### Adjusted weights vs adjusted p-values
+### Adjusted significance vs adjusted p-values
 
 There are two different testing methods - one which uses weights to adjust the significance level, and another which adjusts the p-values. The adjusted p-values method is sometimes more efficient, so it is the standard method. Additional details about the adjusted p-values calculation can be seen by setting `verbose = TRUE`.
 
 ```{r verbose}
 graph_test_closure(
   ss_graph,
-  p = pvals,
+  p = p_values,
   alpha = .025,
   corr = corr1,
   groups = list(1:2, 3:4),
@@ -97,12 +99,12 @@ graph_test_closure(
 )
 ```
 
-The adjusted weights method tests every hypothesis in the closure. Setting `test_values = TRUE` displays the values used in each of these tests. This can provide more detailed information about what caused a hypothesis to fail than the adjusted p-values. However, it comes with some cost in computation time. Note that the `Intersection` columns in the adjusted p-value and adjusted weights sections serve as a persistent index for going between sections.
+The adjusted weights method tests every hypothesis in the closure, rather than summarizing adjusted p-values before testing. Setting `test_values = TRUE` displays the values used in each of these tests. This can provide more detailed information about what caused a hypothesis to fail than the adjusted p-values. However, it comes with some cost in computation time. Note that the `Intersection` columns in the adjusted p-value and adjusted weights sections serve as a persistent index between datasets.
 
 ```{r test_values}
 graph_test_closure(
   ss_graph,
-  p = pvals,
+  p = p_values,
   alpha = .025,
   corr = corr1,
   groups = list(1:2, 3:4),
@@ -114,44 +116,29 @@ graph_test_closure(
 
 ### Bonferroni shortcut
 
-Exclusive Bonferroni testing admits a shortcut which allows us to not test the full closure of a graph. Use [graph_test_shortcut()] to call this shortcut method. In this case, `verbose = TRUE` adds the intermediate graphs after each deletion, and `test_values = TRUE` gives more information about the order in which hypotheses are deleted. Sequential testing stops at the first non-rejected hypothesis. Global rejection results can be found in the `Test summary` section.
+Exclusive Bonferroni testing admits a shortcut which allows us to not test the full closure of a graph. Use [graph_test_shortcut()] to call this shortcut method. In this case, `verbose = TRUE` adds the intermediate graphs after each deletion, and `test_values = TRUE` gives test details for the order in which hypotheses are deleted. Overall hypothesis rejection results can be found in the `Test summary` section.
 
 ```{r sequential}
 graph_test_shortcut(
   graph = ss_graph,
-  p = pvals,
+  p = p_values,
   alpha = .025,
   verbose = TRUE,
   test_values = TRUE
 )
 ```
 
-## Print options
+## Test print options
 
-The print generic for test results includes a couple of additional options. Each section within results is indented 2 spaces by default, but this can be adjusted with `indent`. Numeric values are rounded to 6 significant figures to control the amount of space used, but this can be set using the `precision` argument. Only the printing format is impacted, not the underlying values.
+The print generic for test results includes a couple of additional options. Each section within results is indented 2 spaces by default for readability, but this can be adjusted with `indent` (Note that some portions of the output can be indented by a minimum of 1 space - These pieces will ignore an indent of 0). Numeric values are rounded to 6 significant figures to control the amount of space used, but this can be set using the `precision` argument. Only the printing format is impacted, not the underlying values.
 
 ```{r print-indent}
-set.seed(3123)
-# Randomly generate a graph
-m <- 5
-w <- sample(1:m, replace = TRUE)
-w <- w / sum(w)
-g <- replicate(m, sample(1:m, replace = TRUE), simplify = TRUE)
-diag(g) <- 0
-g <- g / rowSums(g)
-graph <- new("graphMCP", m = g, weights = w)
-graph2 <- graph_create(w, g)
-
-p <- runif(m, .0001, .05)
-sim_corr <- diag(m)
-
 mix_test <- graph_test_closure(
-  graph2,
-  p = p,
+  ss_graph,
+  p = p_values,
   alpha = .025,
-  corr = sim_corr,
-  groups = list(1, 2:3, 4:5),
-  test_types = c("b", "s", "p"),
+  groups = list(c(1, 4), 2:3),
+  test_types = c("b", "s"),
   verbose = TRUE,
   test_values = TRUE
 )
@@ -163,15 +150,19 @@ print(mix_test, indent = 6, precision = 10)
 
 ## Power simulations
 
-It's not always obvious from a given graph structure how easy or difficult it will be to reject each hypothesis. One way to understand this better is to run a power simulation. The essence of a power simulation is to generate many different p-values using some chosen distribution, then test the graph against each set of p-values to see how it performs.
+It's not always obvious from a given graph how easy or difficult it will be to reject each hypothesis. One way to understand this better is to run a power simulation. The essence of a power simulation is to generate many different p-values using some chosen distribution, then test the graph against each set of p-values to see how it performs.
 
-The default for power simulations, like for testing, is to test a graph at alpha level .05 with Bonferroni testing.
+### Bonferroni (Shortcut)
+
+The default for power simulations, like for testing, is to test a graph at alpha level .025 with Bonferroni testing. The default number of simulations (100) will typically need to be increased for more meaningful results. In order to run as efficiently as possible, Bonferroni power calculations use a custom shortcut method that is highly optimized using vectorization and early exit.
 
 ```{r power-bonf}
 graph_calculate_power(ss_graph, sim_n = 1e5)
 ```
 
-However, all testing options are available for power calculations as well.
+### Other tests (Closure)
+
+All valid testing strategies are available for power calculations as well - Simes, parametric, Bonferroni, or any combination of the three. Note that groups consisting of a single hypothesis will be silently converted to Bonferroni. Furthermore, a testing strategy comprised of only Bonferroni groups will be silently converted to shortcut testing for optimal performance.
 
 ```{r power-mix}
 corr2 <- matrix(.5, nrow = 4, ncol = 4)
@@ -186,7 +177,9 @@ graph_calculate_power(
 )
 ```
 
-In addition to testing options, there are options that control how p-values are simulated from the multivariate normal distribution.
+### Simulation options
+
+In addition to the testing-related options, there are options which control how p-values are simulated from the multivariate normal distribution. These parameters control the (estimated) "true" distribution of the hypotheses.
 
 ```{r power-sims}
 s_corr1 <- rbind(
@@ -203,9 +196,88 @@ graph_calculate_power(
   test_corr = corr2,
   marginal_power = c(.4, .4, .9, .9),
   sim_corr = s_corr1,
-  sim_success = function(.) .[1] || .[2],
   sim_seed = 52423, # Set a seed if you need consistent p-values
   sim_n = 1e5
 )
 ```
 
+### Power output
+
+The four standard power calculations are:
+- Local power - The rate each individual hypothesis is rejected in the power simulation
+- Expected no. of rejections - The average rejections per simulation
+- Power to reject 1 or more - Proportion of simulations that reject at least 1 hypothesis
+- Power to reject all - Proportion of simulations that reject every hypothesis
+
+In addition to these standard calculations, a user can define arbitrary "success" power calculations. For instance, in the simple successive example, perhaps the clinical trial will only be considered a success if both primary hypotheses are rejected.
+
+```{r power-success-1}
+graph_calculate_power(
+  ss_graph,
+  test_groups = list(1:4),
+  test_types = c("p"),
+  test_corr = corr2,
+  marginal_power = c(.4, .4, .9, .9),
+  sim_corr = s_corr1,
+  sim_seed = 52423,
+  sim_n = 1e5,
+  sim_success = function(x) x[1] & x[2]
+)
+```
+
+Because success functions could be anything, this parameter has few limitations. It is up to the user to understand the meaning of their functions. Each user defined function is applied to each simulation's test results, and the resulting vector is averaged.
+
+Here are a few more success function examples, some of which imitate the standard calculations. When using logical operators, make sure to use the vectorized operators (|, &), rather than the single-value operators (||, &&). Hypotheses can be weighted as well.
+
+```{r power-success-2}
+graph_calculate_power(
+  ss_graph,
+  test_groups = list(1:4),
+  test_types = c("p"),
+  test_corr = corr2,
+  marginal_power = c(.4, .4, .9, .9),
+  sim_corr = s_corr1,
+  sim_seed = 52423, # Set a seed if you need consistent p-values
+  sim_n = 1e5,
+  sim_success = list(
+    A1 = function(x) x[1],
+    B1 = function(x) x[2],
+    `Expected no. of rejections` = function(x) x[1] + x[2] + x[3] + x[4],
+    `1 or more` = function(x) x[1] | x[2] | x[3] | x[4],
+    `All` = function(x) x[1] & x[2] & x[3] & x[4],
+    `All 'A' or all 'B'` = function(x) (x[1] & x[3]) | (x[2] & x[4]),
+    `Weighted` = function(x) .75 * (x[1] & x[3]) + .25 * (x[2] & x[4])
+  )
+)
+```
+
+### Verbose simulation details
+
+Finally, power output has a `verbose` option, which opts in to include the full simulation and test results matrices.
+
+```{r power-verbose}
+graph_calculate_power(
+  ss_graph,
+  test_groups = list(1:4),
+  test_types = c("p"),
+  test_corr = corr2,
+  marginal_power = c(.4, .4, .9, .9),
+  sim_corr = s_corr1,
+  sim_seed = 52423, # Set a seed if you need consistent p-values
+  sim_n = 1e5,
+  sim_success = list(
+    A1 = function(x) x[1],
+    B1 = function(x) x[2],
+    `Expected no. of rejections` = function(x) x[1] + x[2] + x[3] + x[4],
+    `1 or more` = function(x) x[1] | x[2] | x[3] | x[4],
+    `All` = function(x) x[1] & x[2] & x[3] & x[4],
+    `All 'A' or all 'B'` = function(x) (x[1] & x[3]) | (x[2] & x[4]),
+    `Weighted` = function(x) .75 * (x[1] & x[3]) + .25 * (x[2] & x[4])
+  ),
+  verbose = TRUE
+)
+```
+
+## Power print options
+
+Like testing, the `print()` method for power output uses the `indent` and `precision` arguments.
