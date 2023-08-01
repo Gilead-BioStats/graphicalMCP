@@ -13,13 +13,13 @@
     <loc>https://urban-sniffle-p11zlpj.pages.github.io/articles/case-study.html</loc>
   </url>
   <url>
+    <loc>https://urban-sniffle-p11zlpj.pages.github.io/articles/graphicalMCP.html</loc>
+  </url>
+  <url>
     <loc>https://urban-sniffle-p11zlpj.pages.github.io/articles/index.html</loc>
   </url>
   <url>
-    <loc>https://urban-sniffle-p11zlpj.pages.github.io/articles/test-power-considerations-2011.html</loc>
-  </url>
-  <url>
-    <loc>https://urban-sniffle-p11zlpj.pages.github.io/articles/testing-power-basics.html</loc>
+    <loc>https://urban-sniffle-p11zlpj.pages.github.io/articles/performance.html</loc>
   </url>
   <url>
     <loc>https://urban-sniffle-p11zlpj.pages.github.io/authors.html</loc>
@@ -28,34 +28,37 @@
     <loc>https://urban-sniffle-p11zlpj.pages.github.io/index.html</loc>
   </url>
   <url>
+    <loc>https://urban-sniffle-p11zlpj.pages.github.io/reference/adjust_p.html</loc>
+  </url>
+  <url>
+    <loc>https://urban-sniffle-p11zlpj.pages.github.io/reference/adjusted-weights.html</loc>
+  </url>
+  <url>
     <loc>https://urban-sniffle-p11zlpj.pages.github.io/reference/as-graph.html</loc>
   </url>
   <url>
-    <loc>https://urban-sniffle-p11zlpj.pages.github.io/reference/calc-test_vals.html</loc>
-  </url>
-  <url>
-    <loc>https://urban-sniffle-p11zlpj.pages.github.io/reference/calculate_power.html</loc>
-  </url>
-  <url>
-    <loc>https://urban-sniffle-p11zlpj.pages.github.io/reference/create_graph.html</loc>
-  </url>
-  <url>
-    <loc>https://urban-sniffle-p11zlpj.pages.github.io/reference/critical-vals.html</loc>
+    <loc>https://urban-sniffle-p11zlpj.pages.github.io/reference/calc-test_values.html</loc>
   </url>
   <url>
     <loc>https://urban-sniffle-p11zlpj.pages.github.io/reference/example-graphs.html</loc>
   </url>
   <url>
-    <loc>https://urban-sniffle-p11zlpj.pages.github.io/reference/generate_weights.html</loc>
+    <loc>https://urban-sniffle-p11zlpj.pages.github.io/reference/graph_calculate_power.html</loc>
+  </url>
+  <url>
+    <loc>https://urban-sniffle-p11zlpj.pages.github.io/reference/graph_create.html</loc>
+  </url>
+  <url>
+    <loc>https://urban-sniffle-p11zlpj.pages.github.io/reference/graph_generate_weights.html</loc>
+  </url>
+  <url>
+    <loc>https://urban-sniffle-p11zlpj.pages.github.io/reference/graph_update.html</loc>
   </url>
   <url>
     <loc>https://urban-sniffle-p11zlpj.pages.github.io/reference/graphicalMCP-package.html</loc>
   </url>
   <url>
     <loc>https://urban-sniffle-p11zlpj.pages.github.io/reference/index.html</loc>
-  </url>
-  <url>
-    <loc>https://urban-sniffle-p11zlpj.pages.github.io/reference/p_adjust.html</loc>
   </url>
   <url>
     <loc>https://urban-sniffle-p11zlpj.pages.github.io/reference/print.graph_report.html</loc>
@@ -74,8 +77,5 @@
   </url>
   <url>
     <loc>https://urban-sniffle-p11zlpj.pages.github.io/reference/testing.html</loc>
-  </url>
-  <url>
-    <loc>https://urban-sniffle-p11zlpj.pages.github.io/reference/update_graph.html</loc>
   </url>
 </urlset>

@@ -32,15 +32,17 @@ contains the full tables
     </button>
 
     <div id="navbar" class="collapse navbar-collapse ms-3">
-      <ul class="navbar-nav me-auto"><li class="active nav-item">
+      <ul class="navbar-nav me-auto"><li class="nav-item">
+  <a class="nav-link" href="../articles/graphicalMCP.html">Get started</a>
+</li>
+<li class="active nav-item">
   <a class="nav-link" href="../reference/index.html">Reference</a>
 </li>
 <li class="nav-item dropdown">
   <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" id="dropdown-articles">Articles</a>
   <div class="dropdown-menu" aria-labelledby="dropdown-articles">
     <a class="dropdown-item" href="../articles/case-study.html">Case Study</a>
-    <a class="dropdown-item" href="../articles/test-power-considerations-2011.html">Test and power considerations (Bretz et al 2011)</a>
-    <a class="dropdown-item" href="../articles/testing-power-basics.html">Testing and power basics</a>
+    <a class="dropdown-item" href="../articles/performance.html">Generating the closure tree</a>
   </div>
 </li>
       </ul><form class="form-inline my-2 my-lg-0" role="search">
@@ -60,7 +62,7 @@ contains the full tables
 <div class="row">
   <main id="main" class="col-md-9"><div class="page-header">
       <img src="../logo.png" class="logo" alt=""><h1>S3 print method for class <code>power_report</code></h1>
-      <small class="dont-index">Source: <a href="https://github.com/Gilead-BioStats/graphicalMCP/blob/HEAD/R/power_report_print.R" class="external-link"><code>R/power_report_print.R</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/Gilead-BioStats/graphicalMCP/blob/HEAD/R/print.power_report.R" class="external-link"><code>R/print.power_report.R</code></a></small>
       <div class="d-none name"><code>print.power_report.Rd</code></div>
     </div>
 
@@ -75,7 +77,7 @@ contains the full tables</p></li>
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="co"># S3 method for power_report</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">x</span>, <span class="va">...</span>, precision <span class="op">=</span> <span class="fl">6</span>, indent <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">x</span>, <span class="va">...</span>, precision <span class="op">=</span> <span class="fl">6</span>, indent <span class="op">=</span> <span class="fl">2</span>, rows <span class="op">=</span> <span class="fl">10</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
@@ -95,6 +97,11 @@ to include in numeric values</p></dd>
 
 <dt>indent</dt>
 <dd><p>An integer scalar indicating how many spaces to indent results</p></dd>
+
+
+<dt>rows</dt>
+<dd><p>An integer scalar indicating how many rows of verbose output to
+print</p></dd>
 
 </dl></div>
 

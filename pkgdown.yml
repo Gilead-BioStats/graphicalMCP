@@ -3,9 +3,9 @@ pkgdown: 2.0.7
 pkgdown_sha: ~
 articles:
   case-study: case-study.html
-  test-power-considerations-2011: test-power-considerations-2011.html
-  testing-power-basics: testing-power-basics.html
-last_built: 2023-06-21T16:59Z
+  graphicalMCP: graphicalMCP.html
+  performance: performance.html
+last_built: 2023-08-01T20:30Z
 urls:
   reference: https://urban-sniffle-p11zlpj.pages.github.io/reference
   article: https://urban-sniffle-p11zlpj.pages.github.io/articles
