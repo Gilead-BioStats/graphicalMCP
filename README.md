@@ -6,7 +6,7 @@
 status](https://www.r-pkg.org/badges/version/graphicalMCP)](https://cran.r-project.org/package=graphicalMCP)
 [![Codecov test
 coverage](https://codecov.io/gh/Gilead-BioStats/graphicalMCP/branch/s3-graph_mcp/graph/badge.svg)](https://app.codecov.io/gh/Gilead-BioStats/graphicalMCP?branch=s3-graph_mcp)
-[![R-CMD-check](https://github.com/Gilead-BioStats/graphicalMCP/actions/workflows/R-CMD-check.yaml/badge.svg?branch=%60prompt::git_branch()%60)](https://github.com/Gilead-BioStats/graphicalMCP/actions/workflows/R-CMD-check.yaml)
+[![R-CMD-check](https://github.com/Gilead-BioStats/graphicalMCP/actions/workflows/R-CMD-check.yaml/badge.svg?branch=feature-power)](https://github.com/Gilead-BioStats/graphicalMCP/actions/workflows/R-CMD-check.yaml)
 
 <!-- badges: end -->
 
@@ -19,7 +19,7 @@ that allows for assessing the efficacy of multiple endpoints, some of
 which are dependent on each other, in a single clinical trial. Endpoints
 can be different doses, treatment of different conditions, combined
 superiority & non-inferiority testing, or many others. A key feature is
-that MCPs strongly control the family-wise error rate at level alpha.
+that MCPs strongly control the type-I error rate at level alpha.
 
 In [Bretz et al
 (2011)](https://onlinelibrary.wiley.com/doi/10.1002/bimj.201000239), a
@@ -279,11 +279,11 @@ graph_calculate_power(
 #> 
 #> Power calculation ($power) -----------------------------------------------------
 #>                                    H1      H2      H3      H4
-#>                  Local power: 0.87614 0.87790 0.66966 0.67003
+#>                  Local power: 0.87692 0.87661 0.67054 0.67175
 #> 
-#>   Expected no. of rejections: 3.09373
-#>    Power to reject 1 or more: 0.97437
-#>          Power to reject all: 0.50019
+#>   Expected no. of rejections: 3.09582
+#>    Power to reject 1 or more: 0.9749
+#>          Power to reject all: 0.50298
 ```
 
 All valid test types are also valid for power simulations.

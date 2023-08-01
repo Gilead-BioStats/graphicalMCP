@@ -27,7 +27,7 @@ library(gt)
 
 # Overview {#overview}
 
-Multiple comparison procedures are used in clinical trials to test multiple endpoints in a single trial, while strongly controlling the Type-I error rate at level alpha. {graphicalMCP} can be used at a couple different points in the clinical trial process. First, an [Initial graph](#initial-graph) must be chosen based on study design. The hypothesis and transition weights need not be settled, but the number of hypotheses will be chosen based on the study design. Then a [Power calculation](power-calculations) can be done to explore the likelihood of finding significant results, given a particular graph design, testing strategy, and assumed underlying distribution. In practice, this underlying distribution assumption will need to be well-supported by prior studies or other preliminary results. The power calculation should generally take place long before a study actually begins, as part of the approval to initiate the study. Finally once study data has been collected, the results can be [tested](study-data) according to one of a few different testing strategies. Currently implemented testing strategies include Bonferroni-based procedures (e.g., fixed sequence, Holm, fallback), Simes-based procedures (e.g., Hommel), parametric procedures (e.g., Dunnett), and more (e.g., some gate-keeping procedures). More procedures will be added over time, such as Hochberg or Fisher's combination.
+Multiple comparison procedures are used in clinical trials to test multiple endpoints in a single trial, while strongly controlling the Type-I error rate at level alpha. {graphicalMCP} can be used at a couple different points in the clinical trial process. First, an [Initial graph](#initial-graph) must be chosen based on study design. The hypothesis and transition weights need not be settled, but the number of hypotheses will be chosen based on the study design. Then a [Power calculation](#power-calculations) can be done to explore the likelihood of finding significant results, given a particular graph design, testing strategy, and assumed underlying distribution. In practice, this underlying distribution assumption will need to be well-supported by prior studies or other preliminary results. The power calculation should generally take place long before a study actually begins, as part of the approval to initiate the study. Finally once study data has been collected, the results can be [tested](#study-data) according to one of a few different testing strategies. Currently implemented testing strategies include Bonferroni-based procedures (e.g., fixed sequence, Holm, fallback), Simes-based procedures (e.g., Hommel), parametric procedures (e.g., Dunnett), and more (e.g., some gate-keeping procedures). More procedures will be added over time, such as Hochberg or Fisher's combination.
 
 # Initial graph {#initial-graph}
 
@@ -35,12 +35,13 @@ This vignette demonstrates testing and power calculations for a moderately compl
 
 The initial weight should be split between the primary hypotheses, and each secondary hypothesis should only be tested if the corresponding primary hypothesis can be rejected. Weight from one dose group should certainly be passed to the other dose group if all of one dose is rejected. But scenarios will be explored where some weight is passed directly between primary hypotheses as well.
 
-These requirements result in the graph below: Two different doses at three different outcomes being tested, which results in 6 distinct endpoints for testing. The `gamma` parameter can be set to control how much weight is passed between primary hypotheses vs how much is passed to the secondary groups (`1 - gamma`). The `hyp_1` parameter controls the initial weight of hypothesis 1, low dose A1C. The rest of the initial weight, `1 - hyp_1`, is assigned to hypothesis 2, high dose A1C.
+These requirements result in the graph below: Two different doses at three different outcomes being tested, which results in 6 distinct endpoints for testing. The `gamma` parameter can be set to control how much weight is passed between primary hypotheses vs how much is passed to the secondary hypotheses (`1 - gamma`). The `hyp_1` parameter controls the initial weight of hypothesis 1, low dose A1C. The rest of the initial weight, `1 - hyp_1`, is assigned to hypothesis 2, high dose A1C.
 
 ```{r initial-graph}
-hyp_names <- c("lo_a1c", "hi_a1c", "lo_tir", "hi_tir", "lo_ret", "hi_ret")
+# hyp_names <- c("lo_a1c", "hi_a1c", "lo_tir", "hi_tir", "lo_ret", "hi_ret")
+hyp_names <- paste0("H", 1:6)
 
-motivating_example <- function(hyp_1, gamma, names = hyp_names) {
+motivating_example <- function(hyp_1, gamma, hyp_names) {
   eps <- .0001
 
   hypotheses <- c(hyp_1, 1 - hyp_1, 0, 0, 0, 0)
@@ -57,14 +58,14 @@ motivating_example <- function(hyp_1, gamma, names = hyp_names) {
   graph_create(hypotheses, transitions, hyp_names)
 }
 
-g_complex <- motivating_example(.75, .99)
+g_complex <- motivating_example(.75, .99, hyp_names)
 
 print(g_complex)
 ```
 
-[Need to decide whether to bring in plotting function at this point or not]
-
 ![](images/six-graph.png)
+
+[This whole section may need to move to the vignette that discusses testing methods]
 
 # Test design {#test-design}
 
@@ -86,7 +87,7 @@ rho_com_end <- .5
 t_corr <- rep(list(rbind(c(1, rho_com_end), c(rho_com_end, 1))), 3)
 ```
 
-Using testing methods other than Bonferroni adds power to reject more hypotheses as a result of these other methods being less conservative in controlling the Type-I error rate, but they comes with a speed cost. This is barely noticeable for a single test, but it does slow things down for power calculations. [link to speed vignette, if we keep it around]
+Using testing methods other than Bonferroni adds power to reject more hypotheses as a result of these other methods being less conservative in controlling the Type-I error rate. The tradeoff is that some of these other methods rely on more information being known than Bonferroni, such as non-negative dependency between hypotheses. Other testing strategies are discussed further in [link to other case study vignette]
 
 ## Parametric-Simes {#test-design-parametric-simes}
 
@@ -311,7 +312,7 @@ sub_results %>%
 These additional constraints result in the following graph design chosen for the study.
 
 ```{r study-graph}
-example_.5_.5 <- motivating_example(.5, .5)
+example_.5_.5 <- motivating_example(.5, .5, hyp_names)
 
 example_.5_.5
 ```
