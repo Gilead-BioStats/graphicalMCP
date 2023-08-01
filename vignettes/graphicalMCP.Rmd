@@ -2,10 +2,7 @@
 title: "Get started"
 output:
   rmarkdown::html_vignette:
-    code_folding: "hide"
-params:
-  m: 5
-  sims: 100000
+    code_folding: "show"
 vignette: >
   %\VignetteIndexEntry{Get started}
   %\VignetteEngine{knitr::rmarkdown}
@@ -57,7 +54,7 @@ graph_test_closure(ss_graph, p = p_values, alpha = .025)
 
 ### Simes
 
-[This paragraph needs work]
+[I don't like this paragraph, but I'm not sure why]
 
 Simes testing relies on non-negative dependency between hypotheses to increase the weights of some hypotheses. The strength of the Simes test is most apparent when multiple p-values fall below the global alpha level, but above their local alpha in some intersection(s). In the following case, B1 & B2 are rejected in the Bonferroni testing procedure for intersection `B1 ∩ B2` because the p-value is greater than `alpha * w` for each hypothesis in that case. However, the Simes test rejects `B1 ∩ B2` because the weight from B1 is added to the weight for B2.
 
