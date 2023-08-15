@@ -138,88 +138,21 @@
 <span><span class="va">hyp_names</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"H1"</span>, <span class="st">"H2"</span>, <span class="st">"H3"</span>, <span class="st">"H4"</span><span class="op">)</span></span>
 <span><span class="va">example_graph</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/graph_create.html">graph_create</a></span><span class="op">(</span><span class="va">hypotheses</span>, <span class="va">transitions</span>, <span class="va">hyp_names</span><span class="op">)</span></span>
 <span></span>
-<span><span class="va">example_graph</span></span>
-<span><span class="co">#&gt; Initial graph</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; --- Hypothesis weights ---</span></span>
-<span><span class="co">#&gt; H1: 0.5</span></span>
-<span><span class="co">#&gt; H2: 0.5</span></span>
-<span><span class="co">#&gt; H3: 0.0</span></span>
-<span><span class="co">#&gt; H4: 0.0</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; --- Transition weights ---</span></span>
-<span><span class="co">#&gt;     H1 H2 H3 H4</span></span>
-<span><span class="co">#&gt;  H1  0  0  1  0</span></span>
-<span><span class="co">#&gt;  H2  0  0  0  1</span></span>
-<span><span class="co">#&gt;  H3  0  1  0  0</span></span>
-<span><span class="co">#&gt;  H4  1  0  0  0</span></span></code></pre></div>
+<span><span class="va">example_graph</span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="update-graph">Update graph<a class="anchor" aria-label="anchor" href="#update-graph"></a>
 </h3>
 <p>Hypotheses can be deleted from the MCP using <code><a href="reference/graph_update.html">graph_update()</a></code>. Updated weights and transitions are calculated according to the weighting strategy in Algorithm 1 of <a href="https://onlinelibrary.wiley.com/doi/10.1002/bimj.201000239" class="external-link">Bretz et al (2011)</a>. We distinguish <em>deleting</em> from <em>rejecting</em> in the <a href="#glossary">glossary</a>.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="reference/graph_update.html">graph_update</a></span><span class="op">(</span><span class="va">example_graph</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="cn">TRUE</span>, <span class="cn">FALSE</span>, <span class="cn">FALSE</span>, <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Initial graph</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; --- Hypothesis weights ---</span></span>
-<span><span class="co">#&gt; H1: 0.5</span></span>
-<span><span class="co">#&gt; H2: 0.5</span></span>
-<span><span class="co">#&gt; H3: 0.0</span></span>
-<span><span class="co">#&gt; H4: 0.0</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; --- Transition weights ---</span></span>
-<span><span class="co">#&gt;     H1 H2 H3 H4</span></span>
-<span><span class="co">#&gt;  H1  0  0  1  0</span></span>
-<span><span class="co">#&gt;  H2  0  0  0  1</span></span>
-<span><span class="co">#&gt;  H3  0  1  0  0</span></span>
-<span><span class="co">#&gt;  H4  1  0  0  0</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; --------------------------------------------------------------------------------</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; --- Hypotheses kept ---</span></span>
-<span><span class="co">#&gt;    H1    H2    H3   H4</span></span>
-<span><span class="co">#&gt;  TRUE FALSE FALSE TRUE</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; --------------------------------------------------------------------------------</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Updated graph</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; --- Hypothesis weights ---</span></span>
-<span><span class="co">#&gt; H1: 0.5</span></span>
-<span><span class="co">#&gt; H2: 0.0</span></span>
-<span><span class="co">#&gt; H3: 0.0</span></span>
-<span><span class="co">#&gt; H4: 0.5</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; --- Transition weights ---</span></span>
-<span><span class="co">#&gt;     H1 H2 H3 H4</span></span>
-<span><span class="co">#&gt;  H1  0  0  0  1</span></span>
-<span><span class="co">#&gt;  H2  0  0  0  0</span></span>
-<span><span class="co">#&gt;  H3  0  0  0  0</span></span>
-<span><span class="co">#&gt;  H4  1  0  0  0</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="reference/graph_update.html">graph_update</a></span><span class="op">(</span><span class="va">example_graph</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="cn">TRUE</span>, <span class="cn">FALSE</span>, <span class="cn">FALSE</span>, <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="generate-weights">Generate weights<a class="anchor" aria-label="anchor" href="#generate-weights"></a>
 </h3>
 <p>The weights of all sub-graphs can be calculated with <code><a href="reference/graph_generate_weights.html">graph_generate_weights()</a></code>. This uses more efficient code under the hood than <code><a href="reference/graph_update.html">graph_update()</a></code> in order to be performant for larger graphs.</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="reference/graph_generate_weights.html">graph_generate_weights</a></span><span class="op">(</span><span class="va">example_graph</span><span class="op">)</span></span>
-<span><span class="co">#&gt;    H1 H2 H3 H4  H1  H2  H3  H4</span></span>
-<span><span class="co">#&gt; 1   1  1  1  1 0.5 0.5 0.0 0.0</span></span>
-<span><span class="co">#&gt; 2   1  1  1  0 0.5 0.5 0.0 0.0</span></span>
-<span><span class="co">#&gt; 3   1  1  0  1 0.5 0.5 0.0 0.0</span></span>
-<span><span class="co">#&gt; 4   1  1  0  0 0.5 0.5 0.0 0.0</span></span>
-<span><span class="co">#&gt; 5   1  0  1  1 0.5 0.0 0.0 0.5</span></span>
-<span><span class="co">#&gt; 6   1  0  1  0 1.0 0.0 0.0 0.0</span></span>
-<span><span class="co">#&gt; 7   1  0  0  1 0.5 0.0 0.0 0.5</span></span>
-<span><span class="co">#&gt; 8   1  0  0  0 1.0 0.0 0.0 0.0</span></span>
-<span><span class="co">#&gt; 9   0  1  1  1 0.0 0.5 0.5 0.0</span></span>
-<span><span class="co">#&gt; 10  0  1  1  0 0.0 0.5 0.5 0.0</span></span>
-<span><span class="co">#&gt; 11  0  1  0  1 0.0 1.0 0.0 0.0</span></span>
-<span><span class="co">#&gt; 12  0  1  0  0 0.0 1.0 0.0 0.0</span></span>
-<span><span class="co">#&gt; 13  0  0  1  1 0.0 0.0 0.5 0.5</span></span>
-<span><span class="co">#&gt; 14  0  0  1  0 0.0 0.0 1.0 0.0</span></span>
-<span><span class="co">#&gt; 15  0  0  0  1 0.0 0.0 0.0 1.0</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="reference/graph_generate_weights.html">graph_generate_weights</a></span><span class="op">(</span><span class="va">example_graph</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="test-hypotheses">Test hypotheses<a class="anchor" aria-label="anchor" href="#test-hypotheses"></a>
@@ -232,53 +165,7 @@
 <span>  alpha <span class="op">=</span> <span class="fl">.025</span>,</span>
 <span>  test_types <span class="op">=</span> <span class="st">"bonferroni"</span>,</span>
 <span>  groups <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">4</span><span class="op">)</span></span>
-<span><span class="op">)</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Test parameters ($inputs) ------------------------------------------------------</span></span>
-<span><span class="co">#&gt;   Initial graph</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;   --- Hypothesis weights ---</span></span>
-<span><span class="co">#&gt;   H1: 0.5</span></span>
-<span><span class="co">#&gt;   H2: 0.5</span></span>
-<span><span class="co">#&gt;   H3: 0.0</span></span>
-<span><span class="co">#&gt;   H4: 0.0</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;   --- Transition weights ---</span></span>
-<span><span class="co">#&gt;      H1 H2 H3 H4</span></span>
-<span><span class="co">#&gt;   H1  0  0  1  0</span></span>
-<span><span class="co">#&gt;   H2  0  0  0  1</span></span>
-<span><span class="co">#&gt;   H3  0  1  0  0</span></span>
-<span><span class="co">#&gt;   H4  1  0  0  0</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;   Alpha = 0.025</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;                          H1   H2   H3   H4</span></span>
-<span><span class="co">#&gt;   Unadjusted p-values: 0.01 0.02 0.03 0.05</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;   Test types</span></span>
-<span><span class="co">#&gt;   bonferroni: (H1, H2, H3, H4)</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Test summary ($outputs) --------------------------------------------------------</span></span>
-<span><span class="co">#&gt;   Hypothesis Adj. P-value Reject</span></span>
-<span><span class="co">#&gt;           H1         0.02   TRUE</span></span>
-<span><span class="co">#&gt;           H2         0.04  FALSE</span></span>
-<span><span class="co">#&gt;           H3         0.06  FALSE</span></span>
-<span><span class="co">#&gt;           H4         0.06  FALSE</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;   Final updated graph after removing rejected hypotheses</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;   --- Hypothesis weights ---</span></span>
-<span><span class="co">#&gt;   H1:  NA</span></span>
-<span><span class="co">#&gt;   H2: 0.5</span></span>
-<span><span class="co">#&gt;   H3: 0.5</span></span>
-<span><span class="co">#&gt;   H4: 0.0</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;   --- Transition weights ---</span></span>
-<span><span class="co">#&gt;      H1 H2 H3 H4</span></span>
-<span><span class="co">#&gt;   H1 NA NA NA NA</span></span>
-<span><span class="co">#&gt;   H2 NA  0  0  1</span></span>
-<span><span class="co">#&gt;   H3 NA  1  0  0</span></span>
-<span><span class="co">#&gt;   H4 NA  0  1  0</span></span></code></pre></div>
+<span><span class="op">)</span></span></code></pre></div>
 <p>Other tests, such as parametric- and Simes-based testing, can be used in addition to, or instead of, Bonferroni. More testing algorithms will be added over time. Try setting the <code>verbose</code> and <code>test_values</code> flags for a more detailed report on testing.</p>
 </div>
 </div>
@@ -291,48 +178,7 @@
 <span>  <span class="va">example_graph</span>,</span>
 <span>  sim_n <span class="op">=</span> <span class="fl">1e5</span>,</span>
 <span>  marginal_power <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">.9</span>, <span class="fl">.9</span>, <span class="fl">.8</span>, <span class="fl">.8</span><span class="op">)</span></span>
-<span><span class="op">)</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Test parameters ($inputs) ------------------------------------------------------</span></span>
-<span><span class="co">#&gt;   Initial graph</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;   --- Hypothesis weights ---</span></span>
-<span><span class="co">#&gt;   H1: 0.5</span></span>
-<span><span class="co">#&gt;   H2: 0.5</span></span>
-<span><span class="co">#&gt;   H3: 0.0</span></span>
-<span><span class="co">#&gt;   H4: 0.0</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;   --- Transition weights ---</span></span>
-<span><span class="co">#&gt;      H1 H2 H3 H4</span></span>
-<span><span class="co">#&gt;   H1  0  0  1  0</span></span>
-<span><span class="co">#&gt;   H2  0  0  0  1</span></span>
-<span><span class="co">#&gt;   H3  0  1  0  0</span></span>
-<span><span class="co">#&gt;   H4  1  0  0  0</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;   Alpha = 0.025</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;   Test types</span></span>
-<span><span class="co">#&gt;   bonferroni: (H1, H2, H3, H4)</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Simulation parameters ($inputs) ------------------------------------------------</span></span>
-<span><span class="co">#&gt;   Testing 100,000 simulations with multivariate normal params:</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;                    H1  H2  H3  H4</span></span>
-<span><span class="co">#&gt;   Marginal power: 0.9 0.9 0.8 0.8</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;   Correlation:    H1 H2 H3 H4</span></span>
-<span><span class="co">#&gt;                H1  1  0  0  0</span></span>
-<span><span class="co">#&gt;                H2  0  1  0  0</span></span>
-<span><span class="co">#&gt;                H3  0  0  1  0</span></span>
-<span><span class="co">#&gt;                H4  0  0  0  1</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Power calculation ($power) -----------------------------------------------------</span></span>
-<span><span class="co">#&gt;                                    H1      H2      H3      H4</span></span>
-<span><span class="co">#&gt;                  Local power: 0.87692 0.87661 0.67054 0.67175</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;   Expected no. of rejections: 3.09582</span></span>
-<span><span class="co">#&gt;    Power to reject 1 or more: 0.9749</span></span>
-<span><span class="co">#&gt;          Power to reject all: 0.50298</span></span></code></pre></div>
+<span><span class="op">)</span></span></code></pre></div>
 <p>All valid test types are also valid for power simulations.</p>
 </div>
 <div class="section level2">
@@ -346,21 +192,7 @@
 <h2 id="citation">Citation<a class="anchor" aria-label="anchor" href="#citation"></a>
 </h2>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/citation.html" class="external-link">citation</a></span><span class="op">(</span><span class="st">"graphicalMCP"</span><span class="op">)</span></span>
-<span><span class="co">#&gt; To cite graphicalMCP in publications use:</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;   Xi, D.; Brockmann, E. (2023). graphicalMCP: Graph-based multiple</span></span>
-<span><span class="co">#&gt;   comparison procedures. version 0.1.0. Gilead Sciences, Inc. Foster</span></span>
-<span><span class="co">#&gt;   City, California. https://github.com/Gilead-BioStats/graphicalMCP</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;   Frank Bretz, Martin Posch, Ekkehard Glimm, Florian Klinglmueller,</span></span>
-<span><span class="co">#&gt;   Willi Maurer, Kornelius Rohmeyer (2011), Graphical approaches for</span></span>
-<span><span class="co">#&gt;   multiple comparison procedures using weighted Bonferroni, Simes or</span></span>
-<span><span class="co">#&gt;   parametric tests. Biometrical Journal 53 (6), pages 894--913, Wiley.</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; To see these entries in BibTeX format, use 'print(&lt;citation&gt;,</span></span>
-<span><span class="co">#&gt; bibtex=TRUE)', 'toBibtex(.)', or set</span></span>
-<span><span class="co">#&gt; 'options(citation.bibtex.max=999)'.</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/citation.html" class="external-link">citation</a></span><span class="op">(</span><span class="st">"graphicalMCP"</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="acknowledgments">Acknowledgments<a class="anchor" aria-label="anchor" href="#acknowledgments"></a>
