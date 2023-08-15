@@ -66,20 +66,6 @@ hyp_names <- c("H1", "H2", "H3", "H4")
 example_graph <- graph_create(hypotheses, transitions, hyp_names)
 
 example_graph
-#> Initial graph
-#> 
-#> --- Hypothesis weights ---
-#> H1: 0.5
-#> H2: 0.5
-#> H3: 0.0
-#> H4: 0.0
-#> 
-#> --- Transition weights ---
-#>     H1 H2 H3 H4
-#>  H1  0  0  1  0
-#>  H2  0  0  0  1
-#>  H3  0  1  0  0
-#>  H4  1  0  0  0
 ```
 
 ### Update graph
@@ -92,43 +78,6 @@ distinguish *deleting* from *rejecting* in the [glossary](#glossary).
 
 ``` r
 graph_update(example_graph, c(TRUE, FALSE, FALSE, TRUE))
-#> Initial graph
-#> 
-#> --- Hypothesis weights ---
-#> H1: 0.5
-#> H2: 0.5
-#> H3: 0.0
-#> H4: 0.0
-#> 
-#> --- Transition weights ---
-#>     H1 H2 H3 H4
-#>  H1  0  0  1  0
-#>  H2  0  0  0  1
-#>  H3  0  1  0  0
-#>  H4  1  0  0  0
-#> 
-#> --------------------------------------------------------------------------------
-#> 
-#> --- Hypotheses kept ---
-#>    H1    H2    H3   H4
-#>  TRUE FALSE FALSE TRUE
-#> 
-#> --------------------------------------------------------------------------------
-#> 
-#> Updated graph
-#> 
-#> --- Hypothesis weights ---
-#> H1: 0.5
-#> H2: 0.0
-#> H3: 0.0
-#> H4: 0.5
-#> 
-#> --- Transition weights ---
-#>     H1 H2 H3 H4
-#>  H1  0  0  0  1
-#>  H2  0  0  0  0
-#>  H3  0  0  0  0
-#>  H4  1  0  0  0
 ```
 
 ### Generate weights
@@ -139,22 +88,6 @@ than `graph_update()` in order to be performant for larger graphs.
 
 ``` r
 graph_generate_weights(example_graph)
-#>    H1 H2 H3 H4  H1  H2  H3  H4
-#> 1   1  1  1  1 0.5 0.5 0.0 0.0
-#> 2   1  1  1  0 0.5 0.5 0.0 0.0
-#> 3   1  1  0  1 0.5 0.5 0.0 0.0
-#> 4   1  1  0  0 0.5 0.5 0.0 0.0
-#> 5   1  0  1  1 0.5 0.0 0.0 0.5
-#> 6   1  0  1  0 1.0 0.0 0.0 0.0
-#> 7   1  0  0  1 0.5 0.0 0.0 0.5
-#> 8   1  0  0  0 1.0 0.0 0.0 0.0
-#> 9   0  1  1  1 0.0 0.5 0.5 0.0
-#> 10  0  1  1  0 0.0 0.5 0.5 0.0
-#> 11  0  1  0  1 0.0 1.0 0.0 0.0
-#> 12  0  1  0  0 0.0 1.0 0.0 0.0
-#> 13  0  0  1  1 0.0 0.0 0.5 0.5
-#> 14  0  0  1  0 0.0 0.0 1.0 0.0
-#> 15  0  0  0  1 0.0 0.0 0.0 1.0
 ```
 
 ### Test hypotheses
@@ -175,52 +108,6 @@ graph_test_closure(
   test_types = "bonferroni",
   groups = list(1:4)
 )
-#> 
-#> Test parameters ($inputs) ------------------------------------------------------
-#>   Initial graph
-#> 
-#>   --- Hypothesis weights ---
-#>   H1: 0.5
-#>   H2: 0.5
-#>   H3: 0.0
-#>   H4: 0.0
-#> 
-#>   --- Transition weights ---
-#>      H1 H2 H3 H4
-#>   H1  0  0  1  0
-#>   H2  0  0  0  1
-#>   H3  0  1  0  0
-#>   H4  1  0  0  0
-#> 
-#>   Alpha = 0.025
-#> 
-#>                          H1   H2   H3   H4
-#>   Unadjusted p-values: 0.01 0.02 0.03 0.05
-#> 
-#>   Test types
-#>   bonferroni: (H1, H2, H3, H4)
-#> 
-#> Test summary ($outputs) --------------------------------------------------------
-#>   Hypothesis Adj. P-value Reject
-#>           H1         0.02   TRUE
-#>           H2         0.04  FALSE
-#>           H3         0.06  FALSE
-#>           H4         0.06  FALSE
-#> 
-#>   Final updated graph after removing rejected hypotheses
-#> 
-#>   --- Hypothesis weights ---
-#>   H1:  NA
-#>   H2: 0.5
-#>   H3: 0.5
-#>   H4: 0.0
-#> 
-#>   --- Transition weights ---
-#>      H1 H2 H3 H4
-#>   H1 NA NA NA NA
-#>   H2 NA  0  0  1
-#>   H3 NA  1  0  0
-#>   H4 NA  0  1  0
 ```
 
 Other tests, such as parametric- and Simes-based testing, can be used in
@@ -243,47 +130,6 @@ graph_calculate_power(
   sim_n = 1e5,
   marginal_power = c(.9, .9, .8, .8)
 )
-#> 
-#> Test parameters ($inputs) ------------------------------------------------------
-#>   Initial graph
-#> 
-#>   --- Hypothesis weights ---
-#>   H1: 0.5
-#>   H2: 0.5
-#>   H3: 0.0
-#>   H4: 0.0
-#> 
-#>   --- Transition weights ---
-#>      H1 H2 H3 H4
-#>   H1  0  0  1  0
-#>   H2  0  0  0  1
-#>   H3  0  1  0  0
-#>   H4  1  0  0  0
-#> 
-#>   Alpha = 0.025
-#> 
-#>   Test types
-#>   bonferroni: (H1, H2, H3, H4)
-#> 
-#> Simulation parameters ($inputs) ------------------------------------------------
-#>   Testing 100,000 simulations with multivariate normal params:
-#> 
-#>                    H1  H2  H3  H4
-#>   Marginal power: 0.9 0.9 0.8 0.8
-#> 
-#>   Correlation:    H1 H2 H3 H4
-#>                H1  1  0  0  0
-#>                H2  0  1  0  0
-#>                H3  0  0  1  0
-#>                H4  0  0  0  1
-#> 
-#> Power calculation ($power) -----------------------------------------------------
-#>                                    H1      H2      H3      H4
-#>                  Local power: 0.87692 0.87661 0.67054 0.67175
-#> 
-#>   Expected no. of rejections: 3.09582
-#>    Power to reject 1 or more: 0.9749
-#>          Power to reject all: 0.50298
 ```
 
 All valid test types are also valid for power simulations.
@@ -312,20 +158,6 @@ A portion of Simes testing is also implemented in the lrstat package
 
 ``` r
 citation("graphicalMCP")
-#> To cite graphicalMCP in publications use:
-#> 
-#>   Xi, D.; Brockmann, E. (2023). graphicalMCP: Graph-based multiple
-#>   comparison procedures. version 0.1.0. Gilead Sciences, Inc. Foster
-#>   City, California. https://github.com/Gilead-BioStats/graphicalMCP
-#> 
-#>   Frank Bretz, Martin Posch, Ekkehard Glimm, Florian Klinglmueller,
-#>   Willi Maurer, Kornelius Rohmeyer (2011), Graphical approaches for
-#>   multiple comparison procedures using weighted Bonferroni, Simes or
-#>   parametric tests. Biometrical Journal 53 (6), pages 894--913, Wiley.
-#> 
-#> To see these entries in BibTeX format, use 'print(<citation>,
-#> bibtex=TRUE)', 'toBibtex(.)', or set
-#> 'options(citation.bibtex.max=999)'.
 ```
 
 ## Acknowledgments

@@ -2,8 +2,19 @@
 #'
 #' A multiple comparison procedure graph can be represented by 1) a vector of
 #' initial hypothesis weights, and 2) a matrix of initial transition weights.
-#' This function also does validation to make sure that the vector and matrix
-#' combine to form a valid MCP graph.
+#' This function creates an initial graph object using such a vector and matrix.
+#' It also validates the inputs to make sure that they combine to form a valid
+#' graph.
+#'
+#' The validations performed are:
+#'   * Weights are numeric
+#'   * Length of hypotheses and dimensions of transitions
+#'   * Explicit `hyp_names` override names in `hypotheses` or `transitions`
+#'   * Hypothesis weights must be non-negative and sum to no more than 1
+#'   * Transition weights matrix:
+#'     * Diagonal must be all 1
+#'     * Rows must sum to no more than 1
+#'     * Values must be non-negative
 #'
 #' @param hypotheses A numeric vector of hypothesis weights in an initial
 #'   graphical multiple comparison procedure. Must be a vector of values between

@@ -30,8 +30,24 @@ list with elements \code{hypotheses} and \code{transitions}
 \description{
 A multiple comparison procedure graph can be represented by 1) a vector of
 initial hypothesis weights, and 2) a matrix of initial transition weights.
-This function also does validation to make sure that the vector and matrix
-combine to form a valid MCP graph.
+This function creates an initial graph object using such a vector and matrix.
+It also validates the inputs to make sure that they combine to form a valid
+graph.
+}
+\details{
+The validations performed are:
+\itemize{
+\item Weights are numeric
+\item Length of hypotheses and dimensions of transitions
+\item Explicit \code{hyp_names} override names in \code{hypotheses} or \code{transitions}
+\item Hypothesis weights must be non-negative and sum to no more than 1
+\item Transition weights matrix:
+\itemize{
+\item Diagonal must be all 1
+\item Rows must sum to no more than 1
+\item Values must be non-negative
+}
+}
 }
 \examples{
 # A graphical multiple comparison procedure with two primary hypotheses (H1
