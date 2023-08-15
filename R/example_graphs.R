@@ -179,7 +179,7 @@ complex_example_2 <- function(hyp_names = NULL) {
 
 #' @export
 #' @rdname example-graphs
-complex_example_2 <- function(names = NULL) {
+complex_example_2 <- function(hyp_names = NULL) {
   eps <- .0001
 
   weights <- c(rep(c(1 / 3, 0, 0), 3))
@@ -195,5 +195,5 @@ complex_example_2 <- function(names = NULL) {
     c(eps / 2, 0, 0, eps / 2, 0, 0, 0, 1 - eps, 0) # 9 --> 8, 9 - - > 1 & 4
   )
 
-  create_graph(weights, transitions, names = names)
+  graph_create(weights, transitions, hyp_names = hyp_names)
 }

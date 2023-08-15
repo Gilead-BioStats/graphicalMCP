@@ -23,6 +23,7 @@ BugReports: https://github.com/Gilead-BioStats/graphicalMCP/issues
 Imports: 
     igraph,
     matrixStats,
+    methods,
     mvtnorm
 Suggests: 
     bench,

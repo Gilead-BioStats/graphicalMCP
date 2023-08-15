@@ -20,7 +20,7 @@ Cm2 <- Cm
 
 p <- 1-pnorm(c(2.24,2.24,2.24,2.3))
 G <- matrix2graph(Gm,w)
-g <- as_initial_graph(G)
+g <- as_graph(G)
 
 alpha <- .05
 

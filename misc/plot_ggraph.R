@@ -8,7 +8,7 @@ transitions <- rbind(c(0, 0, 1, 0),
                      c(0, 0, 0, 1),
                      c(0, 1, 0, 0),
                      c(1, 0, 0, 0))
-g <- create_graph(hypotheses, transitions)
+g <- graph_create(hypotheses, transitions)
 g
 
 df_nodes <- data.frame(name = names(g$hypotheses), weight = g$hypotheses)
