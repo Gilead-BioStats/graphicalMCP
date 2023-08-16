@@ -189,7 +189,7 @@ graph_test_closure <- function(graph,
   # The adjusted p-value for a *hypothesis* is the largest adjusted p-value for
   # the intersections containing that hypothesis
   adjusted_p_hypothesis <-
-    apply(adjusted_p_intersection * matrix_intersections, 2, max)
+    apply(adjusted_p_intersection * matrix_intersections, 2, max, na.rm = TRUE)
   reject_hypothesis <- adjusted_p_hypothesis <= alpha # Hypothesis test results
 
   # Adjusted p-value details ---------------------------------------------------
