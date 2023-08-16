@@ -1,22 +1,44 @@
 url: https://urban-sniffle-p11zlpj.pages.github.io/
+
 template:
   bootstrap: 5
+
 reference:
 - title: Creating an initial graph
-  desc: Functions for creating a multiple comparison procedure graph
-  contents:
-  - matches("create_graph")
-  - matches("initial_graph")
+- desc: Functions for creating a multiple comparison procedure graph
+- contents:
+  - graph_create
+  - print.initial_graph
+  - as_graph
+  - as_gmcp_graph
 - title: Updating a graph
-  desc: Functions for removing hypotheses from a graph
-  contents:
-  - matches("update_graph")
-  - matches("updated_graph")
+- desc: Functions for removing hypotheses from a graph
+- contents:
+  - graph_update
+  - print.updated_graph
 - title: Calculating sub-graph weights
-  desc: Functions for generating the weights of the closure
-  contents:
-  - matches("generate_weights")
+- desc: Functions for generating the weights of the closure
+- contents:
+  - graph_generate_weights
+- title: Test a graph
+- desc: Functions for running Bonferroni, parametric, and Simes tests
+- contents:
+  - graph_test_closure
+  - graph_test_shortcut
+  - print.graph_report
+- title: Run a power simulation
+- desc: Functions for running power simulations
+- contents:
+  - graph_calculate_power
+  - print.power_report
 - title: Example graphs
-  desc: Functions for creating example graphs from a variety of papers
-  contents:
-  - matches("bonferroni_holm")
+- desc: Functions for creating example graphs from a variety of papers
+- contents:
+  - bonferroni_holm
+  - fallback
+  - fixed_sequence
+  - huque_alosh_bhore_2011
+  - random_graph
+  - simple_successive_1
+  - simple_successive_2
+  - wiens_dmitrienko_2005

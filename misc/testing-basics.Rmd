@@ -1,0 +1,401 @@
+---
+title: "Testing basics"
+output: rmarkdown::html_vignette
+params:
+  m: 5
+  sims: 100000
+vignette: >
+  %\VignetteIndexEntry{Testing basics}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  cache.lazy = FALSE
+)
+```
+
+```{r setup}
+library(graphicalMCP)
+library(gMCP)
+library(gt)
+```
+
+## Testing parameters
+
+Start testing with the example graph from the README, a parallel gate-keeping procedure graph.
+
+```{r create-graph-1}
+# A graphical multiple comparison procedure with two primary hypotheses (H1
+# and H2) and two secondary hypotheses (H3 and H4)
+# See Figure 1 in Bretz, F., Posch, M., Glimm, E., Klinglmueller, F., Maurer,
+# W., & Rohmeyer, K. (2011). Graphical approaches for multiple comparison
+# procedures using weighted Bonferroni, Simes, or parametric tests. Biometrical
+# Journal, 53(6), 894-913.
+hypotheses <- c(0.5, 0.5, 0, 0)
+transitions <- rbind(
+  c(0, 0, 1, 0),
+  c(0, 0, 0, 1),
+  c(0, 1, 0, 0),
+  c(1, 0, 0, 0)
+)
+names <- c("A1", "A2", "B1", "B2")
+par_gate <- graph_create(hypotheses, transitions, names)
+
+pvals <- c(.024, .01, .026, .027)
+
+par_gate
+```
+
+This graph can be tested most simply with the default weighted Bonferroni test. When testing at the global alpha level 0.05, we can reject hypotheses A1 and A2, but not B1 or B2.
+
+```{r bonferroni-mix-1}
+graph_test_closure(par_gate, p = pvals, alpha = .05)
+```
+
+The results of the weighted Simes test are equivalent to weighted Bonferroni in some situations. The power of the Simes test becomes apparent when multiple p-values fall below the global alpha level, but above their local alpha in some intersection(s). In the following case, B1 & B2 are rejected in the Bonferroni testing procedure for intersection `B1 ∩ B2` because the p-value is greater than `α * w` for each hypothesis in that case. However, the Simes test rejects `B1 ∩ B2` because the weight from B1 is added to the weight for B2.
+
+```{r simes-all-1}
+graph_test_closure(par_gate, p = pvals, alpha = .05, test_types = "s")
+```
+
+If a correlation matrix for the test statistics is partially or fully known, a parametric test can be used for any subsets whose correlation matrix is fully known. Here B1 & B2 get a `c` value calculated that boosts their testing threshold slightly higher. 
+
+```{r parametric-1}
+graph_test_closure(par_gate,
+  p = pvals,
+  alpha = .05,
+  groups = list(1, 2, 3:4),
+  test_types = c("b", "b", "p"),
+  corr = list(NA, NA, rbind(c(1, .5), c(.5, 1)))
+)
+```
+
+ ~~The parametric test reduces to Bonferroni when there is no correlation between any test statistics.~~ (This doesn't look like it's true, actually)
+
+```{r parametric-2}
+graph_test_closure(
+  par_gate,
+  p = pvals,
+  alpha = .05,
+  corr = list(diag(4)),
+  test_types = "p"
+)
+```
+
+The null case of this is when a parametric group is size 1 (Each correlation matrix is a 1x1 with value 1)
+
+```{r parametric-3}
+graph_test_closure(
+  par_gate,
+  p = pvals,
+  alpha = .05,
+  corr = rep(list(matrix(1, 1, 1)), 4), # Correlation matrix doesn't matter when each group is size 1
+  groups = list(1, 2, 3, 4),
+  test_types = rep("p", 4)
+)
+```
+
+Using different test types on different parts of a graph is supported.
+
+```{r mixed-1}
+graph_test_closure(
+  par_gate,
+  p = pvals,
+  alpha = .05,
+  corr = list(NA, rbind(c(1, .5), c(.5, 1))),
+  groups = list(1:2, 3:4),
+  test_types = c("s", "p")
+)
+```
+
+There are two different testing methods - one which tests each hypothesis with the `p <= (c *) w * α` method, and another which calculates adjusted p-values. The adjusted p-values method is much more efficient, so it is the standard method. Additional details about the adjusted p-values calculation can be seen by setting `verbose = TRUE`.
+
+```{r verbose}
+graph_test_closure(
+  par_gate,
+  p = pvals,
+  alpha = .05,
+  corr = list(NA, rbind(c(1, .5), c(.5, 1))),
+  groups = list(1:2, 3:4),
+  test_types = c("s", "p"),
+  verbose = TRUE
+)
+```
+
+The critical value method tests every hypothesis in the closure. Setting `critical = TRUE` displays the values used in each of these tests. This can provide more detailed information about what caused a hypothesis to fail than the adjusted p-values. However, it comes at a significant cost in computation time.
+
+```{r critical}
+graph_test_closure(
+  par_gate,
+  p = pvals,
+  alpha = .05,
+  corr = list(NA, rbind(c(1, .5), c(.5, 1))),
+  groups = list(1:2, 3:4),
+  test_types = c("s", "p"),
+  verbose = TRUE,
+  test_values = TRUE
+)
+```
+
+## Performance
+
+`graph_test_closure()` always calculates the full closure, even for Bonferroni testing. If optimal performance is needed, `graph_test_shortcut()` can be used, which uses the sequential testing shortcut. This causes a significant improvement in speed, and either method is faster than `gMCP::gMCP()`. However, using `gMCP::graphTest()` is the fastest option, as it's written primarily in C directly.
+
+The gMCP suite of testing and power functions is a little confusing, so I'm going to document here to remember for future me:
+
+- gMCP() does a lot, and I haven't dug in line by line to all of it. But it's somewhat of a nicer front end for doing different types of tests a single time, not optimized for speed. Though the `useC` parameter may allow for a pretty fast run still?
+- Using graphTest() directly is a much faster option, with some drawbacks. **graphTest() has a parameter `test`, which is never used. It uses the presence or absence of a correlation matrix to decide between parametric & Bonferroni testing. It does not do Simes testing.** Bonferroni testing then uses the very fast C-based sequential method. Parametric testing is quite slow, and it's all in R.
+- The C code for sequential Bonferroni testing has a couple options - graphproc, which handles a single p-value vector, and graphmult, which handles a matrix of multiple p-value vectors (calling graphproc on each row). They are both made to handle multiple graphs in a list. These two are incredibly fast, and I'd like to learn more about how they can run so fast. Even copying them over and getting them to run with C++ the speed is nowhere close.
+
+I think it would be valuable to build a similar structure, but I'm hoping to have a more organized structure in the end.
+
+- **R-based functions** - To be as fast as possible in R, but without sacrificing transparency. These will be exported, and they're meant to be used sequentially
+  - graph_create()
+  - graph_update()
+  - graph_generate_weights()
+  - graph_test_shortcut()
+  - graph_test_closure()
+  - graph_calculate_power()
+- **C++ functions** - To be as fast as possible. Transparency is less important, except to the extent it impacts maintainability. These are all in support of power simulations primarily
+  - graph_test_shortcut_cpp()
+  - power_shortcut_cpp()
+  - graph_test_closure() is fastest in R using vectorization or matrixStats
+  - graph_calculate_power() is currently fastest using a blend of languages - C++ for sequential Bonferroni testing, and R for the more complex closure testing
+
+```{r gen-graph}
+set.seed(5823)
+m <- params$m
+
+graph2 <- random_graph(m)
+graph <- as_gmcp_graph(graph2)
+
+# generate weights
+gw <- graph_generate_weights(graph2)
+inter_h <- gw[, seq_len(m)]
+
+gw_bonf <- ifelse(inter_h, gw[, seq_len(m) + m], NA)
+
+gw_para <-
+  graphicalMCP:::adjust_weights_parametric(gw_bonf, diag(m), .05, list(1:m))
+
+p <- runif(m, .0001, .03)
+sim_corr <- diag(m)
+
+gw_simes <- graphicalMCP:::adjust_weights_simes(gw_bonf, p, list(1:m))
+groups <- list(1:floor(m / 2), (floor(m / 2) + 1):m)
+
+h <- as.integer(rep(0, m))
+a <- .05 * graph2$hypotheses
+gmcp_g <- as.double(graph2$transitions)
+```
+
+```{r benchmark-bonf}
+# Bonferroni
+bonf_bench <- bench::mark(
+  `C++ sequential` =
+    as.logical(graphicalMCP:::graph_test_shortcut_cpp(graph2, p)),
+  `closure (vec/matrixStats)` =
+    as.logical(graphicalMCP:::graph_test_closure_fast(p, .05, gw_bonf, inter_h)),
+  `gMCP, raw C` =
+    .C("graphproc", h = h, a = a, G = gmcp_g, p, m, gmcp_g, 1, 0, 0)$h,
+  `gMCP::gMCP` =
+    gMCP(graph, p)@rejected,
+  check = FALSE
+)
+
+bonf_bench$expression <- as.character(bonf_bench$expression)
+gt(bonf_bench[1:9]) %>%
+  tab_header("Bonferroni testing", paste(m, "hypotheses"))
+```
+
+```{r benchmark-simes}
+# Simes
+simes_bench <- bench::mark(
+  `graphicalMCP` =
+    graphicalMCP:::graph_test_closure_fast(
+      p,
+      .05,
+      graphicalMCP:::adjust_weights_simes(gw_bonf, p, list(1:m)),
+      inter_h
+    ),
+  `gMCP::gMCP` =
+    gMCP(graph, p, test = "Simes")@rejected,
+  check = FALSE
+)
+
+simes_bench$expression <- as.character(simes_bench$expression)
+gt(simes_bench[1:9]) %>%
+  tab_header("Simes testing", paste(m, "hypotheses"))
+```
+
+```{r benchmark-para}
+p_mat <- rbind(p)
+
+para_bench <- bench::mark(
+  `vec/matrixStats (no critical)` =
+    graphicalMCP:::graph_test_closure_fast(p, alpha = .05, gw_para, inter_h),
+  `gMCP::graphTest` =
+    graphTest(p_mat, graph = graph, test = "parametric", cr = sim_corr)[1, ],
+  `gMCP::gMCP` =
+    gMCP(graph, p, test = "parametric", correlation = sim_corr)@rejected,
+  check = FALSE
+)
+
+para_bench$expression <- as.character(para_bench$expression)
+gt(para_bench[1:9]) %>%
+  tab_header("Parametric testing", paste(m, "hypotheses"))
+```
+
+```{r power-bonf}
+sims <- params$sims
+
+power_bench <- bench::mark(
+  `graphicalMCP` =
+    graph_calculate_power(graph2, sim_n = sims),
+  `gMCP` =
+    calcPower(graph = graph, alpha = .05, n.sim = sims, corr.sim = diag(m)),
+  min_iterations = 3,
+  filter_gc = FALSE,
+  check = FALSE
+)
+
+power_bench$expression <- as.character(power_bench$expression)
+gt(power_bench[1:9]) %>%
+  tab_header("Bonferroni power", paste(m, "hypotheses,", sims, "simulations"))
+```
+
+```{r power-simes}
+power_bench <- bench::mark(
+  `graphicalMCP (vec/matrixStats)` =
+    graph_calculate_power(graph2, sim_n = sims, test_types = "s"),
+  min_iterations = 3,
+  filter_gc = FALSE,
+  check = FALSE
+)
+
+power_bench$expression <- as.character(power_bench$expression)
+gt(power_bench[1:9]) %>%
+  tab_header("Simes power", paste(m, "hypotheses,", sims, "simulations"))
+```
+
+Parametric really only has one viable method at this point, and it's not worth the runtime to compare to gMCP, which takes ages. But here's some code that could compare them.
+
+```{r power-para}
+power_bench <- bench::mark(
+  # `gMCP (n.sim = 1)` =
+  #   calcPower(
+  #     graph = graph,
+  #     alpha = .05,
+  #     n.sim = 1,
+  #     corr.sim = diag(m),
+  #     corr.test = diag(m)
+  #   ),
+  `graphicalMCP (vec/matrixStats)` =
+    graph_calculate_power(
+      graph2,
+      sim_n = sims,
+      test_types = "p",
+      test_corr = list(diag(m))
+    ),
+  min_iterations = 3,
+  filter_gc = FALSE,
+  check = FALSE
+)
+
+power_bench$expression <- as.character(power_bench$expression)
+gt(power_bench[1:9]) %>%
+  tab_header("Parametric power", paste(m, "hypotheses,", sims, "simulations"))
+```
+
+```{r power-blend}
+power_bench <- bench::mark(
+  `Para/Simes/Bonf vectorized (matrixStats)` =
+    graph_calculate_power(
+      graph2,
+      sim_n = sims,
+      test_groups = list(1:floor(m / 2), (floor(m / 2) + 1):(m - 1), m),
+      test_types = c("p", "s", "b"),
+      test_corr = diag(m)
+    ),
+  min_iterations = 3,
+  filter_gc = FALSE,
+  check = FALSE
+)
+
+power_bench$expression <- as.character(power_bench$expression)
+gt(power_bench[1:9]) %>%
+  tab_header("Parametric/Simes/Bonferroni", paste(m, "hypotheses,", sims, "simulations"))
+```
+
+```{r power-blend-2}
+power_bench <- bench::mark(
+  `2 parametric groups` =
+    graph_calculate_power(
+      graph2,
+      sim_n = sims,
+      test_groups = list(1:floor(m / 2), (floor(m / 2) + 1):m),
+      test_types = c("p", "p"),
+      test_corr = diag(m)
+    )
+)
+
+power_bench$expression <- as.character(power_bench$expression)
+gt(power_bench[1:9]) %>%
+  tab_header("Parametric groups", paste(m, "hypotheses,", sims, "simulations"))
+```
+
+```{r power-blend-3}
+power_bench <- bench::mark(
+  `2 Simes groups` =
+    graph_calculate_power(
+      graph2,
+      sim_n = sims,
+      test_groups = list(1:floor(m / 2), (floor(m / 2) + 1):m),
+      test_types = c("s", "s"),
+      test_corr = diag(m)
+    )
+)
+
+power_bench$expression <- as.character(power_bench$expression)
+gt(power_bench[1:9]) %>%
+  tab_header("Simes groups", paste(m, "hypotheses,", sims, "simulations"))
+```
+
+## Print options
+
+The print generic for test results includes a couple of additional options. Each section within results is indented 2 spaces by default, but this can be adjusted with `indent`. Numeric values are rounded to 6 decimals to control the amount of space used, but this can be set using the `precision` argument. This only affects the printing format, not the underlying values.
+
+```{r print-indent}
+set.seed(3123)
+# Randomly generate a graph
+m <- 5
+w <- sample(1:m, replace = TRUE)
+w <- w / sum(w)
+g <- replicate(m, sample(1:m, replace = TRUE), simplify = TRUE)
+diag(g) <- 0
+g <- g / rowSums(g)
+graph <- new("graphMCP", m = g, weights = w)
+graph2 <- graph_create(w, g)
+
+p <- runif(m, .0001, .05)
+sim_corr <- diag(m)
+
+mix_test <- graph_test_closure(
+  graph2,
+  p = p,
+  alpha = .05,
+  corr = list(NA, NA, diag(2)),
+  groups = list(1, 2:3, 4:5),
+  test_types = c("b", "s", "p"),
+  verbose = TRUE,
+  test_values = TRUE
+)
+
+print(mix_test)
+
+print(mix_test, indent = 6, precision = 10)
+```

@@ -22,7 +22,7 @@ jobs:
       - name: install packages & document
         shell: Rscript {0}
         run: |
-          install.packages("devtools")
+          install.packages(c("devtools", "decor"))
           devtools::install(dependencies=TRUE)
           devtools::document()
 

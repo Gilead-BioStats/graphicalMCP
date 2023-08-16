@@ -11,26 +11,40 @@ Authors@R: c(
 Description: A multiple comparison procedure (or multiple test procedure)
     is a a statistical analysis method for determining efficacy of
     multiple drugs, or multiple doses of the same drug, in a single
-    clinical trial. Bretz, et al (2011) laid out a graph-based approach to
-    these multiple comparison procedures, in which the weights of the
+    clinical trial. (Bretz et al., 2011) laid out a graph-based approach
+    to these multiple comparison procedures, in which the weights of the
     vertices and edges of the graph are determined independently of the
-    particular statistical test used to assess results. This package is a
-    low-dependency implementation of the methods described in that paper.
+    particular statistical test used to assess results. This is a
+    low-dependency implementation of the methods described in that and
+    subsequent papers.
 License: GPL (>= 3)
+URL: https://urban-sniffle-p11zlpj.pages.github.io/
+BugReports: https://github.com/Gilead-BioStats/graphicalMCP/issues
+Imports: 
+    matrixStats,
+    mvtnorm
 Suggests: 
     bench,
+    dplyr,
     forcats,
     ggplot2,
     gMCP,
+    gt,
+    here,
+    htmltools,
     knitr,
+    lrstat,
+    prompt,
     rmarkdown,
     testthat (>= 3.0.0),
+    tibble,
     tictoc,
+    tidyr,
     xfun
+VignetteBuilder: 
+    knitr
+Config/testthat/edition: 3
 Encoding: UTF-8
 LazyData: true
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.2.3
-Config/testthat/edition: 3
-VignetteBuilder: knitr
-URL: https://urban-sniffle-p11zlpj.pages.github.io/

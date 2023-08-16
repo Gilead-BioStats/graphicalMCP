@@ -3,7 +3,7 @@
 ^README\.Rmd$
 ^LICENSE\.md$
 ^LICENSE$
-^perf-tests$
+^misc$
 ^cache$
 ^docs$
 ^_pkgdown\.yml$
@@ -11,3 +11,11 @@
 ^\.github$
 ^doc$
 ^Meta$
+^src/calcWeight.cpp$
+^vignettes/.*cache$
+^vignettes/knitted$
+^vignettes/.*files$
+^vignettes/.*\.html$
+^vignettes/.*\.R$
+^codemeta\.json$
+^man-roxygen$
