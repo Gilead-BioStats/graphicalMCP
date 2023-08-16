@@ -1,9 +1,10 @@
 #' Convert between gMCP and graphicalMCP graph classes
 #'
-#' @param graph An initial graph as returned by [graph_create()]
-#' @param gmcp_graph A gMCP graph
+#' @param graph An `initial_graph` object from graphicalMCP, a `graphMCP` object
+#'   from gMCP, or an `igraph` object from igraph, depending on which direction
+#'   you're converting
 #'
-#' @return For `as_gmcp_graph()`, a gMCP graph object, for `as_igraph()`, an
+#' @return For `as_graphMCP()`, a gMCP graph object, for `as_igraph()`, an
 #'   igraph object, and for `as_initial_graph()`, a graphicalMCP graph object
 #' @rdname as-graph
 #' @export
@@ -12,37 +13,42 @@
 #' g1 <- random_graph(5)
 #'
 #' if (requireNamespace("gMCP", quietly = TRUE)) {
-#'   g2 <- as_gmcp_graph(g1)
+#'   g2 <- as_graphMCP(g1)
 #'
 #'   all.equal(g1, as_initial_graph(g2))
 #' }
-as_initial_graph.graphMCP <- function(gmcp_graph) {
-  graph_create(gmcp_graph@weights, gmcp_graph@m)
+#'
+#' if (requireNamespace("igraph", quietly = TRUE)) {
+#'   g3 <- as_igraph(g1)
+#'
+#'   all.equal(g1, as_initial_graph(g3))
+#' }
+as_initial_graph <- function(graph) {
+  UseMethod("as_initial_graph", graph)
 }
 
 #' @rdname as-graph
 #' @export
-as_initial_graph <- function(other_graph) {
-  UseMethod("as_initial_graph", other_graph)
+as_initial_graph.graphMCP <- function(graph) {
+  graph_create(graph@weights, graph@m)
 }
 
 #' @rdname as-graph
 #' @export
-as_initial_graph.igraph <- function(igraph) {
-  # graph_create(gmcp_graph@weights, gmcp_graph@m)
+as_initial_graph.igraph <- function(graph) {
   cat("igraph method")
-  invisible(igraph)
+  invisible(graph)
 }
 
 #' @rdname as-graph
 #' @export
-as_gmcp_graph <- function(graph) {
-  UseMethod("as_gmcp_graph", graph)
+as_graphMCP <- function(graph) {
+  UseMethod("as_graphMCP", graph)
 }
 
 #' @rdname as-graph
 #' @export
-as_gmcp_graph.initial_graph <- function(graph) {
+as_graphMCP.initial_graph <- function(graph) {
   if (!requireNamespace("gMCP", quietly = TRUE)) {
     stop("Please install.packages('gMCP') before converting to a gMCP graph")
   } else {

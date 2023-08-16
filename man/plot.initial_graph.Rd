@@ -5,22 +5,53 @@
 \title{S3 plot method for the class \code{initial_graph}}
 \usage{
 \method{plot}{initial_graph}(
-  graph,
+  x,
+  ...,
   layout = igraph::layout_nicely,
-  groups = list(graph$hypotheses),
-  groups_layout = NULL,
   nrow = NULL,
   ncol = NULL,
   edge_curves = NULL,
   precision = 4,
   eps = 0.001,
-  background_color = "white",
-  ...
+  background_color = "white"
 )
 }
 \arguments{
-\item{...}{}
+\item{x}{An initial graph as returned by \code{\link[=graph_create]{graph_create()}}}
+
+\item{...}{Other arguments passed on to \verb{[igraph::plot.igraph]}}
+
+\item{layout}{An igraph layout specification (See \code{?igraph.plotting}), or
+\code{"grid"}, which lays out hypotheses left-to-right, top-to-bottom with
+\code{nrow} rows and \code{ncol} columns.}
+
+\item{nrow}{An integer scalar specifying the number of rows in the vertex
+grid. If row and columns counts are not specified, vertices will be laid
+out as close to a square as possible.}
+
+\item{ncol}{An integer scalar specifying the number of columns in the vertex
+grid. If row and columns counts are not specified, vertices will be laid
+out as close to a square as possible.}
+
+\item{edge_curves}{A named numeric vector specifying the curvature edges.
+Edge pairs (Where two vertices share an edge in each possible direction)
+are detected automatically and get 0.25 curvature. Adjust edges by adding
+an entry with name \verb{"vertex1|vertex2}. Adjust default edge pairs curvature
+by adding an entry with name \code{"pairs"}.}
+
+\item{precision}{An integer scalar specifying how many decimal places should
+be displayed for weights}
+
+\item{eps}{A numeric scalar. Edge weights between 0 and \code{eps} will be
+displayed as \eqn{\epsilon}, and edge weights between \code{1 - eps} and 1
+will be displayed as \eqn{1 - \epsilon}}
+}
+\value{
+NULL, after plotting the graph
 }
 \description{
 S3 plot method for the class \code{initial_graph}
+}
+\examples{
+plot(simple_successive_2(), layout = "grid")
 }

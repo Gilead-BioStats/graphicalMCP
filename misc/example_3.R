@@ -59,7 +59,7 @@ cbind(gw, cJ)
 # calculation above
 p_vals <- c(.01, .02, .005, .5)
 
-gMCP(as_gmcp_graph(g), p_vals, alpha = alpha, correlation = corr,
+gMCP(as_graphMCP(g), p_vals, alpha = alpha, correlation = corr,
      test = "parametric")@rejected
 graph_test_closure(g, p_vals, alpha = alpha, corr = corr,
            tests = list(parametric = list(1:4)))$hypotheses_rejected
@@ -133,7 +133,7 @@ part2 <- function(n0 = 1000, n1 = n0, n2 = n0, p_vals = c(.01, .02, .005, .05),
   # results than the last ones, or even differ from Bonferroni. So it's not that
   # interesting, I think
   if (print) cat("\ngMCP --------------------------------------------------------------\n")
-  if (print) print(gMCP(as_gmcp_graph(g), p_vals, alpha = alpha, correlation = rho,
+  if (print) print(gMCP(as_graphMCP(g), p_vals, alpha = alpha, correlation = rho,
        test = "parametric")@rejected)
 
   if (print) cat("\ngraphicalMCP ------------------------------------------------------\n")

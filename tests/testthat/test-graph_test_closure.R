@@ -209,7 +209,7 @@ test_that("compare adjusted p-values to gMCP - Bonferroni & parametric", {
   p <- pnorm(rnorm(6, 2.5), lower.tail = FALSE)
 
   if (requireNamespace("gMCP", quietly = TRUE)) {
-    gmcp_g <- as_gmcp_graph(g)
+    gmcp_g <- as_graphMCP(g)
 
     expect_equal(
       graph_test_shortcut(g, p)$outputs$adjusted_p,

@@ -171,7 +171,7 @@ set.seed(5823)
 m <- params$m
 
 graph2 <- random_graph(m)
-graph <- as_gmcp_graph(graph2)
+graph <- as_graphMCP(graph2)
 
 # generate weights
 gw <- graph_generate_weights(graph2)

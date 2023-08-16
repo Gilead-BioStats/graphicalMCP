@@ -454,7 +454,7 @@ graph_calculate_power(
 # } else {
 #   power_timing <- bench::mark(
 #     `gMCP shortcut (C)` = calcPower(
-#       graph = as_gmcp_graph(example_.5_.5),
+#       graph = as_graphMCP(example_.5_.5),
 #       alpha = .025,
 #       mean = marginal_power, corr.sim = s_corr,
 #       n.sim = 2^13
@@ -481,7 +481,7 @@ graph_calculate_power(
 #       sim_corr = s_corr
 #     ),
 #     # `gMCP closure (R)` = calcPower(
-#     #   graph = as_gmcp_graph(example_.5_.5),
+#     #   graph = as_graphMCP(example_.5_.5),
 #     #   alpha = .025,
 #     #   mean = marginal_power, corr.sim = s_corr,
 #     #   n.sim = 2^13,

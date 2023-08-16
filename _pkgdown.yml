@@ -10,7 +10,7 @@ reference:
   - graph_create
   - print.initial_graph
   - as_graph
-  - as_gmcp_graph
+  - as_graphMCP
 - title: Updating a graph
 - desc: Functions for removing hypotheses from a graph
 - contents:

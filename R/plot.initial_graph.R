@@ -1,36 +1,47 @@
 #' S3 plot method for the class `initial_graph`
 #'
-#' @param graph
-#' @param layout
-#' @param groups
-#' @param groups_layout
-#' @param nrow
-#' @param ncol
-#' @param edge_curves
-#' @param precision
-#' @param epsilon
-#' @param ...
+#' @param x An initial graph as returned by [graph_create()]
+#' @param ... Other arguments passed on to `[igraph::plot.igraph]`
+#' @param layout An igraph layout specification (See `?igraph.plotting`), or
+#'   `"grid"`, which lays out hypotheses left-to-right, top-to-bottom with
+#'   `nrow` rows and `ncol` columns.
+#' @param nrow An integer scalar specifying the number of rows in the vertex
+#'   grid. If row and columns counts are not specified, vertices will be laid
+#'   out as close to a square as possible.
+#' @param ncol An integer scalar specifying the number of columns in the vertex
+#'   grid. If row and columns counts are not specified, vertices will be laid
+#'   out as close to a square as possible.
+#' @param edge_curves A named numeric vector specifying the curvature edges.
+#'   Edge pairs (Where two vertices share an edge in each possible direction)
+#'   are detected automatically and get 0.25 curvature. Adjust edges by adding
+#'   an entry with name `"vertex1|vertex2`. Adjust default edge pairs curvature
+#'   by adding an entry with name `"pairs"`.
+#' @param precision An integer scalar specifying how many decimal places should
+#'   be displayed for weights
+#' @param eps A numeric scalar. Edge weights between 0 and `eps` will be
+#'   displayed as \eqn{\epsilon}, and edge weights between `1 - eps` and 1 will
+#'   be displayed as \eqn{1 - \epsilon}
+#' @param background_color A character scalar specifying a background color for
+#'   the whole plotting area
 #'
-#' @return
+#' @return NULL, after plotting the graph
 #' @export
 #'
 #' @examples
-plot.initial_graph <- function(graph,
+#' plot(simple_successive_2(), layout = "grid")
+plot.initial_graph <- function(x,
+                               ...,
                                layout = igraph::layout_nicely,
-                               groups = list(graph$hypotheses),
-                               groups_layout = NULL,
                                nrow = NULL,
                                ncol = NULL,
                                edge_curves = NULL,
                                precision = 4,
                                eps = .001,
-                               background_color = "white",
-                               ...) {
-  graph_size <- length(graph$hypotheses)
-  graph_names <- names(graph$hypotheses)
-  graph_seq <- seq_along(graph$hypotheses)
+                               background_color = "white") {
+  graph_size <- length(x$hypotheses)
+  graph_seq <- seq_along(x$hypotheses)
 
-  graph_igraph <- as_igraph(graph)
+  graph_igraph <- as_igraph(x)
 
   v_attr <- igraph::vertex_attr(graph_igraph)
   e_attr <- igraph::edge_attr(graph_igraph)
@@ -62,7 +73,7 @@ plot.initial_graph <- function(graph,
   }
 
   edge_pair_locs <-
-    attr(igraph::E(graph_igraph), "vnames") %in% edge_pairs(graph)
+    attr(igraph::E(graph_igraph), "vnames") %in% edge_pairs(x)
 
   curve[edge_pair_locs] <- edge_pair_curve
 
@@ -101,7 +112,7 @@ plot.initial_graph <- function(graph,
     # vertex.frame.color = "#e8c2ff",
     vertex.label = v_labels,
     vertex.label.color = "black",
-    vertex.size = 20,
+    vertex.size = 25,
     edge.label = edge_labels,
     edge.curved = curve,
     edge.arrow.size = .5,
