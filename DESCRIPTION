@@ -21,7 +21,9 @@ License: GPL (>= 3)
 URL: https://urban-sniffle-p11zlpj.pages.github.io/
 BugReports: https://github.com/Gilead-BioStats/graphicalMCP/issues
 Imports: 
+    igraph,
     matrixStats,
+    methods,
     mvtnorm
 Suggests: 
     bench,

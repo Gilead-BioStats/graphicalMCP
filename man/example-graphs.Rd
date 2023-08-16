@@ -32,6 +32,8 @@ random_graph(num_hyps, hyp_names = NULL)
 complex_example_1(hyp_names = NULL)
 
 complex_example_2(hyp_names = NULL)
+
+complex_example_2(hyp_names = NULL)
 }
 \arguments{
 \item{num_hyps}{Number of vertices in the graph}
