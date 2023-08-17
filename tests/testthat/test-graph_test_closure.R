@@ -48,15 +48,19 @@ test_that("invalid test inputs throw errors", {
 
   test_values_inval <- 1
 
-  corr_inval1 <- list(NA, NA, rbind(c(1, .01),c(0, 1)))
-  corr_inval2 <- list(diag(2))
-  corr_inval3 <- list(
-    NA,
-    rbind(
-      c(1, .997, .929),
-      c(.997, 1, .769),
-      c(.929, .769, 1)
-    )
+  corr_inval1 <- rbind(
+    c(NA, NA, NA, NA),
+    c(NA, NA, NA, NA),
+    c(NA, NA, 1, 0),
+    c(NA, NA, 0, 1)
+  )
+  corr_inval1[3, 4] <- .01
+  corr_inval2 <- diag(2)
+  corr_inval3 <- rbind(
+    c(1, NA, NA, NA),
+    c(NA, 1, .997, .929),
+    c(NA, .997, 1, .769),
+    c(NA, .929, .769, 1)
   )
 
   expect_s3_class(meta_test_graph(), "graph_report")
@@ -118,7 +122,7 @@ test_that("Simes & parametric adjusted p-values are less than Bonferroni", {
           rando,
           rep(.01, 4),
           test_types = "p",
-          corr = list(diag(4))
+          corr = diag(4)
         )$outputs$adjusted_p
     )
   )
@@ -144,8 +148,7 @@ test_that("verbose/test values output is only present when asked for", {
   )
 })
 
-# could be updated to "Get started" vignette at some point
-test_that("check assertions in former testing vignette", {
+test_that("check assertions in testing vignette", {
   par_gate <- simple_successive_1(c("A1", "A2", "B1", "B2"))
   pvals <- c(.024, .01, .026, .027)
 
@@ -174,6 +177,10 @@ test_that("check assertions in former testing vignette", {
     ignore_attr = TRUE
   )
 
+  corr1 <- matrix(nrow = 4, ncol = 4)
+  corr1[3:4, 3:4] <- .5
+  diag(corr1) <- 1
+
   expect_equal(
     graph_test_closure(
       par_gate,
@@ -181,7 +188,7 @@ test_that("check assertions in former testing vignette", {
       .05,
       list(1:2, 3:4),
       c("b", "p"),
-      list(NA, matrix(c(1, .5, .5, 1), nrow = 2, byrow = TRUE))
+      corr1
     )$outputs,
     list(
       adjusted_p = c(.048, .02, .048, .048),
@@ -191,6 +198,9 @@ test_that("check assertions in former testing vignette", {
     ignore_attr = TRUE
   )
 
+  corr3 <- matrix(nrow = 4, ncol = 4)
+  diag(corr3) <- 1
+
   expect_equal(
     graph_test_closure(
       par_gate,
@@ -198,7 +208,7 @@ test_that("check assertions in former testing vignette", {
       .05,
       list(1, 2, 3, 4),
       rep("p", 4),
-      rep(list(matrix(1)), 4)
+      corr3
     )$outputs,
     graph_test_closure(par_gate, pvals, .05)$outputs
   )
@@ -209,7 +219,7 @@ test_that("compare adjusted p-values to gMCP - Bonferroni & parametric", {
   p <- pnorm(rnorm(6, 2.5), lower.tail = FALSE)
 
   if (requireNamespace("gMCP", quietly = TRUE)) {
-    gmcp_g <- as_graphMCP(g)
+    gmcp_g <- as_gmcp_graph(g)
 
     expect_equal(
       graph_test_shortcut(g, p)$outputs$adjusted_p,
@@ -226,7 +236,7 @@ test_that("compare adjusted p-values to gMCP - Bonferroni & parametric", {
         g,
         p,
         test_types = "p",
-        corr = list(diag(6))
+        corr = diag(6)
       )$outputs$adjusted_p,
       gMCP::gMCP(gmcp_g, p, "parametric", correlation = diag(6))@adjPValues
     )
@@ -298,7 +308,7 @@ test_that("closure internal consistency", {
     .025,
     list(1:2, 3:4, 5:6),
     c("b", "p", "s"),
-    list(NA, diag(2), NA),
+    diag(6),
     TRUE,
     TRUE
   )
@@ -361,7 +371,7 @@ test_that("parametric floating point errors", {
     p,
     .025,
     test_types = "p",
-    corr = list(t_corr),
+    corr = t_corr,
     verbose = TRUE,
     test_values = TRUE
   )

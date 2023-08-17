@@ -66,8 +66,10 @@ transitions <- rbind(
 hyp_names <- c("H1", "H2", "H3", "H4")
 example_graph <- graph_create(hypotheses, transitions, hyp_names)
 
-example_graph
+plot(example_graph, layout = "grid", asp = .7)
 ```
+
+<img src="man/figures/README-create-graph-1.png" width="100%" />
 
 ### Update graph
 
