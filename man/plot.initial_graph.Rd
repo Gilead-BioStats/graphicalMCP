@@ -13,13 +13,14 @@
   edge_curves = NULL,
   precision = 4,
   eps = 0.001,
-  background_color = "white"
+  background_color = "white",
+  margins = c(0, 0, 0, 0)
 )
 }
 \arguments{
 \item{x}{An initial graph as returned by \code{\link[=graph_create]{graph_create()}}}
 
-\item{...}{Other arguments passed on to \verb{[igraph::plot.igraph]}}
+\item{...}{Other arguments passed on to \code{\link[igraph:plot.igraph]{igraph::plot.igraph()}}}
 
 \item{layout}{An igraph layout specification (See \code{?igraph.plotting}), or
 \code{"grid"}, which lays out hypotheses left-to-right, top-to-bottom with
@@ -43,8 +44,15 @@ by adding an entry with name \code{"pairs"}.}
 be displayed for weights}
 
 \item{eps}{A numeric scalar. Edge weights between 0 and \code{eps} will be
-displayed as \eqn{\epsilon}, and edge weights between \code{1 - eps} and 1
-will be displayed as \eqn{1 - \epsilon}}
+displayed as \eqn{\epsilon}, and edge weights between \code{1 - eps} and 1 will
+be displayed as \eqn{1 - \epsilon}}
+
+\item{background_color}{A character scalar specifying a background color for
+the whole plotting area. Passed directly to \code{\link[graphics:par]{graphics::par()}} (\code{bg})}
+
+\item{margins}{A length 4 numeric vector specifying the margins for the plot.
+Defaults to all 0, since igraph plots tend to have large margins. It is
+passed directly to \code{\link[graphics:par]{graphics::par()}} (\code{mar})}
 }
 \value{
 NULL, after plotting the graph

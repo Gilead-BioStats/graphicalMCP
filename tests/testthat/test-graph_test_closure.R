@@ -122,7 +122,7 @@ test_that("Simes & parametric adjusted p-values are less than Bonferroni", {
           rando,
           rep(.01, 4),
           test_types = "p",
-          corr = diag(4)
+          corr = list(diag(4))
         )$outputs$adjusted_p
     )
   )
@@ -177,9 +177,8 @@ test_that("check assertions in testing vignette", {
     ignore_attr = TRUE
   )
 
-  corr1 <- matrix(nrow = 4, ncol = 4)
-  corr1[3:4, 3:4] <- .5
-  diag(corr1) <- 1
+  corr1 <- list(NA, matrix(1, nrow = 2, ncol = 2))
+  corr1[[2]][1, 2] <- corr1[[2]][2, 1] <- .5
 
   expect_equal(
     graph_test_closure(
@@ -198,9 +197,6 @@ test_that("check assertions in testing vignette", {
     ignore_attr = TRUE
   )
 
-  corr3 <- matrix(nrow = 4, ncol = 4)
-  diag(corr3) <- 1
-
   expect_equal(
     graph_test_closure(
       par_gate,
@@ -208,7 +204,7 @@ test_that("check assertions in testing vignette", {
       .05,
       list(1, 2, 3, 4),
       rep("p", 4),
-      corr3
+      rep(list(matrix(1)), 4)
     )$outputs,
     graph_test_closure(par_gate, pvals, .05)$outputs
   )
@@ -219,7 +215,7 @@ test_that("compare adjusted p-values to gMCP - Bonferroni & parametric", {
   p <- pnorm(rnorm(6, 2.5), lower.tail = FALSE)
 
   if (requireNamespace("gMCP", quietly = TRUE)) {
-    gmcp_g <- as_gmcp_graph(g)
+    gmcp_g <- as_graphMCP(g)
 
     expect_equal(
       graph_test_shortcut(g, p)$outputs$adjusted_p,
@@ -236,7 +232,7 @@ test_that("compare adjusted p-values to gMCP - Bonferroni & parametric", {
         g,
         p,
         test_types = "p",
-        corr = diag(6)
+        corr = list(diag(6))
       )$outputs$adjusted_p,
       gMCP::gMCP(gmcp_g, p, "parametric", correlation = diag(6))@adjPValues
     )
@@ -308,7 +304,7 @@ test_that("closure internal consistency", {
     .025,
     list(1:2, 3:4, 5:6),
     c("b", "p", "s"),
-    diag(6),
+    list(NA, diag(2), NA),
     TRUE,
     TRUE
   )
@@ -364,7 +360,7 @@ test_that("parametric floating point errors", {
   bh <- bonferroni_holm(3)
   p <- rep(.025, 3)
 
-  t_corr <- matrix(1, 3, 3)
+  t_corr <- list(matrix(1, 3, 3))
 
   res_para <- graph_test_closure(
     bh,

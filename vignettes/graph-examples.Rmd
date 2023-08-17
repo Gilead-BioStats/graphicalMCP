@@ -1,0 +1,168 @@
+---
+title: "Commonly-used graph examples"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Commonly-used graph examples}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  fig.align = "center",
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup}
+library(graphicalMCP)
+```
+
+# Introduction
+
+Any valid graph can be made with `graph_create()`, but some patterns have been established over time. We demonstrate how to run some of these patterns with graphicalMCP.
+
+# Bonferroni-Holm
+
+```{r bonferroni-holm, fig.dim=c(6, 6)}
+transitions <- matrix(1 / 4, 5, 5)
+diag(transitions) <- 0
+
+bonferroni_holm_graph <- graph_create(rep(1 / 5, 5), transitions)
+
+plot(bonferroni_holm_graph)
+```
+
+# Fixed sequence
+
+```{r fixed-sequence, fig.dim=c(6, 2)}
+fixed_sequence_graph <- graph_create(
+  c(1, 0, 0, 0),
+  rbind(
+    c(0, 1, 0, 0),
+    c(0, 0, 1, 0),
+    c(0, 0, 0, 1),
+    c(0, 0, 0, 0)
+  )
+)
+
+plot(fixed_sequence_graph, layout = "grid", nrow = 1, asp = .1)
+```
+
+# Simplel successive
+
+```{r simple-successive, fig.dim=c(5, 5)}
+simple_successive_graph <- graph_create(
+  c(.5, .5, 0, 0),
+  rbind(
+    c(0, 0, 1, 0),
+    c(0, 0, 0, 1),
+    c(0, 1, 0, 0),
+    c(1, 0, 0, 0)
+  )
+)
+
+plot(simple_successive_graph, layout = "grid", nrow = 2)
+```
+
+General successive graphs are a good example where multiple variations may be useful with slight differences in starting edge weights. Variable edge weights are not currently supported, but they can be done for a particular graph with a light wrapper.
+
+```{r simple-successive-var-fun}
+simple_successive_var <- function(gamma) {
+  graph_create(
+  c(.5, .5, 0, 0),
+  rbind(
+    c(0, gamma, 1 - gamma, 0),
+    c(gamma, 0, 0, 1 - gamma),
+    c(0, 1, 0, 0),
+    c(1, 0, 0, 0)
+  )
+  )
+}
+```
+
+Then multiple variations can be created and compared easily.
+
+```{r simple-successive-var, fig.show="hold", fig.align='default', out.width="47%"}
+plot(
+  simple_successive_var(.75),
+  layout = "grid",
+  nrow = 2,
+  vertex.label.cex = .7,
+  edge.label.cex = .7
+)
+
+plot(
+  simple_successive_var(.9),
+  layout = "grid",
+  nrow = 2,
+  vertex.label.cex = .7,
+  edge.label.cex = .7
+)
+```
+
+# Huque-Alosh-Bhore (2011)
+
+```{r huque-alosh-bhore, fig.dim=c(5, 5)}
+hab_2011_graph <- graph_create(
+    c(1, 0, 0, 0),
+    rbind(
+      c(0, .5, .5,  0),
+      c(0,  0,  0,  1),
+      c(0, .5,  0, .5),
+      c(0,  1,  0,  0)
+  )
+)
+
+plot(hab_2011_graph, layout = "grid")
+```
+
+# Wiens-Dmitrienko (2005)
+
+```{r wiens-dmitrienko, fig.dim=c(6, 2)}
+wd_2005_graph <- graph_create(
+    c(1 / 3, 1 / 3, 1 / 3),
+    rbind(
+      c(0, 1, 0),
+      c(0, 0, 1),
+      c(.5, .5, 0)
+    )
+  )
+
+plot(wd_2005_graph, layout = "grid", nrow = 1, asp = .1, edge_curves = c(pairs = -6, "H3|H1" = -6))
+```
+
+# Parallel gate-keeping
+
+```{r parallel-gatekeeping, fig.dim=c(5, 5)}
+par_gate_graph <- graph_create(
+  c(.5, .5, 0, 0),
+  rbind(
+    c(0, 0, .5, .5),
+    c(0, 0, .5, .5),
+    c(0, 0, 0, 1),
+    c(0, 0, 1, 0)
+  )
+)
+
+
+plot(par_gate_graph, layout = "grid", nrow = 2)
+```
+
+# Improved parallel gate-keeping
+
+```{r improved-parallel-gatekeeping, fig.dim=c(5, 5)}
+imp_par_gate_graph <- graph_create(
+  c(.5, .5, 0, 0),
+  rbind(
+    c(0, 0, .5, .5),
+    c(0, 0, .5, .5),
+    c(.0001, 0, 0, .9999),
+    c(0, .0001, .9999, 0)
+  )
+)
+
+
+plot(imp_par_gate_graph, layout = "grid", nrow = 2)
+```

@@ -1,7 +1,7 @@
 #' S3 plot method for the class `initial_graph`
 #'
 #' @param x An initial graph as returned by [graph_create()]
-#' @param ... Other arguments passed on to `[igraph::plot.igraph]`
+#' @param ... Other arguments passed on to [igraph::plot.igraph()]
 #' @param layout An igraph layout specification (See `?igraph.plotting`), or
 #'   `"grid"`, which lays out hypotheses left-to-right, top-to-bottom with
 #'   `nrow` rows and `ncol` columns.
@@ -22,7 +22,10 @@
 #'   displayed as \eqn{\epsilon}, and edge weights between `1 - eps` and 1 will
 #'   be displayed as \eqn{1 - \epsilon}
 #' @param background_color A character scalar specifying a background color for
-#'   the whole plotting area
+#'   the whole plotting area. Passed directly to [graphics::par()] (`bg`)
+#' @param margins A length 4 numeric vector specifying the margins for the plot.
+#'   Defaults to all 0, since igraph plots tend to have large margins. It is
+#'   passed directly to [graphics::par()] (`mar`)
 #'
 #' @return NULL, after plotting the graph
 #' @export
@@ -37,7 +40,8 @@ plot.initial_graph <- function(x,
                                edge_curves = NULL,
                                precision = 4,
                                eps = .001,
-                               background_color = "white") {
+                               background_color = "white",
+                               margins = c(0, 0, 0, 0)) {
   graph_size <- length(x$hypotheses)
   graph_seq <- seq_along(x$hypotheses)
 
@@ -101,6 +105,7 @@ plot.initial_graph <- function(x,
     }
   }
 
+  graphics::par(mar = margins)
   graphics::par(bg = background_color)
 
   # draw! ----------------------------------------------------------------------
