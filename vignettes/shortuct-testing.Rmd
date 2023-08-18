@@ -1,0 +1,320 @@
+---
+title: "Sequentially rejective graphical approaches based on Bonferroni tests"
+output:
+  rmarkdown::html_vignette:
+    code_folding: "show"
+vignette: >
+  %\VignetteIndexEntry{shortcut-testing}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  cache.lazy = FALSE
+)
+```
+
+```{r setup}
+library(gt)
+library(gMCP)
+library(graphicalMCP)
+```
+
+## Multiple comparison problem
+
+Consider a confirmatory clinical trial comparing a test treatment (treatment) 
+against the control treatment (control) for a disease. There are two doses of treatment: 
+the low dose and the high dose. There are two endpoints included in the multiplicity
+adjustment strategy, which are the primary endpoint (PE) and the secondary endpoint 
+(SE). In total, there are four null hypotheses: $H_1$ and $H_3$ are the primary 
+and secondary hypothesis respectively for the low dose versus control; $H_2$ 
+and $H_4$ are the primary and secondary hypothesis respectively for the high dose 
+versus control.
+
+Before discussing appropriate multiple comparison procedures, there are clinical 
+considerations, which adds some structure to multiple comparison procedures, and 
+which can be flexibly incorporated using graphical approaches. First, the low and 
+the high doses are considered equally important, which means that rejecting the 
+primary hypothesis for either dose versus control leads to a successful trial. 
+Regarding secondary hypotheses, they are tested when their corresponding 
+primary hypothesis has been rejected. This means that $H_3$ is tested if $H_1$ 
+has been rejected; $H_4$ is tested if $H_2$ has been rejected.
+
+In addition, there some statistical considerations to complete the graph. The 
+primary hypotheses $H_1$ and $H_2$ will have an equal hypothesis weight of 0.5. 
+The secondary hypotheses have a hypothesis weight of 0. When a primary hypothesis 
+has been rejected, it will have two outgoing edges: one to the other primary 
+hypothesis and one to its descendant secondary hypothesis. The two edges will 
+have an equal transition weight of 0.5. When both the primary and the secondary 
+hypotheses have been rejected for a dose-control comparison, their hypothesis 
+weights will be propagated to the primary hypothesis for the other dose-control 
+comparison. With these specifications, we can create the following graph.
+
+## Create a graph
+```{r create-graph}
+hypotheses <- c(0.5, 0.5, 0, 0)
+transitions <- rbind(
+  c(0, 0.5, 0.5, 0),
+  c(0.5, 0, 0, 0.5),
+  c(0, 1, 0, 0),
+  c(1, 0, 0, 0)
+)
+hyp_names <- c("H1", "H2", "H3", "H4")
+g <- graph_create(hypotheses, transitions, hyp_names)
+
+plot(g, layout = "grid")
+```
+
+## Perform the graphical multiple comparison procedure
+
+Given a set of p-values for $H_1, \ldots, H_4$, the graphical multiple comparison
+procedure can be performed to control the familywise error rate (FWER) at the 
+significance level `alpha`. The `graph_test_shortcut` function is agnostic to 
+one-sided or two-sided tests. For one-sided p-values, `alpha` is often set to 
+0.025 (defalult); for two-sided p-values, `alpha` is often set to 0.05. We consider 
+one-sided tests here. After running the procedure, hypotheses $H_1$, $H_2$ and 
+$H_4$ are rejected.
+
+```{r graph-test}
+p_values <- c(.013, .012, .105, .005)
+test_results <- graph_test_shortcut(g, p = p_values, alpha = 0.025)
+test_results
+```
+
+### Obtain final and intermediate graphs after rejections
+From the above results, we can obtain the adjusted p-values and the rejections. 
+A hypothesis is rejected if its adjusted p-value is less than or equal to `alpha`. 
+In addition, two graphs are provided: one is the initial graph and one is the 
+final graph after removing rejected hypotheses $H_1$, $H_2$ and $H_4$. If we are 
+also interested in intermediate graphs, for example, the graph after $H_1$ and 
+$H_2$ rejected, we can specify `verbose = TRUE` and obtain it via `test_results_verbose$details$results`. # I am not sure if they can be retrieved easily
+
+### I am not sure if intermediate graphs can be retrieved easily
+
+```{r graph-test-verbose}
+test_results$outputs # Adjusted p-values and rejections
+test_results_verbose <- graph_test_shortcut(g, p = p_values, alpha = 0.025, verbose = TRUE)
+test_results_verbose$details # To be discussed
+```
+
+### Obtain adjusted significance levels
+An equivalent way to obtain rejections is via adjusting significance levels. A 
+hypothesis is rejected if its p-value is less than or equal to its adjusted 
+significance level. Because adjusted significance levels depend on the order of 
+rejections, by default, we use the order of rejections following the increasing 
+adjusted p-values. In this example, the order is $H_2\rightarrow H_1 \rightarrow H_4$ 
+and there are four steps of rejections. First, $H_2$ is rejected at an adjusted 
+significance level of `0.5 * alpha`. Second, $H_1$ is rejected at an adjusted 
+significance level of `0.75 * alpha`, after $H_2$ rejected. Third, $H_4$ is 
+rejected at an adjusted significance level of `0.5 * alpha`, after $H_1$ and $H_2$ 
+rejected. Fourth and finally, $H_3$ cannot be rejected at an adjusted significance 
+level of `alpha`, after $H_1$, $H_2$ and $H_4$ rejected. These results can be 
+obtained by specifying `test_values = TRUE`.
+
+```{r graph-test-test_values}
+test_results_test_values <- graph_test_shortcut(g, p = p_values, alpha = 0.025, test_values = TRUE)
+test_results_test_values$test_values$results
+```
+
+### Something about other rejection orders? 
+
+## Power calculation
+
+Given the above graph, the trial team is often interested in the power of the trial. 
+For a single null hypothesis, the power is the probability to reject the null 
+hypothesis at the significance level `alpha` when the alternative hypothesis is 
+true. For multiple null hypotheses, there could be multiple versions of power. 
+For example, the power to reject at least one hypothesis and the power to reject 
+all hypotheses, given the alternative hypotheses are true. With the graphical 
+multiple comparison procedures, it is also important to understand the power to 
+reject each hypothesis, given the multiplicity adjustment. Sometimes, a team may 
+want to customize definitions of power to define success. Thus power calculation is 
+an important aspect of trial design.
+
+### Input: Marginal power for primary hypotheses
+Assume that the primary endpoint is about the occurrence of an unfavorable clinical 
+event. To evaluate the treatment effect, the proportion of patients with this event 
+is calculated and it is the lower the better. Assume that the proportions are 0.181
+for the low and the high doses, and 0.3 for control. Using the equal randomization
+among the three treatment groups, the clinical trial team chooses a total sample 
+size of 600 with 200 per group. This leads to a marginal power of 80\% for $H_1$ 
+and $H_2$, respectively, using the two-sample test for difference in 
+proportions with unpooled variance each at one-sided significance level 0.025. 
+In this calculation, we use the marginal power to combine the information from 
+the treatment effect, any nuisance parameter, and sample sizes for each 
+hypothesis. Note that the significance level used for the marginal power should 
+be the same as `alpha` which is used in the power calculation as the significance 
+level for the FWER control. In addition, the marginal power has a one-to-one 
+relationship with the noncentrality parameter, which is illustrated below.
+
+```{r power-calculate-primary}
+alpha <- 0.025
+prop <- c(0.3, 0.181, 0.181)
+sample_size <- rep(200, 3)
+unpooled_variance <- prop[-1] * (1 - prop[-1]) / sample_size[-1] + 
+  prop[1] * (1 - prop[1]) / sample_size[1]
+noncentrality_parameter_primary <- -(prop[-1] - prop[1]) / sqrt(unpooled_variance)
+marginal_power_primary <- pnorm(qnorm(alpha, lower.tail = FALSE),
+                        noncentrality_parameter_primary, 1, lower.tail = FALSE)
+names(marginal_power_primary) <- c("H1", "H2")
+marginal_power_primary
+```
+
+### Input: Marginal power for secondary hypotheses
+Assume that the secondary endpoint is about the change in total medication score
+from baseline, which is a continuous outcome. To evaluate the treatment effect, 
+the mean change is calculated, and it is the more reduction the better. Assume that 
+the mean change from baseline is the reduction of 7.5 and 8.25, respectively for 
+the low and the high doses, and 5 for control. Further assume a known common 
+standard deviation of 10. Given the sample size of 200 per treatment group, the 
+marginal power is 71\% and 90\% for $H_3$ and $H_4$, respectively, using the 
+two-sample $z$-test for the difference in means each at the one-sided significance 
+level 0.025.
+
+```{r power-calculate-secondary}
+mean_change <- c(5, 7.5, 8.25)
+sd <- rep(10, 3)
+variance <- sd[-1]^2 / sample_size[-1] + sd[1]^2 / sample_size[1]
+noncentrality_parameter_secondary <- (mean_change[-1] - mean_change[1]) / 
+  sqrt(variance)
+marginal_power_secondary <- pnorm(qnorm(alpha, lower.tail = FALSE),
+                        noncentrality_parameter_secondary, 1, lower.tail = FALSE)
+names(marginal_power_secondary) <- c("H3", "H4")
+marginal_power_secondary
+```
+
+### Input: Correlation structure to simulate test statistics
+
+In addition to the marginal power, we also need to make assumptions about the joint 
+distribution of test statistics. In this example, we assume that they follow a 
+multivariate normal distribution with means defined by the noncentrality parameters 
+above and the correlation matrix $R$. To obtain the correlations, it is helpful 
+to understand that there are two types of correlations in this example. The 
+correlation between two dose-control comparisons for the same endpoint and the 
+correlation between endpoints. The former correlation can be calculated as a 
+function of sample size. For example, the correlation between test statistics for 
+$H_1$ and $H_2$ is $\rho_{12}=\left(\frac{n_1}{n_1+n_0}\right)^{1/2}\left(\frac{n_2}{n_3+n_0}\right)^{1/2}$. 
+Under the equal randomization, this correlation is 0.5. The correlation between 
+test statistics for $H_3$ and $H_4$ is the same as the above. On the other hand, 
+the correlation between endpoints for the same dose-control comparison is often 
+estimated based on prior knowledge or from previous trials. Without the information, 
+we assume it to be $\rho_{13}=\rho_{24}=0.5$. In practice, one could set this 
+correlation as a parameter and try multiple values to assess the sensitivity of this 
+assumption. Regarding the correlation between test statistics for $H_1$ and $H_4$ 
+and for $H_2$ and $H_3$, they are even more difficult to estimate. Here we used 
+a simple product rule, which means that this correlation is a product of 
+correlations of the two previously assumed correlations. For example, 
+$\rho_{14}=\rho_{12}*\rho_{24}$ and $\rho_{23}=\rho_{12}*\rho_{13}$. In practice, 
+one may make further assumptions instead of using the product rule.
+
+```{r power-calculate-correlation}
+corr <- matrix(0, nrow = 4, ncol = 4)
+corr[1, 2] <- corr[3, 4] <- sqrt(sample_size[2] / sum(sample_size[1:2]) * 
+                                   sample_size[3] / sum(sample_size[c(1, 3)]))
+rho <- 0.5
+corr[1, 3] <- corr[2, 4] <- rho
+corr[1, 4] <- corr[2, 3] <- corr[1, 2] * rho
+corr <- corr + t(corr)
+diag(corr) <- 1
+colnames(corr) <- hyp_names
+rownames(corr) <- hyp_names
+corr
+```
+
+### User-defined success criteria
+
+As mentioned earlier, there are multiple versions of "power" when there are multiple 
+hypotheses. Commonly used "power" definitions include:
+- Local power: The probability of each hypothesis being rejected (with multiplicity adjustment)
+- Expected no. of rejections: The expected number of rejections
+- Power to reject 1 or more: The probability to reject at least one hypothesis
+- Power to reject all: The probability to reject all hypotheses
+These are the default outputs from the `graph_calculate_power` function. In 
+addition, an user could customize success criteria to define other versions of "power".
+
+```{r power-calculate-success}
+# Probability to reject H1
+H1 <- function(x) x[1]
+# Expected number of rejections
+`Expected no. of rejections` <- function(x) x[1] + x[2] + x[3] + x[4]
+# Probability to reject at least one hypothesis
+`AtLeast1` <- function(x) x[1] | x[2] | x[3] | x[4]
+# Probability to reject all hypotheses
+`All` <- function(x) x[1] & x[2] & x[3] & x[4]
+# Probability to reject both H1 and H2
+`H1andH2` <- function(x) x[1] & x[2]
+# Probability to reject both hypotheses for the low dose or the high dose
+`(H1andH3)or(H2andH4)` <- function(x) (x[1] & x[3]) | (x[2] & x[4])
+succ <- list(H1, `Expected no. of rejections`, `AtLeast1`, `All`, `H1andH2`, 
+             `(H1andH3)or(H2andH4)`)
+```
+
+### Output: Calculate power
+
+Given the above inputs, we can calculate power via simulation for the graphical 
+multiple comparison procedure at one-sided significance level `alpha=0.025` using 
+`sim_n = 1e5` simulations and the seed `sim_seed = 1234`. The local power is 0.758, 
+0.765, 0.689, and 0.570, respectively for $H_1, \ldots, H_4$. Note that the local 
+power is lower than the marginal power because the former is adjusted for 
+multiplicity. The power to reject at least one hypothesis is 0.856 and the power 
+to reject all hypotheses is 0.512. The expected number of rejections is 2.782. For 
+the last two of user-defined success criteria, the probability to reject both $H_1$ 
+and $H_2$ is 0.667 and the probability to reject at least one of pairs of
+$(H_1$ and $H_3)$ and $(H_2$ and $H_4)$ is 0.747.
+
+```{r power-calculate-calculate}
+output <- graph_calculate_power(g,
+  alpha = .025,
+  sim_corr = corr,
+  sim_n = 1e5,
+  marginal_power = c(marginal_power_primary, marginal_power_secondary),
+  sim_success = succ,
+  sim_seed = 1234
+)
+output
+```
+
+To see the detailed outputs of all simulated p-values and rejection decisions for 
+all hypotheses, one could specify `verbose = TRUE`. This will produce a lot of 
+outputs. To allow flexible printing functions, a user can change the following:
+- The indented space with the default setting of `indent = 2`
+- The precision of numeric values (i.e., the number of decimal places) with the 
+default setting of `precision = 6`
+### maybe the default precision of 4 is enough?
+```{r power-calculate-calculate_verbose}
+verbose_output <- graph_calculate_power(g,
+  alpha = .025,
+  sim_corr = corr,
+  sim_n = 1e5,
+  marginal_power = c(marginal_power_primary, marginal_power_secondary),
+  sim_success = succ,
+  sim_seed = 1234,
+  verbose = TRUE
+)
+
+print(verbose_output)
+
+print(verbose_output, indent = 4, precision = 6)
+```
+
+<!--
+## Compared with gMCP
+
+```{r power-gMCP}
+g_gMCP <- as_graphMCP(g)
+set.seed(1234)
+result <- calcPower(graph=g_gMCP, mean=c(noncentrality_parameter_primary, 
+  noncentrality_parameter_secondary), f=succ, corr.sim=corr, alpha=0.025,
+  n.sim=1e+05)
+
+# Local power
+output$power$power_local
+result$LocalPower
+# User-defined power
+as.numeric(output$power$power_success)
+c(result$func1, result$func2, result$func3, result$func4, result$func5, result$func6) 
+```
+-->
