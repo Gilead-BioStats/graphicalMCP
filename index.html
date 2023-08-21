@@ -67,8 +67,8 @@
 <li class="nav-item dropdown">
   <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" id="dropdown-articles">Articles</a>
   <div class="dropdown-menu" aria-labelledby="dropdown-articles">
-    <a class="dropdown-item" href="articles/case-study.html">Case Study</a>
-    <a class="dropdown-item" href="articles/performance.html">Generating the closure tree</a>
+    <a class="dropdown-item" href="articles/graph-examples.html">Commonly-used graph examples</a>
+    <a class="dropdown-item" href="articles/shortuct-testing.html">Sequentially rejective graphical approaches based on Bonferroni tests</a>
   </div>
 </li>
       </ul>
@@ -101,7 +101,7 @@
 <h2 id="introduction">Introduction<a class="anchor" aria-label="anchor" href="#introduction"></a>
 </h2>
 <p>A multiple comparison procedure (MCP) is a statistical analysis method that allows for assessing the efficacy of multiple endpoints, some of which are dependent on each other, in a single clinical trial. Endpoints can be different doses, treatment of different conditions, combined superiority &amp; non-inferiority testing, or many others. A key feature is that MCPs strongly control the type-I error rate at level alpha.</p>
-<p>In <a href="https://onlinelibrary.wiley.com/doi/10.1002/bimj.201000239" class="external-link">Bretz et al (2011)</a>, a graphical method for MCPs is described, which separates the weighting of the dependency graph from the particular statistical test used to assess each endpoint. This package is a low-dependency implementation of those methods.</p>
+<p>In <a href="https://onlinelibrary.wiley.com/doi/10.1002/bimj.201000239" class="external-link">Bretz et al (2011)</a>, a graphical method for MCPs is described, which separates the weighting of the clinical endpoints from the particular statistical test used to assess each endpoint. A graphical approach can also be helpful for communicating study design to clinical teams. This package is a low-dependency implementation of those methods.</p>
 </div>
 <div class="section level2">
 <h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
@@ -138,14 +138,15 @@
 <span><span class="va">hyp_names</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"H1"</span>, <span class="st">"H2"</span>, <span class="st">"H3"</span>, <span class="st">"H4"</span><span class="op">)</span></span>
 <span><span class="va">example_graph</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/graph_create.html">graph_create</a></span><span class="op">(</span><span class="va">hypotheses</span>, <span class="va">transitions</span>, <span class="va">hyp_names</span><span class="op">)</span></span>
 <span></span>
-<span><span class="va">example_graph</span></span></code></pre></div>
+<span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">example_graph</span>, layout <span class="op">=</span> <span class="st">"grid"</span>, asp <span class="op">=</span> <span class="fl">.7</span><span class="op">)</span></span></code></pre></div>
+<p><img src="reference/figures/README-create-graph-1.png" width="100%"></p>
 </div>
 <div class="section level3">
 <h3 id="update-graph">Update graph<a class="anchor" aria-label="anchor" href="#update-graph"></a>
 </h3>
-<p>Hypotheses can be deleted from the MCP using <code><a href="reference/graph_update.html">graph_update()</a></code>. Updated weights and transitions are calculated according to the weighting strategy in Algorithm 1 of <a href="https://onlinelibrary.wiley.com/doi/10.1002/bimj.201000239" class="external-link">Bretz et al (2011)</a>. We distinguish <em>deleting</em> from <em>rejecting</em> in the <a href="#glossary">glossary</a>.</p>
+<p>Hypotheses can be deleted from the MCP using <code><a href="reference/graph_update.html">graph_update()</a></code>. Updated weights and transitions are calculated according to the weighting strategy in Algorithm 1 of <a href="https://onlinelibrary.wiley.com/doi/10.1002/bimj.201000239" class="external-link">Bretz et al (2011)</a>. We distinguish <em>deleting</em> from <em>rejecting</em> in the <a href="#glossary-of-terms">glossary</a>.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="reference/graph_update.html">graph_update</a></span><span class="op">(</span><span class="va">example_graph</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="cn">TRUE</span>, <span class="cn">FALSE</span>, <span class="cn">FALSE</span>, <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="reference/graph_update.html">graph_update</a></span><span class="op">(</span><span class="va">example_graph</span>, keep <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="cn">TRUE</span>, <span class="cn">FALSE</span>, <span class="cn">FALSE</span>, <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="generate-weights">Generate weights<a class="anchor" aria-label="anchor" href="#generate-weights"></a>
@@ -153,45 +154,48 @@
 <p>The weights of all sub-graphs can be calculated with <code><a href="reference/graph_generate_weights.html">graph_generate_weights()</a></code>. This uses more efficient code under the hood than <code><a href="reference/graph_update.html">graph_update()</a></code> in order to be performant for larger graphs.</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="reference/graph_generate_weights.html">graph_generate_weights</a></span><span class="op">(</span><span class="va">example_graph</span><span class="op">)</span></span></code></pre></div>
+<p>More information on the closure can be found in [Link to closure vignette].</p>
 </div>
 <div class="section level3">
 <h3 id="test-hypotheses">Test hypotheses<a class="anchor" aria-label="anchor" href="#test-hypotheses"></a>
 </h3>
-<p>A mixture of statistical tests are supported in graphicalMCP. A graph can be tested against a given significance level with <code><a href="reference/testing.html">graph_test_closure()</a></code>, which generates a report showing the graph &amp; test results. In this example, a weighted Bonferroni test is applied to all hypotheses, with a significance threshold of 0.025. We can reject the null hypotheses for H1 &amp; H2, but we cannot reject the null hypotheses for H3 &amp; H4.</p>
+<p>Bonferroni testing via the shortcut method is supported in graphicalMCP. Such a test can be performed with <code><a href="reference/testing.html">graph_test_shortcut()</a></code>, which generates a report showing the graph &amp; test results. See more insight about why a hypothesis was rejected or not by setting the <code>verbose</code> and <code>test_values</code> flags. More details about shortcut testing can be found in [link to shortcut vignette].</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="reference/testing.html">graph_test_shortcut</a></span><span class="op">(</span><span class="va">example_graph</span>, p <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">.01</span>, <span class="fl">.03</span>, <span class="fl">.02</span>, <span class="fl">.01</span><span class="op">)</span>, alpha <span class="op">=</span> <span class="fl">.025</span><span class="op">)</span></span></code></pre></div>
+<p>A graph can also be tested using Simes- or parametric-based testing using the closure test. Other types of tests will be added over time, and a combination of tests can be used for groups of hypotheses. Additional details about closure testing can be found in [link to closed test vignette].</p>
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="reference/testing.html">graph_test_closure</a></span><span class="op">(</span></span>
 <span>  <span class="va">example_graph</span>,</span>
-<span>  p <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">.01</span>, <span class="fl">.02</span>, <span class="fl">.03</span>, <span class="fl">.05</span><span class="op">)</span>,</span>
+<span>  p <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">.01</span>, <span class="fl">.03</span>, <span class="fl">.02</span>, <span class="fl">.01</span><span class="op">)</span>,</span>
 <span>  alpha <span class="op">=</span> <span class="fl">.025</span>,</span>
-<span>  test_types <span class="op">=</span> <span class="st">"bonferroni"</span>,</span>
-<span>  groups <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">4</span><span class="op">)</span></span>
+<span>  test_types <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"bonferroni"</span>, <span class="st">"simes"</span><span class="op">)</span>,</span>
+<span>  groups <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">2</span>, <span class="fl">3</span><span class="op">:</span><span class="fl">4</span><span class="op">)</span></span>
 <span><span class="op">)</span></span></code></pre></div>
-<p>Other tests, such as parametric- and Simes-based testing, can be used in addition to, or instead of, Bonferroni. More testing algorithms will be added over time. Try setting the <code>verbose</code> and <code>test_values</code> flags for a more detailed report on testing.</p>
 </div>
-</div>
-<div class="section level2">
-<h2 id="power-simulations">Power simulations<a class="anchor" aria-label="anchor" href="#power-simulations"></a>
-</h2>
-<p>It’s not always obvious from a given graph structure how easy or difficult it will be to reject each hypothesis. One way to understand this better is to run a power simulation. The essence of a power simulation is to generate many different p-values using some chosen distribution, then test the graph against each set of p-values to see how it performs.</p>
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<div class="section level3">
+<h3 id="power-simulations">Power simulations<a class="anchor" aria-label="anchor" href="#power-simulations"></a>
+</h3>
+<p>It’s not always obvious from a graph structure how easy or difficult it will be to reject each hypothesis. One way to understand this better is to run a power simulation, where many p-values are simulated, and a graph is tested against each.</p>
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="reference/graph_calculate_power.html">graph_calculate_power</a></span><span class="op">(</span></span>
 <span>  <span class="va">example_graph</span>,</span>
 <span>  sim_n <span class="op">=</span> <span class="fl">1e5</span>,</span>
 <span>  marginal_power <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">.9</span>, <span class="fl">.9</span>, <span class="fl">.8</span>, <span class="fl">.8</span><span class="op">)</span></span>
 <span><span class="op">)</span></span></code></pre></div>
-<p>All valid test types are also valid for power simulations.</p>
+<p>All valid test types &amp; hypothesis groupings are valid for power simulations as well. Power simulations are discussed further in both the [shortcut testing vignette] and the [closure testing vignette].</p>
+</div>
 </div>
 <div class="section level2">
 <h2 id="related-work">Related work<a class="anchor" aria-label="anchor" href="#related-work"></a>
 </h2>
-<p>These methods were originally implemented in R after the 2011 paper in the <a href="https://github.com/kornl/gMCP" class="external-link">gMCP package</a>, which is still available on CRAN today. There is also a lighter version of gMCP implemented in <a href="https://github.com/allenzhuaz/gMCPmini" class="external-link">gMCPmini</a> and its successor, <a href="https://github.com/Merck/gMCPLite" class="external-link">gMCPLite</a>. These two contain only a subset of the original functionality, but they remove the rJava dependency and add plotting functionality based on ggplot2.</p>
-<p>However, because development has ceased on the original package, we hope to re-implement the methods with a clearer distinction between weighting procedures and test procedures; with fewer dependencies, in particular shedding the Java dependency; with the simpler, more transparent S3 class framework; and with improvements to the accuracy of the parametric and Simes test methods.</p>
+<p>These methods were originally implemented in the <a href="https://github.com/kornl/gMCP" class="external-link">gMCP package</a>, which is still available on CRAN today. There is also a lighter version of gMCP implemented in <a href="https://github.com/allenzhuaz/gMCPmini" class="external-link">gMCPmini</a> and its successor, <a href="https://github.com/Merck/gMCPLite" class="external-link">gMCPLite</a>. These two contain only a subset of the original functionality, but they remove the rJava dependency and add plotting functionality based on ggplot2.</p>
+<p>However, because development has ceased on the original package, we hope to re-implement the methods with a more general testing framework; with fewer dependencies, in particular shedding the Java dependency; with simpler, more transparent S3 classes; and with improvements to the accuracy of the parametric and Simes test methods.</p>
 <p>A portion of Simes testing is also implemented in the lrstat package (<code>install.packages("lrstat")</code>).</p>
 </div>
 <div class="section level2">
 <h2 id="citation">Citation<a class="anchor" aria-label="anchor" href="#citation"></a>
 </h2>
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/citation.html" class="external-link">citation</a></span><span class="op">(</span><span class="st">"graphicalMCP"</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level2">
@@ -201,12 +205,12 @@
 <div class="section level2">
 <h2 id="glossary-of-terms">Glossary of terms<a class="anchor" aria-label="anchor" href="#glossary-of-terms"></a>
 </h2>
-<p>This package seeks to be both accurate and performant, of course. But beyond that, much thought has been put into the readability of the code. Whether being read by a user validating our methods, a developer extending the package to new uses, or a contributor helping enhance the package, we hope that the code contained here can serve as an educational document to grow people’s understanding of the graphical approach to multiple comparison procedures.</p>
-<p>To that end, there are several entities encountered in the world of graphical MCPs that we define here. Some of these are used only in the internal code of the package, but most are output from one or more exported functions. If you believe any definitions could be clarified or improved, please contact the package authors or submit an issue to the GitHub repository.</p>
+<p>This package seeks to be both accurate and performant, of course. But beyond that, much thought has been put into the readability of the code. Whether being read by a user validating our methods, a developer extending the package to new uses, or a contributor helping enhance the core functionality, we hope that the code contained here can serve as an educational document to grow people’s understanding of the graphical approach to multiple comparison procedures.</p>
+<p>To that end, there are several entities encountered in the world of graphical MCPs that we define here. Some of these are used only in the internal code of the package, but most are inputs or output in one or more exported functions. If you believe any definitions could be clarified or improved, please contact the package authors or submit an issue to the GitHub repository.</p>
 <table style="width:99%;" class="table">
 <colgroup>
 <col style="width: 9%">
-<col style="width: 57%">
+<col style="width: 59%">
 <col style="width: 11%">
 <col style="width: 9%">
 <col style="width: 9%">
@@ -471,10 +475,10 @@ Testing strategy
 </td>
 <td>
 <p>
-The mean of each null <strong>hypothesis</strong> in the underlying multivariate normal distribution of the null hypotheses. Closely related to the non-centrality parameter:
+The power to reject each null <strong>hypothesis</strong> at full <strong>alpha</strong>. Closely related to the non-centrality parameter, which is the mean of each null <strong>hypothesis</strong> in the underlying multivariate normal distribution:
 </p>
 <p>
-<code>ncp =<code>qnorm(1 - alpha) -</code>qnorm(1 - marginal_power)</code>
+<code>ncp = qnorm(1 - alpha) - qnorm(1 - marginal_power)</code>
 </p>
 </td>
 <td>
@@ -608,7 +612,7 @@ Delete a hypothesis
 <ul class="list-unstyled">
 <li><a href="https://cran.r-project.org/package=graphicalMCP" class="external-link"><img src="https://www.r-pkg.org/badges/version/graphicalMCP" alt="CRAN status"></a></li>
 <li><a href="https://app.codecov.io/gh/Gilead-BioStats/graphicalMCP?branch=s3-graph_mcp" class="external-link"><img src="https://codecov.io/gh/Gilead-BioStats/graphicalMCP/branch/s3-graph_mcp/graph/badge.svg" alt="Codecov test coverage"></a></li>
-<li><a href="https://github.com/Gilead-BioStats/graphicalMCP/actions/workflows/R-CMD-check.yaml" class="external-link"><img src="https://github.com/Gilead-BioStats/graphicalMCP/actions/workflows/R-CMD-check.yaml/badge.svg?branch=feature-power" alt="R-CMD-check"></a></li>
+<li><a href="https://github.com/Gilead-BioStats/graphicalMCP/actions/workflows/R-CMD-check.yaml" class="external-link"><img src="https://github.com/Gilead-BioStats/graphicalMCP/actions/workflows/R-CMD-check.yaml/badge.svg?branch=%60r%20prompt::git_branch()%60" alt="R-CMD-check"></a></li>
 </ul>
 </div>
 
