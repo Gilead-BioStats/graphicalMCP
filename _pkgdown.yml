@@ -9,8 +9,10 @@ reference:
 - contents:
   - graph_create
   - print.initial_graph
-  - as_graph
+  - plot.initial_graph
+  - as_initial_graph
   - as_graphMCP
+  - as_igraph
 - title: Updating a graph
 - desc: Functions for removing hypotheses from a graph
 - contents:
