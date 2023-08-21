@@ -568,8 +568,8 @@ and <span class="math inline">\(H_3)\)</span> and <span class="math inline">\((H
 <span><span class="co">#&gt; Simulation parameters ($inputs) ------------------------------------------------</span></span>
 <span><span class="co">#&gt;   Testing 100,000 simulations - random seed 1234 &amp; multivariate normal params:</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;                         H1       H2       H3       H4</span></span>
-<span><span class="co">#&gt;   Marginal power: 0.802831 0.802831 0.705414 0.901481</span></span>
+<span><span class="co">#&gt;                       H1     H2     H3     H4</span></span>
+<span><span class="co">#&gt;   Marginal power: 0.8028 0.8028 0.7054 0.9015</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt;   Correlation:      H1   H2   H3   H4</span></span>
 <span><span class="co">#&gt;                H1 1.00 0.50 0.50 0.25</span></span>
@@ -578,17 +578,17 @@ and <span class="math inline">\(H_3)\)</span> and <span class="math inline">\((H
 <span><span class="co">#&gt;                H4 0.25 0.50 0.50 1.00</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Power calculation ($power) -----------------------------------------------------</span></span>
-<span><span class="co">#&gt;                                    H1      H2      H3      H4</span></span>
-<span><span class="co">#&gt;                  Local power: 0.76396 0.75887 0.56767 0.69133</span></span>
+<span><span class="co">#&gt;                                   H1     H2     H3     H4</span></span>
+<span><span class="co">#&gt;                  Local power: 0.7640 0.7589 0.5677 0.6913</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;   Expected no. of rejections: 2.78183</span></span>
-<span><span class="co">#&gt;    Power to reject 1 or more: 0.85557</span></span>
-<span><span class="co">#&gt;          Power to reject all: 0.51205</span></span>
+<span><span class="co">#&gt;   Expected no. of rejections: 2.782</span></span>
+<span><span class="co">#&gt;    Power to reject 1 or more: 0.8556</span></span>
+<span><span class="co">#&gt;          Power to reject all: 0.5121</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;              Power to reject:       H1   Expected no. of rejections   AtLeast1</span></span>
-<span><span class="co">#&gt;                                0.76396                      2.78183    0.85557</span></span>
-<span><span class="co">#&gt;      All   H1andH2   (H1andH3)or(H2andH4)</span></span>
-<span><span class="co">#&gt;  0.51205   0.66726                0.74695</span></span></code></pre></div>
+<span><span class="co">#&gt;              Power to reject:      H1   Expected no. of rejections   AtLeast1</span></span>
+<span><span class="co">#&gt;                                0.7640                       2.7818     0.8556</span></span>
+<span><span class="co">#&gt;     All   H1andH2   (H1andH3)or(H2andH4)</span></span>
+<span><span class="co">#&gt;  0.5121    0.6673                 0.7470</span></span></code></pre></div>
 <p>To see the detailed outputs of all simulated p-values and rejection
 decisions for all hypotheses, specify <code>verbose = TRUE</code>. This
 will produce a lot of outputs. To allow flexible printing functions, a
@@ -597,14 +597,10 @@ user can change the following:</p>
 <li>The indented space with the default setting of
 <code>indent = 2</code>
 </li>
-<li>The precision of numeric values (i.e., the number of decimal places)
-with the default setting of <code>precision = 6</code>
+<li>The precision of numeric values (i.e., the number of significant
+digits) with the default setting of <code>precision = 4</code>
 </li>
 </ul>
-</div>
-<div class="section level3">
-<h3 id="maybe-the-default-precision-of-4-is-enough">maybe the default precision of 4 is enough?<a class="anchor" aria-label="anchor" href="#maybe-the-default-precision-of-4-is-enough"></a>
-</h3>
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">verbose_output</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/graph_calculate_power.html">graph_calculate_power</a></span><span class="op">(</span><span class="va">g</span>,</span>
 <span>  alpha <span class="op">=</span> <span class="fl">.025</span>,</span>
@@ -642,8 +638,8 @@ with the default setting of <code>precision = 6</code>
 <span><span class="co">#&gt; Simulation parameters ($inputs) ------------------------------------------------</span></span>
 <span><span class="co">#&gt;   Testing 100,000 simulations - random seed 1234 &amp; multivariate normal params:</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;                         H1       H2       H3       H4</span></span>
-<span><span class="co">#&gt;   Marginal power: 0.802831 0.802831 0.705414 0.901481</span></span>
+<span><span class="co">#&gt;                       H1     H2     H3     H4</span></span>
+<span><span class="co">#&gt;   Marginal power: 0.8028 0.8028 0.7054 0.9015</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt;   Correlation:      H1   H2   H3   H4</span></span>
 <span><span class="co">#&gt;                H1 1.00 0.50 0.50 0.25</span></span>
@@ -652,30 +648,30 @@ with the default setting of <code>precision = 6</code>
 <span><span class="co">#&gt;                H4 0.25 0.50 0.50 1.00</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Power calculation ($power) -----------------------------------------------------</span></span>
-<span><span class="co">#&gt;                                    H1      H2      H3      H4</span></span>
-<span><span class="co">#&gt;                  Local power: 0.76396 0.75887 0.56767 0.69133</span></span>
+<span><span class="co">#&gt;                                   H1     H2     H3     H4</span></span>
+<span><span class="co">#&gt;                  Local power: 0.7640 0.7589 0.5677 0.6913</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;   Expected no. of rejections: 2.78183</span></span>
-<span><span class="co">#&gt;    Power to reject 1 or more: 0.85557</span></span>
-<span><span class="co">#&gt;          Power to reject all: 0.51205</span></span>
+<span><span class="co">#&gt;   Expected no. of rejections: 2.782</span></span>
+<span><span class="co">#&gt;    Power to reject 1 or more: 0.8556</span></span>
+<span><span class="co">#&gt;          Power to reject all: 0.5121</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;              Power to reject:       H1   Expected no. of rejections   AtLeast1</span></span>
-<span><span class="co">#&gt;                                0.76396                      2.78183    0.85557</span></span>
-<span><span class="co">#&gt;      All   H1andH2   (H1andH3)or(H2andH4)</span></span>
-<span><span class="co">#&gt;  0.51205   0.66726                0.74695</span></span>
+<span><span class="co">#&gt;              Power to reject:      H1   Expected no. of rejections   AtLeast1</span></span>
+<span><span class="co">#&gt;                                0.7640                       2.7818     0.8556</span></span>
+<span><span class="co">#&gt;     All   H1andH2   (H1andH3)or(H2andH4)</span></span>
+<span><span class="co">#&gt;  0.5121    0.6673                 0.7470</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Simulation details ($details) --------------------------------------------------</span></span>
-<span><span class="co">#&gt;       p_sim_H1    p_sim_H2    p_sim_H3    p_sim_H4 rej_H1 rej_H2 rej_H3 rej_H4</span></span>
-<span><span class="co">#&gt;    3.08204e-02 1.20654e-02 4.11858e-03 9.32434e-02  FALSE   TRUE  FALSE  FALSE</span></span>
-<span><span class="co">#&gt;    7.93372e-04 6.49905e-04 2.45178e-02 2.96560e-03   TRUE   TRUE   TRUE   TRUE</span></span>
-<span><span class="co">#&gt;    3.02992e-02 5.95396e-02 5.43083e-02 2.62583e-02  FALSE  FALSE  FALSE  FALSE</span></span>
-<span><span class="co">#&gt;    9.74332e-03 3.31857e-03 7.41721e-04 4.02469e-04   TRUE   TRUE   TRUE   TRUE</span></span>
-<span><span class="co">#&gt;    1.97135e-02 8.61618e-03 1.64183e-02 2.41833e-07   TRUE   TRUE   TRUE   TRUE</span></span>
-<span><span class="co">#&gt;    3.12066e-03 6.70231e-03 1.37441e-02 2.75170e-04   TRUE   TRUE   TRUE   TRUE</span></span>
-<span><span class="co">#&gt;    3.02208e-02 1.42376e-01 6.03828e-03 2.11740e-02  FALSE  FALSE  FALSE  FALSE</span></span>
-<span><span class="co">#&gt;    2.49757e-03 2.94026e-02 4.14273e-04 2.20779e-03   TRUE  FALSE   TRUE  FALSE</span></span>
-<span><span class="co">#&gt;    6.18994e-02 3.87257e-02 3.16613e-01 5.69979e-02  FALSE  FALSE  FALSE  FALSE</span></span>
-<span><span class="co">#&gt;    3.67792e-01 1.89598e-01 7.02265e-02 1.18965e-02  FALSE  FALSE  FALSE  FALSE</span></span>
+<span><span class="co">#&gt;     p_sim_H1  p_sim_H2  p_sim_H3  p_sim_H4 rej_H1 rej_H2 rej_H3 rej_H4</span></span>
+<span><span class="co">#&gt;    3.082e-02 1.207e-02 4.119e-03 9.324e-02  FALSE   TRUE  FALSE  FALSE</span></span>
+<span><span class="co">#&gt;    7.934e-04 6.499e-04 2.452e-02 2.966e-03   TRUE   TRUE   TRUE   TRUE</span></span>
+<span><span class="co">#&gt;    3.030e-02 5.954e-02 5.431e-02 2.626e-02  FALSE  FALSE  FALSE  FALSE</span></span>
+<span><span class="co">#&gt;    9.743e-03 3.319e-03 7.417e-04 4.025e-04   TRUE   TRUE   TRUE   TRUE</span></span>
+<span><span class="co">#&gt;    1.971e-02 8.616e-03 1.642e-02 2.418e-07   TRUE   TRUE   TRUE   TRUE</span></span>
+<span><span class="co">#&gt;    3.121e-03 6.702e-03 1.374e-02 2.752e-04   TRUE   TRUE   TRUE   TRUE</span></span>
+<span><span class="co">#&gt;    3.022e-02 1.424e-01 6.038e-03 2.117e-02  FALSE  FALSE  FALSE  FALSE</span></span>
+<span><span class="co">#&gt;    2.498e-03 2.940e-02 4.143e-04 2.208e-03   TRUE  FALSE   TRUE  FALSE</span></span>
+<span><span class="co">#&gt;    6.190e-02 3.873e-02 3.166e-01 5.700e-02  FALSE  FALSE  FALSE  FALSE</span></span>
+<span><span class="co">#&gt;    3.678e-01 1.896e-01 7.023e-02 1.190e-02  FALSE  FALSE  FALSE  FALSE</span></span>
 <span><span class="co">#&gt;   ... (Use `print(x, rows = &lt;nn&gt;)` for more)</span></span>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">verbose_output</span>, indent <span class="op">=</span> <span class="fl">4</span>, precision <span class="op">=</span> <span class="fl">6</span><span class="op">)</span></span>
