@@ -16,7 +16,7 @@
 #'   print
 #'
 #' @export
-print.power_report <- function(x, ..., precision = 6, indent = 2, rows = 10) {
+print.power_report <- function(x, ..., precision = 4, indent = 2, rows = 10) {
   pad <- paste(rep(" ", indent), collapse = "")
   pad_less_1 <- paste(rep(" ", max(indent - 1, 0)), collapse = "")
   hyp_names <- names(x$inputs$graph$hypotheses)

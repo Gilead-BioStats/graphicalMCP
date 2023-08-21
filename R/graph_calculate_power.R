@@ -162,7 +162,8 @@ graph_calculate_power <- function(graph,
   if (!is.null(sim_seed)) set.seed(sim_seed)
 
   noncentrality_parameter <-
-    stats::qnorm(1 - alpha) - stats::qnorm(1 - marginal_power)
+    stats::qnorm(1 - alpha, lower.tail = TRUE) -
+    stats::qnorm(1 - marginal_power, lower.tail = TRUE)
 
   p_sim <- stats::pnorm(
     mvtnorm::rmvnorm(

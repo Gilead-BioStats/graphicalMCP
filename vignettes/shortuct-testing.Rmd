@@ -295,9 +295,7 @@ all hypotheses, specify `verbose = TRUE`. This will produce a lot of
 outputs. To allow flexible printing functions, a user can change the following:
 
 - The indented space with the default setting of `indent = 2`
-- The precision of numeric values (i.e., the number of decimal places) with the default setting of `precision = 6`
-
-### maybe the default precision of 4 is enough?
+- The precision of numeric values (i.e., the number of significant digits) with the default setting of `precision = 4`
 
 ```{r power-calculate-calculate_verbose}
 verbose_output <- graph_calculate_power(g,
