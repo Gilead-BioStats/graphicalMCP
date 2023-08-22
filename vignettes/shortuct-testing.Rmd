@@ -4,7 +4,7 @@ output:
   rmarkdown::html_vignette:
     code_folding: "show"
 vignette: >
-  %\VignetteIndexEntry{shortcut-testing}
+  %\VignetteIndexEntry{Sequentially rejective graphical approaches based on Bonferroni tests}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---

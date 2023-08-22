@@ -50,7 +50,7 @@ fixed_sequence_graph <- graph_create(
 plot(fixed_sequence_graph, layout = "grid", nrow = 1, asp = .1)
 ```
 
-# Simplel successive
+# Simple successive
 
 ```{r simple-successive, fig.dim=c(5, 5)}
 simple_successive_graph <- graph_create(
