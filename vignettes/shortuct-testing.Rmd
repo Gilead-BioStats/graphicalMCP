@@ -93,7 +93,7 @@ A hypothesis is rejected if its adjusted p-value is less than or equal to `alpha
 In addition, two graphs are provided: one is the initial graph and one is the 
 final graph after removing rejected hypotheses $H_1$, $H_2$, and $H_4$. If we are 
 also interested in intermediate graphs - for example, the graph after $H_1$ and 
-$H_2$ are rejected - we can specify `verbose = TRUE` and obtain it via `test_results_verbose$details$results`. # I am not sure if they can be retrieved easily
+$H_2$ are rejected - we can specify `verbose = TRUE` and obtain it via `test_results_verbose$details$results[[3]]`. # I am not sure if they can be retrieved easily
 
 ### I am not sure if intermediate graphs can be retrieved easily
 
@@ -101,7 +101,7 @@ $H_2$ are rejected - we can specify `verbose = TRUE` and obtain it via `test_res
 test_results$outputs # Adjusted p-values and rejections
 
 test_results_verbose <- graph_test_shortcut(g, p = p_values, alpha = 0.025, verbose = TRUE)
-test_results_verbose$details$results # To be discussed
+test_results_verbose$details$results[[3]] # To be discussed
 ```
 
 The order of these intermediate graphs is determined by deleting the hypothesis with the lowest adjusted p-values at each step (Or the smaller hypothesis sequentially in the case of adjusted p-value ties). In some cases, this order is not the only valid order of deletion. In this example, the minimum adjusted p-value method results in deleting in the order $H_2 \rightarrow H_1 \rightarrow H_4$. But $H_2 \rightarrow H_4 \rightarrow H_1$ is also a valid deletion order. Deletion order can be customized using [`custom_order_function_once_it_is_written()`].
