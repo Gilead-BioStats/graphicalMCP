@@ -42,27 +42,33 @@
 #' gw_0 <- gw_large[, 7:12]
 #' gw <- ifelse(gw_large[, 1:6], gw_0, NA)
 #'
-#' graphicalMCP:::adjust_weights_parametric(gw, diag(6), .05, list(1:3))
+#' graphicalMCP:::adjust_weights_parametric(
+#'   gw_0,
+#'   gw_large[, 1:6],
+#'   diag(6),
+#'   .05,
+#'   list(1:3)
+#' )
+#'
 #' graphicalMCP:::adjust_weights_simes(gw_0, p, list(4:6))
-adjust_weights_parametric <- function(weighting_strategy,
+adjust_weights_parametric <- function(matrix_weights,
+                                      matrix_intersections,
                                       corr,
                                       alpha,
                                       groups) {
-  matrix_intersections <- !is.na(weighting_strategy)
-
   c_values <- matrix(
-    nrow = nrow(weighting_strategy),
-    ncol = ncol(weighting_strategy),
-    dimnames = dimnames(weighting_strategy)
+    nrow = nrow(matrix_weights),
+    ncol = ncol(matrix_weights),
+    dimnames = dimnames(matrix_weights)
   )
 
   for (group in groups) {
-    for (row in seq_len(nrow(weighting_strategy))) {
+    for (row in seq_len(nrow(matrix_weights))) {
       group_by_intersection <-
         group[as.logical(matrix_intersections[row, , drop = TRUE][group])]
 
       group_c_value <- solve_c_parametric(
-        weighting_strategy[row, group_by_intersection, drop = TRUE],
+        matrix_weights[row, group_by_intersection, drop = TRUE],
         corr[group_by_intersection, group_by_intersection, drop = FALSE],
         alpha
       )
@@ -72,22 +78,22 @@ adjust_weights_parametric <- function(weighting_strategy,
     }
   }
 
-  adjusted_weights <- c_values * weighting_strategy
+  adjusted_weights <- c_values * matrix_weights
 
   adjusted_weights[, unlist(groups), drop = FALSE]
 }
 
 #' @rdname adjusted-weights
-adjust_weights_simes <- function(weighting_strategy, p, groups) {
+adjust_weights_simes <- function(matrix_weights, p, groups) {
   ordered_p <- order(p)
 
-  weighting_strategy <- weighting_strategy[, ordered_p, drop = FALSE]
+  matrix_weights <- matrix_weights[, ordered_p, drop = FALSE]
 
   group_adjusted_weights <- vector("list", length(groups))
 
   for (i in seq_along(groups)) {
     group_adjusted_weights[[i]] <- matrixStats::rowCumsums(
-      weighting_strategy[, ordered_p %in% groups[[i]], drop = FALSE],
+      matrix_weights[, ordered_p %in% groups[[i]], drop = FALSE],
       useNames = TRUE
     )
   }

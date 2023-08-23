@@ -51,7 +51,8 @@
 #' )
 #' graphicalMCP:::graph_test_shortcut_fast(
 #'   p,
-#'   adjusted_weights * .025
+#'   .025,
+#'   adjusted_weights
 #' )
 graph_test_closure_fast <- function(p, alpha, adjusted_weights, intersections) {
   rej_hyps <- t(p <= alpha * t(adjusted_weights))
@@ -62,7 +63,7 @@ graph_test_closure_fast <- function(p, alpha, adjusted_weights, intersections) {
 }
 
 #' @rdname testing-fast
-graph_test_shortcut_fast <- function(p, adjusted_weights) {
+graph_test_shortcut_fast <- function(p, alpha, adjusted_weights) {
   num_hyps <- ncol(adjusted_weights)
 
   # There is a mapping from current rejected hypotheses to corresponding row of
@@ -79,7 +80,8 @@ graph_test_shortcut_fast <- function(p, adjusted_weights) {
     # weights matrix, then go down one line
     intersection_num <-
       nrow_critical - sum(binary_slots * !rejected) + 1
-    rejected_step <- p <= adjusted_weights[intersection_num, , drop = TRUE]
+    rejected_step <-
+      p <= adjusted_weights[intersection_num, , drop = TRUE] * alpha
 
     if (!any(rejected_step)) {
       break
