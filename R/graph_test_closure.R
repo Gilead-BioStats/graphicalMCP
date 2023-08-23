@@ -97,6 +97,24 @@ graph_test_closure <- function(graph,
     test_values
   )
 
+  # The test specification arguments can be named or not. However, if
+  # `groups` is named, all of them must be named. The other two are
+  # re-ordered to match `groups`
+  if (!is.null(names(groups))) {
+    if (!all(names(c(test_types, corr)) %in% names(groups))) {
+      stop("If `groups` is named, `test_types` and `corr` must use the
+           same names")
+    } else {
+      test_types <- test_types[names(groups)]
+      corr <- corr[names(groups)]
+    }
+  } else {
+    names(groups) <-
+      names(test_types) <-
+      names(corr) <-
+      paste0("grp", seq_along(groups))
+  }
+
   num_hyps <- length(graph$hypotheses)
   num_groups <- length(groups)
 

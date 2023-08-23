@@ -2,21 +2,21 @@
 #'
 #' The weights created by [graph_generate_weights()] work immediately for
 #' Bonferroni testing, but parametric and Simes testing require additional
-#' calculations. The `adjust_weights_*()` functions apply parametric or
-#' Simes weight increases to get updated weights for testing. They also subset
-#' the weights columns by the appropriate groups
+#' calculations. The `adjust_weights_*()` functions apply parametric or Simes
+#' weight increases to get updated weights for testing. They also subset the
+#' weights columns by the appropriate groups
 #'
-#' @param weighting_strategy For parametric, a compact representation of
-#'   [graph_generate_weights()] output, where missing hypotheses get a missing
-#'   value for weights, and h-vectors are dropped. For Simes, just the weights
-#'   from [graph_generate_weights()] output
+#' @param matrix_weights The weights (second half of columns) from
+#'   [graph_generate_weights()] output
+#' @param matrix_intersections The intersections (first half of columns) from
+#'   [graph_generate_weights()] output
 #' @param corr A numeric matrix of correlations between hypotheses' test
 #'   statistics
 #' @param alpha A numeric scalar specifying the global significance level for
 #'   testing
-#' @param p A numeric vector of p-values
 #' @param groups A list of numeric vectors specifying hypotheses to test
 #'   together
+#' @param p A numeric vector of p-values
 #' @param hypotheses A numeric vector of hypothesis weights
 #' @param x The root to solve for with [stats::uniroot()]
 #'

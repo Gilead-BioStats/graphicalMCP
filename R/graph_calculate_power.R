@@ -139,6 +139,24 @@ graph_calculate_power <- function(graph,
     FALSE
   )
 
+  # The test specification arguments can be named or not. However, if
+  # `test_groups` is named, all of them must be named. The other two are
+  # re-ordered to match `test_groups`
+  if (!is.null(names(test_groups))) {
+    if (!all(names(c(test_types, test_corr)) %in% names(test_groups))) {
+      stop("If `test_groups` is named, `test_types` and `test_corr` must use the
+           same names")
+    } else {
+      test_types <- test_types[names(test_groups)]
+      test_corr <- test_corr[names(test_groups)]
+    }
+  } else {
+    names(test_groups) <-
+      names(test_types) <-
+      names(test_corr) <-
+      paste0("grp", seq_along(test_groups))
+  }
+
   # Correlation matrix input is easier for end users to input as a list, but
   # it's easier to work with internally as a full matrix, potentially with
   # missing values. This puts all the correlation pieces into one matrix
