@@ -69,19 +69,19 @@ test_that("printing blended power", {
   expect_snapshot(
     print(
       graph_calculate_power(
-        g,
-        .0254871,
-        list(4:3, c(6, 1), c(2, 5)),
-        c("b", "s", "p"),
-        list(NA, NA, t_corr[c(2, 5), c(2, 5)]),
-        1328,
-        pi / seq(.3, 2.8, by = .5) / 11,
-        s_corr,
-        list(
+        graph = g,
+        alpha = .0254871,
+        marginal_power = pi / seq(.3, 2.8, by = .5) / 11,
+        test_groups = list(4:3, c(6, 1), c(2, 5)),
+        test_types = c("b", "s", "p"),
+        test_corr = list(NA, NA, t_corr[c(2, 5), c(2, 5)]),
+        sim_n = 1328,
+        sim_corr = s_corr,
+        sim_success = list(
           function(.) .[1] || .[5] || .[6],
           function(.) .[2] && (.[5] || .[6])
         ),
-        51223
+        sim_seed = 51223
       ),
       indent = 0,
       precision = 10

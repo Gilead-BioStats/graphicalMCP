@@ -51,10 +51,7 @@
 #' )
 #' graphicalMCP:::graph_test_shortcut_fast(
 #'   p,
-#'   adjusted_weights * .025,
-#'   length(par_gate$hypotheses),
-#'   2^(length(par_gate$hypotheses):1 - 1),
-#'   2^length(par_gate$hypotheses) - 1
+#'   adjusted_weights * .025
 #' )
 graph_test_closure_fast <- function(p, alpha, adjusted_weights, intersections) {
   rej_hyps <- t(p <= alpha * t(adjusted_weights))
@@ -65,16 +62,23 @@ graph_test_closure_fast <- function(p, alpha, adjusted_weights, intersections) {
 }
 
 #' @rdname testing-fast
-graph_test_shortcut_fast <- function(p,
-                                     adjusted_weights,
-                                     num_hyps,
-                                     bin_slots,
-                                     nrow_critical) {
+graph_test_shortcut_fast <- function(p, adjusted_weights) {
+  num_hyps <- ncol(adjusted_weights)
+
+  # There is a mapping from current rejected hypotheses to corresponding row of
+  # the closure weights matrix by treating the rejected vector as a binary
+  # number. This line creates a vector of binary place values.
+  binary_slots <- 2^(num_hyps:1 - 1)
+  nrow_critical <- nrow(adjusted_weights)
+
   rejected <- vector("logical", num_hyps)
 
   while (!all(rejected)) {
+    # The actual mapping to intersection number is to treat the rejected vector
+    # as a binary number, then count that many lines up from the bottom of the
+    # weights matrix, then go down one line
     intersection_num <-
-      nrow_critical - sum(bin_slots * !rejected) + 1
+      nrow_critical - sum(binary_slots * !rejected) + 1
     rejected_step <- p <= adjusted_weights[intersection_num, , drop = TRUE]
 
     if (!any(rejected_step)) {

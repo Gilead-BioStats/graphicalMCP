@@ -73,10 +73,10 @@ test_that("size one groups are turned into Bonferroni", {
 
   expect_equal(
     graph_calculate_power(
-      g,
-      .05,
-      list(1, 2, 3),
-      c("s", "p", "p"),
+      graph = g,
+      alpha = .05,
+      test_groups = list(1, 2, 3),
+      test_types = c("s", "p", "p"),
       sim_n = 1e5,
       sim_seed = 42823
     )$inputs$test_types,
@@ -88,7 +88,7 @@ test_that("size one groups are turned into Bonferroni", {
 test_that("multi-group/multi-test type runs without error", {
   expect_no_error(
     graph_calculate_power(
-      random_graph(4),
+      graph = random_graph(4),
       test_groups = list(c(4, 1), 2:3),
       test_types = "s"
     )
@@ -96,7 +96,7 @@ test_that("multi-group/multi-test type runs without error", {
 
   expect_no_error(
     graph_calculate_power(
-      random_graph(4),
+      graph = random_graph(4),
       test_groups = list(c(3, 1), c(2, 4)),
       test_types = "p",
       test_corr = list(diag(2), diag(2))
@@ -114,7 +114,7 @@ test_that("complex example runs without error", {
 
   expect_no_error(
     graph_calculate_power(
-      complex_example_2(),
+      graph = complex_example_2(),
       alpha = .025,
       test_groups = list(c(1, 4, 7), 2:3, 5:6, 8:9),
       test_types = c("p", "s", "s", "s"),

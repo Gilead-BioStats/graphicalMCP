@@ -90,13 +90,13 @@
 #'
 graph_calculate_power <- function(graph,
                                   alpha = .025,
+                                  marginal_power =
+                                    rep(alpha, length(graph$hypotheses)),
                                   test_groups =
                                     list(seq_along(graph$hypotheses)),
                                   test_types = c("bonferroni"),
                                   test_corr = rep(list(NA), length(test_types)),
                                   sim_n = 100,
-                                  marginal_power =
-                                    rep(alpha, length(graph$hypotheses)),
                                   sim_corr = diag(length(graph$hypotheses)),
                                   sim_success = NULL,
                                   sim_seed = NULL,
@@ -128,10 +128,9 @@ graph_calculate_power <- function(graph,
   num_hyps <- length(graph$hypotheses)
 
   # Input validation -----------------------------------------------------------
-  fake_p <- rep(alpha, length(graph$hypotheses))
   test_input_val(
     graph,
-    fake_p,
+    rep(alpha, length(graph$hypotheses)),
     alpha,
     test_groups,
     test_types,
@@ -162,7 +161,8 @@ graph_calculate_power <- function(graph,
   if (!is.null(sim_seed)) set.seed(sim_seed)
 
   noncentrality_parameter <-
-    stats::qnorm(1 - alpha) - stats::qnorm(1 - marginal_power)
+    stats::qnorm(1 - alpha, lower.tail = TRUE) -
+    stats::qnorm(1 - marginal_power, lower.tail = TRUE)
 
   p_sim <- stats::pnorm(
     mvtnorm::rmvnorm(
@@ -180,21 +180,17 @@ graph_calculate_power <- function(graph,
     dimnames = list(seq_len(sim_n), hyp_names)
   )
 
-  if (all(test_types == "bonferroni") && !force_closure) {
-    weighting_strategy <- graph_generate_weights(graph)
-    adjusted_weights <-
-      weighting_strategy[, seq_len(num_hyps) + num_hyps, drop = FALSE] * alpha
+  weighting_strategy <- graph_generate_weights(graph)
+  matrix_intersections <- weighting_strategy[, seq_len(num_hyps)]
 
-    nrow_weights <- nrow(adjusted_weights)
-    bin_slots <- 2^(num_hyps:1 - 1)
+  if (all(test_types == "bonferroni") && !force_closure) {
+    adjusted_significance_levels <-
+      weighting_strategy[, seq_len(num_hyps) + num_hyps, drop = FALSE] * alpha
 
     for (row in seq_len(sim_n)) {
       simulation_test_results[row, ] <- graph_test_shortcut_fast(
         p_sim[row, ],
-        adjusted_weights,
-        num_hyps,
-        bin_slots,
-        nrow_weights
+        adjusted_significance_levels
       )
     }
 
@@ -202,8 +198,296 @@ graph_calculate_power <- function(graph,
     rownames(simulation_test_results) <- seq_len(sim_n)
   } else {
     # Calculate weights for each intersection in the closure -------------------
-    weighting_strategy <- graph_generate_weights(graph)
-    matrix_intersections <- weighting_strategy[, seq_len(num_hyps)]
+    weighting_strategy_compact <- ifelse(
+      matrix_intersections,
+      weighting_strategy[, seq_len(num_hyps) + num_hyps],
+      NA
+    )
+
+    # Calculate Bonferroni adjusted weights ------------------------------------
+    groups_bonferroni <- test_groups[test_types == "bonferroni", drop = FALSE]
+
+    # Bonferroni adjusted weights are just the weights from the closure
+    adjusted_weights_bonferroni <-
+      weighting_strategy_compact[, unlist(groups_bonferroni), drop = FALSE]
+
+    # Calculate parametric adjusted weights ------------------------------------
+    groups_parametric <- test_groups[test_types == "parametric", drop = FALSE]
+
+    # Parametric adjusted weights depend only on the joint distribution and
+    # alpha. This allows adjusted weights to be calculated once, rather than
+    # re-calculating for each simulation
+    adjusted_weights_parametric <- adjust_weights_parametric(
+      weighting_strategy_compact,
+      test_corr,
+      alpha,
+      groups_parametric
+    )
+
+    # Separate Simes weighting strategy ----------------------------------------
+    groups_simes <- test_groups[test_types == "simes", drop = FALSE]
+
+    # The fastest option found for calculating Simes adjusted weights requires
+    # missing hypotheses' weights to be 0, rather than NA
+    weighting_strategy_simes <-
+      weighting_strategy_compact[, unlist(groups_simes), drop = FALSE]
+
+    weighting_strategy_simes[is.na(weighting_strategy_simes)] <- 0
+    adjusted_weights_simes <- weighting_strategy_simes
+
+    # Unlike Bonferroni and parametric adjusted weights, Simes adjusted weights
+    # depend on the order of p-values. This means they must be re-calculated for
+    # each simulation. Because this causes a bottleneck in calculations, Simes
+    # testing has been heavily optimized. Fast Simes testing requires Simes
+    # hypothesis numbers to be mapped to their relative position within the set
+    # of all Simes hypotheses. For example, if hypotheses 1/7 form a parametric
+    # group, and 2/5 & 3/4/6 each form a Simes group, the fast Simes functions
+    # will get hypotheses 2/5 & 3/4/6 passed, but the groups must first be
+    # re-indexed to 1/4 & 2/3/5 (their relative locations within all Simes
+    # groups).
+    groups_simes_reduce <- lapply(
+      groups_simes,
+      function(group) which(unlist(groups_simes) %in% group)
+    )
+
+    # Fast Simes testing also requires a set of p-values with columns already
+    # subset for Simes testing, similar to how the weighting strategy is subset
+    # for each test type
+    p_sim_simes <- p_sim[, unlist(groups_simes), drop = FALSE]
+
+    # Apply closure testing to each simulation ---------------------------------
+    for (row in seq_len(sim_n)) {
+      # If there are no Simes groups, adjusted weights are the Simes weighting
+      # strategy (a matrix with 0 columns)
+      if (length(groups_simes) == 0) {
+        adjusted_weights_simes <- weighting_strategy_simes
+      } else {
+        # Simes testing depends on p-values, so adjusted weights must be
+        # calculated for each simulation.
+        adjusted_weights_simes <- adjust_weights_simes(
+          weighting_strategy_simes,
+          p_sim_simes[row, ],
+          groups_simes_reduce
+        )
+
+        # *Note:* The Simes adjusted weights are incorrect for missing Simes
+        # hypotheses. To improve performance, missing hypotheses are given a
+        # zero value rather than NA before calculating adjusted weights. This
+        # results in missing hypotheses getting an adjusted weight calculated
+        # for them. These incorrect values are then replaced with zeroes for
+        # testing
+      }
+
+      # `graph_test_closure_fast()` requires hypotheses, p-values, and the
+      # intersections matrix to all have hypotheses/columns in the same order.
+      # P-values and the intersections matrix are already in the original order,
+      # so order the adjusted weights back in original hypothesis order.
+      adjusted_weights_all <- cbind(
+        adjusted_weights_bonferroni,
+        adjusted_weights_simes,
+        adjusted_weights_parametric
+      )[, hyp_names, drop = FALSE]
+
+      # Similar to Simes adjusted weights, the optimized testing function
+      # requires missing values to be replaced by zero. This line also replaces
+      # the incorrect Simes adjusted weights with zero.
+      adjusted_weights_all[!matrix_intersections] <- 0
+
+      # Record test results for one simulation, all groups
+      simulation_test_results[row, ] <- graph_test_closure_fast(
+        p_sim[row, ],
+        alpha,
+        adjusted_weights_all,
+        matrix_intersections
+      )
+    }
+  }
+
+  # Summarize power results ----------------------------------------------------
+  # Each user-defined function provided as a "success" measure should take a
+  # logical vector (a single simulation's test results) as input, and return a
+  # logical scalar. Applying such a function to each simulation, results in a
+  # success indicator vector with one entry per simulation. The average of this
+  # vector is the probability of "success".
+  power_success <- vapply(
+    sim_success,
+    function(fn_success) mean(apply(simulation_test_results, 1, fn_success)),
+    numeric(1)
+  )
+
+  # If the success functions are not named, set names according to each
+  # function's body
+  if (is.null(names(power_success))) {
+    success_fun_bodies <- vapply(
+      sim_success,
+      function(fn_success) deparse(fn_success)[[2]],
+      character(1)
+    )
+
+    names(power_success) <- success_fun_bodies
+  }
+
+  # Power summaries:
+  # * Local power is the probability of rejecting each individual hypothesis:
+  # Mean of results for each hypothesis individually.
+  # * Expected rejections is the total number of rejections divided by the total
+  # possible rejections.
+  # * Power to reject at least one hypothesis is the probability that any result
+  # in a row is TRUE. This one is just like if a success function was defined as
+  # rejecting any hypothesis in the graph
+  # * Power to reject all hypotheses is the mean of a success vector where
+  # success is only triggered when the whole results vector is TRUE
+  power <- list(
+    power_local = colMeans(simulation_test_results),
+    power_expected = sum(simulation_test_results) / sim_n,
+    power_at_least_1 = mean(rowSums(simulation_test_results) > 0),
+    power_all =
+      mean(rowSums(simulation_test_results) == length(marginal_power)),
+    power_success = power_success
+  )
+
+  # The core output of a power report is the 5 power summaries. It also includes
+  # the main testing and simulation input parameters (similar to test results).
+  # For completion, the full matrix of simulations and corresponding matrix of
+  # test results are included. They are truncated in the print method so as to
+  # not blow up output space. It may be preferred for these to be an optional
+  # output with e.g. `verbose = TRUE/FALSE`.
+  structure(
+    list(
+      inputs = list(
+        graph = graph,
+        alpha = alpha,
+        test_groups = test_groups,
+        test_types = test_types,
+        test_corr = test_corr,
+        sim_n = sim_n,
+        marginal_power = marginal_power,
+        sim_corr = sim_corr,
+        sim_success = sim_success,
+        sim_seed = sim_seed
+      ),
+      power = power,
+      details = if (verbose) {
+        list(
+          p_sim = p_sim,
+          test_results = simulation_test_results
+        )
+      }
+    ),
+    class = "power_report"
+  )
+}
+
+graph_calculate_power_simple <- function(graph,
+                                  alpha = .025,
+                                  marginal_power =
+                                    rep(alpha, length(graph$hypotheses)),
+                                  test_groups =
+                                    list(seq_along(graph$hypotheses)),
+                                  test_types = c("bonferroni"),
+                                  test_corr = rep(list(NA), length(test_types)),
+                                  sim_n = 100,
+                                  sim_corr = diag(length(graph$hypotheses)),
+                                  sim_success = NULL,
+                                  sim_seed = NULL,
+                                  force_closure = FALSE,
+                                  verbose = FALSE) {
+  # Input sanitization ---------------------------------------------------------
+  # Test types should be passed as full names or first letter, case-insensitive,
+  # and a single provided type should get expanded to all groups
+  test_options <- c(
+    bonferroni = "bonferroni",
+    parametric = "parametric",
+    simes = "simes",
+    b = "bonferroni",
+    p = "parametric",
+    s = "simes"
+  )
+  test_types <- test_options[tolower(test_types)]
+  if (length(test_types) == 1) {
+    test_types <- rep(test_types, length(test_groups))
+  }
+
+  # Groups of size 1 should always use Bonferroni testing
+  test_types[lengths(test_groups) == 1] <- "bonferroni"
+
+  # A bare success function should get put into a length-one list
+  if (is.function(sim_success)) sim_success <- list(sim_success)
+
+  hyp_names <- names(graph$hypotheses)
+  num_hyps <- length(graph$hypotheses)
+
+  # Input validation -----------------------------------------------------------
+  test_input_val(
+    graph,
+    rep(alpha, length(graph$hypotheses)),
+    alpha,
+    test_groups,
+    test_types,
+    test_corr,
+    FALSE,
+    FALSE
+  )
+
+  # Correlation matrix input is easier for end users to input as a list, but
+  # it's easier to work with internally as a full matrix, potentially with
+  # missing values. This puts all the correlation pieces into one matrix
+  new_corr <- matrix(NA, num_hyps, num_hyps)
+
+  for (group_num in seq_along(test_groups)) {
+    test_group <- test_groups[[group_num]]
+
+    new_corr[test_group, test_group] <- test_corr[[group_num]]
+  }
+  diag(new_corr) <- 1
+  test_corr <- if (any(test_types == "parametric")) new_corr else NULL
+
+  power_input_val(graph, sim_n, marginal_power, sim_corr, sim_success)
+
+  # Simulated p-values are generated by sampling from the multivariate normal
+  # distribution. The means are set with `marginal_power`, and the correlations
+  # are set with `sim_corr`. Random samples are converted to p-values with a
+  # one-sided test.
+  if (!is.null(sim_seed)) set.seed(sim_seed)
+
+  noncentrality_parameter <-
+    stats::qnorm(1 - alpha, lower.tail = TRUE) -
+    stats::qnorm(1 - marginal_power, lower.tail = TRUE)
+
+  p_sim <- stats::pnorm(
+    mvtnorm::rmvnorm(
+      sim_n,
+      noncentrality_parameter,
+      sigma = sim_corr
+    ),
+    lower.tail = FALSE
+  )
+
+  simulation_test_results <- matrix(
+    NA,
+    nrow = sim_n,
+    ncol = length(marginal_power),
+    dimnames = list(seq_len(sim_n), hyp_names)
+  )
+
+  weighting_strategy <- graph_generate_weights(graph)
+  matrix_intersections <- weighting_strategy[, seq_len(num_hyps)]
+
+  if (all(test_types == "bonferroni") && !force_closure) {
+    adjusted_significance_levels <-
+      weighting_strategy[, seq_len(num_hyps) + num_hyps, drop = FALSE] * alpha
+
+    for (row in seq_len(sim_n)) {
+      simulation_test_results[row, ] <- graph_test_shortcut_fast_simple(
+        p_sim[row, ],
+        adjusted_significance_levels
+      )
+    }
+
+    colnames(simulation_test_results) <- hyp_names
+    rownames(simulation_test_results) <- seq_len(sim_n)
+  } else {
+    # Calculate weights for each intersection in the closure -------------------
     weighting_strategy_compact <- ifelse(
       matrix_intersections,
       weighting_strategy[, seq_len(num_hyps) + num_hyps],
