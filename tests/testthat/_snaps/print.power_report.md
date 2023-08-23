@@ -353,7 +353,7 @@
 # printing blended power
 
     Code
-      print(graph_calculate_power(graph = g, alpha = 0.0254871, marginal_power = pi /
+      print(graph_calculate_power(graph = g, alpha = 0.0254871, power_marginal = pi /
         seq(0.3, 2.8, by = 0.5) / 11, test_groups = list(4:3, c(6, 1), c(2, 5)),
       test_types = c("b", "s", "p"), test_corr = list(NA, NA, t_corr[c(2, 5), c(2, 5)]),
       sim_n = 1328, sim_corr = s_corr, sim_success = list(function(.) .[1] || .[5] ||

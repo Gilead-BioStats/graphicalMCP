@@ -87,18 +87,18 @@ test_input_val <- function(graph,
   invisible(graph)
 }
 
-power_input_val <- function(graph, sim_n, marginal_power, corr, success) {
+power_input_val <- function(graph, sim_n, power_marginal, corr, success) {
   num_hyps <- length(graph$hypotheses)
 
   stopifnot(
     "Number of simulations must be a length one integer" =
       is.numeric(sim_n) && as.integer(sim_n) == sim_n && length(sim_n) == 1,
     "Marginal power must be between 0 and 1" =
-      all(marginal_power >= 0 & marginal_power <= 1),
+      all(power_marginal >= 0 & power_marginal <= 1),
     "Marginal power and correlation parameters must be numeric" =
-      is.numeric(marginal_power) && is.numeric(corr),
+      is.numeric(power_marginal) && is.numeric(corr),
     "Lengths of marginal power must match number of hypotheses" =
-      length(marginal_power) == num_hyps,
+      length(power_marginal) == num_hyps,
     "Correlation matrix for simulating p-values must match no. of hypotheses" =
       unique(nrow(corr), ncol(corr)) == num_hyps,
     "Correlation matrix for simulating p-values cannot have missing values" =

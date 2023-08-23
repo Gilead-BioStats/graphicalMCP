@@ -7,11 +7,11 @@
 graph_calculate_power(
   graph,
   alpha = 0.025,
+  power_marginal = rep(alpha, length(graph$hypotheses)),
   test_groups = list(seq_along(graph$hypotheses)),
   test_types = c("bonferroni"),
   test_corr = rep(list(NA), length(test_types)),
   sim_n = 100,
-  marginal_power = rep(alpha, length(graph$hypotheses)),
   sim_corr = diag(length(graph$hypotheses)),
   sim_success = NULL,
   sim_seed = NULL,
@@ -25,6 +25,10 @@ graph_calculate_power(
 \item{alpha}{A numeric scalar specifying the global significance level for
 testing}
 
+\item{power_marginal}{A numeric vector of mean values to use when simulating
+p-values. Exactly one mean per hypothesis is needed, and p-values will be
+sampled from the multivariate normal distribution. See Details for more}
+
 \item{test_groups}{A list of numeric vectors specifying hypotheses to test
 together}
 
@@ -34,10 +38,6 @@ together}
 of correlations between hypotheses' test statistics}
 
 \item{sim_n}{An integer scalar specifying how many simulations to run}
-
-\item{marginal_power}{A numeric vector of mean values to use when simulating
-p-values. Exactly one mean per hypothesis is needed, and p-values will be
-sampled from the multivariate normal distribution. See Details for more}
 
 \item{sim_corr}{A numeric matrix of correlations between hypotheses used to
 sample from the multivariate normal distribution to generate p-values}
@@ -80,7 +80,7 @@ each hypothesis to be rejected, as well as some additional probabilities such
 as expected rejections and probability of rejecting any hypothesis
 }
 \details{
-The parameters of the normal distribution are set with \code{marginal_power}
+The parameters of the normal distribution are set with \code{power_marginal}
 (means) and \code{sim_corr} (correlation between test statistics). The mean of
 each hypothesis should be set as its marginal power
 \deqn{d_i=P_{\xi_i}(p_i\leq\alpha)} where \eqn{\xi_i} is the non-centrality

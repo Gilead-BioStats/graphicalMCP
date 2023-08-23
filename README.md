@@ -6,7 +6,7 @@
 status](https://www.r-pkg.org/badges/version/graphicalMCP)](https://cran.r-project.org/package=graphicalMCP)
 [![Codecov test
 coverage](https://codecov.io/gh/Gilead-BioStats/graphicalMCP/branch/s3-graph_mcp/graph/badge.svg)](https://app.codecov.io/gh/Gilead-BioStats/graphicalMCP?branch=s3-graph_mcp)
-[![R-CMD-check](https://github.com/Gilead-BioStats/graphicalMCP/actions/workflows/R-CMD-check.yaml/badge.svg?branch=feature-power)](https://github.com/Gilead-BioStats/graphicalMCP/actions/workflows/R-CMD-check.yaml)
+[![R-CMD-check](https://github.com/Gilead-BioStats/graphicalMCP/actions/workflows/R-CMD-check.yaml/badge.svg?branch=test-specification)](https://github.com/Gilead-BioStats/graphicalMCP/actions/workflows/R-CMD-check.yaml)
 
 <!-- badges: end -->
 
@@ -128,7 +128,7 @@ how it performs.
 graph_calculate_power(
   example_graph,
   sim_n = 1e5,
-  marginal_power = c(.9, .9, .8, .8)
+  power_marginal = c(.9, .9, .8, .8)
 )
 ```
 
@@ -321,9 +321,9 @@ combined</td>
 <td><p>The mean of each null <strong>hypothesis</strong> in the
 underlying multivariate normal distribution of the null hypotheses.
 Closely related to the non-centrality parameter:</p>
-<p><code>ncp =``qnorm(1 - alpha) -``qnorm(1 - marginal_power)</code></p></td>
+<p><code>ncp =``qnorm(1 - alpha) -``qnorm(1 - power_marginal)</code></p></td>
 <td></td>
-<td><code>marginal_power</code></td>
+<td><code>power_marginal</code></td>
 <td>Correlation matrix</td>
 </tr>
 <tr class="even">

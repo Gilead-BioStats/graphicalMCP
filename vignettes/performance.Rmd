@@ -354,17 +354,17 @@ if (file.exists(here("vignettes/data/df_benchmarks_power_shortcut.rds"))) {
           calcPower(hyp, .025, trn, ncp, s_corr, n.sim = sims),
         `graphicalMCP shortcut, high power (R)` =
           graph_calculate_power(rando,
-            sim_n = sims, marginal_power = marg_pow,
+            sim_n = sims, power_marginal = marg_pow,
             sim_corr = s_corr
           ),
         `graphicalMCP shortcut, mid power (R)` =
           graph_calculate_power(rando,
-            sim_n = sims, marginal_power = marg_pow / 2,
+            sim_n = sims, power_marginal = marg_pow / 2,
             sim_corr = s_corr
           ),
         `graphicalMCP shortcut, low power (R)` =
           graph_calculate_power(rando,
-            sim_n = sims, marginal_power = marg_pow / 20,
+            sim_n = sims, power_marginal = marg_pow / 20,
             sim_corr = s_corr
           ),
         check = FALSE,
@@ -445,19 +445,19 @@ if (file.exists(here("vignettes/data/df_benchmarks_power_closure.rds"))) {
           },
         `graphicalMCP closure Bonferroni (R)` =
           graph_calculate_power(rando,
-            sim_n = sims, marginal_power = marg_pow,
+            sim_n = sims, power_marginal = marg_pow,
             sim_corr = s_corr,
             force_closure = TRUE
           ),
         `graphicalMCP closure parametric (R)` =
           graph_calculate_power(rando,
-            sim_n = sims, marginal_power = marg_pow,
+            sim_n = sims, power_marginal = marg_pow,
             sim_corr = s_corr, test_types = "parametric",
             test_corr = list(t_corr)
           ),
         `graphicalMCP closure Simes (R)` =
           graph_calculate_power(rando,
-            sim_n = sims, marginal_power = marg_pow,
+            sim_n = sims, power_marginal = marg_pow,
             sim_corr = s_corr, test_types = "simes"
           ),
         check = FALSE,

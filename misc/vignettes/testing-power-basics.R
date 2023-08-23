@@ -123,7 +123,7 @@ graph_calculate_power(
   test_groups = list(1:4),
   test_types = c("p"),
   test_corr = corr2,
-  marginal_power = c(1, 1, 3, 3),
+  power_marginal = c(1, 1, 3, 3),
   sim_corr = s_corr1,
   sim_success = function(.) .[1] || .[2],
   sim_seed = 52423, # Set a seed if you need consistent p-values

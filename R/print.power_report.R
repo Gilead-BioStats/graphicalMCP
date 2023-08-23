@@ -73,7 +73,7 @@ print.power_report <- function(x, ..., precision = 6, indent = 2, rows = 10) {
   section_break("Simulation parameters ($inputs)")
 
   theta_mat <- matrix(
-    x$inputs$marginal_power,
+    x$inputs$power_marginal,
     nrow = 1,
     dimnames = list(
       paste0(pad, "Marginal power:"),

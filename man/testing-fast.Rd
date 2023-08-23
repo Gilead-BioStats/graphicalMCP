@@ -7,13 +7,7 @@
 \usage{
 graph_test_closure_fast(p, alpha, adjusted_weights, intersections)
 
-graph_test_shortcut_fast(
-  p,
-  adjusted_weights,
-  num_hyps,
-  bin_slots,
-  nrow_critical
-)
+graph_test_shortcut_fast(p, alpha, adjusted_weights)
 }
 \arguments{
 \item{p}{A numeric vector of p-values}
@@ -65,10 +59,8 @@ graphicalMCP:::graph_test_closure_fast(
 )
 graphicalMCP:::graph_test_shortcut_fast(
   p,
-  adjusted_weights * .025,
-  length(par_gate$hypotheses),
-  2^(length(par_gate$hypotheses):1 - 1),
-  2^length(par_gate$hypotheses) - 1
+  .025,
+  adjusted_weights
 )
 }
 \references{

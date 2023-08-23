@@ -7,20 +7,21 @@
 \alias{solve_c_parametric}
 \title{Calculate updated hypothesis weights for the closure of a graph}
 \usage{
-adjust_weights_parametric(weighting_strategy, corr, alpha, groups)
+adjust_weights_parametric(
+  matrix_weights,
+  matrix_intersections,
+  corr,
+  alpha,
+  groups
+)
 
-adjust_weights_simes(weighting_strategy, p, groups)
+adjust_weights_simes(matrix_weights, p, groups)
 
 c_value_function(x, hypotheses, corr, alpha)
 
 solve_c_parametric(hypotheses, corr, alpha)
 }
 \arguments{
-\item{weighting_strategy}{For parametric, a compact representation of
-\code{\link[=graph_generate_weights]{graph_generate_weights()}} output, where missing hypotheses get a missing
-value for weights, and h-vectors are dropped. For Simes, just the weights
-from \code{\link[=graph_generate_weights]{graph_generate_weights()}} output}
-
 \item{corr}{A numeric matrix of correlations between hypotheses' test
 statistics}
 
@@ -35,6 +36,11 @@ together}
 \item{x}{The root to solve for with \code{\link[stats:uniroot]{stats::uniroot()}}}
 
 \item{hypotheses}{A numeric vector of hypothesis weights}
+
+\item{weighting_strategy}{For parametric, a compact representation of
+\code{\link[=graph_generate_weights]{graph_generate_weights()}} output, where missing hypotheses get a missing
+value for weights, and h-vectors are dropped. For Simes, just the weights
+from \code{\link[=graph_generate_weights]{graph_generate_weights()}} output}
 }
 \value{
 Outputs:
@@ -62,7 +68,14 @@ gw_large <- graph_generate_weights(g)
 gw_0 <- gw_large[, 7:12]
 gw <- ifelse(gw_large[, 1:6], gw_0, NA)
 
-graphicalMCP:::adjust_weights_parametric(gw, diag(6), .05, list(1:3))
+graphicalMCP:::adjust_weights_parametric(
+  gw_0,
+  gw_large[, 1:6],
+  diag(6),
+  .05,
+  list(1:3)
+)
+
 graphicalMCP:::adjust_weights_simes(gw_0, p, list(4:6))
 }
 \references{

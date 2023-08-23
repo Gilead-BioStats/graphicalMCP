@@ -5,10 +5,10 @@ test_that("improper inputs throw errors", {
 
   expect_error(graph_calculate_power(rando, sim_n = 100.5))
 
-  expect_error(graph_calculate_power(rando, marginal_power = c("1", 1, 1)))
+  expect_error(graph_calculate_power(rando, power_marginal = c("1", 1, 1)))
   expect_error(graph_calculate_power(rando, sim_corr = matrix("1", 3, 3)))
 
-  expect_error(graph_calculate_power(rando, marginal_power = c(1, 1)))
+  expect_error(graph_calculate_power(rando, power_marginal = c(1, 1)))
   expect_error(graph_calculate_power(rando, sim_corr = matrix(1, 2, 2)))
 
   expect_error(graph_calculate_power(rando, sim_corr = matrix(NA, 3, 3)))
@@ -120,7 +120,7 @@ test_that("complex example runs without error", {
       test_types = c("p", "s", "s", "s"),
       test_corr = list(t_corr_para, NA, NA, NA),
       sim_n = 1e4,
-      marginal_power = runif(9, min = 0, max = 1),
+      power_marginal = runif(9, min = 0, max = 1),
       sim_corr = diag(9),
       sim_success = function(.) .[1] || .[4] || .[7]
     )
