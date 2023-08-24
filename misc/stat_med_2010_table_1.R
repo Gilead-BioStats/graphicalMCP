@@ -33,7 +33,7 @@ simfunc <- function(nSim, a1, a2, g1, g2, rh, t1, t2, t3, t4, Gr) {
     alpha = 0.025,
     G = G,
     mean = mean,
-    corr.sim = corMat,
+    test_corr.sim = corMat,
     n.sim = nSim,
     type = "quasirandom"
   )

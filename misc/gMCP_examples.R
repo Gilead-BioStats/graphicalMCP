@@ -43,8 +43,8 @@ gMCP(G, p)
 graph_test_closure(g, p)
 
 # parametric
-gMCP(G, p, corr = corr2, test = "parametric")
-graph_test_closure(g, p, corr = corr2_, alpha = .05,
+gMCP(G, p, test_corr = corr2, test = "parametric")
+graph_test_closure(g, p, test_corr = corr2_, alpha = .05,
            tests = list(parametric = list(1:4)))
 
 

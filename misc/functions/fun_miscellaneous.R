@@ -90,7 +90,7 @@ c_function <- function(x, w, cr, alpha){
   I <- which(w > 0)
   z<-qnorm(x * w[I] * alpha, lower.tail=FALSE)
   y <- ifelse(length(z)==1, pnorm(z, lower.tail=FALSE),
-              1 - pmvnorm(lower=-Inf, upper=z, corr=cr[I, I]))
+              1 - pmvnorm(lower=-Inf, upper=z, test_corr=cr[I, I]))
   return(y - alpha * sum(w)) 
 }
 
@@ -105,7 +105,7 @@ p_function <- function(p, w, cr){
   q <- min(p[I] / w[I])
   q <- q * w[I]
   z <- qnorm(q, lower.tail=FALSE)
-  1 / sum(w) * (1 - pmvnorm(lower=-Inf, upper = z, corr = cr[I, I]))
+  1 / sum(w) * (1 - pmvnorm(lower=-Inf, upper = z, test_corr = cr[I, I]))
 }
 
 
@@ -120,7 +120,7 @@ p_single_step_function <- function(p, w, cr){
   for(i in 1:length(p)){
     q <- pmin(adjp[i]*w, 1)
     z <- qnorm(q, lower.tail=FALSE)
-    adjp[i] <- 1-pmvnorm(lower=-Inf, upper=z, corr=cr)
+    adjp[i] <- 1-pmvnorm(lower=-Inf, upper=z, test_corr=cr)
   }
   return(adjp)
 }

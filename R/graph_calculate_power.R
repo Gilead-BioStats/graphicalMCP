@@ -29,11 +29,11 @@
 #' @param sim_corr A numeric matrix of correlations between hypotheses used to
 #'   sample from the multivariate normal distribution to generate p-values
 #' @param sim_success A list of user-defined functions to apply to the power
-#'   results. Functions must take one simulation's logical vector results as an
-#'   input, and return a length-one logical vector. For instance, if "success"
-#'   means rejecting hypotheses 1 and 2, you would use `sim_success = list("1
+#'   results. Functions must take one simulation's logical vector of results as
+#'   an input, and return a length-one logical vector. For instance, if
+#'   "success" means rejecting hypotheses 1 and 2, use `sim_success = list("1
 #'   and 2" = function(x) x[1] && x[2])`. If the list is not named, the function
-#'   body will be used as the name. Lambda functions also work, e.g.
+#'   body will be used as the name. Lambda functions also work starting with R 4.1, e.g.
 #'   `sim_success = list(\(x) x[3] || x[4])`
 #' @param sim_seed (Optional) Random seed to set before simulating p-values. Set
 #'   this to use a consistent set of p simulations across power calculations

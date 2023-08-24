@@ -72,9 +72,9 @@ corr1 <- list(NA, rbind(c(1, .5), c(.5, 1)))
 graph_test_closure(ss_graph,
   p = p_values,
   alpha = .025,
-  groups = list(1:2, 3:4),
+  test_groups = list(1:2, 3:4),
   test_types = c("b", "p"),
-  corr = corr1
+  test_corr = corr1
 )
 ```
 
@@ -87,8 +87,8 @@ graph_test_closure(
   ss_graph,
   p = p_values,
   alpha = .025,
-  corr = corr1,
-  groups = list(1:2, 3:4),
+  test_corr = corr1,
+  test_groups = list(1:2, 3:4),
   test_types = c("s", "p"),
   verbose = TRUE
 )
@@ -101,8 +101,8 @@ graph_test_closure(
   ss_graph,
   p = p_values,
   alpha = .025,
-  corr = corr1,
-  groups = list(1:2, 3:4),
+  test_corr = corr1,
+  test_groups = list(1:2, 3:4),
   test_types = c("s", "p"),
   verbose = TRUE,
   test_values = TRUE
@@ -132,7 +132,7 @@ mix_test <- graph_test_closure(
   ss_graph,
   p = p_values,
   alpha = .025,
-  groups = list(c(1, 4), 2:3),
+  test_groups = list(c(1, 4), 2:3),
   test_types = c("b", "s"),
   verbose = TRUE,
   test_values = TRUE

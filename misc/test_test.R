@@ -61,7 +61,7 @@ for (i in 1:n) {
   adjp_lrstat[i, ] <- lrstat::fadjpsim(weighting_strategy_lrstat, temp, test_group_lrstat)
   adjp_graphicalMCP[i, ] <- graph_test_closure(graph_graphicalMCP, temp,
                                                test_types = c("s", "s"),
-                                               groups = test_group_graphicalMCP,
+                                               test_groups = test_group_graphicalMCP,
                                                alpha = alpha)$outputs$adjusted_p
 }
 diff <- max(abs(adjp_lrstat - adjp_graphicalMCP))
@@ -143,8 +143,8 @@ for (i in 1:n) {
   adjp[i, ] <- adjp_C
   adjp_graphicalMCP[i, ] <- graph_test_closure(graph_graphicalMCP, temp,
                                                test_types = c("p", "b"),
-                                               corr = cr,
-                                               groups = test_group_graphicalMCP,
+                                               test_corr = cr,
+                                               test_groups = test_group_graphicalMCP,
                                                alpha = alpha)$outputs$adjusted_p
 }
 diff <- max(abs(adjp - adjp_graphicalMCP))

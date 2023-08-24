@@ -106,7 +106,7 @@ graph_test_closure(
   p = c(.01, .02, .03, .05),
   alpha = .025,
   test_types = "bonferroni",
-  groups = list(1:4)
+  test_groups = list(1:4)
 )
 ```
 
@@ -333,7 +333,7 @@ Together with <strong>marginal power</strong>, this specifies the (known
 or assumed) underlying multivariate normal distribution of the null
 <strong>hypotheses</strong>.</td>
 <td></td>
-<td><code>corr</code>, <code>test_corr</code>,
+<td><code>test_corr</code>, <code>test_corr</code>,
 <code>sim_corr</code></td>
 <td>Marginal power</td>
 </tr>

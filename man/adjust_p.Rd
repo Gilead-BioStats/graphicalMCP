@@ -8,7 +8,7 @@
 \usage{
 adjust_p_bonferroni(p, hypotheses)
 
-adjust_p_parametric(p, hypotheses, corr = NULL)
+adjust_p_parametric(p, hypotheses, test_corr = NULL)
 
 adjust_p_simes(p, hypotheses)
 }
@@ -17,7 +17,7 @@ adjust_p_simes(p, hypotheses)
 
 \item{hypotheses}{A named numeric vector of hypothesis weights}
 
-\item{corr}{(Optional) A numeric matrix of correlations between hypotheses'
+\item{test_corr}{(Optional) A numeric matrix of correlations between hypotheses'
 test statistics}
 }
 \value{

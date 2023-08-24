@@ -54,12 +54,16 @@
 #'   .025,
 #'   adjusted_weights
 #' )
-graph_test_closure_fast <- function(p, alpha, adjusted_weights, intersections) {
+graph_test_closure_fast <- function(p,
+                                    alpha,
+                                    adjusted_weights,
+                                    matrix_intersections) {
   rej_hyps <- t(p <= alpha * t(adjusted_weights))
 
   # "+ 0" converts to integer from logical
-  matrixStats::colSums2(intersections * matrixStats::rowMaxs(rej_hyps + 0)) ==
-    2^(ncol(adjusted_weights) - 1)
+  matrixStats::colSums2(
+    matrix_intersections * matrixStats::rowMaxs(rej_hyps + 0)
+  ) == 2 ^ (ncol(adjusted_weights) - 1)
 }
 
 #' @rdname testing-fast

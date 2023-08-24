@@ -23,7 +23,7 @@ alpha <- .025
 # sizes equal
 # Then rho(H1, H3) = rho(H2, H4) = 1
 # All other rho = .5
-corr <- rbind(
+test_corr <- rbind(
   c( 1, .5,  1, .5),
   c(.5,  1, .5,  1),
   c( 1, .5,  1, .5),
@@ -47,7 +47,7 @@ for (i in seq_len(nrow(gw))) {
     upper = 9,
     a = alpha,
     w = gw_weights[i, ],
-    sig = corr
+    sig = test_corr
   )$root
 }
 
@@ -59,9 +59,9 @@ cbind(gw, cJ)
 # calculation above
 p_vals <- c(.01, .02, .005, .5)
 
-gMCP(as_gmcp_graph(g), p_vals, alpha = alpha, correlation = corr,
+gMCP(as_gmcp_graph(g), p_vals, alpha = alpha, correlation = test_corr,
      test = "parametric")@rejected
-graph_test_closure(g, p_vals, alpha = alpha, corr = corr,
+graph_test_closure(g, p_vals, alpha = alpha, test_corr = test_corr,
            tests = list(parametric = list(1:4)))$hypotheses_rejected
 
 # Part 2 -----------------------------------------------------------------------
@@ -137,7 +137,7 @@ part2 <- function(n0 = 1000, n1 = n0, n2 = n0, p_vals = c(.01, .02, .005, .05),
        test = "parametric")@rejected)
 
   if (print) cat("\ngraphicalMCP ------------------------------------------------------\n")
-  graphical <- graph_test_closure(g, p_vals, alpha = alpha, corr = rho,
+  graphical <- graph_test_closure(g, p_vals, alpha = alpha, test_corr = rho,
                           tests = list(parametric = list(1:4)))$hypotheses_rejected
 
   if (print) print(graphical)

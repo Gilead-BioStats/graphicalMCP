@@ -4,9 +4,9 @@
 #' @param hypotheses A numeric vector of hypothesis hypotheses
 #' @param alpha A numeric scalar specifying the global significance level for
 #'   testing
-#' @param intersection A numeric scalar used to track the intersection the test
-#'   values are from
-#' @param corr A numeric matrix of correlations between hypotheses' test
+#' @param intersection A numeric scalar used to track which intersection the
+#'   test values are from
+#' @param test_corr A numeric matrix of correlations between hypotheses' test
 #'   statistics
 #'
 #' @return A data frame with columns specifying the values used to calculate
@@ -24,7 +24,7 @@
 #' p <- c(.024, .01, .026, .027)
 #'
 #' graphicalMCP:::test_values_bonferroni(p, w, .05)
-#' graphicalMCP:::test_values_parametric(p, w, .05, corr = diag(4))
+#' graphicalMCP:::test_values_parametric(p, w, .05, test_corr = diag(4))
 #' graphicalMCP:::test_values_simes(p, w, .05)
 test_values_bonferroni <- function(p, hypotheses, alpha, intersection = NA) {
   if (length(p) == 0) {
@@ -56,11 +56,11 @@ test_values_parametric <- function(p,
                                    hypotheses,
                                    alpha,
                                    intersection = NA,
-                                   corr) {
+                                   test_corr) {
   if (length(p) == 0) {
     NULL
   } else {
-    c_value <- solve_c_parametric(hypotheses, corr, alpha)
+    c_value <- solve_c_parametric(hypotheses, test_corr, alpha)
 
     data.frame(
       Intersection = intersection,

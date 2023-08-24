@@ -25,7 +25,7 @@ print.graph_report <- function(x, ..., precision = 6, indent = 2, rows = 10) {
   cat("\n")
   section_break("Test parameters ($inputs)")
 
-  hyp_groups <- lapply(x$inputs$groups, function(group) hyp_names[group])
+  hyp_groups <- lapply(x$inputs$test_groups, function(group) hyp_names[group])
   pad_tests <- formatC(
     x$inputs$test_types,
     width = max(nchar(x$inputs$test_types)) + indent
@@ -49,16 +49,16 @@ print.graph_report <- function(x, ..., precision = 6, indent = 2, rows = 10) {
   )
 
   if (any(x$inputs$test_types == "parametric")) {
-    para_hyps <- unlist(x$inputs$groups[x$inputs$test_types == "parametric"])
-    dimnames(x$inputs$corr) <- dimnames(x$inputs$graph$transitions)
+    para_hyps <- unlist(x$inputs$test_groups[x$inputs$test_types == "parametric"])
+    dimnames(x$inputs$test_corr) <- dimnames(x$inputs$graph$transitions)
     colname_pad <- format(
       "Correlation matrix:   ",
-      width = max(nchar(rownames(x$inputs$corr)))
+      width = max(nchar(rownames(x$inputs$test_corr)))
     )
     label <- paste0(pad_less_1, colname_pad)
     df_corr <- data.frame(
-      paste0(pad_less_1, rownames(x$inputs$corr[para_hyps, ])),
-      format(x$inputs$corr[para_hyps, para_hyps], digits = precision),
+      paste0(pad_less_1, rownames(x$inputs$test_corr[para_hyps, ])),
+      format(x$inputs$test_corr[para_hyps, para_hyps], digits = precision),
       check.names = FALSE
     )
     names(df_corr)[[1]] <- label

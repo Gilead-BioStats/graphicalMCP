@@ -279,9 +279,9 @@ if (file.exists(here("vignettes/data/df_benchmarks_seqtest.rds"))) {
         `graphicalMCP shortcut (R)` = graph_test_shortcut(rando, p),
         `lrstat Bonferroni (C++)` = fadjpbon(hyp, trn, p) <= .025,
         `gMCP closure parametric (R)` =
-          gMCP(as_gmcp_graph(rando), p, alpha = .025, corr = diag(size)),
+          gMCP(as_gmcp_graph(rando), p, alpha = .025, test_corr = diag(size)),
         `graphicalMCP closure parametric (R)` =
-          graph_test_closure(rando, p, corr = diag(size)),
+          graph_test_closure(rando, p, test_corr = diag(size)),
         `lrstat Simes (C++)` =
           fadjpsim(fwgtmat(hyp, trn), p, matrix(1, ncol = size)) <= .025,
         `graphicalMCP closure Simes (R)` =

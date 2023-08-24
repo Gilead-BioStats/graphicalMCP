@@ -10,19 +10,25 @@
 adjust_weights_parametric(
   matrix_weights,
   matrix_intersections,
-  corr,
+  test_corr,
   alpha,
   groups
 )
 
 adjust_weights_simes(matrix_weights, p, groups)
 
-c_value_function(x, hypotheses, corr, alpha)
+c_value_function(x, hypotheses, test_corr, alpha)
 
-solve_c_parametric(hypotheses, corr, alpha)
+solve_c_parametric(hypotheses, test_corr, alpha)
 }
 \arguments{
-\item{corr}{A numeric matrix of correlations between hypotheses' test
+\item{matrix_weights}{The weights (second half of columns) from
+\code{\link[=graph_generate_weights]{graph_generate_weights()}} output}
+
+\item{matrix_intersections}{The intersections (first half of columns) from
+\code{\link[=graph_generate_weights]{graph_generate_weights()}} output}
+
+\item{test_corr}{A numeric matrix of correlations between hypotheses' test
 statistics}
 
 \item{alpha}{A numeric scalar specifying the global significance level for
@@ -36,11 +42,6 @@ together}
 \item{x}{The root to solve for with \code{\link[stats:uniroot]{stats::uniroot()}}}
 
 \item{hypotheses}{A numeric vector of hypothesis weights}
-
-\item{weighting_strategy}{For parametric, a compact representation of
-\code{\link[=graph_generate_weights]{graph_generate_weights()}} output, where missing hypotheses get a missing
-value for weights, and h-vectors are dropped. For Simes, just the weights
-from \code{\link[=graph_generate_weights]{graph_generate_weights()}} output}
 }
 \value{
 Outputs:
@@ -55,9 +56,9 @@ according to Formula 6 of Xi et al. (2017).
 \description{
 The weights created by \code{\link[=graph_generate_weights]{graph_generate_weights()}} work immediately for
 Bonferroni testing, but parametric and Simes testing require additional
-calculations. The \verb{adjust_weights_*()} functions apply parametric or
-Simes weight increases to get updated weights for testing. They also subset
-the weights columns by the appropriate groups
+calculations. The \verb{adjust_weights_*()} functions apply parametric or Simes
+weight increases to get updated weights for testing. They also subset the
+weights columns by the appropriate groups
 }
 \examples{
 p <- 1:6 / 200

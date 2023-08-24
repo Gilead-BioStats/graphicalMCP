@@ -16,7 +16,7 @@ test_that("printing parametric closure test", {
       par_gate,
       rep(.01, 4),
       test_types = "p",
-      corr = list(diag(4))
+      test_corr = list(diag(4))
     )
   )
 
@@ -24,9 +24,9 @@ test_that("printing parametric closure test", {
     graph_test_closure(
       par_gate,
       rep(.01, 4),
-      groups = list(1:2, 3:4),
+      test_groups = list(1:2, 3:4),
       test_types = c("p", "s"),
-      corr = list(diag(2), NA),
+      test_corr = list(diag(2), NA),
       test_values = TRUE,
       verbose = TRUE
     )
@@ -36,9 +36,9 @@ test_that("printing parametric closure test", {
     graph_test_closure(
       par_gate,
       rep(.01, 4),
-      groups = list(1:2, 3:4),
+      test_groups = list(1:2, 3:4),
       test_types = c("p", "p"),
-      corr = list(diag(2), diag(2)),
+      test_corr = list(diag(2), diag(2)),
       test_values = TRUE,
       verbose = TRUE
     )
