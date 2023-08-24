@@ -13,8 +13,8 @@
 #' @param test_groups A list of numeric vectors specifying hypotheses to test
 #'   together
 #' @param test_types A character vector of tests to apply to the given groups
-#' @param test_corr (Optional) A numeric matrix of correlations between hypotheses'
-#'   test statistics
+#' @param test_corr (Optional) A numeric matrix of correlations between
+#'   hypotheses' test statistics
 #' @param verbose A logical scalar specifying whether the results for each
 #'   intersection hypothesis should be included
 #' @param test_values A logical scalar specifying whether hypothesis-level
@@ -84,7 +84,9 @@ graph_test_closure <- function(graph,
     s = "simes"
   )
   test_types <- test_opts[tolower(test_types)]
-  if (length(test_types) == 1) test_types <- rep(test_types, length(test_groups))
+  if (length(test_types) == 1) {
+    test_types <- rep(test_types, length(test_groups))
+  }
 
   test_input_val(
     graph,
@@ -127,7 +129,8 @@ graph_test_closure <- function(graph,
   new_corr <- matrix(NA, num_hyps, num_hyps)
 
   for (group_num in seq_along(test_groups)) {
-    new_corr[test_groups[[group_num]], test_groups[[group_num]]] <- test_corr[[group_num]]
+    new_corr[test_groups[[group_num]], test_groups[[group_num]]] <-
+      test_corr[[group_num]]
   }
   diag(new_corr) <- 1
   test_corr <- if (any(test_types == "parametric")) new_corr else NULL
@@ -270,7 +273,10 @@ graph_test_closure <- function(graph,
             vec_weights[group_by_intersection],
             alpha,
             intersection_index,
-            test_corr[group_by_intersection, group_by_intersection, drop = FALSE]
+            test_corr[group_by_intersection,
+              group_by_intersection,
+              drop = FALSE
+            ]
           )
         } else {
           stop(paste(test, "testing is not supported at this time"))
@@ -315,4 +321,3 @@ graph_test_closure <- function(graph,
     class = "graph_report"
   )
 }
-

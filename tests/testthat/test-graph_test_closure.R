@@ -48,7 +48,7 @@ test_that("invalid test inputs throw errors", {
 
   test_values_inval <- 1
 
-  corr_inval1 <- list(NA, NA, rbind(c(1, .01),c(0, 1)))
+  corr_inval1 <- list(NA, NA, rbind(c(1, .01), c(0, 1)))
   corr_inval2 <- list(diag(2))
   corr_inval3 <- list(
     NA,

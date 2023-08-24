@@ -38,7 +38,6 @@ The initial weight should be split between the primary hypotheses, and each seco
 These requirements result in the graph below: Two different doses at three different outcomes being tested, which results in 6 distinct endpoints for testing. The `gamma` parameter can be set to control how much weight is passed between primary hypotheses vs how much is passed to the secondary hypotheses (`1 - gamma`). The `hyp_1` parameter controls the initial weight of hypothesis 1, low dose A1C. The rest of the initial weight, `1 - hyp_1`, is assigned to hypothesis 2, high dose A1C.
 
 ```{r initial-graph}
-# hyp_names <- c("lo_a1c", "hi_a1c", "lo_tir", "hi_tir", "lo_ret", "hi_ret")
 hyp_names <- paste0("H", 1:6)
 
 motivating_example <- function(hyp_1, gamma, hyp_names) {

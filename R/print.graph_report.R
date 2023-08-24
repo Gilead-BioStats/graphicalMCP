@@ -49,7 +49,9 @@ print.graph_report <- function(x, ..., precision = 6, indent = 2, rows = 10) {
   )
 
   if (any(x$inputs$test_types == "parametric")) {
-    para_hyps <- unlist(x$inputs$test_groups[x$inputs$test_types == "parametric"])
+    para_hyps <-
+      unlist(x$inputs$test_groups[x$inputs$test_types == "parametric"])
+
     dimnames(x$inputs$test_corr) <- dimnames(x$inputs$graph$transitions)
     colname_pad <- format(
       "Correlation matrix:   ",

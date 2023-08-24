@@ -33,8 +33,8 @@
 #'   an input, and return a length-one logical vector. For instance, if
 #'   "success" means rejecting hypotheses 1 and 2, use `sim_success = list("1
 #'   and 2" = function(x) x[1] && x[2])`. If the list is not named, the function
-#'   body will be used as the name. Lambda functions also work starting with R 4.1, e.g.
-#'   `sim_success = list(\(x) x[3] || x[4])`
+#'   body will be used as the name. Lambda functions also work starting with R
+#'   4.1, e.g. `sim_success = list(\(x) x[3] || x[4])`
 #' @param sim_seed (Optional) Random seed to set before simulating p-values. Set
 #'   this to use a consistent set of p simulations across power calculations
 #' @param force_closure A logical scalar used to determine whether the full
@@ -212,9 +212,6 @@ graph_calculate_power <- function(graph,
         matrix_weights
       )
     }
-
-    # colnames(simulation_test_results) <- hyp_names
-    # rownames(simulation_test_results) <- seq_len(sim_n)
   } else {
     # Calculate Bonferroni adjusted weights ------------------------------------
     groups_bonferroni <- test_groups[test_types == "bonferroni", drop = FALSE]

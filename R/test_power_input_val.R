@@ -16,7 +16,9 @@ test_input_val <- function(graph,
   )
 
   corr_is_matrix_list <- is.list(test_corr) &&
-    all(vapply(test_corr, function(elt) is.matrix(elt) || is.na(elt), logical(1)))
+    all(
+      vapply(test_corr, function(elt) is.matrix(elt) || is.na(elt), logical(1))
+    )
 
   stopifnot(
     "Please test an `initial_graph` object" = class(graph) == "initial_graph",
@@ -36,7 +38,8 @@ test_input_val <- function(graph,
     "Number of test types, groups, and correlation matrices should match" =
       unique(length(test_types), length(test_groups)) == length(test_corr),
     "Length of p-values & groups must match the number of hypotheses" =
-      unique(length(p), length(unlist(test_groups))) == length(graph$hypotheses),
+      unique(length(p), length(unlist(test_groups))) ==
+        length(graph$hypotheses),
     "Verbose flag must be a length one logical" =
       is.logical(verbose) && length(verbose) == 1,
     "Test values flag must be a length one logical" =
