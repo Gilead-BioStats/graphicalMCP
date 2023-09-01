@@ -1,0 +1,342 @@
+---
+title: "Generating the closure of a graph"
+output:
+  rmarkdown::html_vignette:
+    code_folding: hide
+vignette: >
+  %\VignetteIndexEntry{Generating the closure of a graph}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  echo = FALSE,
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup}
+library(graphicalMCP)
+
+library(gt)
+```
+
+## What is the closure?
+
+The closure of a graph is the set of all sub-graphs, along with their weights calculated according to algorithm 1 of Bretz et al (2011). It is primarily used for [closed testing](link to closed test vignette), where all sub-graphs are tested for significance, and results are aggregated to determine which null hypotheses are significant globally.
+
+Throughout this article a common example will be used for demonstrations - the simple successive graph. This graph has two primary hypotheses, $H_1$ and $H_2$, which have the initial weight evenly split between them. The secondary hypotheses, $H_3$ and $H_4$, only have weight propagated to them if $H_1$ or $H_2$ is deleted, respectively.
+
+```{r base-graph, fig.dim=c(6, 6)}
+ss_graph <- simple_successive_2()
+
+plot(ss_graph, layout = "grid")
+```
+
+### Components of the closure
+
+In graphicalMCP, the closure is represented by a matrix, where each row is a sub-graph (also called an intersection hypothesis), and each column is an individual hypothesis. This matrix can be created with `graph_generate_weights()`, and it has two parts: An indicator matrix showing which hypotheses are contained in each sub-graph, and a weights matrix containing the induced weights of each sub-graph.
+
+```{r closure-parts}
+weighting_strategy <- graph_generate_weights(ss_graph)
+matrix_intersections <- weighting_strategy[, seq_along(ss_graph$hypotheses)]
+
+data.frame(Intersection = seq_len(nrow(weighting_strategy))) |> 
+  cbind(weighting_strategy) |> 
+  data.frame() |> 
+  gt() |> 
+  tab_header("Closure of the simple successive graph") |> 
+  tab_spanner("Containment indicator", H1:H4) |> 
+  tab_spanner("Weights", H1.1:H4.1) |> 
+  tab_style(
+    cell_text(align = "center", style = "italic"),
+    cells_body(Intersection)
+  ) |>
+  cols_label(
+    H1.1 = "H1",
+    H2.1 = "H2",
+    H3.1 = "H3",
+    H4.1 = "H4"
+  ) |> 
+  opt_row_striping()
+```
+
+## Properties of the closure
+
+The rows of the closure are generated in a particular way in order to give them some useful properties.
+
+### Repeating recursive blocks
+
+First, notice how each row can be obtained from some row higher up in the matrix by flipping a single 1 to be a 0. For example, go from row 1 to row 3 by flipping $H_3$, or go from row 10 to row 14 by flipping $H_2$. The upper row in a pairing like this can be thought of as the "parent" sub-graph, and the lower row as the "child" sub-graph. Flipping a 0 to be a 1 and moving up the matrix will be called "finding a sub-graph's parent." Now consider the parent-finding strategy where the left-most 0 in each row is flipped. This reveals a pattern between the bottom half and top half, where each row's parent in the bottom half is the corresponding row in the top half, eight rows up.
+
+```{r big-pattern}
+data.frame(Intersection = seq_len(nrow(weighting_strategy))) |> 
+  cbind(matrix_intersections) |> 
+  data.frame() |> 
+  gt() |> 
+  tab_header("The boxes contain identical matrices") |> 
+  tab_style(
+    cell_text(align = "center", style = "italic"),
+    cells_body(Intersection)
+  ) |> 
+  tab_style(
+    cell_borders("left", "#a069c4", weight = px(2)),
+    cells_body(H2, c(1:7, 9:15))
+  ) |>
+  tab_style(
+    cell_borders("top", "#a069c4", weight = px(2)),
+    cells_body(H2:H4, c(1, 9))
+  ) |>
+  tab_style(
+    cell_borders("right", "#a069c4", weight = px(2)),
+    cells_body(H4, c(1:7, 9:15))
+  ) |>
+  tab_style(
+    cell_borders("bottom", "#a069c4", weight = px(2)),
+    cells_body(H2:H4, c(7, 15))
+  )
+```
+
+The pattern then repeats within each box recursively, with the top half of each box matching the bottom half, if the first missing hypothesis is flipped from 0 to 1.
+
+```{r small-pattern}
+data.frame(Intersection = seq_len(nrow(weighting_strategy))) |> 
+  cbind(matrix_intersections) |> 
+  data.frame() |> 
+  gt() |> 
+  tab_header("The boxes contain identical matrices") |> 
+  tab_style(
+    cell_text(align = "center", style = "italic"),
+    cells_body(Intersection)
+  ) |> 
+  tab_style(
+    cell_borders("left", "#a069c4", weight = px(2)),
+    cells_body(H2, c(1:7, 9:15))
+  ) |>
+  tab_style(
+    cell_borders("top", "#a069c4", weight = px(2)),
+    cells_body(H2:H4, c(1, 9))
+  ) |>
+  tab_style(
+    cell_borders("right", "#a069c4", weight = px(2)),
+    cells_body(H4, c(1:7, 9:15))
+  ) |>
+  tab_style(
+    cell_borders("bottom", "#a069c4", weight = px(2)),
+    cells_body(H2:H4, c(7, 15))
+  ) |>
+  tab_style(
+    cell_borders("left", "black", weight = px(2)),
+    cells_body(H3, c(1:3, 5:7, 9:11, 13:15))
+  ) |>
+  tab_style(
+    cell_borders("top", "black", weight = px(2)),
+    cells_body(H3:H4, c(1, 5, 9, 13))
+  ) |>
+  tab_style(
+    cell_borders("right", "black", weight = px(2)),
+    cells_body(H4, c(1:3, 5:7, 9:11, 13:15))
+  ) |>
+  tab_style(
+    cell_borders("bottom", "black", weight = px(2)),
+    cells_body(H3:H4, c(3, 7, 11, 15))
+  )
+```
+
+### Binary counting
+
+The second useful property is somewhat a re-statement of the first, or perhaps a reason why the first is true. Starting with the bottom row, the sub-graphs matrix side of the closure counts up from 1 in binary, incrementing by 1 per row. This means that a row number can be directly calculated from a vector showing which hypotheses are currently deleted from the graph: `row_number == number_of_rows - incl_excl_vec_converted_to_base_10 + 1`. For example, intersection number 6 has hypothesis vector `1010`. When interpreted as binary, this is `1 * 8 + 0 * 4 + 1 * 2 + 0 * 1 = 10` in base 10, and `6 == 15 - 10 + 1`.
+
+```{r closure-repeat}
+data.frame(Intersection = seq_len(nrow(weighting_strategy))) |> 
+  cbind(matrix_intersections) |> 
+  data.frame() |> 
+  gt() |> 
+  tab_header("Binary counting") |> 
+  tab_style(
+    cell_text(align = "center", style = "italic"),
+    cells_body(Intersection)
+  ) |>
+  tab_style(cell_borders("left", "#a069c4"), cells_body(1, 6)) |>
+  tab_style(cell_borders("top", "#a069c4"), cells_body(1:5, 6)) |> 
+  tab_style(cell_borders("right", "#a069c4"), cells_body(5, 6)) |> 
+  tab_style(cell_borders("bottom", "#a069c4"), cells_body(1:5, 6)) |>  
+  opt_row_striping()
+```
+
+## Speed challenges
+
+Because the size of the closure grows quickly as graph size increases (An n-graph has `2^n - 1` sub-graphs), calculating the full closure for large graphs can be computationally intensive. Optimizing this process led to three main strategies:
+
+- The simplest approach, which uses the full graph as the starting point for every sub-graph, then deletes the appropriate hypotheses.
+- A recursive method, which traverses the closure tree, deleting one hypothesis each time to step between graphs
+- A formulaic shortcut using the order of graphs generated with the recursive method
+
+### Simple approach
+
+The simplest approach to generate the weights of the closure is to apply `graph_update()` to the initial graph once for each sub-graph. This is short and sweet to write, but it's inefficient because each hypothesis gets deleted from the graph multiple times. Here is the code for the simple method.
+
+```{r ggw-simple, echo=TRUE}
+ggw_simple <- function(graph) {
+  num_hyps <- length(graph$hypotheses)
+
+  matrix_intersections <-
+    as.matrix(rev(expand.grid(rep(list(1:0), num_hyps))[-2^num_hyps, ]))
+  colnames(matrix_intersections) <- names(graph$hypotheses)
+
+  matrix_weights <- apply(
+    matrix_intersections,
+    1,
+    function(h) graph_update(graph, h)$updated_graph$hypotheses,
+    simplify = FALSE
+  )
+
+  cbind(matrix_intersections, do.call(rbind, matrix_weights))
+}
+```
+
+### Recursive
+
+The recursive method treats the space of sub-graphs as a tree, with the initial graph at the root, and other sub-graphs decreasing in size going down the branches. The essence of the recursive step is to delete a hypothesis in the current graph. But doing this for every hypothesis in every sub-graph in the tree would result in taking multiple paths to many of the graphs. So a key part of the recursive step is that it has memory - Each graph in the tree will only delete the hypotheses that come after the hypothesis that was deleted to reach the current graph. The base case also needs memory - It is reached when a graph has only one hypothesis left, or when the last-deleted hypothesis number is larger than all current hypotheses. This memory in the recursion enables the tree traversal to reach each unique graph state exactly once. Here is the code for the recursion, as well as a wrapper for processing the sub-graph list into the standard matrix form.
+
+```{r recursion, echo=TRUE}
+delete_nodes_recursive <- function(graph, last = 0) {
+  init_hypotheses <- hypotheses <- graph$hypotheses
+  init_transitions <- transitions <- graph$transitions
+
+  ### base case
+  int_hyp <- as.integer(names(hypotheses))
+
+  is_single_node <- length(hypotheses) == 1
+  last_is_bigger <- last > max(int_hyp)
+
+  if (is_single_node || last_is_bigger) {
+    return(list(graph))
+  }
+
+  ### recursive step
+  children <- list()
+
+  for (orig_hyp_num in int_hyp[int_hyp > last]) {
+    del_index <- match(orig_hyp_num, int_hyp)
+    hyp_nums <- seq_along(hypotheses)[seq_along(hypotheses) != del_index]
+
+    for (hyp_num in hyp_nums) {
+      hypotheses[[hyp_num]] <-
+        init_hypotheses[[hyp_num]] +
+        init_hypotheses[[del_index]] * init_transitions[[del_index, hyp_num]]
+
+      denominator <- 1 - init_transitions[[hyp_num, del_index]] *
+        init_transitions[[del_index, hyp_num]]
+
+      for (end_num in hyp_nums) {
+        if (hyp_num == end_num || denominator <= 0) {
+          transitions[[hyp_num, end_num]] <- 0
+        } else {
+          transitions[[hyp_num, end_num]] <- (
+            init_transitions[[hyp_num, end_num]] +
+              init_transitions[[hyp_num, del_index]] *
+                init_transitions[[del_index, end_num]]
+          ) / denominator
+        }
+      }
+    }
+
+    smaller_graph <- structure(
+      list(
+        hypotheses = hypotheses[-del_index],
+        transitions = as.matrix(transitions[-del_index, -del_index])
+      ),
+      class = "initial_graph"
+    )
+
+    children[[del_index]] <- delete_nodes_recursive(
+      smaller_graph,
+      orig_hyp_num
+    )
+  }
+
+  c(
+    unlist(children, recursive = FALSE),
+    list(graph)
+  )
+}
+```
+
+```{r ggw-recursive, echo=TRUE}
+generate_weights_recursive <- function(graph) {
+  ### The recursion requires the hypotheses to be named sequentially as actual
+  ### numbers for the memory property to work
+  hyp_names <- names(graph$hypotheses)
+  names(graph$hypotheses) <- seq_along(graph$hypotheses)
+  colnames(graph$transitions) <- names(graph$hypotheses)
+  rownames(graph$transitions) <- names(graph$hypotheses)
+
+  ### Recursively generate a list of all sub-graphs
+  list_subgraphs <- delete_nodes_recursive(graph)
+
+  ### Process the list of weights into the normal matrix form
+  wgts_mat <- structure(
+    do.call(
+      rbind,
+      lapply(
+        list_subgraphs,
+        function(graph) graph$hypotheses[as.character(seq_along(hyp_names))]
+      )
+    ),
+    dimnames = list(1:(2^length(hyp_names) - 1), hyp_names)
+  )
+
+  wgts_mat_h <- !is.na(wgts_mat)
+  wgts_mat[is.na(wgts_mat)] <- 0
+
+  cbind(wgts_mat_h, wgts_mat)
+}
+```
+
+### Formula shortcut
+
+Finally, the fastest method found so far - the formula shortcut. While recursion can save a lot of time over the first method, it still has quite a bit of overhead to get from the list of sub-graphs to the matrix form that is standard. This is where the "repeating block" property of the closure mentioned earlier is useful. Instead of using recursion to connect parent sub-graphs to their children, a pair of formulas can be used. One formula generates the parent of each graph that is obtained by flipping the left-most 0 to a 1: `do.call(c, lapply(2^(seq_len(num_hyps) - 1), seq_len))`. Note that this is for rows 2 through the (non-existent) row 16, which is the empty graph. Row 1 has no parent graph. The left-most 0 in a child graph is easy to find, but from the parent graph's perspective, this formula calculates which hypothesis to delete: `rep(rev(seq_len(num_hyps)), 2^(seq_len(num_hyps) - 1))`. This also applies to rows 2 through 16.
+
+```{r parent-child-delete}
+num_hyps <- length(ss_graph$hypotheses)
+
+parents <- do.call(c, lapply(2^(seq_len(num_hyps) - 1), seq_len))
+parents <- c(NA, parents[-(2^num_hyps - 1)])
+
+delete <- rep(rev(seq_len(num_hyps)), 2^(seq_len(num_hyps) - 1))
+delete <- c(NA, delete[-(2^num_hyps - 1)])
+
+parent_child_demo <- cbind(
+  data.frame(Intersection = seq_len(2^num_hyps - 1)),
+  weighting_strategy[, seq_len(num_hyps)],
+  delete = delete,
+  parents = parents
+)
+
+gt(parent_child_demo) |> 
+  tab_header("Parent-child connections") |> 
+  tab_spanner("To reach a given row...", delete:parents) |> 
+  tab_style(
+    cell_text(align = "center", style = "italic"),
+    cells_body(Intersection)
+  ) |> 
+  tab_style(
+    cell_text(align = "center"),
+    cells_body(c(delete, parents))
+  ) |> 
+  cols_label(
+    delete = "Delete hypothesis no.",
+    parents = "From intersection no."
+  )
+```
+
+### Performance
+
+Here's how the different methods fare, including the version from the gMCP package as well.
+
+
+
+### Future work?
