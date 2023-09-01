@@ -39,7 +39,7 @@ plot.initial_graph <- function(x,
                                ncol = NULL,
                                edge_curves = NULL,
                                precision = 4,
-                               eps = .001,
+                               eps = NULL,
                                background_color = "white",
                                margins = c(0, 0, 0, 0)) {
   graph_size <- length(x$hypotheses)
@@ -56,13 +56,20 @@ plot.initial_graph <- function(x,
   # very small edges should display as epsilon
   edge_labels <- e_attr$weight
 
+
   near_0 <- edge_labels <= eps & edge_labels != 0
   near_1 <- edge_labels >= 1 - eps & edge_labels != 1
 
+  if (length(near_0) == 0 || length(near_1) == 0) {
+    edge_labels <- round(edge_labels, precision)
+  } else
   edge_labels[!near_0 & !near_1] <-
     round(edge_labels[!near_0 & !near_1], precision)
-  edge_labels[near_0] <- expression(epsilon)
-  edge_labels[near_1] <- expression(1 - epsilon)
+
+  if (!is.null(eps)) {
+    edge_labels[near_0] <- expression(epsilon)
+    edge_labels[near_1] <- expression(1 - epsilon)
+  }
 
   # set curves -----------------------------------------------------------------
   curve <- rep(0, length(igraph::E(graph_igraph)))
@@ -121,6 +128,7 @@ plot.initial_graph <- function(x,
     edge.label = edge_labels,
     edge.curved = curve,
     edge.arrow.size = .5,
-    edge.arrow.width = 1
+    edge.arrow.width = 1,
+    asp = 0
   )
 }

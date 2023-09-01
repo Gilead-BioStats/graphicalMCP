@@ -68,42 +68,33 @@ as_igraph.initial_graph <- function(graph) {
   if (!requireNamespace("igraph", quietly = TRUE)) {
     stop("Please install.packages('igraph') before converting to an igraph")
   } else {
-    graph_size <- length(graph$hypotheses)
-    graph_names <- names(graph$hypotheses)
+    num_hyps <- length(graph$hypotheses)
+    hyp_names <- names(graph$hypotheses)
 
-    all_vert_cross <- rev(expand.grid(
-      end = seq_along(graph$hypotheses),
-      start = seq_along(graph$hypotheses)
-    ))
+    empty_igraph <- igraph::make_empty_graph()
 
-    which_edge <- apply(
-      all_vert_cross,
-      1,
-      function(row) graph$transitions[row[[1]], row[[2]]]
-    ) != 0
-
-    df_edges <- all_vert_cross[which_edge, ]
-
-    graph_igraph <- igraph::make_directed_graph(t(df_edges))
-
-    graph_igraph_vnm <- igraph::set_vertex_attr(
-      graph_igraph,
-      "name",
-      value = graph_names
+    vertex_igraph <- igraph::add_vertices(
+      empty_igraph,
+      num_hyps,
+      name = hyp_names,
+      weight = graph$hypotheses
     )
 
-    graph_igraph_vwgt <- igraph::set_vertex_attr(
-      graph_igraph_vnm,
-      "weight",
-      value = graph$hypotheses
+    matrix_edge_tails <- matrix(rep(hyp_names, num_hyps), nrow = num_hyps)
+    matrix_edge_heads <-
+      matrix(rep(hyp_names, num_hyps), nrow = num_hyps, byrow = TRUE)
+
+    edge_tails <- matrix_edge_tails[graph$transitions != 0]
+    edge_heads <- matrix_edge_heads[graph$transitions != 0]
+
+    vector_edges <- as.vector(rbind(edge_tails, edge_heads))
+
+    complete_igraph <- igraph::add_edges(
+      vertex_igraph,
+      vector_edges,
+      weight = graph$transitions[graph$transitions != 0]
     )
 
-    graph_igraph_ewgt <- igraph::set_edge_attr(
-      graph_igraph_vwgt,
-      "weight",
-      value = t(graph$transitions)[t(graph$transitions) > 0]
-    )
-
-    graph_igraph_ewgt
+    complete_igraph
   }
 }

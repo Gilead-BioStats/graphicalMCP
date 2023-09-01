@@ -12,7 +12,7 @@
   ncol = NULL,
   edge_curves = NULL,
   precision = 4,
-  eps = 0.001,
+  eps = NULL,
   background_color = "white",
   margins = c(0, 0, 0, 0)
 )
