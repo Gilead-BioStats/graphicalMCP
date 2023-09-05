@@ -13,12 +13,12 @@ adjust_p_parametric(p, hypotheses, test_corr = NULL)
 adjust_p_simes(p, hypotheses)
 }
 \arguments{
-\item{p}{A named numeric vector of p-values}
+\item{p}{A numeric vector of p-values}
 
-\item{hypotheses}{A named numeric vector of hypothesis weights}
+\item{hypotheses}{A numeric vector of hypothesis weights}
 
-\item{test_corr}{(Optional) A numeric matrix of correlations between hypotheses'
-test statistics}
+\item{test_corr}{(Optional) A numeric matrix of correlations between
+hypotheses' test statistics}
 }
 \value{
 A single adjusted p-value for the given group

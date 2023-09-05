@@ -16,12 +16,6 @@ graph_rejection_orderings <- function(shortcut_test_result) {
     function(row) if (length(unique(row)) == length(row)) unname(row) else NULL
   )
   list_possible_orderings <- Filter(Negate(is.null), list_possible_orderings)
-# browser()
-  # sequence_names <- vapply(
-  #   list_possible_orderings,
-  #   function(ordering) paste(ordering, collapse = "->"),
-  #   character(1)
-  # )
 
   # Find which permutations are valid rejection orderings ----------------------
   orderings_valid <- vector("logical", length(list_possible_orderings))
@@ -30,9 +24,6 @@ graph_rejection_orderings <- function(shortcut_test_result) {
     length(list_possible_orderings)
   )
 
-  # names(graph_sequences) <- sequence_names
-
-# browser()
   for (hyp_ordering_num in seq_along(list_possible_orderings)) {
     hyp_ordering <- list_possible_orderings[[hyp_ordering_num]]
     intermediate_graph <- graph
@@ -56,9 +47,6 @@ graph_rejection_orderings <- function(shortcut_test_result) {
     }
   }
 
-  list(
-    valid_hypothesis_sequences = list_possible_orderings[orderings_valid],
-    valid_graph_sequences = graph_sequences[orderings_valid]
-  )
+  list(valid_hypothesis_sequences = list_possible_orderings[orderings_valid])
 
 }

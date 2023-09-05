@@ -4,14 +4,19 @@
 \alias{graph_update}
 \title{Delete hypotheses from a graph}
 \usage{
-graph_update(graph, keep)
+graph_update(graph, delete)
 }
 \arguments{
 \item{graph}{An initial graph as returned by \code{\link[=graph_create]{graph_create()}}}
 
-\item{keep}{A logical or integer vector, denoting which hypotheses to
-keep/delete. An entry of \code{FALSE} (or 0) corresponds to a deletion, and
-\code{TRUE} (or 1) corresponds to keeping a hypothesis}
+\item{delete}{A logical or integer vector, denoting which hypotheses to
+keep/delete. A logical vector must match the size of the graph, with one
+entry per hypothesis, and it results in "unordered mode," where selected
+hypotheses are deleted in sequential order. An integer vector can be any
+length, but must only contain valid hypothesis numbers (greater than 0, and
+less than or equal to the size of the graph). This will trigger "ordered
+mode," where selected hypotheses are deleted in the order they appear in
+\code{delete}}
 }
 \value{
 An object of class \code{updated_graph} with 3 elements

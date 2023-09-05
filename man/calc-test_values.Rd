@@ -20,8 +20,8 @@ test_values_simes(p, hypotheses, alpha, intersection = NA)
 \item{alpha}{A numeric scalar specifying the global significance level for
 testing}
 
-\item{intersection}{A numeric scalar used to track the intersection the test
-values are from}
+\item{intersection}{A numeric scalar used to track which intersection the
+test values are from}
 
 \item{test_corr}{A numeric matrix of correlations between hypotheses' test
 statistics}

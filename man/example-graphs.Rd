@@ -36,8 +36,8 @@ complex_example_2(hyp_names = NULL)
 \arguments{
 \item{num_hyps}{Number of vertices in the graph}
 
-\item{hyp_names}{Optional names for the hypotheses (Must have length
-\code{num_hyps} or be NULL)}
+\item{hyp_names}{(Optional) A character vector of hypothesis names. If names
+are not specified, hypotheses will be named sequentially as H1, H2, ...}
 
 \item{hypotheses}{Hypothesis weights in a fallback procedure}
 }

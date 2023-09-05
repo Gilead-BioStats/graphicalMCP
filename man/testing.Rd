@@ -37,8 +37,8 @@ together}
 
 \item{test_types}{A character vector of tests to apply to the given groups}
 
-\item{test_corr}{(Optional) A numeric matrix of correlations between hypotheses'
-test statistics}
+\item{test_corr}{(Optional) A numeric matrix of correlations between
+hypotheses' test statistics}
 
 \item{verbose}{A logical scalar specifying whether the results for each
 intersection hypothesis should be included}

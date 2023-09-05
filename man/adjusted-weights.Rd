@@ -12,7 +12,7 @@ adjust_weights_parametric(
   matrix_intersections,
   test_corr,
   alpha,
-  groups
+  test_groups
 )
 
 adjust_weights_simes(matrix_weights, p, groups)
@@ -22,11 +22,13 @@ c_value_function(x, hypotheses, test_corr, alpha)
 solve_c_parametric(hypotheses, test_corr, alpha)
 }
 \arguments{
-\item{matrix_weights}{The weights (second half of columns) from
-\code{\link[=graph_generate_weights]{graph_generate_weights()}} output}
+\item{matrix_weights}{The second half of columns from
+\code{\link[=graph_generate_weights]{graph_generate_weights()}} output, indicating the weights of each
+intersection}
 
-\item{matrix_intersections}{The intersections (first half of columns) from
-\code{\link[=graph_generate_weights]{graph_generate_weights()}} output}
+\item{matrix_intersections}{The first half of columns from
+\code{\link[=graph_generate_weights]{graph_generate_weights()}} output, indicating which hypotheses are
+contained in each intersection}
 
 \item{test_corr}{A numeric matrix of correlations between hypotheses' test
 statistics}
@@ -34,7 +36,7 @@ statistics}
 \item{alpha}{A numeric scalar specifying the global significance level for
 testing}
 
-\item{groups}{A list of numeric vectors specifying hypotheses to test
+\item{test_groups}{A list of numeric vectors specifying hypotheses to test
 together}
 
 \item{p}{A numeric vector of p-values}
