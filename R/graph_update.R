@@ -93,7 +93,10 @@ graph_update <- function(graph, keep) {
     # At this point, a single hypothesis has been removed from the graph.
     # Assign the newly calculated hypotheses and transitions to `graph`, and
     # loop to the next hypothesis to delete
-    graph <- graph_create(hypotheses, transitions)
+    graph <- structure(
+      list(hypotheses = hypotheses, transitions = transitions),
+      class = "initial_graph"
+    )
   }
 
   structure(

@@ -127,7 +127,7 @@ plot.initial_graph <- function(x,
     vertex.size = 25,
     edge.label = edge_labels,
     edge.curved = curve,
-    edge.arrow.size = .5,
+    edge.arrow.size = .7,
     edge.arrow.width = 1,
     asp = 0
   )

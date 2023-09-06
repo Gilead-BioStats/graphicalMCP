@@ -2,15 +2,16 @@
 % Please edit documentation in R/plot.updated_graph.R
 \name{plot.updated_graph}
 \alias{plot.updated_graph}
-\title{S3 plot method for the class \code{udpated_graph}}
+\title{S3 plot method for the class \code{updated_graph}}
 \usage{
 \method{plot}{updated_graph}(x, ...)
 }
 \arguments{
+\item{x}{An \code{updated_graph} object as returned by \code{graph_update()}}
+
 \item{...}{
   Arguments passed on to \code{\link[=plot.initial_graph]{plot.initial_graph}}
   \describe{
-    \item{\code{x}}{An initial graph as returned by \code{\link[=graph_create]{graph_create()}}}
     \item{\code{layout}}{An igraph layout specification (See \code{?igraph.plotting}), or
 \code{"grid"}, which lays out hypotheses left-to-right, top-to-bottom with
 \code{nrow} rows and \code{ncol} columns.}
@@ -41,8 +42,8 @@ passed directly to \code{\link[graphics:par]{graphics::par()}} (\code{mar})}
 NULL, after plotting the graph
 }
 \description{
-S3 plot method for the class \code{udpated_graph}
+S3 plot method for the class \code{updated_graph}
 }
 \examples{
-plot(graph_update(simple_successive_2(), c(T, F, T, T)), layout = "grid")
+plot(graph_update(simple_successive_2(), c(1, 0, 1, 1)), layout = "grid")
 }

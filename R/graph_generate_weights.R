@@ -52,6 +52,10 @@ graph_generate_weights <- function(graph) {
   graphs <- vector("list", length(parents))
   graphs[[1]] <- graph
 
+  matrix_weights <- matrix(nrow = 2^num_hyps - 1, ncol = num_hyps)
+  dimnames(matrix_weights) <- list(seq_len(2^num_hyps - 1), hyp_names)
+  matrix_weights[1, ] <- graph$hypotheses
+
   for (i in seq_along(parents)) {
     parent <- graphs[[parents[[i]]]]
     del_index <- which(hyp_names[[delete[[i]]]] == names(parent$hypotheses))
@@ -92,20 +96,12 @@ graph_generate_weights <- function(graph) {
       ),
       class = "initial_graph"
     )
+
+    matrix_weights[i + 1, ] <- hypotheses[-del_index][hyp_names]
   }
 
-  wgts_mat <- structure(
-    do.call(
-      rbind,
-      lapply(graphs, function(graph) {
-        graph$hypotheses[hyp_names]
-      })
-    ),
-    dimnames = list(1:(2^length(hyp_names) - 1), hyp_names)
-  )
+  matrix_intersections <- !is.na(matrix_weights)
+  matrix_weights[is.na(matrix_weights)] <- 0
 
-  wgts_mat_h <- !is.na(wgts_mat)
-  wgts_mat[is.na(wgts_mat)] <- 0
-
-  cbind(wgts_mat_h, wgts_mat)
+  cbind(matrix_intersections, matrix_weights)
 }
