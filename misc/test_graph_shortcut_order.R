@@ -9,9 +9,9 @@ graph_test_shortcut_order <- function(graph,
     graph,
     p,
     alpha,
-    groups = list(seq_along(graph$hypotheses)),
+    test_groups = list(seq_along(graph$hypotheses)),
     test_types = "bonferroni",
-    corr = NULL,
+    test_corr = NULL,
     verbose = verbose,
     critical = critical
   )
@@ -217,9 +217,9 @@ graph_test_shortcut_order <- function(graph,
         graph = initial_graph,
         p = p,
         alpha = alpha,
-        groups = list(seq_len(num_hyps)),
+        test_groups = list(seq_len(num_hyps)),
         test_types = "bonferroni",
-        corr = NULL
+        test_corr = NULL
       ),
       outputs = list(
         adjusted_p = adjusted_p,

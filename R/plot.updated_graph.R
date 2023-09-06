@@ -7,7 +7,13 @@
 #' @export
 #'
 #' @examples
-#' plot(graph_update(simple_successive_2(), c(1, 0, 1, 1)), layout = "grid")
+#' plot(
+#'   graph_update(
+#'     simple_successive_2(),
+#'     c(TRUE, FALSE, TRUE, TRUE)
+#'    ),
+#'   layout = "grid"
+#' )
 plot.updated_graph <- function(x, ...) {
   v_colors <- rep("#e8c2ff", length(x$updated_graph$hypotheses))
   v_colors[!x$kept_hypotheses] <- "grey80"

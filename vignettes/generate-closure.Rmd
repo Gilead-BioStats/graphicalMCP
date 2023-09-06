@@ -193,7 +193,7 @@ ggw_simple <- function(graph) {
   matrix_weights <- apply(
     matrix_intersections,
     1,
-    function(h) graph_update(graph, h)$updated_graph$hypotheses,
+    function(h) graph_update(graph, !h)$updated_graph$hypotheses,
     simplify = FALSE
   )
 

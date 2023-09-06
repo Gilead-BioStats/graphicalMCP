@@ -5,9 +5,9 @@ meta_test_graph <- function(...) {
     graph = simple_successive_1(),
     p = c(.001, .02, .002, .03),
     alpha = .025,
-    groups = list(1, 2, 3:4),
+    test_groups = list(1, 2, 3:4),
     test_types = c("bonferroni", "simes", "parametric"),
-    corr = list(NA, NA, rbind(c(1, 0), c(0, 1))),
+    test_corr = list(NA, NA, rbind(c(1, 0), c(0, 1))),
     verbose = TRUE,
     test_values = TRUE
   )
@@ -48,19 +48,15 @@ test_that("invalid test inputs throw errors", {
 
   test_values_inval <- 1
 
-  corr_inval1 <- rbind(
-    c(NA, NA, NA, NA),
-    c(NA, NA, NA, NA),
-    c(NA, NA, 1, 0),
-    c(NA, NA, 0, 1)
-  )
-  corr_inval1[3, 4] <- .01
-  corr_inval2 <- diag(2)
-  corr_inval3 <- rbind(
-    c(1, NA, NA, NA),
-    c(NA, 1, .997, .929),
-    c(NA, .997, 1, .769),
-    c(NA, .929, .769, 1)
+  corr_inval1 <- list(NA, NA, rbind(c(1, .01), c(0, 1)))
+  corr_inval2 <- list(diag(2))
+  corr_inval3 <- list(
+    NA,
+    rbind(
+      c(1, .997, .929),
+      c(.997, 1, .769),
+      c(.929, .769, 1)
+    )
   )
 
   expect_s3_class(meta_test_graph(), "graph_report")
@@ -73,23 +69,23 @@ test_that("invalid test inputs throw errors", {
   expect_error(meta_test_graph(alpha = alpha_inval2))
   expect_error(meta_test_graph(alpha = alpha_inval3))
   expect_error(meta_test_graph(test_types = tests_inval1))
-  expect_error(meta_test_graph(groups = groups_inval1))
+  expect_error(meta_test_graph(test_groups = groups_inval1))
   expect_error(
     meta_test_graph(
       test_types = tests_inval2,
-      groups = groups_inval2
+      test_groups = groups_inval2
     )
   )
-  expect_error(meta_test_graph(groups = groups_inval3))
+  expect_error(meta_test_graph(test_groups = groups_inval3))
   expect_error(meta_test_graph(verbose = verbose_inval))
   expect_error(meta_test_graph(test_values = test_values_inval))
-  expect_error(meta_test_graph(corr = corr_inval1))
-  expect_error(meta_test_graph(corr = corr_inval2))
+  expect_error(meta_test_graph(test_corr = corr_inval1))
+  expect_error(meta_test_graph(test_corr = corr_inval2))
   expect_error(
     meta_test_graph(
-      groups = list(1, 2:4),
+      test_groups = list(1, 2:4),
       test_types = c("b", "p"),
-      corr = corr_inval3
+      test_corr = corr_inval3
     )
   )
 })
@@ -122,7 +118,7 @@ test_that("Simes & parametric adjusted p-values are less than Bonferroni", {
           rando,
           rep(.01, 4),
           test_types = "p",
-          corr = list(diag(4))
+          test_corr = list(diag(4))
         )$outputs$adjusted_p
     )
   )
@@ -157,7 +153,7 @@ test_that("check assertions in testing vignette", {
     list(
       adjusted_p = c(.048, .02, .052, .052),
       rejected = c(TRUE, TRUE, FALSE, FALSE),
-      graph = graph_update(par_gate, c(FALSE, FALSE, TRUE, TRUE))$updated_graph
+      graph = graph_update(par_gate, c(TRUE, TRUE, FALSE, FALSE))$updated_graph
     ),
     ignore_attr = TRUE
   )
@@ -172,7 +168,7 @@ test_that("check assertions in testing vignette", {
     list(
       adjusted_p = c(.027, .02, .027, .027),
       rejected = rep(TRUE, 4),
-      graph = graph_update(par_gate, rep(FALSE, 4))$updated_graph
+      graph = graph_update(par_gate, rep(TRUE, 4))$updated_graph
     ),
     ignore_attr = TRUE
   )
@@ -192,7 +188,7 @@ test_that("check assertions in testing vignette", {
     list(
       adjusted_p = c(.048, .02, .048, .048),
       rejected = rep(TRUE, 4),
-      graph = graph_update(par_gate, rep(FALSE, 4))$updated_graph
+      graph = graph_update(par_gate, rep(TRUE, 4))$updated_graph
     ),
     ignore_attr = TRUE
   )
@@ -232,7 +228,7 @@ test_that("compare adjusted p-values to gMCP - Bonferroni & parametric", {
         g,
         p,
         test_types = "p",
-        corr = list(diag(6))
+        test_corr = list(diag(6))
       )$outputs$adjusted_p,
       gMCP::gMCP(gmcp_g, p, "parametric", correlation = diag(6))@adjPValues
     )
@@ -277,7 +273,7 @@ test_that("compare adjusted p-values to lrstat - Bonferroni & Simes", {
       graph_test_closure(
         g,
         p,
-        groups = list(1:3, 4:6),
+        test_groups = list(1:3, 4:6),
         test_types = "s"
       )$outputs$adjusted_p,
       lrstat::fadjpsim(gw, p, fam2),
@@ -367,7 +363,7 @@ test_that("parametric floating point errors", {
     p,
     .025,
     test_types = "p",
-    corr = t_corr,
+    test_corr = t_corr,
     verbose = TRUE,
     test_values = TRUE
   )

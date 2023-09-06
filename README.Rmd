@@ -71,7 +71,7 @@ plot(example_graph, layout = "grid", asp = .7)
 Hypotheses can be deleted from the MCP using `graph_update()`. Updated weights and transitions are calculated according to the weighting strategy in Algorithm 1 of [Bretz et al (2011)](https://onlinelibrary.wiley.com/doi/10.1002/bimj.201000239). We distinguish *deleting* from *rejecting* in the [glossary](#glossary-of-terms).
 
 ```{r update-graph}
-graph_update(example_graph, keep = c(TRUE, FALSE, FALSE, TRUE))
+graph_update(example_graph, delete = c(FALSE, TRUE, TRUE, FALSE))
 ```
 
 ### Generate weights
@@ -99,8 +99,8 @@ graph_test_closure(
   example_graph,
   p = c(.01, .03, .02, .01),
   alpha = .025,
-  test_types = c("bonferroni", "simes"),
-  groups = list(1:2, 3:4)
+  test_types = "bonferroni",
+  test_groups = list(1:4)
 )
 ```
 
@@ -112,7 +112,7 @@ It's not always obvious from a graph structure how easy or difficult it will be 
 graph_calculate_power(
   example_graph,
   sim_n = 1e5,
-  marginal_power = c(.9, .9, .8, .8)
+  power_marginal = c(.9, .9, .8, .8)
 )
 ```
 

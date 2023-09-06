@@ -8,8 +8,6 @@ test_that("vectorized testing matches standard testing (single-group)", {
   gw_h <- gw[, seq_len(m)]
   gw_weights <- gw[, seq_len(m) + m]
 
-  gw_compact_bonf <- ifelse(gw_h, gw_weights, 0)
-
   groups1 <- list(seq_len(m))
 
   gw_compact_simes <- graphicalMCP:::adjust_weights_simes(
@@ -19,14 +17,15 @@ test_that("vectorized testing matches standard testing (single-group)", {
   )
 
   gw_compact_parametric <- graphicalMCP:::adjust_weights_parametric(
-    gw_compact_bonf,
+    gw_weights,
+    gw_h,
     diag(m),
     .025,
     list(seq_len(m))
   )
 
   expect_equal(
-    graphicalMCP:::graph_test_closure_fast(p, .025, gw_compact_bonf, gw_h),
+    graphicalMCP:::graph_test_closure_fast(p, .025, gw_weights, gw_h),
     graph_test_closure(rando, p)$outputs$rejected,
     ignore_attr = TRUE
   )
@@ -53,7 +52,7 @@ test_that("vectorized testing matches standard testing (single-group)", {
       rando,
       p,
       test_types = "p",
-      corr = list(diag(m))
+      test_corr = list(diag(m))
     )$outputs$rejected,
     ignore_attr = TRUE
   )
@@ -74,36 +73,39 @@ test_that("vectorized testing matches standard testing (multi-group)", {
   simes_groups_reduce <- list(1:2)
   para_groups <- list(5:m)
 
-  gw_compact_bonf <- ifelse(gw_h, gw_weights, 0)
-
-  gw_compact_simes <- graphicalMCP:::adjust_weights_simes(
-    gw_compact_bonf[, unlist(simes_groups)],
+  adjusted_weights_simes <- graphicalMCP:::adjust_weights_simes(
+    gw_weights[, unlist(simes_groups)],
     p[unlist(simes_groups)],
     simes_groups_reduce
   )
 
-  gw_compact_para <- graphicalMCP:::adjust_weights_parametric(
-    gw_compact_bonf,
+  adjusted_weights_para <- graphicalMCP:::adjust_weights_parametric(
+    gw_weights,
+    gw_h,
     diag(m),
     .05,
     para_groups
   )
 
-  gw_compact_bonf <- gw_compact_bonf[, unlist(bonf_groups)]
+  gw_weights <- gw_weights[, unlist(bonf_groups)]
 
   expect_equal(
     graphicalMCP:::graph_test_closure_fast(
       p,
       .025,
-      cbind(gw_compact_bonf, gw_compact_simes, gw_compact_para)[, hyp_names],
+      cbind(
+        gw_weights,
+        adjusted_weights_simes,
+        adjusted_weights_para
+      )[, hyp_names],
       gw_h
     ),
     graph_test_closure(
       rando,
       p,
-      groups = list(1:2, 4:3, 5:m),
+      test_groups = list(1:2, 4:3, 5:m),
       test_types = c("b", "s", "p"),
-      corr = list(NA, NA, diag(m - 4))
+      test_corr = list(NA, NA, diag(m - 4))
     )$outputs$rejected,
     ignore_attr = TRUE
   )

@@ -1,9 +1,9 @@
 #' Calculate adjusted p-values
 #'
-#' @param p A named numeric vector of p-values
-#' @param hypotheses A named numeric vector of hypothesis weights
-#' @param corr (Optional) A numeric matrix of correlations between hypotheses'
-#'   test statistics
+#' @param p A numeric vector of p-values
+#' @param hypotheses A numeric vector of hypothesis weights
+#' @param test_corr (Optional) A numeric matrix of correlations between
+#'   hypotheses' test statistics
 #'
 #' @return A single adjusted p-value for the given group
 #'
@@ -45,7 +45,7 @@ adjust_p_bonferroni <- function(p, hypotheses) {
 }
 
 #' @rdname adjust_p
-adjust_p_parametric <- function(p, hypotheses, corr = NULL) {
+adjust_p_parametric <- function(p, hypotheses, test_corr = NULL) {
   if (sum(hypotheses) == 0) {
     return(Inf)
   }
@@ -60,7 +60,7 @@ adjust_p_parametric <- function(p, hypotheses, corr = NULL) {
     1 - mvtnorm::pmvnorm(
       lower = -Inf,
       upper = z,
-      corr = corr[w_nonzero, w_nonzero, drop = FALSE],
+      corr = test_corr[w_nonzero, w_nonzero, drop = FALSE],
       algorithm = mvtnorm::GenzBretz(maxpts = 25000, abseps = 1e-6, releps = 0)
     )[[1]]
   )
@@ -93,8 +93,8 @@ adjust_p_simes <- function(p, hypotheses) {
     # smaller, incorrect adjusted weight (larger, incorrect adjusted p-value).
     # The hypothesis that comes second will be correct. [adjust_weights_simes()]
     # is only used in power calculations where it should not be possible to have
-    # identical p-values, since they are sampled randomly (unless `all(corr ==
-    # 1)`). Furthermore, even when there are incorrect adjusted weights, it
+    # identical p-values, since they are sampled randomly (unless `all(test_corr
+    # == 1)`). Furthermore, even when there are incorrect adjusted weights, it
     # cannot affect the hypothesis rejections. See Bonferroni function above for
     # na.rm reasoning
     adjusted_p <- min(

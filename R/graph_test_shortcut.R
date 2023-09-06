@@ -10,9 +10,9 @@ graph_test_shortcut <- function(graph,
     graph,
     p,
     alpha,
-    groups = list(seq_along(graph$hypotheses)),
+    test_groups = list(seq_along(graph$hypotheses)),
     test_types = "bonferroni",
-    corr = list(NA),
+    test_corr = list(NA),
     verbose = verbose,
     test_values = test_values
   )
@@ -73,7 +73,7 @@ graph_test_shortcut <- function(graph,
 
     # Update graph to delete a hypothesis
     graph <-
-      graph_update(graph, !hyp_names %in% hyps_deleted_sequence)$updated_graph
+      graph_update(graph, hyp_names %in% hyps_deleted_sequence)$updated_graph
   }
 
   rejected <- round(adjusted_p, 10) <= alpha
@@ -91,20 +91,20 @@ graph_test_shortcut <- function(graph,
     graph_sequence[[1]] <- initial_graph
 
     if (length(rejection_sequence) > 0) {
-      verbose_keep <- rep(TRUE, num_hyps)
-      names(verbose_keep) <- hyp_names
+      verbose_delete <- rep(FALSE, num_hyps)
+      names(verbose_delete) <- hyp_names
 
       # Starting from the original initial graph, delete each hypothesis with
       # adjusted p-value less than alpha. Record the graph state after each
       # deletion
       for (hyp_num_to_reject in seq_along(rejection_sequence)) {
         hyp_name_to_reject <- rejection_sequence[[hyp_num_to_reject]]
-        verbose_keep[[hyp_name_to_reject]] <- FALSE
+        verbose_delete[[hyp_name_to_reject]] <- TRUE
 
         # Update a graph to delete a hypothesis. Record the resulting graph
         graph_sequence[[hyp_num_to_reject + 1]] <- graph_update(
           graph_sequence[[hyp_num_to_reject]],
-          verbose_keep
+          verbose_delete
         )$updated_graph
       }
     }
@@ -116,12 +116,9 @@ graph_test_shortcut <- function(graph,
   if (test_values) {
     # Record the final graph after all rejected hypotheses have been deleted
     graph_after_rejections <-
-      graph_update(initial_graph, !rejected)$updated_graph
+      graph_update(initial_graph, rejected)$updated_graph
 
     df_test_values <- NULL
-
-    test_values_keep <- rep(TRUE, num_hyps)
-    names(test_values_keep) <- hyp_names
 
     step_graph <- initial_graph
     step_num <- 1
@@ -158,7 +155,7 @@ graph_test_shortcut <- function(graph,
 
         step_graph <- graph_update(
           step_graph,
-          !hyp_names == hyp_name_for_test_values
+          hyp_names == hyp_name_for_test_values
         )$updated_graph
       } else {
         step_graph <- graph_after_rejections
@@ -177,14 +174,14 @@ graph_test_shortcut <- function(graph,
         graph = initial_graph,
         p = p,
         alpha = alpha,
-        groups = list(seq_len(num_hyps)),
+        test_groups = list(seq_len(num_hyps)),
         test_types = "bonferroni",
-        corr = NULL
+        test_corr = NULL
       ),
       outputs = list(
         adjusted_p = adjusted_p,
         rejected = rejected,
-        graph = graph_update(initial_graph, !rejected)$updated_graph
+        graph = graph_update(initial_graph, rejected)$updated_graph
       ),
       details = if (verbose) details,
       test_values = if (test_values) list(results = df_test_values)

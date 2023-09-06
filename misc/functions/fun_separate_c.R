@@ -50,7 +50,7 @@ p_separate_c_function <- function(p, w, cr){
       q <- min(subp[ind] / subw[ind])
       q <- q * subw[ind]
       pJ[ind] <- 1 / sum(subw[ind]) *
-        (1 - pmvnorm(upper = qnorm(q, lower.tail = F), corr = subcr[ind, ind]))
+        (1 - pmvnorm(upper = qnorm(q, lower.tail = F), test_corr = subcr[ind, ind]))
     } else {
       pJ[ind] <- subp[ind] / subw[ind]
     }

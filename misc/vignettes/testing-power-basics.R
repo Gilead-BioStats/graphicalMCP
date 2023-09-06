@@ -34,9 +34,9 @@ diag(corr1) <- 1
 graph_test_closure(ss_graph,
   p = pvals,
   alpha = .05,
-  groups = list(1:2, 3:4),
+  test_groups = list(1:2, 3:4),
   test_types = c("b", "p"),
-  corr = corr1
+  test_corr = corr1
 )
 
 ## ----verbose------------------------------------------------------------------
@@ -44,8 +44,8 @@ graph_test_closure(
   ss_graph,
   p = pvals,
   alpha = .05,
-  corr = corr1,
-  groups = list(1:2, 3:4),
+  test_corr = corr1,
+  test_groups = list(1:2, 3:4),
   test_types = c("s", "p"),
   verbose = TRUE
 )
@@ -55,8 +55,8 @@ graph_test_closure(
   ss_graph,
   p = pvals,
   alpha = .05,
-  corr = corr1,
-  groups = list(1:2, 3:4),
+  test_corr = corr1,
+  test_groups = list(1:2, 3:4),
   test_types = c("s", "p"),
   verbose = TRUE,
   critical = TRUE
@@ -84,8 +84,8 @@ mix_test <- graph_test_closure(
   graph2,
   p = p,
   alpha = .05,
-  corr = sim_corr,
-  groups = list(1, 2:3, 4:5),
+  test_corr = sim_corr,
+  test_groups = list(1, 2:3, 4:5),
   test_types = c("b", "s", "p"),
   verbose = TRUE,
   critical = TRUE
@@ -123,7 +123,7 @@ graph_calculate_power(
   test_groups = list(1:4),
   test_types = c("p"),
   test_corr = corr2,
-  marginal_power = c(1, 1, 3, 3),
+  power_marginal = c(1, 1, 3, 3),
   sim_corr = s_corr1,
   sim_success = function(.) .[1] || .[2],
   sim_seed = 52423, # Set a seed if you need consistent p-values

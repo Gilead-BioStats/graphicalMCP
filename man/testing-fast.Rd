@@ -5,15 +5,9 @@
 \alias{graph_test_shortcut_fast}
 \title{Calculate hypothesis rejection results efficiently}
 \usage{
-graph_test_closure_fast(p, alpha, adjusted_weights, intersections)
+graph_test_closure_fast(p, alpha, adjusted_weights, matrix_intersections)
 
-graph_test_shortcut_fast(
-  p,
-  adjusted_weights,
-  num_hyps,
-  bin_slots,
-  nrow_critical
-)
+graph_test_shortcut_fast(p, alpha, adjusted_weights)
 }
 \arguments{
 \item{p}{A numeric vector of p-values}
@@ -25,11 +19,11 @@ testing}
 \code{\link[=graph_generate_weights]{graph_generate_weights()}} output, adjusted by the appropriate testing
 algorithm (Bonferroni, Simes, or parametric)}
 
+\item{graph}{An initial graph as returned by \code{\link[=graph_create]{graph_create()}}}
+
 \item{intersections}{The first half of columns from
 \code{\link[=graph_generate_weights]{graph_generate_weights()}} output, indicating which hypotheses are
 contained in each intersection}
-
-\item{graph}{An initial graph as returned by \code{\link[=graph_create]{graph_create()}}}
 }
 \value{
 A logical or integer vector of results indicating whether each
@@ -65,10 +59,8 @@ graphicalMCP:::graph_test_closure_fast(
 )
 graphicalMCP:::graph_test_shortcut_fast(
   p,
-  adjusted_weights * .025,
-  length(par_gate$hypotheses),
-  2^(length(par_gate$hypotheses):1 - 1),
-  2^length(par_gate$hypotheses) - 1
+  .025,
+  adjusted_weights
 )
 }
 \references{

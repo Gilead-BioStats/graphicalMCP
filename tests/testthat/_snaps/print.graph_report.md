@@ -188,7 +188,8 @@
 # printing parametric closure test
 
     Code
-      graph_test_closure(par_gate, rep(0.01, 4), test_types = "p", corr = list(diag(4)))
+      graph_test_closure(par_gate, rep(0.01, 4), test_types = "p", test_corr = list(
+        diag(4)))
     Output
       
       Test parameters ($inputs) ------------------------------------------------------
@@ -247,8 +248,9 @@
 ---
 
     Code
-      graph_test_closure(par_gate, rep(0.01, 4), groups = list(1:2, 3:4), test_types = c(
-        "p", "s"), corr = list(diag(2), NA), test_values = TRUE, verbose = TRUE)
+      graph_test_closure(par_gate, rep(0.01, 4), test_groups = list(1:2, 3:4),
+      test_types = c("p", "s"), test_corr = list(diag(2), NA), test_values = TRUE,
+      verbose = TRUE)
     Output
       
       Test parameters ($inputs) ------------------------------------------------------
@@ -356,8 +358,9 @@
 ---
 
     Code
-      graph_test_closure(par_gate, rep(0.01, 4), groups = list(1:2, 3:4), test_types = c(
-        "p", "p"), corr = list(diag(2), diag(2)), test_values = TRUE, verbose = TRUE)
+      graph_test_closure(par_gate, rep(0.01, 4), test_groups = list(1:2, 3:4),
+      test_types = c("p", "p"), test_corr = list(diag(2), diag(2)), test_values = TRUE,
+      verbose = TRUE)
     Output
       
       Test parameters ($inputs) ------------------------------------------------------

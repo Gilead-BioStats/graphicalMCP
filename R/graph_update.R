@@ -6,9 +6,14 @@
 #' for a single set of deletions, including transition weights as well.
 #'
 #' @param graph An initial graph as returned by [graph_create()]
-#' @param keep A logical or integer vector, denoting which hypotheses to
-#'   keep/delete. An entry of `FALSE` (or 0) corresponds to a deletion, and
-#'   `TRUE` (or 1) corresponds to keeping a hypothesis
+#' @param delete A logical or integer vector, denoting which hypotheses to
+#'   keep/delete. A logical vector must match the size of the graph, with one
+#'   entry per hypothesis, and it results in "unordered mode," where selected
+#'   hypotheses are deleted in sequential order. An integer vector can be any
+#'   length, but must only contain valid hypothesis numbers (greater than 0, and
+#'   less than or equal to the size of the graph). This will trigger "ordered
+#'   mode," where selected hypotheses are deleted in the order they appear in
+#'   `delete`
 #'
 #' @return An object of class `updated_graph` with 3 elements
 #'   * The initial graph object
@@ -32,25 +37,43 @@
 #' # Delete the second hypothesis
 #' graph_update(g, c(TRUE, FALSE, TRUE, TRUE))
 #' # Equivalent
-#' # graph_update(g, c(1, 0, 1, 1))
+#' # graph_update(g, 2)
 #'
-graph_update <- function(graph, keep) {
+graph_update <- function(graph, delete) {
+  # Basic type checking
   stopifnot(
     "Please update an `initial_graph` object" = class(graph) == "initial_graph",
     "Hypothesis index must be a logical or integer vector" =
-      is.logical(keep) || (is.numeric(keep) && all(as.integer(keep) == keep)),
-    "Length of hypothesis index must match size of graph" =
-      length(graph$hypotheses) == length(keep),
-    "Hypothesis index must only contain 0, 1, TRUE, or FALSE" =
-      all(keep %in% c(TRUE, FALSE, 0, 1))
+      is.logical(delete) || (all(as.integer(delete) == delete))
   )
 
-  keep <- as.logical(keep)
+  ordered <- !is.logical(delete)
+
+  # Qualitative checking
+  if (ordered) {
+    stopifnot(
+      "Ordered deletion index must contain only valid hypothesis numbers" =
+        all(delete > 0 & delete <= length(graph$hypotheses)),
+      "Ordered deletion index must have unique values" =
+        length(delete) == length(unique(delete))
+    )
+
+    intermediate_graphs <- list(graph)
+  } else {
+    stopifnot(
+      "Length of unordered deletion index must match size of graph" =
+        length(graph$hypotheses) == length(delete),
+      "Unordered deletion index must only contain TRUE or FALSE" =
+        all(delete %in% c(TRUE, FALSE))
+    )
+
+    delete <- which(delete)
+  }
+
   initial_graph <- graph
-  names(keep) <- names(graph$hypotheses)
 
   # Iterate over the hypotheses to delete
-  for (delete_num in which(!keep)) {
+  for (delete_num in delete) {
     # Save current state of the graph to use in calculations
     # Also make a copy of graph elements for storing new values in
     init_hypotheses <- hypotheses <- graph$hypotheses
@@ -97,13 +120,16 @@ graph_update <- function(graph, keep) {
       list(hypotheses = hypotheses, transitions = transitions),
       class = "initial_graph"
     )
+
+    if (ordered) intermediate_graphs <- c(intermediate_graphs, list(graph))
   }
 
   structure(
     list(
       initial_graph = initial_graph,
-      kept_hypotheses = keep,
-      updated_graph = graph
+      updated_graph = graph,
+      deleted = delete,
+      intermediate_graphs = if (ordered) intermediate_graphs
     ),
     class = "updated_graph"
   )

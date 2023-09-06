@@ -47,7 +47,7 @@ sim_func <- function(sim_n,
   graph_calculate_power(
     graph = graph,
     alpha = 0.025,
-    marginal_power = theta,
+    power_marginal = theta,
     sim_corr = sim_corr,
     sim_n = sim_n,
     sim_success = function(.) .[1],

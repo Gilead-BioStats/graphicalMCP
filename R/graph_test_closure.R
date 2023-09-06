@@ -10,11 +10,11 @@
 #' @param p A numeric vector of p-values
 #' @param alpha A numeric scalar specifying the global significance level for
 #'   testing
-#' @param groups A list of numeric vectors specifying hypotheses to test
+#' @param test_groups A list of numeric vectors specifying hypotheses to test
 #'   together
 #' @param test_types A character vector of tests to apply to the given groups
-#' @param corr (Optional) A numeric matrix of correlations between hypotheses'
-#'   test statistics
+#' @param test_corr (Optional) A numeric matrix of correlations between
+#'   hypotheses' test statistics
 #' @param verbose A logical scalar specifying whether the results for each
 #'   intersection hypothesis should be included
 #' @param test_values A logical scalar specifying whether hypothesis-level
@@ -49,7 +49,7 @@
 #' g <- graph_create(hypotheses, transitions)
 #' p <- c(.01, .005, .015, .022)
 #'
-#' corr <- list(NA, matrix(c(1, .5, .5, 1), nrow = 2, byrow = TRUE))
+#' test_corr <- list(NA, matrix(c(1, .5, .5, 1), nrow = 2, byrow = TRUE))
 #'
 #' # The default is all Bonferroni with alpha = .025
 #' graph_test_closure(g, p)
@@ -59,16 +59,16 @@
 #'   graph = g,
 #'   p = p,
 #'   alpha = .025,
-#'   groups = list(1:2, 3:4),
+#'   test_groups = list(1:2, 3:4),
 #'   test_types = c("bonferroni", "parametric"),
-#'   corr = corr
+#'   test_corr = test_corr
 #' )
 graph_test_closure <- function(graph,
                                p,
                                alpha = .025,
-                               groups = list(seq_along(graph$hypotheses)),
+                               test_groups = list(seq_along(graph$hypotheses)),
                                test_types = c("bonferroni"),
-                               corr = rep(list(NA), length(test_types)),
+                               test_corr = rep(list(NA), length(test_types)),
                                verbose = FALSE,
                                test_values = FALSE) {
   # Input validation & sanitization --------------------------------------------
@@ -84,21 +84,41 @@ graph_test_closure <- function(graph,
     s = "simes"
   )
   test_types <- test_opts[tolower(test_types)]
-  if (length(test_types) == 1) test_types <- rep(test_types, length(groups))
+  if (length(test_types) == 1) {
+    test_types <- rep(test_types, length(test_groups))
+  }
 
   test_input_val(
     graph,
     p,
     alpha,
-    groups,
+    test_groups,
     test_types,
-    corr,
+    test_corr,
     verbose,
     test_values
   )
 
+  # The test specification arguments can be named or not. However, if
+  # `test_groups` is named, all of them must be named. The other two are
+  # re-ordered to match `test_groups`
+  if (!is.null(names(test_groups))) {
+    if (!all(names(c(test_types, test_corr)) %in% names(test_groups))) {
+      stop("If `test_groups` is named, `test_types` and `test_corr` must use the
+           same names")
+    } else {
+      test_types <- test_types[names(test_groups)]
+      test_corr <- test_corr[names(test_groups)]
+    }
+  } else {
+    names(test_groups) <-
+      names(test_types) <-
+      names(test_corr) <-
+      paste0("grp", seq_along(test_groups))
+  }
+
   num_hyps <- length(graph$hypotheses)
-  num_groups <- length(groups)
+  num_groups <- length(test_groups)
 
   hyp_names <- names(graph$hypotheses)
   names(p) <- hyp_names
@@ -108,13 +128,14 @@ graph_test_closure <- function(graph,
   # missing values. This puts all the correlation pieces into one matrix
   new_corr <- matrix(NA, num_hyps, num_hyps)
 
-  for (group_num in seq_along(groups)) {
-    new_corr[groups[[group_num]], groups[[group_num]]] <- corr[[group_num]]
+  for (group_num in seq_along(test_groups)) {
+    new_corr[test_groups[[group_num]], test_groups[[group_num]]] <-
+      test_corr[[group_num]]
   }
   diag(new_corr) <- 1
-  corr <- if (any(test_types == "parametric")) new_corr else NULL
+  test_corr <- if (any(test_types == "parametric")) new_corr else NULL
 
-  if (!is.null(corr)) dimnames(corr) <- list(hyp_names, hyp_names)
+  if (!is.null(test_corr)) dimnames(test_corr) <- list(hyp_names, hyp_names)
 
   # Generate weights of the closure --------------------------------------------
   weighting_strategy <- graph_generate_weights(graph)
@@ -135,7 +156,7 @@ graph_test_closure <- function(graph,
     NA_real_,
     nrow = num_intersections,
     ncol = num_groups,
-    dimnames = list(NULL, paste0("adj_p_grp", seq_along(groups)))
+    dimnames = list(NULL, paste0("adj_p_grp", seq_along(test_groups)))
   )
 
   # Calculate adjusted p-values ------------------------------------------------
@@ -147,7 +168,7 @@ graph_test_closure <- function(graph,
       weighting_strategy_compact[intersection_index, , drop = TRUE]
 
     for (group_index in seq_len(num_groups)) {
-      group <- groups[[group_index]]
+      group <- test_groups[[group_index]]
       test <- test_types[[group_index]]
 
       # Hypotheses to include in adjusted p-value calculations must be in both
@@ -171,7 +192,7 @@ graph_test_closure <- function(graph,
         adjusted_p[[intersection_index, group_index]] <- adjust_p_parametric(
           p[group_by_intersection],
           vec_weights[group_by_intersection],
-          corr[group_by_intersection, group_by_intersection, drop = FALSE]
+          test_corr[group_by_intersection, group_by_intersection, drop = FALSE]
         )
       } else {
         stop(paste(test, "testing is not supported at this time"))
@@ -221,7 +242,7 @@ graph_test_closure <- function(graph,
         weighting_strategy_compact[intersection_index, , drop = TRUE]
 
       for (group_index in seq_len(num_groups)) {
-        group <- groups[[group_index]]
+        group <- test_groups[[group_index]]
         test <- test_types[[group_index]]
 
         # Hypotheses to include in adjusted weight calculations must be in both
@@ -252,7 +273,10 @@ graph_test_closure <- function(graph,
             vec_weights[group_by_intersection],
             alpha,
             intersection_index,
-            corr[group_by_intersection, group_by_intersection, drop = FALSE]
+            test_corr[group_by_intersection,
+              group_by_intersection,
+              drop = FALSE
+            ]
           )
         } else {
           stop(paste(test, "testing is not supported at this time"))
@@ -282,14 +306,14 @@ graph_test_closure <- function(graph,
         graph = graph,
         p = p,
         alpha = alpha,
-        groups = groups,
+        test_groups = test_groups,
         test_types = test_types,
-        corr = corr
+        test_corr = test_corr
       ),
       outputs = list(
         adjusted_p = pmin(adjusted_p_hypothesis, 1 + 1e-14), # Cap reported at 1
         rejected = reject_hypothesis,
-        graph = graph_update(graph, !reject_hypothesis)$updated_graph
+        graph = graph_update(graph, reject_hypothesis)$updated_graph
       ),
       details = if (verbose) detail_results,
       test_values = if (test_values) list(results = df_test_values)
@@ -297,4 +321,3 @@ graph_test_closure <- function(graph,
     class = "graph_report"
   )
 }
-

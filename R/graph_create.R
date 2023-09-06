@@ -126,8 +126,8 @@ graph_create <- function(hypotheses, transitions, hyp_names = NULL) {
       ncol(transitions) != length(hypotheses)
     )
   ) {
-    stop("Length of 'hypotheses', rows of 'transitions', and columns of
-             'transitions' must all match")
+    stop("Length of `hypotheses`, rows of `transitions`, and columns of
+             `transitions` must all match")
   }
 
   # Validation of names of hypotheses ----------------------------------------

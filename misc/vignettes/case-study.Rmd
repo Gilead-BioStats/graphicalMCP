@@ -38,7 +38,6 @@ The initial weight should be split between the primary hypotheses, and each seco
 These requirements result in the graph below: Two different doses at three different outcomes being tested, which results in 6 distinct endpoints for testing. The `gamma` parameter can be set to control how much weight is passed between primary hypotheses vs how much is passed to the secondary hypotheses (`1 - gamma`). The `hyp_1` parameter controls the initial weight of hypothesis 1, low dose A1C. The rest of the initial weight, `1 - hyp_1`, is assigned to hypothesis 2, high dose A1C.
 
 ```{r initial-graph}
-# hyp_names <- c("lo_a1c", "hi_a1c", "lo_tir", "hi_tir", "lo_ret", "hi_ret")
 hyp_names <- paste0("H", 1:6)
 
 motivating_example <- function(hyp_1, gamma, hyp_names) {
@@ -81,7 +80,7 @@ Besides Bonferroni, the parametric and Simes class of testing strategies have be
 
 We can take advantage of the correlation between doses by testing the primary hypotheses together in a parametric group. Correlation between doses at the same endpoint reduces to 0.5 with equal randomization [similar statement to Xi unpublished (2023?)]. For each parametric testing group the joint distribution must be fully specified. In this case the correlations between doses for the same outcome measure are known, but all other correlations are unknown.
 
-```{r test-corr}
+```{r test-test_corr}
 rho_com_end <- .5
 
 t_corr <- rep(list(rbind(c(1, rho_com_end), c(rho_com_end, 1))), 3)
@@ -115,7 +114,7 @@ In order to run a power simulation, several parameters must be set. We'll divide
 -   Dynamic
     -   `graph` - Design of the hypothesis and transition weights
         -   Known before beginning the study, but multiple options may be tested for power
-    -   `marginal_power` - Power to reject each hypothesis at the full alpha level
+    -   `power_marginal` - Power to reject each hypothesis at the full alpha level
         -   Unknown until study data is collected
         -   Calculated using other packages or software
     -   `sim_corr` - Correlation between hypotheses' test statistics
@@ -133,7 +132,7 @@ graph_calculate_power(
   sim_n = 1e5,
   sim_seed = 6923,
   sim_success = function(.) .[1] && .[4],
-  # marginal_power = <variable power>,
+  # power_marginal = <variable power>,
   # sim_corr = <variable correlation>
 )
 ```
@@ -156,7 +155,7 @@ v_gamma <- c(0, .5, .99)
 
 We know that with equal sample size between doses, the correlation between corresponding endpoints is 0.5. Correlation between endpoints within a dose is unknown; let's call it `rho_com_dose`. In our hypothetical study scenario, let's say a prior study looked at these diabetes endpoints and found 0.8 pairwise correlation between the three outcome measures. We'll sensitivity test this at +/- 5%. Correlation between different endpoints in different doses can be calculated with the product rule.
 
-```{r sim-corr}
+```{r sim-test_corr}
 rho_com_end <- 0.5
 v_rho_com_dose <- .8 * c(.95, 1, 1.05)
 
@@ -201,7 +200,7 @@ marginal_power_list <- list(
 Now bring all the assumptions together and calculate power for each scenario. [Possibly need to pare down the list of scenarios, as the current situation will take \~30 minutes - though maybe this is realistic? Maybe even more situations are normally checked for power?]
 
 ```{r power-results}
-power_scenario <- function(hyp_1, gamma, s_corr, marginal_power) {
+power_scenario <- function(hyp_1, gamma, s_corr, power_marginal) {
   graph_calculate_power(
     graph = motivating_example(hyp_1, gamma),
     alpha = .025,
@@ -211,7 +210,7 @@ power_scenario <- function(hyp_1, gamma, s_corr, marginal_power) {
     sim_n = 1e5,
     sim_seed = 6923,
     sim_success = function(.) .[1] && .[2],
-    marginal_power = marginal_power,
+    power_marginal = power_marginal,
     sim_corr = s_corr
   )$power
 }
@@ -232,10 +231,10 @@ if (file.exists(here("vignettes/data/power_results.rds"))) {
   for (hyp_1 in v_hyp_1) {
     for (gamma in v_gamma) {
       for (s_corr in s_corr_list) {
-        for (marginal_power in marginal_power_list) {
+        for (power_marginal in marginal_power_list) {
           res_list[[i]] <- c(
-            list(hyp_1, gamma, s_corr[1, 2], marginal_power),
-            power_scenario(hyp_1, gamma, s_corr, marginal_power)
+            list(hyp_1, gamma, s_corr[1, 2], power_marginal),
+            power_scenario(hyp_1, gamma, s_corr, power_marginal)
           )
 
           i <- i + 1
@@ -342,9 +341,9 @@ graph_test_closure(
   example_.5_.5,
   p_mean_diff_from_placebo,
   alpha = .025,
-  groups = list(1:2, 3:6),
+  test_groups = list(1:2, 3:6),
   test_types = c("p", "b"),
-  corr = list(t_corr[[1]], NA)
+  test_corr = list(t_corr[[1]], NA)
 )
 ```
 
@@ -355,9 +354,9 @@ graph_test_closure(
   example_.5_.5,
   p_mean_diff_from_placebo,
   alpha = .025,
-  groups = list(1:2, c(3, 5), c(4, 6)),
+  test_groups = list(1:2, c(3, 5), c(4, 6)),
   test_types = c("p", "s", "s"),
-  corr = t_corr,
+  test_corr = t_corr,
   verbose = TRUE,
   test_values = TRUE
 )
@@ -399,11 +398,11 @@ graph_test_closure(
     .012
   ),
   alpha = .025,
-  groups =
+  test_groups =
     list(1:2, c(3, 5), c(4, 6)),
   test_types =
     c("parametric", "simes", "simes"),
-  corr = t_corr,
+  test_corr = t_corr,
   verbose = TRUE,
   test_values = TRUE
 )
@@ -420,7 +419,7 @@ s_corr <- rbind(
   c(0.4, 0.8, 0.4, 0.8, 0.5, 1)
 )
 
-marginal_power <- c(.9, .9, .8, .8, .7, .7)
+power_marginal <- c(.9, .9, .8, .8, .7, .7)
 
 graph_calculate_power(
   graph = example_.5_.5,
@@ -429,7 +428,7 @@ graph_calculate_power(
   test_types = c("parametric", "simes", "simes"),
   test_corr = t_corr,
   sim_n = 1e5,
-  marginal_power = marginal_power,
+  power_marginal = power_marginal,
   sim_corr = s_corr,
   sim_success = list(
     `H1 & H2` =
@@ -444,7 +443,7 @@ graph_calculate_power(
 ```
 
 ```{r performance-comp}
-# gMCP relies on corr.test for group specification
+# gMCP relies on test_corr.test for group specification
 # t_corr_gmcp <- t_corr
 # t_corr_gmcp[3:6, 3:6] <- NA
 # diag(t_corr_gmcp) <- 1
@@ -456,19 +455,19 @@ graph_calculate_power(
 #     `gMCP shortcut (C)` = calcPower(
 #       graph = as_graphMCP(example_.5_.5),
 #       alpha = .025,
-#       mean = marginal_power, corr.sim = s_corr,
+#       mean = power_marginal, test_corr.sim = s_corr,
 #       n.sim = 2^13
 #     ),
 #     `graphicalMCP shortcut (R, closure trick)` = graph_calculate_power_r3(
 #       example_.5_.5,
 #       sim_n = 2^13,
-#       marginal_power = marginal_power,
+#       power_marginal = power_marginal,
 #       sim_corr = s_corr
 #     ),
 #     `graphicalMCP shortcut (R)` = graph_calculate_power_r(
 #       example_.5_.5,
 #       sim_n = 2^13,
-#       marginal_power = marginal_power,
+#       power_marginal = power_marginal,
 #       sim_corr = s_corr
 #     ),
 #     `graphicalMCP closure (R)` = graph_calculate_power_r3(
@@ -477,15 +476,15 @@ graph_calculate_power(
 #       test_types = c("p", "b"),
 #       test_corr = t_corr,
 #       sim_n = 2^13,
-#       marginal_power = marginal_power,
+#       power_marginal = power_marginal,
 #       sim_corr = s_corr
 #     ),
 #     # `gMCP closure (R)` = calcPower(
 #     #   graph = as_graphMCP(example_.5_.5),
 #     #   alpha = .025,
-#     #   mean = marginal_power, corr.sim = s_corr,
+#     #   mean = power_marginal, test_corr.sim = s_corr,
 #     #   n.sim = 2^13,
-#     #   corr.test = t_corr_gmcp
+#     #   test_corr.test = t_corr_gmcp
 #     # ),
 #     check = FALSE,
 #     min_iterations = 1,

@@ -26,7 +26,7 @@ common_c_function <- function(x, w, cr, alpha){
     ind <- subsets[[i]]
     z <- qnorm(pmin(x * subw[ind] * alpha, 1), lower.tail=FALSE)
     y1 <- ifelse(length(z)==1, pnorm(z, lower.tail=FALSE),
-                 1-pmvnorm(upper=z, corr=subcr[ind, ind]))
+                 1-pmvnorm(upper=z, test_corr=subcr[ind, ind]))
     y <- y + y1
   }
   return(y - alpha * sum(w))
