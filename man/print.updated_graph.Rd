@@ -10,6 +10,11 @@
 \item{x}{An object of class \code{updated_graph} to print}
 
 \item{...}{Other values passed on to other methods (currently unused)}
+
+\item{precision}{An integer scalar indicating the maximum number of decimals
+to include in numeric values}
+
+\item{indent}{An integer scalar indicating how many spaces to indent results}
 }
 \description{
 A printed \code{updated_graph} displays the initial graph, the vector of

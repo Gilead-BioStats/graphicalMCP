@@ -344,7 +344,7 @@ gt(parent_child_demo) |>
 These formulas reduce each step of generating the closure to a single deletion from a prior graph, with almost no additional overhead. Here's how the different methods fare, including the version from the gMCP package for reference. Also worthy of note is the lrstat package, which contains a few graphical MCP-related functions, including generating weights of the closure. It uses excellent C++ code to perform even faster, but since the speed of the current formula-based method is acceptable, adding an Rcpp dependency was not considered to be worth the additional time savings.
 
 ```{r gw-benchmarks, echo=TRUE}
-vec_num_hyps <- 2:10 * 2
+vec_num_hyps <- 2:8 * 2
 
 if (file.exists(here::here("vignettes/cache/gw_benchmark_list.rds"))) {
   benchmark_list <- readRDS(here::here("vignettes/cache/gw_benchmark_list.rds"))
@@ -352,7 +352,7 @@ if (file.exists(here::here("vignettes/cache/gw_benchmark_list.rds"))) {
   benchmark_list <- lapply(
     vec_num_hyps,
     function(num_hyps) {
-      # cat(num_hyps, "\n")
+      cat(num_hyps, "\n")
       # A graph for the Holm procedure
       transitions <- matrix(1 / (num_hyps - 1), nrow = num_hyps, ncol = num_hyps)
       diag(transitions) <- 0
@@ -372,7 +372,9 @@ if (file.exists(here::here("vignettes/cache/gw_benchmark_list.rds"))) {
         `graphicalMCP recursive` = ggw_recursive(graph),
         `graphicalMCP shortcut` = graph_generate_weights(graph),
         # lrstat still errors with graphs occasionally for unknown reasons
-        lrstat = if (num_hyps != 10) fwgtmat(graph$hypotheses, graph$transitions),
+        lrstat = if (!num_hyps %in% c(10, 14)) {
+          fwgtmat(graph$hypotheses, graph$transitions)
+        },
         check = FALSE,
         memory = FALSE,
         time_unit = "ms",
@@ -380,7 +382,7 @@ if (file.exists(here::here("vignettes/cache/gw_benchmark_list.rds"))) {
       )[, c(-6, -10:-13)]
       
       # Remove rows for lrstat that weren't actually run
-      benchmark <- benchmark[benchmark$median > .001, ]
+      benchmark <- benchmark[benchmark$median > .002, ]
       benchmark$char_expression <- as.character(benchmark$expression)
       
       cbind(data.frame(num_hyps = num_hyps), benchmark)
@@ -446,7 +448,7 @@ Running this process in either R or a low-level language like C is fast for a si
 While this method is not as fast as gMCP's C implementation, it still runs substantial power simulations in a matter of seconds. The biggest drawback is how it can scale differently for different graph structures. For instance a fixed sequence procedure can take longer than a more balanced graph, like a Holm procedure, because it takes more steps to reject all possible hypotheses.
 
 ```{r power-benchmarks, echo=TRUE}
-vec_num_hyps <- 2:10 * 2
+vec_num_hyps <- 2:8 * 2
 
 if (file.exists(here::here("vignettes/cache/power_benchmark_list.rds"))) {
   benchmark_list <- readRDS(here::here("vignettes/cache/power_benchmark_list.rds"))
@@ -467,11 +469,11 @@ if (file.exists(here::here("vignettes/cache/power_benchmark_list.rds"))) {
                                     n.sim = 2^16, corr.sim = corr),
         `graphicalMCP Holm (R)` =
           graph_calculate_power(graph, .025,
-                                marginal_power = rep(.9, num_hyps),
+                                power_marginal = rep(.9, num_hyps),
                                 sim_n = 2^16),
         `graphicalMCP fixed sequence (R)` =
           graph_calculate_power(fixed_sequence(num_hyps), .025,
-                                marginal_power = rep(.9, num_hyps),
+                                power_marginal = rep(.9, num_hyps),
                                 sim_n = 2^16),
         check = FALSE,
         memory = FALSE,

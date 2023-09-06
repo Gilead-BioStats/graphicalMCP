@@ -4,8 +4,10 @@
 #' keep/delete hypotheses, and the updated graph
 #'
 #' @param x An object of class `updated_graph` to print
-#'
 #' @param ... Other values passed on to other methods (currently unused)
+#' @param precision An integer scalar indicating the maximum number of decimals
+#'   to include in numeric values
+#' @param indent An integer scalar indicating how many spaces to indent results
 #'
 #' @export
 print.updated_graph <- function(x, ..., precision = 6, indent = 2) {

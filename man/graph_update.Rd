@@ -45,7 +45,7 @@ g <- graph_create(hypotheses, transitions)
 # Delete the second hypothesis
 graph_update(g, c(TRUE, FALSE, TRUE, TRUE))
 # Equivalent
-# graph_update(g, c(1, 0, 1, 1))
+# graph_update(g, 2)
 
 }
 \references{

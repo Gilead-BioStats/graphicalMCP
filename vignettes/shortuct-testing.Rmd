@@ -162,10 +162,10 @@ sample_size <- rep(200, 3)
 unpooled_variance <- prop[-1] * (1 - prop[-1]) / sample_size[-1] + 
   prop[1] * (1 - prop[1]) / sample_size[1]
 noncentrality_parameter_primary <- -(prop[-1] - prop[1]) / sqrt(unpooled_variance)
-marginal_power_primary <- pnorm(qnorm(alpha, lower.tail = FALSE),
+power_marginal_primary <- pnorm(qnorm(alpha, lower.tail = FALSE),
                         noncentrality_parameter_primary, 1, lower.tail = FALSE)
-names(marginal_power_primary) <- c("H1", "H2")
-marginal_power_primary
+names(power_marginal_primary) <- c("H1", "H2")
+power_marginal_primary
 ```
 
 ### Input: Marginal power for secondary hypotheses
@@ -185,10 +185,10 @@ sd <- rep(10, 3)
 variance <- sd[-1]^2 / sample_size[-1] + sd[1]^2 / sample_size[1]
 noncentrality_parameter_secondary <- (mean_change[-1] - mean_change[1]) / 
   sqrt(variance)
-marginal_power_secondary <- pnorm(qnorm(alpha, lower.tail = FALSE),
+power_marginal_secondary <- pnorm(qnorm(alpha, lower.tail = FALSE),
                         noncentrality_parameter_secondary, 1, lower.tail = FALSE)
-names(marginal_power_secondary) <- c("H3", "H4")
-marginal_power_secondary
+names(power_marginal_secondary) <- c("H3", "H4")
+power_marginal_secondary
 ```
 
 ### Input: Correlation structure to simulate test statistics
@@ -283,7 +283,7 @@ output <- graph_calculate_power(g,
   alpha = .025,
   sim_corr = corr,
   sim_n = 1e5,
-  marginal_power = c(marginal_power_primary, marginal_power_secondary),
+  power_marginal = c(power_marginal_primary, power_marginal_secondary),
   sim_success = succ,
   sim_seed = 1234
 )
@@ -302,7 +302,7 @@ verbose_output <- graph_calculate_power(g,
   alpha = .025,
   sim_corr = corr,
   sim_n = 1e5,
-  marginal_power = c(marginal_power_primary, marginal_power_secondary),
+  power_marginal = c(power_marginal_primary, power_marginal_secondary),
   sim_success = succ,
   sim_seed = 1234,
   verbose = TRUE

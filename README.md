@@ -6,11 +6,7 @@
 status](https://www.r-pkg.org/badges/version/graphicalMCP)](https://cran.r-project.org/package=graphicalMCP)
 [![Codecov test
 coverage](https://codecov.io/gh/Gilead-BioStats/graphicalMCP/branch/s3-graph_mcp/graph/badge.svg)](https://app.codecov.io/gh/Gilead-BioStats/graphicalMCP?branch=s3-graph_mcp)
-<<<<<<< HEAD
 [![R-CMD-check](https://github.com/Gilead-BioStats/graphicalMCP/actions/workflows/R-CMD-check.yaml/badge.svg?branch=%60r%20prompt::git_branch()%60)](https://github.com/Gilead-BioStats/graphicalMCP/actions/workflows/R-CMD-check.yaml)
-=======
-[![R-CMD-check](https://github.com/Gilead-BioStats/graphicalMCP/actions/workflows/R-CMD-check.yaml/badge.svg?branch=test-specification)](https://github.com/Gilead-BioStats/graphicalMCP/actions/workflows/R-CMD-check.yaml)
->>>>>>> test-specification
 
 <!-- badges: end -->
 
@@ -85,7 +81,7 @@ distinguish *deleting* from *rejecting* in the
 [glossary](#glossary-of-terms).
 
 ``` r
-graph_update(example_graph, keep = c(TRUE, FALSE, FALSE, TRUE))
+graph_update(example_graph, delete = c(FALSE, TRUE, TRUE, FALSE))
 ```
 
 ### Generate weights
@@ -125,13 +121,8 @@ graph_test_closure(
   example_graph,
   p = c(.01, .03, .02, .01),
   alpha = .025,
-<<<<<<< HEAD
-  test_types = c("bonferroni", "simes"),
-  groups = list(1:2, 3:4)
-=======
   test_types = "bonferroni",
   test_groups = list(1:4)
->>>>>>> test-specification
 )
 ```
 
@@ -337,18 +328,11 @@ combined</td>
 </tr>
 <tr class="odd">
 <td><strong>Marginal power</strong></td>
-<<<<<<< HEAD
 <td><p>The power to reject each null <strong>hypothesis</strong> at full
 <strong>alpha</strong>. Closely related to the non-centrality parameter,
 which is the mean of each null <strong>hypothesis</strong> in the
 underlying multivariate normal distribution:</p>
-<p><code>ncp = qnorm(1 - alpha) - qnorm(1 - marginal_power)</code></p></td>
-=======
-<td><p>The mean of each null <strong>hypothesis</strong> in the
-underlying multivariate normal distribution of the null hypotheses.
-Closely related to the non-centrality parameter:</p>
-<p><code>ncp =``qnorm(1 - alpha) -``qnorm(1 - power_marginal)</code></p></td>
->>>>>>> test-specification
+<p><code>ncp = qnorm(1 - alpha) - qnorm(1 - power_marginal)</code></p></td>
 <td></td>
 <td><code>power_marginal</code></td>
 <td>Correlation matrix</td>
@@ -360,7 +344,7 @@ Together with <strong>marginal power</strong>, this specifies the (known
 or assumed) underlying multivariate normal distribution of the null
 <strong>hypotheses</strong>.</td>
 <td></td>
-<td><code>test_corr</code>, <code>test_corr</code>,
+<td><code>corr</code>, <code>test_corr</code>,
 <code>sim_corr</code></td>
 <td>Marginal power</td>
 </tr>

@@ -37,6 +37,7 @@ Suggests:
     lrstat,
     prompt,
     rmarkdown,
+    scales,
     testthat (>= 3.0.0),
     tibble,
     tictoc,

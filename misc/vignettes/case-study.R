@@ -52,7 +52,7 @@ t_corr <- rep(list(rbind(c(1, rho_com_end), c(rho_com_end, 1))), 3)
 #    sim_n = 1e5,
 #    sim_seed = 6923,
 #    sim_success = function(.) .[1] && .[4],
-#    # marginal_power = <variable power>,
+#    # power_marginal = <variable power>,
 #    # sim_corr = <variable correlation>
 #  )
 
@@ -84,7 +84,7 @@ s_corr_list <- lapply(
 )
 
 ## ----marginal-power-----------------------------------------------------------
-marginal_power_list <- list(
+power_marginal_list <- list(
   rep(0, 6),
   rep(.5, 6),
   rep(.9, 6),
@@ -97,7 +97,7 @@ marginal_power_list <- list(
 )
 
 ## ----power-results------------------------------------------------------------
-power_scenario <- function(hyp_1, gamma, s_corr, marginal_power) {
+power_scenario <- function(hyp_1, gamma, s_corr, power_marginal) {
   graph_calculate_power(
     graph = motivating_example(hyp_1, gamma),
     alpha = .025,
@@ -107,7 +107,7 @@ power_scenario <- function(hyp_1, gamma, s_corr, marginal_power) {
     sim_n = 1e5,
     sim_seed = 6923,
     sim_success = function(.) .[1] && .[2],
-    marginal_power = marginal_power,
+    power_marginal = power_marginal,
     sim_corr = s_corr
   )$power
 }
@@ -120,7 +120,7 @@ if (file.exists(here("vignettes/data/power_results.rds"))) {
     "list",
     length(v_hyp_1) *
       length(v_gamma) *
-      length(marginal_power_list) *
+      length(power_marginal_list) *
       length(s_corr_list)
   )
   i <- 1
@@ -128,10 +128,10 @@ if (file.exists(here("vignettes/data/power_results.rds"))) {
   for (hyp_1 in v_hyp_1) {
     for (gamma in v_gamma) {
       for (s_corr in s_corr_list) {
-        for (marginal_power in marginal_power_list) {
+        for (power_marginal in power_marginal_list) {
           res_list[[i]] <- c(
-            list(hyp_1, gamma, s_corr[1, 2], marginal_power),
-            power_scenario(hyp_1, gamma, s_corr, marginal_power)
+            list(hyp_1, gamma, s_corr[1, 2], power_marginal),
+            power_scenario(hyp_1, gamma, s_corr, power_marginal)
           )
 
           i <- i + 1
@@ -273,7 +273,7 @@ s_corr <- rbind(
   c(0.4, 0.8, 0.4, 0.8, 0.5, 1)
 )
 
-marginal_power <- c(.9, .9, .8, .8, .7, .7)
+power_marginal <- c(.9, .9, .8, .8, .7, .7)
 
 graph_calculate_power(
   graph = example_.5_.5,
@@ -282,7 +282,7 @@ graph_calculate_power(
   test_types = c("parametric", "simes", "simes"),
   test_corr = t_corr,
   sim_n = 1e5,
-  marginal_power = marginal_power,
+  power_marginal = power_marginal,
   sim_corr = s_corr,
   sim_success = list(
     `H1 & H2` =
@@ -308,19 +308,19 @@ graph_calculate_power(
 #     `gMCP shortcut (C)` = calcPower(
 #       graph = as_graphMCP(example_.5_.5),
 #       alpha = .025,
-#       mean = marginal_power, corr.sim = s_corr,
+#       mean = power_marginal, corr.sim = s_corr,
 #       n.sim = 2^13
 #     ),
 #     `graphicalMCP shortcut (R, closure trick)` = graph_calculate_power_r3(
 #       example_.5_.5,
 #       sim_n = 2^13,
-#       marginal_power = marginal_power,
+#       power_marginal = power_marginal,
 #       sim_corr = s_corr
 #     ),
 #     `graphicalMCP shortcut (R)` = graph_calculate_power_r(
 #       example_.5_.5,
 #       sim_n = 2^13,
-#       marginal_power = marginal_power,
+#       power_marginal = power_marginal,
 #       sim_corr = s_corr
 #     ),
 #     `graphicalMCP closure (R)` = graph_calculate_power_r3(
@@ -329,13 +329,13 @@ graph_calculate_power(
 #       test_types = c("p", "b"),
 #       test_corr = t_corr,
 #       sim_n = 2^13,
-#       marginal_power = marginal_power,
+#       power_marginal = power_marginal,
 #       sim_corr = s_corr
 #     ),
 #     # `gMCP closure (R)` = calcPower(
 #     #   graph = as_graphMCP(example_.5_.5),
 #     #   alpha = .025,
-#     #   mean = marginal_power, corr.sim = s_corr,
+#     #   mean = power_marginal, corr.sim = s_corr,
 #     #   n.sim = 2^13,
 #     #   corr.test = t_corr_gmcp
 #     # ),

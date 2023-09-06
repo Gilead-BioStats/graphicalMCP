@@ -182,7 +182,7 @@ s_corr_list <- lapply(
 Marginal power is a complicated assumption to test, because there are many possibilities. In a real clinical trial scenario, there may be intuition about where the marginal power will fall, but here we just test a wide variety of scenarios. [Add more information about how this parameter is estimated - this one would probably have to be pulled from prior studies too, right?]
 
 ```{r marginal-power}
-marginal_power_list <- list(
+power_marginal_list <- list(
   rep(0, 6),
   rep(.5, 6),
   rep(.9, 6),
@@ -223,7 +223,7 @@ if (file.exists(here("vignettes/data/power_results.rds"))) {
     "list",
     length(v_hyp_1) *
       length(v_gamma) *
-      length(marginal_power_list) *
+      length(power_marginal_list) *
       length(s_corr_list)
   )
   i <- 1
@@ -231,7 +231,7 @@ if (file.exists(here("vignettes/data/power_results.rds"))) {
   for (hyp_1 in v_hyp_1) {
     for (gamma in v_gamma) {
       for (s_corr in s_corr_list) {
-        for (power_marginal in marginal_power_list) {
+        for (power_marginal in power_marginal_list) {
           res_list[[i]] <- c(
             list(hyp_1, gamma, s_corr[1, 2], power_marginal),
             power_scenario(hyp_1, gamma, s_corr, power_marginal)

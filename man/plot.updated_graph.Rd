@@ -45,5 +45,11 @@ NULL, after plotting the graph
 S3 plot method for the class \code{updated_graph}
 }
 \examples{
-plot(graph_update(simple_successive_2(), c(1, 0, 1, 1)), layout = "grid")
+plot(
+  graph_update(
+    simple_successive_2(),
+    c(TRUE, FALSE, TRUE, TRUE)
+   ),
+  layout = "grid"
+)
 }
