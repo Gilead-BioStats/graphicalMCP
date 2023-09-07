@@ -23,8 +23,11 @@
 #'
 #' # But these cannot be rejected in any order - For instance, H4 has 0 weight
 #' # in the initial graph and cannot be rejected first
+#' graph_rejection_orderings(short_res)
 #'
-#' graph_rejection_orderings(short_res)$valid_orderings
+#' # Finally, intermediate graphs can be obtained by putting one of the
+#' # orderings outputs into `graph_update()`
+#' graph_update(graph, delete = c(2, 1, 4))
 graph_rejection_orderings <- function(shortcut_test_result) {
   # Extract basic testing values -----------------------------------------------
   graph <- shortcut_test_result$inputs$graph

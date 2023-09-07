@@ -17,7 +17,7 @@ knitr::opts_chunk$set(
 )
 ```
 
-```{r setup}
+```{r setup, results="hide"}
 library(graphicalMCP)
 library(lrstat)
 library(gMCP)
@@ -41,7 +41,7 @@ plot(ss_graph, layout = "grid")
 
 ### Components of the closure
 
-In graphicalMCP, the closure is represented by a matrix, where each row represents a sub-graph (also called an intersection hypothesis), and each column corresponds to an individual hypothesis. This matrix can be created with `graph_generate_weights()`, and it has two parts: An indicator matrix showing which hypotheses are contained in each sub-graph, and a weights matrix containing the induced weights of each sub-graph.
+In graphicalMCP, the closure is represented by a matrix, where each row represents a sub-graph (also called an intersection hypothesis), and each column corresponds to an individual hypothesis. This matrix can be created with `graph_generate_weights()`, and it has two parts: An indicator matrix showing which hypotheses are contained in each sub-graph (The so-called powerset of a set), and a weights matrix containing the induced weights of each sub-graph.
 
 ```{r closure-parts}
 weighting_strategy <- graph_generate_weights(ss_graph)
@@ -52,7 +52,7 @@ data.frame(Intersection = seq_len(nrow(weighting_strategy))) |>
   data.frame() |>
   gt() |>
   tab_header("Closure of the simple successive graph") |>
-  tab_spanner("Containment indicator", H1:H4) |>
+  tab_spanner("Powerset", H1:H4) |>
   tab_spanner("Weights", H1.1:H4.1) |>
   tab_style(
     cell_text(align = "center", style = "italic"),
@@ -151,7 +151,7 @@ data.frame(Intersection = seq_len(nrow(weighting_strategy))) |>
 
 #### Binary counting
 
-The second useful property is somewhat a re-statement of the first, or perhaps a reason why the first is true. Starting with the bottom row, the sub-graphs matrix side of the closure counts up from 1 in binary, incrementing by 1 per row. This means that a row number can be directly calculated from a vector showing which hypotheses are currently deleted from the graph: `row_number == number_of_rows - incl_excl_vec_converted_to_base_10 + 1`. For example, intersection number 6 has hypothesis vector `1010`. When interpreted as binary, this is `1 * 8 + 0 * 4 + 1 * 2 + 0 * 1 = 10` in base 10, and `6 == 15 - 10 + 1`.
+The second useful property is somewhat a re-framing of the first, or perhaps could be viewed as a reason why the first is true. Starting with the bottom row, the powerset in this particular order counts up from 1 in binary, incrementing by 1 per row. This means that a row number can be directly calculated from a vector showing which hypotheses are currently deleted from the graph: `row_number == number_of_rows - incl_excl_vec_converted_to_base_10 + 1`. For example, intersection number 6 has hypothesis vector `1010`. When interpreted as binary, this is `1 * 8 + 0 * 4 + 1 * 2 + 0 * 1 = 10` in base 10, and `6 == 15 - 10 + 1`.
 
 ```{r closure-repeat}
 data.frame(Intersection = seq_len(nrow(weighting_strategy))) |>
@@ -178,6 +178,12 @@ Because the size of the closure grows quickly as graph size increases (An n-grap
 - A recursive method, which traverses the closure tree, deleting one hypothesis each time to step between graphs
 - A formulaic shortcut using the order of graphs generated with the recursive method
 
+Note that the discussion of these methods focuses primarily on the weights side rather than the powerset side of the closure. This is because the fastest methods discovered generate the powerset implicitly from missing values in the weights side. For methods such as the simple approach, which rely on having the powerset in order to generate weights, the powerset can be created efficiently. Here `num_hyps` refers to the number of hypotheses in the initial graph.
+
+```{r powerset, eval=FALSE, echo=TRUE}
+powerset <- as.matrix(rev(expand.grid(rep(list(1:0), num_hyps))[-2^num_hyps, ]))
+```
+
 ### Simple approach
 
 The simplest approach to generate the weights of the closure is to apply `graph_update()` to the initial graph once for each sub-graph. This is short and sweet to write, but it's inefficient because each hypothesis gets deleted from the graph multiple times. Here is the code for the simple method.
@@ -203,7 +209,7 @@ ggw_simple <- function(graph) {
 
 ### Recursive
 
-The recursive method treats the space of sub-graphs as a tree, with the initial graph at the root, and other sub-graphs decreasing in size going down the branches. The essence of the recursive step is to delete a hypothesis in the current graph. But doing this for every hypothesis in every sub-graph in the tree would result in taking multiple paths to many of the graphs. So a key part of the recursive step is that it has memory - Each graph in the tree will only delete the hypotheses that come after the hypothesis that was deleted to reach the current graph. The base case also needs memory - It is reached when a graph has only one hypothesis left, or when the last-deleted hypothesis number is larger than all current hypotheses. This memory in the recursion enables the tree traversal to reach each unique graph state exactly once. Here is the code for the recursion, as well as a wrapper for processing the sub-graph list into the standard matrix form.
+The recursive method treats the space of sub-graphs as a tree, with the initial graph at the root, and other sub-graphs decreasing in size going down the branches. The essence of the recursive step is to delete a hypothesis in the current graph. But doing this for every hypothesis in every sub-graph in the tree would result in taking multiple paths to many of the graphs. So a key part of the recursive step is that it has memory - Each graph in the tree will only delete the hypotheses that come after the hypothesis that was just deleted to reach the current graph. The base case also needs memory - It is reached when a graph has only one hypothesis left, or when the last-deleted hypothesis number is larger than all current hypotheses. This memory in the recursion enables the tree traversal to reach each unique graph state exactly once. Here is an implementation of the recursion, followed by a wrapper for processing the sub-graph list into the standard matrix form.
 
 ```{r recursion, echo=TRUE}
 delete_nodes_recursive <- function(graph, last = 0) {
@@ -271,18 +277,18 @@ delete_nodes_recursive <- function(graph, last = 0) {
 
 ```{r ggw-recursive, echo=TRUE}
 ggw_recursive <- function(graph) {
-  ### The recursion requires the hypotheses to be named sequentially as actual
-  ### numbers for the memory property to work
+  # The recursion requires the hypotheses to be named sequentially as actual
+  # numbers for the memory property to work
   hyp_names <- names(graph$hypotheses)
   names(graph$hypotheses) <- seq_along(graph$hypotheses)
   colnames(graph$transitions) <- names(graph$hypotheses)
   rownames(graph$transitions) <- names(graph$hypotheses)
 
-  ### Recursively generate a list of all sub-graphs
+  # Recursively generate a list of all sub-graphs
   list_subgraphs <- delete_nodes_recursive(graph)
 
-  ### Process the list of weights into the normal matrix form
-  wgts_mat <- structure(
+  # Process the list of graphs into the normal matrix form
+  matrix_weights <- structure(
     do.call(
       rbind,
       lapply(
@@ -293,16 +299,16 @@ ggw_recursive <- function(graph) {
     dimnames = list(1:(2^length(hyp_names) - 1), hyp_names)
   )
 
-  wgts_mat_h <- !is.na(wgts_mat)
-  wgts_mat[is.na(wgts_mat)] <- 0
+  matrix_intersections <- !is.na(matrix_weights)
+  matrix_weights[is.na(matrix_weights)] <- 0
 
-  cbind(wgts_mat_h, wgts_mat)
+  cbind(matrix_intersections, matrix_weights)
 }
 ```
 
 ### Formula shortcut
 
-Finally, the fastest method found so far - the formula shortcut. While recursion can save a lot of time over the first method, it still has quite a bit of overhead to get from the list of sub-graphs to the matrix form that is standard. This is where the "repeating block" property of the closure mentioned earlier is useful. Instead of using recursion to connect parent sub-graphs to their children, a pair of formulas can be used. One formula generates the parent of each graph that is obtained by flipping the left-most 0 to be a 1: `do.call(c, lapply(2^(seq_len(num_hyps) - 1), seq_len))`. Note that this is for rows 2 through the (non-existent) row 16, which is the empty graph. Row 1 has no parent graph. The left-most 0 in a child graph is easy to find, but from the parent graph's perspective, this formula calculates which hypothesis to delete: `rep(rev(seq_len(num_hyps)), 2^(seq_len(num_hyps) - 1))`. This also applies to rows 2 through 16.
+Finally, the fastest method found so far - the formula shortcut. While recursion can save a lot of time over the first method, it still has a bit of overhead to get from the list of sub-graphs to the matrix form that is standard. This is where the "repeating block" property of the closure mentioned earlier is useful. Instead of using recursion to connect parent sub-graphs to their children, a pair of formulas can be used. One formula generates the parent of each graph that is obtained by flipping the left-most 0 to be a 1: `do.call(c, lapply(2^(seq_len(num_hyps) - 1), seq_len))`. Note that this is for rows 2 through the (non-existent) row 16, which is the empty graph. Row 1 has no parent graph. The left-most 0 in a child graph is easy to find, but from the parent graph's perspective, this formula calculates which hypothesis to delete: `rep(rev(seq_len(num_hyps)), 2^(seq_len(num_hyps) - 1))`. This also applies to rows 2 through 16.
 
 ```{r parent-child-delete}
 num_hyps <- length(ss_graph$hypotheses)
@@ -337,11 +343,13 @@ gt(parent_child_demo) |>
   )
 ```
 
+The formula shortcut also results in simpler code than the recursive solution.
+
 ## Performance gains
 
 ### Generating the closure
 
-These formulas reduce each step of generating the closure to a single deletion from a prior graph, with almost no additional overhead. Here's how the different methods fare, including the version from the gMCP package for reference. Also worthy of note is the lrstat package, which contains a few graphical MCP-related functions, including generating weights of the closure. It uses excellent C++ code to perform even faster, but since the speed of the current formula-based method is acceptable, adding an Rcpp dependency was not considered to be worth the additional time savings.
+The formula method reduces each step of generating the closure to a single deletion from a prior graph, with almost no additional overhead. Here's how the different methods fare, including the version from the gMCP package for reference. Also worthy of note is the lrstat package, which contains a few MCP-related functions, including generating weights of the closure. It uses excellent C++ code to perform even faster, but since the speed of the current formula-based method is acceptable, adding an Rcpp dependency was not considered to be worth the additional time savings.
 
 ```{r gw-benchmarks, echo=TRUE}
 vec_num_hyps <- 2:8 * 2
@@ -406,7 +414,7 @@ benchmarks$char_expression <- ordered(
 )
 ```
 
-```{r plot-gw-benchmarks, echo=TRUE, fig.dim=c(6, 6)}
+```{r plot-gw-benchmarks, echo=TRUE, fig.dim=c(8, 5)}
 benchmarks_plot_standard <-
   ggplot(benchmarks, aes(num_hyps, median, color = char_expression)) +
   geom_point() +
@@ -431,13 +439,19 @@ benchmarks_plot_standard +
 
 While the time savings on the closure are nice, on most graphs the savings will not make a big difference compared to the longer run-times on e.g. power simulations. However, paying attention to the closure is important for other reasons too, such as improving the power algorithm.
 
+#### Standard algorithm
+
 The typical method for running a Bonferroni shortcut procedure on a graph is to:
 
   1. Search a graph for a single hypothesis which can be rejected
   1. Delete the rejected hypothesis and update weights
   1. Repeat until there are no more significant hypotheses
   
-Running this process in either R or a low-level language like C is fast for a single procedure, but when it's run 100,000 times for a power simulation, the R version becomes onerous. However, there's a lot of duplication in a power simulation using this method. In many of the simulations, the same steps will be taken, which means re-calculating the same set of weights many times. The [binary counting](#binary-counting) property of the closure admits a shortcut which can be implemented in R to get a scalable competitor to the typical algorithm:
+Running this process in either R or a low-level language like C is fast for a single procedure, but when it's run 100,000 times for a power simulation, the R version becomes onerous. However, there's a lot of duplication in a power simulation using this method. In many of the simulations, the same steps will be taken, which means re-calculating the same set of weights many times.
+
+#### Closure shortcut
+
+The [binary counting](#binary-counting) property of the closure admits a shortcut which can be implemented in R to get a scalable competitor to the typical algorithm:
 
   1. Generate the closure a single time to get all sub-graph weights efficiently
   1. For each simulation:
@@ -508,7 +522,7 @@ benchmarks$char_expression <- ordered(
 )
 ```
 
-```{r plot-power-benchmarks, echo=TRUE, fig.dim=c(6, 6)}
+```{r plot-power-benchmarks, echo=TRUE, fig.dim=c(8, 5)}
 benchmarks_plot_standard <-
   ggplot(benchmarks, aes(num_hyps, median, color = char_expression)) +
   geom_point() +
