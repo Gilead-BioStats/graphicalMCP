@@ -1,3 +1,30 @@
+#' Find alternate rejection orderings for shortcut testing
+#'
+#' When using `graph_test_shortcut()`, there may be multiple hypotheses which
+#' can be rejected at each step. The specific hypothesis chosen is decided based
+#' on the minimum adjusted p-value. This function shows every other order that
+#' deletes the same hypotheses, where each hypothesis is still a valid deletion
+#' at the step it is chosen.
+#'
+#' @param shortcut_test_result A `graph_report` object as returned by
+#'   [graph_test_shortcut()]
+#'
+#' @return A modified `graph_report` object containing all valid orderings for
+#'   deleting the significant hypotheses
+#' @export
+#'
+#' @examples
+#' graph <- simple_successive_2()
+#'
+#' short_res <- graph_test_shortcut(graph, c(.018, .01, .03, .004))
+#'
+#' # Reject H1, H2, and H4
+#' short_res$outputs$rejected
+#'
+#' # But these cannot be rejected in any order - For instance, H4 has 0 weight
+#' # in the initial graph and cannot be rejected first
+#'
+#' graph_rejection_orderings(short_res)$valid_orderings
 graph_rejection_orderings <- function(shortcut_test_result) {
   # Extract basic testing values -----------------------------------------------
   graph <- shortcut_test_result$inputs$graph
@@ -7,10 +34,10 @@ graph_rejection_orderings <- function(shortcut_test_result) {
   hyp_names <- names(graph$hypotheses)
 
   # Permute rejected hypotheses ------------------------------------------------
-  rejected_names <- hyp_names[shortcut_test_result$outputs$rejected]
+  rejected <- which(shortcut_test_result$outputs$rejected)
 
   list_possible_orderings <- apply(
-    expand.grid(rep(list(rejected_names), length(rejected_names))),
+    expand.grid(rep(list(rejected), length(rejected))),
     1,
     function(row) if (length(unique(row)) == length(row)) unname(row) else NULL
   )
@@ -18,33 +45,43 @@ graph_rejection_orderings <- function(shortcut_test_result) {
 
   # Find which permutations are valid rejection orderings ----------------------
   orderings_valid <- vector("logical", length(list_possible_orderings))
-  graph_sequences <- rep(
-    list(c(list(graph), vector("list", length(rejected_names)))),
-    length(list_possible_orderings)
-  )
 
   for (hyp_ordering_num in seq_along(list_possible_orderings)) {
     hyp_ordering <- list_possible_orderings[[hyp_ordering_num]]
     intermediate_graph <- graph
-    graph_index <- 2
 
-    for (hyp_name in hyp_ordering) {
-      hyp_num <- which(hyp_name == names(graph$hypotheses))
+    for (hyp_num in hyp_ordering) {
 
       if (p[[hyp_num]] <= intermediate_graph$hypotheses[[hyp_num]] * alpha) {
         intermediate_graph <-
-          graph_update(intermediate_graph, hyp_name == hyp_names)$updated_graph
-
-        graph_sequences[[hyp_ordering_num]][[graph_index]] <- intermediate_graph
+          graph_update(intermediate_graph, hyp_num)$updated_graph
       } else {
         orderings_valid[[hyp_ordering_num]] <- FALSE
         break
       }
 
       orderings_valid[[hyp_ordering_num]] <- TRUE
-      graph_index <- graph_index + 1
     }
   }
 
-  list(valid_hypothesis_sequences = list_possible_orderings[orderings_valid])
+  list_orderings_code <- lapply(
+    list_possible_orderings[orderings_valid],
+    function(ordering) {
+      paste0("c(", paste(ordering, collapse = ", "), ")")
+    }
+  )
+
+  valid_orderings <- do.call(rbind, list_orderings_code)
+  dimnames(valid_orderings) <- list(
+    seq_len(length(list_orderings_code)),
+    "Valid rejection orderings"
+  )
+
+  structure(
+    c(
+      shortcut_test_result,
+      list(valid_orderings = valid_orderings)
+    ),
+    class = "graph_report"
+  )
 }

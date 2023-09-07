@@ -63,7 +63,7 @@ transitions <- rbind(
 hyp_names <- c("H1", "H2", "H3", "H4")
 example_graph <- graph_create(hypotheses, transitions, hyp_names)
 
-plot(example_graph, layout = "grid", asp = .7)
+plot(example_graph, layout = "grid")
 ```
 
 ### Update graph
@@ -124,11 +124,11 @@ These methods were originally implemented in the [gMCP package](https://github.c
 
 However, because development has ceased on the original package, we hope to re-implement the methods with a more general testing framework; with fewer dependencies, in particular shedding the Java dependency; with simpler, more transparent S3 classes; and with improvements to the accuracy of the parametric and Simes test methods.
 
-A portion of Simes testing is also implemented in the lrstat package (`install.packages("lrstat")`).
+A portion of Simes testing is also implemented in the lrstat package.
 
 ## Citation
 
-```{r citation}
+```{r citation, results="markup"}
 citation("graphicalMCP")
 ```
 
@@ -175,9 +175,9 @@ To that end, there are several entities encountered in the world of graphical MC
 +---------------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+---------------------------------------+---------------------------------+---------------------------------+
 | **Testing strategy**            | **Test types** and **test groups** combined                                                                                                                                                                        |                                       |                                 |                                 |
 +---------------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+---------------------------------------+---------------------------------+---------------------------------+
-| **Marginal power**              | The power to reject each null **hypothesis** at full **alpha**. Closely related to the non-centrality parameter, which is the mean of each null **hypothesis** in the underlying multivariate normal distribution: |                                       | `power_marginal`                | Correlation matrix              |
+| **Marginal power**              | The power to reject each null **hypothesis** at full **alpha**. Closely related to the non-centrality parameter, which is the mean of each null **hypothesis** in the underlying multivariate normal distribution: |                                       | `marginal_power`                | Correlation matrix              |
 |                                 |                                                                                                                                                                                                                    |                                       |                                 |                                 |
-|                                 | `ncp = qnorm(1 - alpha) - qnorm(1 - power_marginal)`                                                                                                                                                               |                                       |                                 |                                 |
+|                                 | `ncp = qnorm(1 - alpha) - qnorm(1 - marginal_power)`                                                                                                                                                               |                                       |                                 |                                 |
 +---------------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+---------------------------------------+---------------------------------+---------------------------------+
 | **Correlation matrix**          | Specification of correlations between **hypotheses**. Together with **marginal power**, this specifies the (known or assumed) underlying multivariate normal distribution of the null **hypotheses**.              |                                       | `corr`, `test_corr`, `sim_corr` | Marginal power                  |
 +---------------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+---------------------------------------+---------------------------------+---------------------------------+

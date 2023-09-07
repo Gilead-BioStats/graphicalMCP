@@ -233,6 +233,17 @@ print.graph_report <- function(x, ..., precision = 4, indent = 2, rows = 10) {
     }
   }
 
+  # Optional alternate orderings
+  if (!is.null(x$valid_orderings)) {
+    section_break("Alternate rejection orderings ($valid_rejection_orderings)")
+
+    apply(
+      x$valid_orderings, 1,
+      function(ordering) cat(pad, ordering, "\n", sep = "")
+    )
+    cat("\n")
+  }
+
   invisible(x)
 }
 

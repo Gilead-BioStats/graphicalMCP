@@ -7,7 +7,7 @@
 \method{plot}{initial_graph}(
   x,
   ...,
-  layout = igraph::layout_nicely,
+  layout = "grid",
   nrow = NULL,
   ncol = NULL,
   edge_curves = NULL,

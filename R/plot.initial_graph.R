@@ -34,7 +34,7 @@
 #' plot(simple_successive_2(), layout = "grid")
 plot.initial_graph <- function(x,
                                ...,
-                               layout = igraph::layout_nicely,
+                               layout = "grid",
                                nrow = NULL,
                                ncol = NULL,
                                edge_curves = NULL,

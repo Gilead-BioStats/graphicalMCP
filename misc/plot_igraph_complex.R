@@ -21,7 +21,6 @@ plot(
   layout = complex_layout,
   edge_curves = c("pairs" = 1),
   vertex.size = 15,
-  asp = .4,
   edge.label.cex = 1.2,
   edge.arrow.size = 1
   )
@@ -50,7 +49,6 @@ plot(
                   "H3|H7" = .05,
                   "H9|H1" = .05),
   vertex.size = 15,
-  asp = .4,
   edge.label.cex = 1.2,
   edge.arrow.size = 1
 )

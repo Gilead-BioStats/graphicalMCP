@@ -47,7 +47,7 @@ fixed_sequence_graph <- graph_create(
   )
 )
 
-plot(fixed_sequence_graph, layout = "grid", nrow = 1, asp = .1)
+plot(fixed_sequence_graph, layout = "grid", nrow = 1)
 ```
 
 # Simple successive
@@ -134,7 +134,6 @@ plot(
   wd_2005_graph,
   layout = "grid",
   nrow = 1,
-  asp = .1,
   edge_curves = c(pairs = -6, "H3|H1" = -6)
 )
 ```

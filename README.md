@@ -66,7 +66,7 @@ transitions <- rbind(
 hyp_names <- c("H1", "H2", "H3", "H4")
 example_graph <- graph_create(hypotheses, transitions, hyp_names)
 
-plot(example_graph, layout = "grid", asp = .7)
+plot(example_graph, layout = "grid")
 ```
 
 <img src="man/figures/README-create-graph-1.png" width="100%" />
@@ -161,13 +161,26 @@ fewer dependencies, in particular shedding the Java dependency; with
 simpler, more transparent S3 classes; and with improvements to the
 accuracy of the parametric and Simes test methods.
 
-A portion of Simes testing is also implemented in the lrstat package
-(`install.packages("lrstat")`).
+A portion of Simes testing is also implemented in the lrstat package.
 
 ## Citation
 
 ``` r
 citation("graphicalMCP")
+#> To cite graphicalMCP in publications use:
+#> 
+#>   Xi, D.; Brockmann, E. (2023). graphicalMCP: Graph-based multiple
+#>   comparison procedures. version 0.1.0. Gilead Sciences, Inc. Foster
+#>   City, California. https://github.com/Gilead-BioStats/graphicalMCP
+#> 
+#>   Frank Bretz, Martin Posch, Ekkehard Glimm, Florian Klinglmueller,
+#>   Willi Maurer, Kornelius Rohmeyer (2011), Graphical approaches for
+#>   multiple comparison procedures using weighted Bonferroni, Simes or
+#>   parametric tests. Biometrical Journal 53 (6), pages 894--913, Wiley.
+#> 
+#> To see these entries in BibTeX format, use 'print(<citation>,
+#> bibtex=TRUE)', 'toBibtex(.)', or set
+#> 'options(citation.bibtex.max=999)'.
 ```
 
 ## Acknowledgments
@@ -332,9 +345,9 @@ combined</td>
 <strong>alpha</strong>. Closely related to the non-centrality parameter,
 which is the mean of each null <strong>hypothesis</strong> in the
 underlying multivariate normal distribution:</p>
-<p><code>ncp = qnorm(1 - alpha) - qnorm(1 - power_marginal)</code></p></td>
+<p><code>ncp = qnorm(1 - alpha) - qnorm(1 - marginal_power)</code></p></td>
 <td></td>
-<td><code>power_marginal</code></td>
+<td><code>marginal_power</code></td>
 <td>Correlation matrix</td>
 </tr>
 <tr class="even">
