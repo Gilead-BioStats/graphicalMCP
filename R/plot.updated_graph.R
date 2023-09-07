@@ -11,7 +11,7 @@
 #'   graph_update(
 #'     simple_successive_2(),
 #'     c(TRUE, FALSE, TRUE, TRUE)
-#'    ),
+#'   ),
 #'   layout = "grid"
 #' )
 plot.updated_graph <- function(x, ...) {

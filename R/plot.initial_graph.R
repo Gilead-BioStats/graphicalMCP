@@ -62,9 +62,10 @@ plot.initial_graph <- function(x,
 
   if (length(near_0) == 0 || length(near_1) == 0) {
     edge_labels <- round(edge_labels, precision)
-  } else
-  edge_labels[!near_0 & !near_1] <-
-    round(edge_labels[!near_0 & !near_1], precision)
+  } else {
+    edge_labels[!near_0 & !near_1] <-
+      round(edge_labels[!near_0 & !near_1], precision)
+  }
 
   if (!is.null(eps)) {
     edge_labels[near_0] <- expression(epsilon)
@@ -121,13 +122,12 @@ plot.initial_graph <- function(x,
     ...,
     layout = layout,
     vertex.color = "#e8c2ff",
-    # vertex.frame.color = "#e8c2ff",
     vertex.label = v_labels,
     vertex.label.color = "black",
-    vertex.size = 25,
+    vertex.size = 35,
     edge.label = edge_labels,
     edge.curved = curve,
-    edge.arrow.size = .7,
+    edge.arrow.size = 1,
     edge.arrow.width = 1,
     asp = 0
   )

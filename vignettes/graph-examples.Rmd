@@ -71,13 +71,13 @@ General successive graphs are a good example where multiple variations may be us
 ```{r simple-successive-var-fun}
 simple_successive_var <- function(gamma) {
   graph_create(
-  c(.5, .5, 0, 0),
-  rbind(
-    c(0, gamma, 1 - gamma, 0),
-    c(gamma, 0, 0, 1 - gamma),
-    c(0, 1, 0, 0),
-    c(1, 0, 0, 0)
-  )
+    c(.5, .5, 0, 0),
+    rbind(
+      c(0, gamma, 1 - gamma, 0),
+      c(gamma, 0, 0, 1 - gamma),
+      c(0, 1, 0, 0),
+      c(1, 0, 0, 0)
+    )
   )
 }
 ```
@@ -106,12 +106,12 @@ plot(
 
 ```{r huque-alosh-bhore, fig.dim=c(5, 5)}
 hab_2011_graph <- graph_create(
-    c(1, 0, 0, 0),
-    rbind(
-      c(0, .5, .5,  0),
-      c(0,  0,  0,  1),
-      c(0, .5,  0, .5),
-      c(0,  1,  0,  0)
+  c(1, 0, 0, 0),
+  rbind(
+    c(0, .5, .5, 0),
+    c(0, 0, 0, 1),
+    c(0, .5, 0, .5),
+    c(0, 1, 0, 0)
   )
 )
 
@@ -122,15 +122,21 @@ plot(hab_2011_graph, layout = "grid")
 
 ```{r wiens-dmitrienko, fig.dim=c(6, 2)}
 wd_2005_graph <- graph_create(
-    c(1 / 3, 1 / 3, 1 / 3),
-    rbind(
-      c(0, 1, 0),
-      c(0, 0, 1),
-      c(.5, .5, 0)
-    )
+  c(1 / 3, 1 / 3, 1 / 3),
+  rbind(
+    c(0, 1, 0),
+    c(0, 0, 1),
+    c(.5, .5, 0)
   )
+)
 
-plot(wd_2005_graph, layout = "grid", nrow = 1, asp = .1, edge_curves = c(pairs = -6, "H3|H1" = -6))
+plot(
+  wd_2005_graph,
+  layout = "grid",
+  nrow = 1,
+  asp = .1,
+  edge_curves = c(pairs = -6, "H3|H1" = -6)
+)
 ```
 
 # Parallel gate-keeping

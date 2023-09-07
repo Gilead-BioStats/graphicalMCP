@@ -4,7 +4,6 @@ graph_rejection_orderings <- function(shortcut_test_result) {
   p <- shortcut_test_result$inputs$p
   alpha <- shortcut_test_result$inputs$alpha
 
-  num_hyps <- length(graph$hypotheses)
   hyp_names <- names(graph$hypotheses)
 
   # Permute rejected hypotheses ------------------------------------------------
@@ -48,5 +47,4 @@ graph_rejection_orderings <- function(shortcut_test_result) {
   }
 
   list(valid_hypothesis_sequences = list_possible_orderings[orderings_valid])
-
 }

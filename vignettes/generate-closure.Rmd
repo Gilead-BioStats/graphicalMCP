@@ -47,13 +47,13 @@ In graphicalMCP, the closure is represented by a matrix, where each row represen
 weighting_strategy <- graph_generate_weights(ss_graph)
 matrix_intersections <- weighting_strategy[, seq_along(ss_graph$hypotheses)]
 
-data.frame(Intersection = seq_len(nrow(weighting_strategy))) |> 
-  cbind(weighting_strategy) |> 
-  data.frame() |> 
-  gt() |> 
-  tab_header("Closure of the simple successive graph") |> 
-  tab_spanner("Containment indicator", H1:H4) |> 
-  tab_spanner("Weights", H1.1:H4.1) |> 
+data.frame(Intersection = seq_len(nrow(weighting_strategy))) |>
+  cbind(weighting_strategy) |>
+  data.frame() |>
+  gt() |>
+  tab_header("Closure of the simple successive graph") |>
+  tab_spanner("Containment indicator", H1:H4) |>
+  tab_spanner("Weights", H1.1:H4.1) |>
   tab_style(
     cell_text(align = "center", style = "italic"),
     cells_body(Intersection)
@@ -63,7 +63,7 @@ data.frame(Intersection = seq_len(nrow(weighting_strategy))) |>
     H2.1 = "H2",
     H3.1 = "H3",
     H4.1 = "H4"
-  ) |> 
+  ) |>
   opt_row_striping()
 ```
 
@@ -76,15 +76,15 @@ The rows of the closure are generated in a particular way in order to give them 
 First, notice how each row can be obtained from some row higher up in the matrix by flipping a single 1 to be a 0. For example, go from row 1 to row 3 by flipping $H_3$, or go from row 10 to row 14 by flipping $H_2$. The upper row in a pairing like this can be thought of as the "parent" sub-graph, and the lower row as the "child" sub-graph. Flipping a 0 to be a 1 and moving up the matrix will be called "finding a sub-graph's parent." Now consider the parent-finding strategy where the left-most 0 in each row is flipped. This reveals a pattern between the bottom half and top half, where each row's parent in the bottom half is the corresponding row in the top half, eight rows up.
 
 ```{r big-pattern}
-data.frame(Intersection = seq_len(nrow(weighting_strategy))) |> 
-  cbind(matrix_intersections) |> 
-  data.frame() |> 
-  gt() |> 
-  tab_header("The boxes contain identical matrices") |> 
+data.frame(Intersection = seq_len(nrow(weighting_strategy))) |>
+  cbind(matrix_intersections) |>
+  data.frame() |>
+  gt() |>
+  tab_header("The boxes contain identical matrices") |>
   tab_style(
     cell_text(align = "center", style = "italic"),
     cells_body(Intersection)
-  ) |> 
+  ) |>
   tab_style(
     cell_borders("left", "#a069c4", weight = px(2)),
     cells_body(H2, c(1:7, 9:15))
@@ -106,15 +106,15 @@ data.frame(Intersection = seq_len(nrow(weighting_strategy))) |>
 The pattern then repeats within each box recursively, with the top half of each box matching the bottom half, if the first missing hypothesis is flipped from 0 to 1.
 
 ```{r small-pattern}
-data.frame(Intersection = seq_len(nrow(weighting_strategy))) |> 
-  cbind(matrix_intersections) |> 
-  data.frame() |> 
-  gt() |> 
-  tab_header("The boxes contain identical matrices") |> 
+data.frame(Intersection = seq_len(nrow(weighting_strategy))) |>
+  cbind(matrix_intersections) |>
+  data.frame() |>
+  gt() |>
+  tab_header("The boxes contain identical matrices") |>
   tab_style(
     cell_text(align = "center", style = "italic"),
     cells_body(Intersection)
-  ) |> 
+  ) |>
   tab_style(
     cell_borders("left", "#a069c4", weight = px(2)),
     cells_body(H2, c(1:7, 9:15))
@@ -154,19 +154,19 @@ data.frame(Intersection = seq_len(nrow(weighting_strategy))) |>
 The second useful property is somewhat a re-statement of the first, or perhaps a reason why the first is true. Starting with the bottom row, the sub-graphs matrix side of the closure counts up from 1 in binary, incrementing by 1 per row. This means that a row number can be directly calculated from a vector showing which hypotheses are currently deleted from the graph: `row_number == number_of_rows - incl_excl_vec_converted_to_base_10 + 1`. For example, intersection number 6 has hypothesis vector `1010`. When interpreted as binary, this is `1 * 8 + 0 * 4 + 1 * 2 + 0 * 1 = 10` in base 10, and `6 == 15 - 10 + 1`.
 
 ```{r closure-repeat}
-data.frame(Intersection = seq_len(nrow(weighting_strategy))) |> 
-  cbind(matrix_intersections) |> 
-  data.frame() |> 
-  gt() |> 
-  tab_header("Binary counting") |> 
+data.frame(Intersection = seq_len(nrow(weighting_strategy))) |>
+  cbind(matrix_intersections) |>
+  data.frame() |>
+  gt() |>
+  tab_header("Binary counting") |>
   tab_style(
     cell_text(align = "center", style = "italic"),
     cells_body(Intersection)
   ) |>
   tab_style(cell_borders("left", "#a069c4"), cells_body(1, 6)) |>
-  tab_style(cell_borders("top", "#a069c4"), cells_body(1:5, 6)) |> 
-  tab_style(cell_borders("right", "#a069c4"), cells_body(5, 6)) |> 
-  tab_style(cell_borders("bottom", "#a069c4"), cells_body(1:5, 6)) |>  
+  tab_style(cell_borders("top", "#a069c4"), cells_body(1:5, 6)) |>
+  tab_style(cell_borders("right", "#a069c4"), cells_body(5, 6)) |>
+  tab_style(cell_borders("bottom", "#a069c4"), cells_body(1:5, 6)) |>
   opt_row_striping()
 ```
 
@@ -320,17 +320,17 @@ parent_child_demo <- cbind(
   parents = parents
 )
 
-gt(parent_child_demo) |> 
-  tab_header("Parent-child connections") |> 
-  tab_spanner("To reach a given row...", delete:parents) |> 
+gt(parent_child_demo) |>
+  tab_header("Parent-child connections") |>
+  tab_spanner("To reach a given row...", delete:parents) |>
   tab_style(
     cell_text(align = "center", style = "italic"),
     cells_body(Intersection)
-  ) |> 
+  ) |>
   tab_style(
     cell_text(align = "center"),
     cells_body(c(delete, parents))
-  ) |> 
+  ) |>
   cols_label(
     delete = "Delete hypothesis no.",
     parents = "From intersection no."
@@ -354,18 +354,18 @@ if (file.exists(here::here("vignettes/cache/gw_benchmark_list.rds"))) {
     function(num_hyps) {
       cat(num_hyps, "\n")
       # A graph for the Holm procedure
-      transitions <- matrix(1 / (num_hyps - 1), nrow = num_hyps, ncol = num_hyps)
+      transitions <- matrix(1 / (num_hyps - 1), num_hyps, num_hyps)
       diag(transitions) <- 0
-      
+
       graph <- graph_create(rep(1 / num_hyps, num_hyps), transitions)
-      
-      # lrstat sometimes errors, even when hypotheses seem to sum to 1. This fixes
-      # some of those cases
+
+      # lrstat sometimes errors, even when hypotheses seem to sum to 1. This
+      # fixes some of those cases
       graph$hypotheses <- c(
         graph$hypotheses[seq_len(num_hyps - 1)],
         1 - sum(graph$hypotheses[seq_len(num_hyps - 1)])
       )
-      
+
       benchmark <- mark(
         gMCP = generateWeights(graph$transitions, graph$hypotheses),
         `graphicalMCP simple` = ggw_simple(graph),
@@ -380,15 +380,15 @@ if (file.exists(here::here("vignettes/cache/gw_benchmark_list.rds"))) {
         time_unit = "ms",
         min_iterations = 5
       )[, c(-6, -10:-13)]
-      
+
       # Remove rows for lrstat that weren't actually run
       benchmark <- benchmark[benchmark$median > .002, ]
       benchmark$char_expression <- as.character(benchmark$expression)
-      
+
       cbind(data.frame(num_hyps = num_hyps), benchmark)
     }
   )
-  
+
   saveRDS(benchmark_list, here::here("vignettes/cache/gw_benchmark_list.rds"))
 }
 
@@ -451,45 +451,49 @@ While this method is not as fast as gMCP's C implementation, it still runs subst
 vec_num_hyps <- 2:8 * 2
 
 if (file.exists(here::here("vignettes/cache/power_benchmark_list.rds"))) {
-  benchmark_list <- readRDS(here::here("vignettes/cache/power_benchmark_list.rds"))
+  benchmark_list <-
+    readRDS(here::here("vignettes/cache/power_benchmark_list.rds"))
 } else {
   benchmark_list <- lapply(
     vec_num_hyps,
     function(num_hyps) {
       # A graph for the Holm procedure
-      transitions <- matrix(1 / (num_hyps - 1), nrow = num_hyps, ncol = num_hyps)
+      transitions <- matrix(1 / (num_hyps - 1), num_hyps, num_hyps)
       diag(transitions) <- 0
-      
+
       graph <- graph_create(rep(1 / num_hyps, num_hyps), transitions)
-      
+
       corr <- diag(num_hyps)
-  
+
       benchmark <- mark(
         `gMCP (C)` = calcPower(graph$hypotheses, .025, graph$transitions,
-                                    n.sim = 2^16, corr.sim = corr),
+          n.sim = 2^16, corr.sim = corr
+        ),
         `graphicalMCP Holm (R)` =
           graph_calculate_power(graph, .025,
-                                power_marginal = rep(.9, num_hyps),
-                                sim_n = 2^16),
+            power_marginal = rep(.9, num_hyps),
+            sim_n = 2^16
+          ),
         `graphicalMCP fixed sequence (R)` =
           graph_calculate_power(fixed_sequence(num_hyps), .025,
-                                power_marginal = rep(.9, num_hyps),
-                                sim_n = 2^16),
+            power_marginal = rep(.9, num_hyps),
+            sim_n = 2^16
+          ),
         check = FALSE,
         memory = FALSE,
         time_unit = "s",
         min_iterations = 5
       )[, c(-6, -10:-13)]
-  
+
       # Remove rows for gMCP closure that weren't actually run
       benchmark <- benchmark[benchmark$median > .00001, ]
       benchmark$char_expression <- as.character(benchmark$expression)
-  
+
       cbind(data.frame(num_hyps = num_hyps), benchmark)
     }
   )
 }
-  
+
 saveRDS(benchmark_list, here::here("vignettes/cache/power_benchmark_list.rds"))
 
 benchmarks <- do.call(rbind, benchmark_list)

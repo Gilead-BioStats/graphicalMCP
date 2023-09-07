@@ -13,7 +13,7 @@ diag(m6) <- 0
 bh6 <- graph_create(rep(1 / 6, 6), m6)
 
 test_that("basic updating & structure", {
-  expect_s3_class(graph_update(g, c(FALSE, FALSE, FALSE, TRUE)), "updated_graph")
+  expect_s3_class(graph_update(g, c(FALSE, FALSE, TRUE, TRUE)), "updated_graph")
   expect_equal(graph_update(g, c(FALSE, FALSE, FALSE, TRUE))$initial_graph, g)
   expect_equal(graph_update(g, c(1, 2, 3, 4))$initial_graph, g)
 })
