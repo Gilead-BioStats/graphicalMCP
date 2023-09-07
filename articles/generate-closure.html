@@ -114,25 +114,25 @@ row represents a sub-graph (also called an intersection hypothesis), and
 each column corresponds to an individual hypothesis. This matrix can be
 created with <code><a href="../reference/graph_generate_weights.html">graph_generate_weights()</a></code>, and it has two
 parts: An indicator matrix showing which hypotheses are contained in
-each sub-graph, and a weights matrix containing the induced weights of
-each sub-graph.</p>
-<div id="isrqomfxcl" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
-<style>#isrqomfxcl table {
+each sub-graph (The so-called powerset of a set), and a weights matrix
+containing the induced weights of each sub-graph.</p>
+<div id="noirjxcjbt" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#noirjxcjbt table {
   font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-#isrqomfxcl thead, #isrqomfxcl tbody, #isrqomfxcl tfoot, #isrqomfxcl tr, #isrqomfxcl td, #isrqomfxcl th {
+#noirjxcjbt thead, #noirjxcjbt tbody, #noirjxcjbt tfoot, #noirjxcjbt tr, #noirjxcjbt td, #noirjxcjbt th {
   border-style: none;
 }
 
-#isrqomfxcl p {
+#noirjxcjbt p {
   margin: 0;
   padding: 0;
 }
 
-#isrqomfxcl .gt_table {
+#noirjxcjbt .gt_table {
   display: table;
   border-collapse: collapse;
   line-height: normal;
@@ -158,12 +158,12 @@ each sub-graph.</p>
   border-left-color: #D3D3D3;
 }
 
-#isrqomfxcl .gt_caption {
+#noirjxcjbt .gt_caption {
   padding-top: 4px;
   padding-bottom: 4px;
 }
 
-#isrqomfxcl .gt_title {
+#noirjxcjbt .gt_title {
   color: #333333;
   font-size: 125%;
   font-weight: initial;
@@ -175,7 +175,7 @@ each sub-graph.</p>
   border-bottom-width: 0;
 }
 
-#isrqomfxcl .gt_subtitle {
+#noirjxcjbt .gt_subtitle {
   color: #333333;
   font-size: 85%;
   font-weight: initial;
@@ -187,7 +187,7 @@ each sub-graph.</p>
   border-top-width: 0;
 }
 
-#isrqomfxcl .gt_heading {
+#noirjxcjbt .gt_heading {
   background-color: #FFFFFF;
   text-align: center;
   border-bottom-color: #FFFFFF;
@@ -199,13 +199,13 @@ each sub-graph.</p>
   border-right-color: #D3D3D3;
 }
 
-#isrqomfxcl .gt_bottom_border {
+#noirjxcjbt .gt_bottom_border {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
 }
 
-#isrqomfxcl .gt_col_headings {
+#noirjxcjbt .gt_col_headings {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -220,7 +220,7 @@ each sub-graph.</p>
   border-right-color: #D3D3D3;
 }
 
-#isrqomfxcl .gt_col_heading {
+#noirjxcjbt .gt_col_heading {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -240,7 +240,7 @@ each sub-graph.</p>
   overflow-x: hidden;
 }
 
-#isrqomfxcl .gt_column_spanner_outer {
+#noirjxcjbt .gt_column_spanner_outer {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -252,15 +252,15 @@ each sub-graph.</p>
   padding-right: 4px;
 }
 
-#isrqomfxcl .gt_column_spanner_outer:first-child {
+#noirjxcjbt .gt_column_spanner_outer:first-child {
   padding-left: 0;
 }
 
-#isrqomfxcl .gt_column_spanner_outer:last-child {
+#noirjxcjbt .gt_column_spanner_outer:last-child {
   padding-right: 0;
 }
 
-#isrqomfxcl .gt_column_spanner {
+#noirjxcjbt .gt_column_spanner {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
@@ -272,11 +272,11 @@ each sub-graph.</p>
   width: 100%;
 }
 
-#isrqomfxcl .gt_spanner_row {
+#noirjxcjbt .gt_spanner_row {
   border-bottom-style: hidden;
 }
 
-#isrqomfxcl .gt_group_heading {
+#noirjxcjbt .gt_group_heading {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -302,7 +302,7 @@ each sub-graph.</p>
   text-align: left;
 }
 
-#isrqomfxcl .gt_empty_group_heading {
+#noirjxcjbt .gt_empty_group_heading {
   padding: 0.5px;
   color: #333333;
   background-color: #FFFFFF;
@@ -317,15 +317,15 @@ each sub-graph.</p>
   vertical-align: middle;
 }
 
-#isrqomfxcl .gt_from_md > :first-child {
+#noirjxcjbt .gt_from_md > :first-child {
   margin-top: 0;
 }
 
-#isrqomfxcl .gt_from_md > :last-child {
+#noirjxcjbt .gt_from_md > :last-child {
   margin-bottom: 0;
 }
 
-#isrqomfxcl .gt_row {
+#noirjxcjbt .gt_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -344,7 +344,7 @@ each sub-graph.</p>
   overflow-x: hidden;
 }
 
-#isrqomfxcl .gt_stub {
+#noirjxcjbt .gt_stub {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -357,7 +357,7 @@ each sub-graph.</p>
   padding-right: 5px;
 }
 
-#isrqomfxcl .gt_stub_row_group {
+#noirjxcjbt .gt_stub_row_group {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -371,15 +371,15 @@ each sub-graph.</p>
   vertical-align: top;
 }
 
-#isrqomfxcl .gt_row_group_first td {
+#noirjxcjbt .gt_row_group_first td {
   border-top-width: 2px;
 }
 
-#isrqomfxcl .gt_row_group_first th {
+#noirjxcjbt .gt_row_group_first th {
   border-top-width: 2px;
 }
 
-#isrqomfxcl .gt_summary_row {
+#noirjxcjbt .gt_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -389,16 +389,16 @@ each sub-graph.</p>
   padding-right: 5px;
 }
 
-#isrqomfxcl .gt_first_summary_row {
+#noirjxcjbt .gt_first_summary_row {
   border-top-style: solid;
   border-top-color: #D3D3D3;
 }
 
-#isrqomfxcl .gt_first_summary_row.thick {
+#noirjxcjbt .gt_first_summary_row.thick {
   border-top-width: 2px;
 }
 
-#isrqomfxcl .gt_last_summary_row {
+#noirjxcjbt .gt_last_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -408,7 +408,7 @@ each sub-graph.</p>
   border-bottom-color: #D3D3D3;
 }
 
-#isrqomfxcl .gt_grand_summary_row {
+#noirjxcjbt .gt_grand_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -418,7 +418,7 @@ each sub-graph.</p>
   padding-right: 5px;
 }
 
-#isrqomfxcl .gt_first_grand_summary_row {
+#noirjxcjbt .gt_first_grand_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -428,7 +428,7 @@ each sub-graph.</p>
   border-top-color: #D3D3D3;
 }
 
-#isrqomfxcl .gt_last_grand_summary_row_top {
+#noirjxcjbt .gt_last_grand_summary_row_top {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -438,11 +438,11 @@ each sub-graph.</p>
   border-bottom-color: #D3D3D3;
 }
 
-#isrqomfxcl .gt_striped {
+#noirjxcjbt .gt_striped {
   background-color: rgba(128, 128, 128, 0.05);
 }
 
-#isrqomfxcl .gt_table_body {
+#noirjxcjbt .gt_table_body {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -451,7 +451,7 @@ each sub-graph.</p>
   border-bottom-color: #D3D3D3;
 }
 
-#isrqomfxcl .gt_footnotes {
+#noirjxcjbt .gt_footnotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -465,7 +465,7 @@ each sub-graph.</p>
   border-right-color: #D3D3D3;
 }
 
-#isrqomfxcl .gt_footnote {
+#noirjxcjbt .gt_footnote {
   margin: 0px;
   font-size: 90%;
   padding-top: 4px;
@@ -474,7 +474,7 @@ each sub-graph.</p>
   padding-right: 5px;
 }
 
-#isrqomfxcl .gt_sourcenotes {
+#noirjxcjbt .gt_sourcenotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -488,7 +488,7 @@ each sub-graph.</p>
   border-right-color: #D3D3D3;
 }
 
-#isrqomfxcl .gt_sourcenote {
+#noirjxcjbt .gt_sourcenote {
   font-size: 90%;
   padding-top: 4px;
   padding-bottom: 4px;
@@ -496,63 +496,63 @@ each sub-graph.</p>
   padding-right: 5px;
 }
 
-#isrqomfxcl .gt_left {
+#noirjxcjbt .gt_left {
   text-align: left;
 }
 
-#isrqomfxcl .gt_center {
+#noirjxcjbt .gt_center {
   text-align: center;
 }
 
-#isrqomfxcl .gt_right {
+#noirjxcjbt .gt_right {
   text-align: right;
   font-variant-numeric: tabular-nums;
 }
 
-#isrqomfxcl .gt_font_normal {
+#noirjxcjbt .gt_font_normal {
   font-weight: normal;
 }
 
-#isrqomfxcl .gt_font_bold {
+#noirjxcjbt .gt_font_bold {
   font-weight: bold;
 }
 
-#isrqomfxcl .gt_font_italic {
+#noirjxcjbt .gt_font_italic {
   font-style: italic;
 }
 
-#isrqomfxcl .gt_super {
+#noirjxcjbt .gt_super {
   font-size: 65%;
 }
 
-#isrqomfxcl .gt_footnote_marks {
+#noirjxcjbt .gt_footnote_marks {
   font-size: 75%;
   vertical-align: 0.4em;
   position: initial;
 }
 
-#isrqomfxcl .gt_asterisk {
+#noirjxcjbt .gt_asterisk {
   font-size: 100%;
   vertical-align: 0;
 }
 
-#isrqomfxcl .gt_indent_1 {
+#noirjxcjbt .gt_indent_1 {
   text-indent: 5px;
 }
 
-#isrqomfxcl .gt_indent_2 {
+#noirjxcjbt .gt_indent_2 {
   text-indent: 10px;
 }
 
-#isrqomfxcl .gt_indent_3 {
+#noirjxcjbt .gt_indent_3 {
   text-indent: 15px;
 }
 
-#isrqomfxcl .gt_indent_4 {
+#noirjxcjbt .gt_indent_4 {
   text-indent: 20px;
 }
 
-#isrqomfxcl .gt_indent_5 {
+#noirjxcjbt .gt_indent_5 {
   text-indent: 25px;
 }
 </style>
@@ -563,8 +563,8 @@ each sub-graph.</p>
     </tr>
 <tr class="gt_col_headings gt_spanner_row">
 <th class="gt_col_heading gt_columns_bottom_border gt_right" rowspan="2" colspan="1" scope="col" id="Intersection">Intersection</th>
-      <th class="gt_center gt_columns_top_border gt_column_spanner_outer" rowspan="1" colspan="4" scope="colgroup" id="Containment indicator">
-        <span class="gt_column_spanner">Containment indicator</span>
+      <th class="gt_center gt_columns_top_border gt_column_spanner_outer" rowspan="1" colspan="4" scope="colgroup" id="Powerset">
+        <span class="gt_column_spanner">Powerset</span>
       </th>
       <th class="gt_center gt_columns_top_border gt_column_spanner_outer" rowspan="1" colspan="4" scope="colgroup" id="Weights">
         <span class="gt_column_spanner">Weights</span>
@@ -770,23 +770,23 @@ parent-finding strategy where the left-most 0 in each row is flipped.
 This reveals a pattern between the bottom half and top half, where each
 row’s parent in the bottom half is the corresponding row in the top
 half, eight rows up.</p>
-<div id="lxwwrnjydd" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
-<style>#lxwwrnjydd table {
+<div id="koywjpexcu" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#koywjpexcu table {
   font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-#lxwwrnjydd thead, #lxwwrnjydd tbody, #lxwwrnjydd tfoot, #lxwwrnjydd tr, #lxwwrnjydd td, #lxwwrnjydd th {
+#koywjpexcu thead, #koywjpexcu tbody, #koywjpexcu tfoot, #koywjpexcu tr, #koywjpexcu td, #koywjpexcu th {
   border-style: none;
 }
 
-#lxwwrnjydd p {
+#koywjpexcu p {
   margin: 0;
   padding: 0;
 }
 
-#lxwwrnjydd .gt_table {
+#koywjpexcu .gt_table {
   display: table;
   border-collapse: collapse;
   line-height: normal;
@@ -812,12 +812,12 @@ half, eight rows up.</p>
   border-left-color: #D3D3D3;
 }
 
-#lxwwrnjydd .gt_caption {
+#koywjpexcu .gt_caption {
   padding-top: 4px;
   padding-bottom: 4px;
 }
 
-#lxwwrnjydd .gt_title {
+#koywjpexcu .gt_title {
   color: #333333;
   font-size: 125%;
   font-weight: initial;
@@ -829,7 +829,7 @@ half, eight rows up.</p>
   border-bottom-width: 0;
 }
 
-#lxwwrnjydd .gt_subtitle {
+#koywjpexcu .gt_subtitle {
   color: #333333;
   font-size: 85%;
   font-weight: initial;
@@ -841,7 +841,7 @@ half, eight rows up.</p>
   border-top-width: 0;
 }
 
-#lxwwrnjydd .gt_heading {
+#koywjpexcu .gt_heading {
   background-color: #FFFFFF;
   text-align: center;
   border-bottom-color: #FFFFFF;
@@ -853,13 +853,13 @@ half, eight rows up.</p>
   border-right-color: #D3D3D3;
 }
 
-#lxwwrnjydd .gt_bottom_border {
+#koywjpexcu .gt_bottom_border {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
 }
 
-#lxwwrnjydd .gt_col_headings {
+#koywjpexcu .gt_col_headings {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -874,7 +874,7 @@ half, eight rows up.</p>
   border-right-color: #D3D3D3;
 }
 
-#lxwwrnjydd .gt_col_heading {
+#koywjpexcu .gt_col_heading {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -894,7 +894,7 @@ half, eight rows up.</p>
   overflow-x: hidden;
 }
 
-#lxwwrnjydd .gt_column_spanner_outer {
+#koywjpexcu .gt_column_spanner_outer {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -906,15 +906,15 @@ half, eight rows up.</p>
   padding-right: 4px;
 }
 
-#lxwwrnjydd .gt_column_spanner_outer:first-child {
+#koywjpexcu .gt_column_spanner_outer:first-child {
   padding-left: 0;
 }
 
-#lxwwrnjydd .gt_column_spanner_outer:last-child {
+#koywjpexcu .gt_column_spanner_outer:last-child {
   padding-right: 0;
 }
 
-#lxwwrnjydd .gt_column_spanner {
+#koywjpexcu .gt_column_spanner {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
@@ -926,11 +926,11 @@ half, eight rows up.</p>
   width: 100%;
 }
 
-#lxwwrnjydd .gt_spanner_row {
+#koywjpexcu .gt_spanner_row {
   border-bottom-style: hidden;
 }
 
-#lxwwrnjydd .gt_group_heading {
+#koywjpexcu .gt_group_heading {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -956,7 +956,7 @@ half, eight rows up.</p>
   text-align: left;
 }
 
-#lxwwrnjydd .gt_empty_group_heading {
+#koywjpexcu .gt_empty_group_heading {
   padding: 0.5px;
   color: #333333;
   background-color: #FFFFFF;
@@ -971,15 +971,15 @@ half, eight rows up.</p>
   vertical-align: middle;
 }
 
-#lxwwrnjydd .gt_from_md > :first-child {
+#koywjpexcu .gt_from_md > :first-child {
   margin-top: 0;
 }
 
-#lxwwrnjydd .gt_from_md > :last-child {
+#koywjpexcu .gt_from_md > :last-child {
   margin-bottom: 0;
 }
 
-#lxwwrnjydd .gt_row {
+#koywjpexcu .gt_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -998,7 +998,7 @@ half, eight rows up.</p>
   overflow-x: hidden;
 }
 
-#lxwwrnjydd .gt_stub {
+#koywjpexcu .gt_stub {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -1011,7 +1011,7 @@ half, eight rows up.</p>
   padding-right: 5px;
 }
 
-#lxwwrnjydd .gt_stub_row_group {
+#koywjpexcu .gt_stub_row_group {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -1025,15 +1025,15 @@ half, eight rows up.</p>
   vertical-align: top;
 }
 
-#lxwwrnjydd .gt_row_group_first td {
+#koywjpexcu .gt_row_group_first td {
   border-top-width: 2px;
 }
 
-#lxwwrnjydd .gt_row_group_first th {
+#koywjpexcu .gt_row_group_first th {
   border-top-width: 2px;
 }
 
-#lxwwrnjydd .gt_summary_row {
+#koywjpexcu .gt_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -1043,16 +1043,16 @@ half, eight rows up.</p>
   padding-right: 5px;
 }
 
-#lxwwrnjydd .gt_first_summary_row {
+#koywjpexcu .gt_first_summary_row {
   border-top-style: solid;
   border-top-color: #D3D3D3;
 }
 
-#lxwwrnjydd .gt_first_summary_row.thick {
+#koywjpexcu .gt_first_summary_row.thick {
   border-top-width: 2px;
 }
 
-#lxwwrnjydd .gt_last_summary_row {
+#koywjpexcu .gt_last_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1062,7 +1062,7 @@ half, eight rows up.</p>
   border-bottom-color: #D3D3D3;
 }
 
-#lxwwrnjydd .gt_grand_summary_row {
+#koywjpexcu .gt_grand_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -1072,7 +1072,7 @@ half, eight rows up.</p>
   padding-right: 5px;
 }
 
-#lxwwrnjydd .gt_first_grand_summary_row {
+#koywjpexcu .gt_first_grand_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1082,7 +1082,7 @@ half, eight rows up.</p>
   border-top-color: #D3D3D3;
 }
 
-#lxwwrnjydd .gt_last_grand_summary_row_top {
+#koywjpexcu .gt_last_grand_summary_row_top {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1092,11 +1092,11 @@ half, eight rows up.</p>
   border-bottom-color: #D3D3D3;
 }
 
-#lxwwrnjydd .gt_striped {
+#koywjpexcu .gt_striped {
   background-color: rgba(128, 128, 128, 0.05);
 }
 
-#lxwwrnjydd .gt_table_body {
+#koywjpexcu .gt_table_body {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -1105,7 +1105,7 @@ half, eight rows up.</p>
   border-bottom-color: #D3D3D3;
 }
 
-#lxwwrnjydd .gt_footnotes {
+#koywjpexcu .gt_footnotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -1119,7 +1119,7 @@ half, eight rows up.</p>
   border-right-color: #D3D3D3;
 }
 
-#lxwwrnjydd .gt_footnote {
+#koywjpexcu .gt_footnote {
   margin: 0px;
   font-size: 90%;
   padding-top: 4px;
@@ -1128,7 +1128,7 @@ half, eight rows up.</p>
   padding-right: 5px;
 }
 
-#lxwwrnjydd .gt_sourcenotes {
+#koywjpexcu .gt_sourcenotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -1142,7 +1142,7 @@ half, eight rows up.</p>
   border-right-color: #D3D3D3;
 }
 
-#lxwwrnjydd .gt_sourcenote {
+#koywjpexcu .gt_sourcenote {
   font-size: 90%;
   padding-top: 4px;
   padding-bottom: 4px;
@@ -1150,63 +1150,63 @@ half, eight rows up.</p>
   padding-right: 5px;
 }
 
-#lxwwrnjydd .gt_left {
+#koywjpexcu .gt_left {
   text-align: left;
 }
 
-#lxwwrnjydd .gt_center {
+#koywjpexcu .gt_center {
   text-align: center;
 }
 
-#lxwwrnjydd .gt_right {
+#koywjpexcu .gt_right {
   text-align: right;
   font-variant-numeric: tabular-nums;
 }
 
-#lxwwrnjydd .gt_font_normal {
+#koywjpexcu .gt_font_normal {
   font-weight: normal;
 }
 
-#lxwwrnjydd .gt_font_bold {
+#koywjpexcu .gt_font_bold {
   font-weight: bold;
 }
 
-#lxwwrnjydd .gt_font_italic {
+#koywjpexcu .gt_font_italic {
   font-style: italic;
 }
 
-#lxwwrnjydd .gt_super {
+#koywjpexcu .gt_super {
   font-size: 65%;
 }
 
-#lxwwrnjydd .gt_footnote_marks {
+#koywjpexcu .gt_footnote_marks {
   font-size: 75%;
   vertical-align: 0.4em;
   position: initial;
 }
 
-#lxwwrnjydd .gt_asterisk {
+#koywjpexcu .gt_asterisk {
   font-size: 100%;
   vertical-align: 0;
 }
 
-#lxwwrnjydd .gt_indent_1 {
+#koywjpexcu .gt_indent_1 {
   text-indent: 5px;
 }
 
-#lxwwrnjydd .gt_indent_2 {
+#koywjpexcu .gt_indent_2 {
   text-indent: 10px;
 }
 
-#lxwwrnjydd .gt_indent_3 {
+#koywjpexcu .gt_indent_3 {
   text-indent: 15px;
 }
 
-#lxwwrnjydd .gt_indent_4 {
+#koywjpexcu .gt_indent_4 {
   text-indent: 20px;
 }
 
-#lxwwrnjydd .gt_indent_5 {
+#koywjpexcu .gt_indent_5 {
   text-indent: 25px;
 }
 </style>
@@ -1335,23 +1335,23 @@ half, eight rows up.</p>
 <p>The pattern then repeats within each box recursively, with the top
 half of each box matching the bottom half, if the first missing
 hypothesis is flipped from 0 to 1.</p>
-<div id="ypqylozzek" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
-<style>#ypqylozzek table {
+<div id="kuxnoeqnbn" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#kuxnoeqnbn table {
   font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-#ypqylozzek thead, #ypqylozzek tbody, #ypqylozzek tfoot, #ypqylozzek tr, #ypqylozzek td, #ypqylozzek th {
+#kuxnoeqnbn thead, #kuxnoeqnbn tbody, #kuxnoeqnbn tfoot, #kuxnoeqnbn tr, #kuxnoeqnbn td, #kuxnoeqnbn th {
   border-style: none;
 }
 
-#ypqylozzek p {
+#kuxnoeqnbn p {
   margin: 0;
   padding: 0;
 }
 
-#ypqylozzek .gt_table {
+#kuxnoeqnbn .gt_table {
   display: table;
   border-collapse: collapse;
   line-height: normal;
@@ -1377,12 +1377,12 @@ hypothesis is flipped from 0 to 1.</p>
   border-left-color: #D3D3D3;
 }
 
-#ypqylozzek .gt_caption {
+#kuxnoeqnbn .gt_caption {
   padding-top: 4px;
   padding-bottom: 4px;
 }
 
-#ypqylozzek .gt_title {
+#kuxnoeqnbn .gt_title {
   color: #333333;
   font-size: 125%;
   font-weight: initial;
@@ -1394,7 +1394,7 @@ hypothesis is flipped from 0 to 1.</p>
   border-bottom-width: 0;
 }
 
-#ypqylozzek .gt_subtitle {
+#kuxnoeqnbn .gt_subtitle {
   color: #333333;
   font-size: 85%;
   font-weight: initial;
@@ -1406,7 +1406,7 @@ hypothesis is flipped from 0 to 1.</p>
   border-top-width: 0;
 }
 
-#ypqylozzek .gt_heading {
+#kuxnoeqnbn .gt_heading {
   background-color: #FFFFFF;
   text-align: center;
   border-bottom-color: #FFFFFF;
@@ -1418,13 +1418,13 @@ hypothesis is flipped from 0 to 1.</p>
   border-right-color: #D3D3D3;
 }
 
-#ypqylozzek .gt_bottom_border {
+#kuxnoeqnbn .gt_bottom_border {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
 }
 
-#ypqylozzek .gt_col_headings {
+#kuxnoeqnbn .gt_col_headings {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -1439,7 +1439,7 @@ hypothesis is flipped from 0 to 1.</p>
   border-right-color: #D3D3D3;
 }
 
-#ypqylozzek .gt_col_heading {
+#kuxnoeqnbn .gt_col_heading {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -1459,7 +1459,7 @@ hypothesis is flipped from 0 to 1.</p>
   overflow-x: hidden;
 }
 
-#ypqylozzek .gt_column_spanner_outer {
+#kuxnoeqnbn .gt_column_spanner_outer {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -1471,15 +1471,15 @@ hypothesis is flipped from 0 to 1.</p>
   padding-right: 4px;
 }
 
-#ypqylozzek .gt_column_spanner_outer:first-child {
+#kuxnoeqnbn .gt_column_spanner_outer:first-child {
   padding-left: 0;
 }
 
-#ypqylozzek .gt_column_spanner_outer:last-child {
+#kuxnoeqnbn .gt_column_spanner_outer:last-child {
   padding-right: 0;
 }
 
-#ypqylozzek .gt_column_spanner {
+#kuxnoeqnbn .gt_column_spanner {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
@@ -1491,11 +1491,11 @@ hypothesis is flipped from 0 to 1.</p>
   width: 100%;
 }
 
-#ypqylozzek .gt_spanner_row {
+#kuxnoeqnbn .gt_spanner_row {
   border-bottom-style: hidden;
 }
 
-#ypqylozzek .gt_group_heading {
+#kuxnoeqnbn .gt_group_heading {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1521,7 +1521,7 @@ hypothesis is flipped from 0 to 1.</p>
   text-align: left;
 }
 
-#ypqylozzek .gt_empty_group_heading {
+#kuxnoeqnbn .gt_empty_group_heading {
   padding: 0.5px;
   color: #333333;
   background-color: #FFFFFF;
@@ -1536,15 +1536,15 @@ hypothesis is flipped from 0 to 1.</p>
   vertical-align: middle;
 }
 
-#ypqylozzek .gt_from_md > :first-child {
+#kuxnoeqnbn .gt_from_md > :first-child {
   margin-top: 0;
 }
 
-#ypqylozzek .gt_from_md > :last-child {
+#kuxnoeqnbn .gt_from_md > :last-child {
   margin-bottom: 0;
 }
 
-#ypqylozzek .gt_row {
+#kuxnoeqnbn .gt_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1563,7 +1563,7 @@ hypothesis is flipped from 0 to 1.</p>
   overflow-x: hidden;
 }
 
-#ypqylozzek .gt_stub {
+#kuxnoeqnbn .gt_stub {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -1576,7 +1576,7 @@ hypothesis is flipped from 0 to 1.</p>
   padding-right: 5px;
 }
 
-#ypqylozzek .gt_stub_row_group {
+#kuxnoeqnbn .gt_stub_row_group {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -1590,15 +1590,15 @@ hypothesis is flipped from 0 to 1.</p>
   vertical-align: top;
 }
 
-#ypqylozzek .gt_row_group_first td {
+#kuxnoeqnbn .gt_row_group_first td {
   border-top-width: 2px;
 }
 
-#ypqylozzek .gt_row_group_first th {
+#kuxnoeqnbn .gt_row_group_first th {
   border-top-width: 2px;
 }
 
-#ypqylozzek .gt_summary_row {
+#kuxnoeqnbn .gt_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -1608,16 +1608,16 @@ hypothesis is flipped from 0 to 1.</p>
   padding-right: 5px;
 }
 
-#ypqylozzek .gt_first_summary_row {
+#kuxnoeqnbn .gt_first_summary_row {
   border-top-style: solid;
   border-top-color: #D3D3D3;
 }
 
-#ypqylozzek .gt_first_summary_row.thick {
+#kuxnoeqnbn .gt_first_summary_row.thick {
   border-top-width: 2px;
 }
 
-#ypqylozzek .gt_last_summary_row {
+#kuxnoeqnbn .gt_last_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1627,7 +1627,7 @@ hypothesis is flipped from 0 to 1.</p>
   border-bottom-color: #D3D3D3;
 }
 
-#ypqylozzek .gt_grand_summary_row {
+#kuxnoeqnbn .gt_grand_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -1637,7 +1637,7 @@ hypothesis is flipped from 0 to 1.</p>
   padding-right: 5px;
 }
 
-#ypqylozzek .gt_first_grand_summary_row {
+#kuxnoeqnbn .gt_first_grand_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1647,7 +1647,7 @@ hypothesis is flipped from 0 to 1.</p>
   border-top-color: #D3D3D3;
 }
 
-#ypqylozzek .gt_last_grand_summary_row_top {
+#kuxnoeqnbn .gt_last_grand_summary_row_top {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1657,11 +1657,11 @@ hypothesis is flipped from 0 to 1.</p>
   border-bottom-color: #D3D3D3;
 }
 
-#ypqylozzek .gt_striped {
+#kuxnoeqnbn .gt_striped {
   background-color: rgba(128, 128, 128, 0.05);
 }
 
-#ypqylozzek .gt_table_body {
+#kuxnoeqnbn .gt_table_body {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -1670,7 +1670,7 @@ hypothesis is flipped from 0 to 1.</p>
   border-bottom-color: #D3D3D3;
 }
 
-#ypqylozzek .gt_footnotes {
+#kuxnoeqnbn .gt_footnotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -1684,7 +1684,7 @@ hypothesis is flipped from 0 to 1.</p>
   border-right-color: #D3D3D3;
 }
 
-#ypqylozzek .gt_footnote {
+#kuxnoeqnbn .gt_footnote {
   margin: 0px;
   font-size: 90%;
   padding-top: 4px;
@@ -1693,7 +1693,7 @@ hypothesis is flipped from 0 to 1.</p>
   padding-right: 5px;
 }
 
-#ypqylozzek .gt_sourcenotes {
+#kuxnoeqnbn .gt_sourcenotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -1707,7 +1707,7 @@ hypothesis is flipped from 0 to 1.</p>
   border-right-color: #D3D3D3;
 }
 
-#ypqylozzek .gt_sourcenote {
+#kuxnoeqnbn .gt_sourcenote {
   font-size: 90%;
   padding-top: 4px;
   padding-bottom: 4px;
@@ -1715,63 +1715,63 @@ hypothesis is flipped from 0 to 1.</p>
   padding-right: 5px;
 }
 
-#ypqylozzek .gt_left {
+#kuxnoeqnbn .gt_left {
   text-align: left;
 }
 
-#ypqylozzek .gt_center {
+#kuxnoeqnbn .gt_center {
   text-align: center;
 }
 
-#ypqylozzek .gt_right {
+#kuxnoeqnbn .gt_right {
   text-align: right;
   font-variant-numeric: tabular-nums;
 }
 
-#ypqylozzek .gt_font_normal {
+#kuxnoeqnbn .gt_font_normal {
   font-weight: normal;
 }
 
-#ypqylozzek .gt_font_bold {
+#kuxnoeqnbn .gt_font_bold {
   font-weight: bold;
 }
 
-#ypqylozzek .gt_font_italic {
+#kuxnoeqnbn .gt_font_italic {
   font-style: italic;
 }
 
-#ypqylozzek .gt_super {
+#kuxnoeqnbn .gt_super {
   font-size: 65%;
 }
 
-#ypqylozzek .gt_footnote_marks {
+#kuxnoeqnbn .gt_footnote_marks {
   font-size: 75%;
   vertical-align: 0.4em;
   position: initial;
 }
 
-#ypqylozzek .gt_asterisk {
+#kuxnoeqnbn .gt_asterisk {
   font-size: 100%;
   vertical-align: 0;
 }
 
-#ypqylozzek .gt_indent_1 {
+#kuxnoeqnbn .gt_indent_1 {
   text-indent: 5px;
 }
 
-#ypqylozzek .gt_indent_2 {
+#kuxnoeqnbn .gt_indent_2 {
   text-indent: 10px;
 }
 
-#ypqylozzek .gt_indent_3 {
+#kuxnoeqnbn .gt_indent_3 {
   text-indent: 15px;
 }
 
-#ypqylozzek .gt_indent_4 {
+#kuxnoeqnbn .gt_indent_4 {
   text-indent: 20px;
 }
 
-#ypqylozzek .gt_indent_5 {
+#kuxnoeqnbn .gt_indent_5 {
   text-indent: 25px;
 }
 </style>
@@ -1901,34 +1901,34 @@ hypothesis is flipped from 0 to 1.</p>
 <div class="section level4">
 <h4 id="binary-counting">Binary counting<a class="anchor" aria-label="anchor" href="#binary-counting"></a>
 </h4>
-<p>The second useful property is somewhat a re-statement of the first,
-or perhaps a reason why the first is true. Starting with the bottom row,
-the sub-graphs matrix side of the closure counts up from 1 in binary,
-incrementing by 1 per row. This means that a row number can be directly
-calculated from a vector showing which hypotheses are currently deleted
-from the graph:
+<p>The second useful property is somewhat a re-framing of the first, or
+perhaps could be viewed as a reason why the first is true. Starting with
+the bottom row, the powerset in this particular order counts up from 1
+in binary, incrementing by 1 per row. This means that a row number can
+be directly calculated from a vector showing which hypotheses are
+currently deleted from the graph:
 <code>row_number == number_of_rows - incl_excl_vec_converted_to_base_10 + 1</code>.
 For example, intersection number 6 has hypothesis vector
 <code>1010</code>. When interpreted as binary, this is
 <code>1 * 8 + 0 * 4 + 1 * 2 + 0 * 1 = 10</code> in base 10, and
 <code>6 == 15 - 10 + 1</code>.</p>
-<div id="lpopqiyxco" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
-<style>#lpopqiyxco table {
+<div id="mwsxkqfmaw" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#mwsxkqfmaw table {
   font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-#lpopqiyxco thead, #lpopqiyxco tbody, #lpopqiyxco tfoot, #lpopqiyxco tr, #lpopqiyxco td, #lpopqiyxco th {
+#mwsxkqfmaw thead, #mwsxkqfmaw tbody, #mwsxkqfmaw tfoot, #mwsxkqfmaw tr, #mwsxkqfmaw td, #mwsxkqfmaw th {
   border-style: none;
 }
 
-#lpopqiyxco p {
+#mwsxkqfmaw p {
   margin: 0;
   padding: 0;
 }
 
-#lpopqiyxco .gt_table {
+#mwsxkqfmaw .gt_table {
   display: table;
   border-collapse: collapse;
   line-height: normal;
@@ -1954,12 +1954,12 @@ For example, intersection number 6 has hypothesis vector
   border-left-color: #D3D3D3;
 }
 
-#lpopqiyxco .gt_caption {
+#mwsxkqfmaw .gt_caption {
   padding-top: 4px;
   padding-bottom: 4px;
 }
 
-#lpopqiyxco .gt_title {
+#mwsxkqfmaw .gt_title {
   color: #333333;
   font-size: 125%;
   font-weight: initial;
@@ -1971,7 +1971,7 @@ For example, intersection number 6 has hypothesis vector
   border-bottom-width: 0;
 }
 
-#lpopqiyxco .gt_subtitle {
+#mwsxkqfmaw .gt_subtitle {
   color: #333333;
   font-size: 85%;
   font-weight: initial;
@@ -1983,7 +1983,7 @@ For example, intersection number 6 has hypothesis vector
   border-top-width: 0;
 }
 
-#lpopqiyxco .gt_heading {
+#mwsxkqfmaw .gt_heading {
   background-color: #FFFFFF;
   text-align: center;
   border-bottom-color: #FFFFFF;
@@ -1995,13 +1995,13 @@ For example, intersection number 6 has hypothesis vector
   border-right-color: #D3D3D3;
 }
 
-#lpopqiyxco .gt_bottom_border {
+#mwsxkqfmaw .gt_bottom_border {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
 }
 
-#lpopqiyxco .gt_col_headings {
+#mwsxkqfmaw .gt_col_headings {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -2016,7 +2016,7 @@ For example, intersection number 6 has hypothesis vector
   border-right-color: #D3D3D3;
 }
 
-#lpopqiyxco .gt_col_heading {
+#mwsxkqfmaw .gt_col_heading {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -2036,7 +2036,7 @@ For example, intersection number 6 has hypothesis vector
   overflow-x: hidden;
 }
 
-#lpopqiyxco .gt_column_spanner_outer {
+#mwsxkqfmaw .gt_column_spanner_outer {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -2048,15 +2048,15 @@ For example, intersection number 6 has hypothesis vector
   padding-right: 4px;
 }
 
-#lpopqiyxco .gt_column_spanner_outer:first-child {
+#mwsxkqfmaw .gt_column_spanner_outer:first-child {
   padding-left: 0;
 }
 
-#lpopqiyxco .gt_column_spanner_outer:last-child {
+#mwsxkqfmaw .gt_column_spanner_outer:last-child {
   padding-right: 0;
 }
 
-#lpopqiyxco .gt_column_spanner {
+#mwsxkqfmaw .gt_column_spanner {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
@@ -2068,11 +2068,11 @@ For example, intersection number 6 has hypothesis vector
   width: 100%;
 }
 
-#lpopqiyxco .gt_spanner_row {
+#mwsxkqfmaw .gt_spanner_row {
   border-bottom-style: hidden;
 }
 
-#lpopqiyxco .gt_group_heading {
+#mwsxkqfmaw .gt_group_heading {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -2098,7 +2098,7 @@ For example, intersection number 6 has hypothesis vector
   text-align: left;
 }
 
-#lpopqiyxco .gt_empty_group_heading {
+#mwsxkqfmaw .gt_empty_group_heading {
   padding: 0.5px;
   color: #333333;
   background-color: #FFFFFF;
@@ -2113,15 +2113,15 @@ For example, intersection number 6 has hypothesis vector
   vertical-align: middle;
 }
 
-#lpopqiyxco .gt_from_md > :first-child {
+#mwsxkqfmaw .gt_from_md > :first-child {
   margin-top: 0;
 }
 
-#lpopqiyxco .gt_from_md > :last-child {
+#mwsxkqfmaw .gt_from_md > :last-child {
   margin-bottom: 0;
 }
 
-#lpopqiyxco .gt_row {
+#mwsxkqfmaw .gt_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -2140,7 +2140,7 @@ For example, intersection number 6 has hypothesis vector
   overflow-x: hidden;
 }
 
-#lpopqiyxco .gt_stub {
+#mwsxkqfmaw .gt_stub {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -2153,7 +2153,7 @@ For example, intersection number 6 has hypothesis vector
   padding-right: 5px;
 }
 
-#lpopqiyxco .gt_stub_row_group {
+#mwsxkqfmaw .gt_stub_row_group {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -2167,15 +2167,15 @@ For example, intersection number 6 has hypothesis vector
   vertical-align: top;
 }
 
-#lpopqiyxco .gt_row_group_first td {
+#mwsxkqfmaw .gt_row_group_first td {
   border-top-width: 2px;
 }
 
-#lpopqiyxco .gt_row_group_first th {
+#mwsxkqfmaw .gt_row_group_first th {
   border-top-width: 2px;
 }
 
-#lpopqiyxco .gt_summary_row {
+#mwsxkqfmaw .gt_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -2185,16 +2185,16 @@ For example, intersection number 6 has hypothesis vector
   padding-right: 5px;
 }
 
-#lpopqiyxco .gt_first_summary_row {
+#mwsxkqfmaw .gt_first_summary_row {
   border-top-style: solid;
   border-top-color: #D3D3D3;
 }
 
-#lpopqiyxco .gt_first_summary_row.thick {
+#mwsxkqfmaw .gt_first_summary_row.thick {
   border-top-width: 2px;
 }
 
-#lpopqiyxco .gt_last_summary_row {
+#mwsxkqfmaw .gt_last_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -2204,7 +2204,7 @@ For example, intersection number 6 has hypothesis vector
   border-bottom-color: #D3D3D3;
 }
 
-#lpopqiyxco .gt_grand_summary_row {
+#mwsxkqfmaw .gt_grand_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -2214,7 +2214,7 @@ For example, intersection number 6 has hypothesis vector
   padding-right: 5px;
 }
 
-#lpopqiyxco .gt_first_grand_summary_row {
+#mwsxkqfmaw .gt_first_grand_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -2224,7 +2224,7 @@ For example, intersection number 6 has hypothesis vector
   border-top-color: #D3D3D3;
 }
 
-#lpopqiyxco .gt_last_grand_summary_row_top {
+#mwsxkqfmaw .gt_last_grand_summary_row_top {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -2234,11 +2234,11 @@ For example, intersection number 6 has hypothesis vector
   border-bottom-color: #D3D3D3;
 }
 
-#lpopqiyxco .gt_striped {
+#mwsxkqfmaw .gt_striped {
   background-color: rgba(128, 128, 128, 0.05);
 }
 
-#lpopqiyxco .gt_table_body {
+#mwsxkqfmaw .gt_table_body {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -2247,7 +2247,7 @@ For example, intersection number 6 has hypothesis vector
   border-bottom-color: #D3D3D3;
 }
 
-#lpopqiyxco .gt_footnotes {
+#mwsxkqfmaw .gt_footnotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -2261,7 +2261,7 @@ For example, intersection number 6 has hypothesis vector
   border-right-color: #D3D3D3;
 }
 
-#lpopqiyxco .gt_footnote {
+#mwsxkqfmaw .gt_footnote {
   margin: 0px;
   font-size: 90%;
   padding-top: 4px;
@@ -2270,7 +2270,7 @@ For example, intersection number 6 has hypothesis vector
   padding-right: 5px;
 }
 
-#lpopqiyxco .gt_sourcenotes {
+#mwsxkqfmaw .gt_sourcenotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -2284,7 +2284,7 @@ For example, intersection number 6 has hypothesis vector
   border-right-color: #D3D3D3;
 }
 
-#lpopqiyxco .gt_sourcenote {
+#mwsxkqfmaw .gt_sourcenote {
   font-size: 90%;
   padding-top: 4px;
   padding-bottom: 4px;
@@ -2292,63 +2292,63 @@ For example, intersection number 6 has hypothesis vector
   padding-right: 5px;
 }
 
-#lpopqiyxco .gt_left {
+#mwsxkqfmaw .gt_left {
   text-align: left;
 }
 
-#lpopqiyxco .gt_center {
+#mwsxkqfmaw .gt_center {
   text-align: center;
 }
 
-#lpopqiyxco .gt_right {
+#mwsxkqfmaw .gt_right {
   text-align: right;
   font-variant-numeric: tabular-nums;
 }
 
-#lpopqiyxco .gt_font_normal {
+#mwsxkqfmaw .gt_font_normal {
   font-weight: normal;
 }
 
-#lpopqiyxco .gt_font_bold {
+#mwsxkqfmaw .gt_font_bold {
   font-weight: bold;
 }
 
-#lpopqiyxco .gt_font_italic {
+#mwsxkqfmaw .gt_font_italic {
   font-style: italic;
 }
 
-#lpopqiyxco .gt_super {
+#mwsxkqfmaw .gt_super {
   font-size: 65%;
 }
 
-#lpopqiyxco .gt_footnote_marks {
+#mwsxkqfmaw .gt_footnote_marks {
   font-size: 75%;
   vertical-align: 0.4em;
   position: initial;
 }
 
-#lpopqiyxco .gt_asterisk {
+#mwsxkqfmaw .gt_asterisk {
   font-size: 100%;
   vertical-align: 0;
 }
 
-#lpopqiyxco .gt_indent_1 {
+#mwsxkqfmaw .gt_indent_1 {
   text-indent: 5px;
 }
 
-#lpopqiyxco .gt_indent_2 {
+#mwsxkqfmaw .gt_indent_2 {
   text-indent: 10px;
 }
 
-#lpopqiyxco .gt_indent_3 {
+#mwsxkqfmaw .gt_indent_3 {
   text-indent: 15px;
 }
 
-#lpopqiyxco .gt_indent_4 {
+#mwsxkqfmaw .gt_indent_4 {
   text-indent: 20px;
 }
 
-#lpopqiyxco .gt_indent_5 {
+#mwsxkqfmaw .gt_indent_5 {
   text-indent: 25px;
 }
 </style>
@@ -2492,6 +2492,16 @@ hypothesis each time to step between graphs</li>
 <li>A formulaic shortcut using the order of graphs generated with the
 recursive method</li>
 </ul>
+<p>Note that the discussion of these methods focuses primarily on the
+weights side rather than the powerset side of the closure. This is
+because the fastest methods discovered generate the powerset implicitly
+from missing values in the weights side. For methods such as the simple
+approach, which rely on having the powerset in order to generate
+weights, the powerset can be created efficiently. Here
+<code>num_hyps</code> refers to the number of hypotheses in the initial
+graph.</p>
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">powerset</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">as.matrix</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/rev.html" class="external-link">rev</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/expand.grid.html" class="external-link">expand.grid</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">0</span><span class="op">)</span>, <span class="va">num_hyps</span><span class="op">)</span><span class="op">)</span><span class="op">[</span><span class="op">-</span><span class="fl">2</span><span class="op">^</span><span class="va">num_hyps</span>, <span class="op">]</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <div class="section level3">
 <h3 id="simple-approach">Simple approach<a class="anchor" aria-label="anchor" href="#simple-approach"></a>
 </h3>
@@ -2500,7 +2510,7 @@ apply <code><a href="../reference/graph_update.html">graph_update()</a></code> t
 sub-graph. This is short and sweet to write, but it’s inefficient
 because each hypothesis gets deleted from the graph multiple times. Here
 is the code for the simple method.</p>
-<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">ggw_simple</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">graph</span><span class="op">)</span> <span class="op">{</span></span>
 <span>  <span class="va">num_hyps</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">graph</span><span class="op">$</span><span class="va">hypotheses</span><span class="op">)</span></span>
 <span></span>
@@ -2528,14 +2538,14 @@ a hypothesis in the current graph. But doing this for every hypothesis
 in every sub-graph in the tree would result in taking multiple paths to
 many of the graphs. So a key part of the recursive step is that it has
 memory - Each graph in the tree will only delete the hypotheses that
-come after the hypothesis that was deleted to reach the current graph.
-The base case also needs memory - It is reached when a graph has only
-one hypothesis left, or when the last-deleted hypothesis number is
+come after the hypothesis that was just deleted to reach the current
+graph. The base case also needs memory - It is reached when a graph has
+only one hypothesis left, or when the last-deleted hypothesis number is
 larger than all current hypotheses. This memory in the recursion enables
 the tree traversal to reach each unique graph state exactly once. Here
-is the code for the recursion, as well as a wrapper for processing the
-sub-graph list into the standard matrix form.</p>
-<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+is an implementation of the recursion, followed by a wrapper for
+processing the sub-graph list into the standard matrix form.</p>
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">delete_nodes_recursive</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">graph</span>, <span class="va">last</span> <span class="op">=</span> <span class="fl">0</span><span class="op">)</span> <span class="op">{</span></span>
 <span>  <span class="va">init_hypotheses</span> <span class="op">&lt;-</span> <span class="va">hypotheses</span> <span class="op">&lt;-</span> <span class="va">graph</span><span class="op">$</span><span class="va">hypotheses</span></span>
 <span>  <span class="va">init_transitions</span> <span class="op">&lt;-</span> <span class="va">transitions</span> <span class="op">&lt;-</span> <span class="va">graph</span><span class="op">$</span><span class="va">transitions</span></span>
@@ -2597,20 +2607,20 @@ sub-graph list into the standard matrix form.</p>
 <span>    <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">graph</span><span class="op">)</span></span>
 <span>  <span class="op">)</span></span>
 <span><span class="op">}</span></span></code></pre></div>
-<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">ggw_recursive</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">graph</span><span class="op">)</span> <span class="op">{</span></span>
-<span>  <span class="co">### The recursion requires the hypotheses to be named sequentially as actual</span></span>
-<span>  <span class="co">### numbers for the memory property to work</span></span>
+<span>  <span class="co"># The recursion requires the hypotheses to be named sequentially as actual</span></span>
+<span>  <span class="co"># numbers for the memory property to work</span></span>
 <span>  <span class="va">hyp_names</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">graph</span><span class="op">$</span><span class="va">hypotheses</span><span class="op">)</span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">graph</span><span class="op">$</span><span class="va">hypotheses</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq_along</a></span><span class="op">(</span><span class="va">graph</span><span class="op">$</span><span class="va">hypotheses</span><span class="op">)</span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">graph</span><span class="op">$</span><span class="va">transitions</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">graph</span><span class="op">$</span><span class="va">hypotheses</span><span class="op">)</span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">rownames</a></span><span class="op">(</span><span class="va">graph</span><span class="op">$</span><span class="va">transitions</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">graph</span><span class="op">$</span><span class="va">hypotheses</span><span class="op">)</span></span>
 <span></span>
-<span>  <span class="co">### Recursively generate a list of all sub-graphs</span></span>
+<span>  <span class="co"># Recursively generate a list of all sub-graphs</span></span>
 <span>  <span class="va">list_subgraphs</span> <span class="op">&lt;-</span> <span class="fu">delete_nodes_recursive</span><span class="op">(</span><span class="va">graph</span><span class="op">)</span></span>
 <span></span>
-<span>  <span class="co">### Process the list of weights into the normal matrix form</span></span>
-<span>  <span class="va">wgts_mat</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/structure.html" class="external-link">structure</a></span><span class="op">(</span></span>
+<span>  <span class="co"># Process the list of graphs into the normal matrix form</span></span>
+<span>  <span class="va">matrix_weights</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/structure.html" class="external-link">structure</a></span><span class="op">(</span></span>
 <span>    <span class="fu"><a href="https://rdrr.io/r/base/do.call.html" class="external-link">do.call</a></span><span class="op">(</span></span>
 <span>      <span class="va">rbind</span>,</span>
 <span>      <span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">lapply</a></span><span class="op">(</span></span>
@@ -2621,10 +2631,10 @@ sub-graph list into the standard matrix form.</p>
 <span>    dimnames <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="op">(</span><span class="fl">2</span><span class="op">^</span><span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">hyp_names</span><span class="op">)</span> <span class="op">-</span> <span class="fl">1</span><span class="op">)</span>, <span class="va">hyp_names</span><span class="op">)</span></span>
 <span>  <span class="op">)</span></span>
 <span></span>
-<span>  <span class="va">wgts_mat_h</span> <span class="op">&lt;-</span> <span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html" class="external-link">is.na</a></span><span class="op">(</span><span class="va">wgts_mat</span><span class="op">)</span></span>
-<span>  <span class="va">wgts_mat</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html" class="external-link">is.na</a></span><span class="op">(</span><span class="va">wgts_mat</span><span class="op">)</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="fl">0</span></span>
+<span>  <span class="va">matrix_intersections</span> <span class="op">&lt;-</span> <span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html" class="external-link">is.na</a></span><span class="op">(</span><span class="va">matrix_weights</span><span class="op">)</span></span>
+<span>  <span class="va">matrix_weights</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html" class="external-link">is.na</a></span><span class="op">(</span><span class="va">matrix_weights</span><span class="op">)</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="fl">0</span></span>
 <span></span>
-<span>  <span class="fu"><a href="https://rdrr.io/r/base/cbind.html" class="external-link">cbind</a></span><span class="op">(</span><span class="va">wgts_mat_h</span>, <span class="va">wgts_mat</span><span class="op">)</span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/cbind.html" class="external-link">cbind</a></span><span class="op">(</span><span class="va">matrix_intersections</span>, <span class="va">matrix_weights</span><span class="op">)</span></span>
 <span><span class="op">}</span></span></code></pre></div>
 </div>
 <div class="section level3">
@@ -2632,12 +2642,12 @@ sub-graph list into the standard matrix form.</p>
 </h3>
 <p>Finally, the fastest method found so far - the formula shortcut.
 While recursion can save a lot of time over the first method, it still
-has quite a bit of overhead to get from the list of sub-graphs to the
-matrix form that is standard. This is where the “repeating block”
-property of the closure mentioned earlier is useful. Instead of using
-recursion to connect parent sub-graphs to their children, a pair of
-formulas can be used. One formula generates the parent of each graph
-that is obtained by flipping the left-most 0 to be a 1:
+has a bit of overhead to get from the list of sub-graphs to the matrix
+form that is standard. This is where the “repeating block” property of
+the closure mentioned earlier is useful. Instead of using recursion to
+connect parent sub-graphs to their children, a pair of formulas can be
+used. One formula generates the parent of each graph that is obtained by
+flipping the left-most 0 to be a 1:
 <code>do.call(c, lapply(2^(seq_len(num_hyps) - 1), seq_len))</code>.
 Note that this is for rows 2 through the (non-existent) row 16, which is
 the empty graph. Row 1 has no parent graph. The left-most 0 in a child
@@ -2645,23 +2655,23 @@ graph is easy to find, but from the parent graph’s perspective, this
 formula calculates which hypothesis to delete:
 <code>rep(rev(seq_len(num_hyps)), 2^(seq_len(num_hyps) - 1))</code>.
 This also applies to rows 2 through 16.</p>
-<div id="asftznaxbg" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
-<style>#asftznaxbg table {
+<div id="qsuzzxsbvv" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#qsuzzxsbvv table {
   font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-#asftznaxbg thead, #asftznaxbg tbody, #asftznaxbg tfoot, #asftznaxbg tr, #asftznaxbg td, #asftznaxbg th {
+#qsuzzxsbvv thead, #qsuzzxsbvv tbody, #qsuzzxsbvv tfoot, #qsuzzxsbvv tr, #qsuzzxsbvv td, #qsuzzxsbvv th {
   border-style: none;
 }
 
-#asftznaxbg p {
+#qsuzzxsbvv p {
   margin: 0;
   padding: 0;
 }
 
-#asftznaxbg .gt_table {
+#qsuzzxsbvv .gt_table {
   display: table;
   border-collapse: collapse;
   line-height: normal;
@@ -2687,12 +2697,12 @@ This also applies to rows 2 through 16.</p>
   border-left-color: #D3D3D3;
 }
 
-#asftznaxbg .gt_caption {
+#qsuzzxsbvv .gt_caption {
   padding-top: 4px;
   padding-bottom: 4px;
 }
 
-#asftznaxbg .gt_title {
+#qsuzzxsbvv .gt_title {
   color: #333333;
   font-size: 125%;
   font-weight: initial;
@@ -2704,7 +2714,7 @@ This also applies to rows 2 through 16.</p>
   border-bottom-width: 0;
 }
 
-#asftznaxbg .gt_subtitle {
+#qsuzzxsbvv .gt_subtitle {
   color: #333333;
   font-size: 85%;
   font-weight: initial;
@@ -2716,7 +2726,7 @@ This also applies to rows 2 through 16.</p>
   border-top-width: 0;
 }
 
-#asftznaxbg .gt_heading {
+#qsuzzxsbvv .gt_heading {
   background-color: #FFFFFF;
   text-align: center;
   border-bottom-color: #FFFFFF;
@@ -2728,13 +2738,13 @@ This also applies to rows 2 through 16.</p>
   border-right-color: #D3D3D3;
 }
 
-#asftznaxbg .gt_bottom_border {
+#qsuzzxsbvv .gt_bottom_border {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
 }
 
-#asftznaxbg .gt_col_headings {
+#qsuzzxsbvv .gt_col_headings {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -2749,7 +2759,7 @@ This also applies to rows 2 through 16.</p>
   border-right-color: #D3D3D3;
 }
 
-#asftznaxbg .gt_col_heading {
+#qsuzzxsbvv .gt_col_heading {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -2769,7 +2779,7 @@ This also applies to rows 2 through 16.</p>
   overflow-x: hidden;
 }
 
-#asftznaxbg .gt_column_spanner_outer {
+#qsuzzxsbvv .gt_column_spanner_outer {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -2781,15 +2791,15 @@ This also applies to rows 2 through 16.</p>
   padding-right: 4px;
 }
 
-#asftznaxbg .gt_column_spanner_outer:first-child {
+#qsuzzxsbvv .gt_column_spanner_outer:first-child {
   padding-left: 0;
 }
 
-#asftznaxbg .gt_column_spanner_outer:last-child {
+#qsuzzxsbvv .gt_column_spanner_outer:last-child {
   padding-right: 0;
 }
 
-#asftznaxbg .gt_column_spanner {
+#qsuzzxsbvv .gt_column_spanner {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
@@ -2801,11 +2811,11 @@ This also applies to rows 2 through 16.</p>
   width: 100%;
 }
 
-#asftznaxbg .gt_spanner_row {
+#qsuzzxsbvv .gt_spanner_row {
   border-bottom-style: hidden;
 }
 
-#asftznaxbg .gt_group_heading {
+#qsuzzxsbvv .gt_group_heading {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -2831,7 +2841,7 @@ This also applies to rows 2 through 16.</p>
   text-align: left;
 }
 
-#asftznaxbg .gt_empty_group_heading {
+#qsuzzxsbvv .gt_empty_group_heading {
   padding: 0.5px;
   color: #333333;
   background-color: #FFFFFF;
@@ -2846,15 +2856,15 @@ This also applies to rows 2 through 16.</p>
   vertical-align: middle;
 }
 
-#asftznaxbg .gt_from_md > :first-child {
+#qsuzzxsbvv .gt_from_md > :first-child {
   margin-top: 0;
 }
 
-#asftznaxbg .gt_from_md > :last-child {
+#qsuzzxsbvv .gt_from_md > :last-child {
   margin-bottom: 0;
 }
 
-#asftznaxbg .gt_row {
+#qsuzzxsbvv .gt_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -2873,7 +2883,7 @@ This also applies to rows 2 through 16.</p>
   overflow-x: hidden;
 }
 
-#asftznaxbg .gt_stub {
+#qsuzzxsbvv .gt_stub {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -2886,7 +2896,7 @@ This also applies to rows 2 through 16.</p>
   padding-right: 5px;
 }
 
-#asftznaxbg .gt_stub_row_group {
+#qsuzzxsbvv .gt_stub_row_group {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -2900,15 +2910,15 @@ This also applies to rows 2 through 16.</p>
   vertical-align: top;
 }
 
-#asftznaxbg .gt_row_group_first td {
+#qsuzzxsbvv .gt_row_group_first td {
   border-top-width: 2px;
 }
 
-#asftznaxbg .gt_row_group_first th {
+#qsuzzxsbvv .gt_row_group_first th {
   border-top-width: 2px;
 }
 
-#asftznaxbg .gt_summary_row {
+#qsuzzxsbvv .gt_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -2918,16 +2928,16 @@ This also applies to rows 2 through 16.</p>
   padding-right: 5px;
 }
 
-#asftznaxbg .gt_first_summary_row {
+#qsuzzxsbvv .gt_first_summary_row {
   border-top-style: solid;
   border-top-color: #D3D3D3;
 }
 
-#asftznaxbg .gt_first_summary_row.thick {
+#qsuzzxsbvv .gt_first_summary_row.thick {
   border-top-width: 2px;
 }
 
-#asftznaxbg .gt_last_summary_row {
+#qsuzzxsbvv .gt_last_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -2937,7 +2947,7 @@ This also applies to rows 2 through 16.</p>
   border-bottom-color: #D3D3D3;
 }
 
-#asftznaxbg .gt_grand_summary_row {
+#qsuzzxsbvv .gt_grand_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -2947,7 +2957,7 @@ This also applies to rows 2 through 16.</p>
   padding-right: 5px;
 }
 
-#asftznaxbg .gt_first_grand_summary_row {
+#qsuzzxsbvv .gt_first_grand_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -2957,7 +2967,7 @@ This also applies to rows 2 through 16.</p>
   border-top-color: #D3D3D3;
 }
 
-#asftznaxbg .gt_last_grand_summary_row_top {
+#qsuzzxsbvv .gt_last_grand_summary_row_top {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -2967,11 +2977,11 @@ This also applies to rows 2 through 16.</p>
   border-bottom-color: #D3D3D3;
 }
 
-#asftznaxbg .gt_striped {
+#qsuzzxsbvv .gt_striped {
   background-color: rgba(128, 128, 128, 0.05);
 }
 
-#asftznaxbg .gt_table_body {
+#qsuzzxsbvv .gt_table_body {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -2980,7 +2990,7 @@ This also applies to rows 2 through 16.</p>
   border-bottom-color: #D3D3D3;
 }
 
-#asftznaxbg .gt_footnotes {
+#qsuzzxsbvv .gt_footnotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -2994,7 +3004,7 @@ This also applies to rows 2 through 16.</p>
   border-right-color: #D3D3D3;
 }
 
-#asftznaxbg .gt_footnote {
+#qsuzzxsbvv .gt_footnote {
   margin: 0px;
   font-size: 90%;
   padding-top: 4px;
@@ -3003,7 +3013,7 @@ This also applies to rows 2 through 16.</p>
   padding-right: 5px;
 }
 
-#asftznaxbg .gt_sourcenotes {
+#qsuzzxsbvv .gt_sourcenotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -3017,7 +3027,7 @@ This also applies to rows 2 through 16.</p>
   border-right-color: #D3D3D3;
 }
 
-#asftznaxbg .gt_sourcenote {
+#qsuzzxsbvv .gt_sourcenote {
   font-size: 90%;
   padding-top: 4px;
   padding-bottom: 4px;
@@ -3025,63 +3035,63 @@ This also applies to rows 2 through 16.</p>
   padding-right: 5px;
 }
 
-#asftznaxbg .gt_left {
+#qsuzzxsbvv .gt_left {
   text-align: left;
 }
 
-#asftznaxbg .gt_center {
+#qsuzzxsbvv .gt_center {
   text-align: center;
 }
 
-#asftznaxbg .gt_right {
+#qsuzzxsbvv .gt_right {
   text-align: right;
   font-variant-numeric: tabular-nums;
 }
 
-#asftznaxbg .gt_font_normal {
+#qsuzzxsbvv .gt_font_normal {
   font-weight: normal;
 }
 
-#asftznaxbg .gt_font_bold {
+#qsuzzxsbvv .gt_font_bold {
   font-weight: bold;
 }
 
-#asftznaxbg .gt_font_italic {
+#qsuzzxsbvv .gt_font_italic {
   font-style: italic;
 }
 
-#asftznaxbg .gt_super {
+#qsuzzxsbvv .gt_super {
   font-size: 65%;
 }
 
-#asftznaxbg .gt_footnote_marks {
+#qsuzzxsbvv .gt_footnote_marks {
   font-size: 75%;
   vertical-align: 0.4em;
   position: initial;
 }
 
-#asftznaxbg .gt_asterisk {
+#qsuzzxsbvv .gt_asterisk {
   font-size: 100%;
   vertical-align: 0;
 }
 
-#asftznaxbg .gt_indent_1 {
+#qsuzzxsbvv .gt_indent_1 {
   text-indent: 5px;
 }
 
-#asftznaxbg .gt_indent_2 {
+#qsuzzxsbvv .gt_indent_2 {
   text-indent: 10px;
 }
 
-#asftznaxbg .gt_indent_3 {
+#qsuzzxsbvv .gt_indent_3 {
   text-indent: 15px;
 }
 
-#asftznaxbg .gt_indent_4 {
+#qsuzzxsbvv .gt_indent_4 {
   text-indent: 20px;
 }
 
-#asftznaxbg .gt_indent_5 {
+#qsuzzxsbvv .gt_indent_5 {
   text-indent: 25px;
 }
 </style>
@@ -3244,6 +3254,8 @@ This also applies to rows 2 through 16.</p>
 </tbody>
 </table>
 </div>
+<p>The formula shortcut also results in simpler code than the recursive
+solution.</p>
 </div>
 </div>
 <div class="section level2">
@@ -3252,16 +3264,16 @@ This also applies to rows 2 through 16.</p>
 <div class="section level3">
 <h3 id="generating-the-closure">Generating the closure<a class="anchor" aria-label="anchor" href="#generating-the-closure"></a>
 </h3>
-<p>These formulas reduce each step of generating the closure to a single
-deletion from a prior graph, with almost no additional overhead. Here’s
-how the different methods fare, including the version from the gMCP
-package for reference. Also worthy of note is the lrstat package, which
-contains a few graphical MCP-related functions, including generating
-weights of the closure. It uses excellent C++ code to perform even
-faster, but since the speed of the current formula-based method is
-acceptable, adding an Rcpp dependency was not considered to be worth the
-additional time savings.</p>
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<p>The formula method reduces each step of generating the closure to a
+single deletion from a prior graph, with almost no additional overhead.
+Here’s how the different methods fare, including the version from the
+gMCP package for reference. Also worthy of note is the lrstat package,
+which contains a few MCP-related functions, including generating weights
+of the closure. It uses excellent C++ code to perform even faster, but
+since the speed of the current formula-based method is acceptable,
+adding an Rcpp dependency was not considered to be worth the additional
+time savings.</p>
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">vec_num_hyps</span> <span class="op">&lt;-</span> <span class="fl">2</span><span class="op">:</span><span class="fl">8</span> <span class="op">*</span> <span class="fl">2</span></span>
 <span></span>
 <span><span class="kw">if</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/files.html" class="external-link">file.exists</a></span><span class="op">(</span><span class="fu">here</span><span class="fu">::</span><span class="fu"><a href="https://here.r-lib.org//reference/here.html" class="external-link">here</a></span><span class="op">(</span><span class="st">"vignettes/cache/gw_benchmark_list.rds"</span><span class="op">)</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span></span>
@@ -3322,7 +3334,7 @@ additional time savings.</p>
 <span>    <span class="st">"lrstat"</span></span>
 <span>  <span class="op">)</span></span>
 <span><span class="op">)</span></span></code></pre></div>
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">benchmarks_plot_standard</span> <span class="op">&lt;-</span></span>
 <span>  <span class="fu">ggplot</span><span class="op">(</span><span class="va">benchmarks</span>, <span class="fu">aes</span><span class="op">(</span><span class="va">num_hyps</span>, <span class="va">median</span>, color <span class="op">=</span> <span class="va">char_expression</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu">geom_point</span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
@@ -3353,6 +3365,9 @@ savings will not make a big difference compared to the longer run-times
 on e.g. power simulations. However, paying attention to the closure is
 important for other reasons too, such as improving the power
 algorithm.</p>
+<div class="section level4">
+<h4 id="standard-algorithm">Standard algorithm<a class="anchor" aria-label="anchor" href="#standard-algorithm"></a>
+</h4>
 <p>The typical method for running a Bonferroni shortcut procedure on a
 graph is to:</p>
 <ol style="list-style-type: decimal">
@@ -3365,9 +3380,14 @@ fast for a single procedure, but when it’s run 100,000 times for a power
 simulation, the R version becomes onerous. However, there’s a lot of
 duplication in a power simulation using this method. In many of the
 simulations, the same steps will be taken, which means re-calculating
-the same set of weights many times. The <a href="#binary-counting">binary counting</a> property of the closure
-admits a shortcut which can be implemented in R to get a scalable
-competitor to the typical algorithm:</p>
+the same set of weights many times.</p>
+</div>
+<div class="section level4">
+<h4 id="closure-shortcut">Closure shortcut<a class="anchor" aria-label="anchor" href="#closure-shortcut"></a>
+</h4>
+<p>The <a href="#binary-counting">binary counting</a> property of the
+closure admits a shortcut which can be implemented in R to get a
+scalable competitor to the typical algorithm:</p>
 <ol style="list-style-type: decimal">
 <li>Generate the closure a single time to get all sub-graph weights
 efficiently</li>
@@ -3384,7 +3404,7 @@ drawback is how it can scale differently for different graph structures.
 For instance a fixed sequence procedure can take longer than a more
 balanced graph, like a Holm procedure, because it takes more steps to
 reject all possible hypotheses.</p>
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">vec_num_hyps</span> <span class="op">&lt;-</span> <span class="fl">2</span><span class="op">:</span><span class="fl">8</span> <span class="op">*</span> <span class="fl">2</span></span>
 <span></span>
 <span><span class="kw">if</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/files.html" class="external-link">file.exists</a></span><span class="op">(</span><span class="fu">here</span><span class="fu">::</span><span class="fu"><a href="https://here.r-lib.org//reference/here.html" class="external-link">here</a></span><span class="op">(</span><span class="st">"vignettes/cache/power_benchmark_list.rds"</span><span class="op">)</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span></span>
@@ -3443,7 +3463,7 @@ reject all possible hypotheses.</p>
 <span>    <span class="st">"gMCP (C)"</span></span>
 <span>  <span class="op">)</span></span>
 <span><span class="op">)</span></span></code></pre></div>
-<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">benchmarks_plot_standard</span> <span class="op">&lt;-</span></span>
 <span>  <span class="fu">ggplot</span><span class="op">(</span><span class="va">benchmarks</span>, <span class="fu">aes</span><span class="op">(</span><span class="va">num_hyps</span>, <span class="va">median</span>, color <span class="op">=</span> <span class="va">char_expression</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu">geom_point</span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
@@ -3464,7 +3484,8 @@ reject all possible hypotheses.</p>
 <span>  <span class="fu">labs</span><span class="op">(</span>subtitle <span class="op">=</span> <span class="st">"Log-10 median runtime"</span><span class="op">)</span></span>
 <span><span class="co">#&gt; Scale for <span style="color: #00BB00;">y</span> is already present.</span></span>
 <span><span class="co">#&gt; Adding another scale for <span style="color: #00BB00;">y</span>, which will replace the existing scale.</span></span></code></pre></div>
-<p><img src="generate-closure_files/figure-html/plot-power-benchmarks-1.png" width="576"></p>
+<p><img src="generate-closure_files/figure-html/plot-power-benchmarks-1.png" width="480"></p>
+</div>
 </div>
 </div>
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
