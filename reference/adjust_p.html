@@ -18,15 +18,13 @@
     </button>
 
     <div id="navbar" class="collapse navbar-collapse ms-3">
-      <ul class="navbar-nav me-auto"><li class="nav-item">
-  <a class="nav-link" href="../articles/graphicalMCP.html">Get started</a>
-</li>
-<li class="active nav-item">
+      <ul class="navbar-nav me-auto"><li class="active nav-item">
   <a class="nav-link" href="../reference/index.html">Reference</a>
 </li>
 <li class="nav-item dropdown">
   <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" id="dropdown-articles">Articles</a>
   <div class="dropdown-menu" aria-labelledby="dropdown-articles">
+    <a class="dropdown-item" href="../articles/generate-closure.html">Generating the closure of a graph</a>
     <a class="dropdown-item" href="../articles/graph-examples.html">Commonly-used graph examples</a>
     <a class="dropdown-item" href="../articles/shortuct-testing.html">Sequentially rejective graphical approaches based on Bonferroni tests</a>
   </div>
@@ -60,7 +58,7 @@
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">adjust_p_bonferroni</span><span class="op">(</span><span class="va">p</span>, <span class="va">hypotheses</span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu">adjust_p_parametric</span><span class="op">(</span><span class="va">p</span>, <span class="va">hypotheses</span>, corr <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></span>
+<span><span class="fu">adjust_p_parametric</span><span class="op">(</span><span class="va">p</span>, <span class="va">hypotheses</span>, test_corr <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu">adjust_p_simes</span><span class="op">(</span><span class="va">p</span>, <span class="va">hypotheses</span><span class="op">)</span></span></code></pre></div>
     </div>
@@ -68,16 +66,16 @@
     <div class="section level2">
     <h2 id="arguments">Arguments<a class="anchor" aria-label="anchor" href="#arguments"></a></h2>
     <dl><dt>p</dt>
-<dd><p>A named numeric vector of p-values</p></dd>
+<dd><p>A numeric vector of p-values</p></dd>
 
 
 <dt>hypotheses</dt>
-<dd><p>A named numeric vector of hypothesis weights</p></dd>
+<dd><p>A numeric vector of hypothesis weights</p></dd>
 
 
-<dt>corr</dt>
-<dd><p>(Optional) A numeric matrix of correlations between hypotheses'
-test statistics</p></dd>
+<dt>test_corr</dt>
+<dd><p>(Optional) A numeric matrix of correlations between
+hypotheses' test statistics</p></dd>
 
 </dl></div>
     <div class="section level2">

@@ -43,14 +43,12 @@
     <div id="navbar" class="collapse navbar-collapse ms-3">
       <ul class="navbar-nav me-auto">
 <li class="nav-item">
-  <a class="nav-link" href="../articles/graphicalMCP.html">Get started</a>
-</li>
-<li class="nav-item">
   <a class="nav-link" href="../reference/index.html">Reference</a>
 </li>
 <li class="active nav-item dropdown">
   <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" id="dropdown-articles">Articles</a>
   <div class="dropdown-menu" aria-labelledby="dropdown-articles">
+    <a class="dropdown-item" href="../articles/generate-closure.html">Generating the closure of a graph</a>
     <a class="dropdown-item" href="../articles/graph-examples.html">Commonly-used graph examples</a>
     <a class="dropdown-item" href="../articles/shortuct-testing.html">Sequentially rejective graphical approaches based on Bonferroni tests</a>
   </div>
@@ -144,8 +142,8 @@ the following graph.</p>
 <span></span>
 <span><span class="va">g</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/graph_create.html">graph_create</a></span><span class="op">(</span><span class="va">hypotheses</span>, <span class="va">transitions</span>, <span class="va">hyp_names</span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">g</span>, layout <span class="op">=</span> <span class="st">"grid"</span><span class="op">)</span></span></code></pre></div>
-<p><img src="shortuct-testing_files/figure-html/create-graph-1.png" width="700"></p>
+<span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">g</span>, layout <span class="op">=</span> <span class="st">"grid"</span>, vertex.size <span class="op">=</span> <span class="fl">40</span><span class="op">)</span></span></code></pre></div>
+<p><img src="shortuct-testing_files/figure-html/create-graph-1.png" width="480"></p>
 </div>
 <div class="section level2">
 <h2 id="perform-the-graphical-multiple-comparison-procedure">Perform the graphical multiple comparison procedure<a class="anchor" aria-label="anchor" href="#perform-the-graphical-multiple-comparison-procedure"></a>
@@ -252,7 +250,8 @@ if they can be retrieved easily</p>
 <span><span class="co">#&gt;  H3  0  0  0  0</span></span>
 <span><span class="co">#&gt;  H4  0  0  0  0</span></span>
 <span></span>
-<span><span class="va">test_results_verbose</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/testing.html">graph_test_shortcut</a></span><span class="op">(</span><span class="va">g</span>, p <span class="op">=</span> <span class="va">p_values</span>, alpha <span class="op">=</span> <span class="fl">0.025</span>, verbose <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<span><span class="va">test_results_verbose</span> <span class="op">&lt;-</span></span>
+<span>  <span class="fu"><a href="../reference/testing.html">graph_test_shortcut</a></span><span class="op">(</span><span class="va">g</span>, p <span class="op">=</span> <span class="va">p_values</span>, alpha <span class="op">=</span> <span class="fl">0.025</span>, verbose <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
 <span><span class="va">test_results_verbose</span><span class="op">$</span><span class="va">details</span><span class="op">$</span><span class="va">results</span><span class="op">[[</span><span class="fl">3</span><span class="op">]</span><span class="op">]</span> <span class="co"># To be discussed</span></span>
 <span><span class="co">#&gt; Initial graph</span></span>
 <span><span class="co">#&gt; </span></span>
@@ -294,7 +293,8 @@ significance level of <code>0.5 * alpha</code>, after <span class="math inline">
 adjusted significance level of <code>alpha</code>, after <span class="math inline">\(H_1\)</span>, <span class="math inline">\(H_2\)</span> and <span class="math inline">\(H_4\)</span> are rejected. These results can be
 obtained by specifying <code>test_values = TRUE</code>.</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">test_results_test_values</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/testing.html">graph_test_shortcut</a></span><span class="op">(</span><span class="va">g</span>, p <span class="op">=</span> <span class="va">p_values</span>, alpha <span class="op">=</span> <span class="fl">0.025</span>, test_values <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="va">test_results_test_values</span> <span class="op">&lt;-</span></span>
+<span>  <span class="fu"><a href="../reference/testing.html">graph_test_shortcut</a></span><span class="op">(</span><span class="va">g</span>, p <span class="op">=</span> <span class="va">p_values</span>, alpha <span class="op">=</span> <span class="fl">0.025</span>, test_values <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
 <span><span class="va">test_results_test_values</span><span class="op">$</span><span class="va">test_values</span><span class="op">$</span><span class="va">results</span></span>
 <span><span class="co">#&gt;    Step Hypothesis     p &lt;= Weight * Alpha Inequality_holds</span></span>
 <span><span class="co">#&gt; H2    1         H2 0.012 &lt;=   0.50 * 0.025             TRUE</span></span>
@@ -347,13 +347,20 @@ parameter, which is illustrated below.</p>
 <code class="sourceCode R"><span><span class="va">alpha</span> <span class="op">&lt;-</span> <span class="fl">0.025</span></span>
 <span><span class="va">prop</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.3</span>, <span class="fl">0.181</span>, <span class="fl">0.181</span><span class="op">)</span></span>
 <span><span class="va">sample_size</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="fl">200</span>, <span class="fl">3</span><span class="op">)</span></span>
-<span><span class="va">unpooled_variance</span> <span class="op">&lt;-</span> <span class="va">prop</span><span class="op">[</span><span class="op">-</span><span class="fl">1</span><span class="op">]</span> <span class="op">*</span> <span class="op">(</span><span class="fl">1</span> <span class="op">-</span> <span class="va">prop</span><span class="op">[</span><span class="op">-</span><span class="fl">1</span><span class="op">]</span><span class="op">)</span> <span class="op">/</span> <span class="va">sample_size</span><span class="op">[</span><span class="op">-</span><span class="fl">1</span><span class="op">]</span> <span class="op">+</span> </span>
+<span></span>
+<span><span class="va">unpooled_variance</span> <span class="op">&lt;-</span> <span class="va">prop</span><span class="op">[</span><span class="op">-</span><span class="fl">1</span><span class="op">]</span> <span class="op">*</span> <span class="op">(</span><span class="fl">1</span> <span class="op">-</span> <span class="va">prop</span><span class="op">[</span><span class="op">-</span><span class="fl">1</span><span class="op">]</span><span class="op">)</span> <span class="op">/</span> <span class="va">sample_size</span><span class="op">[</span><span class="op">-</span><span class="fl">1</span><span class="op">]</span> <span class="op">+</span></span>
 <span>  <span class="va">prop</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span> <span class="op">*</span> <span class="op">(</span><span class="fl">1</span> <span class="op">-</span> <span class="va">prop</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span><span class="op">)</span> <span class="op">/</span> <span class="va">sample_size</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span></span>
-<span><span class="va">noncentrality_parameter_primary</span> <span class="op">&lt;-</span> <span class="op">-</span><span class="op">(</span><span class="va">prop</span><span class="op">[</span><span class="op">-</span><span class="fl">1</span><span class="op">]</span> <span class="op">-</span> <span class="va">prop</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span><span class="op">)</span> <span class="op">/</span> <span class="fu"><a href="https://rdrr.io/r/base/MathFun.html" class="external-link">sqrt</a></span><span class="op">(</span><span class="va">unpooled_variance</span><span class="op">)</span></span>
-<span><span class="va">marginal_power_primary</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">pnorm</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">qnorm</a></span><span class="op">(</span><span class="va">alpha</span>, lower.tail <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>,</span>
-<span>                        <span class="va">noncentrality_parameter_primary</span>, <span class="fl">1</span>, lower.tail <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">marginal_power_primary</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"H1"</span>, <span class="st">"H2"</span><span class="op">)</span></span>
-<span><span class="va">marginal_power_primary</span></span>
+<span></span>
+<span><span class="va">noncentrality_parameter_primary</span> <span class="op">&lt;-</span></span>
+<span>  <span class="op">-</span><span class="op">(</span><span class="va">prop</span><span class="op">[</span><span class="op">-</span><span class="fl">1</span><span class="op">]</span> <span class="op">-</span> <span class="va">prop</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span><span class="op">)</span> <span class="op">/</span> <span class="fu"><a href="https://rdrr.io/r/base/MathFun.html" class="external-link">sqrt</a></span><span class="op">(</span><span class="va">unpooled_variance</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">power_marginal_primary</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">pnorm</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">qnorm</a></span><span class="op">(</span><span class="va">alpha</span>, lower.tail <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>,</span>
+<span>  <span class="va">noncentrality_parameter_primary</span>, <span class="fl">1</span>,</span>
+<span>  lower.tail <span class="op">=</span> <span class="cn">FALSE</span></span>
+<span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">power_marginal_primary</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"H1"</span>, <span class="st">"H2"</span><span class="op">)</span></span>
+<span><span class="va">power_marginal_primary</span></span>
 <span><span class="co">#&gt;        H1        H2 </span></span>
 <span><span class="co">#&gt; 0.8028315 0.8028315</span></span></code></pre></div>
 </div>
@@ -374,12 +381,17 @@ each at the one-sided significance level 0.025.</p>
 <code class="sourceCode R"><span><span class="va">mean_change</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">5</span>, <span class="fl">7.5</span>, <span class="fl">8.25</span><span class="op">)</span></span>
 <span><span class="va">sd</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="fl">10</span>, <span class="fl">3</span><span class="op">)</span></span>
 <span><span class="va">variance</span> <span class="op">&lt;-</span> <span class="va">sd</span><span class="op">[</span><span class="op">-</span><span class="fl">1</span><span class="op">]</span><span class="op">^</span><span class="fl">2</span> <span class="op">/</span> <span class="va">sample_size</span><span class="op">[</span><span class="op">-</span><span class="fl">1</span><span class="op">]</span> <span class="op">+</span> <span class="va">sd</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span><span class="op">^</span><span class="fl">2</span> <span class="op">/</span> <span class="va">sample_size</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span></span>
-<span><span class="va">noncentrality_parameter_secondary</span> <span class="op">&lt;-</span> <span class="op">(</span><span class="va">mean_change</span><span class="op">[</span><span class="op">-</span><span class="fl">1</span><span class="op">]</span> <span class="op">-</span> <span class="va">mean_change</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span><span class="op">)</span> <span class="op">/</span> </span>
+<span></span>
+<span><span class="va">noncentrality_parameter_secondary</span> <span class="op">&lt;-</span> <span class="op">(</span><span class="va">mean_change</span><span class="op">[</span><span class="op">-</span><span class="fl">1</span><span class="op">]</span> <span class="op">-</span> <span class="va">mean_change</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span><span class="op">)</span> <span class="op">/</span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/base/MathFun.html" class="external-link">sqrt</a></span><span class="op">(</span><span class="va">variance</span><span class="op">)</span></span>
-<span><span class="va">marginal_power_secondary</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">pnorm</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">qnorm</a></span><span class="op">(</span><span class="va">alpha</span>, lower.tail <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>,</span>
-<span>                        <span class="va">noncentrality_parameter_secondary</span>, <span class="fl">1</span>, lower.tail <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">marginal_power_secondary</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"H3"</span>, <span class="st">"H4"</span><span class="op">)</span></span>
-<span><span class="va">marginal_power_secondary</span></span>
+<span></span>
+<span><span class="va">power_marginal_secondary</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">pnorm</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">qnorm</a></span><span class="op">(</span><span class="va">alpha</span>, lower.tail <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>,</span>
+<span>  <span class="va">noncentrality_parameter_secondary</span>, <span class="fl">1</span>,</span>
+<span>  lower.tail <span class="op">=</span> <span class="cn">FALSE</span></span>
+<span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">power_marginal_secondary</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"H3"</span>, <span class="st">"H4"</span><span class="op">)</span></span>
+<span><span class="va">power_marginal_secondary</span></span>
 <span><span class="co">#&gt;        H3        H4 </span></span>
 <span><span class="co">#&gt; 0.7054139 0.9014809</span></span></code></pre></div>
 </div>
@@ -413,8 +425,10 @@ practice, one may make further assumptions instead of using the product
 rule.</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">corr</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">matrix</a></span><span class="op">(</span><span class="fl">0</span>, nrow <span class="op">=</span> <span class="fl">4</span>, ncol <span class="op">=</span> <span class="fl">4</span><span class="op">)</span></span>
-<span><span class="va">corr</span><span class="op">[</span><span class="fl">1</span>, <span class="fl">2</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="va">corr</span><span class="op">[</span><span class="fl">3</span>, <span class="fl">4</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/MathFun.html" class="external-link">sqrt</a></span><span class="op">(</span><span class="va">sample_size</span><span class="op">[</span><span class="fl">2</span><span class="op">]</span> <span class="op">/</span> <span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="va">sample_size</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">2</span><span class="op">]</span><span class="op">)</span> <span class="op">*</span> </span>
-<span>                                   <span class="va">sample_size</span><span class="op">[</span><span class="fl">3</span><span class="op">]</span> <span class="op">/</span> <span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="va">sample_size</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">3</span><span class="op">)</span><span class="op">]</span><span class="op">)</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">corr</span><span class="op">[</span><span class="fl">1</span>, <span class="fl">2</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="va">corr</span><span class="op">[</span><span class="fl">3</span>, <span class="fl">4</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/MathFun.html" class="external-link">sqrt</a></span><span class="op">(</span><span class="va">sample_size</span><span class="op">[</span><span class="fl">2</span><span class="op">]</span> <span class="op">/</span> <span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="va">sample_size</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">2</span><span class="op">]</span><span class="op">)</span> <span class="op">*</span></span>
+<span>  <span class="va">sample_size</span><span class="op">[</span><span class="fl">3</span><span class="op">]</span> <span class="op">/</span> <span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="va">sample_size</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">3</span><span class="op">)</span><span class="op">]</span><span class="op">)</span><span class="op">)</span></span>
+<span></span>
 <span><span class="va">rho</span> <span class="op">&lt;-</span> <span class="fl">0.5</span></span>
 <span><span class="va">corr</span><span class="op">[</span><span class="fl">1</span>, <span class="fl">3</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="va">corr</span><span class="op">[</span><span class="fl">2</span>, <span class="fl">4</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="va">rho</span></span>
 <span><span class="va">corr</span><span class="op">[</span><span class="fl">1</span>, <span class="fl">4</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="va">corr</span><span class="op">[</span><span class="fl">2</span>, <span class="fl">3</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="va">corr</span><span class="op">[</span><span class="fl">1</span>, <span class="fl">2</span><span class="op">]</span> <span class="op">*</span> <span class="va">rho</span></span>
@@ -449,23 +463,32 @@ customize success criteria to define other versions of “power”.</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Probability to reject H1</span></span>
 <span><span class="va">H1</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="va">x</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span></span>
+<span></span>
 <span><span class="co"># Expected number of rejections</span></span>
 <span><span class="va">`Expected no. of rejections`</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="va">x</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span> <span class="op">+</span> <span class="va">x</span><span class="op">[</span><span class="fl">2</span><span class="op">]</span> <span class="op">+</span> <span class="va">x</span><span class="op">[</span><span class="fl">3</span><span class="op">]</span> <span class="op">+</span> <span class="va">x</span><span class="op">[</span><span class="fl">4</span><span class="op">]</span></span>
+<span></span>
 <span><span class="co"># Probability to reject at least one hypothesis</span></span>
 <span><span class="va">`AtLeast1`</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="va">x</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span> <span class="op">|</span> <span class="va">x</span><span class="op">[</span><span class="fl">2</span><span class="op">]</span> <span class="op">|</span> <span class="va">x</span><span class="op">[</span><span class="fl">3</span><span class="op">]</span> <span class="op">|</span> <span class="va">x</span><span class="op">[</span><span class="fl">4</span><span class="op">]</span></span>
+<span></span>
 <span><span class="co"># Probability to reject all hypotheses</span></span>
 <span><span class="va">`All`</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="va">x</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span> <span class="op">&amp;</span> <span class="va">x</span><span class="op">[</span><span class="fl">2</span><span class="op">]</span> <span class="op">&amp;</span> <span class="va">x</span><span class="op">[</span><span class="fl">3</span><span class="op">]</span> <span class="op">&amp;</span> <span class="va">x</span><span class="op">[</span><span class="fl">4</span><span class="op">]</span></span>
+<span></span>
 <span><span class="co"># Probability to reject both H1 and H2</span></span>
 <span><span class="va">`H1andH2`</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="va">x</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span> <span class="op">&amp;</span> <span class="va">x</span><span class="op">[</span><span class="fl">2</span><span class="op">]</span></span>
+<span></span>
 <span><span class="co"># Probability to reject both hypotheses for the low dose or the high dose</span></span>
 <span><span class="va">`(H1andH3)or(H2andH4)`</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="op">(</span><span class="va">x</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span> <span class="op">&amp;</span> <span class="va">x</span><span class="op">[</span><span class="fl">3</span><span class="op">]</span><span class="op">)</span> <span class="op">|</span> <span class="op">(</span><span class="va">x</span><span class="op">[</span><span class="fl">2</span><span class="op">]</span> <span class="op">&amp;</span> <span class="va">x</span><span class="op">[</span><span class="fl">4</span><span class="op">]</span><span class="op">)</span></span>
-<span><span class="va">succ</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">H1</span>, <span class="va">`Expected no. of rejections`</span>, <span class="va">`AtLeast1`</span>, <span class="va">`All`</span>, <span class="va">`H1andH2`</span>, </span>
-<span>             <span class="va">`(H1andH3)or(H2andH4)`</span><span class="op">)</span></span>
+<span><span class="va">succ</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
+<span>  <span class="va">H1</span>, <span class="va">`Expected no. of rejections`</span>, <span class="va">`AtLeast1`</span>, <span class="va">`All`</span>, <span class="va">`H1andH2`</span>,</span>
+<span>  <span class="va">`(H1andH3)or(H2andH4)`</span></span>
+<span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">succ</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/setNames.html" class="external-link">setNames</a></span><span class="op">(</span></span>
 <span>  <span class="va">succ</span>,</span>
-<span>  <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"H1"</span>, <span class="st">"Expected no. of rejections"</span>, <span class="st">"AtLeast1"</span>, <span class="st">"All"</span>, <span class="st">"H1andH2"</span>,</span>
-<span>    <span class="st">"(H1andH3)or(H2andH4)"</span><span class="op">)</span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span></span>
+<span>    <span class="st">"H1"</span>, <span class="st">"Expected no. of rejections"</span>, <span class="st">"AtLeast1"</span>, <span class="st">"All"</span>, <span class="st">"H1andH2"</span>,</span>
+<span>    <span class="st">"(H1andH3)or(H2andH4)"</span></span>
+<span>  <span class="op">)</span></span>
 <span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level3">
@@ -489,7 +512,7 @@ and <span class="math inline">\(H_3)\)</span> and <span class="math inline">\((H
 <span>  alpha <span class="op">=</span> <span class="fl">.025</span>,</span>
 <span>  sim_corr <span class="op">=</span> <span class="va">corr</span>,</span>
 <span>  sim_n <span class="op">=</span> <span class="fl">1e5</span>,</span>
-<span>  marginal_power <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">marginal_power_primary</span>, <span class="va">marginal_power_secondary</span><span class="op">)</span>,</span>
+<span>  power_marginal <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">power_marginal_primary</span>, <span class="va">power_marginal_secondary</span><span class="op">)</span>,</span>
 <span>  sim_success <span class="op">=</span> <span class="va">succ</span>,</span>
 <span>  sim_seed <span class="op">=</span> <span class="fl">1234</span></span>
 <span><span class="op">)</span></span>
@@ -557,7 +580,7 @@ digits) with the default setting of <code>precision = 4</code>
 <span>  alpha <span class="op">=</span> <span class="fl">.025</span>,</span>
 <span>  sim_corr <span class="op">=</span> <span class="va">corr</span>,</span>
 <span>  sim_n <span class="op">=</span> <span class="fl">1e5</span>,</span>
-<span>  marginal_power <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">marginal_power_primary</span>, <span class="va">marginal_power_secondary</span><span class="op">)</span>,</span>
+<span>  power_marginal <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">power_marginal_primary</span>, <span class="va">power_marginal_secondary</span><span class="op">)</span>,</span>
 <span>  sim_success <span class="op">=</span> <span class="va">succ</span>,</span>
 <span>  sim_seed <span class="op">=</span> <span class="fl">1234</span>,</span>
 <span>  verbose <span class="op">=</span> <span class="cn">TRUE</span></span>
@@ -693,9 +716,13 @@ digits) with the default setting of <code>precision = 4</code>
 ```r
 g_gMCP <- as_graphMCP(g)
 set.seed(1234)
-result <- calcPower(graph=g_gMCP, mean=c(noncentrality_parameter_primary, 
-  noncentrality_parameter_secondary), f=succ, corr.sim=corr, alpha=0.025,
-  n.sim=1e+05)
+result <- calcPower(
+  graph = g_gMCP, mean = c(
+    noncentrality_parameter_primary,
+    noncentrality_parameter_secondary
+  ), f = succ, corr.sim = corr, alpha = 0.025,
+  n.sim = 1e+05
+)
 
 # Local power
 output$power$power_local
@@ -707,7 +734,7 @@ result$LocalPower
 # User-defined power
 as.numeric(output$power$power_success)
 #> [1] 0.76396 2.78183 0.85557 0.51205 0.66726 0.74695
-c(result$func1, result$func2, result$func3, result$func4, result$func5, result$func6) 
+c(result$func1, result$func2, result$func3, result$func4, result$func5, result$func6)
 #> NULL
 ```
 -->

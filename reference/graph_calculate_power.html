@@ -28,15 +28,13 @@ as expected rejections and probability of rejecting any hypothesis"><meta proper
     </button>
 
     <div id="navbar" class="collapse navbar-collapse ms-3">
-      <ul class="navbar-nav me-auto"><li class="nav-item">
-  <a class="nav-link" href="../articles/graphicalMCP.html">Get started</a>
-</li>
-<li class="active nav-item">
+      <ul class="navbar-nav me-auto"><li class="active nav-item">
   <a class="nav-link" href="../reference/index.html">Reference</a>
 </li>
 <li class="nav-item dropdown">
   <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" id="dropdown-articles">Articles</a>
   <div class="dropdown-menu" aria-labelledby="dropdown-articles">
+    <a class="dropdown-item" href="../articles/generate-closure.html">Generating the closure of a graph</a>
     <a class="dropdown-item" href="../articles/graph-examples.html">Commonly-used graph examples</a>
     <a class="dropdown-item" href="../articles/shortuct-testing.html">Sequentially rejective graphical approaches based on Bonferroni tests</a>
   </div>
@@ -76,11 +74,11 @@ as expected rejections and probability of rejecting any hypothesis</p>
     <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">graph_calculate_power</span><span class="op">(</span></span>
 <span>  <span class="va">graph</span>,</span>
 <span>  alpha <span class="op">=</span> <span class="fl">0.025</span>,</span>
+<span>  power_marginal <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="va">alpha</span>, <span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">graph</span><span class="op">$</span><span class="va">hypotheses</span><span class="op">)</span><span class="op">)</span>,</span>
 <span>  test_groups <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq_along</a></span><span class="op">(</span><span class="va">graph</span><span class="op">$</span><span class="va">hypotheses</span><span class="op">)</span><span class="op">)</span>,</span>
 <span>  test_types <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"bonferroni"</span><span class="op">)</span>,</span>
 <span>  test_corr <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="cn">NA</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">test_types</span><span class="op">)</span><span class="op">)</span>,</span>
 <span>  sim_n <span class="op">=</span> <span class="fl">100</span>,</span>
-<span>  marginal_power <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="va">alpha</span>, <span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">graph</span><span class="op">$</span><span class="va">hypotheses</span><span class="op">)</span><span class="op">)</span>,</span>
 <span>  sim_corr <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/diag.html" class="external-link">diag</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">graph</span><span class="op">$</span><span class="va">hypotheses</span><span class="op">)</span><span class="op">)</span>,</span>
 <span>  sim_success <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  sim_seed <span class="op">=</span> <span class="cn">NULL</span>,</span>
@@ -98,6 +96,12 @@ as expected rejections and probability of rejecting any hypothesis</p>
 <dt>alpha</dt>
 <dd><p>A numeric scalar specifying the global significance level for
 testing</p></dd>
+
+
+<dt>power_marginal</dt>
+<dd><p>A numeric vector of mean values to use when simulating
+p-values. Exactly one mean per hypothesis is needed, and p-values will be
+sampled from the multivariate normal distribution. See Details for more</p></dd>
 
 
 <dt>test_groups</dt>
@@ -118,12 +122,6 @@ of correlations between hypotheses' test statistics</p></dd>
 <dd><p>An integer scalar specifying how many simulations to run</p></dd>
 
 
-<dt>marginal_power</dt>
-<dd><p>A numeric vector of mean values to use when simulating
-p-values. Exactly one mean per hypothesis is needed, and p-values will be
-sampled from the multivariate normal distribution. See Details for more</p></dd>
-
-
 <dt>sim_corr</dt>
 <dd><p>A numeric matrix of correlations between hypotheses used to
 sample from the multivariate normal distribution to generate p-values</p></dd>
@@ -131,11 +129,11 @@ sample from the multivariate normal distribution to generate p-values</p></dd>
 
 <dt>sim_success</dt>
 <dd><p>A list of user-defined functions to apply to the power
-results. Functions must take one simulation's logical vector results as an
-input, and return a length-one logical vector. For instance, if "success"
-means rejecting hypotheses 1 and 2, you would use <code>sim_success = list("1 and 2" = function(x) x[1] &amp;&amp; x[2])</code>. If the list is not named, the function
-body will be used as the name. Lambda functions also work, e.g.
-<code>sim_success = list(\(x) x[3] || x[4])</code></p></dd>
+results. Functions must take one simulation's logical vector of results as
+an input, and return a length-one logical vector. For instance, if
+"success" means rejecting hypotheses 1 and 2, use <code>sim_success = list("1 and 2" = function(x) x[1] &amp;&amp; x[2])</code>. If the list is not named, the function
+body will be used as the name. Lambda functions also work starting with R
+4.1, e.g. <code>sim_success = list(\(x) x[3] || x[4])</code></p></dd>
 
 
 <dt>sim_seed</dt>
@@ -168,7 +166,7 @@ hypotheses specified in <code>sim_success</code></p></li>
 </ul></div>
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
-    <p>The parameters of the normal distribution are set with <code>marginal_power</code>
+    <p>The parameters of the normal distribution are set with <code>power_marginal</code>
 (means) and <code>sim_corr</code> (correlation between test statistics). The mean of
 each hypothesis should be set as its marginal power
 $$d_i=P_{\xi_i}(p_i\leq\alpha)$$ where \(\xi_i\) is the non-centrality

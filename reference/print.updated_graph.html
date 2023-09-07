@@ -20,15 +20,13 @@ keep/delete hypotheses, and the updated graph"><meta property="og:image" content
     </button>
 
     <div id="navbar" class="collapse navbar-collapse ms-3">
-      <ul class="navbar-nav me-auto"><li class="nav-item">
-  <a class="nav-link" href="../articles/graphicalMCP.html">Get started</a>
-</li>
-<li class="active nav-item">
+      <ul class="navbar-nav me-auto"><li class="active nav-item">
   <a class="nav-link" href="../reference/index.html">Reference</a>
 </li>
 <li class="nav-item dropdown">
   <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" id="dropdown-articles">Articles</a>
   <div class="dropdown-menu" aria-labelledby="dropdown-articles">
+    <a class="dropdown-item" href="../articles/generate-closure.html">Generating the closure of a graph</a>
     <a class="dropdown-item" href="../articles/graph-examples.html">Commonly-used graph examples</a>
     <a class="dropdown-item" href="../articles/shortuct-testing.html">Sequentially rejective graphical approaches based on Bonferroni tests</a>
   </div>
@@ -62,7 +60,7 @@ keep/delete hypotheses, and the updated graph</p>
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="co"># S3 method for updated_graph</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">x</span>, <span class="va">...</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">x</span>, <span class="va">...</span>, precision <span class="op">=</span> <span class="fl">6</span>, indent <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
@@ -73,6 +71,15 @@ keep/delete hypotheses, and the updated graph</p>
 
 <dt>...</dt>
 <dd><p>Other values passed on to other methods (currently unused)</p></dd>
+
+
+<dt>precision</dt>
+<dd><p>An integer scalar indicating the maximum number of decimals
+to include in numeric values</p></dd>
+
+
+<dt>indent</dt>
+<dd><p>An integer scalar indicating how many spaces to indent results</p></dd>
 
 </dl></div>
 

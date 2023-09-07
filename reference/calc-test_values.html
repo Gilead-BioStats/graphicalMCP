@@ -18,15 +18,13 @@
     </button>
 
     <div id="navbar" class="collapse navbar-collapse ms-3">
-      <ul class="navbar-nav me-auto"><li class="nav-item">
-  <a class="nav-link" href="../articles/graphicalMCP.html">Get started</a>
-</li>
-<li class="active nav-item">
+      <ul class="navbar-nav me-auto"><li class="active nav-item">
   <a class="nav-link" href="../reference/index.html">Reference</a>
 </li>
 <li class="nav-item dropdown">
   <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" id="dropdown-articles">Articles</a>
   <div class="dropdown-menu" aria-labelledby="dropdown-articles">
+    <a class="dropdown-item" href="../articles/generate-closure.html">Generating the closure of a graph</a>
     <a class="dropdown-item" href="../articles/graph-examples.html">Commonly-used graph examples</a>
     <a class="dropdown-item" href="../articles/shortuct-testing.html">Sequentially rejective graphical approaches based on Bonferroni tests</a>
   </div>
@@ -60,7 +58,7 @@
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">test_values_bonferroni</span><span class="op">(</span><span class="va">p</span>, <span class="va">hypotheses</span>, <span class="va">alpha</span>, intersection <span class="op">=</span> <span class="cn">NA</span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu">test_values_parametric</span><span class="op">(</span><span class="va">p</span>, <span class="va">hypotheses</span>, <span class="va">alpha</span>, intersection <span class="op">=</span> <span class="cn">NA</span>, <span class="va">corr</span><span class="op">)</span></span>
+<span><span class="fu">test_values_parametric</span><span class="op">(</span><span class="va">p</span>, <span class="va">hypotheses</span>, <span class="va">alpha</span>, intersection <span class="op">=</span> <span class="cn">NA</span>, <span class="va">test_corr</span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu">test_values_simes</span><span class="op">(</span><span class="va">p</span>, <span class="va">hypotheses</span>, <span class="va">alpha</span>, intersection <span class="op">=</span> <span class="cn">NA</span><span class="op">)</span></span></code></pre></div>
     </div>
@@ -81,11 +79,11 @@ testing</p></dd>
 
 
 <dt>intersection</dt>
-<dd><p>A numeric scalar used to track the intersection the test
-values are from</p></dd>
+<dd><p>A numeric scalar used to track which intersection the
+test values are from</p></dd>
 
 
-<dt>corr</dt>
+<dt>test_corr</dt>
 <dd><p>A numeric matrix of correlations between hypotheses' test
 statistics</p></dd>
 
@@ -141,7 +139,7 @@ Procedures</em>. R package version 0.8-15,
 <span class="r-out co"><span class="r-pr">#&gt;</span> H2             TRUE</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> H3            FALSE</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> H4            FALSE</span>
-<span class="r-in"><span><span class="fu">graphicalMCP</span><span class="fu">:::</span><span class="fu">test_values_parametric</span><span class="op">(</span><span class="va">p</span>, <span class="va">w</span>, <span class="fl">.05</span>, corr <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/diag.html" class="external-link">diag</a></span><span class="op">(</span><span class="fl">4</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu">graphicalMCP</span><span class="fu">:::</span><span class="fu">test_values_parametric</span><span class="op">(</span><span class="va">p</span>, <span class="va">w</span>, <span class="fl">.05</span>, test_corr <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/diag.html" class="external-link">diag</a></span><span class="op">(</span><span class="fl">4</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>    Intersection Hypothesis       Test     p &lt;=  c_value * Weight * Alpha</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> H1           NA         H1 parametric 0.024 &lt;= 1.012823 *    0.5 *  0.05</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> H2           NA         H2 parametric 0.010 &lt;= 1.012823 *    0.5 *  0.05</span>

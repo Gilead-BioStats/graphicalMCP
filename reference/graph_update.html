@@ -24,15 +24,13 @@ for a single set of deletions, including transition weights as well."><meta prop
     </button>
 
     <div id="navbar" class="collapse navbar-collapse ms-3">
-      <ul class="navbar-nav me-auto"><li class="nav-item">
-  <a class="nav-link" href="../articles/graphicalMCP.html">Get started</a>
-</li>
-<li class="active nav-item">
+      <ul class="navbar-nav me-auto"><li class="active nav-item">
   <a class="nav-link" href="../reference/index.html">Reference</a>
 </li>
 <li class="nav-item dropdown">
   <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" id="dropdown-articles">Articles</a>
   <div class="dropdown-menu" aria-labelledby="dropdown-articles">
+    <a class="dropdown-item" href="../articles/generate-closure.html">Generating the closure of a graph</a>
     <a class="dropdown-item" href="../articles/graph-examples.html">Commonly-used graph examples</a>
     <a class="dropdown-item" href="../articles/shortuct-testing.html">Sequentially rejective graphical approaches based on Bonferroni tests</a>
   </div>
@@ -67,7 +65,7 @@ for a single set of deletions, including transition weights as well.</p>
 
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">graph_update</span><span class="op">(</span><span class="va">graph</span>, <span class="va">keep</span><span class="op">)</span></span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">graph_update</span><span class="op">(</span><span class="va">graph</span>, <span class="va">delete</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
@@ -76,10 +74,15 @@ for a single set of deletions, including transition weights as well.</p>
 <dd><p>An initial graph as returned by <code><a href="graph_create.html">graph_create()</a></code></p></dd>
 
 
-<dt>keep</dt>
+<dt>delete</dt>
 <dd><p>A logical or integer vector, denoting which hypotheses to
-keep/delete. An entry of <code>FALSE</code> (or 0) corresponds to a deletion, and
-<code>TRUE</code> (or 1) corresponds to keeping a hypothesis</p></dd>
+keep/delete. A logical vector must match the size of the graph, with one
+entry per hypothesis, and it results in "unordered mode," where selected
+hypotheses are deleted in sequential order. An integer vector can be any
+length, but must only contain valid hypothesis numbers (greater than 0, and
+less than or equal to the size of the graph). This will trigger "ordered
+mode," where selected hypotheses are deleted in the order they appear in
+<code>delete</code></p></dd>
 
 </dl></div>
     <div class="section level2">
@@ -145,30 +148,22 @@ Procedures</em>. R package version 0.8-15,
 <span class="r-out co"><span class="r-pr">#&gt;</span>  H3  0  1  0  0</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  H4  1  0  0  0</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> --------------------------------------------------------------------------------</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> --- Hypotheses kept ---</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    H1    H2   H3   H4</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  TRUE FALSE TRUE TRUE</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> --------------------------------------------------------------------------------</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Updated graph</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Updated graph after deleting hypotheses 1, 3, 4</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> --- Hypothesis weights ---</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> H1: 0.5</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> H2: 0.0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> H3: 0.0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> H4: 0.5</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> H1: NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> H2:  1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> H3: NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> H4: NA</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> --- Transition weights ---</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     H1 H2 H3 H4</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  H1  0  0  1  0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  H2  0  0  0  0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  H3  0  0  0  1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  H4  1  0  0  0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  H1 NA NA NA NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  H2 NA  0 NA NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  H3 NA NA NA NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  H4 NA NA NA NA</span>
 <span class="r-in"><span><span class="co"># Equivalent</span></span></span>
-<span class="r-in"><span><span class="co"># graph_update(g, c(1, 0, 1, 1))</span></span></span>
+<span class="r-in"><span><span class="co"># graph_update(g, 2)</span></span></span>
 <span class="r-in"><span></span></span>
 </code></pre></div>
     </div>

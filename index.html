@@ -59,14 +59,12 @@
     <div id="navbar" class="collapse navbar-collapse ms-3">
       <ul class="navbar-nav me-auto">
 <li class="nav-item">
-  <a class="nav-link" href="articles/graphicalMCP.html">Get started</a>
-</li>
-<li class="nav-item">
   <a class="nav-link" href="reference/index.html">Reference</a>
 </li>
 <li class="nav-item dropdown">
   <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" id="dropdown-articles">Articles</a>
   <div class="dropdown-menu" aria-labelledby="dropdown-articles">
+    <a class="dropdown-item" href="articles/generate-closure.html">Generating the closure of a graph</a>
     <a class="dropdown-item" href="articles/graph-examples.html">Commonly-used graph examples</a>
     <a class="dropdown-item" href="articles/shortuct-testing.html">Sequentially rejective graphical approaches based on Bonferroni tests</a>
   </div>
@@ -109,7 +107,7 @@
 <p>graphicalMCP is not on CRAN, so install it from GitHub with</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># install.packages("pak")</span></span>
-<span><span class="fu">pak</span><span class="fu">::</span><span class="fu"><a href="http://pak.r-lib.org/reference/pak.html" class="external-link">pak</a></span><span class="op">(</span><span class="st">"Gilead-BioStats/graphicalMCP@dev"</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu">pak</span><span class="fu">::</span><span class="fu"><a href="https://pak.r-lib.org/reference/pak.html" class="external-link">pak</a></span><span class="op">(</span><span class="st">"Gilead-BioStats/graphicalMCP@dev"</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="basic-usage">Basic usage<a class="anchor" aria-label="anchor" href="#basic-usage"></a>
@@ -138,7 +136,7 @@
 <span><span class="va">hyp_names</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"H1"</span>, <span class="st">"H2"</span>, <span class="st">"H3"</span>, <span class="st">"H4"</span><span class="op">)</span></span>
 <span><span class="va">example_graph</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/graph_create.html">graph_create</a></span><span class="op">(</span><span class="va">hypotheses</span>, <span class="va">transitions</span>, <span class="va">hyp_names</span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">example_graph</span>, layout <span class="op">=</span> <span class="st">"grid"</span>, asp <span class="op">=</span> <span class="fl">.7</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">example_graph</span>, layout <span class="op">=</span> <span class="st">"grid"</span><span class="op">)</span></span></code></pre></div>
 <p><img src="reference/figures/README-create-graph-1.png" width="100%"></p>
 </div>
 <div class="section level3">
@@ -146,7 +144,7 @@
 </h3>
 <p>Hypotheses can be deleted from the MCP using <code><a href="reference/graph_update.html">graph_update()</a></code>. Updated weights and transitions are calculated according to the weighting strategy in Algorithm 1 of <a href="https://onlinelibrary.wiley.com/doi/10.1002/bimj.201000239" class="external-link">Bretz et al (2011)</a>. We distinguish <em>deleting</em> from <em>rejecting</em> in the <a href="#glossary-of-terms">glossary</a>.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="reference/graph_update.html">graph_update</a></span><span class="op">(</span><span class="va">example_graph</span>, keep <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="cn">TRUE</span>, <span class="cn">FALSE</span>, <span class="cn">FALSE</span>, <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="reference/graph_update.html">graph_update</a></span><span class="op">(</span><span class="va">example_graph</span>, delete <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="cn">FALSE</span>, <span class="cn">TRUE</span>, <span class="cn">TRUE</span>, <span class="cn">FALSE</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="generate-weights">Generate weights<a class="anchor" aria-label="anchor" href="#generate-weights"></a>
@@ -168,8 +166,8 @@
 <span>  <span class="va">example_graph</span>,</span>
 <span>  p <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">.01</span>, <span class="fl">.03</span>, <span class="fl">.02</span>, <span class="fl">.01</span><span class="op">)</span>,</span>
 <span>  alpha <span class="op">=</span> <span class="fl">.025</span>,</span>
-<span>  test_types <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"bonferroni"</span>, <span class="st">"simes"</span><span class="op">)</span>,</span>
-<span>  groups <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">2</span>, <span class="fl">3</span><span class="op">:</span><span class="fl">4</span><span class="op">)</span></span>
+<span>  test_types <span class="op">=</span> <span class="st">"bonferroni"</span>,</span>
+<span>  test_groups <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">4</span><span class="op">)</span></span>
 <span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level3">
@@ -180,7 +178,7 @@
 <code class="sourceCode R"><span><span class="fu"><a href="reference/graph_calculate_power.html">graph_calculate_power</a></span><span class="op">(</span></span>
 <span>  <span class="va">example_graph</span>,</span>
 <span>  sim_n <span class="op">=</span> <span class="fl">1e5</span>,</span>
-<span>  marginal_power <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">.9</span>, <span class="fl">.9</span>, <span class="fl">.8</span>, <span class="fl">.8</span><span class="op">)</span></span>
+<span>  power_marginal <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">.9</span>, <span class="fl">.9</span>, <span class="fl">.8</span>, <span class="fl">.8</span><span class="op">)</span></span>
 <span><span class="op">)</span></span></code></pre></div>
 <p>All valid test types &amp; hypothesis groupings are valid for power simulations as well. Power simulations are discussed further in both the [shortcut testing vignette] and the [closure testing vignette].</p>
 </div>
@@ -190,13 +188,27 @@
 </h2>
 <p>These methods were originally implemented in the <a href="https://github.com/kornl/gMCP" class="external-link">gMCP package</a>, which is still available on CRAN today. There is also a lighter version of gMCP implemented in <a href="https://github.com/allenzhuaz/gMCPmini" class="external-link">gMCPmini</a> and its successor, <a href="https://github.com/Merck/gMCPLite" class="external-link">gMCPLite</a>. These two contain only a subset of the original functionality, but they remove the rJava dependency and add plotting functionality based on ggplot2.</p>
 <p>However, because development has ceased on the original package, we hope to re-implement the methods with a more general testing framework; with fewer dependencies, in particular shedding the Java dependency; with simpler, more transparent S3 classes; and with improvements to the accuracy of the parametric and Simes test methods.</p>
-<p>A portion of Simes testing is also implemented in the lrstat package (<code>install.packages("lrstat")</code>).</p>
+<p>A portion of Simes testing is also implemented in the lrstat package.</p>
 </div>
 <div class="section level2">
 <h2 id="citation">Citation<a class="anchor" aria-label="anchor" href="#citation"></a>
 </h2>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/citation.html" class="external-link">citation</a></span><span class="op">(</span><span class="st">"graphicalMCP"</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/citation.html" class="external-link">citation</a></span><span class="op">(</span><span class="st">"graphicalMCP"</span><span class="op">)</span></span>
+<span><span class="co">#&gt; To cite graphicalMCP in publications use:</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt;   Xi, D.; Brockmann, E. (2023). graphicalMCP: Graph-based multiple</span></span>
+<span><span class="co">#&gt;   comparison procedures. version 0.1.0. Gilead Sciences, Inc. Foster</span></span>
+<span><span class="co">#&gt;   City, California. https://github.com/Gilead-BioStats/graphicalMCP</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt;   Frank Bretz, Martin Posch, Ekkehard Glimm, Florian Klinglmueller,</span></span>
+<span><span class="co">#&gt;   Willi Maurer, Kornelius Rohmeyer (2011), Graphical approaches for</span></span>
+<span><span class="co">#&gt;   multiple comparison procedures using weighted Bonferroni, Simes or</span></span>
+<span><span class="co">#&gt;   parametric tests. Biometrical Journal 53 (6), pages 894--913, Wiley.</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; To see these entries in BibTeX format, use 'print(&lt;citation&gt;,</span></span>
+<span><span class="co">#&gt; bibtex=TRUE)', 'toBibtex(.)', or set</span></span>
+<span><span class="co">#&gt; 'options(citation.bibtex.max=999)'.</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="acknowledgments">Acknowledgments<a class="anchor" aria-label="anchor" href="#acknowledgments"></a>

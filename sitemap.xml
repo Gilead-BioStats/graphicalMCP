@@ -10,10 +10,10 @@
     <loc>https://urban-sniffle-p11zlpj.pages.github.io/LICENSE.html</loc>
   </url>
   <url>
-    <loc>https://urban-sniffle-p11zlpj.pages.github.io/articles/graph-examples.html</loc>
+    <loc>https://urban-sniffle-p11zlpj.pages.github.io/articles/generate-closure.html</loc>
   </url>
   <url>
-    <loc>https://urban-sniffle-p11zlpj.pages.github.io/articles/graphicalMCP.html</loc>
+    <loc>https://urban-sniffle-p11zlpj.pages.github.io/articles/graph-examples.html</loc>
   </url>
   <url>
     <loc>https://urban-sniffle-p11zlpj.pages.github.io/articles/index.html</loc>
@@ -62,6 +62,9 @@
   </url>
   <url>
     <loc>https://urban-sniffle-p11zlpj.pages.github.io/reference/plot.initial_graph.html</loc>
+  </url>
+  <url>
+    <loc>https://urban-sniffle-p11zlpj.pages.github.io/reference/plot.updated_graph.html</loc>
   </url>
   <url>
     <loc>https://urban-sniffle-p11zlpj.pages.github.io/reference/print.graph_report.html</loc>
