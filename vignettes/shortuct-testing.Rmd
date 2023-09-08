@@ -67,7 +67,7 @@ hyp_names <- c("H1", "H2", "H3", "H4")
 
 g <- graph_create(hypotheses, transitions, hyp_names)
 
-plot(g, layout = "grid", vertex.size = 40)
+plot(g, layout = "grid", vertex.size = 20)
 ```
 
 ## Perform the graphical multiple comparison procedure
@@ -77,32 +77,51 @@ procedure can be performed to control the familywise error rate (FWER) at the
 significance level `alpha`. The `graph_test_shortcut` function is agnostic to 
 one-sided or two-sided tests. For one-sided p-values, `alpha` is often set to 
 0.025 (default); for two-sided p-values, `alpha` is often set to 0.05. We consider 
-one-sided tests here. After running the procedure, hypotheses $H_1$, $H_2$, and 
-$H_4$ are rejected.
+one-sided tests here. A hypothesis is rejected if its adjusted p-value is less than 
+or equal to `alpha`. After running the procedure, hypotheses $H_1$, $H_2$, and 
+$H_4$ are rejected with their adjusted p-value calculated. 
 
 ```{r graph-test}
 p_values <- c(.013, .012, .105, .005)
 test_results <- graph_test_shortcut(g, p = p_values, alpha = 0.025)
-test_results
+test_results$outputs # Adjusted p-values and rejections
 ```
 
 ### Obtain final and intermediate graphs after rejections
 
-From the above results, we can obtain the adjusted p-values and the rejections. 
-A hypothesis is rejected if its adjusted p-value is less than or equal to `alpha`. 
 In addition, two graphs are provided: one is the initial graph and one is the 
 final graph after removing rejected hypotheses $H_1$, $H_2$, and $H_4$. If we are 
 also interested in intermediate graphs - for example, the graph after $H_1$ and 
-$H_2$ are rejected - we can specify `verbose = TRUE` and obtain it via `test_results_verbose$details$results[[3]]`. # I am not sure if they can be retrieved easily
+$H_2$ are rejected - we can specify `verbose = TRUE`. Note that intermediate graphs 
+depends on the order of rejections, i.e., the sequence of hypotheses being rejected. 
+The default order is defined by the increasing adjusted p-values and the earlier  
+hypothesis numbering in the case of ties in adjusted p-values. Among all rejected 
+hypotheses, the one with the smallest adjusted p-value is the first to be rejected 
+and the one with the largest adjusted p-value is the last to be rejected.
 
-### I am not sure if intermediate graphs can be retrieved easily
+In this example, the default order of rejection is $H_2\rightarrow H_1\rightarrow H_4$. 
+To obtain intermediate graphs based on this order of rejection, one can specify 
+`test_results_verbose$details$results`. For example, the graph after $H_1$ and 
+$H_2$ being rejected is given by `test_results_verbose$details$results[[3]]`.
 
 ```{r graph-test-verbose}
-test_results$outputs # Adjusted p-values and rejections
-
 test_results_verbose <-
   graph_test_shortcut(g, p = p_values, alpha = 0.025, verbose = TRUE)
-test_results_verbose$details$results[[3]] # To be discussed
+test_results_verbose$details$results[[3]] # Intermediate graph after H1 and H2 rejected
+```
+
+The order of rejections may not be unique and not all orders are valid. For this 
+example, the rejected hypotheses are $H_1$, $H_2$ and $H_4$. The default order of 
+rejections is $H_2 \rightarrow H_1 \rightarrow H_4$. Another valid order of rejections 
+is $H_2 \rightarrow H_4 \rightarrow H_1$. However, the first rejected hypothesis can 
+not be $H_1$ or $H_4$. To obtain all possible rejection orders, one can use the function 
+`graph_rejection_orderings`. Initial, intermediate and final graphs can be obtained 
+by using the function `graph_update` with a particular order of rejections.
+
+```{r graph-test-order}
+orders <- graph_rejection_orderings(test_results)$valid_orderings # Obtain all valid orders of rejections
+orders
+graph_update(g, delete = orders[[2]]) # Graphs following the order of H2, H4, and H1
 ```
 
 The order of these intermediate graphs is determined by deleting the hypothesis with the lowest adjusted p-values at each step (Or the smaller hypothesis sequentially in the case of adjusted p-value ties). In some cases, this order is not the only valid order of deletion. In this example, the minimum adjusted p-value method results in deleting in the order $H_2 \rightarrow H_1 \rightarrow H_4$. But $H_2 \rightarrow H_4 \rightarrow H_1$ is also a valid deletion order. Deletion order can be customized using [`custom_order_function_once_it_is_written()`].
@@ -111,8 +130,9 @@ The order of these intermediate graphs is determined by deleting the hypothesis 
 
 An equivalent way to obtain rejections is by adjusting significance levels. A 
 hypothesis is rejected if its p-value is less than or equal to its adjusted 
-significance level. The adjusted significance levels are calculated in the same order as adjusted p-values: $H_2 \rightarrow H_1 \rightarrow H_4$,
-and there are four steps of checking for rejections. First, $H_2$ is rejected at an adjusted 
+significance level. The adjusted significance levels are calculated in the same 
+order as adjusted p-values: $H_2 \rightarrow H_1 \rightarrow H_4$, and there are 
+four steps of checking for rejections. First, $H_2$ is rejected at an adjusted 
 significance level of `0.5 * alpha`. Second, $H_1$ is rejected at an adjusted 
 significance level of `0.75 * alpha`, after $H_2$ is rejected. Third, $H_4$ is 
 rejected at an adjusted significance level of `0.5 * alpha`, after $H_1$ and $H_2$ are 
@@ -125,8 +145,6 @@ test_results_test_values <-
   graph_test_shortcut(g, p = p_values, alpha = 0.025, test_values = TRUE)
 test_results_test_values$test_values$results
 ```
-
-### Something about other rejection orders? 
 
 ## Power calculation
 
