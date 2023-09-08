@@ -142,7 +142,7 @@ the following graph.</p>
 <span></span>
 <span><span class="va">g</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/graph_create.html">graph_create</a></span><span class="op">(</span><span class="va">hypotheses</span>, <span class="va">transitions</span>, <span class="va">hyp_names</span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">g</span>, layout <span class="op">=</span> <span class="st">"grid"</span>, vertex.size <span class="op">=</span> <span class="fl">40</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">g</span>, layout <span class="op">=</span> <span class="st">"grid"</span>, vertex.size <span class="op">=</span> <span class="fl">20</span><span class="op">)</span></span></code></pre></div>
 <p><img src="shortuct-testing_files/figure-html/create-graph-1.png" width="480"></p>
 </div>
 <div class="section level2">
@@ -155,77 +155,14 @@ significance level <code>alpha</code>. The
 <code>graph_test_shortcut</code> function is agnostic to one-sided or
 two-sided tests. For one-sided p-values, <code>alpha</code> is often set
 to 0.025 (default); for two-sided p-values, <code>alpha</code> is often
-set to 0.05. We consider one-sided tests here. After running the
-procedure, hypotheses <span class="math inline">\(H_1\)</span>, <span class="math inline">\(H_2\)</span>, and <span class="math inline">\(H_4\)</span> are rejected.</p>
+set to 0.05. We consider one-sided tests here. A hypothesis is rejected
+if its adjusted p-value is less than or equal to <code>alpha</code>.
+After running the procedure, hypotheses <span class="math inline">\(H_1\)</span>, <span class="math inline">\(H_2\)</span>, and <span class="math inline">\(H_4\)</span> are rejected with their adjusted
+p-value calculated.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">p_values</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">.013</span>, <span class="fl">.012</span>, <span class="fl">.105</span>, <span class="fl">.005</span><span class="op">)</span></span>
 <span><span class="va">test_results</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/testing.html">graph_test_shortcut</a></span><span class="op">(</span><span class="va">g</span>, p <span class="op">=</span> <span class="va">p_values</span>, alpha <span class="op">=</span> <span class="fl">0.025</span><span class="op">)</span></span>
-<span><span class="va">test_results</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Test parameters ($inputs) ------------------------------------------------------</span></span>
-<span><span class="co">#&gt;   Initial graph</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;   --- Hypothesis weights ---</span></span>
-<span><span class="co">#&gt;   H1: 0.5</span></span>
-<span><span class="co">#&gt;   H2: 0.5</span></span>
-<span><span class="co">#&gt;   H3: 0.0</span></span>
-<span><span class="co">#&gt;   H4: 0.0</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;   --- Transition weights ---</span></span>
-<span><span class="co">#&gt;       H1  H2  H3  H4</span></span>
-<span><span class="co">#&gt;   H1 0.0 0.5 0.5 0.0</span></span>
-<span><span class="co">#&gt;   H2 0.5 0.0 0.0 0.5</span></span>
-<span><span class="co">#&gt;   H3 0.0 1.0 0.0 0.0</span></span>
-<span><span class="co">#&gt;   H4 1.0 0.0 0.0 0.0</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;   Alpha = 0.025</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;                           H1    H2    H3    H4</span></span>
-<span><span class="co">#&gt;   Unadjusted p-values: 0.013 0.012 0.105 0.005</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;   Test types</span></span>
-<span><span class="co">#&gt;   bonferroni: (H1, H2, H3, H4)</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Test summary ($outputs) --------------------------------------------------------</span></span>
-<span><span class="co">#&gt;   Hypothesis Adj. P-value Reject</span></span>
-<span><span class="co">#&gt;           H1        0.024   TRUE</span></span>
-<span><span class="co">#&gt;           H2        0.024   TRUE</span></span>
-<span><span class="co">#&gt;           H3        0.105  FALSE</span></span>
-<span><span class="co">#&gt;           H4        0.024   TRUE</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;   Final updated graph after removing rejected hypotheses</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;   --- Hypothesis weights ---</span></span>
-<span><span class="co">#&gt;   H1: NA</span></span>
-<span><span class="co">#&gt;   H2: NA</span></span>
-<span><span class="co">#&gt;   H3:  1</span></span>
-<span><span class="co">#&gt;   H4: NA</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;   --- Transition weights ---</span></span>
-<span><span class="co">#&gt;      H1 H2 H3 H4</span></span>
-<span><span class="co">#&gt;   H1 NA NA NA NA</span></span>
-<span><span class="co">#&gt;   H2 NA NA NA NA</span></span>
-<span><span class="co">#&gt;   H3 NA NA  0 NA</span></span>
-<span><span class="co">#&gt;   H4 NA NA NA NA</span></span></code></pre></div>
-<div class="section level3">
-<h3 id="obtain-final-and-intermediate-graphs-after-rejections">Obtain final and intermediate graphs after rejections<a class="anchor" aria-label="anchor" href="#obtain-final-and-intermediate-graphs-after-rejections"></a>
-</h3>
-<p>From the above results, we can obtain the adjusted p-values and the
-rejections. A hypothesis is rejected if its adjusted p-value is less
-than or equal to <code>alpha</code>. In addition, two graphs are
-provided: one is the initial graph and one is the final graph after
-removing rejected hypotheses <span class="math inline">\(H_1\)</span>,
-<span class="math inline">\(H_2\)</span>, and <span class="math inline">\(H_4\)</span>. If we are also interested in
-intermediate graphs - for example, the graph after <span class="math inline">\(H_1\)</span> and <span class="math inline">\(H_2\)</span> are rejected - we can specify
-<code>verbose = TRUE</code> and obtain it via
-<code>test_results_verbose$details$results[[3]]</code>. # I am not sure
-if they can be retrieved easily</p>
-</div>
-<div class="section level3">
-<h3 id="i-am-not-sure-if-intermediate-graphs-can-be-retrieved-easily">I am not sure if intermediate graphs can be retrieved easily<a class="anchor" aria-label="anchor" href="#i-am-not-sure-if-intermediate-graphs-can-be-retrieved-easily"></a>
-</h3>
-<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">test_results</span><span class="op">$</span><span class="va">outputs</span> <span class="co"># Adjusted p-values and rejections</span></span>
+<span><span class="va">test_results</span><span class="op">$</span><span class="va">outputs</span> <span class="co"># Adjusted p-values and rejections</span></span>
 <span><span class="co">#&gt; $adjusted_p</span></span>
 <span><span class="co">#&gt;    H1    H2    H3    H4 </span></span>
 <span><span class="co">#&gt; 0.024 0.024 0.105 0.024 </span></span>
@@ -248,11 +185,30 @@ if they can be retrieved easily</p>
 <span><span class="co">#&gt;  H1  0  0  0  0</span></span>
 <span><span class="co">#&gt;  H2  0  0  0  0</span></span>
 <span><span class="co">#&gt;  H3  0  0  0  0</span></span>
-<span><span class="co">#&gt;  H4  0  0  0  0</span></span>
-<span></span>
-<span><span class="va">test_results_verbose</span> <span class="op">&lt;-</span></span>
+<span><span class="co">#&gt;  H4  0  0  0  0</span></span></code></pre></div>
+<div class="section level3">
+<h3 id="obtain-final-and-intermediate-graphs-after-rejections">Obtain final and intermediate graphs after rejections<a class="anchor" aria-label="anchor" href="#obtain-final-and-intermediate-graphs-after-rejections"></a>
+</h3>
+<p>In addition, two graphs are provided: one is the initial graph and
+one is the final graph after removing rejected hypotheses <span class="math inline">\(H_1\)</span>, <span class="math inline">\(H_2\)</span>, and <span class="math inline">\(H_4\)</span>. If we are also interested in
+intermediate graphs - for example, the graph after <span class="math inline">\(H_1\)</span> and <span class="math inline">\(H_2\)</span> are rejected - we can specify
+<code>verbose = TRUE</code>. Note that intermediate graphs depends on
+the order of rejections, i.e., the sequence of hypotheses being
+rejected. The default order is defined by the increasing adjusted
+p-values and the earlier<br>
+hypothesis numbering in the case of ties in adjusted p-values. Among all
+rejected hypotheses, the one with the smallest adjusted p-value is the
+first to be rejected and the one with the largest adjusted p-value is
+the last to be rejected.</p>
+<p>In this example, the default order of rejection is <span class="math inline">\(H_2\rightarrow H_1\rightarrow H_4\)</span>. To
+obtain intermediate graphs based on this order of rejection, one can
+specify <code>test_results_verbose$details$results</code>. For example,
+the graph after <span class="math inline">\(H_1\)</span> and <span class="math inline">\(H_2\)</span> being rejected is given by
+<code>test_results_verbose$details$results[[3]]</code>.</p>
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">test_results_verbose</span> <span class="op">&lt;-</span></span>
 <span>  <span class="fu"><a href="../reference/testing.html">graph_test_shortcut</a></span><span class="op">(</span><span class="va">g</span>, p <span class="op">=</span> <span class="va">p_values</span>, alpha <span class="op">=</span> <span class="fl">0.025</span>, verbose <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
-<span><span class="va">test_results_verbose</span><span class="op">$</span><span class="va">details</span><span class="op">$</span><span class="va">results</span><span class="op">[[</span><span class="fl">3</span><span class="op">]</span><span class="op">]</span> <span class="co"># To be discussed</span></span>
+<span><span class="va">test_results_verbose</span><span class="op">$</span><span class="va">details</span><span class="op">$</span><span class="va">results</span><span class="op">[[</span><span class="fl">3</span><span class="op">]</span><span class="op">]</span> <span class="co"># Intermediate graph after H1 and H2 rejected</span></span>
 <span><span class="co">#&gt; Initial graph</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; --- Hypothesis weights ---</span></span>
@@ -267,6 +223,132 @@ if they can be retrieved easily</p>
 <span><span class="co">#&gt;  H2  0  0  0  0</span></span>
 <span><span class="co">#&gt;  H3  0  0  0  1</span></span>
 <span><span class="co">#&gt;  H4  0  0  1  0</span></span></code></pre></div>
+<p>The order of rejections may not be unique and not all orders are
+valid. For this example, the rejected hypotheses are <span class="math inline">\(H_1\)</span>, <span class="math inline">\(H_2\)</span> and <span class="math inline">\(H_4\)</span>. The default order of rejections is
+<span class="math inline">\(H_2 \rightarrow H_1 \rightarrow
+H_4\)</span>. Another valid order of rejections is <span class="math inline">\(H_2 \rightarrow H_4 \rightarrow H_1\)</span>.
+However, the first rejected hypothesis can not be <span class="math inline">\(H_1\)</span> or <span class="math inline">\(H_4\)</span>. To obtain all possible rejection
+orders, one can use the function <code>graph_rejection_orderings</code>.
+Initial, intermediate and final graphs can be obtained by using the
+function <code>graph_update</code> with a particular order of
+rejections.</p>
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">orders</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/graph_rejection_orderings.html">graph_rejection_orderings</a></span><span class="op">(</span><span class="va">test_results</span><span class="op">)</span><span class="op">$</span><span class="va">valid_orderings</span> <span class="co"># Obtain all valid orders of rejections</span></span>
+<span><span class="va">orders</span></span>
+<span><span class="co">#&gt; [[1]]</span></span>
+<span><span class="co">#&gt; H2 H4 H1 </span></span>
+<span><span class="co">#&gt;  2  4  1 </span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; [[2]]</span></span>
+<span><span class="co">#&gt; H2 H1 H4 </span></span>
+<span><span class="co">#&gt;  2  1  4</span></span>
+<span><span class="fu"><a href="../reference/graph_update.html">graph_update</a></span><span class="op">(</span><span class="va">g</span>, delete <span class="op">=</span> <span class="va">orders</span><span class="op">[[</span><span class="fl">2</span><span class="op">]</span><span class="op">]</span><span class="op">)</span> <span class="co"># Graphs following the order of H2, H4, and H1</span></span>
+<span><span class="co">#&gt; Initial graph</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; --- Hypothesis weights ---</span></span>
+<span><span class="co">#&gt; H1: 0.5</span></span>
+<span><span class="co">#&gt; H2: 0.5</span></span>
+<span><span class="co">#&gt; H3: 0.0</span></span>
+<span><span class="co">#&gt; H4: 0.0</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; --- Transition weights ---</span></span>
+<span><span class="co">#&gt;      H1  H2  H3  H4</span></span>
+<span><span class="co">#&gt;  H1 0.0 0.5 0.5 0.0</span></span>
+<span><span class="co">#&gt;  H2 0.5 0.0 0.0 0.5</span></span>
+<span><span class="co">#&gt;  H3 0.0 1.0 0.0 0.0</span></span>
+<span><span class="co">#&gt;  H4 1.0 0.0 0.0 0.0</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; Updated graph after deleting hypotheses 2, 1, 4</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; --- Hypothesis weights ---</span></span>
+<span><span class="co">#&gt; H1: NA</span></span>
+<span><span class="co">#&gt; H2: NA</span></span>
+<span><span class="co">#&gt; H3:  1</span></span>
+<span><span class="co">#&gt; H4: NA</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; --- Transition weights ---</span></span>
+<span><span class="co">#&gt;     H1 H2 H3 H4</span></span>
+<span><span class="co">#&gt;  H1 NA NA NA NA</span></span>
+<span><span class="co">#&gt;  H2 NA NA NA NA</span></span>
+<span><span class="co">#&gt;  H3 NA NA  0 NA</span></span>
+<span><span class="co">#&gt;  H4 NA NA NA NA</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; Deletion sequence ($intermediate_graphs) ---------------------------------------</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt;   Initial graph</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt;   --- Hypothesis weights ---</span></span>
+<span><span class="co">#&gt;   H1: 0.5</span></span>
+<span><span class="co">#&gt;   H2: 0.5</span></span>
+<span><span class="co">#&gt;   H3: 0.0</span></span>
+<span><span class="co">#&gt;   H4: 0.0</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt;   --- Transition weights ---</span></span>
+<span><span class="co">#&gt;       H1  H2  H3  H4</span></span>
+<span><span class="co">#&gt;   H1 0.0 0.5 0.5 0.0</span></span>
+<span><span class="co">#&gt;   H2 0.5 0.0 0.0 0.5</span></span>
+<span><span class="co">#&gt;   H3 0.0 1.0 0.0 0.0</span></span>
+<span><span class="co">#&gt;   H4 1.0 0.0 0.0 0.0</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt;     Step 1: Updated graph after removing hypothesis 2</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt;     --- Hypothesis weights ---</span></span>
+<span><span class="co">#&gt;     H1: 0.75</span></span>
+<span><span class="co">#&gt;     H2:   NA</span></span>
+<span><span class="co">#&gt;     H3: 0.00</span></span>
+<span><span class="co">#&gt;     H4: 0.25</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt;     --- Transition weights ---</span></span>
+<span><span class="co">#&gt;              H1       H2       H3       H4</span></span>
+<span><span class="co">#&gt;     H1 0.000000       NA 0.666667 0.333333</span></span>
+<span><span class="co">#&gt;     H2       NA       NA       NA       NA</span></span>
+<span><span class="co">#&gt;     H3 0.500000       NA 0.000000 0.500000</span></span>
+<span><span class="co">#&gt;     H4 1.000000       NA 0.000000 0.000000</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt;       Step 2: Updated graph after removing hypotheses 2, 1</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt;       --- Hypothesis weights ---</span></span>
+<span><span class="co">#&gt;       H1:  NA</span></span>
+<span><span class="co">#&gt;       H2:  NA</span></span>
+<span><span class="co">#&gt;       H3: 0.5</span></span>
+<span><span class="co">#&gt;       H4: 0.5</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt;       --- Transition weights ---</span></span>
+<span><span class="co">#&gt;          H1 H2 H3 H4</span></span>
+<span><span class="co">#&gt;       H1 NA NA NA NA</span></span>
+<span><span class="co">#&gt;       H2 NA NA NA NA</span></span>
+<span><span class="co">#&gt;       H3 NA NA  0  1</span></span>
+<span><span class="co">#&gt;       H4 NA NA  1  0</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt;         Step 3: Updated graph after removing hypotheses 2, 1, 4</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt;         --- Hypothesis weights ---</span></span>
+<span><span class="co">#&gt;         H1: NA</span></span>
+<span><span class="co">#&gt;         H2: NA</span></span>
+<span><span class="co">#&gt;         H3:  1</span></span>
+<span><span class="co">#&gt;         H4: NA</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt;         --- Transition weights ---</span></span>
+<span><span class="co">#&gt;            H1 H2 H3 H4</span></span>
+<span><span class="co">#&gt;         H1 NA NA NA NA</span></span>
+<span><span class="co">#&gt;         H2 NA NA NA NA</span></span>
+<span><span class="co">#&gt;         H3 NA NA  0 NA</span></span>
+<span><span class="co">#&gt;         H4 NA NA NA NA</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt;   Final updated graph after removing deleted hypotheses</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt;   --- Hypothesis weights ---</span></span>
+<span><span class="co">#&gt;   H1: NA</span></span>
+<span><span class="co">#&gt;   H2: NA</span></span>
+<span><span class="co">#&gt;   H3:  1</span></span>
+<span><span class="co">#&gt;   H4: NA</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt;   --- Transition weights ---</span></span>
+<span><span class="co">#&gt;      H1 H2 H3 H4</span></span>
+<span><span class="co">#&gt;   H1 NA NA NA NA</span></span>
+<span><span class="co">#&gt;   H2 NA NA NA NA</span></span>
+<span><span class="co">#&gt;   H3 NA NA  0 NA</span></span>
+<span><span class="co">#&gt;   H4 NA NA NA NA</span></span></code></pre></div>
 <p>The order of these intermediate graphs is determined by deleting the
 hypothesis with the lowest adjusted p-values at each step (Or the
 smaller hypothesis sequentially in the case of adjusted p-value ties).
@@ -292,7 +374,7 @@ significance level of <code>0.5 * alpha</code>, after <span class="math inline">
 <span class="math inline">\(H_3\)</span> cannot be rejected at an
 adjusted significance level of <code>alpha</code>, after <span class="math inline">\(H_1\)</span>, <span class="math inline">\(H_2\)</span> and <span class="math inline">\(H_4\)</span> are rejected. These results can be
 obtained by specifying <code>test_values = TRUE</code>.</p>
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">test_results_test_values</span> <span class="op">&lt;-</span></span>
 <span>  <span class="fu"><a href="../reference/testing.html">graph_test_shortcut</a></span><span class="op">(</span><span class="va">g</span>, p <span class="op">=</span> <span class="va">p_values</span>, alpha <span class="op">=</span> <span class="fl">0.025</span>, test_values <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
 <span><span class="va">test_results_test_values</span><span class="op">$</span><span class="va">test_values</span><span class="op">$</span><span class="va">results</span></span>
@@ -301,10 +383,6 @@ obtained by specifying <code>test_values = TRUE</code>.</p>
 <span><span class="co">#&gt; H1    2         H1 0.013 &lt;=   0.75 * 0.025             TRUE</span></span>
 <span><span class="co">#&gt; H4    3         H4 0.005 &lt;=   0.50 * 0.025             TRUE</span></span>
 <span><span class="co">#&gt; H3    4         H3 0.105 &lt;=   1.00 * 0.025            FALSE</span></span></code></pre></div>
-</div>
-<div class="section level3">
-<h3 id="something-about-other-rejection-orders">Something about other rejection orders?<a class="anchor" aria-label="anchor" href="#something-about-other-rejection-orders"></a>
-</h3>
 </div>
 </div>
 <div class="section level2">
@@ -343,7 +421,7 @@ the same as <code>alpha</code>, which is used in the power calculation
 as the significance level for the FWER control. In addition, the
 marginal power has a one-to-one relationship with the noncentrality
 parameter, which is illustrated below.</p>
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">alpha</span> <span class="op">&lt;-</span> <span class="fl">0.025</span></span>
 <span><span class="va">prop</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.3</span>, <span class="fl">0.181</span>, <span class="fl">0.181</span><span class="op">)</span></span>
 <span><span class="va">sample_size</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="fl">200</span>, <span class="fl">3</span><span class="op">)</span></span>
@@ -377,7 +455,7 @@ standard deviation of 10. Given the sample size of 200 per treatment
 group, the marginal power is 71% and 90% for <span class="math inline">\(H_3\)</span> and <span class="math inline">\(H_4\)</span>, respectively, using the two-sample
 <span class="math inline">\(z\)</span>-test for the difference in means
 each at the one-sided significance level 0.025.</p>
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">mean_change</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">5</span>, <span class="fl">7.5</span>, <span class="fl">8.25</span><span class="op">)</span></span>
 <span><span class="va">sd</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="fl">10</span>, <span class="fl">3</span><span class="op">)</span></span>
 <span><span class="va">variance</span> <span class="op">&lt;-</span> <span class="va">sd</span><span class="op">[</span><span class="op">-</span><span class="fl">1</span><span class="op">]</span><span class="op">^</span><span class="fl">2</span> <span class="op">/</span> <span class="va">sample_size</span><span class="op">[</span><span class="op">-</span><span class="fl">1</span><span class="op">]</span> <span class="op">+</span> <span class="va">sd</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span><span class="op">^</span><span class="fl">2</span> <span class="op">/</span> <span class="va">sample_size</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span></span>
@@ -423,7 +501,7 @@ correlation is a product of correlations of the two previously assumed
 correlations. For example, <span class="math inline">\(\rho_{14}=\rho_{12}*\rho_{24}\)</span> and <span class="math inline">\(\rho_{23}=\rho_{12}*\rho_{13}\)</span>. In
 practice, one may make further assumptions instead of using the product
 rule.</p>
-<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">corr</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">matrix</a></span><span class="op">(</span><span class="fl">0</span>, nrow <span class="op">=</span> <span class="fl">4</span>, ncol <span class="op">=</span> <span class="fl">4</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">corr</span><span class="op">[</span><span class="fl">1</span>, <span class="fl">2</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="va">corr</span><span class="op">[</span><span class="fl">3</span>, <span class="fl">4</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/MathFun.html" class="external-link">sqrt</a></span><span class="op">(</span><span class="va">sample_size</span><span class="op">[</span><span class="fl">2</span><span class="op">]</span> <span class="op">/</span> <span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="va">sample_size</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">2</span><span class="op">]</span><span class="op">)</span> <span class="op">*</span></span>
@@ -460,7 +538,7 @@ hypothesis</li>
 <p>These are the default outputs from the
 <code>graph_calculate_power</code> function. In addition, a user can
 customize success criteria to define other versions of “power”.</p>
-<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Probability to reject H1</span></span>
 <span><span class="va">H1</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="va">x</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span></span>
 <span></span>
@@ -507,7 +585,7 @@ the last two user-defined success criteria, the probability to reject
 both <span class="math inline">\(H_1\)</span> and <span class="math inline">\(H_2\)</span> is 0.667, and the probability to
 reject at least one pair of <span class="math inline">\((H_1\)</span>
 and <span class="math inline">\(H_3)\)</span> and <span class="math inline">\((H_2\)</span> and <span class="math inline">\(H_4)\)</span> is 0.747.</p>
-<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">output</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/graph_calculate_power.html">graph_calculate_power</a></span><span class="op">(</span><span class="va">g</span>,</span>
 <span>  alpha <span class="op">=</span> <span class="fl">.025</span>,</span>
 <span>  sim_corr <span class="op">=</span> <span class="va">corr</span>,</span>
@@ -575,7 +653,7 @@ user can change the following:</p>
 digits) with the default setting of <code>precision = 4</code>
 </li>
 </ul>
-<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">verbose_output</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/graph_calculate_power.html">graph_calculate_power</a></span><span class="op">(</span><span class="va">g</span>,</span>
 <span>  alpha <span class="op">=</span> <span class="fl">.025</span>,</span>
 <span>  sim_corr <span class="op">=</span> <span class="va">corr</span>,</span>
