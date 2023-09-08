@@ -42,7 +42,13 @@ graph_rejection_orderings <- function(shortcut_test_result) {
   list_possible_orderings <- apply(
     expand.grid(rep(list(rejected), length(rejected))),
     1,
-    function(row) if (length(unique(row)) == length(row)) unname(row) else NULL
+    function(row) {
+      if (length(unique(row)) == length(row)){
+        setNames(row, hyp_names[row])
+      } else {
+        NULL
+      }
+    }
   )
   list_possible_orderings <- Filter(Negate(is.null), list_possible_orderings)
 
@@ -67,23 +73,10 @@ graph_rejection_orderings <- function(shortcut_test_result) {
     }
   }
 
-  list_orderings_code <- lapply(
-    list_possible_orderings[orderings_valid],
-    function(ordering) {
-      paste0("c(", paste(ordering, collapse = ", "), ")")
-    }
-  )
-
-  valid_orderings <- do.call(rbind, list_orderings_code)
-  dimnames(valid_orderings) <- list(
-    seq_len(length(list_orderings_code)),
-    "Valid rejection orderings"
-  )
-
   structure(
     c(
       shortcut_test_result,
-      list(valid_orderings = valid_orderings)
+      list(valid_orderings = list_possible_orderings[orderings_valid])
     ),
     class = "graph_report"
   )
