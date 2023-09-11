@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <meta name="description" content="graphicalMCP">
-<title>Commonly-used graph examples • graphicalMCP</title>
+<title>Common procedures • graphicalMCP</title>
 <!-- favicons --><link rel="icon" type="image/png" sizes="16x16" href="../favicon-16x16.png">
 <link rel="icon" type="image/png" sizes="32x32" href="../favicon-32x32.png">
 <link rel="apple-touch-icon" type="image/png" sizes="180x180" href="../apple-touch-icon.png">
@@ -17,7 +17,7 @@
 <link href="../deps/bootstrap-5.2.2/bootstrap.min.css" rel="stylesheet">
 <script src="../deps/bootstrap-5.2.2/bootstrap.bundle.min.js"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous">
-<!-- bootstrap-toc --><script src="https://cdn.jsdelivr.net/gh/afeld/bootstrap-toc@v1.0.1/dist/bootstrap-toc.min.js" integrity="sha256-4veVQbu7//Lk5TSmc7YV48MxtMy98e26cf5MrgZYnwo=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><!-- search --><script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/6.4.6/fuse.js" integrity="sha512-zv6Ywkjyktsohkbp9bb45V6tEMoWhzFzXis+LrMehmJZZSys19Yxf1dopHx7WzIKxr5tK2dVcYmaCk2uqdjF4A==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/autocomplete.js/0.38.0/autocomplete.jquery.min.js" integrity="sha512-GU9ayf+66Xx2TmpxqJpliWbT5PiGYxpaG8rfnBEk1LL8l1KGkRShhngwdXK1UgqhAzWpZHSiYPc09/NwDQIGyg==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/mark.min.js" integrity="sha512-5CYOlHXGh6QpOFA/TeTylKLWfB3ftPsde7AnmhuitiTX4K5SqCLBeKro6sPS8ilsz1Q4NRx3v8Ko2IBiszzdww==" crossorigin="anonymous"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="Commonly-used graph examples">
+<!-- bootstrap-toc --><script src="https://cdn.jsdelivr.net/gh/afeld/bootstrap-toc@v1.0.1/dist/bootstrap-toc.min.js" integrity="sha256-4veVQbu7//Lk5TSmc7YV48MxtMy98e26cf5MrgZYnwo=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><!-- search --><script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/6.4.6/fuse.js" integrity="sha512-zv6Ywkjyktsohkbp9bb45V6tEMoWhzFzXis+LrMehmJZZSys19Yxf1dopHx7WzIKxr5tK2dVcYmaCk2uqdjF4A==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/autocomplete.js/0.38.0/autocomplete.jquery.min.js" integrity="sha512-GU9ayf+66Xx2TmpxqJpliWbT5PiGYxpaG8rfnBEk1LL8l1KGkRShhngwdXK1UgqhAzWpZHSiYPc09/NwDQIGyg==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/mark.min.js" integrity="sha512-5CYOlHXGh6QpOFA/TeTylKLWfB3ftPsde7AnmhuitiTX4K5SqCLBeKro6sPS8ilsz1Q4NRx3v8Ko2IBiszzdww==" crossorigin="anonymous"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="Common procedures">
 <meta property="og:description" content="graphicalMCP">
 <meta property="og:image" content="https://urban-sniffle-p11zlpj.pages.github.io/logo.png">
 <!-- mathjax --><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js" integrity="sha256-nvJJv9wWKEm88qvoQl9ekL2J+k/RWIsaSScxxlsrv8k=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/config/TeX-AMS-MML_HTMLorMML.js" integrity="sha256-84DKXVJXs0/F8OTMzX4UR909+jtl4G7SPypPavF+GfA=" crossorigin="anonymous"></script><!--[if lt IE 9]>
@@ -49,7 +49,7 @@
   <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" id="dropdown-articles">Articles</a>
   <div class="dropdown-menu" aria-labelledby="dropdown-articles">
     <a class="dropdown-item" href="../articles/generate-closure.html">Generating the closure of a graph</a>
-    <a class="dropdown-item" href="../articles/graph-examples.html">Commonly-used graph examples</a>
+    <a class="dropdown-item" href="../articles/graph-examples.html">Common procedures</a>
     <a class="dropdown-item" href="../articles/shortuct-testing.html">Sequentially rejective graphical approaches based on Bonferroni tests</a>
   </div>
 </li>
@@ -77,7 +77,7 @@
 
 <div class="row">
   <main id="main" class="col-md-9"><div class="page-header">
-      <img src="../logo.png" class="logo" alt=""><h1>Commonly-used graph examples</h1>
+      <img src="../logo.png" class="logo" alt=""><h1>Common procedures</h1>
             
       
       <small class="dont-index">Source: <a href="https://github.com/Gilead-BioStats/graphicalMCP/blob/HEAD/vignettes/graph-examples.Rmd" class="external-link"><code>vignettes/graph-examples.Rmd</code></a></small>
@@ -91,31 +91,57 @@
 <div class="section level2">
 <h2 id="introduction">Introduction<a class="anchor" aria-label="anchor" href="#introduction"></a>
 </h2>
-<div class="section level3">
-<h3 id="multiple-comparison-procedures">Multiple comparison procedures<a class="anchor" aria-label="anchor" href="#multiple-comparison-procedures"></a>
-</h3>
-<p>In confirmatory clinical trials with multiple endpoints,</p>
-<p>Any valid graph can be made with <code><a href="../reference/graph_create.html">graph_create()</a></code>, but
-some patterns have been established over time. We demonstrate how to run
-some of these patterns with graphicalMCP.</p>
-</div>
+<p>In confirmatory clinical trials with multiple endpoints, regulations
+mandate the strong control of the family-wise error rate to reduce the
+risk of false positives. Multiple comparison procedures (MCPs) are used
+to spread the total significance out over multiple hypotheses. In this
+article we’ll demonstrate how to go from a few standard procedures to
+more advanced procedures using the graphical approach.</p>
 </div>
 <div class="section level2">
-<h2 id="bonferroni-holm">Bonferroni-Holm<a class="anchor" aria-label="anchor" href="#bonferroni-holm"></a>
+<h2 id="simple-procedures">Simple procedures<a class="anchor" aria-label="anchor" href="#simple-procedures"></a>
 </h2>
+<div class="section level3">
+<h3 id="bonferroni">Bonferroni<a class="anchor" aria-label="anchor" href="#bonferroni"></a>
+</h3>
+<p>Probably the most common MCP is the Bonferroni correction. It simply
+divides the alpha level evenly between all hypotheses. No significance
+adjustment is made if a hypothesis is rejected. The Bonferroni
+correction can be performed easily without a graphical approach, but
+here is a graphical example of it.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">transitions</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">matrix</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">5</span>, <span class="fl">5</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">bonferroni_graph</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/graph_create.html">graph_create</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="fl">1</span> <span class="op">/</span> <span class="fl">5</span>, <span class="fl">5</span><span class="op">)</span>, <span class="va">transitions</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">bonferroni_graph</span>, layout <span class="op">=</span> <span class="fu">igraph</span><span class="fu">::</span><span class="va"><a href="https://r.igraph.org/reference/layout_in_circle.html" class="external-link">layout_in_circle</a></span>, vertex.size <span class="op">=</span> <span class="fl">30</span><span class="op">)</span></span></code></pre></div>
+<p><img src="graph-examples_files/figure-html/bonferroni-1.png" width="480" style="display: block; margin: auto;"></p>
+</div>
+<div class="section level3">
+<h3 id="holm">Holm<a class="anchor" aria-label="anchor" href="#holm"></a>
+</h3>
+<p>The Holm procedure starts with identical weights to Bonferroni, but
+weights are updated uniformly when a hypothesis is rejected. Because of
+this updating, it is always at least as powerful as the Bonferroni
+procedure.</p>
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">transitions</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">matrix</a></span><span class="op">(</span><span class="fl">1</span> <span class="op">/</span> <span class="fl">4</span>, <span class="fl">5</span>, <span class="fl">5</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/diag.html" class="external-link">diag</a></span><span class="op">(</span><span class="va">transitions</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fl">0</span></span>
 <span></span>
-<span><span class="va">bonferroni_holm_graph</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/graph_create.html">graph_create</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="fl">1</span> <span class="op">/</span> <span class="fl">5</span>, <span class="fl">5</span><span class="op">)</span>, <span class="va">transitions</span><span class="op">)</span></span>
+<span><span class="va">holm_graph</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/graph_create.html">graph_create</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="fl">1</span> <span class="op">/</span> <span class="fl">5</span>, <span class="fl">5</span><span class="op">)</span>, <span class="va">transitions</span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">bonferroni_holm_graph</span><span class="op">)</span></span></code></pre></div>
-<p><img src="graph-examples_files/figure-html/bonferroni-holm-1.png" width="576" style="display: block; margin: auto;"></p>
+<span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">holm_graph</span>, layout <span class="op">=</span> <span class="fu">igraph</span><span class="fu">::</span><span class="va"><a href="https://r.igraph.org/reference/layout_in_circle.html" class="external-link">layout_in_circle</a></span>, vertex.size <span class="op">=</span> <span class="fl">30</span><span class="op">)</span></span></code></pre></div>
+<p><img src="graph-examples_files/figure-html/bonferroni-holm-1.png" width="480" style="display: block; margin: auto;"></p>
 </div>
-<div class="section level2">
-<h2 id="fixed-sequence">Fixed sequence<a class="anchor" aria-label="anchor" href="#fixed-sequence"></a>
-</h2>
-<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<div class="section level3">
+<h3 id="fixed-sequence">Fixed sequence<a class="anchor" aria-label="anchor" href="#fixed-sequence"></a>
+</h3>
+<p>Another common procedure because of its simplicity is the fixed
+sequence procedure. It places more emphasis on rejecting hypotheses when
+most hypotheses are expected to have p-values only slightly below alpha,
+where the reduced weights of the Holm procedure would cause most or all
+hypotheses to not be rejected from the start.</p>
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">fixed_sequence_graph</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/graph_create.html">graph_create</a></span><span class="op">(</span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">0</span>, <span class="fl">0</span>, <span class="fl">0</span><span class="op">)</span>,</span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/base/cbind.html" class="external-link">rbind</a></span><span class="op">(</span></span>
@@ -126,13 +152,31 @@ some of these patterns with graphicalMCP.</p>
 <span>  <span class="op">)</span></span>
 <span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">fixed_sequence_graph</span>, layout <span class="op">=</span> <span class="st">"grid"</span>, nrow <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">fixed_sequence_graph</span>, nrow <span class="op">=</span> <span class="fl">1</span>, asp <span class="op">=</span> <span class="fl">.1</span><span class="op">)</span></span></code></pre></div>
 <p><img src="graph-examples_files/figure-html/fixed-sequence-1.png" width="576" style="display: block; margin: auto;"></p>
+<!-- This paragraph needs work -->
+<p>These procedures are popular because they control the FWER while
+being simple, allowing them to be easily understood and communicated
+about. However, they’re not always the procedures which fit the study
+best, and using more complex procedures can make communication
+difficult. The graphical approach can enable more powerful procedures to
+be used while enabling clinical teams to understand and communicate the
+procedures.</p>
+</div>
 </div>
 <div class="section level2">
-<h2 id="simple-successive">Simple successive<a class="anchor" aria-label="anchor" href="#simple-successive"></a>
+<h2 id="complex-procedures">Complex procedures<a class="anchor" aria-label="anchor" href="#complex-procedures"></a>
 </h2>
-<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<div class="section level3">
+<h3 id="simple-successive">Simple successive<a class="anchor" aria-label="anchor" href="#simple-successive"></a>
+</h3>
+<p>The simple successive procedure was introduced by [names] in their
+[year] paper, [<em>title</em>]. It is designed for experiments involving
+four hypotheses: Two pairs of hypotheses, each containing a primary and
+a related secondary hypothesis. Initial weight is split equally between
+pairs and is passed from one pair to the other only when both hypotheses
+in a pair are rejected.</p>
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">simple_successive_graph</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/graph_create.html">graph_create</a></span><span class="op">(</span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">.5</span>, <span class="fl">.5</span>, <span class="fl">0</span>, <span class="fl">0</span><span class="op">)</span>,</span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/base/cbind.html" class="external-link">rbind</a></span><span class="op">(</span></span>
@@ -143,13 +187,13 @@ some of these patterns with graphicalMCP.</p>
 <span>  <span class="op">)</span></span>
 <span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">simple_successive_graph</span>, layout <span class="op">=</span> <span class="st">"grid"</span>, nrow <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">simple_successive_graph</span>, layout <span class="op">=</span> <span class="st">"grid"</span>, nrow <span class="op">=</span> <span class="fl">2</span>, vertex.size <span class="op">=</span> <span class="fl">30</span><span class="op">)</span></span></code></pre></div>
 <p><img src="graph-examples_files/figure-html/simple-successive-1.png" width="480" style="display: block; margin: auto;"></p>
 <p>General successive graphs are a good example where multiple
 variations may be useful with slight differences in starting edge
 weights. Variable edge weights are not currently supported, but they can
 be done for a particular graph with a light wrapper.</p>
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">simple_successive_var</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">gamma</span><span class="op">)</span> <span class="op">{</span></span>
 <span>  <span class="fu"><a href="../reference/graph_create.html">graph_create</a></span><span class="op">(</span></span>
 <span>    <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">.5</span>, <span class="fl">.5</span>, <span class="fl">0</span>, <span class="fl">0</span><span class="op">)</span>,</span>
@@ -161,29 +205,35 @@ be done for a particular graph with a light wrapper.</p>
 <span>    <span class="op">)</span></span>
 <span>  <span class="op">)</span></span>
 <span><span class="op">}</span></span></code></pre></div>
-<p>Then multiple variations can be created and compared easily.</p>
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<p>Then multiple variations can be created and compared easily. A
+similar approach could be used for deviating from the equal split of
+hypothesis weights as well.</p>
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span></span>
 <span>  <span class="fu">simple_successive_var</span><span class="op">(</span><span class="fl">.75</span><span class="op">)</span>,</span>
 <span>  layout <span class="op">=</span> <span class="st">"grid"</span>,</span>
 <span>  nrow <span class="op">=</span> <span class="fl">2</span>,</span>
-<span>  vertex.label.cex <span class="op">=</span> <span class="fl">.7</span>,</span>
-<span>  edge.label.cex <span class="op">=</span> <span class="fl">.7</span></span>
+<span>  vertex.label.cex <span class="op">=</span> <span class="fl">1.4</span>,</span>
+<span>  edge.label.cex <span class="op">=</span> <span class="fl">1.4</span>,</span>
+<span>  vertex.size <span class="op">=</span> <span class="fl">30</span></span>
 <span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span></span>
 <span>  <span class="fu">simple_successive_var</span><span class="op">(</span><span class="fl">.9</span><span class="op">)</span>,</span>
 <span>  layout <span class="op">=</span> <span class="st">"grid"</span>,</span>
 <span>  nrow <span class="op">=</span> <span class="fl">2</span>,</span>
-<span>  vertex.label.cex <span class="op">=</span> <span class="fl">.7</span>,</span>
-<span>  edge.label.cex <span class="op">=</span> <span class="fl">.7</span></span>
+<span>  vertex.label.cex <span class="op">=</span> <span class="fl">1.4</span>,</span>
+<span>  edge.label.cex <span class="op">=</span> <span class="fl">1.4</span>,</span>
+<span>  vertex.size <span class="op">=</span> <span class="fl">30</span></span>
 <span><span class="op">)</span></span></code></pre></div>
 <p><img src="graph-examples_files/figure-html/simple-successive-var-1.png" width="47%"><img src="graph-examples_files/figure-html/simple-successive-var-2.png" width="47%"></p>
 </div>
-<div class="section level2">
-<h2 id="huque-alosh-bhore-2011">Huque-Alosh-Bhore (2011)<a class="anchor" aria-label="anchor" href="#huque-alosh-bhore-2011"></a>
-</h2>
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<div class="section level3">
+<h3 id="huque-alosh-bhore-2011">Huque-Alosh-Bhore (2011)<a class="anchor" aria-label="anchor" href="#huque-alosh-bhore-2011"></a>
+</h3>
+<p>In 2011, Huque, Alosh, and Bhore proposed another size 4 procedure.
+What’s this one particularly meant for?</p>
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">hab_2011_graph</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/graph_create.html">graph_create</a></span><span class="op">(</span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">0</span>, <span class="fl">0</span>, <span class="fl">0</span><span class="op">)</span>,</span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/base/cbind.html" class="external-link">rbind</a></span><span class="op">(</span></span>
@@ -194,13 +244,13 @@ be done for a particular graph with a light wrapper.</p>
 <span>  <span class="op">)</span></span>
 <span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">hab_2011_graph</span>, layout <span class="op">=</span> <span class="st">"grid"</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">hab_2011_graph</span>, layout <span class="op">=</span> <span class="st">"grid"</span>, vertex.size <span class="op">=</span> <span class="fl">30</span><span class="op">)</span></span></code></pre></div>
 <p><img src="graph-examples_files/figure-html/huque-alosh-bhore-1.png" width="480" style="display: block; margin: auto;"></p>
 </div>
-<div class="section level2">
-<h2 id="wiens-dmitrienko-2005">Wiens-Dmitrienko (2005)<a class="anchor" aria-label="anchor" href="#wiens-dmitrienko-2005"></a>
-</h2>
-<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<div class="section level3">
+<h3 id="wiens-dmitrienko-2005">Wiens-Dmitrienko (2005)<a class="anchor" aria-label="anchor" href="#wiens-dmitrienko-2005"></a>
+</h3>
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">wd_2005_graph</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/graph_create.html">graph_create</a></span><span class="op">(</span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span> <span class="op">/</span> <span class="fl">3</span>, <span class="fl">1</span> <span class="op">/</span> <span class="fl">3</span>, <span class="fl">1</span> <span class="op">/</span> <span class="fl">3</span><span class="op">)</span>,</span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/base/cbind.html" class="external-link">rbind</a></span><span class="op">(</span></span>
@@ -214,14 +264,18 @@ be done for a particular graph with a light wrapper.</p>
 <span>  <span class="va">wd_2005_graph</span>,</span>
 <span>  layout <span class="op">=</span> <span class="st">"grid"</span>,</span>
 <span>  nrow <span class="op">=</span> <span class="fl">1</span>,</span>
-<span>  edge_curves <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>pairs <span class="op">=</span> <span class="op">-</span><span class="fl">6</span>, <span class="st">"H3|H1"</span> <span class="op">=</span> <span class="op">-</span><span class="fl">6</span><span class="op">)</span></span>
+<span>  edge_curves <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>pairs <span class="op">=</span> <span class="op">-</span><span class="fl">4</span>, <span class="st">"H3|H1"</span> <span class="op">=</span> <span class="op">-</span><span class="fl">4</span><span class="op">)</span>,</span>
+<span>  vertex.size <span class="op">=</span> <span class="fl">30</span>,</span>
+<span>  asp <span class="op">=</span> <span class="fl">.1</span></span>
 <span><span class="op">)</span></span></code></pre></div>
 <p><img src="graph-examples_files/figure-html/wiens-dmitrienko-1.png" width="576" style="display: block; margin: auto;"></p>
 </div>
-<div class="section level2">
-<h2 id="parallel-gate-keeping">Parallel gate-keeping<a class="anchor" aria-label="anchor" href="#parallel-gate-keeping"></a>
-</h2>
-<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<div class="section level3">
+<h3 id="parallel-gate-keeping">Parallel gate-keeping<a class="anchor" aria-label="anchor" href="#parallel-gate-keeping"></a>
+</h3>
+<p>In [year], [names] introduced the parallel gate-keeping procedure. It
+is useful when…?</p>
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">par_gate_graph</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/graph_create.html">graph_create</a></span><span class="op">(</span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">.5</span>, <span class="fl">.5</span>, <span class="fl">0</span>, <span class="fl">0</span><span class="op">)</span>,</span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/base/cbind.html" class="external-link">rbind</a></span><span class="op">(</span></span>
@@ -233,13 +287,26 @@ be done for a particular graph with a light wrapper.</p>
 <span><span class="op">)</span></span>
 <span></span>
 <span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">par_gate_graph</span>, layout <span class="op">=</span> <span class="st">"grid"</span>, nrow <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">par_gate_graph</span>, layout <span class="op">=</span> <span class="st">"grid"</span>, nrow <span class="op">=</span> <span class="fl">2</span>, vertex.size <span class="op">=</span> <span class="fl">30</span><span class="op">)</span></span></code></pre></div>
 <p><img src="graph-examples_files/figure-html/parallel-gatekeeping-1.png" width="480" style="display: block; margin: auto;"></p>
 </div>
-<div class="section level2">
-<h2 id="improved-parallel-gate-keeping">Improved parallel gate-keeping<a class="anchor" aria-label="anchor" href="#improved-parallel-gate-keeping"></a>
-</h2>
-<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<div class="section level3">
+<h3 id="improved-parallel-gate-keeping">Improved parallel gate-keeping<a class="anchor" aria-label="anchor" href="#improved-parallel-gate-keeping"></a>
+</h3>
+<p>One shortcoming of the parallel gate-keeping approach is in the case
+where e.g. H2, H3, and H4 are found to be significant. Once these three
+have been deleted, H1 is left with only 0.5 weight. This makes the graph
+sub-optimal.</p>
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="fu"><a href="../reference/graph_update.html">graph_update</a></span><span class="op">(</span><span class="va">par_gate_graph</span>, <span class="fl">2</span><span class="op">:</span><span class="fl">4</span><span class="op">)</span>, vertex.size <span class="op">=</span> <span class="fl">30</span><span class="op">)</span></span></code></pre></div>
+<p><img src="graph-examples_files/figure-html/parallel-gatekeeping-update-1.png" width="480" style="display: block; margin: auto;"></p>
+<p>The graph can be made optimal by adding epsilon edges going back up
+from the secondary to the primary hypotheses. Epsilon edges have some
+infinitesimal weight which creates a connection between hypotheses that
+effectively only propagates weight when it’s the only edge left exiting
+a hypothesis. This yields the improved parallel gate-keeping
+procedure.</p>
+<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">imp_par_gate_graph</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/graph_create.html">graph_create</a></span><span class="op">(</span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">.5</span>, <span class="fl">.5</span>, <span class="fl">0</span>, <span class="fl">0</span><span class="op">)</span>,</span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/base/cbind.html" class="external-link">rbind</a></span><span class="op">(</span></span>
@@ -250,9 +317,49 @@ be done for a particular graph with a light wrapper.</p>
 <span>  <span class="op">)</span></span>
 <span><span class="op">)</span></span>
 <span></span>
-<span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">imp_par_gate_graph</span>, layout <span class="op">=</span> <span class="st">"grid"</span>, nrow <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span></span>
+<span>  <span class="va">imp_par_gate_graph</span>,</span>
+<span>  layout <span class="op">=</span> <span class="st">"grid"</span>,</span>
+<span>  nrow <span class="op">=</span> <span class="fl">2</span>,</span>
+<span>  eps <span class="op">=</span> <span class="fl">.001</span>,</span>
+<span>  vertex.size <span class="op">=</span> <span class="fl">30</span></span>
+<span><span class="op">)</span></span></code></pre></div>
 <p><img src="graph-examples_files/figure-html/improved-parallel-gatekeeping-1.png" width="480" style="display: block; margin: auto;"></p>
+<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span></span>
+<span>  <span class="fu"><a href="../reference/graph_update.html">graph_update</a></span><span class="op">(</span><span class="va">imp_par_gate_graph</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">2</span><span class="op">)</span><span class="op">)</span>,</span>
+<span>  vertex.size <span class="op">=</span> <span class="fl">60</span>,</span>
+<span>  vertex.label.cex <span class="op">=</span> <span class="fl">2.5</span>,</span>
+<span>  edge.label.cex <span class="op">=</span> <span class="fl">2.5</span>,</span>
+<span>  eps <span class="op">=</span> <span class="fl">1e-3</span></span>
+<span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span></span>
+<span>  <span class="fu"><a href="../reference/graph_update.html">graph_update</a></span><span class="op">(</span><span class="va">imp_par_gate_graph</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">2</span>, <span class="fl">4</span><span class="op">)</span><span class="op">)</span>,</span>
+<span>  vertex.size <span class="op">=</span> <span class="fl">60</span>,</span>
+<span>  vertex.label.cex <span class="op">=</span> <span class="fl">2.5</span>,</span>
+<span>  edge.label.cex <span class="op">=</span> <span class="fl">2.5</span></span>
+<span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span></span>
+<span>  <span class="fu"><a href="../reference/graph_update.html">graph_update</a></span><span class="op">(</span><span class="va">imp_par_gate_graph</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">2</span>, <span class="fl">4</span>, <span class="fl">3</span><span class="op">)</span><span class="op">)</span>,</span>
+<span>  vertex.size <span class="op">=</span> <span class="fl">60</span>,</span>
+<span>  vertex.label.cex <span class="op">=</span> <span class="fl">2.5</span>,</span>
+<span>  edge.label.cex <span class="op">=</span> <span class="fl">2.5</span></span>
+<span><span class="op">)</span></span></code></pre></div>
+<p><img src="graph-examples_files/figure-html/improved-parallel-gatekeeping-update-1.png" width="30%"><img src="graph-examples_files/figure-html/improved-parallel-gatekeeping-update-2.png" width="30%"><img src="graph-examples_files/figure-html/improved-parallel-gatekeeping-update-3.png" width="30%"></p>
+</div>
+</div>
+<div class="section level2">
+<h2 id="conclusion">Conclusion<a class="anchor" aria-label="anchor" href="#conclusion"></a>
+</h2>
+<p>These examples are just a few of the unlimited possibilities enabled
+by the graphical approach to MCPs. Graphs can be customized based on
+priorities in trial design, marginal power of the endpoints, and other
+assumptions, such as expected or known correlation between endpoints.
+The graphical approach allows these complex procedures to maximize the
+chances of having a successful trial while enabling better communication
+and insight about the procedures.</p>
 </div>
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
     </nav></aside>
