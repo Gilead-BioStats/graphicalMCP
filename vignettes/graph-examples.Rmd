@@ -21,6 +21,10 @@ library(graphicalMCP)
 
 # Introduction
 
+## Multiple comparison procedures
+
+In confirmatory clinical trials with multiple endpoints, 
+
 Any valid graph can be made with `graph_create()`, but some patterns have been established over time. We demonstrate how to run some of these patterns with graphicalMCP.
 
 # Bonferroni-Holm

@@ -29,7 +29,7 @@ library(gt)
 
 ## What is the closure?
 
-The closure of a graph is the set of all sub-graphs, along with their weights calculated according to algorithm 1 of Bretz et al (2011). It is primarily used for [closed testing](link to closed test vignette), where all sub-graphs are tested for significance, and results are aggregated to determine which null hypotheses are significant globally.
+The closure of a graph is the set of all sub-graphs, along with their weights calculated according to algorithm 1 of Bretz et al (2011). It is primarily used for [closed testing](link%20to%20closed%20test%20vignette), where all sub-graphs are tested for significance, and results are aggregated to determine which null hypotheses are significant globally.
 
 Throughout this article a common example will be used for demonstrations - the simple successive graph. It has two primary hypotheses, $H_1$ and $H_2$, which have the initial weight evenly split between them. The secondary hypotheses, $H_3$ and $H_4$, only have weight propagated to them if $H_1$ or $H_2$ is deleted, respectively.
 
@@ -149,7 +149,7 @@ data.frame(Intersection = seq_len(nrow(weighting_strategy))) |>
   )
 ```
 
-#### Binary counting
+#### Binary counting {#binary-counting}
 
 The second useful property is somewhat a re-framing of the first, or perhaps could be viewed as a reason why the first is true. Starting with the bottom row, the powerset in this particular order counts up from 1 in binary, incrementing by 1 per row. This means that a row number can be directly calculated from a vector showing which hypotheses are currently deleted from the graph: `row_number == number_of_rows - incl_excl_vec_converted_to_base_10 + 1`. For example, intersection number 6 has hypothesis vector `1010`. When interpreted as binary, this is `1 * 8 + 0 * 4 + 1 * 2 + 0 * 1 = 10` in base 10, and `6 == 15 - 10 + 1`.
 
@@ -174,9 +174,9 @@ data.frame(Intersection = seq_len(nrow(weighting_strategy))) |>
 
 Because the size of the closure grows quickly as graph size increases (An n-graph has `2^n - 1` sub-graphs), calculating the full closure for large graphs can be computationally intensive. Optimizing this process led to three main strategies:
 
-- The simplest approach, which uses the full graph as the starting point for every sub-graph, then deletes the appropriate hypotheses
-- A recursive method, which traverses the closure tree, deleting one hypothesis each time to step between graphs
-- A formulaic shortcut using the order of graphs generated with the recursive method
+-   The simplest approach, which uses the full graph as the starting point for every sub-graph, then deletes the appropriate hypotheses
+-   A recursive method, which traverses the closure tree, deleting one hypothesis each time to step between graphs
+-   A formulaic shortcut using the order of graphs generated with the recursive method
 
 Note that the discussion of these methods focuses primarily on the weights side rather than the powerset side of the closure. This is because the fastest methods discovered generate the powerset implicitly from missing values in the weights side. For methods such as the simple approach, which rely on having the powerset in order to generate weights, the powerset can be created efficiently. Here `num_hyps` refers to the number of hypotheses in the initial graph.
 
@@ -351,11 +351,11 @@ The formula shortcut also results in simpler code than the recursive solution.
 
 The formula method reduces each step of generating the closure to a single deletion from a prior graph, with almost no additional overhead. Here's how the different methods fare, including the version from the gMCP package for reference. Also worthy of note is the lrstat package, which contains a few MCP-related functions, including generating weights of the closure. It uses excellent C++ code to perform even faster, but since the speed of the current formula-based method is acceptable, adding an Rcpp dependency was not considered to be worth the additional time savings.
 
-```{r gw-benchmarks, echo=TRUE}
+```{r gw-benchmarks, eval=FALSE}
 vec_num_hyps <- 2:8 * 2
 
 if (file.exists(here::here("vignettes/cache/gw_benchmark_list.rds"))) {
-  benchmark_list <- readRDS(here::here("vignettes/cache/gw_benchmark_list.rds"))
+  benchmarks <- read.csv(here::here("vignettes/cache/gw_benchmarks.csv"))
 } else {
   benchmark_list <- lapply(
     vec_num_hyps,
@@ -387,34 +387,41 @@ if (file.exists(here::here("vignettes/cache/gw_benchmark_list.rds"))) {
         memory = FALSE,
         time_unit = "ms",
         min_iterations = 5
-      )[, c(-6, -10:-13)]
+      )[, 1:5]
 
       # Remove rows for lrstat that weren't actually run
       benchmark <- benchmark[benchmark$median > .002, ]
       benchmark$char_expression <- as.character(benchmark$expression)
+      benchmark <- benchmark[, c("char_expression", "median")]
 
       cbind(data.frame(num_hyps = num_hyps), benchmark)
     }
   )
 
-  saveRDS(benchmark_list, here::here("vignettes/cache/gw_benchmark_list.rds"))
-}
-
-benchmarks <- do.call(rbind, benchmark_list)
-
-benchmarks$char_expression <- ordered(
-  benchmarks$char_expression,
-  c(
-    "gMCP",
-    "graphicalMCP simple",
-    "graphicalMCP recursive",
-    "graphicalMCP shortcut",
-    "lrstat"
+  benchmarks <- do.call(rbind, benchmark_list)
+  
+  benchmarks$char_expression <- ordered(
+    benchmarks$char_expression,
+    c(
+      "gMCP",
+      "graphicalMCP simple",
+      "graphicalMCP recursive",
+      "graphicalMCP shortcut",
+      "lrstat"
+    )
   )
-)
+  
+  write.csv(
+    benchmarks,
+    here::here("vignettes/cache/gw_benchmarks.csv"),
+    row.names = FALSE
+  )
+
+  # saveRDS(benchmark_list, here::here("vignettes/cache/gw_benchmark_list.rds"))
+}
 ```
 
-```{r plot-gw-benchmarks, echo=TRUE, fig.dim=c(8, 5)}
+```{r plot-gw-benchmarks, eval=FALSE, fig.dim=c(8, 5)}
 benchmarks_plot_standard <-
   ggplot(benchmarks, aes(num_hyps, median, color = char_expression)) +
   geom_point() +
@@ -435,6 +442,8 @@ benchmarks_plot_standard +
   labs(subtitle = "Log-10 median runtime")
 ```
 
+![](img/gw-benchmarks-plot.png)
+
 ### Power simulations
 
 While the time savings on the closure are nice, on most graphs the savings will not make a big difference compared to the longer run-times on e.g. power simulations. However, paying attention to the closure is important for other reasons too, such as improving the power algorithm.
@@ -443,30 +452,35 @@ While the time savings on the closure are nice, on most graphs the savings will 
 
 The typical method for running a Bonferroni shortcut procedure on a graph is to:
 
-  1. Search a graph for a single hypothesis which can be rejected
-  1. Delete the rejected hypothesis and update weights
-  1. Repeat until there are no more significant hypotheses
-  
+1.  Search a graph for a single hypothesis which can be rejected
+2.  Delete the rejected hypothesis and update weights
+3.  Repeat until there are no more significant hypotheses
+
 Running this process in either R or a low-level language like C is fast for a single procedure, but when it's run 100,000 times for a power simulation, the R version becomes onerous. However, there's a lot of duplication in a power simulation using this method. In many of the simulations, the same steps will be taken, which means re-calculating the same set of weights many times.
 
 #### Closure shortcut
 
 The [binary counting](#binary-counting) property of the closure admits a shortcut which can be implemented in R to get a scalable competitor to the typical algorithm:
 
-  1. Generate the closure a single time to get all sub-graph weights efficiently
-  1. For each simulation:
-    1. Search a graph for all hypotheses which can be rejected - This is fast with vectorization
-    1. Using the binary counting property, index into the row of the closure corresponding to all hypotheses rejected so far to get updated weights - This is substantially faster than updating a graph and re-calculating weights, especially for larger graphs
-    1. Repeat using the updated weights
-    
+1.  Generate the closure a single time to get all sub-graph weights efficiently
+2.  For each simulation: 1. Search a graph for all hypotheses which can be rejected - This is fast with vectorization 1. Using the binary counting property, index into the row of the closure corresponding to all hypotheses rejected so far to get updated weights - This is substantially faster than updating a graph and re-calculating weights, especially for larger graphs 1. Repeat using the updated weights
+
 While this method is not as fast as gMCP's C implementation, it still runs substantial power simulations in a matter of seconds. The biggest drawback is how it can scale differently for different graph structures. For instance a fixed sequence procedure can take longer than a more balanced graph, like a Holm procedure, because it takes more steps to reject all possible hypotheses.
 
-```{r power-benchmarks, echo=TRUE}
+```{r power-benchmarks, eval=FALSE}
 vec_num_hyps <- 2:8 * 2
 
 if (file.exists(here::here("vignettes/cache/power_benchmark_list.rds"))) {
-  benchmark_list <-
-    readRDS(here::here("vignettes/cache/power_benchmark_list.rds"))
+  benchmarks <- read.csv(here::here("vignettes/cache/power_benchmarks.csv"))
+  
+  benchmarks$char_expression <- ordered(
+    benchmarks$char_expression,
+    c(
+      "graphicalMCP fixed sequence (R)",
+      "graphicalMCP Holm (R)",
+      "gMCP (C)"
+    )
+  )
 } else {
   benchmark_list <- lapply(
     vec_num_hyps,
@@ -497,32 +511,42 @@ if (file.exists(here::here("vignettes/cache/power_benchmark_list.rds"))) {
         memory = FALSE,
         time_unit = "s",
         min_iterations = 5
-      )[, c(-6, -10:-13)]
+      )[, 1:5]
 
       # Remove rows for gMCP closure that weren't actually run
       benchmark <- benchmark[benchmark$median > .00001, ]
       benchmark$char_expression <- as.character(benchmark$expression)
+      benchmark <- benchmark[, c("char_expression", "median")]
 
       cbind(data.frame(num_hyps = num_hyps), benchmark)
     }
   )
-}
 
-saveRDS(benchmark_list, here::here("vignettes/cache/power_benchmark_list.rds"))
-
-benchmarks <- do.call(rbind, benchmark_list)
-
-benchmarks$char_expression <- ordered(
-  benchmarks$char_expression,
-  c(
-    "graphicalMCP fixed sequence (R)",
-    "graphicalMCP Holm (R)",
-    "gMCP (C)"
+  benchmarks <- do.call(rbind, benchmark_list)
+  
+  benchmarks$char_expression <- ordered(
+    benchmarks$char_expression,
+    c(
+      "graphicalMCP fixed sequence (R)",
+      "graphicalMCP Holm (R)",
+      "gMCP (C)"
+    )
   )
-)
+  
+  write.csv(
+    benchmarks,
+    here::here("vignettes/cache/power_benchmarks.csv"),
+    row.names = FALSE
+  )
+
+  # saveRDS(
+  #   benchmark_list,
+  #   here::here("vignettes/cache/power_benchmark_list.rds")
+  # )
+}
 ```
 
-```{r plot-power-benchmarks, echo=TRUE, fig.dim=c(8, 5)}
+```{r plot-power-benchmarks, eval=FALSE, fig.dim=c(8, 5)}
 benchmarks_plot_standard <-
   ggplot(benchmarks, aes(num_hyps, median, color = char_expression)) +
   geom_point() +
@@ -542,3 +566,5 @@ benchmarks_plot_standard +
   scale_y_log10(labels = scales::label_comma(suffix = "s")) +
   labs(subtitle = "Log-10 median runtime")
 ```
+
+![](img/power-benchmarks-plot.png)

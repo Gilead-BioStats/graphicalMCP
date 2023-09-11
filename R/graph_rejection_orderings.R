@@ -44,7 +44,7 @@ graph_rejection_orderings <- function(shortcut_test_result) {
     1,
     function(row) {
       if (length(unique(row)) == length(row)){
-        setNames(row, hyp_names[row])
+        stats::setNames(row, hyp_names[row])
       } else {
         NULL
       }
