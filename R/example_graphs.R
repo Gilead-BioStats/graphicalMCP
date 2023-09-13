@@ -211,3 +211,12 @@ complex_example_2 <- function(hyp_names = NULL) {
 
   graph_create(weights, transitions, hyp_names = hyp_names)
 }
+
+#' @export
+#' @rdname example-graphs
+empty_graph <- function(num_hyps, hyp_names = NULL) {
+  graph_create(
+    rep(0, num_hyps),
+    matrix(0, num_hyps, num_hyps)
+  )
+}

@@ -19,3 +19,4 @@
 ^vignettes/.*\.R$
 ^codemeta\.json$
 ^man-roxygen$
+^app$

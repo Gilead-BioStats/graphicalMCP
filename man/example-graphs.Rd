@@ -11,6 +11,7 @@
 \alias{random_graph}
 \alias{complex_example_1}
 \alias{complex_example_2}
+\alias{empty_graph}
 \title{Example graphs from a selection of papers}
 \usage{
 bonferroni_holm(num_hyps, hyp_names = NULL)
@@ -36,6 +37,8 @@ complex_example_1(hyp_names = NULL)
 complex_example_2(hyp_names = NULL)
 
 complex_example_2(hyp_names = NULL)
+
+empty_graph(num_hyps, hyp_names = NULL)
 }
 \arguments{
 \item{num_hyps}{Number of vertices in the graph}
