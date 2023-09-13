@@ -20,11 +20,10 @@ Description: A multiple comparison procedure (or multiple test procedure)
 License: Apache License (>= 2)
 URL: https://urban-sniffle-p11zlpj.pages.github.io/
 BugReports: https://github.com/Gilead-BioStats/graphicalMCP/issues
-Imports: 
-    igraph,
+Imports:
     matrixStats,
     mvtnorm
-Suggests: 
+Suggests:
     bench,
     dplyr,
     forcats,
@@ -33,6 +32,7 @@ Suggests:
     gt,
     here,
     htmltools,
+    igraph,
     knitr,
     lrstat,
     prompt,
