@@ -1,4 +1,5 @@
 library(shiny)
+library(igraph)
 library(graphicalMCP)
 
 ui <- fluidPage(
@@ -7,7 +8,11 @@ ui <- fluidPage(
   titlePanel("Graphical Multiple Comparison Procedures"),
 
   fluidRow(
-    column(6, plotOutput("graphPlot"))
+    column(6, plotOutput("graphPlot")),
+    column(
+      6,
+      selectInput("layout", "Graph layout", c("grid", "layout_nicely"))
+    )
   ),
 
   hr(),
@@ -130,7 +135,13 @@ server <- function(input, output, session) {
       clean_transitions
     )
 
-    plot(graph)
+    if (input$layout != "grid") {
+      layout <- as.function(input$layout)
+    } else {
+      layout <- input$layout
+    }
+
+    plot(graph, layout = layout)
   })
 }
 
