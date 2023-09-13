@@ -40,11 +40,11 @@ graph_rejection_orderings <- function(shortcut_test_result) {
   rejected <- which(shortcut_test_result$outputs$rejected)
 
   list_possible_orderings <- apply(
-    expand.grid(rep(list(rejected), length(rejected))),
+    rev(expand.grid(rep(list(rejected), length(rejected)))),
     1,
     function(row) {
       if (length(unique(row)) == length(row)){
-        stats::setNames(row, hyp_names[row])
+        structure(row, names = hyp_names[row])
       } else {
         NULL
       }

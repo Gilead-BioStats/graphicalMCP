@@ -2,7 +2,8 @@
 % Please edit documentation in R/plot.initial_graph.R
 \name{plot.initial_graph}
 \alias{plot.initial_graph}
-\title{S3 plot method for the class \code{initial_graph}}
+\title{The plot of an \code{initial_graph} includes the hypotheses and edges between
+them, along with their weights}
 \usage{
 \method{plot}{initial_graph}(
   x,
@@ -58,7 +59,8 @@ passed directly to \code{\link[graphics:par]{graphics::par()}} (\code{mar})}
 NULL, after plotting the graph
 }
 \description{
-S3 plot method for the class \code{initial_graph}
+The plot of an \code{initial_graph} includes the hypotheses and edges between
+them, along with their weights
 }
 \examples{
 plot(simple_successive_2(), layout = "grid")

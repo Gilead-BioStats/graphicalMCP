@@ -1,4 +1,5 @@
-#' S3 plot method for the class `initial_graph`
+#' The plot of an `initial_graph` includes the hypotheses and edges between
+#' them, along with their weights
 #'
 #' @param x An initial graph as returned by [graph_create()]
 #' @param ... Other arguments passed on to [igraph::plot.igraph()]
