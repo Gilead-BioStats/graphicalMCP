@@ -188,7 +188,8 @@
 # printing parametric closure test
 
     Code
-      graph_test_closure(par_gate, rep(0.01, 4), test_types = "p", corr = list(diag(4)))
+      graph_test_closure(par_gate, rep(0.01, 4), test_types = "p", test_corr = list(
+        diag(4)))
     Output
       
       Test parameters ($inputs) ------------------------------------------------------
@@ -247,8 +248,9 @@
 ---
 
     Code
-      graph_test_closure(par_gate, rep(0.01, 4), groups = list(1:2, 3:4), test_types = c(
-        "p", "s"), corr = list(diag(2), NA), test_values = TRUE, verbose = TRUE)
+      graph_test_closure(par_gate, rep(0.01, 4), test_groups = list(1:2, 3:4),
+      test_types = c("p", "s"), test_corr = list(diag(2), NA), test_values = TRUE,
+      verbose = TRUE)
     Output
       
       Test parameters ($inputs) ------------------------------------------------------
@@ -329,15 +331,15 @@
       
       Detailed test values ($test_values) --------------------------------------------
         Intersection Hypothesis       Test    p <= c_value * Weight * Alpha
-                   1         H1 parametric 0.01 <= 1.00633 *    0.5 * 0.025
-                   1         H2 parametric 0.01 <= 1.00633 *    0.5 * 0.025
+                   1         H1 parametric 0.01 <=   1.006 *    0.5 * 0.025
+                   1         H2 parametric 0.01 <=   1.006 *    0.5 * 0.025
                    1         H3      simes 0.01 <=              0.0 * 0.025
                    1         H4      simes 0.01 <=              0.0 * 0.025
-                   2         H1 parametric 0.01 <= 1.00633 *    0.5 * 0.025
-                   2         H2 parametric 0.01 <= 1.00633 *    0.5 * 0.025
+                   2         H1 parametric 0.01 <=   1.006 *    0.5 * 0.025
+                   2         H2 parametric 0.01 <=   1.006 *    0.5 * 0.025
                    2         H3      simes 0.01 <=              0.0 * 0.025
-                   3         H1 parametric 0.01 <= 1.00633 *    0.5 * 0.025
-                   3         H2 parametric 0.01 <= 1.00633 *    0.5 * 0.025
+                   3         H1 parametric 0.01 <=   1.006 *    0.5 * 0.025
+                   3         H2 parametric 0.01 <=   1.006 *    0.5 * 0.025
                    3         H4      simes 0.01 <=              0.0 * 0.025
         Inequality_holds
                     TRUE
@@ -356,8 +358,9 @@
 ---
 
     Code
-      graph_test_closure(par_gate, rep(0.01, 4), groups = list(1:2, 3:4), test_types = c(
-        "p", "p"), corr = list(diag(2), diag(2)), test_values = TRUE, verbose = TRUE)
+      graph_test_closure(par_gate, rep(0.01, 4), test_groups = list(1:2, 3:4),
+      test_types = c("p", "p"), test_corr = list(diag(2), diag(2)), test_values = TRUE,
+      verbose = TRUE)
     Output
       
       Test parameters ($inputs) ------------------------------------------------------
@@ -440,16 +443,16 @@
       
       Detailed test values ($test_values) --------------------------------------------
         Intersection Hypothesis       Test    p <= c_value * Weight * Alpha
-                   1         H1 parametric 0.01 <= 1.00633 *    0.5 * 0.025
-                   1         H2 parametric 0.01 <= 1.00633 *    0.5 * 0.025
-                   1         H3 parametric 0.01 <= 1.00000 *    0.0 * 0.025
-                   1         H4 parametric 0.01 <= 1.00000 *    0.0 * 0.025
-                   2         H1 parametric 0.01 <= 1.00633 *    0.5 * 0.025
-                   2         H2 parametric 0.01 <= 1.00633 *    0.5 * 0.025
-                   2         H3 parametric 0.01 <= 1.00000 *    0.0 * 0.025
-                   3         H1 parametric 0.01 <= 1.00633 *    0.5 * 0.025
-                   3         H2 parametric 0.01 <= 1.00633 *    0.5 * 0.025
-                   3         H4 parametric 0.01 <= 1.00000 *    0.0 * 0.025
+                   1         H1 parametric 0.01 <=   1.006 *    0.5 * 0.025
+                   1         H2 parametric 0.01 <=   1.006 *    0.5 * 0.025
+                   1         H3 parametric 0.01 <=   1.000 *    0.0 * 0.025
+                   1         H4 parametric 0.01 <=   1.000 *    0.0 * 0.025
+                   2         H1 parametric 0.01 <=   1.006 *    0.5 * 0.025
+                   2         H2 parametric 0.01 <=   1.006 *    0.5 * 0.025
+                   2         H3 parametric 0.01 <=   1.000 *    0.0 * 0.025
+                   3         H1 parametric 0.01 <=   1.006 *    0.5 * 0.025
+                   3         H2 parametric 0.01 <=   1.006 *    0.5 * 0.025
+                   3         H4 parametric 0.01 <=   1.000 *    0.0 * 0.025
         Inequality_holds
                     TRUE
                     TRUE
@@ -856,12 +859,12 @@
             Step 2: Updated graph after removing hypotheses H4, H6
       
             --- Hypothesis weights ---
-            H1: 0.500025
-            H2: 0.000000
-            H3: 0.000000
-            H4:       NA
-            H5: 0.499975
-            H6:       NA
+            H1: 0.5
+            H2: 0.0
+            H3: 0.0
+            H4:  NA
+            H5: 0.5
+            H6:  NA
       
             --- Transition weights ---
                         H1          H2          H3          H4          H5
@@ -937,12 +940,12 @@
         H6 NA NA NA NA NA NA
       
       Detailed test values ($test_values) --------------------------------------------
-        Step Hypothesis     p <=   Weight * Alpha Inequality_holds
-           1         H4 0.010 <= 0.500000 * 0.025             TRUE
-           2         H6 0.000 <= 0.250000 * 0.025             TRUE
-           3         H5 0.005 <= 0.499975 * 0.025             TRUE
-           4         H1 0.025 <= 1.000000 * 0.025             TRUE
-           5         H3 0.015 <= 0.500000 * 0.025            FALSE
-           5         H2 0.020 <= 0.500000 * 0.025            FALSE
+        Step Hypothesis     p <= Weight * Alpha Inequality_holds
+           1         H4 0.010 <=   0.50 * 0.025             TRUE
+           2         H6 0.000 <=   0.25 * 0.025             TRUE
+           3         H5 0.005 <=   0.50 * 0.025             TRUE
+           4         H1 0.025 <=   1.00 * 0.025             TRUE
+           5         H3 0.015 <=   0.50 * 0.025            FALSE
+           5         H2 0.020 <=   0.50 * 0.025            FALSE
       
 

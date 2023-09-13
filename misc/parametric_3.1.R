@@ -27,8 +27,8 @@ alpha <- .05
 gMCP(G, p)
 graph_test_closure(g, alpha = .05, p_values = p)
 
-gMCP(G, p, corr=Cm2, test="parametric")
-graph_test_closure(g, alpha = .05, p_values = p, corr = Cm2,
+gMCP(G, p, test_corr=Cm2, test="parametric")
+graph_test_closure(g, alpha = .05, p_values = p, test_corr = Cm2,
            tests = list(parametric = list(1:4)))
 
 # cJ exploration

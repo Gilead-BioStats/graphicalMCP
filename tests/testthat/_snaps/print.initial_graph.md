@@ -17,7 +17,7 @@
 ---
 
     Code
-      graph_update(graph_create(1, matrix(0, nrow = 1)), FALSE)$updated_graph
+      graph_update(graph_create(1, matrix(0, nrow = 1)), TRUE)$updated_graph
     Output
       Initial graph
       

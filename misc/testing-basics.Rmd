@@ -68,9 +68,9 @@ If a correlation matrix for the test statistics is partially or fully known, a p
 graph_test_closure(par_gate,
   p = pvals,
   alpha = .05,
-  groups = list(1, 2, 3:4),
+  test_groups = list(1, 2, 3:4),
   test_types = c("b", "b", "p"),
-  corr = list(NA, NA, rbind(c(1, .5), c(.5, 1)))
+  test_corr = list(NA, NA, rbind(c(1, .5), c(.5, 1)))
 )
 ```
 
@@ -81,7 +81,7 @@ graph_test_closure(
   par_gate,
   p = pvals,
   alpha = .05,
-  corr = list(diag(4)),
+  test_corr = list(diag(4)),
   test_types = "p"
 )
 ```
@@ -93,8 +93,8 @@ graph_test_closure(
   par_gate,
   p = pvals,
   alpha = .05,
-  corr = rep(list(matrix(1, 1, 1)), 4), # Correlation matrix doesn't matter when each group is size 1
-  groups = list(1, 2, 3, 4),
+  test_corr = rep(list(matrix(1, 1, 1)), 4), # Correlation matrix doesn't matter when each group is size 1
+  test_groups = list(1, 2, 3, 4),
   test_types = rep("p", 4)
 )
 ```
@@ -106,8 +106,8 @@ graph_test_closure(
   par_gate,
   p = pvals,
   alpha = .05,
-  corr = list(NA, rbind(c(1, .5), c(.5, 1))),
-  groups = list(1:2, 3:4),
+  test_corr = list(NA, rbind(c(1, .5), c(.5, 1))),
+  test_groups = list(1:2, 3:4),
   test_types = c("s", "p")
 )
 ```
@@ -119,8 +119,8 @@ graph_test_closure(
   par_gate,
   p = pvals,
   alpha = .05,
-  corr = list(NA, rbind(c(1, .5), c(.5, 1))),
-  groups = list(1:2, 3:4),
+  test_corr = list(NA, rbind(c(1, .5), c(.5, 1))),
+  test_groups = list(1:2, 3:4),
   test_types = c("s", "p"),
   verbose = TRUE
 )
@@ -133,8 +133,8 @@ graph_test_closure(
   par_gate,
   p = pvals,
   alpha = .05,
-  corr = list(NA, rbind(c(1, .5), c(.5, 1))),
-  groups = list(1:2, 3:4),
+  test_corr = list(NA, rbind(c(1, .5), c(.5, 1))),
+  test_groups = list(1:2, 3:4),
   test_types = c("s", "p"),
   verbose = TRUE,
   test_values = TRUE
@@ -171,7 +171,7 @@ set.seed(5823)
 m <- params$m
 
 graph2 <- random_graph(m)
-graph <- as_gmcp_graph(graph2)
+graph <- as_graphMCP(graph2)
 
 # generate weights
 gw <- graph_generate_weights(graph2)
@@ -257,7 +257,7 @@ power_bench <- bench::mark(
   `graphicalMCP` =
     graph_calculate_power(graph2, sim_n = sims),
   `gMCP` =
-    calcPower(graph = graph, alpha = .05, n.sim = sims, corr.sim = diag(m)),
+    calcPower(graph = graph, alpha = .05, n.sim = sims, test_corr.sim = diag(m)),
   min_iterations = 3,
   filter_gc = FALSE,
   check = FALSE
@@ -291,8 +291,8 @@ power_bench <- bench::mark(
   #     graph = graph,
   #     alpha = .05,
   #     n.sim = 1,
-  #     corr.sim = diag(m),
-  #     corr.test = diag(m)
+  #     test_corr.sim = diag(m),
+  #     test_corr.test = diag(m)
   #   ),
   `graphicalMCP (vec/matrixStats)` =
     graph_calculate_power(
@@ -388,8 +388,8 @@ mix_test <- graph_test_closure(
   graph2,
   p = p,
   alpha = .05,
-  corr = list(NA, NA, diag(2)),
-  groups = list(1, 2:3, 4:5),
+  test_corr = list(NA, NA, diag(2)),
+  test_groups = list(1, 2:3, 4:5),
   test_types = c("b", "s", "p"),
   verbose = TRUE,
   test_values = TRUE

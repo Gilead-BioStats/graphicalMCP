@@ -9,5 +9,5 @@ names <- c("H1", "H2", "H3", "H4")
 g <- graph_create(hypotheses, transitions, names)
 
 test_that("snapshot print method", {
-  expect_snapshot(graph_update(g, c(TRUE, TRUE, TRUE, FALSE)))
+  expect_snapshot(graph_update(g, c(FALSE, FALSE, FALSE, TRUE)))
 })

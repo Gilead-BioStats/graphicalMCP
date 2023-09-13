@@ -2,8 +2,8 @@
 #'
 #' @param num_hyps Number of vertices in the graph
 #' @param hypotheses Hypothesis weights in a fallback procedure
-#' @param hyp_names Optional names for the hypotheses (Must have length
-#'   `num_hyps` or be NULL)
+#' @param hyp_names (Optional) A character vector of hypothesis names. If names
+#'   are not specified, hypotheses will be named sequentially as H1, H2, ...
 #'
 #' @return An S3 object as returned by [graph_create()]
 #'
@@ -151,6 +151,27 @@ complex_example_1 <- function(hyp_names = NULL) {
     c(0, 0, 0, 0, .5, .5),
     c(0, 0, 0, 0, 0, 1),
     c(eps, 0, 0, 0, 1 - eps, 0)
+  )
+
+  graph_create(weights, transitions, hyp_names = hyp_names)
+}
+
+#' @export
+#' @rdname example-graphs
+complex_example_2 <- function(hyp_names = NULL) {
+  eps <- .0001
+
+  weights <- c(rep(c(1 / 3, 0, 0), 3))
+  transitions <- rbind(
+    c(0, .5, .5, 0, 0, 0, 0, 0, 0), # 1 --> 2 & 3
+    c(0, 0, 1, 0, 0, 0, 0, 0, 0), # 2 --> 3
+    c(0, 1 - eps, 0, eps / 2, 0, 0, eps / 2, 0, 0), # 3 --> 2, 3 - - > 4 & 7
+    c(0, 0, 0, 0, .5, .5, 0, 0, 0), # 4 --> 5 & 6
+    c(0, 0, 0, 0, 0, 1, 0, 0, 0), # 5 --> 6
+    c(eps / 2, 0, 0, 0, 1 - eps, 0, eps / 2, 0, 0), # 6 --> 5, 6 - - > 1 & 7
+    c(0, 0, 0, 0, 0, 0, 0, .5, .5), # 7 --> 8 & 9
+    c(0, 0, 0, 0, 0, 0, 0, 0, 1), # 8 --> 9
+    c(eps / 2, 0, 0, eps / 2, 0, 0, 0, 1 - eps, 0) # 9 --> 8, 9 - - > 1 & 4
   )
 
   graph_create(weights, transitions, hyp_names = hyp_names)

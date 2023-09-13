@@ -13,7 +13,7 @@ m <- rbind(
 )
 
 g <- graph_create(w, m)
-G <- as_gmcp_graph(g)
+G <- as_graphMCP(g)
 
 alpha <- .025
 

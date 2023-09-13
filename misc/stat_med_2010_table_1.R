@@ -33,7 +33,7 @@ simfunc <- function(nSim, a1, a2, g1, g2, rh, t1, t2, t3, t4, Gr) {
     alpha = 0.025,
     G = G,
     mean = mean,
-    corr.sim = corMat,
+    test_corr.sim = corMat,
     n.sim = nSim,
     type = "quasirandom"
   )
@@ -150,7 +150,7 @@ sim_func <- function(sim_n,
     alpha = 0.025,
     # test_types = "p",
     # test_corr = matrix(1, 4, 4),
-    marginal_power = theta,
+    power_marginal = theta,
     sim_corr = sim_corr,
     sim_n = sim_n,
     sim_success = function(.) .[1],

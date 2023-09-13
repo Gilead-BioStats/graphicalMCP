@@ -6,7 +6,7 @@
 status](https://www.r-pkg.org/badges/version/graphicalMCP)](https://cran.r-project.org/package=graphicalMCP)
 [![Codecov test
 coverage](https://codecov.io/gh/Gilead-BioStats/graphicalMCP/branch/s3-graph_mcp/graph/badge.svg)](https://app.codecov.io/gh/Gilead-BioStats/graphicalMCP?branch=s3-graph_mcp)
-[![R-CMD-check](https://github.com/Gilead-BioStats/graphicalMCP/actions/workflows/R-CMD-check.yaml/badge.svg?branch=feature-power)](https://github.com/Gilead-BioStats/graphicalMCP/actions/workflows/R-CMD-check.yaml)
+[![R-CMD-check](https://github.com/Gilead-BioStats/graphicalMCP/actions/workflows/R-CMD-check.yaml/badge.svg?branch=%60r%20prompt::git_branch()%60)](https://github.com/Gilead-BioStats/graphicalMCP/actions/workflows/R-CMD-check.yaml)
 
 <!-- badges: end -->
 
@@ -24,9 +24,10 @@ that MCPs strongly control the type-I error rate at level alpha.
 In [Bretz et al
 (2011)](https://onlinelibrary.wiley.com/doi/10.1002/bimj.201000239), a
 graphical method for MCPs is described, which separates the weighting of
-the dependency graph from the particular statistical test used to assess
-each endpoint. This package is a low-dependency implementation of those
-methods.
+the clinical endpoints from the particular statistical test used to
+assess each endpoint. A graphical approach can also be helpful for
+communicating study design to clinical teams. This package is a
+low-dependency implementation of those methods.
 
 ## Installation
 
@@ -65,8 +66,10 @@ transitions <- rbind(
 hyp_names <- c("H1", "H2", "H3", "H4")
 example_graph <- graph_create(hypotheses, transitions, hyp_names)
 
-example_graph
+plot(example_graph, layout = "grid")
 ```
+
+<img src="man/figures/README-create-graph-1.png" width="100%" />
 
 ### Update graph
 
@@ -74,10 +77,11 @@ Hypotheses can be deleted from the MCP using `graph_update()`. Updated
 weights and transitions are calculated according to the weighting
 strategy in Algorithm 1 of [Bretz et al
 (2011)](https://onlinelibrary.wiley.com/doi/10.1002/bimj.201000239). We
-distinguish *deleting* from *rejecting* in the [glossary](#glossary).
+distinguish *deleting* from *rejecting* in the
+[glossary](#glossary-of-terms).
 
 ``` r
-graph_update(example_graph, c(TRUE, FALSE, FALSE, TRUE))
+graph_update(example_graph, delete = c(FALSE, TRUE, TRUE, FALSE))
 ```
 
 ### Generate weights
@@ -90,74 +94,93 @@ than `graph_update()` in order to be performant for larger graphs.
 graph_generate_weights(example_graph)
 ```
 
+More information on the closure can be found in \[Link to closure
+vignette\].
+
 ### Test hypotheses
 
-A mixture of statistical tests are supported in graphicalMCP. A graph
-can be tested against a given significance level with
-`graph_test_closure()`, which generates a report showing the graph &
-test results. In this example, a weighted Bonferroni test is applied to
-all hypotheses, with a significance threshold of 0.025. We can reject
-the null hypotheses for H1 & H2, but we cannot reject the null
-hypotheses for H3 & H4.
+Bonferroni testing via the shortcut method is supported in graphicalMCP.
+Such a test can be performed with `graph_test_shortcut()`, which
+generates a report showing the graph & test results. See more insight
+about why a hypothesis was rejected or not by setting the `verbose` and
+`test_values` flags. More details about shortcut testing can be found in
+\[link to shortcut vignette\].
+
+``` r
+graph_test_shortcut(example_graph, p = c(.01, .03, .02, .01), alpha = .025)
+```
+
+A graph can also be tested using Simes- or parametric-based testing
+using the closure test. Other types of tests will be added over time,
+and a combination of tests can be used for groups of hypotheses.
+Additional details about closure testing can be found in \[link to
+closed test vignette\].
 
 ``` r
 graph_test_closure(
   example_graph,
-  p = c(.01, .02, .03, .05),
+  p = c(.01, .03, .02, .01),
   alpha = .025,
   test_types = "bonferroni",
-  groups = list(1:4)
+  test_groups = list(1:4)
 )
 ```
 
-Other tests, such as parametric- and Simes-based testing, can be used in
-addition to, or instead of, Bonferroni. More testing algorithms will be
-added over time. Try setting the `verbose` and `test_values` flags for a
-more detailed report on testing.
+### Power simulations
 
-## Power simulations
-
-It’s not always obvious from a given graph structure how easy or
-difficult it will be to reject each hypothesis. One way to understand
-this better is to run a power simulation. The essence of a power
-simulation is to generate many different p-values using some chosen
-distribution, then test the graph against each set of p-values to see
-how it performs.
+It’s not always obvious from a graph structure how easy or difficult it
+will be to reject each hypothesis. One way to understand this better is
+to run a power simulation, where many p-values are simulated, and a
+graph is tested against each.
 
 ``` r
 graph_calculate_power(
   example_graph,
   sim_n = 1e5,
-  marginal_power = c(.9, .9, .8, .8)
+  power_marginal = c(.9, .9, .8, .8)
 )
 ```
 
-All valid test types are also valid for power simulations.
+All valid test types & hypothesis groupings are valid for power
+simulations as well. Power simulations are discussed further in both the
+\[shortcut testing vignette\] and the \[closure testing vignette\].
 
 ## Related work
 
-These methods were originally implemented in R after the 2011 paper in
-the [gMCP package](https://github.com/kornl/gMCP), which is still
-available on CRAN today. There is also a lighter version of gMCP
-implemented in [gMCPmini](https://github.com/allenzhuaz/gMCPmini) and
-its successor, [gMCPLite](https://github.com/Merck/gMCPLite). These two
-contain only a subset of the original functionality, but they remove the
-rJava dependency and add plotting functionality based on ggplot2.
+These methods were originally implemented in the [gMCP
+package](https://github.com/kornl/gMCP), which is still available on
+CRAN today. There is also a lighter version of gMCP implemented in
+[gMCPmini](https://github.com/allenzhuaz/gMCPmini) and its successor,
+[gMCPLite](https://github.com/Merck/gMCPLite). These two contain only a
+subset of the original functionality, but they remove the rJava
+dependency and add plotting functionality based on ggplot2.
 
 However, because development has ceased on the original package, we hope
-to re-implement the methods with a clearer distinction between weighting
-procedures and test procedures; with fewer dependencies, in particular
-shedding the Java dependency; with the simpler, more transparent S3
-class framework; and with improvements to the accuracy of the parametric
-and Simes test methods.
+to re-implement the methods with a more general testing framework; with
+fewer dependencies, in particular shedding the Java dependency; with
+simpler, more transparent S3 classes; and with improvements to the
+accuracy of the parametric and Simes test methods.
 
-A portion of Simes testing is also implemented in the lrstat package
-(`install.packages("lrstat")`).
+A portion of Simes testing is also implemented in the lrstat package.
 
 ## Citation
 
 ``` r
 citation("graphicalMCP")
+#> To cite graphicalMCP in publications use:
+#> 
+#>   Xi, D.; Brockmann, E. (2023). graphicalMCP: Graph-based multiple
+#>   comparison procedures. version 0.1.0. Gilead Sciences, Inc. Foster
+#>   City, California. https://github.com/Gilead-BioStats/graphicalMCP
+#> 
+#>   Frank Bretz, Martin Posch, Ekkehard Glimm, Florian Klinglmueller,
+#>   Willi Maurer, Kornelius Rohmeyer (2011), Graphical approaches for
+#>   multiple comparison procedures using weighted Bonferroni, Simes or
+#>   parametric tests. Biometrical Journal 53 (6), pages 894--913, Wiley.
+#> 
+#> To see these entries in BibTeX format, use 'print(<citation>,
+#> bibtex=TRUE)', 'toBibtex(.)', or set
+#> 'options(citation.bibtex.max=999)'.
 ```
 
 ## Acknowledgments
@@ -168,21 +191,21 @@ This package seeks to be both accurate and performant, of course. But
 beyond that, much thought has been put into the readability of the code.
 Whether being read by a user validating our methods, a developer
 extending the package to new uses, or a contributor helping enhance the
-package, we hope that the code contained here can serve as an
+core functionality, we hope that the code contained here can serve as an
 educational document to grow people’s understanding of the graphical
 approach to multiple comparison procedures.
 
 To that end, there are several entities encountered in the world of
 graphical MCPs that we define here. Some of these are used only in the
-internal code of the package, but most are output from one or more
-exported functions. If you believe any definitions could be clarified or
-improved, please contact the package authors or submit an issue to the
-GitHub repository.
+internal code of the package, but most are inputs or output in one or
+more exported functions. If you believe any definitions could be
+clarified or improved, please contact the package authors or submit an
+issue to the GitHub repository.
 
 <table style="width:99%;">
 <colgroup>
 <col style="width: 9%" />
-<col style="width: 57%" />
+<col style="width: 59%" />
 <col style="width: 11%" />
 <col style="width: 9%" />
 <col style="width: 9%" />
@@ -318,10 +341,11 @@ combined</td>
 </tr>
 <tr class="odd">
 <td><strong>Marginal power</strong></td>
-<td><p>The mean of each null <strong>hypothesis</strong> in the
-underlying multivariate normal distribution of the null hypotheses.
-Closely related to the non-centrality parameter:</p>
-<p><code>ncp =``qnorm(1 - alpha) -``qnorm(1 - marginal_power)</code></p></td>
+<td><p>The power to reject each null <strong>hypothesis</strong> at full
+<strong>alpha</strong>. Closely related to the non-centrality parameter,
+which is the mean of each null <strong>hypothesis</strong> in the
+underlying multivariate normal distribution:</p>
+<p><code>ncp = qnorm(1 - alpha) - qnorm(1 - marginal_power)</code></p></td>
 <td></td>
 <td><code>marginal_power</code></td>
 <td>Correlation matrix</td>

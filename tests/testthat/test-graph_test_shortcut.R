@@ -13,10 +13,8 @@ test_that("results match graph_test_closure()", {
     graph_test_shortcut(rando, p)$outputs$rejected,
     graph_test_shortcut_fast(
       p,
-      graph_generate_weights(rando)[, 5:8, drop = FALSE] * .025,
-      4,
-      2^(3:0),
-      2^4 - 1
+      .025,
+      graph_generate_weights(rando)[, 5:8, drop = FALSE]
     )
   )
 
@@ -62,7 +60,7 @@ test_that("fast shortcut testing matches closure testing", {
   adjusted_weights <- graph_generate_weights(g)[, 5:8, drop = FALSE]
 
   expect_equal(
-    as.logical(graph_test_shortcut_fast(p, adjusted_weights, 4, 2^(3:0), 15)),
+    as.logical(graph_test_shortcut_fast(p, .025, adjusted_weights)),
     unname(graph_test_closure(g, p)$outputs$rejected)
   )
 })

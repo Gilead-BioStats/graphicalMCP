@@ -9,9 +9,9 @@ graph_test_closure(
   graph,
   p,
   alpha = 0.025,
-  groups = list(seq_along(graph$hypotheses)),
+  test_groups = list(seq_along(graph$hypotheses)),
   test_types = c("bonferroni"),
-  corr = rep(list(NA), length(test_types)),
+  test_corr = rep(list(NA), length(test_types)),
   verbose = FALSE,
   test_values = FALSE
 )
@@ -32,13 +32,13 @@ graph_test_shortcut(
 \item{alpha}{A numeric scalar specifying the global significance level for
 testing}
 
-\item{groups}{A list of numeric vectors specifying hypotheses to test
+\item{test_groups}{A list of numeric vectors specifying hypotheses to test
 together}
 
 \item{test_types}{A character vector of tests to apply to the given groups}
 
-\item{corr}{(Optional) A numeric matrix of correlations between hypotheses'
-test statistics}
+\item{test_corr}{(Optional) A numeric matrix of correlations between
+hypotheses' test statistics}
 
 \item{verbose}{A logical scalar specifying whether the results for each
 intersection hypothesis should be included}
@@ -79,7 +79,7 @@ transitions <- rbind(
 g <- graph_create(hypotheses, transitions)
 p <- c(.01, .005, .015, .022)
 
-corr <- list(NA, matrix(c(1, .5, .5, 1), nrow = 2, byrow = TRUE))
+test_corr <- list(NA, matrix(c(1, .5, .5, 1), nrow = 2, byrow = TRUE))
 
 # The default is all Bonferroni with alpha = .025
 graph_test_closure(g, p)
@@ -89,9 +89,9 @@ graph_test_closure(
   graph = g,
   p = p,
   alpha = .025,
-  groups = list(1:2, 3:4),
+  test_groups = list(1:2, 3:4),
   test_types = c("bonferroni", "parametric"),
-  corr = corr
+  test_corr = test_corr
 )
 }
 \references{

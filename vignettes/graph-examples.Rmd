@@ -1,0 +1,249 @@
+---
+title: "Common procedures"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Common procedures}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  fig.align = "center",
+  collapse = TRUE,
+  comment = "#>",
+  fig.dim = c(5, 5)
+)
+```
+
+```{r setup}
+library(graphicalMCP)
+```
+
+# Introduction
+
+In confirmatory clinical trials with multiple endpoints, regulations mandate the strong control of the family-wise error rate to reduce the risk of false positives. Multiple comparison procedures (MCPs) are used to spread the total significance out over multiple hypotheses. In this article we'll demonstrate how to go from a few standard procedures to more advanced procedures using the graphical approach.
+
+# Simple procedures
+
+## Bonferroni
+
+Probably the most common MCP is the Bonferroni correction. It simply divides the alpha level evenly between all hypotheses. No significance adjustment is made if a hypothesis is rejected. The Bonferroni correction can be performed easily without a graphical approach, but here is a graphical example of it.
+
+```{r bonferroni}
+transitions <- matrix(0, 5, 5)
+
+bonferroni_graph <- graph_create(rep(1 / 5, 5), transitions)
+
+plot(bonferroni_graph, layout = igraph::layout_in_circle, vertex.size = 30)
+```
+
+## Holm
+
+The Holm procedure starts with identical weights to Bonferroni, but weights are updated uniformly when a hypothesis is rejected. Because of this updating, it is always at least as powerful as the Bonferroni procedure.
+
+```{r bonferroni-holm}
+transitions <- matrix(1 / 4, 5, 5)
+diag(transitions) <- 0
+
+holm_graph <- graph_create(rep(1 / 5, 5), transitions)
+
+plot(holm_graph, layout = igraph::layout_in_circle, vertex.size = 30)
+```
+
+## Fixed sequence
+
+Another common procedure because of its simplicity is the fixed sequence procedure. It places more emphasis on rejecting hypotheses when most hypotheses are expected to have p-values only slightly below alpha, where the reduced weights of the Holm procedure would cause most or all hypotheses to not be rejected from the start.
+
+```{r fixed-sequence, fig.dim=c(6, 2)}
+fixed_sequence_graph <- graph_create(
+  c(1, 0, 0, 0),
+  rbind(
+    c(0, 1, 0, 0),
+    c(0, 0, 1, 0),
+    c(0, 0, 0, 1),
+    c(0, 0, 0, 0)
+  )
+)
+
+plot(fixed_sequence_graph, nrow = 1, asp = .1)
+```
+
+<!-- This paragraph needs work -->
+
+These procedures are popular because they control the FWER while being simple, allowing them to be easily understood and communicated about. However, they're not always the procedures which fit the study best, and using more complex procedures can make communication difficult. The graphical approach can enable more powerful procedures to be used while enabling clinical teams to understand and communicate the procedures.
+
+# Complex procedures
+
+## Simple successive
+
+The simple successive procedure was introduced by [names] in their [year] paper, [*title*]. It is designed for experiments involving four hypotheses: Two pairs of hypotheses, each containing a primary and a related secondary hypothesis. Initial weight is split equally between pairs and is passed from one pair to the other only when both hypotheses in a pair are rejected.
+
+```{r simple-successive}
+simple_successive_graph <- graph_create(
+  c(.5, .5, 0, 0),
+  rbind(
+    c(0, 0, 1, 0),
+    c(0, 0, 0, 1),
+    c(0, 1, 0, 0),
+    c(1, 0, 0, 0)
+  )
+)
+
+plot(simple_successive_graph, layout = "grid", nrow = 2, vertex.size = 30)
+```
+
+General successive graphs are a good example where multiple variations may be useful with slight differences in starting edge weights. Variable edge weights are not currently supported, but they can be done for a particular graph with a light wrapper.
+
+```{r simple-successive-var-fun}
+simple_successive_var <- function(gamma) {
+  graph_create(
+    c(.5, .5, 0, 0),
+    rbind(
+      c(0, gamma, 1 - gamma, 0),
+      c(gamma, 0, 0, 1 - gamma),
+      c(0, 1, 0, 0),
+      c(1, 0, 0, 0)
+    )
+  )
+}
+```
+
+Then multiple variations can be created and compared easily. A similar approach could be used for deviating from the equal split of hypothesis weights as well.
+
+```{r simple-successive-var, fig.show="hold", fig.align='default', out.width="47%"}
+plot(
+  simple_successive_var(.75),
+  layout = "grid",
+  nrow = 2,
+  vertex.label.cex = 1.4,
+  edge.label.cex = 1.4,
+  vertex.size = 30
+)
+
+plot(
+  simple_successive_var(.9),
+  layout = "grid",
+  nrow = 2,
+  vertex.label.cex = 1.4,
+  edge.label.cex = 1.4,
+  vertex.size = 30
+)
+```
+
+## Huque-Alosh-Bhore (2011)
+
+In 2011, Huque, Alosh, and Bhore proposed another size 4 procedure. What's this one particularly meant for?
+
+```{r huque-alosh-bhore}
+hab_2011_graph <- graph_create(
+  c(1, 0, 0, 0),
+  rbind(
+    c(0, .5, .5, 0),
+    c(0, 0, 0, 1),
+    c(0, .5, 0, .5),
+    c(0, 1, 0, 0)
+  )
+)
+
+plot(hab_2011_graph, layout = "grid", vertex.size = 30)
+```
+
+## Wiens-Dmitrienko (2005)
+
+```{r wiens-dmitrienko, fig.dim=c(6, 2)}
+wd_2005_graph <- graph_create(
+  c(1 / 3, 1 / 3, 1 / 3),
+  rbind(
+    c(0, 1, 0),
+    c(0, 0, 1),
+    c(.5, .5, 0)
+  )
+)
+
+plot(
+  wd_2005_graph,
+  layout = "grid",
+  nrow = 1,
+  edge_curves = c(pairs = -4, "H3|H1" = -4),
+  vertex.size = 30,
+  asp = .1
+)
+```
+
+## Parallel gate-keeping
+
+In [year], [names] introduced the parallel gate-keeping procedure. It is useful when...?
+
+```{r parallel-gatekeeping}
+par_gate_graph <- graph_create(
+  c(.5, .5, 0, 0),
+  rbind(
+    c(0, 0, .5, .5),
+    c(0, 0, .5, .5),
+    c(0, 0, 0, 1),
+    c(0, 0, 1, 0)
+  )
+)
+
+
+plot(par_gate_graph, layout = "grid", nrow = 2, vertex.size = 30)
+```
+
+## Improved parallel gate-keeping
+
+One shortcoming of the parallel gate-keeping approach is in the case where e.g. H2, H3, and H4 are found to be significant. Once these three have been deleted, H1 is left with only 0.5 weight. This makes the graph sub-optimal.
+
+```{r parallel-gatekeeping-update}
+plot(graph_update(par_gate_graph, 2:4), vertex.size = 30)
+```
+
+The graph can be made optimal by adding epsilon edges going back up from the secondary to the primary hypotheses. Epsilon edges have some infinitesimal weight which creates a connection between hypotheses that effectively only propagates weight when it's the only edge left exiting a hypothesis. This yields the improved parallel gate-keeping procedure.
+
+```{r improved-parallel-gatekeeping}
+imp_par_gate_graph <- graph_create(
+  c(.5, .5, 0, 0),
+  rbind(
+    c(0, 0, .5, .5),
+    c(0, 0, .5, .5),
+    c(.0001, 0, 0, .9999),
+    c(0, .0001, .9999, 0)
+  )
+)
+
+plot(
+  imp_par_gate_graph,
+  layout = "grid",
+  nrow = 2,
+  eps = .001,
+  vertex.size = 30
+)
+```
+
+```{r improved-parallel-gatekeeping-update, fig.show="hold", fig.align='default', out.width="30%"}
+plot(
+  graph_update(imp_par_gate_graph, c(2)),
+  vertex.size = 60,
+  vertex.label.cex = 2.5,
+  edge.label.cex = 2.5,
+  eps = 1e-3
+)
+
+plot(
+  graph_update(imp_par_gate_graph, c(2, 4)),
+  vertex.size = 60,
+  vertex.label.cex = 2.5,
+  edge.label.cex = 2.5
+)
+
+plot(
+  graph_update(imp_par_gate_graph, c(2, 4, 3)),
+  vertex.size = 60,
+  vertex.label.cex = 2.5,
+  edge.label.cex = 2.5
+)
+```
+
+# Conclusion
+
+These examples are just a few of the unlimited possibilities enabled by the graphical approach to MCPs. Graphs can be customized based on priorities in trial design, marginal power of the endpoints, and other assumptions, such as expected or known correlation between endpoints. The graphical approach allows these complex procedures to maximize the chances of having a successful trial while enabling better communication and insight about the procedures.

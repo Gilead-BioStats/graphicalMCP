@@ -1,7 +1,7 @@
 devtools::check(quiet = FALSE, vignettes = FALSE)
 # devtools::load_all("..")
 #
-# test_m <- function(m, groups = list(seq_len(m)), test_types = "b", verbose = FALSE, critical = FALSE) {
+# test_m <- function(m, test_groups = list(seq_len(m)), test_types = "b", verbose = FALSE, critical = FALSE) {
 #   w <- sample(1:m, replace = TRUE)
 #   w <- w / sum(w)
 #   g <- replicate(m, sample(1:m, replace = TRUE), simplify = TRUE)
@@ -17,8 +17,8 @@ devtools::check(quiet = FALSE, vignettes = FALSE)
 #       graph2,
 #       p = p,
 #       alpha = .05,
-#       corr = sim_corr,
-#       groups = groups,
+#       test_corr = sim_corr,
+#       test_groups = groups,
 #       test_types = test_types,
 #       verbose = verbose,
 #       critical = critical

@@ -13,34 +13,38 @@ diag(m6) <- 0
 bh6 <- graph_create(rep(1 / 6, 6), m6)
 
 test_that("basic updating & structure", {
-  expect_s3_class(graph_update(g, c(0, 0, 0, 1)), "updated_graph")
+  expect_s3_class(graph_update(g, c(FALSE, FALSE, TRUE, TRUE)), "updated_graph")
   expect_equal(graph_update(g, c(FALSE, FALSE, FALSE, TRUE))$initial_graph, g)
+  expect_equal(graph_update(g, c(1, 2, 3, 4))$initial_graph, g)
 })
 
 test_that("invalid input", {
-  expect_error(graph_update(g, c(0, 1, 1)))
+  expect_error(graph_update(g, c(FALSE, TRUE, TRUE)))
   expect_error(graph_update(g, c(0, 1, 1, "1")))
+  expect_error(graph_update(g, c(0, 1, 1, 1)))
+  expect_error(graph_update(g, c(1, 2, 3, 3)))
+  expect_error(graph_update(g, c(1, 2, 3, 5)))
 })
 
 test_that("generate floating point differences", {
   expect_s3_class(
     updated_1 <- graph_update(
       bh6,
-      c(TRUE, TRUE, TRUE, FALSE, FALSE, FALSE)
+      c(FALSE, FALSE, FALSE, TRUE, TRUE, TRUE)
     )$updated_graph,
     "initial_graph"
   )
   expect_s3_class(
     updated_2 <- graph_update(
       updated_1,
-      c(TRUE, TRUE, FALSE, FALSE, FALSE, FALSE)
+      c(FALSE, FALSE, TRUE, TRUE, TRUE, TRUE)
     )$updated_graph,
     "initial_graph"
   )
   expect_s3_class(
     updated_3 <- graph_update(
       updated_2,
-      c(TRUE, FALSE, FALSE, FALSE, FALSE, FALSE)
+      c(FALSE, TRUE, TRUE, TRUE, TRUE, TRUE)
     )$updated_graph,
     "initial_graph"
   )

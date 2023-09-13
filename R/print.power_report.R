@@ -16,7 +16,7 @@
 #'   print
 #'
 #' @export
-print.power_report <- function(x, ..., precision = 6, indent = 2, rows = 10) {
+print.power_report <- function(x, ..., precision = 4, indent = 2, rows = 10) {
   pad <- paste(rep(" ", indent), collapse = "")
   pad_less_1 <- paste(rep(" ", max(indent - 1, 0)), collapse = "")
   hyp_names <- names(x$inputs$graph$hypotheses)
@@ -73,7 +73,7 @@ print.power_report <- function(x, ..., precision = 6, indent = 2, rows = 10) {
   section_break("Simulation parameters ($inputs)")
 
   theta_mat <- matrix(
-    x$inputs$marginal_power,
+    x$inputs$power_marginal,
     nrow = 1,
     dimnames = list(
       paste0(pad, "Marginal power:"),

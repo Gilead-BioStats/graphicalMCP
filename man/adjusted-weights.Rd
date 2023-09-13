@@ -7,27 +7,36 @@
 \alias{solve_c_parametric}
 \title{Calculate updated hypothesis weights for the closure of a graph}
 \usage{
-adjust_weights_parametric(weighting_strategy, corr, alpha, groups)
+adjust_weights_parametric(
+  matrix_weights,
+  matrix_intersections,
+  test_corr,
+  alpha,
+  test_groups
+)
 
-adjust_weights_simes(weighting_strategy, p, groups)
+adjust_weights_simes(matrix_weights, p, groups)
 
-c_value_function(x, hypotheses, corr, alpha)
+c_value_function(x, hypotheses, test_corr, alpha)
 
-solve_c_parametric(hypotheses, corr, alpha)
+solve_c_parametric(hypotheses, test_corr, alpha)
 }
 \arguments{
-\item{weighting_strategy}{For parametric, a compact representation of
-\code{\link[=graph_generate_weights]{graph_generate_weights()}} output, where missing hypotheses get a missing
-value for weights, and h-vectors are dropped. For Simes, just the weights
-from \code{\link[=graph_generate_weights]{graph_generate_weights()}} output}
+\item{matrix_weights}{The second half of columns from
+\code{\link[=graph_generate_weights]{graph_generate_weights()}} output, indicating the weights of each
+intersection}
 
-\item{corr}{A numeric matrix of correlations between hypotheses' test
+\item{matrix_intersections}{The first half of columns from
+\code{\link[=graph_generate_weights]{graph_generate_weights()}} output, indicating which hypotheses are
+contained in each intersection}
+
+\item{test_corr}{A numeric matrix of correlations between hypotheses' test
 statistics}
 
 \item{alpha}{A numeric scalar specifying the global significance level for
 testing}
 
-\item{groups}{A list of numeric vectors specifying hypotheses to test
+\item{test_groups}{A list of numeric vectors specifying hypotheses to test
 together}
 
 \item{p}{A numeric vector of p-values}
@@ -49,9 +58,9 @@ according to Formula 6 of Xi et al. (2017).
 \description{
 The weights created by \code{\link[=graph_generate_weights]{graph_generate_weights()}} work immediately for
 Bonferroni testing, but parametric and Simes testing require additional
-calculations. The \verb{adjust_weights_*()} functions apply parametric or
-Simes weight increases to get updated weights for testing. They also subset
-the weights columns by the appropriate groups
+calculations. The \verb{adjust_weights_*()} functions apply parametric or Simes
+weight increases to get updated weights for testing. They also subset the
+weights columns by the appropriate groups
 }
 \examples{
 p <- 1:6 / 200
@@ -62,7 +71,14 @@ gw_large <- graph_generate_weights(g)
 gw_0 <- gw_large[, 7:12]
 gw <- ifelse(gw_large[, 1:6], gw_0, NA)
 
-graphicalMCP:::adjust_weights_parametric(gw, diag(6), .05, list(1:3))
+graphicalMCP:::adjust_weights_parametric(
+  gw_0,
+  gw_large[, 1:6],
+  diag(6),
+  .05,
+  list(1:3)
+)
+
 graphicalMCP:::adjust_weights_simes(gw_0, p, list(4:6))
 }
 \references{
