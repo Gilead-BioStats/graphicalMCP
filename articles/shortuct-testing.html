@@ -236,12 +236,12 @@ rejections.</p>
 <code class="sourceCode R"><span><span class="va">orders</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/graph_rejection_orderings.html">graph_rejection_orderings</a></span><span class="op">(</span><span class="va">test_results</span><span class="op">)</span><span class="op">$</span><span class="va">valid_orderings</span> <span class="co"># Obtain all valid orders of rejections</span></span>
 <span><span class="va">orders</span></span>
 <span><span class="co">#&gt; [[1]]</span></span>
-<span><span class="co">#&gt; H2 H4 H1 </span></span>
-<span><span class="co">#&gt;  2  4  1 </span></span>
+<span><span class="co">#&gt; H2 H1 H4 </span></span>
+<span><span class="co">#&gt;  2  1  4 </span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; [[2]]</span></span>
-<span><span class="co">#&gt; H2 H1 H4 </span></span>
-<span><span class="co">#&gt;  2  1  4</span></span>
+<span><span class="co">#&gt; H2 H4 H1 </span></span>
+<span><span class="co">#&gt;  2  4  1</span></span>
 <span><span class="fu"><a href="../reference/graph_update.html">graph_update</a></span><span class="op">(</span><span class="va">g</span>, delete <span class="op">=</span> <span class="va">orders</span><span class="op">[[</span><span class="fl">2</span><span class="op">]</span><span class="op">]</span><span class="op">)</span> <span class="co"># Graphs following the order of H2, H4, and H1</span></span>
 <span><span class="co">#&gt; Initial graph</span></span>
 <span><span class="co">#&gt; </span></span>
@@ -258,7 +258,7 @@ rejections.</p>
 <span><span class="co">#&gt;  H3 0.0 1.0 0.0 0.0</span></span>
 <span><span class="co">#&gt;  H4 1.0 0.0 0.0 0.0</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Updated graph after deleting hypotheses 2, 1, 4</span></span>
+<span><span class="co">#&gt; Updated graph after deleting hypotheses 2, 4, 1</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; --- Hypothesis weights ---</span></span>
 <span><span class="co">#&gt; H1: NA</span></span>
@@ -305,22 +305,22 @@ rejections.</p>
 <span><span class="co">#&gt;     H3 0.500000       NA 0.000000 0.500000</span></span>
 <span><span class="co">#&gt;     H4 1.000000       NA 0.000000 0.000000</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;       Step 2: Updated graph after removing hypotheses 2, 1</span></span>
+<span><span class="co">#&gt;       Step 2: Updated graph after removing hypotheses 2, 4</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt;       --- Hypothesis weights ---</span></span>
-<span><span class="co">#&gt;       H1:  NA</span></span>
-<span><span class="co">#&gt;       H2:  NA</span></span>
-<span><span class="co">#&gt;       H3: 0.5</span></span>
-<span><span class="co">#&gt;       H4: 0.5</span></span>
+<span><span class="co">#&gt;       H1:  1</span></span>
+<span><span class="co">#&gt;       H2: NA</span></span>
+<span><span class="co">#&gt;       H3:  0</span></span>
+<span><span class="co">#&gt;       H4: NA</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt;       --- Transition weights ---</span></span>
 <span><span class="co">#&gt;          H1 H2 H3 H4</span></span>
-<span><span class="co">#&gt;       H1 NA NA NA NA</span></span>
+<span><span class="co">#&gt;       H1  0 NA  1 NA</span></span>
 <span><span class="co">#&gt;       H2 NA NA NA NA</span></span>
-<span><span class="co">#&gt;       H3 NA NA  0  1</span></span>
-<span><span class="co">#&gt;       H4 NA NA  1  0</span></span>
+<span><span class="co">#&gt;       H3  1 NA  0 NA</span></span>
+<span><span class="co">#&gt;       H4 NA NA NA NA</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;         Step 3: Updated graph after removing hypotheses 2, 1, 4</span></span>
+<span><span class="co">#&gt;         Step 3: Updated graph after removing hypotheses 2, 4, 1</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt;         --- Hypothesis weights ---</span></span>
 <span><span class="co">#&gt;         H1: NA</span></span>
