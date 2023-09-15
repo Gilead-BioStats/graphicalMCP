@@ -48,6 +48,7 @@
 <li class="active nav-item dropdown">
   <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" id="dropdown-articles">Articles</a>
   <div class="dropdown-menu" aria-labelledby="dropdown-articles">
+    <a class="dropdown-item" href="../articles/Graphical%20approaches%20based%20on%20the%20closure%20principle.html">Graphical approaches based on the closure principle</a>
     <a class="dropdown-item" href="../articles/generate-closure.html">Generating the closure of a graph</a>
     <a class="dropdown-item" href="../articles/graph-examples.html">Common procedures</a>
     <a class="dropdown-item" href="../articles/shortuct-testing.html">Sequentially rejective graphical approaches based on Bonferroni tests</a>
@@ -107,14 +108,14 @@ there are four null hypotheses: <span class="math inline">\(H_1\)</span>
 and <span class="math inline">\(H_3\)</span> are the primary and
 secondary hypotheses respectively for the low dose versus control; <span class="math inline">\(H_2\)</span> and <span class="math inline">\(H_4\)</span> are the primary and secondary
 hypotheses respectively for the high dose versus control.</p>
-<p>Before discussing appropriate multiple comparison procedures, there
-are clinical considerations, which adds some structure to multiple
-comparison procedures, and which can be flexibly incorporated using
-graphical approaches. First, the low and the high doses are considered
-equally important, which means that rejecting the primary hypothesis for
-either dose versus control leads to a successful trial. Regarding
-secondary hypotheses, each one is tested only if its corresponding
-primary hypothesis has been rejected. This means that <span class="math inline">\(H_3\)</span> is tested if <span class="math inline">\(H_1\)</span> has been rejected; <span class="math inline">\(H_4\)</span> is tested if <span class="math inline">\(H_2\)</span> has been rejected.</p>
+<p>There are clinical considerations which constrain the structure of
+multiple comparison procedures; these considerations can be flexibly
+incorporated using graphical approaches. First, the low and the high
+doses are considered equally important, which means that rejecting the
+primary hypothesis for either dose versus control leads to a successful
+trial. Regarding secondary hypotheses, each one is tested only if its
+corresponding primary hypothesis has been rejected. This means that
+<span class="math inline">\(H_3\)</span> is tested only after <span class="math inline">\(H_1\)</span> has been rejected; <span class="math inline">\(H_4\)</span> is tested only after <span class="math inline">\(H_2\)</span> has been rejected.</p>
 <p>In addition, there are some statistical considerations to complete
 the graph. The primary hypotheses <span class="math inline">\(H_1\)</span> and <span class="math inline">\(H_2\)</span> will have an equal hypothesis weight
 of 0.5. The secondary hypotheses will have a hypothesis weight of 0.
@@ -195,11 +196,10 @@ intermediate graphs - for example, the graph after <span class="math inline">\(H
 <code>verbose = TRUE</code>. Note that intermediate graphs depends on
 the order of rejections, i.e., the sequence of hypotheses being
 rejected. The default order is defined by the increasing adjusted
-p-values and the earlier<br>
-hypothesis numbering in the case of ties in adjusted p-values. Among all
-rejected hypotheses, the one with the smallest adjusted p-value is the
-first to be rejected and the one with the largest adjusted p-value is
-the last to be rejected.</p>
+p-values, followed by the earlier hypothesis numbering in the case of
+ties. Among all rejected hypotheses, the one with the smallest adjusted
+p-value is the first to be rejected and the one with the largest
+adjusted p-value is the last to be rejected.</p>
 <p>In this example, the default order of rejection is <span class="math inline">\(H_2\rightarrow H_1\rightarrow H_4\)</span>. To
 obtain intermediate graphs based on this order of rejection, one can
 specify <code>test_results_verbose$details$results</code>. For example,
@@ -349,16 +349,6 @@ rejections.</p>
 <span><span class="co">#&gt;   H2 NA NA NA NA</span></span>
 <span><span class="co">#&gt;   H3 NA NA  0 NA</span></span>
 <span><span class="co">#&gt;   H4 NA NA NA NA</span></span></code></pre></div>
-<p>The order of these intermediate graphs is determined by deleting the
-hypothesis with the lowest adjusted p-values at each step (Or the
-smaller hypothesis sequentially in the case of adjusted p-value ties).
-In some cases, this order is not the only valid order of deletion. In
-this example, the minimum adjusted p-value method results in deleting in
-the order <span class="math inline">\(H_2 \rightarrow H_1 \rightarrow
-H_4\)</span>. But <span class="math inline">\(H_2 \rightarrow H_4
-\rightarrow H_1\)</span> is also a valid deletion order. Deletion order
-can be customized using
-[<code>custom_order_function_once_it_is_written()</code>].</p>
 </div>
 <div class="section level3">
 <h3 id="obtain-adjusted-significance-levels">Obtain adjusted significance levels<a class="anchor" aria-label="anchor" href="#obtain-adjusted-significance-levels"></a>
@@ -390,16 +380,16 @@ obtained by specifying <code>test_values = TRUE</code>.</p>
 </h2>
 <p>Given the above graph, the trial team is often interested in the
 power of the trial. For a single null hypothesis, the power is the
-probability to reject the null hypothesis at the significance level
-<code>alpha</code> when the alternative hypothesis is true. For multiple
-null hypotheses, there could be multiple versions of power. For example,
-the power to reject at least one hypothesis and the power to reject all
-hypotheses, given the alternative hypotheses are true. With the
-graphical multiple comparison procedures, it is also important to
-understand the power to reject each hypothesis, given the multiplicity
-adjustment. Sometimes, a team may want to customize definitions of power
-to define success. Thus power calculation is an important aspect of
-trial design.</p>
+probability of a true positive - that is, rejecting the null hypothesis
+at the significance level <code>alpha</code> when the alternative
+hypothesis is true. For multiple null hypotheses, there could be
+multiple versions of power. For example, the power to reject at least
+one hypothesis vs the power to reject all hypotheses, given the
+alternative hypotheses are true. With the graphical multiple comparison
+procedures, it is also important to understand the power to reject each
+hypothesis, given the multiplicity adjustment. Sometimes, a team may
+want to customize definitions of power to define success. Thus power
+calculation is an important aspect of trial design.</p>
 <div class="section level3">
 <h3 id="input-marginal-power-for-primary-hypotheses">Input: Marginal power for primary hypotheses<a class="anchor" aria-label="anchor" href="#input-marginal-power-for-primary-hypotheses"></a>
 </h3>
@@ -574,16 +564,16 @@ customize success criteria to define other versions of “power”.</p>
 </h3>
 <p>Given the above inputs, we can calculate power via simulation for the
 graphical multiple comparison procedure at one-sided significance level
-<code>alpha=0.025</code> using <code>sim_n = 1e5</code> simulations and
-the seed <code>sim_seed = 1234</code>. The local power is 0.758, 0.765,
-0.689, and 0.570, respectively for <span class="math inline">\(H_1,
-\ldots, H_4\)</span>. Note that the local power is lower than the
-marginal power because the former is adjusted for multiplicity. The
-power to reject at least one hypothesis is 0.856 and the power to reject
-all hypotheses is 0.512. The expected number of rejections is 2.782. For
-the last two user-defined success criteria, the probability to reject
-both <span class="math inline">\(H_1\)</span> and <span class="math inline">\(H_2\)</span> is 0.667, and the probability to
-reject at least one pair of <span class="math inline">\((H_1\)</span>
+<code>alpha = 0.025</code> using <code>sim_n = 1e5</code> simulations
+and the seed <code>sim_seed = 1234</code>. The local power is 0.758,
+0.765, 0.689, and 0.570, respectively for <span class="math inline">\(H_1, \ldots, H_4\)</span>. Note that the local
+power is lower than the marginal power because the former is adjusted
+for multiplicity. The power to reject at least one hypothesis is 0.856
+and the power to reject all hypotheses is 0.512. The expected number of
+rejections is 2.782. For the last two user-defined success criteria, the
+probability to reject both <span class="math inline">\(H_1\)</span> and
+<span class="math inline">\(H_2\)</span> is 0.667, and the probability
+to reject at least one pair of <span class="math inline">\((H_1\)</span>
 and <span class="math inline">\(H_3)\)</span> and <span class="math inline">\((H_2\)</span> and <span class="math inline">\(H_4)\)</span> is 0.747.</p>
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">output</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/graph_calculate_power.html">graph_calculate_power</a></span><span class="op">(</span><span class="va">g</span>,</span>
