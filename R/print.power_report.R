@@ -153,19 +153,13 @@ print.power_report <- function(x, ..., precision = 4, indent = 2, rows = 10) {
   if (!length(x$power$power_success) == 0) {
     cat("\n")
 
-    success_mat <- matrix(
-      c("", format(x$power$power_success, digits = precision)),
-      nrow = 1,
-      dimnames = list(
-        "",
-        c(
-          paste0(pad, "          Power to reject: "),
-          paste0("  ", names(x$power$power_success))
-        )
-      ),
+    success_df <- data.frame(
+      ` Success measure` = paste0(pad_less_1, names(x$power$power_success)),
+      `Power` = format(x$power$power_success, digits = precision),
+      check.names = FALSE
     )
 
-    print(as.data.frame(format(success_mat, digits = precision)))
+    print(success_df, row.names = FALSE)
   }
   cat("\n")
 
