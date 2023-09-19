@@ -35,11 +35,6 @@
 #'   and 2" = function(x) x[1] && x[2])`. If the list is not named, the function
 #'   body will be used as the name. Lambda functions also work starting with R
 #'   4.1, e.g. `sim_success = list(\(x) x[3] || x[4])`
-#' @param sim_seed (Optional) Random seed to set before simulating p-values. Set
-#'   this to use a consistent set of p simulations across power calculations
-#' @param force_closure A logical scalar used to determine whether the full
-#'   closure test should be used for Bonferroni testing. Ignored if any tests
-#'   are non-Bonferroni
 #' @param verbose A logical scalar specifying whether the full matrix of
 #'   simulations and test results should be included in the output or not
 #'
@@ -99,8 +94,6 @@ graph_calculate_power <- function(graph,
                                   sim_n = 100,
                                   sim_corr = diag(length(graph$hypotheses)),
                                   sim_success = NULL,
-                                  sim_seed = NULL,
-                                  force_closure = FALSE,
                                   verbose = FALSE) {
   # Input sanitization ---------------------------------------------------------
   # Test types should be passed as full names or first letter, case-insensitive,
@@ -176,8 +169,6 @@ graph_calculate_power <- function(graph,
   # distribution. The means are set with `power_marginal`, and the correlations
   # are set with `sim_corr`. Random samples are converted to p-values with a
   # one-sided test.
-  if (!is.null(sim_seed)) set.seed(sim_seed)
-
   noncentrality_parameter <-
     stats::qnorm(1 - alpha, lower.tail = TRUE) -
     stats::qnorm(1 - power_marginal, lower.tail = TRUE)
@@ -204,7 +195,7 @@ graph_calculate_power <- function(graph,
   matrix_weights <-
     weighting_strategy[, seq_len(num_hyps) + num_hyps, drop = FALSE]
 
-  if (all(test_types == "bonferroni") && !force_closure) {
+  if (all(test_types == "bonferroni")) {
     for (row in seq_len(sim_n)) {
       simulation_test_results[row, ] <- graph_test_shortcut_fast(
         p_sim[row, ],
@@ -370,8 +361,7 @@ graph_calculate_power <- function(graph,
         sim_n = sim_n,
         power_marginal = power_marginal,
         sim_corr = sim_corr,
-        sim_success = sim_success,
-        sim_seed = sim_seed
+        sim_success = sim_success
       ),
       power = power,
       details = if (verbose) {

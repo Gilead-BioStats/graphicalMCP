@@ -246,13 +246,14 @@ succ <- list(H1, `Expected no. of rejections`, `AtLeast1`, `All`, `H1andH2`,
 
 ### Output: Calculate power
 
-Given the above inputs, we can calculate power via simulation for the graphical multiple comparison procedure at one-sided significance level `alpha=0.025` using `sim_n = 1e5` simulations and the seed `sim_seed = 1234`. There are three procedures to compare: the Bonferroni-based procedure, the procedure using parametric tests for primary hypotheses, and the procedure using parametric tests for primary hypotheses and Simes tests for two sets of secondary hypotheses separately. The local power for hypotheses $H_1, \ldots, H_6$ is 
+Given the above inputs, we can calculate power via simulation for the graphical multiple comparison procedure at one-sided significance level `alpha = 0.025` using `sim_n = 1e5` simulations and the random seed 1234. There are three procedures to compare: the Bonferroni-based procedure, the procedure using parametric tests for primary hypotheses, and the procedure using parametric tests for primary hypotheses and Simes tests for two sets of secondary hypotheses separately. The local power for hypotheses $H_1, \ldots, H_6$ is 
 - 0.760, 0.752, 0.510, 0.665, 0.391, and 0.625, respectively using the Bonferroni-based procedure,
 - 0.764, 0.756, 0.511, 0.668, 0.392, and 0.628, respectively using the procedure using parametric tests for primary hypotheses,
 - 0.764, 0.757, 0.521, 0.673, 0.402, and 0.633, respectively using the procedure using parametric tests for primary hypotheses and Simes tests for two sets of secondary hypotheses separately.
 Note that the local power is improved for all hypotheses after parametric tests and Simes tests being applied over the Bonferroni-based procedure.
 
 ```{r power-calculate-calculate}
+set.seed(1234)
 power_bonferroni <- graph_calculate_power(
   g,
   alpha = 0.025,
@@ -263,11 +264,11 @@ power_bonferroni <- graph_calculate_power(
     marginal_power_se1,
     marginal_power_se2
   ),
-  sim_success = succ,
-  sim_seed = 1234
+  sim_success = succ
 )
 round(power_bonferroni$power$power_local, 3)
 
+set.seed(1234)
 power_parametric <- graph_calculate_power(
   g,
   alpha = 0.025,
@@ -281,11 +282,11 @@ power_parametric <- graph_calculate_power(
   test_groups = list(c(1, 2), 3:6),
   test_types = c("parametric", "bonferroni"),
   test_corr = list(corr_12, NA),
-  sim_success = succ,
-  sim_seed = 1234
+  sim_success = succ
 )
 round(power_parametric$power$power_local, 3)
 
+set.seed(1234)
 power_parametric_simes <- graph_calculate_power(
   g,
   alpha = 0.025,
@@ -299,8 +300,7 @@ power_parametric_simes <- graph_calculate_power(
   test_groups = list(c(1, 2), c(3, 5), c(4, 6)),
   test_types = c("parametric", "simes", "simes"),
   test_corr = list(corr_12, NA, NA),
-  sim_success = succ,
-  sim_seed = 1234
+  sim_success = succ
 )
 round(power_parametric_simes$power$power_local, 3)
 ```
@@ -310,6 +310,7 @@ To see the detailed outputs of all simulated p-values and rejection decisions fo
   - The precision of numeric values (i.e., the number of decimal places) with the default setting of `precision = 6`
 
 ```{r power-calculate-calculate_verbose}
+set.seed(1234)
 verbose_output_parametric_simes <- graph_calculate_power(
   g,
   alpha = 0.025,
@@ -324,7 +325,6 @@ verbose_output_parametric_simes <- graph_calculate_power(
   test_types = c("parametric", "simes", "simes"),
   test_corr = list(corr_12, NA, NA),
   sim_success = succ,
-  sim_seed = 1234,
   verbose = TRUE
 )
 

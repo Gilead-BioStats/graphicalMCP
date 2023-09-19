@@ -203,16 +203,16 @@ succ <- setNames(
 
 ### Output: Calculate power
 
-Given the above inputs, we can calculate power via simulation for the graphical multiple comparison procedure at one-sided significance level `alpha = 0.025` using `sim_n = 1e5` simulations and the seed `sim_seed = 1234`. The local power is 0.758, 0.765, 0.689, and 0.570, respectively for $H_1, \ldots, H_4$. Note that the local power is lower than the marginal power because the former is adjusted for multiplicity. The power to reject at least one hypothesis is 0.856 and the power to reject all hypotheses is 0.512. The expected number of rejections is 2.782. For the last two user-defined success criteria, the probability to reject both $H_1$ and $H_2$ is 0.667, and the probability to reject at least one pair of $(H_1$ and $H_3)$ and $(H_2$ and $H_4)$ is 0.747.
+Given the above inputs, we can calculate power via simulation for the graphical multiple comparison procedure at one-sided significance level `alpha = 0.025` using `sim_n = 1e5` simulations and the random seed 1234. The local power is 0.758, 0.765, 0.689, and 0.570, respectively for $H_1, \ldots, H_4$. Note that the local power is lower than the marginal power because the former is adjusted for multiplicity. The power to reject at least one hypothesis is 0.856 and the power to reject all hypotheses is 0.512. The expected number of rejections is 2.782. For the last two user-defined success criteria, the probability to reject both $H_1$ and $H_2$ is 0.667, and the probability to reject at least one pair of $(H_1$ and $H_3)$ and $(H_2$ and $H_4)$ is 0.747.
 
 ```{r power-calculate-calculate}
+set.seed(1234)
 output <- graph_calculate_power(g,
   alpha = .025,
   sim_corr = corr,
   sim_n = 1e5,
   power_marginal = c(power_marginal_primary, power_marginal_secondary),
-  sim_success = succ,
-  sim_seed = 1234
+  sim_success = succ
 )
 output
 ```
@@ -223,13 +223,13 @@ To see the detailed outputs of all simulated p-values and rejection decisions fo
 - The precision of numeric values (i.e., the number of significant digits) with the default setting of `precision = 4`
 
 ```{r power-calculate-calculate_verbose}
+set.seed(1234)
 verbose_output <- graph_calculate_power(g,
   alpha = .025,
   sim_corr = corr,
   sim_n = 1e5,
   power_marginal = c(power_marginal_primary, power_marginal_secondary),
   sim_success = succ,
-  sim_seed = 1234,
   verbose = TRUE
 )
 

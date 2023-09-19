@@ -1,7 +1,7 @@
-# printing Bonferroni power - sequential & closure
+# printing Bonferroni power - sequential
 
     Code
-      graph_calculate_power(g, sim_seed = 51223)
+      graph_calculate_power(g)
     Output
       
       Test parameters ($inputs) ------------------------------------------------------
@@ -26,7 +26,7 @@
         bonferroni: (H1, H2, H3, H4)
       
       Simulation parameters ($inputs) ------------------------------------------------
-        Testing 100 simulations - random seed 51223 & multivariate normal params:
+        Testing 100 simulations with multivariate normal params:
       
                            H1    H2    H3    H4
         Marginal power: 0.025 0.025 0.025 0.025
@@ -49,7 +49,7 @@
 ---
 
     Code
-      print(graph_calculate_power(g, sim_seed = 51223), indent = 6, precision = 3)
+      print(graph_calculate_power(g), indent = 6, precision = 3)
     Output
       
       Test parameters ($inputs) ------------------------------------------------------
@@ -74,56 +74,7 @@
             bonferroni: (H1, H2, H3, H4)
       
       Simulation parameters ($inputs) ------------------------------------------------
-            Testing 100 simulations - random seed 51223 & multivariate normal params:
-      
-                               H1    H2    H3    H4
-            Marginal power: 0.025 0.025 0.025 0.025
-      
-            Correlation:    H1 H2 H3 H4
-                         H1  1  0  0  0
-                         H2  0  1  0  0
-                         H3  0  0  1  0
-                         H4  0  0  0  1
-      
-      Power calculation ($power) -----------------------------------------------------
-                                          H1   H2   H3   H4
-                           Local power: 0.02 0.00 0.00 0.00
-      
-            Expected no. of rejections: 0.02
-             Power to reject 1 or more: 0.02
-                   Power to reject all: 0
-      
-
----
-
-    Code
-      print(graph_calculate_power(g, sim_seed = 51223, force_closure = TRUE), indent = 6,
-      precision = 3)
-    Output
-      
-      Test parameters ($inputs) ------------------------------------------------------
-            Initial graph
-      
-            --- Hypothesis weights ---
-            H1: 1
-            H2: 0
-            H3: 0
-            H4: 0
-      
-            --- Transition weights ---
-                H1  H2  H3  H4
-            H1 0.0 0.5 0.5 0.0
-            H2 0.0 0.0 0.0 1.0
-            H3 0.0 0.5 0.0 0.5
-            H4 0.0 1.0 0.0 0.0
-      
-            Alpha = 0.025
-      
-            Test types
-            bonferroni: (H1, H2, H3, H4)
-      
-      Simulation parameters ($inputs) ------------------------------------------------
-            Testing 100 simulations - random seed 51223 & multivariate normal params:
+            Testing 100 simulations with multivariate normal params:
       
                                H1    H2    H3    H4
             Marginal power: 0.025 0.025 0.025 0.025
@@ -146,7 +97,7 @@
 # printing Simes power
 
     Code
-      graph_calculate_power(g, sim_seed = 51223, test_types = "s")
+      graph_calculate_power(g, test_types = "s")
     Output
       
       Test parameters ($inputs) ------------------------------------------------------
@@ -171,7 +122,7 @@
         simes: (H1, H2, H3, H4)
       
       Simulation parameters ($inputs) ------------------------------------------------
-        Testing 100 simulations - random seed 51223 & multivariate normal params:
+        Testing 100 simulations with multivariate normal params:
       
                            H1    H2    H3    H4
         Marginal power: 0.025 0.025 0.025 0.025
@@ -194,8 +145,7 @@
 ---
 
     Code
-      print(graph_calculate_power(g, sim_seed = 51223, test_types = "s"), indent = 6,
-      precision = 3)
+      print(graph_calculate_power(g, test_types = "s"), indent = 6, precision = 3)
     Output
       
       Test parameters ($inputs) ------------------------------------------------------
@@ -220,7 +170,7 @@
             simes: (H1, H2, H3, H4)
       
       Simulation parameters ($inputs) ------------------------------------------------
-            Testing 100 simulations - random seed 51223 & multivariate normal params:
+            Testing 100 simulations with multivariate normal params:
       
                                H1    H2    H3    H4
             Marginal power: 0.025 0.025 0.025 0.025
@@ -243,8 +193,7 @@
 # printing parametric power
 
     Code
-      graph_calculate_power(g, sim_seed = 51223, test_types = "p", test_corr = list(
-        diag(4)))
+      graph_calculate_power(g, test_types = "p", test_corr = list(diag(4)))
     Output
       
       Test parameters ($inputs) ------------------------------------------------------
@@ -275,7 +224,7 @@
         parametric: (H1, H2, H3, H4)
       
       Simulation parameters ($inputs) ------------------------------------------------
-        Testing 100 simulations - random seed 51223 & multivariate normal params:
+        Testing 100 simulations with multivariate normal params:
       
                            H1    H2    H3    H4
         Marginal power: 0.025 0.025 0.025 0.025
@@ -298,8 +247,8 @@
 ---
 
     Code
-      print(graph_calculate_power(g, sim_seed = 51223, test_types = "p", test_corr = list(
-        diag(4))), indent = 6, precision = 3)
+      print(graph_calculate_power(g, test_types = "p", test_corr = list(diag(4))),
+      indent = 6, precision = 3)
     Output
       
       Test parameters ($inputs) ------------------------------------------------------
@@ -330,7 +279,7 @@
             parametric: (H1, H2, H3, H4)
       
       Simulation parameters ($inputs) ------------------------------------------------
-            Testing 100 simulations - random seed 51223 & multivariate normal params:
+            Testing 100 simulations with multivariate normal params:
       
                                H1    H2    H3    H4
             Marginal power: 0.025 0.025 0.025 0.025
@@ -357,8 +306,7 @@
         seq(0.3, 2.8, by = 0.5) / 11, test_groups = list(4:3, c(6, 1), c(2, 5)),
       test_types = c("b", "s", "p"), test_corr = list(NA, NA, t_corr[c(2, 5), c(2, 5)]),
       sim_n = 1328, sim_corr = s_corr, sim_success = list(function(.) .[1] || .[5] ||
-        .[6], function(.) .[2] && (.[5] || .[6])), sim_seed = 51223), indent = 0,
-      precision = 10)
+        .[6], function(.) .[2] && (.[5] || .[6]))), indent = 0, precision = 10)
     Output
       
       Test parameters ($inputs) ------------------------------------------------------
@@ -393,7 +341,7 @@
       parametric: (H2, H5)
       
       Simulation parameters ($inputs) ------------------------------------------------
-      Testing 1,328 simulations - random seed 51223 & multivariate normal params:
+      Testing 1,328 simulations with multivariate normal params:
       
                                 H1           H2           H3           H4
       Marginal power: 0.9519977738 0.3569991652 0.2196917940 0.1586662956

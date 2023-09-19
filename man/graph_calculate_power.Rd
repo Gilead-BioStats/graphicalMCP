@@ -14,8 +14,6 @@ graph_calculate_power(
   sim_n = 100,
   sim_corr = diag(length(graph$hypotheses)),
   sim_success = NULL,
-  sim_seed = NULL,
-  force_closure = FALSE,
   verbose = FALSE
 )
 }
@@ -48,13 +46,6 @@ an input, and return a length-one logical vector. For instance, if
 "success" means rejecting hypotheses 1 and 2, use \code{sim_success = list("1 and 2" = function(x) x[1] && x[2])}. If the list is not named, the function
 body will be used as the name. Lambda functions also work starting with R
 4.1, e.g. \verb{sim_success = list(\\(x) x[3] || x[4])}}
-
-\item{sim_seed}{(Optional) Random seed to set before simulating p-values. Set
-this to use a consistent set of p simulations across power calculations}
-
-\item{force_closure}{A logical scalar used to determine whether the full
-closure test should be used for Bonferroni testing. Ignored if any tests
-are non-Bonferroni}
 
 \item{verbose}{A logical scalar specifying whether the full matrix of
 simulations and test results should be included in the output or not}

@@ -447,12 +447,6 @@ if (file.exists(here("vignettes/data/df_benchmarks_power_closure.rds"))) {
               marg_pow, s_corr, t_corr, sims
             )
           },
-        `graphicalMCP closure Bonferroni (R)` =
-          graph_calculate_power(rando,
-            sim_n = sims, power_marginal = marg_pow,
-            sim_corr = s_corr,
-            force_closure = TRUE
-          ),
         `graphicalMCP closure parametric (R)` =
           graph_calculate_power(rando,
             sim_n = sims, power_marginal = marg_pow,

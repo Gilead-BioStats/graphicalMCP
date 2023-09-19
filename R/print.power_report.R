@@ -97,13 +97,7 @@ print.power_report <- function(x, ..., precision = 4, indent = 2, rows = 10) {
   cat(paste0(
     paste0(pad, "Testing "),
     format(x$inputs$sim_n, scientific = FALSE, big.mark = ","),
-    " simulations ",
-    ifelse(
-      is.null(x$inputs$sim_seed),
-      "with",
-      paste0("- random seed ", x$inputs$sim_seed, " &")
-    ),
-    " multivariate normal params:"
+    " simulations with multivariate normal params:"
   ))
   cat("\n\n")
 

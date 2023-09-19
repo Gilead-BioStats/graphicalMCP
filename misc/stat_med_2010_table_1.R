@@ -153,9 +153,7 @@ sim_func <- function(sim_n,
     power_marginal = theta,
     sim_corr = sim_corr,
     sim_n = sim_n,
-    sim_success = function(.) .[1],
-    force_closure = TRUE,
-    sim_seed = 456
+    sim_success = function(.) .[1]
   )
 }
 
