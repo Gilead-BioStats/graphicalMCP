@@ -109,18 +109,18 @@ and <span class="math inline">\(H_3\)</span> are the primary and
 secondary hypotheses respectively for the low dose versus control; <span class="math inline">\(H_2\)</span> and <span class="math inline">\(H_4\)</span> are the primary and secondary
 hypotheses respectively for the high dose versus control.</p>
 <p>There are clinical considerations which constrain the structure of
-multiple comparison procedures; these considerations can be flexibly
-incorporated using graphical approaches. First, the low and the high
-doses are considered equally important, which means that rejecting the
-primary hypothesis for either dose versus control leads to a successful
-trial. Regarding secondary hypotheses, each one is tested only if its
+multiple comparison procedures, and which can be flexibly incorporated
+using graphical approaches. First, the low and the high doses are
+considered equally important, which means that rejecting the primary
+hypothesis for either dose versus control leads to a successful trial.
+Regarding secondary hypotheses, each one is tested only if its
 corresponding primary hypothesis has been rejected. This means that
 <span class="math inline">\(H_3\)</span> is tested only after <span class="math inline">\(H_1\)</span> has been rejected; <span class="math inline">\(H_4\)</span> is tested only after <span class="math inline">\(H_2\)</span> has been rejected.</p>
 <p>In addition, there are some statistical considerations to complete
 the graph. The primary hypotheses <span class="math inline">\(H_1\)</span> and <span class="math inline">\(H_2\)</span> will have an equal hypothesis weight
 of 0.5. The secondary hypotheses will have a hypothesis weight of 0.
 When a primary hypothesis has been rejected, its weight will propagate
-along two outgoing edges: one to the other primary hypothesis and one to
+along two outgoing edges: One to the other primary hypothesis and one to
 its descendant secondary hypothesis. The two edges will have an equal
 transition weight of 0.5. When both the primary and the secondary
 hypotheses have been rejected for a dose-control comparison, their
@@ -163,6 +163,7 @@ p-value calculated.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">p_values</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">.013</span>, <span class="fl">.012</span>, <span class="fl">.105</span>, <span class="fl">.005</span><span class="op">)</span></span>
 <span><span class="va">test_results</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/testing.html">graph_test_shortcut</a></span><span class="op">(</span><span class="va">g</span>, p <span class="op">=</span> <span class="va">p_values</span>, alpha <span class="op">=</span> <span class="fl">0.025</span><span class="op">)</span></span>
+<span></span>
 <span><span class="va">test_results</span><span class="op">$</span><span class="va">outputs</span> <span class="co"># Adjusted p-values and rejections</span></span>
 <span><span class="co">#&gt; $adjusted_p</span></span>
 <span><span class="co">#&gt;    H1    H2    H3    H4 </span></span>
@@ -565,24 +566,23 @@ customize success criteria to define other versions of “power”.</p>
 <p>Given the above inputs, we can calculate power via simulation for the
 graphical multiple comparison procedure at one-sided significance level
 <code>alpha = 0.025</code> using <code>sim_n = 1e5</code> simulations
-and the seed <code>sim_seed = 1234</code>. The local power is 0.758,
-0.765, 0.689, and 0.570, respectively for <span class="math inline">\(H_1, \ldots, H_4\)</span>. Note that the local
-power is lower than the marginal power because the former is adjusted
-for multiplicity. The power to reject at least one hypothesis is 0.856
-and the power to reject all hypotheses is 0.512. The expected number of
-rejections is 2.782. For the last two user-defined success criteria, the
-probability to reject both <span class="math inline">\(H_1\)</span> and
-<span class="math inline">\(H_2\)</span> is 0.667, and the probability
-to reject at least one pair of <span class="math inline">\((H_1\)</span>
+and the random seed 1234. The local power is 0.758, 0.765, 0.689, and
+0.570, respectively for <span class="math inline">\(H_1, \ldots,
+H_4\)</span>. Note that the local power is lower than the marginal power
+because the former is adjusted for multiplicity. The power to reject at
+least one hypothesis is 0.856 and the power to reject all hypotheses is
+0.512. The expected number of rejections is 2.782. For the last two
+user-defined success criteria, the probability to reject both <span class="math inline">\(H_1\)</span> and <span class="math inline">\(H_2\)</span> is 0.667, and the probability to
+reject at least one pair of <span class="math inline">\((H_1\)</span>
 and <span class="math inline">\(H_3)\)</span> and <span class="math inline">\((H_2\)</span> and <span class="math inline">\(H_4)\)</span> is 0.747.</p>
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">output</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/graph_calculate_power.html">graph_calculate_power</a></span><span class="op">(</span><span class="va">g</span>,</span>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">1234</span><span class="op">)</span></span>
+<span><span class="va">output</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/graph_calculate_power.html">graph_calculate_power</a></span><span class="op">(</span><span class="va">g</span>,</span>
 <span>  alpha <span class="op">=</span> <span class="fl">.025</span>,</span>
 <span>  sim_corr <span class="op">=</span> <span class="va">corr</span>,</span>
 <span>  sim_n <span class="op">=</span> <span class="fl">1e5</span>,</span>
 <span>  power_marginal <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">power_marginal_primary</span>, <span class="va">power_marginal_secondary</span><span class="op">)</span>,</span>
-<span>  sim_success <span class="op">=</span> <span class="va">succ</span>,</span>
-<span>  sim_seed <span class="op">=</span> <span class="fl">1234</span></span>
+<span>  sim_success <span class="op">=</span> <span class="va">succ</span></span>
 <span><span class="op">)</span></span>
 <span><span class="va">output</span></span>
 <span><span class="co">#&gt; </span></span>
@@ -608,7 +608,7 @@ and <span class="math inline">\(H_3)\)</span> and <span class="math inline">\((H
 <span><span class="co">#&gt;   bonferroni: (H1, H2, H3, H4)</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Simulation parameters ($inputs) ------------------------------------------------</span></span>
-<span><span class="co">#&gt;   Testing 100,000 simulations - random seed 1234 &amp; multivariate normal params:</span></span>
+<span><span class="co">#&gt;   Testing 100,000 simulations with multivariate normal params:</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt;                       H1     H2     H3     H4</span></span>
 <span><span class="co">#&gt;   Marginal power: 0.8028 0.8028 0.7054 0.9015</span></span>
@@ -647,13 +647,13 @@ digits) with the default setting of <code>precision = 4</code>
 </li>
 </ul>
 <div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">verbose_output</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/graph_calculate_power.html">graph_calculate_power</a></span><span class="op">(</span><span class="va">g</span>,</span>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">1234</span><span class="op">)</span></span>
+<span><span class="va">verbose_output</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/graph_calculate_power.html">graph_calculate_power</a></span><span class="op">(</span><span class="va">g</span>,</span>
 <span>  alpha <span class="op">=</span> <span class="fl">.025</span>,</span>
 <span>  sim_corr <span class="op">=</span> <span class="va">corr</span>,</span>
 <span>  sim_n <span class="op">=</span> <span class="fl">1e5</span>,</span>
 <span>  power_marginal <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">power_marginal_primary</span>, <span class="va">power_marginal_secondary</span><span class="op">)</span>,</span>
 <span>  sim_success <span class="op">=</span> <span class="va">succ</span>,</span>
-<span>  sim_seed <span class="op">=</span> <span class="fl">1234</span>,</span>
 <span>  verbose <span class="op">=</span> <span class="cn">TRUE</span></span>
 <span><span class="op">)</span></span>
 <span></span>
@@ -681,7 +681,7 @@ digits) with the default setting of <code>precision = 4</code>
 <span><span class="co">#&gt;   bonferroni: (H1, H2, H3, H4)</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Simulation parameters ($inputs) ------------------------------------------------</span></span>
-<span><span class="co">#&gt;   Testing 100,000 simulations - random seed 1234 &amp; multivariate normal params:</span></span>
+<span><span class="co">#&gt;   Testing 100,000 simulations with multivariate normal params:</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt;                       H1     H2     H3     H4</span></span>
 <span><span class="co">#&gt;   Marginal power: 0.8028 0.8028 0.7054 0.9015</span></span>
@@ -746,7 +746,7 @@ digits) with the default setting of <code>precision = 4</code>
 <span><span class="co">#&gt;     bonferroni: (H1, H2, H3, H4)</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Simulation parameters ($inputs) ------------------------------------------------</span></span>
-<span><span class="co">#&gt;     Testing 100,000 simulations - random seed 1234 &amp; multivariate normal params:</span></span>
+<span><span class="co">#&gt;     Testing 100,000 simulations with multivariate normal params:</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt;                           H1       H2       H3       H4</span></span>
 <span><span class="co">#&gt;     Marginal power: 0.802831 0.802831 0.705414 0.901481</span></span>

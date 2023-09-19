@@ -79,7 +79,7 @@ weighting strategy defined in Bretz et al (2011).</p>
 <p>A numeric matrix of all intersection hypothesis weights. Each row
 corresponds to a single intersection hypothesis. The first half of the
 columns indicate which hypotheses are included in the given intersection
-hypothesis, and the second half of columns are the weights</p>
+hypothesis, and the second half of columns are the weights.</p>
     </div>
     <div class="section level2">
     <h2 id="performance">Performance<a class="anchor" aria-label="anchor" href="#performance"></a></h2>
@@ -89,9 +89,8 @@ hypothesis, and the second half of columns are the weights</p>
 time usage can grow quickly as graph size grows. On the systems used for
 testing, a size 10 graph had a median run time of 20-60 ms. Run time
 increases at a rate of O(2 ^ n), so e.g. a size 5 graph takes approximately
-twice as long to run as a size 4 graph. See
-<code>vignette("generate-weights-performance")</code> for a detailed analysis and
-explanation</p>
+twice as long to run as a size 4 graph. See <code><a href="../articles/generate-closure.html">vignette("generate-closure")</a></code>
+for more information about using the closure, including performance metrics.</p>
     </div>
     <div class="section level2">
     <h2 id="references">References<a class="anchor" aria-label="anchor" href="#references"></a></h2>

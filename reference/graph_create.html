@@ -75,19 +75,19 @@ graph.</p>
     <div class="section level2">
     <h2 id="arguments">Arguments<a class="anchor" aria-label="anchor" href="#arguments"></a></h2>
     <dl><dt>hypotheses</dt>
-<dd><p>A numeric vector of hypothesis weights in an initial
-graphical multiple comparison procedure. Must be a vector of values between
-0 &amp; 1 (inclusive). The length should match the row and column lengths of
+<dd><p>A numeric vector of hypothesis weights in a graphical
+multiple comparison procedure. Must be a vector of values between 0 &amp; 1
+(inclusive). The length should match the row and column lengths of
 <code>transitions</code>. The sum of hypothesis weights cannot exceed 1</p></dd>
 
 
 <dt>transitions</dt>
 <dd><p>A numeric matrix of transition weights between hypotheses
-in an initial graphical multiple comparison procedure. Must be a square
-matrix of values between 0 &amp; 1 (inclusive). The row and column lengths
-should match the length of <code>hypotheses</code>. Each row (Transition weights
-leaving a hypothesis) can sum to no more than 1. The diagonal (Transition
-weights from a hypothesis to itself) must be all 0s</p></dd>
+in a graphical multiple comparison procedure. Must be a square matrix of
+values between 0 &amp; 1 (inclusive). The row and column lengths should match
+the length of <code>hypotheses</code>. Each row (Transition weights leaving a
+hypothesis) can sum to no more than 1. The diagonal (Transition weights
+from a hypothesis to itself) must be all 0s</p></dd>
 
 
 <dt>hyp_names</dt>
@@ -108,10 +108,10 @@ list with elements <code>hypotheses</code> and <code>transitions</code></p>
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
     <p>The validations performed are:</p><ul><li><p>Weights are numeric</p></li>
-<li><p>Length of hypotheses and dimensions of transitions</p></li>
+<li><p>Length of <code>hypotheses</code> and dimensions of <code>transitions</code> match</p></li>
 <li><p>Explicit <code>hyp_names</code> override names in <code>hypotheses</code> or <code>transitions</code></p></li>
 <li><p>Hypothesis weights must be non-negative and sum to no more than 1</p></li>
-<li><p>Transition weights matrix:</p><ul><li><p>Diagonal must be all 1</p></li>
+<li><p>Transition weights matrix:</p><ul><li><p>Diagonal must be all 0</p></li>
 <li><p>Rows must sum to no more than 1</p></li>
 <li><p>Values must be non-negative</p></li>
 </ul></li>
@@ -158,82 +158,26 @@ Procedures</em>. R package version 0.8-15,
 <span class="r-in"><span>  <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">1</span>, <span class="fl">0</span>, <span class="fl">0</span><span class="op">)</span>,</span></span>
 <span class="r-in"><span>  <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">0</span>, <span class="fl">0</span>, <span class="fl">0</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="va">hyp_names</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"H1"</span>, <span class="st">"H2"</span>, <span class="st">"H3"</span>, <span class="st">"H4"</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">hyp_names</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"H11"</span>, <span class="st">"H12"</span>, <span class="st">"H21"</span>, <span class="st">"H22"</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">g</span> <span class="op">&lt;-</span> <span class="fu">graph_create</span><span class="op">(</span><span class="va">hypotheses</span>, <span class="va">transitions</span>, <span class="va">hyp_names</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">g</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Initial graph</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> --- Hypothesis weights ---</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> H1: 0.5</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> H2: 0.5</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> H3: 0.0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> H4: 0.0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> H11: 0.5</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> H12: 0.5</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> H21: 0.0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> H22: 0.0</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> --- Transition weights ---</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     H1 H2 H3 H4</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  H1  0  0  1  0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  H2  0  0  0  1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  H3  0  1  0  0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  H4  1  0  0  0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>      H11 H12 H21 H22</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  H11   0   0   1   0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  H12   0   0   0   1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  H21   0   1   0   0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  H22   1   0   0   0</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Explicit names override names in `hypotheses` (with a warning)</span></span></span>
 <span class="r-in"><span><span class="va">hypotheses</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>h1 <span class="op">=</span> <span class="fl">0.5</span>, h2 <span class="op">=</span> <span class="fl">0.5</span>, h3 <span class="op">=</span> <span class="fl">0</span>, h4 <span class="op">=</span> <span class="fl">0</span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="va">transitions</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/cbind.html" class="external-link">rbind</a></span><span class="op">(</span></span></span>
-<span class="r-in"><span>  <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">0</span>, <span class="fl">1</span>, <span class="fl">0</span><span class="op">)</span>,</span></span>
-<span class="r-in"><span>  <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">0</span>, <span class="fl">0</span>, <span class="fl">1</span><span class="op">)</span>,</span></span>
-<span class="r-in"><span>  <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">1</span>, <span class="fl">0</span>, <span class="fl">0</span><span class="op">)</span>,</span></span>
-<span class="r-in"><span>  <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">0</span>, <span class="fl">0</span>, <span class="fl">0</span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="op">)</span></span></span>
-<span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="va">g</span> <span class="op">&lt;-</span> <span class="fu">graph_create</span><span class="op">(</span><span class="va">hypotheses</span>, <span class="va">transitions</span>, <span class="va">hyp_names</span><span class="op">)</span></span></span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Hypothesis names specified - overriding names in</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span>                     `hypotheses` and `transitions`</span>
-<span class="r-in"><span><span class="va">g</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Initial graph</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> --- Hypothesis weights ---</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> H1: 0.5</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> H2: 0.5</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> H3: 0.0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> H4: 0.0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> --- Transition weights ---</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     H1 H2 H3 H4</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  H1  0  0  1  0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  H2  0  0  0  1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  H3  0  1  0  0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  H4  1  0  0  0</span>
-<span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="co"># Explicit names override names in `transitions` (with a warning)</span></span></span>
-<span class="r-in"><span><span class="va">hypotheses</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.5</span>, <span class="fl">0.5</span>, <span class="fl">0</span>, <span class="fl">0</span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="va">transitions</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/cbind.html" class="external-link">rbind</a></span><span class="op">(</span></span></span>
-<span class="r-in"><span>  h1 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">0</span>, <span class="fl">1</span>, <span class="fl">0</span><span class="op">)</span>,</span></span>
-<span class="r-in"><span>  h2 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">0</span>, <span class="fl">0</span>, <span class="fl">1</span><span class="op">)</span>,</span></span>
-<span class="r-in"><span>  h3 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">1</span>, <span class="fl">0</span>, <span class="fl">0</span><span class="op">)</span>,</span></span>
-<span class="r-in"><span>  h4 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">0</span>, <span class="fl">0</span>, <span class="fl">0</span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="op">)</span></span></span>
-<span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="va">g</span> <span class="op">&lt;-</span> <span class="fu">graph_create</span><span class="op">(</span><span class="va">hypotheses</span>, <span class="va">transitions</span>, <span class="va">hyp_names</span><span class="op">)</span></span></span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Hypothesis names specified - overriding names in</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span>                     `hypotheses` and `transitions`</span>
-<span class="r-in"><span><span class="va">g</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Initial graph</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> --- Hypothesis weights ---</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> H1: 0.5</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> H2: 0.5</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> H3: 0.0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> H4: 0.0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> --- Transition weights ---</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     H1 H2 H3 H4</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  H1  0  0  1  0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  H2  0  0  0  1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  H3  0  1  0  0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  H4  1  0  0  0</span>
-<span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="co"># Use names in `hypotheses`</span></span></span>
-<span class="r-in"><span><span class="va">hypotheses</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>H1 <span class="op">=</span> <span class="fl">0.5</span>, H2 <span class="op">=</span> <span class="fl">0.5</span>, H3 <span class="op">=</span> <span class="fl">0</span>, H4 <span class="op">=</span> <span class="fl">0</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">transitions</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/cbind.html" class="external-link">rbind</a></span><span class="op">(</span></span></span>
 <span class="r-in"><span>  <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">0</span>, <span class="fl">1</span>, <span class="fl">0</span><span class="op">)</span>,</span></span>
 <span class="r-in"><span>  <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">0</span>, <span class="fl">0</span>, <span class="fl">1</span><span class="op">)</span>,</span></span>
@@ -245,17 +189,17 @@ Procedures</em>. R package version 0.8-15,
 <span class="r-out co"><span class="r-pr">#&gt;</span> Initial graph</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> --- Hypothesis weights ---</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> H1: 0.5</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> H2: 0.5</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> H3: 0.0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> H4: 0.0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> h1: 0.5</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> h2: 0.5</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> h3: 0.0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> h4: 0.0</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> --- Transition weights ---</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     H1 H2 H3 H4</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  H1  0  0  1  0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  H2  0  0  0  1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  H3  0  1  0  0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  H4  1  0  0  0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     h1 h2 h3 h4</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  h1  0  0  1  0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  h2  0  0  0  1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  h3  0  1  0  0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  h4  1  0  0  0</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Use names in `transitions`</span></span></span>
 <span class="r-in"><span><span class="va">hypotheses</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.5</span>, <span class="fl">0.5</span>, <span class="fl">0</span>, <span class="fl">0</span><span class="op">)</span></span></span>

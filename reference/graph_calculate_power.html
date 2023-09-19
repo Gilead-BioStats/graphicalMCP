@@ -82,8 +82,6 @@ as expected rejections and probability of rejecting any hypothesis</p>
 <span>  sim_n <span class="op">=</span> <span class="fl">100</span>,</span>
 <span>  sim_corr <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/diag.html" class="external-link">diag</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">graph</span><span class="op">$</span><span class="va">hypotheses</span><span class="op">)</span><span class="op">)</span>,</span>
 <span>  sim_success <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  sim_seed <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  force_closure <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  verbose <span class="op">=</span> <span class="cn">FALSE</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
@@ -135,17 +133,6 @@ an input, and return a length-one logical vector. For instance, if
 "success" means rejecting hypotheses 1 and 2, use <code>sim_success = list("1 and 2" = function(x) x[1] &amp;&amp; x[2])</code>. If the list is not named, the function
 body will be used as the name. Lambda functions also work starting with R
 4.1, e.g. <code>sim_success = list(\(x) x[3] || x[4])</code></p></dd>
-
-
-<dt>sim_seed</dt>
-<dd><p>(Optional) Random seed to set before simulating p-values. Set
-this to use a consistent set of p simulations across power calculations</p></dd>
-
-
-<dt>force_closure</dt>
-<dd><p>A logical scalar used to determine whether the full
-closure test should be used for Bonferroni testing. Ignored if any tests
-are non-Bonferroni</p></dd>
 
 
 <dt>verbose</dt>
