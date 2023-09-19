@@ -1,12 +1,12 @@
-#' S3 print method for class `updated_graph`
+#' S3 print method for the class `updated_graph`
 #'
-#' A printed `updated_graph` displays the initial graph, the vector of
-#' keep/delete hypotheses, and the updated graph
+#' A printed `updated_graph` displays the initial graph, the updated graph, and
+#' the sequence of graphs between the two (if it's available).
 #'
 #' @param x An object of class `updated_graph` to print
 #' @param ... Other values passed on to other methods (currently unused)
-#' @param precision An integer scalar indicating the maximum number of decimals
-#'   to include in numeric values
+#' @param precision An integer scalar indicating the number of significant
+#'   figures to include in numeric values
 #' @param indent An integer scalar indicating how many spaces to indent results
 #'
 #' @export

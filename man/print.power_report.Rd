@@ -11,7 +11,7 @@
 
 \item{...}{Other values passed on to other methods (currently unused)}
 
-\item{precision}{An integer scalar indicating the maximum number of decimals
+\item{precision}{An integer scalar indicating the number of significant figures
 to include in numeric values}
 
 \item{indent}{An integer scalar indicating how many spaces to indent results}
@@ -20,12 +20,11 @@ to include in numeric values}
 print}
 }
 \description{
-A power report displays
+A power report displays:
 \itemize{
 \item The initial graph being tested,
 \item Testing and simulation options,
 \item Final power calculations, and
-\item (Partial) Detailed p-values and test results - The underlying object
-contains the full tables
+\item (Optionally) Detailed p-values and test results for each simulation
 }
 }

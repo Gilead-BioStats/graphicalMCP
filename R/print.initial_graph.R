@@ -5,7 +5,7 @@
 #'
 #' @param x An object of class `initial_graph` to print
 #' @param ... Other values passed on to other methods (currently unused)
-#' @param precision An integer scalar indicating the maximum number of decimals
+#' @param precision An integer scalar indicating the number of significant figures
 #'   to include in numeric values
 #' @param indent An integer scalar indicating how many spaces to indent results
 #' @param title First line of printing, used internally to distinguish initial

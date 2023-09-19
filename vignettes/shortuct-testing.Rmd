@@ -27,9 +27,9 @@ library(graphicalMCP)
 
 Consider a confirmatory clinical trial comparing a test treatment (treatment) against the control treatment (control) for a disease. There are two doses of treatment: the low dose and the high dose. There are two endpoints included in the multiplicity adjustment strategy, which are the primary endpoint (PE) and the secondary endpoint (SE). In total, there are four null hypotheses: $H_1$ and $H_3$ are the primary and secondary hypotheses respectively for the low dose versus control; $H_2$ and $H_4$ are the primary and secondary hypotheses respectively for the high dose versus control.
 
-There are clinical considerations which constrain the structure of multiple comparison procedures; these considerations can be flexibly incorporated using graphical approaches. First, the low and the high doses are considered equally important, which means that rejecting the primary hypothesis for either dose versus control leads to a successful trial. Regarding secondary hypotheses, each one is tested only if its corresponding primary hypothesis has been rejected. This means that $H_3$ is tested only after $H_1$ has been rejected; $H_4$ is tested only after $H_2$ has been rejected.
+There are clinical considerations which constrain the structure of multiple comparison procedures, and which can be flexibly incorporated using graphical approaches. First, the low and the high doses are considered equally important, which means that rejecting the primary hypothesis for either dose versus control leads to a successful trial. Regarding secondary hypotheses, each one is tested only if its corresponding primary hypothesis has been rejected. This means that $H_3$ is tested only after $H_1$ has been rejected; $H_4$ is tested only after $H_2$ has been rejected.
 
-In addition, there are some statistical considerations to complete the graph. The primary hypotheses $H_1$ and $H_2$ will have an equal hypothesis weight of 0.5. The secondary hypotheses will have a hypothesis weight of 0. When a primary hypothesis has been rejected, its weight will propagate along two outgoing edges: one to the other primary hypothesis and one to its descendant secondary hypothesis. The two edges will have an equal transition weight of 0.5. When both the primary and the secondary hypotheses have been rejected for a dose-control comparison, their hypothesis weights will be propagated to the primary hypothesis for the other dose-control comparison. With these specifications, we can create the following graph.
+In addition, there are some statistical considerations to complete the graph. The primary hypotheses $H_1$ and $H_2$ will have an equal hypothesis weight of 0.5. The secondary hypotheses will have a hypothesis weight of 0. When a primary hypothesis has been rejected, its weight will propagate along two outgoing edges: One to the other primary hypothesis and one to its descendant secondary hypothesis. The two edges will have an equal transition weight of 0.5. When both the primary and the secondary hypotheses have been rejected for a dose-control comparison, their hypothesis weights will be propagated to the primary hypothesis for the other dose-control comparison. With these specifications, we can create the following graph.
 
 ## Create a graph
 
@@ -55,6 +55,7 @@ Given a set of p-values for $H_1, \ldots, H_4$, the graphical multiple compariso
 ```{r graph-test}
 p_values <- c(.013, .012, .105, .005)
 test_results <- graph_test_shortcut(g, p = p_values, alpha = 0.025)
+
 test_results$outputs # Adjusted p-values and rejections
 ```
 

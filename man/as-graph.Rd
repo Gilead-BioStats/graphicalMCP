@@ -8,7 +8,7 @@
 \alias{as_graphMCP.initial_graph}
 \alias{as_igraph}
 \alias{as_igraph.initial_graph}
-\title{Convert between gMCP and graphicalMCP graph classes}
+\title{Convert between graphicalMCP, gMCP, and igraph graph classes}
 \usage{
 as_initial_graph(graph)
 
@@ -26,15 +26,20 @@ as_igraph(graph)
 }
 \arguments{
 \item{graph}{An \code{initial_graph} object from graphicalMCP, a \code{graphMCP} object
-from gMCP, or an \code{igraph} object from igraph, depending on which direction
-you're converting}
+from gMCP, or an \code{igraph} object from igraph, depending on conversion type}
 }
 \value{
 For \code{as_graphMCP()}, a gMCP graph object, for \code{as_igraph()}, an
 igraph object, and for \code{as_initial_graph()}, a graphicalMCP graph object
 }
 \description{
-Convert between gMCP and graphicalMCP graph classes
+Graphs are handled with a different object in graphicalMCP, gMCP, and igraph.
+These functions convert minimally between the different classes.
+}
+\details{
+Note that igraph and gMCP can set various attributes for vertices, edges, or
+a graph itself. These conversion functions only handle attributes related to
+names and weights. Other attributes will be dropped when converting.
 }
 \examples{
 g1 <- random_graph(5)

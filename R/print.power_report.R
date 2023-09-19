@@ -1,15 +1,14 @@
 #' S3 print method for class `power_report`
 #'
-#' A power report displays
+#' A power report displays:
 #'   * The initial graph being tested,
 #'   * Testing and simulation options,
 #'   * Final power calculations, and
-#'   * (Partial) Detailed p-values and test results - The underlying object
-#' contains the full tables
+#'   * (Optionally) Detailed p-values and test results for each simulation
 #'
 #' @param x An object of class `power_report` to print
 #' @param ... Other values passed on to other methods (currently unused)
-#' @param precision An integer scalar indicating the maximum number of decimals
+#' @param precision An integer scalar indicating the number of significant figures
 #'   to include in numeric values
 #' @param indent An integer scalar indicating how many spaces to indent results
 #' @param rows An integer scalar indicating how many rows of verbose output to

@@ -29,23 +29,26 @@ graph_test_shortcut(
 
 \item{p}{A numeric vector of p-values}
 
-\item{alpha}{A numeric scalar specifying the global significance level for
-testing}
+\item{alpha}{A numeric scalar specifying the significance level for testing}
 
 \item{test_groups}{A list of numeric vectors specifying hypotheses to test
-together}
+together. Part 1 of the test specification.}
 
-\item{test_types}{A character vector of tests to apply to the given groups}
+\item{test_types}{A character vector of tests to apply to the test groups.
+Part 2 of the test specification.}
 
-\item{test_corr}{(Optional) A numeric matrix of correlations between
-hypotheses' test statistics}
+\item{test_corr}{(Optional) A list of numeric matrices. Part 3 of the test
+specification. Each test group must have exactly one entry in the list:
+Bonferroni and Simes test groups should have entries of NULL, and
+parametric test groups should have numeric matrices specifying the (known
+or estimated) pairwise correlations between the test statistics of all
+hypotheses in the group.}
 
-\item{verbose}{A logical scalar specifying whether the results for each
-intersection hypothesis should be included}
+\item{verbose}{A logical scalar specifying whether the details of the
+adjusted p-value calculations should be included in results}
 
-\item{test_values}{A logical scalar specifying whether hypothesis-level
-detail should be included in the results, including calculating adjusted
-weights for parametric tests}
+\item{test_values}{A logical scalar specifying whether details of the
+adjusted significance calculations should be included in results}
 }
 \value{
 A \code{graph_report} object, a list of 4 elements: \code{inputs}, \code{outputs},
@@ -53,18 +56,29 @@ A \code{graph_report} object, a list of 4 elements: \code{inputs}, \code{outputs
 \itemize{
 \item Inputs - A list of the input parameters used to run the test
 \item Outputs - A list of global test results
-\item Details - A matrix with detailed adjusted p-value results (graph deletion
-sequence for shortcut testing)
-\item Test values - A data frame with hypothesis-level test details for each
-intersection (each step for shortcut testing)
+\item Details - A list of detailed adjusted p-value calculations (graph
+deletion sequence for shortcut testing)
+\item Test values - A list with hypothesis-level test details for each
+intersection using the adjusted significance method (Details about each
+step taken for shortcut testing)
 }
 }
 \description{
-The slower graph testing functions have design choices made that favor ease
-of interpreting results over speed. Results include hypothesis rejection
-decisions, but also the test values that led to the final result. The
-functions include options for reporting details using the adjusted p-value
-method or adjusted weight method.
+The graph testing functions apply a specified test strategy to a graph and a
+set of p-values, giving rich information on which hypotheses are significant,
+and why. Results include hypothesis rejection decisions, but also the test
+values that led to the final result. The functions include options for
+reporting details using the adjusted p-value method or adjusted significance
+method.
+}
+\details{
+The test specification (\code{test_groups}, \code{test_types}, and \code{test_corr}) can be
+specified either named or unnamed. If unnamed, it's assumed that all 3 are
+ordered the same way, i.e. the nth elements of \code{test_types} and \code{test_corr}
+apply to the nth group in \code{test_groups}. Naming each element with consistent
+names across the three vectors will mean that they do not have to retain the
+same order, and also may be a more robust way to keep track of testing
+details.
 }
 \examples{
 
@@ -79,7 +93,7 @@ transitions <- rbind(
 g <- graph_create(hypotheses, transitions)
 p <- c(.01, .005, .015, .022)
 
-test_corr <- list(NA, matrix(c(1, .5, .5, 1), nrow = 2, byrow = TRUE))
+corr_list <- list(NA, matrix(c(1, .5, .5, 1), nrow = 2, byrow = TRUE))
 
 # The default is all Bonferroni with alpha = .025
 graph_test_closure(g, p)
@@ -91,7 +105,7 @@ graph_test_closure(
   alpha = .025,
   test_groups = list(1:2, 3:4),
   test_types = c("bonferroni", "parametric"),
-  test_corr = test_corr
+  test_corr = corr_list
 )
 }
 \references{
@@ -124,7 +138,4 @@ with application to the Hochberg procedure. Statistics in Medicine, 38(27),
 Rohmeyer K, Klinglmueller F (2020). \emph{gMCP: Graph Based Multiple Test
 Procedures}. R package version 0.8-15,
 \url{https://cran.r-project.org/package=gMCP}.
-}
-\seealso{
-\code{\link[=graph_test_closure_fast]{graph_test_closure_fast()}}, \code{\link[=graph_test_shortcut_fast]{graph_test_shortcut_fast()}}
 }

@@ -8,24 +8,24 @@
 #'
 #' The validations performed are:
 #'   * Weights are numeric
-#'   * Length of hypotheses and dimensions of transitions
+#'   * Length of `hypotheses` and dimensions of `transitions` match
 #'   * Explicit `hyp_names` override names in `hypotheses` or `transitions`
 #'   * Hypothesis weights must be non-negative and sum to no more than 1
 #'   * Transition weights matrix:
-#'     * Diagonal must be all 1
+#'     * Diagonal must be all 0
 #'     * Rows must sum to no more than 1
 #'     * Values must be non-negative
 #'
-#' @param hypotheses A numeric vector of hypothesis weights in an initial
-#'   graphical multiple comparison procedure. Must be a vector of values between
-#'   0 & 1 (inclusive). The length should match the row and column lengths of
+#' @param hypotheses A numeric vector of hypothesis weights in a graphical
+#'   multiple comparison procedure. Must be a vector of values between 0 & 1
+#'   (inclusive). The length should match the row and column lengths of
 #'   `transitions`. The sum of hypothesis weights cannot exceed 1
 #' @param transitions A numeric matrix of transition weights between hypotheses
-#'   in an initial graphical multiple comparison procedure. Must be a square
-#'   matrix of values between 0 & 1 (inclusive). The row and column lengths
-#'   should match the length of `hypotheses`. Each row (Transition weights
-#'   leaving a hypothesis) can sum to no more than 1. The diagonal (Transition
-#'   weights from a hypothesis to itself) must be all 0s
+#'   in a graphical multiple comparison procedure. Must be a square matrix of
+#'   values between 0 & 1 (inclusive). The row and column lengths should match
+#'   the length of `hypotheses`. Each row (Transition weights leaving a
+#'   hypothesis) can sum to no more than 1. The diagonal (Transition weights
+#'   from a hypothesis to itself) must be all 0s
 #' @param hyp_names (Optional) A character vector of hypothesis names. If not
 #'   provided, names from `hypotheses` and `transitions` will be used. If names
 #'   are not specified, hypotheses will be named sequentially as H1, H2, ...
@@ -51,36 +51,12 @@
 #'   c(0, 1, 0, 0),
 #'   c(1, 0, 0, 0)
 #' )
-#' hyp_names <- c("H1", "H2", "H3", "H4")
+#' hyp_names <- c("H11", "H12", "H21", "H22")
 #' g <- graph_create(hypotheses, transitions, hyp_names)
 #' g
 #'
 #' # Explicit names override names in `hypotheses` (with a warning)
 #' hypotheses <- c(h1 = 0.5, h2 = 0.5, h3 = 0, h4 = 0)
-#' transitions <- rbind(
-#'   c(0, 0, 1, 0),
-#'   c(0, 0, 0, 1),
-#'   c(0, 1, 0, 0),
-#'   c(1, 0, 0, 0)
-#' )
-#'
-#' g <- graph_create(hypotheses, transitions, hyp_names)
-#' g
-#'
-#' # Explicit names override names in `transitions` (with a warning)
-#' hypotheses <- c(0.5, 0.5, 0, 0)
-#' transitions <- rbind(
-#'   h1 = c(0, 0, 1, 0),
-#'   h2 = c(0, 0, 0, 1),
-#'   h3 = c(0, 1, 0, 0),
-#'   h4 = c(1, 0, 0, 0)
-#' )
-#'
-#' g <- graph_create(hypotheses, transitions, hyp_names)
-#' g
-#'
-#' # Use names in `hypotheses`
-#' hypotheses <- c(H1 = 0.5, H2 = 0.5, H3 = 0, H4 = 0)
 #' transitions <- rbind(
 #'   c(0, 0, 1, 0),
 #'   c(0, 0, 0, 1),

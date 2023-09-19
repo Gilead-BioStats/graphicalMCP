@@ -19,18 +19,20 @@ mode," where selected hypotheses are deleted in the order they appear in
 \code{delete}}
 }
 \value{
-An object of class \code{updated_graph} with 3 elements
+An object of class \code{updated_graph} with 4 elements
 \itemize{
 \item The initial graph object
-\item The Boolean vector indicating which hypotheses are kept/deleted
-\item The updated graph object with specific hypotheses deleted
+\item The updated graph object with specified hypotheses deleted
+\item A numeric vector indicating which hypotheses were deleted
+\item When using ordered mode, a list of intermediate graphs for each deletion
+step
 }
 }
 \description{
 It is not always obvious what a graph's weights will look like after deleting
 one or more hypotheses. While \code{\link[=graph_generate_weights]{graph_generate_weights()}} calculates all
 sub-graphs' hypothesis weights, \code{graph_update()} gives a more detailed view
-for a single set of deletions, including transition weights as well.
+for a single set of deletions, including transition weights.
 }
 \examples{
 hypotheses <- c(0.5, 0.5, 0, 0)
@@ -42,11 +44,11 @@ transitions <- rbind(
 )
 g <- graph_create(hypotheses, transitions)
 
-# Delete the second hypothesis
-graph_update(g, c(TRUE, FALSE, TRUE, TRUE))
-# Equivalent
-# graph_update(g, 2)
+# Delete the second and third hypotheses in any order
+graph_update(g, c(FALSE, TRUE, TRUE, FALSE))
 
+# Equivalent in ordered mode
+graph_update(g, 2:3)
 }
 \references{
 Bretz, F., Maurer, W., Brannath, W., and Posch, M. (2009). A graphical

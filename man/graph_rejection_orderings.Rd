@@ -17,9 +17,10 @@ deleting the significant hypotheses
 \description{
 When using \code{graph_test_shortcut()}, there may be multiple hypotheses which
 can be rejected at each step. The specific hypothesis chosen is decided based
-on the minimum adjusted p-value. This function shows every other order that
-deletes the same hypotheses, where each hypothesis is still a valid deletion
-at the step it is chosen.
+on the minimum adjusted p-value, but final results don't change if rejection
+order changes. This function shows every other order that deletes the same
+hypotheses, where each hypothesis is still a valid rejection at the step it
+is deleted.
 }
 \examples{
 graph <- simple_successive_2()

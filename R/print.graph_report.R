@@ -2,18 +2,18 @@
 #'
 #' A graph report displays
 #'   * The initial graph being tested,
-#'   * p-values & alpha used for tests,
+#'   * p-values & significance level used for tests,
 #'   * Which hypotheses can be rejected, and
-#'   * Detailed test results matrix, including the results of
-#' [graph_generate_weights()] & test results for each intersection hypothesis
+#'   * Optional detailed test results, which vary depending on whether shortcut or
+#' closed testing was used
 #'
 #' @param x An object of class `graph_report` to print
 #' @param ... Other values passed on to other methods (currently unused)
-#' @param precision An integer scalar indicating the maximum number of decimals
-#'   to include in numeric values
+#' @param precision An integer scalar indicating the number of significant
+#'   figures to include in numeric values
 #' @param indent An integer scalar indicating how many spaces to indent results
-#' @param rows An integer scalar indicating how many rows of verbose and
-#'   test values output to print
+#' @param rows An integer scalar indicating how many rows of verbose and test
+#'   values output to print
 #'
 #' @export
 print.graph_report <- function(x, ..., precision = 4, indent = 2, rows = 10) {

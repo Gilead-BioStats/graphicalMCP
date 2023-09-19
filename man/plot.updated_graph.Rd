@@ -13,21 +13,22 @@
   Arguments passed on to \code{\link[=plot.initial_graph]{plot.initial_graph}}
   \describe{
     \item{\code{layout}}{An igraph layout specification (See \code{?igraph.plotting}), or
-\code{"grid"}, which lays out hypotheses left-to-right, top-to-bottom with
-\code{nrow} rows and \code{ncol} columns.}
+\code{"grid"}, which lays out hypotheses left-to-right and top-to-bottom. \code{nrow}
+and \code{ncol} control the grid shape}
     \item{\code{nrow}}{An integer scalar specifying the number of rows in the vertex
-grid. If row and columns counts are not specified, vertices will be laid
-out as close to a square as possible.}
+grid. If row and column counts are not specified, vertices will be laid out
+as close to a square as possible.}
     \item{\code{ncol}}{An integer scalar specifying the number of columns in the vertex
-grid. If row and columns counts are not specified, vertices will be laid
-out as close to a square as possible.}
-    \item{\code{edge_curves}}{A named numeric vector specifying the curvature edges.
-Edge pairs (Where two vertices share an edge in each possible direction)
-are detected automatically and get 0.25 curvature. Adjust edges by adding
-an entry with name \verb{"vertex1|vertex2}. Adjust default edge pairs curvature
-by adding an entry with name \code{"pairs"}.}
-    \item{\code{precision}}{An integer scalar specifying how many decimal places should
-be displayed for weights}
+grid. If row and column counts are not specified, vertices will be laid out
+as close to a square as possible.}
+    \item{\code{edge_curves}}{A named numeric vector specifying the curvature  of
+specific edges. Edge pairs (Where two vertices share an edge in each
+possible direction) are detected automatically and get 0.25 curvature.
+Adjust edges by adding an entry with name \verb{"vertex1|vertex2}, and adjust
+default edge pairs curvature by adding an entry with name \code{"pairs"} -
+\code{edge_curves = c("pairs" = .5, "H1|H3" = .25, "H3|H4" = .75)}}
+    \item{\code{precision}}{An integer scalar specifying how many significant figures
+should be displayed for weights}
     \item{\code{eps}}{A numeric scalar. Edge weights between 0 and \code{eps} will be
 displayed as \eqn{\epsilon}, and edge weights between \code{1 - eps} and 1 will
 be displayed as \eqn{1 - \epsilon}}
@@ -42,7 +43,9 @@ passed directly to \code{\link[graphics:par]{graphics::par()}} (\code{mar})}
 NULL, after plotting the graph
 }
 \description{
-S3 plot method for the class \code{updated_graph}
+Plotting an updated graph is a \emph{very} light wrapper around
+\code{\link[=plot.initial_graph]{plot.initial_graph()}}, only changing the default vertex color to use gray
+for deleted hypotheses.
 }
 \examples{
 plot(

@@ -13,7 +13,7 @@ graph_generate_weights(graph)
 A numeric matrix of all intersection hypothesis weights. Each row
 corresponds to a single intersection hypothesis. The first half of the
 columns indicate which hypotheses are included in the given intersection
-hypothesis, and the second half of columns are the weights
+hypothesis, and the second half of columns are the weights.
 }
 \description{
 The closure of a graph is the set of all sub-graphs, or intersections
@@ -26,9 +26,8 @@ Much thought was given to the performance of this code, as the memory and
 time usage can grow quickly as graph size grows. On the systems used for
 testing, a size 10 graph had a median run time of 20-60 ms. Run time
 increases at a rate of O(2 ^ n), so e.g. a size 5 graph takes approximately
-twice as long to run as a size 4 graph. See
-\code{vignette("generate-weights-performance")} for a detailed analysis and
-explanation
+twice as long to run as a size 4 graph. See \code{vignette("generate-closure")}
+for more information about using the closure, including performance metrics.
 }
 
 \examples{

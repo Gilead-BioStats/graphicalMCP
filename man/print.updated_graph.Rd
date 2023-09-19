@@ -2,7 +2,7 @@
 % Please edit documentation in R/print.updated_graph.R
 \name{print.updated_graph}
 \alias{print.updated_graph}
-\title{S3 print method for class \code{updated_graph}}
+\title{S3 print method for the class \code{updated_graph}}
 \usage{
 \method{print}{updated_graph}(x, ..., precision = 6, indent = 2)
 }
@@ -11,12 +11,12 @@
 
 \item{...}{Other values passed on to other methods (currently unused)}
 
-\item{precision}{An integer scalar indicating the maximum number of decimals
-to include in numeric values}
+\item{precision}{An integer scalar indicating the number of significant
+figures to include in numeric values}
 
 \item{indent}{An integer scalar indicating how many spaces to indent results}
 }
 \description{
-A printed \code{updated_graph} displays the initial graph, the vector of
-keep/delete hypotheses, and the updated graph
+A printed \code{updated_graph} displays the initial graph, the updated graph, and
+the sequence of graphs between the two (if it's available).
 }

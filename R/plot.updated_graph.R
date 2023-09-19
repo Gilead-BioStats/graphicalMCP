@@ -1,5 +1,9 @@
 #' S3 plot method for the class `updated_graph`
 #'
+#' Plotting an updated graph is a *very* light wrapper around
+#' [plot.initial_graph()], only changing the default vertex color to use gray
+#' for deleted hypotheses.
+#'
 #' @param x An `updated_graph` object as returned by `graph_update()`
 #' @inheritDotParams plot.initial_graph
 #'

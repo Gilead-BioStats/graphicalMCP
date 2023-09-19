@@ -11,7 +11,7 @@
 
 \item{...}{Other values passed on to other methods (currently unused)}
 
-\item{precision}{An integer scalar indicating the maximum number of decimals
+\item{precision}{An integer scalar indicating the number of significant figures
 to include in numeric values}
 
 \item{indent}{An integer scalar indicating how many spaces to indent results}
