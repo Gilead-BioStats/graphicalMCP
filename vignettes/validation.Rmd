@@ -56,7 +56,7 @@ dimnames(graphicalmcp_weights) <- list(NULL, NULL)
 
 gmcp_weights <- generateWeights(ss_graph$transitions, ss_graph$hypotheses)
 
-identical(gmcp_weights, graphicalmcp_weights[15:1, ])
+all.equal(gmcp_weights, graphicalmcp_weights[15:1, ])
 ```
 
 ### Bonferroni adjusted p-values
@@ -68,7 +68,7 @@ graphicalmcp_test_bonf <- graph_test_shortcut(ss_graph, p)
 
 gmcp_test_bonf <- gMCP(as_graphMCP(ss_graph), p, alpha = .025)
 
-identical(graphicalmcp_test_bonf$outputs$adjusted_p, gmcp_test_bonf@adjPValues)
+all.equal(graphicalmcp_test_bonf$outputs$adjusted_p, gmcp_test_bonf@adjPValues)
 ```
 
 ### Parametric adjusted p-values
@@ -76,18 +76,24 @@ identical(graphicalmcp_test_bonf$outputs$adjusted_p, gmcp_test_bonf@adjPValues)
 Parametric adjusted p-values are calculated at different precision between packages.
 
 ```{r test-para}
-test_corr <- matrix(.5, 4, 4)
-diag(test_corr) <- 1
+test_corr <- rbind(
+  c(1, .5, NA, NA),
+  c(.5, 1, NA, NA),
+  c(NA, NA, 1, NA),
+  c(NA, NA, NA, 1)
+)
 
-graphicalmcp_test_para <- graph_test_closure(ss_graph, p,
-                                             test_types = "p",
-                                             test_corr = list(test_corr))
+graphicalmcp_test_para <-
+  graph_test_closure(ss_graph, p,
+                     test_groups = list(1:2, 3:4),
+                     test_types = c("p", "b"),
+                     test_corr = list(test_corr[1:2, 1:2], NA))
 
 gmcp_test_para <- gMCP(as_graphMCP(ss_graph), p,
                        alpha = .025,
                        correlation = test_corr)
 
-identical(
+all.equal(
   round(graphicalmcp_test_para$outputs$adjusted_p, 10),
   round(gmcp_test_para@adjPValues, 10)
 )
@@ -97,23 +103,26 @@ identical(
 
 The packages use slightly different simulation methods, which leads to slight differences in power.
 
-```{r power}
+```{r power-bonf}
 marginal_power <- c(.8, .8, .7, .7)
 
 noncentrality_parameter <-
   qnorm(1 - .025, lower.tail = TRUE) -
   qnorm(1 - marginal_power, lower.tail = TRUE)
 
+sim_corr <- matrix(.5, 4, 4)
+diag(sim_corr) <- 1
+
 set.seed(92123)
 graphicalmcp_power <- graph_calculate_power(ss_graph,
                                             power_marginal = marginal_power,
-                                            sim_corr = test_corr,
+                                            sim_corr = sim_corr,
                                             sim_n = 2^17)
 
 set.seed(92123)
 gmcp_power <- calcPower(ss_graph$hypotheses, .025, ss_graph$transitions,
                         mean = noncentrality_parameter,
-                        corr.sim = test_corr,
+                        corr.sim = sim_corr,
                         n.sim = 2^17)
 
 print("Power differences")
@@ -123,6 +132,38 @@ structure(
     function(index) gmcp_power[[index]] - graphicalmcp_power$power[[index]]
   ),
   names = names(graphicalmcp_power$power)[1:4]
+)
+```
+
+### Parametric power
+
+```{r power-para}
+set.seed(92123)
+graphicalmcp_power_para <-
+  graph_calculate_power(ss_graph,
+                        test_groups = list(1:2, 3:4),
+                        test_types = c("p", "b"),
+                        test_corr = list(test_corr[1:2, 1:2], NA),
+                        power_marginal = marginal_power,
+                        sim_corr = sim_corr,
+                        sim_n = 2^13)
+
+set.seed(92123)
+gmcp_power_para <- calcPower(ss_graph$hypotheses, .025, ss_graph$transitions,
+                        corr.test = test_corr,
+                        mean = noncentrality_parameter,
+                        corr.sim = sim_corr,
+                        n.sim = 2^13)
+
+print("Power differences")
+structure(
+  lapply(
+    seq_along(gmcp_power_para),
+    function(index) {
+      gmcp_power_para[[index]] - graphicalmcp_power_para$power[[index]]
+    }
+  ),
+  names = names(graphicalmcp_power_para$power)[1:4]
 )
 ```
 
@@ -137,22 +178,73 @@ graphicalmcp_weights <- graph_generate_weights(ss_graph)
 
 lrstat_weights <- fwgtmat(ss_graph$hypotheses, ss_graph$transitions)
 
-identical(lrstat_weights, unname(graphicalmcp_weights[, 5:8]))
+all.equal(lrstat_weights, unname(graphicalmcp_weights[, 5:8]))
 ```
 
 ### Simes adjusted p-values
 
 ```{r test-simes}
-graphicalmcp_test_simes <- graph_test_closure(ss_graph, p, test_types = "s")
+graphicalmcp_test_simes <- graph_test_closure(ss_graph, p,
+                                              test_groups = list(1:2, 3:4),
+                                              test_types = c("s", "b"))
+
+family <- rbind(
+  c(1, 1, 0, 0),
+  c(0, 0, 1, 0),
+  c(0, 0, 0, 1)
+)
 
 lrstat_test_simes <- fadjpsim(
   fwgtmat(ss_graph$hypotheses, ss_graph$transitions),
   p,
-  matrix(1, 1, 4)
+  family
 )
 
-identical(
+all.equal(
   unname(graphicalmcp_test_simes$outputs$adjusted_p),
   lrstat_test_simes
+)
+```
+
+### Simes power
+
+lrstat doesn't have a built-in MCP power function, but it can calculate many adjusted p-values quickly if given a matrix of p-values. Here we simulate p-values the same way as `graph_calculate_power()` and demonstrate that results are the same.
+
+```{r power-simes}
+set.seed(92123)
+graphicalmcp_power_simes <-
+  graph_calculate_power(ss_graph,
+                        power_marginal = marginal_power,
+                        test_groups = list(1:2, 3:4),
+                        test_types = c("s", "b"),
+                        sim_corr = sim_corr,
+                        sim_n = 1e5)
+
+noncentrality_parameter <-
+  qnorm(1 - .025, lower.tail = TRUE) - 
+  qnorm(1 - marginal_power, lower.tail = TRUE)
+
+# Simulate p-values the same way as graph_calculate_power()
+set.seed(92123)
+p_sim <- pnorm(
+  mvtnorm::rmvnorm(
+    1e5,
+    noncentrality_parameter,
+    sigma = sim_corr
+  ),
+  lower.tail = FALSE
+)
+
+lrstat_p_adj_simes <- fadjpsim(
+  fwgtmat(ss_graph$hypotheses, ss_graph$transitions),
+  p_sim,
+  family
+)
+
+lrstat_power_simes <- colSums(lrstat_p_adj_simes <= .025) / 1e5
+
+all.equal(
+  lrstat_power_simes,
+  unname(graphicalmcp_power_simes$power$power_local)
 )
 ```
