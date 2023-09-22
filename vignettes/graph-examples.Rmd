@@ -86,7 +86,7 @@ otherwise the testing stops. If $H_2$ is rejected, it will test $H_3$; otherwise
 the testing stops. For each hypothesis, it will be tested at the full $\alpha$ level, 
 when it can be tested.
 
-```{r fixed-sequence, fig.dim=c(6, 2)}
+```{r fixed-sequence-1, fig.dim=c(6, 2)}
 set.seed(1234)
 alpha <- 0.025
 m <- 3
@@ -139,7 +139,7 @@ transitions <- rbind(
   c(0.5, 0.5, 0)
 )
 fallback_graph_2005 <- graph_create(rep(1 / m, m), transitions)
-plot(fallback_graph_2008, nrow = 1, asp = .1)
+plot(fallback_graph_2003, nrow = 1, asp = .1)
 
 # Hommel and Bretz (2008)
 epsilon <- 0.0001
@@ -255,7 +255,7 @@ the successive relationships between $H_1$ and $H_3$, and $H_2$ and $H_4$, respe
 If both $H_1$ and $H_3$ are rejected, their hypothesis weights are propagated to 
 $H_2$ and $H_4$, and vice versa.
 
-```{r simple-successive}
+```{r simple-successive-1}
 set.seed(1234)
 alpha <- 0.025
 m <- 4
@@ -277,7 +277,7 @@ The above graph could be generalized to allow propagation between primary hypoth
 A general successive graph is illustrate below with a variable to determine the 
 propagation between $H_1$ and $H_2$.
 
-```{r simple-successive-var}
+```{r simple-successive-var-1}
 set.seed(1234)
 alpha <- 0.025
 m <- 4
@@ -457,7 +457,7 @@ plot(
 
 In [year], [names] introduced the parallel gate-keeping procedure. It is useful when...?
 
-```{r parallel-gatekeeping}
+```{r parallel-gatekeeping-1}
 par_gate_graph <- graph_create(
   c(.5, .5, 0, 0),
   rbind(

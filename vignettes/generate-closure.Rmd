@@ -39,7 +39,7 @@ weights are propagated to $H_1$. Thus there is an edge from $H_3 (H_4)$ to $H_2 
 with a transition weight of 1. A graphical multiple comparison procedure is illustrated 
 below.
 
-```{r base-graph, fig.dim=c(6, 6)}
+```{r base-graph-1, fig.dim=c(6, 6)}
 ss_graph <- simple_successive_2()
 
 plot(ss_graph, layout = "grid")
