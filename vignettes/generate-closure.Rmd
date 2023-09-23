@@ -139,232 +139,10 @@ is the slowest and `fwgtmat::lrstat` is the fastest. Approach 2
 that `fwgtmat::lrstat` implements the calculation using C++, which is known to be 
 faster than R. But it is less stable than other approaches, e.g., giving errors more 
 often than others. Given that the computing time of R-based approaches is acceptable, 
-adding Rcpp dependency is not considered in `graphicalMCP`. For these considerations, we implement 
-Approach 2 in `weighting_strategy::graphicalMCP`.
+adding Rcpp dependency is not considered in `graphicalMCP`. For these considerations, 
+we implement Approach 2 in `weighting_strategy::graphicalMCP`.
 
-### Add plot here
-
-## Improving power simulations using parent-child relationships
-### Conventional approach for power simulations
-The conventional approach for power simulations is to repeat the following process 
-many times, e.g., 100,000 times.
-1. Simulate a set of p-values
-2. Run the graphical multiple comparison procedure to
-    + Determine which hypothesis can be rejected
-    + Remove the rejected hypothesis and update the graph
-    + Repeat until no more hypotheses can be rejected
-Note that the same step to update the graph may repeat in many replications, which 
-may be repetitive. For $m$ hypotheses, there are at most $2^m-1$ graphs depending 
-on which hypotheses are rejected. These graphs corresponds to the closure and the 
-weighting strategy. Thus an idea to avoid redundant updating of graphs is to utilize 
-the weighting strategy.
-
-### Power simulations using parent-child relationships
-The key to allow this approach is to efficiently identify the row of the weighting 
-strategy, given which hypotheses are rejected. Remembering the pattern we found for 
-Approach 2, the bottom half (rows 9 - 15) of `matrix_intersections` is the same as 
-the top half (rows 1 - 7), except flipping $H_1$ from 1 to 0. This means that if 
-$H_1$ has not been rejected (1 for $H_1$ in `matrix_intersections`), the row number 
-of that index should be in the top half. For example, assume that $H_2$ and 
-$H_4$ have been rejected and the index in `matrix_intersections` should be $(1, 0, 1, 0)$. 
-Since $H_1$ is 1, the corresponding row should be in the top half (rows 1- 7). But 
-$H_2$ is 0 and thus the corresponding row should be in the bottom half within the 
-top half (rows 5 - 7). Since $H_3$ is 1 and thus the corresponding row should be 
-in the top half (rows 5 - 6). But $H_4$ is 0 and thus the corresponding row should 
-be 6. A useful way to calculate the row number for an index of XXXX is 
-`2^m - sum(XXXX * 2^(m:1 - 1))`. For example for XXXX=1010, its row number should be 
-`(1 - 1) * 8 + (1 - 0) * 4 + (1 - 1) * 2 + (1 - 0) * 1 + 1 = 16 - 10 = 6`.               
-
-With the above way of efficiently identifying rows of `weighting_strategy`, power 
-simulations could be implemented as follows:
-1. Obtain the weighting strategy (once for all simulations)
-2. Simulate a set of p-values
-3. Run the graphical multiple comparison procedure to
-    + Determine which hypothesis can be rejected
-    + Remove the rejected hypothesis and identify the row of the weighting strategy
-    + Repeat until no more hypotheses can be rejected
-The small modification in Step 3b make this approach much faster than the conventional 
-approach for power simulations.
-
-## Comparing different approaches to power simulations
-To benchmark against existing approaches to calculating weighting strategies, we 
-compare the following approaches: `calcPower::gMCP`, Approach 1 
-(graphicalMCP conventional), and Approach 2 (graphicalMCP parent-child). Both Holm 
-and fixed sequence procedures are considered with the numbers of hypotheses of 4, 
-8, 12, and 16. Computing time (in median log-10 seconds) is plotted below. We can 
-see that `calcPower::gMCP` is the fastest and Approach 1 (graphicalMCP conventional) 
-is the lowest. Note that `calcPower::gMCP` implements the simulation using C, which 
-is known to be faster than R but is not easy to extend to other situations. Given 
-that the computing time of Approach 2 (graphicalMCP parent-child) is acceptable, 
-we implement it in `graph_calculate_power::graphicalMCP`.
-
-### Add plot here
-
-################################################################################
-
-
-
-
-The closure of a graph is the set of all sub-graphs, along with their weights calculated according to algorithm 1 of Bretz et al (2011). It is primarily used for [closed testing](link%20to%20closed%20test%20vignette), where all sub-graphs are tested for significance, and results are aggregated to determine which null hypotheses are significant globally.
-
-Throughout this article a common example will be used for demonstrations - the simple successive graph. It has two primary hypotheses, $H_1$ and $H_2$, which have the initial weight evenly split between them. The secondary hypotheses, $H_3$ and $H_4$, only have weight propagated to them if $H_1$ or $H_2$ is deleted, respectively.
-
-```{r base-graph, fig.dim=c(6, 6)}
-ss_graph <- simple_successive_2()
-
-plot(ss_graph, layout = "grid")
-```
-
-### Components of the closure
-
-In graphicalMCP, the closure is represented by a matrix, where each row represents a sub-graph (also called an intersection hypothesis), and each column corresponds to an individual hypothesis. This matrix can be created with `graph_generate_weights()`, and it has two parts: An indicator matrix showing which hypotheses are contained in each sub-graph (The so-called powerset of a set), and a weights matrix containing the induced weights of each sub-graph.
-
-```{r closure-parts}
-weighting_strategy <- graph_generate_weights(ss_graph)
-matrix_intersections <- weighting_strategy[, seq_along(ss_graph$hypotheses)]
-
-data.frame(Intersection = seq_len(nrow(weighting_strategy))) |>
-  cbind(weighting_strategy) |>
-  data.frame() |>
-  gt() |>
-  tab_header("Closure of the simple successive graph") |>
-  tab_spanner("Powerset", H1:H4) |>
-  tab_spanner("Weights", H1.1:H4.1) |>
-  tab_style(
-    cell_text(align = "center", style = "italic"),
-    cells_body(Intersection)
-  ) |>
-  cols_label(
-    H1.1 = "H1",
-    H2.1 = "H2",
-    H3.1 = "H3",
-    H4.1 = "H4"
-  ) |>
-  opt_row_striping()
-```
-
-### Properties of the closure
-
-The rows of the closure are generated in a particular way in order to give them some useful properties.
-
-#### Repeating recursive blocks
-
-First, notice how each row can be obtained from some row higher up in the matrix by flipping a single 1 to be a 0. For example, go from row 1 to row 3 by flipping $H_3$, or go from row 10 to row 14 by flipping $H_2$. The upper row in a pairing like this can be thought of as the "parent" sub-graph, and the lower row as the "child" sub-graph. Flipping a 0 to be a 1 and moving up the matrix will be called "finding a sub-graph's parent." Now consider the parent-finding strategy where the left-most 0 in each row is flipped. This reveals a pattern between the bottom half and top half, where each row's parent in the bottom half is the corresponding row in the top half, eight rows up.
-
-```{r big-pattern}
-data.frame(Intersection = seq_len(nrow(weighting_strategy))) |>
-  cbind(matrix_intersections) |>
-  data.frame() |>
-  gt() |>
-  tab_header("The boxes contain identical matrices") |>
-  tab_style(
-    cell_text(align = "center", style = "italic"),
-    cells_body(Intersection)
-  ) |>
-  tab_style(
-    cell_borders("left", "#a069c4", weight = px(2)),
-    cells_body(H2, c(1:7, 9:15))
-  ) |>
-  tab_style(
-    cell_borders("top", "#a069c4", weight = px(2)),
-    cells_body(H2:H4, c(1, 9))
-  ) |>
-  tab_style(
-    cell_borders("right", "#a069c4", weight = px(2)),
-    cells_body(H4, c(1:7, 9:15))
-  ) |>
-  tab_style(
-    cell_borders("bottom", "#a069c4", weight = px(2)),
-    cells_body(H2:H4, c(7, 15))
-  )
-```
-
-The pattern then repeats within each box recursively, with the top half of each box matching the bottom half, if the first missing hypothesis is flipped from 0 to 1.
-
-```{r small-pattern}
-data.frame(Intersection = seq_len(nrow(weighting_strategy))) |>
-  cbind(matrix_intersections) |>
-  data.frame() |>
-  gt() |>
-  tab_header("The boxes contain identical matrices") |>
-  tab_style(
-    cell_text(align = "center", style = "italic"),
-    cells_body(Intersection)
-  ) |>
-  tab_style(
-    cell_borders("left", "#a069c4", weight = px(2)),
-    cells_body(H2, c(1:7, 9:15))
-  ) |>
-  tab_style(
-    cell_borders("top", "#a069c4", weight = px(2)),
-    cells_body(H2:H4, c(1, 9))
-  ) |>
-  tab_style(
-    cell_borders("right", "#a069c4", weight = px(2)),
-    cells_body(H4, c(1:7, 9:15))
-  ) |>
-  tab_style(
-    cell_borders("bottom", "#a069c4", weight = px(2)),
-    cells_body(H2:H4, c(7, 15))
-  ) |>
-  tab_style(
-    cell_borders("left", "black", weight = px(2)),
-    cells_body(H3, c(1:3, 5:7, 9:11, 13:15))
-  ) |>
-  tab_style(
-    cell_borders("top", "black", weight = px(2)),
-    cells_body(H3:H4, c(1, 5, 9, 13))
-  ) |>
-  tab_style(
-    cell_borders("right", "black", weight = px(2)),
-    cells_body(H4, c(1:3, 5:7, 9:11, 13:15))
-  ) |>
-  tab_style(
-    cell_borders("bottom", "black", weight = px(2)),
-    cells_body(H3:H4, c(3, 7, 11, 15))
-  )
-```
-
-#### Binary counting {#binary-counting}
-
-The second useful property is somewhat a re-framing of the first, or perhaps could be viewed as a reason why the first is true. Starting with the bottom row, the powerset in this particular order counts up from 1 in binary, incrementing by 1 per row. This means that a row number can be directly calculated from a vector showing which hypotheses are currently deleted from the graph: `row_number == number_of_rows - incl_excl_vec_converted_to_base_10 + 1`. For example, intersection number 6 has hypothesis vector `1010`. When interpreted as binary, this is `1 * 8 + 0 * 4 + 1 * 2 + 0 * 1 = 10` in base 10, and `6 == 15 - 10 + 1`.
-
-```{r closure-repeat}
-data.frame(Intersection = seq_len(nrow(weighting_strategy))) |>
-  cbind(matrix_intersections) |>
-  data.frame() |>
-  gt() |>
-  tab_header("Binary counting") |>
-  tab_style(
-    cell_text(align = "center", style = "italic"),
-    cells_body(Intersection)
-  ) |>
-  tab_style(cell_borders("left", "#a069c4"), cells_body(1, 6)) |>
-  tab_style(cell_borders("top", "#a069c4"), cells_body(1:5, 6)) |>
-  tab_style(cell_borders("right", "#a069c4"), cells_body(5, 6)) |>
-  tab_style(cell_borders("bottom", "#a069c4"), cells_body(1:5, 6)) |>
-  opt_row_striping()
-```
-
-## Strategies
-
-Because the size of the closure grows quickly as graph size increases (An n-graph has `2^n - 1` sub-graphs), calculating the full closure for large graphs can be computationally intensive. Optimizing this process led to three main strategies:
-
--   The simplest approach, which uses the full graph as the starting point for every sub-graph, then deletes the appropriate hypotheses
--   A recursive method, which traverses the closure tree, deleting one hypothesis each time to step between graphs
--   A formulaic shortcut using the order of graphs generated with the recursive method
-
-Note that the discussion of these methods focuses primarily on the weights side rather than the powerset side of the closure. This is because the fastest methods discovered generate the powerset implicitly from missing values in the weights side. For methods such as the simple approach, which rely on having the powerset in order to generate weights, the powerset can be created efficiently. Here `num_hyps` refers to the number of hypotheses in the initial graph.
-
-```{r powerset, eval=FALSE, echo=TRUE}
-powerset <- as.matrix(rev(expand.grid(rep(list(1:0), num_hyps))[-2^num_hyps, ]))
-```
-
-### Simple approach
-
-The simplest approach to generate the weights of the closure is to apply `graph_update()` to the initial graph once for each sub-graph. This is short and sweet to write, but it's inefficient because each hypothesis gets deleted from the graph multiple times. Here is the code for the simple method.
-
-```{r ggw-simple, echo=TRUE}
+```{r gw-benchmarks-functions, eval = FALSE}
 ggw_simple <- function(graph) {
   num_hyps <- length(graph$hypotheses)
 
@@ -381,13 +159,7 @@ ggw_simple <- function(graph) {
 
   cbind(matrix_intersections, do.call(rbind, matrix_weights))
 }
-```
 
-### Recursive
-
-The recursive method treats the space of sub-graphs as a tree, with the initial graph at the root, and other sub-graphs decreasing in size going down the branches. The essence of the recursive step is to delete a hypothesis in the current graph. But doing this for every hypothesis in every sub-graph in the tree would result in taking multiple paths to many of the graphs. So a key part of the recursive step is that it has memory - Each graph in the tree will only delete the hypotheses that come after the hypothesis that was just deleted to reach the current graph. The base case also needs memory - It is reached when a graph has only one hypothesis left, or when the last-deleted hypothesis number is larger than all current hypotheses. This memory in the recursion enables the tree traversal to reach each unique graph state exactly once. Here is an implementation of the recursion, followed by a wrapper for processing the sub-graph list into the standard matrix form.
-
-```{r recursion, echo=TRUE}
 delete_nodes_recursive <- function(graph, last = 0) {
   init_hypotheses <- hypotheses <- graph$hypotheses
   init_transitions <- transitions <- graph$transitions
@@ -449,9 +221,7 @@ delete_nodes_recursive <- function(graph, last = 0) {
     list(graph)
   )
 }
-```
 
-```{r ggw-recursive, echo=TRUE}
 ggw_recursive <- function(graph) {
   # The recursion requires the hypotheses to be named sequentially as actual
   # numbers for the memory property to work
@@ -480,267 +250,696 @@ ggw_recursive <- function(graph) {
 
   cbind(matrix_intersections, matrix_weights)
 }
-```
 
-### Formula shortcut
+vec_num_hyps <- 2:8 * 2
 
-Finally, the fastest method found so far - the formula shortcut. While recursion can save a lot of time over the first method, it still has a bit of overhead to get from the list of sub-graphs to the matrix form that is standard. This is where the "repeating block" property of the closure mentioned earlier is useful. Instead of using recursion to connect parent sub-graphs to their children, a pair of formulas can be used. One formula generates the parent of each graph that is obtained by flipping the left-most 0 to be a 1: `do.call(c, lapply(2^(seq_len(num_hyps) - 1), seq_len))`. Note that this is for rows 2 through the (non-existent) row 16, which is the empty graph. Row 1 has no parent graph. The left-most 0 in a child graph is easy to find, but from the parent graph's perspective, this formula calculates which hypothesis to delete: `rep(rev(seq_len(num_hyps)), 2^(seq_len(num_hyps) - 1))`. This also applies to rows 2 through 16.
-
-```{r parent-child-delete}
-num_hyps <- length(ss_graph$hypotheses)
-
-parents <- do.call(c, lapply(2^(seq_len(num_hyps) - 1), seq_len))
-parents <- c(NA, parents[-(2^num_hyps - 1)])
-
-delete <- rep(rev(seq_len(num_hyps)), 2^(seq_len(num_hyps) - 1))
-delete <- c(NA, delete[-(2^num_hyps - 1)])
-
-parent_child_demo <- cbind(
-  data.frame(Intersection = seq_len(2^num_hyps - 1)),
-  weighting_strategy[, seq_len(num_hyps)],
-  delete = delete,
-  parents = parents
+benchmark_list <- lapply(
+  vec_num_hyps,
+  function(num_hyps) {
+    cat(num_hyps, "\n")
+    # A graph for the Holm procedure
+    transitions <- matrix(1 / (num_hyps - 1), num_hyps, num_hyps)
+    diag(transitions) <- 0
+    
+    graph <- graph_create(rep(1 / num_hyps, num_hyps), transitions)
+    
+    # lrstat sometimes errors, even when hypotheses seem to sum to 1. This
+    # fixes some of those cases
+    graph$hypotheses <- c(
+      graph$hypotheses[seq_len(num_hyps - 1)],
+      1 - sum(graph$hypotheses[seq_len(num_hyps - 1)])
+    )
+    
+    benchmark <- mark(
+      gMCP = generateWeights(graph$transitions, graph$hypotheses),
+      `graphicalMCP simple` = ggw_simple(graph),
+      `graphicalMCP recursive` = ggw_recursive(graph),
+      `graphicalMCP parent-child` = graph_generate_weights(graph),
+      # lrstat still errors with graphs occasionally for unknown reasons
+      lrstat = if (!num_hyps %in% c(10, 14)) {
+        fwgtmat(graph$hypotheses, graph$transitions)
+      },
+      check = FALSE,
+      memory = FALSE,
+      time_unit = "ms",
+      min_iterations = 5
+    )[, 1:5]
+    
+    # Remove rows for lrstat that weren't actually run
+    benchmark <- benchmark[benchmark$median > 0.005, ]
+    benchmark$char_expression <- as.character(benchmark$expression)
+    benchmark <- benchmark[, c("char_expression", "median")]
+    
+    cbind(data.frame(num_hyps = num_hyps), benchmark)
+  }
 )
 
-gt(parent_child_demo) |>
-  tab_header("Parent-child connections") |>
-  tab_spanner("To reach a given row...", delete:parents) |>
-  tab_style(
-    cell_text(align = "center", style = "italic"),
-    cells_body(Intersection)
-  ) |>
-  tab_style(
-    cell_text(align = "center"),
-    cells_body(c(delete, parents))
-  ) |>
-  cols_label(
-    delete = "Delete hypothesis no.",
-    parents = "From intersection no."
+benchmarks <- do.call(rbind, benchmark_list)
+
+benchmarks$char_expression <- ordered(
+  benchmarks$char_expression,
+  c(
+    "gMCP",
+    "graphicalMCP simple",
+    "graphicalMCP recursive",
+    "graphicalMCP parent-child",
+    "lrstat"
   )
+)
+
+write.csv(
+  benchmarks,
+  here::here("vignettes/cache/gw_benchmarks.csv"),
+  row.names = FALSE
+)
+
 ```
 
-The formula shortcut also results in simpler code than the recursive solution.
-
-## Performance gains
-
-### Generating the closure
-
-The formula method reduces each step of generating the closure to a single deletion from a prior graph, with almost no additional overhead. Here's how the different methods fare, including the version from the gMCP package for reference. Also worthy of note is the lrstat package, which contains a few MCP-related functions, including generating weights of the closure. It uses excellent C++ code to perform even faster, but since the speed of the current formula-based method is acceptable, adding an Rcpp dependency was not considered to be worth the additional time savings.
-
-```{r gw-benchmarks, eval=FALSE}
-vec_num_hyps <- 2:8 * 2
-
-if (file.exists(here::here("vignettes/cache/gw_benchmark_list.rds"))) {
-  benchmarks <- read.csv(here::here("vignettes/cache/gw_benchmarks.csv"))
-} else {
-  benchmark_list <- lapply(
-    vec_num_hyps,
-    function(num_hyps) {
-      cat(num_hyps, "\n")
-      # A graph for the Holm procedure
-      transitions <- matrix(1 / (num_hyps - 1), num_hyps, num_hyps)
-      diag(transitions) <- 0
-
-      graph <- graph_create(rep(1 / num_hyps, num_hyps), transitions)
-
-      # lrstat sometimes errors, even when hypotheses seem to sum to 1. This
-      # fixes some of those cases
-      graph$hypotheses <- c(
-        graph$hypotheses[seq_len(num_hyps - 1)],
-        1 - sum(graph$hypotheses[seq_len(num_hyps - 1)])
-      )
-
-      benchmark <- mark(
-        gMCP = generateWeights(graph$transitions, graph$hypotheses),
-        `graphicalMCP simple` = ggw_simple(graph),
-        `graphicalMCP recursive` = ggw_recursive(graph),
-        `graphicalMCP shortcut` = graph_generate_weights(graph),
-        # lrstat still errors with graphs occasionally for unknown reasons
-        lrstat = if (!num_hyps %in% c(10, 14)) {
-          fwgtmat(graph$hypotheses, graph$transitions)
-        },
-        check = FALSE,
-        memory = FALSE,
-        time_unit = "ms",
-        min_iterations = 5
-      )[, 1:5]
-
-      # Remove rows for lrstat that weren't actually run
-      benchmark <- benchmark[benchmark$median > .002, ]
-      benchmark$char_expression <- as.character(benchmark$expression)
-      benchmark <- benchmark[, c("char_expression", "median")]
-
-      cbind(data.frame(num_hyps = num_hyps), benchmark)
-    }
-  )
-
-  benchmarks <- do.call(rbind, benchmark_list)
-  
-  benchmarks$char_expression <- ordered(
-    benchmarks$char_expression,
-    c(
-      "gMCP",
-      "graphicalMCP simple",
-      "graphicalMCP recursive",
-      "graphicalMCP shortcut",
-      "lrstat"
-    )
-  )
-  
-  write.csv(
-    benchmarks,
-    here::here("vignettes/cache/gw_benchmarks.csv"),
-    row.names = FALSE
-  )
-
-  # saveRDS(benchmark_list, here::here("vignettes/cache/gw_benchmark_list.rds"))
-}
-```
-
-```{r plot-gw-benchmarks, eval=FALSE, fig.dim=c(8, 5)}
+```{r plot-gw-benchmarks, fig.dim=c(8, 5)}
+benchmarks <- read.csv(here::here("vignettes/cache/gw_benchmarks.csv"))
+benchmarks <- subset(benchmarks, char_expression != "graphicalMCP recursive")
+benchmarks$char_expression <- factor(benchmarks$char_expression,
+                                     levels = c("gMCP",
+                                                "graphicalMCP simple",
+                                                "graphicalMCP parent-child",
+                                                "lrstat")
+                                     )
 benchmarks_plot_standard <-
   ggplot(benchmarks, aes(num_hyps, median, color = char_expression)) +
-  geom_point() +
-  geom_line() +
-  theme_minimal() +
-  scale_y_continuous(labels = scales::label_comma(suffix = "ms")) +
+  geom_point(size = 2) +
+  geom_line(size = 1) +
+  # scale_y_continuous(labels = scales::label_comma(suffix = "ms")) +
   scale_color_discrete() +
   labs(
-    title = "Generating the weights of the closure",
-    subtitle = "Median runtime",
+    title = "Computing time to generate weighting strategies",
+    subtitle = "Median runtime in milliseconds",
     x = "Number of hypotheses",
     y = NULL,
-    color = "Package"
-  )
-
-benchmarks_plot_standard +
-  scale_y_log10(labels = scales::label_comma(suffix = "ms")) +
-  labs(subtitle = "Log-10 median runtime")
+    color = "Approach"
+    ) +
+  scale_y_log10(breaks = c(0, 0.1, 1, 10, 100, 1000, 100000),
+                labels = c("0", "0.1", "1", "10", "100", "1,000", "100,000")) +
+  labs(subtitle = "Log10(median runtime) in milliseconds")
+benchmarks_plot_standard
 ```
 
-![](img/gw-benchmarks-plot.png)
+## Improving power simulations using parent-child relationships
+### Conventional approach for power simulations
+The conventional approach for power simulations is to repeat the following process 
+many times, e.g., 100,000 times.
+1. Simulate a set of p-values
+2. Run the graphical multiple comparison procedure to
+    + Determine which hypothesis can be rejected
+    + Remove the rejected hypothesis and update the graph
+    + Repeat until no more hypotheses can be rejected
+Note that the same step to update the graph may repeat in many replications, which 
+may be repetitive. For $m$ hypotheses, there are at most $2^m-1$ graphs depending 
+on which hypotheses are rejected. These graphs corresponds to the closure and the 
+weighting strategy. Thus an idea to avoid redundant updating of graphs is to utilize 
+the weighting strategy.
 
-### Power simulations
+### Power simulations using parent-child relationships
+The key to allow this approach is to efficiently identify the row of the weighting 
+strategy, given which hypotheses are rejected. Remembering the pattern we found for 
+Approach 2, the bottom half (rows 9 - 15) of `matrix_intersections` is the same as 
+the top half (rows 1 - 7), except flipping $H_1$ from 1 to 0. This means that if 
+$H_1$ has not been rejected (1 for $H_1$ in `matrix_intersections`), the row number 
+of that index should be in the top half. For example, assume that $H_2$ and 
+$H_4$ have been rejected and the index in `matrix_intersections` should be $(1, 0, 1, 0)$. 
+Since $H_1$ is 1, the corresponding row should be in the top half (rows 1- 7). But 
+$H_2$ is 0 and thus the corresponding row should be in the bottom half within the 
+top half (rows 5 - 7). Since $H_3$ is 1 and thus the corresponding row should be 
+in the top half (rows 5 - 6). But $H_4$ is 0 and thus the corresponding row should 
+be 6. A useful way to calculate the row number for an index of XXXX is 
+`2^m - sum(XXXX * 2^(m:1 - 1))`. For example for XXXX=1010, its row number should be 
+`(1 - 1) * 8 + (1 - 0) * 4 + (1 - 1) * 2 + (1 - 0) * 1 + 1 = 16 - 10 = 6`.               
 
-While the time savings on the closure are nice, on most graphs the savings will not make a big difference compared to the longer run-times on e.g. power simulations. However, paying attention to the closure is important for other reasons too, such as improving the power algorithm.
+With the above way of efficiently identifying rows of `weighting_strategy`, power 
+simulations could be implemented as follows:
+1. Obtain the weighting strategy (once for all simulations)
+2. Simulate a set of p-values
+3. Run the graphical multiple comparison procedure to
+    + Determine which hypothesis can be rejected
+    + Remove the rejected hypothesis and identify the row of the weighting strategy
+    + Repeat until no more hypotheses can be rejected
+The small modification in Step 3b make this approach much faster than the conventional 
+approach for power simulations.
 
-#### Standard algorithm
+## Comparing different approaches to power simulations
+To benchmark against existing approaches to calculating weighting strategies, we 
+compare the following approaches: `calcPower::gMCP`, Approach 1 
+(graphicalMCP conventional), and Approach 2 (graphicalMCP parent-child). Both Holm 
+and fixed sequence procedures are considered with the numbers of hypotheses of 4, 
+8, 12, and 16. Computing time (in median log-10 seconds) is plotted below. We can 
+see that `calcPower::gMCP` is the fastest and Approach 1 (graphicalMCP conventional) 
+is the lowest. Note that `calcPower::gMCP` implements the simulation using C, which 
+is known to be faster than R but is not easy to extend to other situations. Given 
+that the computing time of Approach 2 (graphicalMCP parent-child) is acceptable, 
+we implement it in `graph_calculate_power::graphicalMCP`.
 
-The typical method for running a Bonferroni shortcut procedure on a graph is to:
+### Add plot here
 
-1.  Search a graph for a single hypothesis which can be rejected
-2.  Delete the rejected hypothesis and update weights
-3.  Repeat until there are no more significant hypotheses
+<!-- ################################################################################ -->
 
-Running this process in either R or a low-level language like C is fast for a single procedure, but when it's run 100,000 times for a power simulation, the R version becomes onerous. However, there's a lot of duplication in a power simulation using this method. In many of the simulations, the same steps will be taken, which means re-calculating the same set of weights many times.
 
-#### Closure shortcut
 
-The [binary counting](#binary-counting) property of the closure admits a shortcut which can be implemented in R to get a scalable competitor to the typical algorithm:
 
-1.  Generate the closure a single time to get all sub-graph weights efficiently
-2.  For each simulation: 1. Search a graph for all hypotheses which can be rejected - This is fast with vectorization 1. Using the binary counting property, index into the row of the closure corresponding to all hypotheses rejected so far to get updated weights - This is substantially faster than updating a graph and re-calculating weights, especially for larger graphs 1. Repeat using the updated weights
+<!-- The closure of a graph is the set of all sub-graphs, along with their weights calculated according to algorithm 1 of Bretz et al (2011). It is primarily used for [closed testing](link%20to%20closed%20test%20vignette), where all sub-graphs are tested for significance, and results are aggregated to determine which null hypotheses are significant globally. -->
 
-While this method is not as fast as gMCP's C implementation, it still runs substantial power simulations in a matter of seconds. The biggest drawback is how it can scale differently for different graph structures. For instance a fixed sequence procedure can take longer than a more balanced graph, like a Holm procedure, because it takes more steps to reject all possible hypotheses.
+<!-- Throughout this article a common example will be used for demonstrations - the simple successive graph. It has two primary hypotheses, $H_1$ and $H_2$, which have the initial weight evenly split between them. The secondary hypotheses, $H_3$ and $H_4$, only have weight propagated to them if $H_1$ or $H_2$ is deleted, respectively. -->
 
-```{r power-benchmarks, eval=FALSE}
-vec_num_hyps <- 2:8 * 2
+<!-- ```{r base-graph, fig.dim=c(6, 6)} -->
+<!-- ss_graph <- simple_successive_2() -->
 
-if (file.exists(here::here("vignettes/cache/power_benchmark_list.rds"))) {
-  benchmarks <- read.csv(here::here("vignettes/cache/power_benchmarks.csv"))
-  
-  benchmarks$char_expression <- ordered(
-    benchmarks$char_expression,
-    c(
-      "graphicalMCP fixed sequence (R)",
-      "graphicalMCP Holm (R)",
-      "gMCP (C)"
-    )
-  )
-} else {
-  benchmark_list <- lapply(
-    vec_num_hyps,
-    function(num_hyps) {
-      # A graph for the Holm procedure
-      transitions <- matrix(1 / (num_hyps - 1), num_hyps, num_hyps)
-      diag(transitions) <- 0
+<!-- plot(ss_graph, layout = "grid") -->
+<!-- ``` -->
 
-      graph <- graph_create(rep(1 / num_hyps, num_hyps), transitions)
+<!-- ### Components of the closure -->
 
-      corr <- diag(num_hyps)
+<!-- In graphicalMCP, the closure is represented by a matrix, where each row represents a sub-graph (also called an intersection hypothesis), and each column corresponds to an individual hypothesis. This matrix can be created with `graph_generate_weights()`, and it has two parts: An indicator matrix showing which hypotheses are contained in each sub-graph (The so-called powerset of a set), and a weights matrix containing the induced weights of each sub-graph. -->
 
-      benchmark <- mark(
-        `gMCP (C)` = calcPower(graph$hypotheses, .025, graph$transitions,
-          n.sim = 2^16, corr.sim = corr
-        ),
-        `graphicalMCP Holm (R)` =
-          graph_calculate_power(graph, .025,
-            power_marginal = rep(.9, num_hyps),
-            sim_n = 2^16
-          ),
-        `graphicalMCP fixed sequence (R)` =
-          graph_calculate_power(fixed_sequence(num_hyps), .025,
-            power_marginal = rep(.9, num_hyps),
-            sim_n = 2^16
-          ),
-        check = FALSE,
-        memory = FALSE,
-        time_unit = "s",
-        min_iterations = 5
-      )[, 1:5]
+<!-- ```{r closure-parts} -->
+<!-- weighting_strategy <- graph_generate_weights(ss_graph) -->
+<!-- matrix_intersections <- weighting_strategy[, seq_along(ss_graph$hypotheses)] -->
 
-      # Remove rows for gMCP closure that weren't actually run
-      benchmark <- benchmark[benchmark$median > .00001, ]
-      benchmark$char_expression <- as.character(benchmark$expression)
-      benchmark <- benchmark[, c("char_expression", "median")]
+<!-- data.frame(Intersection = seq_len(nrow(weighting_strategy))) |> -->
+<!--   cbind(weighting_strategy) |> -->
+<!--   data.frame() |> -->
+<!--   gt() |> -->
+<!--   tab_header("Closure of the simple successive graph") |> -->
+<!--   tab_spanner("Powerset", H1:H4) |> -->
+<!--   tab_spanner("Weights", H1.1:H4.1) |> -->
+<!--   tab_style( -->
+<!--     cell_text(align = "center", style = "italic"), -->
+<!--     cells_body(Intersection) -->
+<!--   ) |> -->
+<!--   cols_label( -->
+<!--     H1.1 = "H1", -->
+<!--     H2.1 = "H2", -->
+<!--     H3.1 = "H3", -->
+<!--     H4.1 = "H4" -->
+<!--   ) |> -->
+<!--   opt_row_striping() -->
+<!-- ``` -->
 
-      cbind(data.frame(num_hyps = num_hyps), benchmark)
-    }
-  )
+<!-- ### Properties of the closure -->
 
-  benchmarks <- do.call(rbind, benchmark_list)
-  
-  benchmarks$char_expression <- ordered(
-    benchmarks$char_expression,
-    c(
-      "graphicalMCP fixed sequence (R)",
-      "graphicalMCP Holm (R)",
-      "gMCP (C)"
-    )
-  )
-  
-  write.csv(
-    benchmarks,
-    here::here("vignettes/cache/power_benchmarks.csv"),
-    row.names = FALSE
-  )
+<!-- The rows of the closure are generated in a particular way in order to give them some useful properties. -->
 
-  # saveRDS(
-  #   benchmark_list,
-  #   here::here("vignettes/cache/power_benchmark_list.rds")
-  # )
-}
-```
+<!-- #### Repeating recursive blocks -->
 
-```{r plot-power-benchmarks, eval=FALSE, fig.dim=c(8, 5)}
-benchmarks_plot_standard <-
-  ggplot(benchmarks, aes(num_hyps, median, color = char_expression)) +
-  geom_point() +
-  geom_line() +
-  theme_minimal() +
-  scale_y_continuous(labels = scales::label_comma(suffix = "s")) +
-  scale_color_discrete() +
-  labs(
-    title = "Power simulations with shortcut testing",
-    subtitle = "Median runtime for 65,536 simulations",
-    x = "Number of hypotheses",
-    y = NULL,
-    color = "Package"
-  )
+<!-- First, notice how each row can be obtained from some row higher up in the matrix by flipping a single 1 to be a 0. For example, go from row 1 to row 3 by flipping $H_3$, or go from row 10 to row 14 by flipping $H_2$. The upper row in a pairing like this can be thought of as the "parent" sub-graph, and the lower row as the "child" sub-graph. Flipping a 0 to be a 1 and moving up the matrix will be called "finding a sub-graph's parent." Now consider the parent-finding strategy where the left-most 0 in each row is flipped. This reveals a pattern between the bottom half and top half, where each row's parent in the bottom half is the corresponding row in the top half, eight rows up. -->
 
-benchmarks_plot_standard +
-  scale_y_log10(labels = scales::label_comma(suffix = "s")) +
-  labs(subtitle = "Log-10 median runtime")
-```
+<!-- ```{r big-pattern} -->
+<!-- data.frame(Intersection = seq_len(nrow(weighting_strategy))) |> -->
+<!--   cbind(matrix_intersections) |> -->
+<!--   data.frame() |> -->
+<!--   gt() |> -->
+<!--   tab_header("The boxes contain identical matrices") |> -->
+<!--   tab_style( -->
+<!--     cell_text(align = "center", style = "italic"), -->
+<!--     cells_body(Intersection) -->
+<!--   ) |> -->
+<!--   tab_style( -->
+<!--     cell_borders("left", "#a069c4", weight = px(2)), -->
+<!--     cells_body(H2, c(1:7, 9:15)) -->
+<!--   ) |> -->
+<!--   tab_style( -->
+<!--     cell_borders("top", "#a069c4", weight = px(2)), -->
+<!--     cells_body(H2:H4, c(1, 9)) -->
+<!--   ) |> -->
+<!--   tab_style( -->
+<!--     cell_borders("right", "#a069c4", weight = px(2)), -->
+<!--     cells_body(H4, c(1:7, 9:15)) -->
+<!--   ) |> -->
+<!--   tab_style( -->
+<!--     cell_borders("bottom", "#a069c4", weight = px(2)), -->
+<!--     cells_body(H2:H4, c(7, 15)) -->
+<!--   ) -->
+<!-- ``` -->
 
-![](img/power-benchmarks-plot.png)
+<!-- The pattern then repeats within each box recursively, with the top half of each box matching the bottom half, if the first missing hypothesis is flipped from 0 to 1. -->
+
+<!-- ```{r small-pattern} -->
+<!-- data.frame(Intersection = seq_len(nrow(weighting_strategy))) |> -->
+<!--   cbind(matrix_intersections) |> -->
+<!--   data.frame() |> -->
+<!--   gt() |> -->
+<!--   tab_header("The boxes contain identical matrices") |> -->
+<!--   tab_style( -->
+<!--     cell_text(align = "center", style = "italic"), -->
+<!--     cells_body(Intersection) -->
+<!--   ) |> -->
+<!--   tab_style( -->
+<!--     cell_borders("left", "#a069c4", weight = px(2)), -->
+<!--     cells_body(H2, c(1:7, 9:15)) -->
+<!--   ) |> -->
+<!--   tab_style( -->
+<!--     cell_borders("top", "#a069c4", weight = px(2)), -->
+<!--     cells_body(H2:H4, c(1, 9)) -->
+<!--   ) |> -->
+<!--   tab_style( -->
+<!--     cell_borders("right", "#a069c4", weight = px(2)), -->
+<!--     cells_body(H4, c(1:7, 9:15)) -->
+<!--   ) |> -->
+<!--   tab_style( -->
+<!--     cell_borders("bottom", "#a069c4", weight = px(2)), -->
+<!--     cells_body(H2:H4, c(7, 15)) -->
+<!--   ) |> -->
+<!--   tab_style( -->
+<!--     cell_borders("left", "black", weight = px(2)), -->
+<!--     cells_body(H3, c(1:3, 5:7, 9:11, 13:15)) -->
+<!--   ) |> -->
+<!--   tab_style( -->
+<!--     cell_borders("top", "black", weight = px(2)), -->
+<!--     cells_body(H3:H4, c(1, 5, 9, 13)) -->
+<!--   ) |> -->
+<!--   tab_style( -->
+<!--     cell_borders("right", "black", weight = px(2)), -->
+<!--     cells_body(H4, c(1:3, 5:7, 9:11, 13:15)) -->
+<!--   ) |> -->
+<!--   tab_style( -->
+<!--     cell_borders("bottom", "black", weight = px(2)), -->
+<!--     cells_body(H3:H4, c(3, 7, 11, 15)) -->
+<!--   ) -->
+<!-- ``` -->
+
+<!-- #### Binary counting {#binary-counting} -->
+
+<!-- The second useful property is somewhat a re-framing of the first, or perhaps could be viewed as a reason why the first is true. Starting with the bottom row, the powerset in this particular order counts up from 1 in binary, incrementing by 1 per row. This means that a row number can be directly calculated from a vector showing which hypotheses are currently deleted from the graph: `row_number == number_of_rows - incl_excl_vec_converted_to_base_10 + 1`. For example, intersection number 6 has hypothesis vector `1010`. When interpreted as binary, this is `1 * 8 + 0 * 4 + 1 * 2 + 0 * 1 = 10` in base 10, and `6 == 15 - 10 + 1`. -->
+
+<!-- ```{r closure-repeat} -->
+<!-- data.frame(Intersection = seq_len(nrow(weighting_strategy))) |> -->
+<!--   cbind(matrix_intersections) |> -->
+<!--   data.frame() |> -->
+<!--   gt() |> -->
+<!--   tab_header("Binary counting") |> -->
+<!--   tab_style( -->
+<!--     cell_text(align = "center", style = "italic"), -->
+<!--     cells_body(Intersection) -->
+<!--   ) |> -->
+<!--   tab_style(cell_borders("left", "#a069c4"), cells_body(1, 6)) |> -->
+<!--   tab_style(cell_borders("top", "#a069c4"), cells_body(1:5, 6)) |> -->
+<!--   tab_style(cell_borders("right", "#a069c4"), cells_body(5, 6)) |> -->
+<!--   tab_style(cell_borders("bottom", "#a069c4"), cells_body(1:5, 6)) |> -->
+<!--   opt_row_striping() -->
+<!-- ``` -->
+
+<!-- ## Strategies -->
+
+<!-- Because the size of the closure grows quickly as graph size increases (An n-graph has `2^n - 1` sub-graphs), calculating the full closure for large graphs can be computationally intensive. Optimizing this process led to three main strategies: -->
+
+<!-- -   The simplest approach, which uses the full graph as the starting point for every sub-graph, then deletes the appropriate hypotheses -->
+<!-- -   A recursive method, which traverses the closure tree, deleting one hypothesis each time to step between graphs -->
+<!-- -   A formulaic shortcut using the order of graphs generated with the recursive method -->
+
+<!-- Note that the discussion of these methods focuses primarily on the weights side rather than the powerset side of the closure. This is because the fastest methods discovered generate the powerset implicitly from missing values in the weights side. For methods such as the simple approach, which rely on having the powerset in order to generate weights, the powerset can be created efficiently. Here `num_hyps` refers to the number of hypotheses in the initial graph. -->
+
+<!-- ```{r powerset, eval=FALSE, echo=TRUE} -->
+<!-- powerset <- as.matrix(rev(expand.grid(rep(list(1:0), num_hyps))[-2^num_hyps, ])) -->
+<!-- ``` -->
+
+<!-- ### Simple approach -->
+
+<!-- The simplest approach to generate the weights of the closure is to apply `graph_update()` to the initial graph once for each sub-graph. This is short and sweet to write, but it's inefficient because each hypothesis gets deleted from the graph multiple times. Here is the code for the simple method. -->
+
+<!-- ```{r ggw-simple, echo=TRUE} -->
+<!-- ggw_simple <- function(graph) { -->
+<!--   num_hyps <- length(graph$hypotheses) -->
+
+<!--   matrix_intersections <- -->
+<!--     as.matrix(rev(expand.grid(rep(list(1:0), num_hyps))[-2^num_hyps, ])) -->
+<!--   colnames(matrix_intersections) <- names(graph$hypotheses) -->
+
+<!--   matrix_weights <- apply( -->
+<!--     matrix_intersections, -->
+<!--     1, -->
+<!--     function(h) graph_update(graph, !h)$updated_graph$hypotheses, -->
+<!--     simplify = FALSE -->
+<!--   ) -->
+
+<!--   cbind(matrix_intersections, do.call(rbind, matrix_weights)) -->
+<!-- } -->
+<!-- ``` -->
+
+<!-- ### Recursive -->
+
+<!-- The recursive method treats the space of sub-graphs as a tree, with the initial graph at the root, and other sub-graphs decreasing in size going down the branches. The essence of the recursive step is to delete a hypothesis in the current graph. But doing this for every hypothesis in every sub-graph in the tree would result in taking multiple paths to many of the graphs. So a key part of the recursive step is that it has memory - Each graph in the tree will only delete the hypotheses that come after the hypothesis that was just deleted to reach the current graph. The base case also needs memory - It is reached when a graph has only one hypothesis left, or when the last-deleted hypothesis number is larger than all current hypotheses. This memory in the recursion enables the tree traversal to reach each unique graph state exactly once. Here is an implementation of the recursion, followed by a wrapper for processing the sub-graph list into the standard matrix form. -->
+
+<!-- ```{r recursion, echo=TRUE} -->
+<!-- delete_nodes_recursive <- function(graph, last = 0) { -->
+<!--   init_hypotheses <- hypotheses <- graph$hypotheses -->
+<!--   init_transitions <- transitions <- graph$transitions -->
+
+<!--   ### base case -->
+<!--   int_hyp <- as.integer(names(hypotheses)) -->
+
+<!--   is_single_node <- length(hypotheses) == 1 -->
+<!--   last_is_bigger <- last > max(int_hyp) -->
+
+<!--   if (is_single_node || last_is_bigger) { -->
+<!--     return(list(graph)) -->
+<!--   } -->
+
+<!--   ### recursive step -->
+<!--   children <- list() -->
+
+<!--   for (orig_hyp_num in int_hyp[int_hyp > last]) { -->
+<!--     del_index <- match(orig_hyp_num, int_hyp) -->
+<!--     hyp_nums <- seq_along(hypotheses)[seq_along(hypotheses) != del_index] -->
+
+<!--     for (hyp_num in hyp_nums) { -->
+<!--       hypotheses[[hyp_num]] <- -->
+<!--         init_hypotheses[[hyp_num]] + -->
+<!--         init_hypotheses[[del_index]] * init_transitions[[del_index, hyp_num]] -->
+
+<!--       denominator <- 1 - init_transitions[[hyp_num, del_index]] * -->
+<!--         init_transitions[[del_index, hyp_num]] -->
+
+<!--       for (end_num in hyp_nums) { -->
+<!--         if (hyp_num == end_num || denominator <= 0) { -->
+<!--           transitions[[hyp_num, end_num]] <- 0 -->
+<!--         } else { -->
+<!--           transitions[[hyp_num, end_num]] <- ( -->
+<!--             init_transitions[[hyp_num, end_num]] + -->
+<!--               init_transitions[[hyp_num, del_index]] * -->
+<!--                 init_transitions[[del_index, end_num]] -->
+<!--           ) / denominator -->
+<!--         } -->
+<!--       } -->
+<!--     } -->
+
+<!--     smaller_graph <- structure( -->
+<!--       list( -->
+<!--         hypotheses = hypotheses[-del_index], -->
+<!--         transitions = as.matrix(transitions[-del_index, -del_index]) -->
+<!--       ), -->
+<!--       class = "initial_graph" -->
+<!--     ) -->
+
+<!--     children[[del_index]] <- delete_nodes_recursive( -->
+<!--       smaller_graph, -->
+<!--       orig_hyp_num -->
+<!--     ) -->
+<!--   } -->
+
+<!--   c( -->
+<!--     unlist(children, recursive = FALSE), -->
+<!--     list(graph) -->
+<!--   ) -->
+<!-- } -->
+<!-- ``` -->
+
+<!-- ```{r ggw-recursive, echo=TRUE} -->
+<!-- ggw_recursive <- function(graph) { -->
+<!--   # The recursion requires the hypotheses to be named sequentially as actual -->
+<!--   # numbers for the memory property to work -->
+<!--   hyp_names <- names(graph$hypotheses) -->
+<!--   names(graph$hypotheses) <- seq_along(graph$hypotheses) -->
+<!--   colnames(graph$transitions) <- names(graph$hypotheses) -->
+<!--   rownames(graph$transitions) <- names(graph$hypotheses) -->
+
+<!--   # Recursively generate a list of all sub-graphs -->
+<!--   list_subgraphs <- delete_nodes_recursive(graph) -->
+
+<!--   # Process the list of graphs into the normal matrix form -->
+<!--   matrix_weights <- structure( -->
+<!--     do.call( -->
+<!--       rbind, -->
+<!--       lapply( -->
+<!--         list_subgraphs, -->
+<!--         function(graph) graph$hypotheses[as.character(seq_along(hyp_names))] -->
+<!--       ) -->
+<!--     ), -->
+<!--     dimnames = list(1:(2^length(hyp_names) - 1), hyp_names) -->
+<!--   ) -->
+
+<!--   matrix_intersections <- !is.na(matrix_weights) -->
+<!--   matrix_weights[is.na(matrix_weights)] <- 0 -->
+
+<!--   cbind(matrix_intersections, matrix_weights) -->
+<!-- } -->
+<!-- ``` -->
+
+<!-- ### Formula shortcut -->
+
+<!-- Finally, the fastest method found so far - the formula shortcut. While recursion can save a lot of time over the first method, it still has a bit of overhead to get from the list of sub-graphs to the matrix form that is standard. This is where the "repeating block" property of the closure mentioned earlier is useful. Instead of using recursion to connect parent sub-graphs to their children, a pair of formulas can be used. One formula generates the parent of each graph that is obtained by flipping the left-most 0 to be a 1: `do.call(c, lapply(2^(seq_len(num_hyps) - 1), seq_len))`. Note that this is for rows 2 through the (non-existent) row 16, which is the empty graph. Row 1 has no parent graph. The left-most 0 in a child graph is easy to find, but from the parent graph's perspective, this formula calculates which hypothesis to delete: `rep(rev(seq_len(num_hyps)), 2^(seq_len(num_hyps) - 1))`. This also applies to rows 2 through 16. -->
+
+<!-- ```{r parent-child-delete} -->
+<!-- num_hyps <- length(ss_graph$hypotheses) -->
+
+<!-- parents <- do.call(c, lapply(2^(seq_len(num_hyps) - 1), seq_len)) -->
+<!-- parents <- c(NA, parents[-(2^num_hyps - 1)]) -->
+
+<!-- delete <- rep(rev(seq_len(num_hyps)), 2^(seq_len(num_hyps) - 1)) -->
+<!-- delete <- c(NA, delete[-(2^num_hyps - 1)]) -->
+
+<!-- parent_child_demo <- cbind( -->
+<!--   data.frame(Intersection = seq_len(2^num_hyps - 1)), -->
+<!--   weighting_strategy[, seq_len(num_hyps)], -->
+<!--   delete = delete, -->
+<!--   parents = parents -->
+<!-- ) -->
+
+<!-- gt(parent_child_demo) |> -->
+<!--   tab_header("Parent-child connections") |> -->
+<!--   tab_spanner("To reach a given row...", delete:parents) |> -->
+<!--   tab_style( -->
+<!--     cell_text(align = "center", style = "italic"), -->
+<!--     cells_body(Intersection) -->
+<!--   ) |> -->
+<!--   tab_style( -->
+<!--     cell_text(align = "center"), -->
+<!--     cells_body(c(delete, parents)) -->
+<!--   ) |> -->
+<!--   cols_label( -->
+<!--     delete = "Delete hypothesis no.", -->
+<!--     parents = "From intersection no." -->
+<!--   ) -->
+<!-- ``` -->
+
+<!-- The formula shortcut also results in simpler code than the recursive solution. -->
+
+<!-- ## Performance gains -->
+
+<!-- ### Generating the closure -->
+
+<!-- The formula method reduces each step of generating the closure to a single deletion from a prior graph, with almost no additional overhead. Here's how the different methods fare, including the version from the gMCP package for reference. Also worthy of note is the lrstat package, which contains a few MCP-related functions, including generating weights of the closure. It uses excellent C++ code to perform even faster, but since the speed of the current formula-based method is acceptable, adding an Rcpp dependency was not considered to be worth the additional time savings. -->
+
+<!-- ```{r gw-benchmarks, eval=FALSE} -->
+<!-- vec_num_hyps <- 2:8 * 2 -->
+
+<!-- if (file.exists(here::here("vignettes/cache/gw_benchmark_list.rds"))) { -->
+<!--   benchmarks <- read.csv(here::here("vignettes/cache/gw_benchmarks.csv")) -->
+<!-- } else { -->
+<!--   benchmark_list <- lapply( -->
+<!--     vec_num_hyps, -->
+<!--     function(num_hyps) { -->
+<!--       cat(num_hyps, "\n") -->
+<!--       # A graph for the Holm procedure -->
+<!--       transitions <- matrix(1 / (num_hyps - 1), num_hyps, num_hyps) -->
+<!--       diag(transitions) <- 0 -->
+
+<!--       graph <- graph_create(rep(1 / num_hyps, num_hyps), transitions) -->
+
+<!--       # lrstat sometimes errors, even when hypotheses seem to sum to 1. This -->
+<!--       # fixes some of those cases -->
+<!--       graph$hypotheses <- c( -->
+<!--         graph$hypotheses[seq_len(num_hyps - 1)], -->
+<!--         1 - sum(graph$hypotheses[seq_len(num_hyps - 1)]) -->
+<!--       ) -->
+
+<!--       benchmark <- mark( -->
+<!--         gMCP = generateWeights(graph$transitions, graph$hypotheses), -->
+<!--         `graphicalMCP simple` = ggw_simple(graph), -->
+<!--         `graphicalMCP recursive` = ggw_recursive(graph), -->
+<!--         `graphicalMCP shortcut` = graph_generate_weights(graph), -->
+<!--         # lrstat still errors with graphs occasionally for unknown reasons -->
+<!--         lrstat = if (!num_hyps %in% c(10, 14)) { -->
+<!--           fwgtmat(graph$hypotheses, graph$transitions) -->
+<!--         }, -->
+<!--         check = FALSE, -->
+<!--         memory = FALSE, -->
+<!--         time_unit = "ms", -->
+<!--         min_iterations = 5 -->
+<!--       )[, 1:5] -->
+
+<!--       # Remove rows for lrstat that weren't actually run -->
+<!--       benchmark <- benchmark[benchmark$median > .002, ] -->
+<!--       benchmark$char_expression <- as.character(benchmark$expression) -->
+<!--       benchmark <- benchmark[, c("char_expression", "median")] -->
+
+<!--       cbind(data.frame(num_hyps = num_hyps), benchmark) -->
+<!--     } -->
+<!--   ) -->
+
+<!--   benchmarks <- do.call(rbind, benchmark_list) -->
+
+<!--   benchmarks$char_expression <- ordered( -->
+<!--     benchmarks$char_expression, -->
+<!--     c( -->
+<!--       "gMCP", -->
+<!--       "graphicalMCP simple", -->
+<!--       "graphicalMCP recursive", -->
+<!--       "graphicalMCP shortcut", -->
+<!--       "lrstat" -->
+<!--     ) -->
+<!--   ) -->
+
+<!--   write.csv( -->
+<!--     benchmarks, -->
+<!--     here::here("vignettes/cache/gw_benchmarks.csv"), -->
+<!--     row.names = FALSE -->
+<!--   ) -->
+
+<!--   # saveRDS(benchmark_list, here::here("vignettes/cache/gw_benchmark_list.rds")) -->
+<!-- } -->
+<!-- ``` -->
+
+<!-- ```{r plot-gw-benchmarks, eval=FALSE, fig.dim=c(8, 5)} -->
+<!-- benchmarks_plot_standard <- -->
+<!--   ggplot(benchmarks, aes(num_hyps, median, color = char_expression)) + -->
+<!--   geom_point() + -->
+<!--   geom_line() + -->
+<!--   theme_minimal() + -->
+<!--   scale_y_continuous(labels = scales::label_comma(suffix = "ms")) + -->
+<!--   scale_color_discrete() + -->
+<!--   labs( -->
+<!--     title = "Generating the weights of the closure", -->
+<!--     subtitle = "Median runtime", -->
+<!--     x = "Number of hypotheses", -->
+<!--     y = NULL, -->
+<!--     color = "Package" -->
+<!--   ) -->
+
+<!-- benchmarks_plot_standard + -->
+<!--   scale_y_log10(labels = scales::label_comma(suffix = "ms")) + -->
+<!--   labs(subtitle = "Log-10 median runtime") -->
+<!-- ``` -->
+
+<!-- ![](img/gw-benchmarks-plot.png) -->
+
+<!-- ### Power simulations -->
+
+<!-- While the time savings on the closure are nice, on most graphs the savings will not make a big difference compared to the longer run-times on e.g. power simulations. However, paying attention to the closure is important for other reasons too, such as improving the power algorithm. -->
+
+<!-- #### Standard algorithm -->
+
+<!-- The typical method for running a Bonferroni shortcut procedure on a graph is to: -->
+
+<!-- 1.  Search a graph for a single hypothesis which can be rejected -->
+<!-- 2.  Delete the rejected hypothesis and update weights -->
+<!-- 3.  Repeat until there are no more significant hypotheses -->
+
+<!-- Running this process in either R or a low-level language like C is fast for a single procedure, but when it's run 100,000 times for a power simulation, the R version becomes onerous. However, there's a lot of duplication in a power simulation using this method. In many of the simulations, the same steps will be taken, which means re-calculating the same set of weights many times. -->
+
+<!-- #### Closure shortcut -->
+
+<!-- The [binary counting](#binary-counting) property of the closure admits a shortcut which can be implemented in R to get a scalable competitor to the typical algorithm: -->
+
+<!-- 1.  Generate the closure a single time to get all sub-graph weights efficiently -->
+<!-- 2.  For each simulation: 1. Search a graph for all hypotheses which can be rejected - This is fast with vectorization 1. Using the binary counting property, index into the row of the closure corresponding to all hypotheses rejected so far to get updated weights - This is substantially faster than updating a graph and re-calculating weights, especially for larger graphs 1. Repeat using the updated weights -->
+
+<!-- While this method is not as fast as gMCP's C implementation, it still runs substantial power simulations in a matter of seconds. The biggest drawback is how it can scale differently for different graph structures. For instance a fixed sequence procedure can take longer than a more balanced graph, like a Holm procedure, because it takes more steps to reject all possible hypotheses. -->
+
+<!-- ```{r power-benchmarks, eval=FALSE} -->
+<!-- vec_num_hyps <- 2:8 * 2 -->
+
+<!-- if (file.exists(here::here("vignettes/cache/power_benchmark_list.rds"))) { -->
+<!--   benchmarks <- read.csv(here::here("vignettes/cache/power_benchmarks.csv")) -->
+
+<!--   benchmarks$char_expression <- ordered( -->
+<!--     benchmarks$char_expression, -->
+<!--     c( -->
+<!--       "graphicalMCP fixed sequence (R)", -->
+<!--       "graphicalMCP Holm (R)", -->
+<!--       "gMCP (C)" -->
+<!--     ) -->
+<!--   ) -->
+<!-- } else { -->
+<!--   benchmark_list <- lapply( -->
+<!--     vec_num_hyps, -->
+<!--     function(num_hyps) { -->
+<!--       # A graph for the Holm procedure -->
+<!--       transitions <- matrix(1 / (num_hyps - 1), num_hyps, num_hyps) -->
+<!--       diag(transitions) <- 0 -->
+
+<!--       graph <- graph_create(rep(1 / num_hyps, num_hyps), transitions) -->
+
+<!--       corr <- diag(num_hyps) -->
+
+<!--       benchmark <- mark( -->
+<!--         `gMCP (C)` = calcPower(graph$hypotheses, .025, graph$transitions, -->
+<!--           n.sim = 2^16, corr.sim = corr -->
+<!--         ), -->
+<!--         `graphicalMCP Holm (R)` = -->
+<!--           graph_calculate_power(graph, .025, -->
+<!--             power_marginal = rep(.9, num_hyps), -->
+<!--             sim_n = 2^16 -->
+<!--           ), -->
+<!--         `graphicalMCP fixed sequence (R)` = -->
+<!--           graph_calculate_power(fixed_sequence(num_hyps), .025, -->
+<!--             power_marginal = rep(.9, num_hyps), -->
+<!--             sim_n = 2^16 -->
+<!--           ), -->
+<!--         check = FALSE, -->
+<!--         memory = FALSE, -->
+<!--         time_unit = "s", -->
+<!--         min_iterations = 5 -->
+<!--       )[, 1:5] -->
+
+<!--       # Remove rows for gMCP closure that weren't actually run -->
+<!--       benchmark <- benchmark[benchmark$median > .00001, ] -->
+<!--       benchmark$char_expression <- as.character(benchmark$expression) -->
+<!--       benchmark <- benchmark[, c("char_expression", "median")] -->
+
+<!--       cbind(data.frame(num_hyps = num_hyps), benchmark) -->
+<!--     } -->
+<!--   ) -->
+
+<!--   benchmarks <- do.call(rbind, benchmark_list) -->
+
+<!--   benchmarks$char_expression <- ordered( -->
+<!--     benchmarks$char_expression, -->
+<!--     c( -->
+<!--       "graphicalMCP fixed sequence (R)", -->
+<!--       "graphicalMCP Holm (R)", -->
+<!--       "gMCP (C)" -->
+<!--     ) -->
+<!--   ) -->
+
+<!--   write.csv( -->
+<!--     benchmarks, -->
+<!--     here::here("vignettes/cache/power_benchmarks.csv"), -->
+<!--     row.names = FALSE -->
+<!--   ) -->
+
+<!--   # saveRDS( -->
+<!--   #   benchmark_list, -->
+<!--   #   here::here("vignettes/cache/power_benchmark_list.rds") -->
+<!--   # ) -->
+<!-- } -->
+<!-- ``` -->
+
+<!-- ```{r plot-power-benchmarks, eval=FALSE, fig.dim=c(8, 5)} -->
+<!-- benchmarks_plot_standard <- -->
+<!--   ggplot(benchmarks, aes(num_hyps, median, color = char_expression)) + -->
+<!--   geom_point() + -->
+<!--   geom_line() + -->
+<!--   theme_minimal() + -->
+<!--   scale_y_continuous(labels = scales::label_comma(suffix = "s")) + -->
+<!--   scale_color_discrete() + -->
+<!--   labs( -->
+<!--     title = "Power simulations with shortcut testing", -->
+<!--     subtitle = "Median runtime for 65,536 simulations", -->
+<!--     x = "Number of hypotheses", -->
+<!--     y = NULL, -->
+<!--     color = "Package" -->
+<!--   ) -->
+
+<!-- benchmarks_plot_standard + -->
+<!--   scale_y_log10(labels = scales::label_comma(suffix = "s")) + -->
+<!--   labs(subtitle = "Log-10 median runtime") -->
+<!-- ``` -->
+
+<!-- ![](img/power-benchmarks-plot.png) -->
