@@ -261,10 +261,12 @@ others. Given that the computing time of R-based approaches is
 acceptable, adding Rcpp dependency is not considered in
 <code>graphicalMCP</code>. For these considerations, we implement
 Approach 2 in <code>weighting_strategy::graphicalMCP</code>.</p>
-<div class="section level3">
-<h3 id="add-plot-here">Add plot here<a class="anchor" aria-label="anchor" href="#add-plot-here"></a>
-</h3>
-</div>
+<pre><code><span><span class="co">#&gt; Warning: Using `size` aesthetic for lines was deprecated in ggplot2 3.4.0.</span></span>
+<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Please use `linewidth` instead.</span></span>
+<span><span class="co">#&gt; <span style="color: #555555;">This warning is displayed once every 8 hours.</span></span></span>
+<span><span class="co">#&gt; <span style="color: #555555;">Call `lifecycle::last_lifecycle_warnings()` to see where this warning was</span></span></span>
+<span><span class="co">#&gt; <span style="color: #555555;">generated.</span></span></span></code></pre>
+<p><img src="generate-closure_files/figure-html/plot-gw-benchmarks-1.png" width="768"></p>
 </div>
 <div class="section level2">
 <h2 id="improving-power-simulations-using-parent-child-relationships">Improving power simulations using parent-child relationships<a class="anchor" aria-label="anchor" href="#improving-power-simulations-using-parent-child-relationships"></a>
@@ -332,3242 +334,451 @@ Given that the computing time of Approach 2 (graphicalMCP parent-child)
 is acceptable, we implement it in
 <code>graph_calculate_power::graphicalMCP</code>.</p>
 <div class="section level3">
-<h3 id="add-plot-here-1">Add plot here<a class="anchor" aria-label="anchor" href="#add-plot-here-1"></a>
+<h3 id="add-plot-here">Add plot here<a class="anchor" aria-label="anchor" href="#add-plot-here"></a>
 </h3>
-<div id="section" class="section level80">
-<p class="heading"></p>
-<p>The closure of a graph is the set of all sub-graphs, along with their
-weights calculated according to algorithm 1 of Bretz et al (2011). It is
-primarily used for <a href="link%20to%20closed%20test%20vignette">closed
-testing</a>, where all sub-graphs are tested for significance, and
-results are aggregated to determine which null hypotheses are
-significant globally.</p>
-<p>Throughout this article a common example will be used for
-demonstrations - the simple successive graph. It has two primary
-hypotheses, <span class="math inline">\(H_1\)</span> and <span class="math inline">\(H_2\)</span>, which have the initial weight evenly
-split between them. The secondary hypotheses, <span class="math inline">\(H_3\)</span> and <span class="math inline">\(H_4\)</span>, only have weight propagated to them
-if <span class="math inline">\(H_1\)</span> or <span class="math inline">\(H_2\)</span> is deleted, respectively.</p>
-<p><img src="generate-closure_files/figure-html/base-graph-1.png" width="576"></p>
-</div>
-</div>
-<div class="section level3">
-<h3 id="components-of-the-closure">Components of the closure<a class="anchor" aria-label="anchor" href="#components-of-the-closure"></a>
-</h3>
-<p>In graphicalMCP, the closure is represented by a matrix, where each
-row represents a sub-graph (also called an intersection hypothesis), and
-each column corresponds to an individual hypothesis. This matrix can be
-created with <code><a href="../reference/graph_generate_weights.html">graph_generate_weights()</a></code>, and it has two
-parts: An indicator matrix showing which hypotheses are contained in
-each sub-graph (The so-called powerset of a set), and a weights matrix
-containing the induced weights of each sub-graph.</p>
-<div id="dnnzmtkvnx" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
-<style>#dnnzmtkvnx table {
-  font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
-
-#dnnzmtkvnx thead, #dnnzmtkvnx tbody, #dnnzmtkvnx tfoot, #dnnzmtkvnx tr, #dnnzmtkvnx td, #dnnzmtkvnx th {
-  border-style: none;
-}
-
-#dnnzmtkvnx p {
-  margin: 0;
-  padding: 0;
-}
-
-#dnnzmtkvnx .gt_table {
-  display: table;
-  border-collapse: collapse;
-  line-height: normal;
-  margin-left: auto;
-  margin-right: auto;
-  color: #333333;
-  font-size: 16px;
-  font-weight: normal;
-  font-style: normal;
-  background-color: #FFFFFF;
-  width: auto;
-  border-top-style: solid;
-  border-top-width: 2px;
-  border-top-color: #A8A8A8;
-  border-right-style: none;
-  border-right-width: 2px;
-  border-right-color: #D3D3D3;
-  border-bottom-style: solid;
-  border-bottom-width: 2px;
-  border-bottom-color: #A8A8A8;
-  border-left-style: none;
-  border-left-width: 2px;
-  border-left-color: #D3D3D3;
-}
-
-#dnnzmtkvnx .gt_caption {
-  padding-top: 4px;
-  padding-bottom: 4px;
-}
-
-#dnnzmtkvnx .gt_title {
-  color: #333333;
-  font-size: 125%;
-  font-weight: initial;
-  padding-top: 4px;
-  padding-bottom: 4px;
-  padding-left: 5px;
-  padding-right: 5px;
-  border-bottom-color: #FFFFFF;
-  border-bottom-width: 0;
-}
-
-#dnnzmtkvnx .gt_subtitle {
-  color: #333333;
-  font-size: 85%;
-  font-weight: initial;
-  padding-top: 3px;
-  padding-bottom: 5px;
-  padding-left: 5px;
-  padding-right: 5px;
-  border-top-color: #FFFFFF;
-  border-top-width: 0;
-}
-
-#dnnzmtkvnx .gt_heading {
-  background-color: #FFFFFF;
-  text-align: center;
-  border-bottom-color: #FFFFFF;
-  border-left-style: none;
-  border-left-width: 1px;
-  border-left-color: #D3D3D3;
-  border-right-style: none;
-  border-right-width: 1px;
-  border-right-color: #D3D3D3;
-}
-
-#dnnzmtkvnx .gt_bottom_border {
-  border-bottom-style: solid;
-  border-bottom-width: 2px;
-  border-bottom-color: #D3D3D3;
-}
-
-#dnnzmtkvnx .gt_col_headings {
-  border-top-style: solid;
-  border-top-width: 2px;
-  border-top-color: #D3D3D3;
-  border-bottom-style: solid;
-  border-bottom-width: 2px;
-  border-bottom-color: #D3D3D3;
-  border-left-style: none;
-  border-left-width: 1px;
-  border-left-color: #D3D3D3;
-  border-right-style: none;
-  border-right-width: 1px;
-  border-right-color: #D3D3D3;
-}
-
-#dnnzmtkvnx .gt_col_heading {
-  color: #333333;
-  background-color: #FFFFFF;
-  font-size: 100%;
-  font-weight: normal;
-  text-transform: inherit;
-  border-left-style: none;
-  border-left-width: 1px;
-  border-left-color: #D3D3D3;
-  border-right-style: none;
-  border-right-width: 1px;
-  border-right-color: #D3D3D3;
-  vertical-align: bottom;
-  padding-top: 5px;
-  padding-bottom: 6px;
-  padding-left: 5px;
-  padding-right: 5px;
-  overflow-x: hidden;
-}
-
-#dnnzmtkvnx .gt_column_spanner_outer {
-  color: #333333;
-  background-color: #FFFFFF;
-  font-size: 100%;
-  font-weight: normal;
-  text-transform: inherit;
-  padding-top: 0;
-  padding-bottom: 0;
-  padding-left: 4px;
-  padding-right: 4px;
-}
-
-#dnnzmtkvnx .gt_column_spanner_outer:first-child {
-  padding-left: 0;
-}
-
-#dnnzmtkvnx .gt_column_spanner_outer:last-child {
-  padding-right: 0;
-}
-
-#dnnzmtkvnx .gt_column_spanner {
-  border-bottom-style: solid;
-  border-bottom-width: 2px;
-  border-bottom-color: #D3D3D3;
-  vertical-align: bottom;
-  padding-top: 5px;
-  padding-bottom: 5px;
-  overflow-x: hidden;
-  display: inline-block;
-  width: 100%;
-}
-
-#dnnzmtkvnx .gt_spanner_row {
-  border-bottom-style: hidden;
-}
-
-#dnnzmtkvnx .gt_group_heading {
-  padding-top: 8px;
-  padding-bottom: 8px;
-  padding-left: 5px;
-  padding-right: 5px;
-  color: #333333;
-  background-color: #FFFFFF;
-  font-size: 100%;
-  font-weight: initial;
-  text-transform: inherit;
-  border-top-style: solid;
-  border-top-width: 2px;
-  border-top-color: #D3D3D3;
-  border-bottom-style: solid;
-  border-bottom-width: 2px;
-  border-bottom-color: #D3D3D3;
-  border-left-style: none;
-  border-left-width: 1px;
-  border-left-color: #D3D3D3;
-  border-right-style: none;
-  border-right-width: 1px;
-  border-right-color: #D3D3D3;
-  vertical-align: middle;
-  text-align: left;
-}
-
-#dnnzmtkvnx .gt_empty_group_heading {
-  padding: 0.5px;
-  color: #333333;
-  background-color: #FFFFFF;
-  font-size: 100%;
-  font-weight: initial;
-  border-top-style: solid;
-  border-top-width: 2px;
-  border-top-color: #D3D3D3;
-  border-bottom-style: solid;
-  border-bottom-width: 2px;
-  border-bottom-color: #D3D3D3;
-  vertical-align: middle;
-}
-
-#dnnzmtkvnx .gt_from_md > :first-child {
-  margin-top: 0;
-}
-
-#dnnzmtkvnx .gt_from_md > :last-child {
-  margin-bottom: 0;
-}
-
-#dnnzmtkvnx .gt_row {
-  padding-top: 8px;
-  padding-bottom: 8px;
-  padding-left: 5px;
-  padding-right: 5px;
-  margin: 10px;
-  border-top-style: solid;
-  border-top-width: 1px;
-  border-top-color: #D3D3D3;
-  border-left-style: none;
-  border-left-width: 1px;
-  border-left-color: #D3D3D3;
-  border-right-style: none;
-  border-right-width: 1px;
-  border-right-color: #D3D3D3;
-  vertical-align: middle;
-  overflow-x: hidden;
-}
-
-#dnnzmtkvnx .gt_stub {
-  color: #333333;
-  background-color: #FFFFFF;
-  font-size: 100%;
-  font-weight: initial;
-  text-transform: inherit;
-  border-right-style: solid;
-  border-right-width: 2px;
-  border-right-color: #D3D3D3;
-  padding-left: 5px;
-  padding-right: 5px;
-}
-
-#dnnzmtkvnx .gt_stub_row_group {
-  color: #333333;
-  background-color: #FFFFFF;
-  font-size: 100%;
-  font-weight: initial;
-  text-transform: inherit;
-  border-right-style: solid;
-  border-right-width: 2px;
-  border-right-color: #D3D3D3;
-  padding-left: 5px;
-  padding-right: 5px;
-  vertical-align: top;
-}
-
-#dnnzmtkvnx .gt_row_group_first td {
-  border-top-width: 2px;
-}
-
-#dnnzmtkvnx .gt_row_group_first th {
-  border-top-width: 2px;
-}
-
-#dnnzmtkvnx .gt_summary_row {
-  color: #333333;
-  background-color: #FFFFFF;
-  text-transform: inherit;
-  padding-top: 8px;
-  padding-bottom: 8px;
-  padding-left: 5px;
-  padding-right: 5px;
-}
-
-#dnnzmtkvnx .gt_first_summary_row {
-  border-top-style: solid;
-  border-top-color: #D3D3D3;
-}
-
-#dnnzmtkvnx .gt_first_summary_row.thick {
-  border-top-width: 2px;
-}
-
-#dnnzmtkvnx .gt_last_summary_row {
-  padding-top: 8px;
-  padding-bottom: 8px;
-  padding-left: 5px;
-  padding-right: 5px;
-  border-bottom-style: solid;
-  border-bottom-width: 2px;
-  border-bottom-color: #D3D3D3;
-}
-
-#dnnzmtkvnx .gt_grand_summary_row {
-  color: #333333;
-  background-color: #FFFFFF;
-  text-transform: inherit;
-  padding-top: 8px;
-  padding-bottom: 8px;
-  padding-left: 5px;
-  padding-right: 5px;
-}
-
-#dnnzmtkvnx .gt_first_grand_summary_row {
-  padding-top: 8px;
-  padding-bottom: 8px;
-  padding-left: 5px;
-  padding-right: 5px;
-  border-top-style: double;
-  border-top-width: 6px;
-  border-top-color: #D3D3D3;
-}
-
-#dnnzmtkvnx .gt_last_grand_summary_row_top {
-  padding-top: 8px;
-  padding-bottom: 8px;
-  padding-left: 5px;
-  padding-right: 5px;
-  border-bottom-style: double;
-  border-bottom-width: 6px;
-  border-bottom-color: #D3D3D3;
-}
-
-#dnnzmtkvnx .gt_striped {
-  background-color: rgba(128, 128, 128, 0.05);
-}
-
-#dnnzmtkvnx .gt_table_body {
-  border-top-style: solid;
-  border-top-width: 2px;
-  border-top-color: #D3D3D3;
-  border-bottom-style: solid;
-  border-bottom-width: 2px;
-  border-bottom-color: #D3D3D3;
-}
-
-#dnnzmtkvnx .gt_footnotes {
-  color: #333333;
-  background-color: #FFFFFF;
-  border-bottom-style: none;
-  border-bottom-width: 2px;
-  border-bottom-color: #D3D3D3;
-  border-left-style: none;
-  border-left-width: 2px;
-  border-left-color: #D3D3D3;
-  border-right-style: none;
-  border-right-width: 2px;
-  border-right-color: #D3D3D3;
-}
-
-#dnnzmtkvnx .gt_footnote {
-  margin: 0px;
-  font-size: 90%;
-  padding-top: 4px;
-  padding-bottom: 4px;
-  padding-left: 5px;
-  padding-right: 5px;
-}
-
-#dnnzmtkvnx .gt_sourcenotes {
-  color: #333333;
-  background-color: #FFFFFF;
-  border-bottom-style: none;
-  border-bottom-width: 2px;
-  border-bottom-color: #D3D3D3;
-  border-left-style: none;
-  border-left-width: 2px;
-  border-left-color: #D3D3D3;
-  border-right-style: none;
-  border-right-width: 2px;
-  border-right-color: #D3D3D3;
-}
-
-#dnnzmtkvnx .gt_sourcenote {
-  font-size: 90%;
-  padding-top: 4px;
-  padding-bottom: 4px;
-  padding-left: 5px;
-  padding-right: 5px;
-}
-
-#dnnzmtkvnx .gt_left {
-  text-align: left;
-}
-
-#dnnzmtkvnx .gt_center {
-  text-align: center;
-}
-
-#dnnzmtkvnx .gt_right {
-  text-align: right;
-  font-variant-numeric: tabular-nums;
-}
-
-#dnnzmtkvnx .gt_font_normal {
-  font-weight: normal;
-}
-
-#dnnzmtkvnx .gt_font_bold {
-  font-weight: bold;
-}
-
-#dnnzmtkvnx .gt_font_italic {
-  font-style: italic;
-}
-
-#dnnzmtkvnx .gt_super {
-  font-size: 65%;
-}
-
-#dnnzmtkvnx .gt_footnote_marks {
-  font-size: 75%;
-  vertical-align: 0.4em;
-  position: initial;
-}
-
-#dnnzmtkvnx .gt_asterisk {
-  font-size: 100%;
-  vertical-align: 0;
-}
-
-#dnnzmtkvnx .gt_indent_1 {
-  text-indent: 5px;
-}
-
-#dnnzmtkvnx .gt_indent_2 {
-  text-indent: 10px;
-}
-
-#dnnzmtkvnx .gt_indent_3 {
-  text-indent: 15px;
-}
-
-#dnnzmtkvnx .gt_indent_4 {
-  text-indent: 20px;
-}
-
-#dnnzmtkvnx .gt_indent_5 {
-  text-indent: 25px;
-}
-</style>
-<table class="table gt_table" data-quarto-disable-processing="false" data-quarto-bootstrap="false">
-<thead>
-<tr class="gt_heading">
-<td colspan="9" class="gt_heading gt_title gt_font_normal gt_bottom_border" style>Closure of the simple successive graph</td>
-    </tr>
-<tr class="gt_col_headings gt_spanner_row">
-<th class="gt_col_heading gt_columns_bottom_border gt_right" rowspan="2" colspan="1" scope="col" id="Intersection">Intersection</th>
-      <th class="gt_center gt_columns_top_border gt_column_spanner_outer" rowspan="1" colspan="4" scope="colgroup" id="Powerset">
-        <span class="gt_column_spanner">Powerset</span>
-      </th>
-      <th class="gt_center gt_columns_top_border gt_column_spanner_outer" rowspan="1" colspan="4" scope="colgroup" id="Weights">
-        <span class="gt_column_spanner">Weights</span>
-      </th>
-    </tr>
-<tr class="gt_col_headings">
-<th class="gt_col_heading gt_columns_bottom_border gt_right" rowspan="1" colspan="1" scope="col" id="H1">H1</th>
-      <th class="gt_col_heading gt_columns_bottom_border gt_right" rowspan="1" colspan="1" scope="col" id="H2">H2</th>
-      <th class="gt_col_heading gt_columns_bottom_border gt_right" rowspan="1" colspan="1" scope="col" id="H3">H3</th>
-      <th class="gt_col_heading gt_columns_bottom_border gt_right" rowspan="1" colspan="1" scope="col" id="H4">H4</th>
-      <th class="gt_col_heading gt_columns_bottom_border gt_right" rowspan="1" colspan="1" scope="col" id="H1">H1</th>
-      <th class="gt_col_heading gt_columns_bottom_border gt_right" rowspan="1" colspan="1" scope="col" id="H2">H2</th>
-      <th class="gt_col_heading gt_columns_bottom_border gt_right" rowspan="1" colspan="1" scope="col" id="H3">H3</th>
-      <th class="gt_col_heading gt_columns_bottom_border gt_right" rowspan="1" colspan="1" scope="col" id="H4">H4</th>
-    </tr>
-</thead>
-<tbody class="gt_table_body">
-<tr>
-<td headers="Intersection" class="gt_row gt_right" style="text-align: center; font-style: italic;">1</td>
-<td headers="H1" class="gt_row gt_right">1</td>
-<td headers="H2" class="gt_row gt_right">1</td>
-<td headers="H3" class="gt_row gt_right">1</td>
-<td headers="H4" class="gt_row gt_right">1</td>
-<td headers="H1.1" class="gt_row gt_right">0.50</td>
-<td headers="H2.1" class="gt_row gt_right">0.50</td>
-<td headers="H3.1" class="gt_row gt_right">0.00</td>
-<td headers="H4.1" class="gt_row gt_right">0.00</td>
-</tr>
-<tr>
-<td headers="Intersection" class="gt_row gt_right gt_striped" style="text-align: center; font-style: italic;">2</td>
-<td headers="H1" class="gt_row gt_right gt_striped">1</td>
-<td headers="H2" class="gt_row gt_right gt_striped">1</td>
-<td headers="H3" class="gt_row gt_right gt_striped">1</td>
-<td headers="H4" class="gt_row gt_right gt_striped">0</td>
-<td headers="H1.1" class="gt_row gt_right gt_striped">0.50</td>
-<td headers="H2.1" class="gt_row gt_right gt_striped">0.50</td>
-<td headers="H3.1" class="gt_row gt_right gt_striped">0.00</td>
-<td headers="H4.1" class="gt_row gt_right gt_striped">0.00</td>
-</tr>
-<tr>
-<td headers="Intersection" class="gt_row gt_right" style="text-align: center; font-style: italic;">3</td>
-<td headers="H1" class="gt_row gt_right">1</td>
-<td headers="H2" class="gt_row gt_right">1</td>
-<td headers="H3" class="gt_row gt_right">0</td>
-<td headers="H4" class="gt_row gt_right">1</td>
-<td headers="H1.1" class="gt_row gt_right">0.50</td>
-<td headers="H2.1" class="gt_row gt_right">0.50</td>
-<td headers="H3.1" class="gt_row gt_right">0.00</td>
-<td headers="H4.1" class="gt_row gt_right">0.00</td>
-</tr>
-<tr>
-<td headers="Intersection" class="gt_row gt_right gt_striped" style="text-align: center; font-style: italic;">4</td>
-<td headers="H1" class="gt_row gt_right gt_striped">1</td>
-<td headers="H2" class="gt_row gt_right gt_striped">1</td>
-<td headers="H3" class="gt_row gt_right gt_striped">0</td>
-<td headers="H4" class="gt_row gt_right gt_striped">0</td>
-<td headers="H1.1" class="gt_row gt_right gt_striped">0.50</td>
-<td headers="H2.1" class="gt_row gt_right gt_striped">0.50</td>
-<td headers="H3.1" class="gt_row gt_right gt_striped">0.00</td>
-<td headers="H4.1" class="gt_row gt_right gt_striped">0.00</td>
-</tr>
-<tr>
-<td headers="Intersection" class="gt_row gt_right" style="text-align: center; font-style: italic;">5</td>
-<td headers="H1" class="gt_row gt_right">1</td>
-<td headers="H2" class="gt_row gt_right">0</td>
-<td headers="H3" class="gt_row gt_right">1</td>
-<td headers="H4" class="gt_row gt_right">1</td>
-<td headers="H1.1" class="gt_row gt_right">0.75</td>
-<td headers="H2.1" class="gt_row gt_right">0.00</td>
-<td headers="H3.1" class="gt_row gt_right">0.00</td>
-<td headers="H4.1" class="gt_row gt_right">0.25</td>
-</tr>
-<tr>
-<td headers="Intersection" class="gt_row gt_right gt_striped" style="text-align: center; font-style: italic;">6</td>
-<td headers="H1" class="gt_row gt_right gt_striped">1</td>
-<td headers="H2" class="gt_row gt_right gt_striped">0</td>
-<td headers="H3" class="gt_row gt_right gt_striped">1</td>
-<td headers="H4" class="gt_row gt_right gt_striped">0</td>
-<td headers="H1.1" class="gt_row gt_right gt_striped">1.00</td>
-<td headers="H2.1" class="gt_row gt_right gt_striped">0.00</td>
-<td headers="H3.1" class="gt_row gt_right gt_striped">0.00</td>
-<td headers="H4.1" class="gt_row gt_right gt_striped">0.00</td>
-</tr>
-<tr>
-<td headers="Intersection" class="gt_row gt_right" style="text-align: center; font-style: italic;">7</td>
-<td headers="H1" class="gt_row gt_right">1</td>
-<td headers="H2" class="gt_row gt_right">0</td>
-<td headers="H3" class="gt_row gt_right">0</td>
-<td headers="H4" class="gt_row gt_right">1</td>
-<td headers="H1.1" class="gt_row gt_right">0.75</td>
-<td headers="H2.1" class="gt_row gt_right">0.00</td>
-<td headers="H3.1" class="gt_row gt_right">0.00</td>
-<td headers="H4.1" class="gt_row gt_right">0.25</td>
-</tr>
-<tr>
-<td headers="Intersection" class="gt_row gt_right gt_striped" style="text-align: center; font-style: italic;">8</td>
-<td headers="H1" class="gt_row gt_right gt_striped">1</td>
-<td headers="H2" class="gt_row gt_right gt_striped">0</td>
-<td headers="H3" class="gt_row gt_right gt_striped">0</td>
-<td headers="H4" class="gt_row gt_right gt_striped">0</td>
-<td headers="H1.1" class="gt_row gt_right gt_striped">1.00</td>
-<td headers="H2.1" class="gt_row gt_right gt_striped">0.00</td>
-<td headers="H3.1" class="gt_row gt_right gt_striped">0.00</td>
-<td headers="H4.1" class="gt_row gt_right gt_striped">0.00</td>
-</tr>
-<tr>
-<td headers="Intersection" class="gt_row gt_right" style="text-align: center; font-style: italic;">9</td>
-<td headers="H1" class="gt_row gt_right">0</td>
-<td headers="H2" class="gt_row gt_right">1</td>
-<td headers="H3" class="gt_row gt_right">1</td>
-<td headers="H4" class="gt_row gt_right">1</td>
-<td headers="H1.1" class="gt_row gt_right">0.00</td>
-<td headers="H2.1" class="gt_row gt_right">0.75</td>
-<td headers="H3.1" class="gt_row gt_right">0.25</td>
-<td headers="H4.1" class="gt_row gt_right">0.00</td>
-</tr>
-<tr>
-<td headers="Intersection" class="gt_row gt_right gt_striped" style="text-align: center; font-style: italic;">10</td>
-<td headers="H1" class="gt_row gt_right gt_striped">0</td>
-<td headers="H2" class="gt_row gt_right gt_striped">1</td>
-<td headers="H3" class="gt_row gt_right gt_striped">1</td>
-<td headers="H4" class="gt_row gt_right gt_striped">0</td>
-<td headers="H1.1" class="gt_row gt_right gt_striped">0.00</td>
-<td headers="H2.1" class="gt_row gt_right gt_striped">0.75</td>
-<td headers="H3.1" class="gt_row gt_right gt_striped">0.25</td>
-<td headers="H4.1" class="gt_row gt_right gt_striped">0.00</td>
-</tr>
-<tr>
-<td headers="Intersection" class="gt_row gt_right" style="text-align: center; font-style: italic;">11</td>
-<td headers="H1" class="gt_row gt_right">0</td>
-<td headers="H2" class="gt_row gt_right">1</td>
-<td headers="H3" class="gt_row gt_right">0</td>
-<td headers="H4" class="gt_row gt_right">1</td>
-<td headers="H1.1" class="gt_row gt_right">0.00</td>
-<td headers="H2.1" class="gt_row gt_right">1.00</td>
-<td headers="H3.1" class="gt_row gt_right">0.00</td>
-<td headers="H4.1" class="gt_row gt_right">0.00</td>
-</tr>
-<tr>
-<td headers="Intersection" class="gt_row gt_right gt_striped" style="text-align: center; font-style: italic;">12</td>
-<td headers="H1" class="gt_row gt_right gt_striped">0</td>
-<td headers="H2" class="gt_row gt_right gt_striped">1</td>
-<td headers="H3" class="gt_row gt_right gt_striped">0</td>
-<td headers="H4" class="gt_row gt_right gt_striped">0</td>
-<td headers="H1.1" class="gt_row gt_right gt_striped">0.00</td>
-<td headers="H2.1" class="gt_row gt_right gt_striped">1.00</td>
-<td headers="H3.1" class="gt_row gt_right gt_striped">0.00</td>
-<td headers="H4.1" class="gt_row gt_right gt_striped">0.00</td>
-</tr>
-<tr>
-<td headers="Intersection" class="gt_row gt_right" style="text-align: center; font-style: italic;">13</td>
-<td headers="H1" class="gt_row gt_right">0</td>
-<td headers="H2" class="gt_row gt_right">0</td>
-<td headers="H3" class="gt_row gt_right">1</td>
-<td headers="H4" class="gt_row gt_right">1</td>
-<td headers="H1.1" class="gt_row gt_right">0.00</td>
-<td headers="H2.1" class="gt_row gt_right">0.00</td>
-<td headers="H3.1" class="gt_row gt_right">0.50</td>
-<td headers="H4.1" class="gt_row gt_right">0.50</td>
-</tr>
-<tr>
-<td headers="Intersection" class="gt_row gt_right gt_striped" style="text-align: center; font-style: italic;">14</td>
-<td headers="H1" class="gt_row gt_right gt_striped">0</td>
-<td headers="H2" class="gt_row gt_right gt_striped">0</td>
-<td headers="H3" class="gt_row gt_right gt_striped">1</td>
-<td headers="H4" class="gt_row gt_right gt_striped">0</td>
-<td headers="H1.1" class="gt_row gt_right gt_striped">0.00</td>
-<td headers="H2.1" class="gt_row gt_right gt_striped">0.00</td>
-<td headers="H3.1" class="gt_row gt_right gt_striped">1.00</td>
-<td headers="H4.1" class="gt_row gt_right gt_striped">0.00</td>
-</tr>
-<tr>
-<td headers="Intersection" class="gt_row gt_right" style="text-align: center; font-style: italic;">15</td>
-<td headers="H1" class="gt_row gt_right">0</td>
-<td headers="H2" class="gt_row gt_right">0</td>
-<td headers="H3" class="gt_row gt_right">0</td>
-<td headers="H4" class="gt_row gt_right">1</td>
-<td headers="H1.1" class="gt_row gt_right">0.00</td>
-<td headers="H2.1" class="gt_row gt_right">0.00</td>
-<td headers="H3.1" class="gt_row gt_right">0.00</td>
-<td headers="H4.1" class="gt_row gt_right">1.00</td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
-<div class="section level3">
-<h3 id="properties-of-the-closure">Properties of the closure<a class="anchor" aria-label="anchor" href="#properties-of-the-closure"></a>
-</h3>
-<p>The rows of the closure are generated in a particular way in order to
-give them some useful properties.</p>
-<div class="section level4">
-<h4 id="repeating-recursive-blocks">Repeating recursive blocks<a class="anchor" aria-label="anchor" href="#repeating-recursive-blocks"></a>
-</h4>
-<p>First, notice how each row can be obtained from some row higher up in
-the matrix by flipping a single 1 to be a 0. For example, go from row 1
-to row 3 by flipping <span class="math inline">\(H_3\)</span>, or go
-from row 10 to row 14 by flipping <span class="math inline">\(H_2\)</span>. The upper row in a pairing like this
-can be thought of as the “parent” sub-graph, and the lower row as the
-“child” sub-graph. Flipping a 0 to be a 1 and moving up the matrix will
-be called “finding a sub-graph’s parent.” Now consider the
-parent-finding strategy where the left-most 0 in each row is flipped.
-This reveals a pattern between the bottom half and top half, where each
-row’s parent in the bottom half is the corresponding row in the top
-half, eight rows up.</p>
-<div id="noulxmynba" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
-<style>#noulxmynba table {
-  font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
-
-#noulxmynba thead, #noulxmynba tbody, #noulxmynba tfoot, #noulxmynba tr, #noulxmynba td, #noulxmynba th {
-  border-style: none;
-}
-
-#noulxmynba p {
-  margin: 0;
-  padding: 0;
-}
-
-#noulxmynba .gt_table {
-  display: table;
-  border-collapse: collapse;
-  line-height: normal;
-  margin-left: auto;
-  margin-right: auto;
-  color: #333333;
-  font-size: 16px;
-  font-weight: normal;
-  font-style: normal;
-  background-color: #FFFFFF;
-  width: auto;
-  border-top-style: solid;
-  border-top-width: 2px;
-  border-top-color: #A8A8A8;
-  border-right-style: none;
-  border-right-width: 2px;
-  border-right-color: #D3D3D3;
-  border-bottom-style: solid;
-  border-bottom-width: 2px;
-  border-bottom-color: #A8A8A8;
-  border-left-style: none;
-  border-left-width: 2px;
-  border-left-color: #D3D3D3;
-}
-
-#noulxmynba .gt_caption {
-  padding-top: 4px;
-  padding-bottom: 4px;
-}
-
-#noulxmynba .gt_title {
-  color: #333333;
-  font-size: 125%;
-  font-weight: initial;
-  padding-top: 4px;
-  padding-bottom: 4px;
-  padding-left: 5px;
-  padding-right: 5px;
-  border-bottom-color: #FFFFFF;
-  border-bottom-width: 0;
-}
-
-#noulxmynba .gt_subtitle {
-  color: #333333;
-  font-size: 85%;
-  font-weight: initial;
-  padding-top: 3px;
-  padding-bottom: 5px;
-  padding-left: 5px;
-  padding-right: 5px;
-  border-top-color: #FFFFFF;
-  border-top-width: 0;
-}
-
-#noulxmynba .gt_heading {
-  background-color: #FFFFFF;
-  text-align: center;
-  border-bottom-color: #FFFFFF;
-  border-left-style: none;
-  border-left-width: 1px;
-  border-left-color: #D3D3D3;
-  border-right-style: none;
-  border-right-width: 1px;
-  border-right-color: #D3D3D3;
-}
-
-#noulxmynba .gt_bottom_border {
-  border-bottom-style: solid;
-  border-bottom-width: 2px;
-  border-bottom-color: #D3D3D3;
-}
-
-#noulxmynba .gt_col_headings {
-  border-top-style: solid;
-  border-top-width: 2px;
-  border-top-color: #D3D3D3;
-  border-bottom-style: solid;
-  border-bottom-width: 2px;
-  border-bottom-color: #D3D3D3;
-  border-left-style: none;
-  border-left-width: 1px;
-  border-left-color: #D3D3D3;
-  border-right-style: none;
-  border-right-width: 1px;
-  border-right-color: #D3D3D3;
-}
-
-#noulxmynba .gt_col_heading {
-  color: #333333;
-  background-color: #FFFFFF;
-  font-size: 100%;
-  font-weight: normal;
-  text-transform: inherit;
-  border-left-style: none;
-  border-left-width: 1px;
-  border-left-color: #D3D3D3;
-  border-right-style: none;
-  border-right-width: 1px;
-  border-right-color: #D3D3D3;
-  vertical-align: bottom;
-  padding-top: 5px;
-  padding-bottom: 6px;
-  padding-left: 5px;
-  padding-right: 5px;
-  overflow-x: hidden;
-}
-
-#noulxmynba .gt_column_spanner_outer {
-  color: #333333;
-  background-color: #FFFFFF;
-  font-size: 100%;
-  font-weight: normal;
-  text-transform: inherit;
-  padding-top: 0;
-  padding-bottom: 0;
-  padding-left: 4px;
-  padding-right: 4px;
-}
-
-#noulxmynba .gt_column_spanner_outer:first-child {
-  padding-left: 0;
-}
-
-#noulxmynba .gt_column_spanner_outer:last-child {
-  padding-right: 0;
-}
-
-#noulxmynba .gt_column_spanner {
-  border-bottom-style: solid;
-  border-bottom-width: 2px;
-  border-bottom-color: #D3D3D3;
-  vertical-align: bottom;
-  padding-top: 5px;
-  padding-bottom: 5px;
-  overflow-x: hidden;
-  display: inline-block;
-  width: 100%;
-}
-
-#noulxmynba .gt_spanner_row {
-  border-bottom-style: hidden;
-}
-
-#noulxmynba .gt_group_heading {
-  padding-top: 8px;
-  padding-bottom: 8px;
-  padding-left: 5px;
-  padding-right: 5px;
-  color: #333333;
-  background-color: #FFFFFF;
-  font-size: 100%;
-  font-weight: initial;
-  text-transform: inherit;
-  border-top-style: solid;
-  border-top-width: 2px;
-  border-top-color: #D3D3D3;
-  border-bottom-style: solid;
-  border-bottom-width: 2px;
-  border-bottom-color: #D3D3D3;
-  border-left-style: none;
-  border-left-width: 1px;
-  border-left-color: #D3D3D3;
-  border-right-style: none;
-  border-right-width: 1px;
-  border-right-color: #D3D3D3;
-  vertical-align: middle;
-  text-align: left;
-}
-
-#noulxmynba .gt_empty_group_heading {
-  padding: 0.5px;
-  color: #333333;
-  background-color: #FFFFFF;
-  font-size: 100%;
-  font-weight: initial;
-  border-top-style: solid;
-  border-top-width: 2px;
-  border-top-color: #D3D3D3;
-  border-bottom-style: solid;
-  border-bottom-width: 2px;
-  border-bottom-color: #D3D3D3;
-  vertical-align: middle;
-}
-
-#noulxmynba .gt_from_md > :first-child {
-  margin-top: 0;
-}
-
-#noulxmynba .gt_from_md > :last-child {
-  margin-bottom: 0;
-}
-
-#noulxmynba .gt_row {
-  padding-top: 8px;
-  padding-bottom: 8px;
-  padding-left: 5px;
-  padding-right: 5px;
-  margin: 10px;
-  border-top-style: solid;
-  border-top-width: 1px;
-  border-top-color: #D3D3D3;
-  border-left-style: none;
-  border-left-width: 1px;
-  border-left-color: #D3D3D3;
-  border-right-style: none;
-  border-right-width: 1px;
-  border-right-color: #D3D3D3;
-  vertical-align: middle;
-  overflow-x: hidden;
-}
-
-#noulxmynba .gt_stub {
-  color: #333333;
-  background-color: #FFFFFF;
-  font-size: 100%;
-  font-weight: initial;
-  text-transform: inherit;
-  border-right-style: solid;
-  border-right-width: 2px;
-  border-right-color: #D3D3D3;
-  padding-left: 5px;
-  padding-right: 5px;
-}
-
-#noulxmynba .gt_stub_row_group {
-  color: #333333;
-  background-color: #FFFFFF;
-  font-size: 100%;
-  font-weight: initial;
-  text-transform: inherit;
-  border-right-style: solid;
-  border-right-width: 2px;
-  border-right-color: #D3D3D3;
-  padding-left: 5px;
-  padding-right: 5px;
-  vertical-align: top;
-}
-
-#noulxmynba .gt_row_group_first td {
-  border-top-width: 2px;
-}
-
-#noulxmynba .gt_row_group_first th {
-  border-top-width: 2px;
-}
-
-#noulxmynba .gt_summary_row {
-  color: #333333;
-  background-color: #FFFFFF;
-  text-transform: inherit;
-  padding-top: 8px;
-  padding-bottom: 8px;
-  padding-left: 5px;
-  padding-right: 5px;
-}
-
-#noulxmynba .gt_first_summary_row {
-  border-top-style: solid;
-  border-top-color: #D3D3D3;
-}
-
-#noulxmynba .gt_first_summary_row.thick {
-  border-top-width: 2px;
-}
-
-#noulxmynba .gt_last_summary_row {
-  padding-top: 8px;
-  padding-bottom: 8px;
-  padding-left: 5px;
-  padding-right: 5px;
-  border-bottom-style: solid;
-  border-bottom-width: 2px;
-  border-bottom-color: #D3D3D3;
-}
-
-#noulxmynba .gt_grand_summary_row {
-  color: #333333;
-  background-color: #FFFFFF;
-  text-transform: inherit;
-  padding-top: 8px;
-  padding-bottom: 8px;
-  padding-left: 5px;
-  padding-right: 5px;
-}
-
-#noulxmynba .gt_first_grand_summary_row {
-  padding-top: 8px;
-  padding-bottom: 8px;
-  padding-left: 5px;
-  padding-right: 5px;
-  border-top-style: double;
-  border-top-width: 6px;
-  border-top-color: #D3D3D3;
-}
-
-#noulxmynba .gt_last_grand_summary_row_top {
-  padding-top: 8px;
-  padding-bottom: 8px;
-  padding-left: 5px;
-  padding-right: 5px;
-  border-bottom-style: double;
-  border-bottom-width: 6px;
-  border-bottom-color: #D3D3D3;
-}
-
-#noulxmynba .gt_striped {
-  background-color: rgba(128, 128, 128, 0.05);
-}
-
-#noulxmynba .gt_table_body {
-  border-top-style: solid;
-  border-top-width: 2px;
-  border-top-color: #D3D3D3;
-  border-bottom-style: solid;
-  border-bottom-width: 2px;
-  border-bottom-color: #D3D3D3;
-}
-
-#noulxmynba .gt_footnotes {
-  color: #333333;
-  background-color: #FFFFFF;
-  border-bottom-style: none;
-  border-bottom-width: 2px;
-  border-bottom-color: #D3D3D3;
-  border-left-style: none;
-  border-left-width: 2px;
-  border-left-color: #D3D3D3;
-  border-right-style: none;
-  border-right-width: 2px;
-  border-right-color: #D3D3D3;
-}
-
-#noulxmynba .gt_footnote {
-  margin: 0px;
-  font-size: 90%;
-  padding-top: 4px;
-  padding-bottom: 4px;
-  padding-left: 5px;
-  padding-right: 5px;
-}
-
-#noulxmynba .gt_sourcenotes {
-  color: #333333;
-  background-color: #FFFFFF;
-  border-bottom-style: none;
-  border-bottom-width: 2px;
-  border-bottom-color: #D3D3D3;
-  border-left-style: none;
-  border-left-width: 2px;
-  border-left-color: #D3D3D3;
-  border-right-style: none;
-  border-right-width: 2px;
-  border-right-color: #D3D3D3;
-}
-
-#noulxmynba .gt_sourcenote {
-  font-size: 90%;
-  padding-top: 4px;
-  padding-bottom: 4px;
-  padding-left: 5px;
-  padding-right: 5px;
-}
-
-#noulxmynba .gt_left {
-  text-align: left;
-}
-
-#noulxmynba .gt_center {
-  text-align: center;
-}
-
-#noulxmynba .gt_right {
-  text-align: right;
-  font-variant-numeric: tabular-nums;
-}
-
-#noulxmynba .gt_font_normal {
-  font-weight: normal;
-}
-
-#noulxmynba .gt_font_bold {
-  font-weight: bold;
-}
-
-#noulxmynba .gt_font_italic {
-  font-style: italic;
-}
-
-#noulxmynba .gt_super {
-  font-size: 65%;
-}
-
-#noulxmynba .gt_footnote_marks {
-  font-size: 75%;
-  vertical-align: 0.4em;
-  position: initial;
-}
-
-#noulxmynba .gt_asterisk {
-  font-size: 100%;
-  vertical-align: 0;
-}
-
-#noulxmynba .gt_indent_1 {
-  text-indent: 5px;
-}
-
-#noulxmynba .gt_indent_2 {
-  text-indent: 10px;
-}
-
-#noulxmynba .gt_indent_3 {
-  text-indent: 15px;
-}
-
-#noulxmynba .gt_indent_4 {
-  text-indent: 20px;
-}
-
-#noulxmynba .gt_indent_5 {
-  text-indent: 25px;
-}
-</style>
-<table class="table gt_table" data-quarto-disable-processing="false" data-quarto-bootstrap="false">
-<thead>
-<tr class="gt_heading">
-<td colspan="5" class="gt_heading gt_title gt_font_normal gt_bottom_border" style>The boxes contain identical matrices</td>
-    </tr>
-<tr class="gt_col_headings">
-<th class="gt_col_heading gt_columns_bottom_border gt_right" rowspan="1" colspan="1" scope="col" id="Intersection">Intersection</th>
-      <th class="gt_col_heading gt_columns_bottom_border gt_right" rowspan="1" colspan="1" scope="col" id="H1">H1</th>
-      <th class="gt_col_heading gt_columns_bottom_border gt_right" rowspan="1" colspan="1" scope="col" id="H2">H2</th>
-      <th class="gt_col_heading gt_columns_bottom_border gt_right" rowspan="1" colspan="1" scope="col" id="H3">H3</th>
-      <th class="gt_col_heading gt_columns_bottom_border gt_right" rowspan="1" colspan="1" scope="col" id="H4">H4</th>
-    </tr>
-</thead>
-<tbody class="gt_table_body">
-<tr>
-<td headers="Intersection" class="gt_row gt_right" style="text-align: center; font-style: italic;">1</td>
-<td headers="H1" class="gt_row gt_right">1</td>
-<td headers="H2" class="gt_row gt_right" style="border-left-width: 2px; border-left-style: solid; border-left-color: #a069c4; border-top-width: 2px; border-top-style: solid; border-top-color: #a069c4;">1</td>
-<td headers="H3" class="gt_row gt_right" style="border-top-width: 2px; border-top-style: solid; border-top-color: #a069c4;">1</td>
-<td headers="H4" class="gt_row gt_right" style="border-top-width: 2px; border-top-style: solid; border-top-color: #a069c4; border-right-width: 2px; border-right-style: solid; border-right-color: #a069c4;">1</td>
-</tr>
-<tr>
-<td headers="Intersection" class="gt_row gt_right" style="text-align: center; font-style: italic;">2</td>
-<td headers="H1" class="gt_row gt_right">1</td>
-<td headers="H2" class="gt_row gt_right" style="border-left-width: 2px; border-left-style: solid; border-left-color: #a069c4;">1</td>
-<td headers="H3" class="gt_row gt_right">1</td>
-<td headers="H4" class="gt_row gt_right" style="border-right-width: 2px; border-right-style: solid; border-right-color: #a069c4;">0</td>
-</tr>
-<tr>
-<td headers="Intersection" class="gt_row gt_right" style="text-align: center; font-style: italic;">3</td>
-<td headers="H1" class="gt_row gt_right">1</td>
-<td headers="H2" class="gt_row gt_right" style="border-left-width: 2px; border-left-style: solid; border-left-color: #a069c4;">1</td>
-<td headers="H3" class="gt_row gt_right">0</td>
-<td headers="H4" class="gt_row gt_right" style="border-right-width: 2px; border-right-style: solid; border-right-color: #a069c4;">1</td>
-</tr>
-<tr>
-<td headers="Intersection" class="gt_row gt_right" style="text-align: center; font-style: italic;">4</td>
-<td headers="H1" class="gt_row gt_right">1</td>
-<td headers="H2" class="gt_row gt_right" style="border-left-width: 2px; border-left-style: solid; border-left-color: #a069c4;">1</td>
-<td headers="H3" class="gt_row gt_right">0</td>
-<td headers="H4" class="gt_row gt_right" style="border-right-width: 2px; border-right-style: solid; border-right-color: #a069c4;">0</td>
-</tr>
-<tr>
-<td headers="Intersection" class="gt_row gt_right" style="text-align: center; font-style: italic;">5</td>
-<td headers="H1" class="gt_row gt_right">1</td>
-<td headers="H2" class="gt_row gt_right" style="border-left-width: 2px; border-left-style: solid; border-left-color: #a069c4;">0</td>
-<td headers="H3" class="gt_row gt_right">1</td>
-<td headers="H4" class="gt_row gt_right" style="border-right-width: 2px; border-right-style: solid; border-right-color: #a069c4;">1</td>
-</tr>
-<tr>
-<td headers="Intersection" class="gt_row gt_right" style="text-align: center; font-style: italic;">6</td>
-<td headers="H1" class="gt_row gt_right">1</td>
-<td headers="H2" class="gt_row gt_right" style="border-left-width: 2px; border-left-style: solid; border-left-color: #a069c4;">0</td>
-<td headers="H3" class="gt_row gt_right">1</td>
-<td headers="H4" class="gt_row gt_right" style="border-right-width: 2px; border-right-style: solid; border-right-color: #a069c4;">0</td>
-</tr>
-<tr>
-<td headers="Intersection" class="gt_row gt_right" style="text-align: center; font-style: italic;">7</td>
-<td headers="H1" class="gt_row gt_right">1</td>
-<td headers="H2" class="gt_row gt_right" style="border-left-width: 2px; border-left-style: solid; border-left-color: #a069c4; border-bottom-width: 2px; border-bottom-style: solid; border-bottom-color: #a069c4;">0</td>
-<td headers="H3" class="gt_row gt_right" style="border-bottom-width: 2px; border-bottom-style: solid; border-bottom-color: #a069c4;">0</td>
-<td headers="H4" class="gt_row gt_right" style="border-right-width: 2px; border-right-style: solid; border-right-color: #a069c4; border-bottom-width: 2px; border-bottom-style: solid; border-bottom-color: #a069c4;">1</td>
-</tr>
-<tr>
-<td headers="Intersection" class="gt_row gt_right" style="text-align: center; font-style: italic;">8</td>
-<td headers="H1" class="gt_row gt_right">1</td>
-<td headers="H2" class="gt_row gt_right">0</td>
-<td headers="H3" class="gt_row gt_right">0</td>
-<td headers="H4" class="gt_row gt_right">0</td>
-</tr>
-<tr>
-<td headers="Intersection" class="gt_row gt_right" style="text-align: center; font-style: italic;">9</td>
-<td headers="H1" class="gt_row gt_right">0</td>
-<td headers="H2" class="gt_row gt_right" style="border-left-width: 2px; border-left-style: solid; border-left-color: #a069c4; border-top-width: 2px; border-top-style: solid; border-top-color: #a069c4;">1</td>
-<td headers="H3" class="gt_row gt_right" style="border-top-width: 2px; border-top-style: solid; border-top-color: #a069c4;">1</td>
-<td headers="H4" class="gt_row gt_right" style="border-top-width: 2px; border-top-style: solid; border-top-color: #a069c4; border-right-width: 2px; border-right-style: solid; border-right-color: #a069c4;">1</td>
-</tr>
-<tr>
-<td headers="Intersection" class="gt_row gt_right" style="text-align: center; font-style: italic;">10</td>
-<td headers="H1" class="gt_row gt_right">0</td>
-<td headers="H2" class="gt_row gt_right" style="border-left-width: 2px; border-left-style: solid; border-left-color: #a069c4;">1</td>
-<td headers="H3" class="gt_row gt_right">1</td>
-<td headers="H4" class="gt_row gt_right" style="border-right-width: 2px; border-right-style: solid; border-right-color: #a069c4;">0</td>
-</tr>
-<tr>
-<td headers="Intersection" class="gt_row gt_right" style="text-align: center; font-style: italic;">11</td>
-<td headers="H1" class="gt_row gt_right">0</td>
-<td headers="H2" class="gt_row gt_right" style="border-left-width: 2px; border-left-style: solid; border-left-color: #a069c4;">1</td>
-<td headers="H3" class="gt_row gt_right">0</td>
-<td headers="H4" class="gt_row gt_right" style="border-right-width: 2px; border-right-style: solid; border-right-color: #a069c4;">1</td>
-</tr>
-<tr>
-<td headers="Intersection" class="gt_row gt_right" style="text-align: center; font-style: italic;">12</td>
-<td headers="H1" class="gt_row gt_right">0</td>
-<td headers="H2" class="gt_row gt_right" style="border-left-width: 2px; border-left-style: solid; border-left-color: #a069c4;">1</td>
-<td headers="H3" class="gt_row gt_right">0</td>
-<td headers="H4" class="gt_row gt_right" style="border-right-width: 2px; border-right-style: solid; border-right-color: #a069c4;">0</td>
-</tr>
-<tr>
-<td headers="Intersection" class="gt_row gt_right" style="text-align: center; font-style: italic;">13</td>
-<td headers="H1" class="gt_row gt_right">0</td>
-<td headers="H2" class="gt_row gt_right" style="border-left-width: 2px; border-left-style: solid; border-left-color: #a069c4;">0</td>
-<td headers="H3" class="gt_row gt_right">1</td>
-<td headers="H4" class="gt_row gt_right" style="border-right-width: 2px; border-right-style: solid; border-right-color: #a069c4;">1</td>
-</tr>
-<tr>
-<td headers="Intersection" class="gt_row gt_right" style="text-align: center; font-style: italic;">14</td>
-<td headers="H1" class="gt_row gt_right">0</td>
-<td headers="H2" class="gt_row gt_right" style="border-left-width: 2px; border-left-style: solid; border-left-color: #a069c4;">0</td>
-<td headers="H3" class="gt_row gt_right">1</td>
-<td headers="H4" class="gt_row gt_right" style="border-right-width: 2px; border-right-style: solid; border-right-color: #a069c4;">0</td>
-</tr>
-<tr>
-<td headers="Intersection" class="gt_row gt_right" style="text-align: center; font-style: italic;">15</td>
-<td headers="H1" class="gt_row gt_right">0</td>
-<td headers="H2" class="gt_row gt_right" style="border-left-width: 2px; border-left-style: solid; border-left-color: #a069c4; border-bottom-width: 2px; border-bottom-style: solid; border-bottom-color: #a069c4;">0</td>
-<td headers="H3" class="gt_row gt_right" style="border-bottom-width: 2px; border-bottom-style: solid; border-bottom-color: #a069c4;">0</td>
-<td headers="H4" class="gt_row gt_right" style="border-right-width: 2px; border-right-style: solid; border-right-color: #a069c4; border-bottom-width: 2px; border-bottom-style: solid; border-bottom-color: #a069c4;">1</td>
-</tr>
-</tbody>
-</table>
-</div>
-<p>The pattern then repeats within each box recursively, with the top
-half of each box matching the bottom half, if the first missing
-hypothesis is flipped from 0 to 1.</p>
-<div id="bhvteuwfid" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
-<style>#bhvteuwfid table {
-  font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
-
-#bhvteuwfid thead, #bhvteuwfid tbody, #bhvteuwfid tfoot, #bhvteuwfid tr, #bhvteuwfid td, #bhvteuwfid th {
-  border-style: none;
-}
-
-#bhvteuwfid p {
-  margin: 0;
-  padding: 0;
-}
-
-#bhvteuwfid .gt_table {
-  display: table;
-  border-collapse: collapse;
-  line-height: normal;
-  margin-left: auto;
-  margin-right: auto;
-  color: #333333;
-  font-size: 16px;
-  font-weight: normal;
-  font-style: normal;
-  background-color: #FFFFFF;
-  width: auto;
-  border-top-style: solid;
-  border-top-width: 2px;
-  border-top-color: #A8A8A8;
-  border-right-style: none;
-  border-right-width: 2px;
-  border-right-color: #D3D3D3;
-  border-bottom-style: solid;
-  border-bottom-width: 2px;
-  border-bottom-color: #A8A8A8;
-  border-left-style: none;
-  border-left-width: 2px;
-  border-left-color: #D3D3D3;
-}
-
-#bhvteuwfid .gt_caption {
-  padding-top: 4px;
-  padding-bottom: 4px;
-}
-
-#bhvteuwfid .gt_title {
-  color: #333333;
-  font-size: 125%;
-  font-weight: initial;
-  padding-top: 4px;
-  padding-bottom: 4px;
-  padding-left: 5px;
-  padding-right: 5px;
-  border-bottom-color: #FFFFFF;
-  border-bottom-width: 0;
-}
-
-#bhvteuwfid .gt_subtitle {
-  color: #333333;
-  font-size: 85%;
-  font-weight: initial;
-  padding-top: 3px;
-  padding-bottom: 5px;
-  padding-left: 5px;
-  padding-right: 5px;
-  border-top-color: #FFFFFF;
-  border-top-width: 0;
-}
-
-#bhvteuwfid .gt_heading {
-  background-color: #FFFFFF;
-  text-align: center;
-  border-bottom-color: #FFFFFF;
-  border-left-style: none;
-  border-left-width: 1px;
-  border-left-color: #D3D3D3;
-  border-right-style: none;
-  border-right-width: 1px;
-  border-right-color: #D3D3D3;
-}
-
-#bhvteuwfid .gt_bottom_border {
-  border-bottom-style: solid;
-  border-bottom-width: 2px;
-  border-bottom-color: #D3D3D3;
-}
-
-#bhvteuwfid .gt_col_headings {
-  border-top-style: solid;
-  border-top-width: 2px;
-  border-top-color: #D3D3D3;
-  border-bottom-style: solid;
-  border-bottom-width: 2px;
-  border-bottom-color: #D3D3D3;
-  border-left-style: none;
-  border-left-width: 1px;
-  border-left-color: #D3D3D3;
-  border-right-style: none;
-  border-right-width: 1px;
-  border-right-color: #D3D3D3;
-}
-
-#bhvteuwfid .gt_col_heading {
-  color: #333333;
-  background-color: #FFFFFF;
-  font-size: 100%;
-  font-weight: normal;
-  text-transform: inherit;
-  border-left-style: none;
-  border-left-width: 1px;
-  border-left-color: #D3D3D3;
-  border-right-style: none;
-  border-right-width: 1px;
-  border-right-color: #D3D3D3;
-  vertical-align: bottom;
-  padding-top: 5px;
-  padding-bottom: 6px;
-  padding-left: 5px;
-  padding-right: 5px;
-  overflow-x: hidden;
-}
-
-#bhvteuwfid .gt_column_spanner_outer {
-  color: #333333;
-  background-color: #FFFFFF;
-  font-size: 100%;
-  font-weight: normal;
-  text-transform: inherit;
-  padding-top: 0;
-  padding-bottom: 0;
-  padding-left: 4px;
-  padding-right: 4px;
-}
-
-#bhvteuwfid .gt_column_spanner_outer:first-child {
-  padding-left: 0;
-}
-
-#bhvteuwfid .gt_column_spanner_outer:last-child {
-  padding-right: 0;
-}
-
-#bhvteuwfid .gt_column_spanner {
-  border-bottom-style: solid;
-  border-bottom-width: 2px;
-  border-bottom-color: #D3D3D3;
-  vertical-align: bottom;
-  padding-top: 5px;
-  padding-bottom: 5px;
-  overflow-x: hidden;
-  display: inline-block;
-  width: 100%;
-}
-
-#bhvteuwfid .gt_spanner_row {
-  border-bottom-style: hidden;
-}
-
-#bhvteuwfid .gt_group_heading {
-  padding-top: 8px;
-  padding-bottom: 8px;
-  padding-left: 5px;
-  padding-right: 5px;
-  color: #333333;
-  background-color: #FFFFFF;
-  font-size: 100%;
-  font-weight: initial;
-  text-transform: inherit;
-  border-top-style: solid;
-  border-top-width: 2px;
-  border-top-color: #D3D3D3;
-  border-bottom-style: solid;
-  border-bottom-width: 2px;
-  border-bottom-color: #D3D3D3;
-  border-left-style: none;
-  border-left-width: 1px;
-  border-left-color: #D3D3D3;
-  border-right-style: none;
-  border-right-width: 1px;
-  border-right-color: #D3D3D3;
-  vertical-align: middle;
-  text-align: left;
-}
-
-#bhvteuwfid .gt_empty_group_heading {
-  padding: 0.5px;
-  color: #333333;
-  background-color: #FFFFFF;
-  font-size: 100%;
-  font-weight: initial;
-  border-top-style: solid;
-  border-top-width: 2px;
-  border-top-color: #D3D3D3;
-  border-bottom-style: solid;
-  border-bottom-width: 2px;
-  border-bottom-color: #D3D3D3;
-  vertical-align: middle;
-}
-
-#bhvteuwfid .gt_from_md > :first-child {
-  margin-top: 0;
-}
-
-#bhvteuwfid .gt_from_md > :last-child {
-  margin-bottom: 0;
-}
-
-#bhvteuwfid .gt_row {
-  padding-top: 8px;
-  padding-bottom: 8px;
-  padding-left: 5px;
-  padding-right: 5px;
-  margin: 10px;
-  border-top-style: solid;
-  border-top-width: 1px;
-  border-top-color: #D3D3D3;
-  border-left-style: none;
-  border-left-width: 1px;
-  border-left-color: #D3D3D3;
-  border-right-style: none;
-  border-right-width: 1px;
-  border-right-color: #D3D3D3;
-  vertical-align: middle;
-  overflow-x: hidden;
-}
-
-#bhvteuwfid .gt_stub {
-  color: #333333;
-  background-color: #FFFFFF;
-  font-size: 100%;
-  font-weight: initial;
-  text-transform: inherit;
-  border-right-style: solid;
-  border-right-width: 2px;
-  border-right-color: #D3D3D3;
-  padding-left: 5px;
-  padding-right: 5px;
-}
-
-#bhvteuwfid .gt_stub_row_group {
-  color: #333333;
-  background-color: #FFFFFF;
-  font-size: 100%;
-  font-weight: initial;
-  text-transform: inherit;
-  border-right-style: solid;
-  border-right-width: 2px;
-  border-right-color: #D3D3D3;
-  padding-left: 5px;
-  padding-right: 5px;
-  vertical-align: top;
-}
-
-#bhvteuwfid .gt_row_group_first td {
-  border-top-width: 2px;
-}
-
-#bhvteuwfid .gt_row_group_first th {
-  border-top-width: 2px;
-}
-
-#bhvteuwfid .gt_summary_row {
-  color: #333333;
-  background-color: #FFFFFF;
-  text-transform: inherit;
-  padding-top: 8px;
-  padding-bottom: 8px;
-  padding-left: 5px;
-  padding-right: 5px;
-}
-
-#bhvteuwfid .gt_first_summary_row {
-  border-top-style: solid;
-  border-top-color: #D3D3D3;
-}
-
-#bhvteuwfid .gt_first_summary_row.thick {
-  border-top-width: 2px;
-}
-
-#bhvteuwfid .gt_last_summary_row {
-  padding-top: 8px;
-  padding-bottom: 8px;
-  padding-left: 5px;
-  padding-right: 5px;
-  border-bottom-style: solid;
-  border-bottom-width: 2px;
-  border-bottom-color: #D3D3D3;
-}
-
-#bhvteuwfid .gt_grand_summary_row {
-  color: #333333;
-  background-color: #FFFFFF;
-  text-transform: inherit;
-  padding-top: 8px;
-  padding-bottom: 8px;
-  padding-left: 5px;
-  padding-right: 5px;
-}
-
-#bhvteuwfid .gt_first_grand_summary_row {
-  padding-top: 8px;
-  padding-bottom: 8px;
-  padding-left: 5px;
-  padding-right: 5px;
-  border-top-style: double;
-  border-top-width: 6px;
-  border-top-color: #D3D3D3;
-}
-
-#bhvteuwfid .gt_last_grand_summary_row_top {
-  padding-top: 8px;
-  padding-bottom: 8px;
-  padding-left: 5px;
-  padding-right: 5px;
-  border-bottom-style: double;
-  border-bottom-width: 6px;
-  border-bottom-color: #D3D3D3;
-}
-
-#bhvteuwfid .gt_striped {
-  background-color: rgba(128, 128, 128, 0.05);
-}
-
-#bhvteuwfid .gt_table_body {
-  border-top-style: solid;
-  border-top-width: 2px;
-  border-top-color: #D3D3D3;
-  border-bottom-style: solid;
-  border-bottom-width: 2px;
-  border-bottom-color: #D3D3D3;
-}
-
-#bhvteuwfid .gt_footnotes {
-  color: #333333;
-  background-color: #FFFFFF;
-  border-bottom-style: none;
-  border-bottom-width: 2px;
-  border-bottom-color: #D3D3D3;
-  border-left-style: none;
-  border-left-width: 2px;
-  border-left-color: #D3D3D3;
-  border-right-style: none;
-  border-right-width: 2px;
-  border-right-color: #D3D3D3;
-}
-
-#bhvteuwfid .gt_footnote {
-  margin: 0px;
-  font-size: 90%;
-  padding-top: 4px;
-  padding-bottom: 4px;
-  padding-left: 5px;
-  padding-right: 5px;
-}
-
-#bhvteuwfid .gt_sourcenotes {
-  color: #333333;
-  background-color: #FFFFFF;
-  border-bottom-style: none;
-  border-bottom-width: 2px;
-  border-bottom-color: #D3D3D3;
-  border-left-style: none;
-  border-left-width: 2px;
-  border-left-color: #D3D3D3;
-  border-right-style: none;
-  border-right-width: 2px;
-  border-right-color: #D3D3D3;
-}
-
-#bhvteuwfid .gt_sourcenote {
-  font-size: 90%;
-  padding-top: 4px;
-  padding-bottom: 4px;
-  padding-left: 5px;
-  padding-right: 5px;
-}
-
-#bhvteuwfid .gt_left {
-  text-align: left;
-}
-
-#bhvteuwfid .gt_center {
-  text-align: center;
-}
-
-#bhvteuwfid .gt_right {
-  text-align: right;
-  font-variant-numeric: tabular-nums;
-}
-
-#bhvteuwfid .gt_font_normal {
-  font-weight: normal;
-}
-
-#bhvteuwfid .gt_font_bold {
-  font-weight: bold;
-}
-
-#bhvteuwfid .gt_font_italic {
-  font-style: italic;
-}
-
-#bhvteuwfid .gt_super {
-  font-size: 65%;
-}
-
-#bhvteuwfid .gt_footnote_marks {
-  font-size: 75%;
-  vertical-align: 0.4em;
-  position: initial;
-}
-
-#bhvteuwfid .gt_asterisk {
-  font-size: 100%;
-  vertical-align: 0;
-}
-
-#bhvteuwfid .gt_indent_1 {
-  text-indent: 5px;
-}
-
-#bhvteuwfid .gt_indent_2 {
-  text-indent: 10px;
-}
-
-#bhvteuwfid .gt_indent_3 {
-  text-indent: 15px;
-}
-
-#bhvteuwfid .gt_indent_4 {
-  text-indent: 20px;
-}
-
-#bhvteuwfid .gt_indent_5 {
-  text-indent: 25px;
-}
-</style>
-<table class="table gt_table" data-quarto-disable-processing="false" data-quarto-bootstrap="false">
-<thead>
-<tr class="gt_heading">
-<td colspan="5" class="gt_heading gt_title gt_font_normal gt_bottom_border" style>The boxes contain identical matrices</td>
-    </tr>
-<tr class="gt_col_headings">
-<th class="gt_col_heading gt_columns_bottom_border gt_right" rowspan="1" colspan="1" scope="col" id="Intersection">Intersection</th>
-      <th class="gt_col_heading gt_columns_bottom_border gt_right" rowspan="1" colspan="1" scope="col" id="H1">H1</th>
-      <th class="gt_col_heading gt_columns_bottom_border gt_right" rowspan="1" colspan="1" scope="col" id="H2">H2</th>
-      <th class="gt_col_heading gt_columns_bottom_border gt_right" rowspan="1" colspan="1" scope="col" id="H3">H3</th>
-      <th class="gt_col_heading gt_columns_bottom_border gt_right" rowspan="1" colspan="1" scope="col" id="H4">H4</th>
-    </tr>
-</thead>
-<tbody class="gt_table_body">
-<tr>
-<td headers="Intersection" class="gt_row gt_right" style="text-align: center; font-style: italic;">1</td>
-<td headers="H1" class="gt_row gt_right">1</td>
-<td headers="H2" class="gt_row gt_right" style="border-left-width: 2px; border-left-style: solid; border-left-color: #a069c4; border-top-width: 2px; border-top-style: solid; border-top-color: #a069c4;">1</td>
-<td headers="H3" class="gt_row gt_right" style="border-top-width: 2px; border-top-style: solid; border-top-color: black; border-left-width: 2px; border-left-style: solid; border-left-color: black;">1</td>
-<td headers="H4" class="gt_row gt_right" style="border-top-width: 2px; border-top-style: solid; border-top-color: black; border-right-width: 2px; border-right-style: solid; border-right-color: black;">1</td>
-</tr>
-<tr>
-<td headers="Intersection" class="gt_row gt_right" style="text-align: center; font-style: italic;">2</td>
-<td headers="H1" class="gt_row gt_right">1</td>
-<td headers="H2" class="gt_row gt_right" style="border-left-width: 2px; border-left-style: solid; border-left-color: #a069c4;">1</td>
-<td headers="H3" class="gt_row gt_right" style="border-left-width: 2px; border-left-style: solid; border-left-color: black;">1</td>
-<td headers="H4" class="gt_row gt_right" style="border-right-width: 2px; border-right-style: solid; border-right-color: black;">0</td>
-</tr>
-<tr>
-<td headers="Intersection" class="gt_row gt_right" style="text-align: center; font-style: italic;">3</td>
-<td headers="H1" class="gt_row gt_right">1</td>
-<td headers="H2" class="gt_row gt_right" style="border-left-width: 2px; border-left-style: solid; border-left-color: #a069c4;">1</td>
-<td headers="H3" class="gt_row gt_right" style="border-left-width: 2px; border-left-style: solid; border-left-color: black; border-bottom-width: 2px; border-bottom-style: solid; border-bottom-color: black;">0</td>
-<td headers="H4" class="gt_row gt_right" style="border-right-width: 2px; border-right-style: solid; border-right-color: black; border-bottom-width: 2px; border-bottom-style: solid; border-bottom-color: black;">1</td>
-</tr>
-<tr>
-<td headers="Intersection" class="gt_row gt_right" style="text-align: center; font-style: italic;">4</td>
-<td headers="H1" class="gt_row gt_right">1</td>
-<td headers="H2" class="gt_row gt_right" style="border-left-width: 2px; border-left-style: solid; border-left-color: #a069c4;">1</td>
-<td headers="H3" class="gt_row gt_right">0</td>
-<td headers="H4" class="gt_row gt_right" style="border-right-width: 2px; border-right-style: solid; border-right-color: #a069c4;">0</td>
-</tr>
-<tr>
-<td headers="Intersection" class="gt_row gt_right" style="text-align: center; font-style: italic;">5</td>
-<td headers="H1" class="gt_row gt_right">1</td>
-<td headers="H2" class="gt_row gt_right" style="border-left-width: 2px; border-left-style: solid; border-left-color: #a069c4;">0</td>
-<td headers="H3" class="gt_row gt_right" style="border-left-width: 2px; border-left-style: solid; border-left-color: black; border-top-width: 2px; border-top-style: solid; border-top-color: black;">1</td>
-<td headers="H4" class="gt_row gt_right" style="border-right-width: 2px; border-right-style: solid; border-right-color: black; border-top-width: 2px; border-top-style: solid; border-top-color: black;">1</td>
-</tr>
-<tr>
-<td headers="Intersection" class="gt_row gt_right" style="text-align: center; font-style: italic;">6</td>
-<td headers="H1" class="gt_row gt_right">1</td>
-<td headers="H2" class="gt_row gt_right" style="border-left-width: 2px; border-left-style: solid; border-left-color: #a069c4;">0</td>
-<td headers="H3" class="gt_row gt_right" style="border-left-width: 2px; border-left-style: solid; border-left-color: black;">1</td>
-<td headers="H4" class="gt_row gt_right" style="border-right-width: 2px; border-right-style: solid; border-right-color: black;">0</td>
-</tr>
-<tr>
-<td headers="Intersection" class="gt_row gt_right" style="text-align: center; font-style: italic;">7</td>
-<td headers="H1" class="gt_row gt_right">1</td>
-<td headers="H2" class="gt_row gt_right" style="border-left-width: 2px; border-left-style: solid; border-left-color: #a069c4; border-bottom-width: 2px; border-bottom-style: solid; border-bottom-color: #a069c4;">0</td>
-<td headers="H3" class="gt_row gt_right" style="border-bottom-width: 2px; border-bottom-style: solid; border-bottom-color: black; border-left-width: 2px; border-left-style: solid; border-left-color: black;">0</td>
-<td headers="H4" class="gt_row gt_right" style="border-right-width: 2px; border-right-style: solid; border-right-color: black; border-bottom-width: 2px; border-bottom-style: solid; border-bottom-color: black;">1</td>
-</tr>
-<tr>
-<td headers="Intersection" class="gt_row gt_right" style="text-align: center; font-style: italic;">8</td>
-<td headers="H1" class="gt_row gt_right">1</td>
-<td headers="H2" class="gt_row gt_right">0</td>
-<td headers="H3" class="gt_row gt_right">0</td>
-<td headers="H4" class="gt_row gt_right">0</td>
-</tr>
-<tr>
-<td headers="Intersection" class="gt_row gt_right" style="text-align: center; font-style: italic;">9</td>
-<td headers="H1" class="gt_row gt_right">0</td>
-<td headers="H2" class="gt_row gt_right" style="border-left-width: 2px; border-left-style: solid; border-left-color: #a069c4; border-top-width: 2px; border-top-style: solid; border-top-color: #a069c4;">1</td>
-<td headers="H3" class="gt_row gt_right" style="border-top-width: 2px; border-top-style: solid; border-top-color: black; border-left-width: 2px; border-left-style: solid; border-left-color: black;">1</td>
-<td headers="H4" class="gt_row gt_right" style="border-top-width: 2px; border-top-style: solid; border-top-color: black; border-right-width: 2px; border-right-style: solid; border-right-color: black;">1</td>
-</tr>
-<tr>
-<td headers="Intersection" class="gt_row gt_right" style="text-align: center; font-style: italic;">10</td>
-<td headers="H1" class="gt_row gt_right">0</td>
-<td headers="H2" class="gt_row gt_right" style="border-left-width: 2px; border-left-style: solid; border-left-color: #a069c4;">1</td>
-<td headers="H3" class="gt_row gt_right" style="border-left-width: 2px; border-left-style: solid; border-left-color: black;">1</td>
-<td headers="H4" class="gt_row gt_right" style="border-right-width: 2px; border-right-style: solid; border-right-color: black;">0</td>
-</tr>
-<tr>
-<td headers="Intersection" class="gt_row gt_right" style="text-align: center; font-style: italic;">11</td>
-<td headers="H1" class="gt_row gt_right">0</td>
-<td headers="H2" class="gt_row gt_right" style="border-left-width: 2px; border-left-style: solid; border-left-color: #a069c4;">1</td>
-<td headers="H3" class="gt_row gt_right" style="border-left-width: 2px; border-left-style: solid; border-left-color: black; border-bottom-width: 2px; border-bottom-style: solid; border-bottom-color: black;">0</td>
-<td headers="H4" class="gt_row gt_right" style="border-right-width: 2px; border-right-style: solid; border-right-color: black; border-bottom-width: 2px; border-bottom-style: solid; border-bottom-color: black;">1</td>
-</tr>
-<tr>
-<td headers="Intersection" class="gt_row gt_right" style="text-align: center; font-style: italic;">12</td>
-<td headers="H1" class="gt_row gt_right">0</td>
-<td headers="H2" class="gt_row gt_right" style="border-left-width: 2px; border-left-style: solid; border-left-color: #a069c4;">1</td>
-<td headers="H3" class="gt_row gt_right">0</td>
-<td headers="H4" class="gt_row gt_right" style="border-right-width: 2px; border-right-style: solid; border-right-color: #a069c4;">0</td>
-</tr>
-<tr>
-<td headers="Intersection" class="gt_row gt_right" style="text-align: center; font-style: italic;">13</td>
-<td headers="H1" class="gt_row gt_right">0</td>
-<td headers="H2" class="gt_row gt_right" style="border-left-width: 2px; border-left-style: solid; border-left-color: #a069c4;">0</td>
-<td headers="H3" class="gt_row gt_right" style="border-left-width: 2px; border-left-style: solid; border-left-color: black; border-top-width: 2px; border-top-style: solid; border-top-color: black;">1</td>
-<td headers="H4" class="gt_row gt_right" style="border-right-width: 2px; border-right-style: solid; border-right-color: black; border-top-width: 2px; border-top-style: solid; border-top-color: black;">1</td>
-</tr>
-<tr>
-<td headers="Intersection" class="gt_row gt_right" style="text-align: center; font-style: italic;">14</td>
-<td headers="H1" class="gt_row gt_right">0</td>
-<td headers="H2" class="gt_row gt_right" style="border-left-width: 2px; border-left-style: solid; border-left-color: #a069c4;">0</td>
-<td headers="H3" class="gt_row gt_right" style="border-left-width: 2px; border-left-style: solid; border-left-color: black;">1</td>
-<td headers="H4" class="gt_row gt_right" style="border-right-width: 2px; border-right-style: solid; border-right-color: black;">0</td>
-</tr>
-<tr>
-<td headers="Intersection" class="gt_row gt_right" style="text-align: center; font-style: italic;">15</td>
-<td headers="H1" class="gt_row gt_right">0</td>
-<td headers="H2" class="gt_row gt_right" style="border-left-width: 2px; border-left-style: solid; border-left-color: #a069c4; border-bottom-width: 2px; border-bottom-style: solid; border-bottom-color: #a069c4;">0</td>
-<td headers="H3" class="gt_row gt_right" style="border-bottom-width: 2px; border-bottom-style: solid; border-bottom-color: black; border-left-width: 2px; border-left-style: solid; border-left-color: black;">0</td>
-<td headers="H4" class="gt_row gt_right" style="border-right-width: 2px; border-right-style: solid; border-right-color: black; border-bottom-width: 2px; border-bottom-style: solid; border-bottom-color: black;">1</td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
-<div class="section level4">
-<h4 id="binary-counting">Binary counting<a class="anchor" aria-label="anchor" href="#binary-counting"></a>
-</h4>
-<p>The second useful property is somewhat a re-framing of the first, or
-perhaps could be viewed as a reason why the first is true. Starting with
-the bottom row, the powerset in this particular order counts up from 1
-in binary, incrementing by 1 per row. This means that a row number can
-be directly calculated from a vector showing which hypotheses are
-currently deleted from the graph:
-<code>row_number == number_of_rows - incl_excl_vec_converted_to_base_10 + 1</code>.
-For example, intersection number 6 has hypothesis vector
-<code>1010</code>. When interpreted as binary, this is
-<code>1 * 8 + 0 * 4 + 1 * 2 + 0 * 1 = 10</code> in base 10, and
-<code>6 == 15 - 10 + 1</code>.</p>
-<div id="bqzygeabfw" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
-<style>#bqzygeabfw table {
-  font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
-
-#bqzygeabfw thead, #bqzygeabfw tbody, #bqzygeabfw tfoot, #bqzygeabfw tr, #bqzygeabfw td, #bqzygeabfw th {
-  border-style: none;
-}
-
-#bqzygeabfw p {
-  margin: 0;
-  padding: 0;
-}
-
-#bqzygeabfw .gt_table {
-  display: table;
-  border-collapse: collapse;
-  line-height: normal;
-  margin-left: auto;
-  margin-right: auto;
-  color: #333333;
-  font-size: 16px;
-  font-weight: normal;
-  font-style: normal;
-  background-color: #FFFFFF;
-  width: auto;
-  border-top-style: solid;
-  border-top-width: 2px;
-  border-top-color: #A8A8A8;
-  border-right-style: none;
-  border-right-width: 2px;
-  border-right-color: #D3D3D3;
-  border-bottom-style: solid;
-  border-bottom-width: 2px;
-  border-bottom-color: #A8A8A8;
-  border-left-style: none;
-  border-left-width: 2px;
-  border-left-color: #D3D3D3;
-}
-
-#bqzygeabfw .gt_caption {
-  padding-top: 4px;
-  padding-bottom: 4px;
-}
-
-#bqzygeabfw .gt_title {
-  color: #333333;
-  font-size: 125%;
-  font-weight: initial;
-  padding-top: 4px;
-  padding-bottom: 4px;
-  padding-left: 5px;
-  padding-right: 5px;
-  border-bottom-color: #FFFFFF;
-  border-bottom-width: 0;
-}
-
-#bqzygeabfw .gt_subtitle {
-  color: #333333;
-  font-size: 85%;
-  font-weight: initial;
-  padding-top: 3px;
-  padding-bottom: 5px;
-  padding-left: 5px;
-  padding-right: 5px;
-  border-top-color: #FFFFFF;
-  border-top-width: 0;
-}
-
-#bqzygeabfw .gt_heading {
-  background-color: #FFFFFF;
-  text-align: center;
-  border-bottom-color: #FFFFFF;
-  border-left-style: none;
-  border-left-width: 1px;
-  border-left-color: #D3D3D3;
-  border-right-style: none;
-  border-right-width: 1px;
-  border-right-color: #D3D3D3;
-}
-
-#bqzygeabfw .gt_bottom_border {
-  border-bottom-style: solid;
-  border-bottom-width: 2px;
-  border-bottom-color: #D3D3D3;
-}
-
-#bqzygeabfw .gt_col_headings {
-  border-top-style: solid;
-  border-top-width: 2px;
-  border-top-color: #D3D3D3;
-  border-bottom-style: solid;
-  border-bottom-width: 2px;
-  border-bottom-color: #D3D3D3;
-  border-left-style: none;
-  border-left-width: 1px;
-  border-left-color: #D3D3D3;
-  border-right-style: none;
-  border-right-width: 1px;
-  border-right-color: #D3D3D3;
-}
-
-#bqzygeabfw .gt_col_heading {
-  color: #333333;
-  background-color: #FFFFFF;
-  font-size: 100%;
-  font-weight: normal;
-  text-transform: inherit;
-  border-left-style: none;
-  border-left-width: 1px;
-  border-left-color: #D3D3D3;
-  border-right-style: none;
-  border-right-width: 1px;
-  border-right-color: #D3D3D3;
-  vertical-align: bottom;
-  padding-top: 5px;
-  padding-bottom: 6px;
-  padding-left: 5px;
-  padding-right: 5px;
-  overflow-x: hidden;
-}
-
-#bqzygeabfw .gt_column_spanner_outer {
-  color: #333333;
-  background-color: #FFFFFF;
-  font-size: 100%;
-  font-weight: normal;
-  text-transform: inherit;
-  padding-top: 0;
-  padding-bottom: 0;
-  padding-left: 4px;
-  padding-right: 4px;
-}
-
-#bqzygeabfw .gt_column_spanner_outer:first-child {
-  padding-left: 0;
-}
-
-#bqzygeabfw .gt_column_spanner_outer:last-child {
-  padding-right: 0;
-}
-
-#bqzygeabfw .gt_column_spanner {
-  border-bottom-style: solid;
-  border-bottom-width: 2px;
-  border-bottom-color: #D3D3D3;
-  vertical-align: bottom;
-  padding-top: 5px;
-  padding-bottom: 5px;
-  overflow-x: hidden;
-  display: inline-block;
-  width: 100%;
-}
-
-#bqzygeabfw .gt_spanner_row {
-  border-bottom-style: hidden;
-}
-
-#bqzygeabfw .gt_group_heading {
-  padding-top: 8px;
-  padding-bottom: 8px;
-  padding-left: 5px;
-  padding-right: 5px;
-  color: #333333;
-  background-color: #FFFFFF;
-  font-size: 100%;
-  font-weight: initial;
-  text-transform: inherit;
-  border-top-style: solid;
-  border-top-width: 2px;
-  border-top-color: #D3D3D3;
-  border-bottom-style: solid;
-  border-bottom-width: 2px;
-  border-bottom-color: #D3D3D3;
-  border-left-style: none;
-  border-left-width: 1px;
-  border-left-color: #D3D3D3;
-  border-right-style: none;
-  border-right-width: 1px;
-  border-right-color: #D3D3D3;
-  vertical-align: middle;
-  text-align: left;
-}
-
-#bqzygeabfw .gt_empty_group_heading {
-  padding: 0.5px;
-  color: #333333;
-  background-color: #FFFFFF;
-  font-size: 100%;
-  font-weight: initial;
-  border-top-style: solid;
-  border-top-width: 2px;
-  border-top-color: #D3D3D3;
-  border-bottom-style: solid;
-  border-bottom-width: 2px;
-  border-bottom-color: #D3D3D3;
-  vertical-align: middle;
-}
-
-#bqzygeabfw .gt_from_md > :first-child {
-  margin-top: 0;
-}
-
-#bqzygeabfw .gt_from_md > :last-child {
-  margin-bottom: 0;
-}
-
-#bqzygeabfw .gt_row {
-  padding-top: 8px;
-  padding-bottom: 8px;
-  padding-left: 5px;
-  padding-right: 5px;
-  margin: 10px;
-  border-top-style: solid;
-  border-top-width: 1px;
-  border-top-color: #D3D3D3;
-  border-left-style: none;
-  border-left-width: 1px;
-  border-left-color: #D3D3D3;
-  border-right-style: none;
-  border-right-width: 1px;
-  border-right-color: #D3D3D3;
-  vertical-align: middle;
-  overflow-x: hidden;
-}
-
-#bqzygeabfw .gt_stub {
-  color: #333333;
-  background-color: #FFFFFF;
-  font-size: 100%;
-  font-weight: initial;
-  text-transform: inherit;
-  border-right-style: solid;
-  border-right-width: 2px;
-  border-right-color: #D3D3D3;
-  padding-left: 5px;
-  padding-right: 5px;
-}
-
-#bqzygeabfw .gt_stub_row_group {
-  color: #333333;
-  background-color: #FFFFFF;
-  font-size: 100%;
-  font-weight: initial;
-  text-transform: inherit;
-  border-right-style: solid;
-  border-right-width: 2px;
-  border-right-color: #D3D3D3;
-  padding-left: 5px;
-  padding-right: 5px;
-  vertical-align: top;
-}
-
-#bqzygeabfw .gt_row_group_first td {
-  border-top-width: 2px;
-}
-
-#bqzygeabfw .gt_row_group_first th {
-  border-top-width: 2px;
-}
-
-#bqzygeabfw .gt_summary_row {
-  color: #333333;
-  background-color: #FFFFFF;
-  text-transform: inherit;
-  padding-top: 8px;
-  padding-bottom: 8px;
-  padding-left: 5px;
-  padding-right: 5px;
-}
-
-#bqzygeabfw .gt_first_summary_row {
-  border-top-style: solid;
-  border-top-color: #D3D3D3;
-}
-
-#bqzygeabfw .gt_first_summary_row.thick {
-  border-top-width: 2px;
-}
-
-#bqzygeabfw .gt_last_summary_row {
-  padding-top: 8px;
-  padding-bottom: 8px;
-  padding-left: 5px;
-  padding-right: 5px;
-  border-bottom-style: solid;
-  border-bottom-width: 2px;
-  border-bottom-color: #D3D3D3;
-}
-
-#bqzygeabfw .gt_grand_summary_row {
-  color: #333333;
-  background-color: #FFFFFF;
-  text-transform: inherit;
-  padding-top: 8px;
-  padding-bottom: 8px;
-  padding-left: 5px;
-  padding-right: 5px;
-}
-
-#bqzygeabfw .gt_first_grand_summary_row {
-  padding-top: 8px;
-  padding-bottom: 8px;
-  padding-left: 5px;
-  padding-right: 5px;
-  border-top-style: double;
-  border-top-width: 6px;
-  border-top-color: #D3D3D3;
-}
-
-#bqzygeabfw .gt_last_grand_summary_row_top {
-  padding-top: 8px;
-  padding-bottom: 8px;
-  padding-left: 5px;
-  padding-right: 5px;
-  border-bottom-style: double;
-  border-bottom-width: 6px;
-  border-bottom-color: #D3D3D3;
-}
-
-#bqzygeabfw .gt_striped {
-  background-color: rgba(128, 128, 128, 0.05);
-}
-
-#bqzygeabfw .gt_table_body {
-  border-top-style: solid;
-  border-top-width: 2px;
-  border-top-color: #D3D3D3;
-  border-bottom-style: solid;
-  border-bottom-width: 2px;
-  border-bottom-color: #D3D3D3;
-}
-
-#bqzygeabfw .gt_footnotes {
-  color: #333333;
-  background-color: #FFFFFF;
-  border-bottom-style: none;
-  border-bottom-width: 2px;
-  border-bottom-color: #D3D3D3;
-  border-left-style: none;
-  border-left-width: 2px;
-  border-left-color: #D3D3D3;
-  border-right-style: none;
-  border-right-width: 2px;
-  border-right-color: #D3D3D3;
-}
-
-#bqzygeabfw .gt_footnote {
-  margin: 0px;
-  font-size: 90%;
-  padding-top: 4px;
-  padding-bottom: 4px;
-  padding-left: 5px;
-  padding-right: 5px;
-}
-
-#bqzygeabfw .gt_sourcenotes {
-  color: #333333;
-  background-color: #FFFFFF;
-  border-bottom-style: none;
-  border-bottom-width: 2px;
-  border-bottom-color: #D3D3D3;
-  border-left-style: none;
-  border-left-width: 2px;
-  border-left-color: #D3D3D3;
-  border-right-style: none;
-  border-right-width: 2px;
-  border-right-color: #D3D3D3;
-}
-
-#bqzygeabfw .gt_sourcenote {
-  font-size: 90%;
-  padding-top: 4px;
-  padding-bottom: 4px;
-  padding-left: 5px;
-  padding-right: 5px;
-}
-
-#bqzygeabfw .gt_left {
-  text-align: left;
-}
-
-#bqzygeabfw .gt_center {
-  text-align: center;
-}
-
-#bqzygeabfw .gt_right {
-  text-align: right;
-  font-variant-numeric: tabular-nums;
-}
-
-#bqzygeabfw .gt_font_normal {
-  font-weight: normal;
-}
-
-#bqzygeabfw .gt_font_bold {
-  font-weight: bold;
-}
-
-#bqzygeabfw .gt_font_italic {
-  font-style: italic;
-}
-
-#bqzygeabfw .gt_super {
-  font-size: 65%;
-}
-
-#bqzygeabfw .gt_footnote_marks {
-  font-size: 75%;
-  vertical-align: 0.4em;
-  position: initial;
-}
-
-#bqzygeabfw .gt_asterisk {
-  font-size: 100%;
-  vertical-align: 0;
-}
-
-#bqzygeabfw .gt_indent_1 {
-  text-indent: 5px;
-}
-
-#bqzygeabfw .gt_indent_2 {
-  text-indent: 10px;
-}
-
-#bqzygeabfw .gt_indent_3 {
-  text-indent: 15px;
-}
-
-#bqzygeabfw .gt_indent_4 {
-  text-indent: 20px;
-}
-
-#bqzygeabfw .gt_indent_5 {
-  text-indent: 25px;
-}
-</style>
-<table class="table gt_table" data-quarto-disable-processing="false" data-quarto-bootstrap="false">
-<thead>
-<tr class="gt_heading">
-<td colspan="5" class="gt_heading gt_title gt_font_normal gt_bottom_border" style>Binary counting</td>
-    </tr>
-<tr class="gt_col_headings">
-<th class="gt_col_heading gt_columns_bottom_border gt_right" rowspan="1" colspan="1" scope="col" id="Intersection">Intersection</th>
-      <th class="gt_col_heading gt_columns_bottom_border gt_right" rowspan="1" colspan="1" scope="col" id="H1">H1</th>
-      <th class="gt_col_heading gt_columns_bottom_border gt_right" rowspan="1" colspan="1" scope="col" id="H2">H2</th>
-      <th class="gt_col_heading gt_columns_bottom_border gt_right" rowspan="1" colspan="1" scope="col" id="H3">H3</th>
-      <th class="gt_col_heading gt_columns_bottom_border gt_right" rowspan="1" colspan="1" scope="col" id="H4">H4</th>
-    </tr>
-</thead>
-<tbody class="gt_table_body">
-<tr>
-<td headers="Intersection" class="gt_row gt_right" style="text-align: center; font-style: italic;">1</td>
-<td headers="H1" class="gt_row gt_right">1</td>
-<td headers="H2" class="gt_row gt_right">1</td>
-<td headers="H3" class="gt_row gt_right">1</td>
-<td headers="H4" class="gt_row gt_right">1</td>
-</tr>
-<tr>
-<td headers="Intersection" class="gt_row gt_right gt_striped" style="text-align: center; font-style: italic;">2</td>
-<td headers="H1" class="gt_row gt_right gt_striped">1</td>
-<td headers="H2" class="gt_row gt_right gt_striped">1</td>
-<td headers="H3" class="gt_row gt_right gt_striped">1</td>
-<td headers="H4" class="gt_row gt_right gt_striped">0</td>
-</tr>
-<tr>
-<td headers="Intersection" class="gt_row gt_right" style="text-align: center; font-style: italic;">3</td>
-<td headers="H1" class="gt_row gt_right">1</td>
-<td headers="H2" class="gt_row gt_right">1</td>
-<td headers="H3" class="gt_row gt_right">0</td>
-<td headers="H4" class="gt_row gt_right">1</td>
-</tr>
-<tr>
-<td headers="Intersection" class="gt_row gt_right gt_striped" style="text-align: center; font-style: italic;">4</td>
-<td headers="H1" class="gt_row gt_right gt_striped">1</td>
-<td headers="H2" class="gt_row gt_right gt_striped">1</td>
-<td headers="H3" class="gt_row gt_right gt_striped">0</td>
-<td headers="H4" class="gt_row gt_right gt_striped">0</td>
-</tr>
-<tr>
-<td headers="Intersection" class="gt_row gt_right" style="text-align: center; font-style: italic;">5</td>
-<td headers="H1" class="gt_row gt_right">1</td>
-<td headers="H2" class="gt_row gt_right">0</td>
-<td headers="H3" class="gt_row gt_right">1</td>
-<td headers="H4" class="gt_row gt_right">1</td>
-</tr>
-<tr>
-<td headers="Intersection" class="gt_row gt_right gt_striped" style="text-align: center; font-style: italic; border-left-width: 1px; border-left-style: solid; border-left-color: #a069c4; border-top-width: 1px; border-top-style: solid; border-top-color: #a069c4; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: #a069c4;">6</td>
-<td headers="H1" class="gt_row gt_right gt_striped" style="border-top-width: 1px; border-top-style: solid; border-top-color: #a069c4; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: #a069c4;">1</td>
-<td headers="H2" class="gt_row gt_right gt_striped" style="border-top-width: 1px; border-top-style: solid; border-top-color: #a069c4; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: #a069c4;">0</td>
-<td headers="H3" class="gt_row gt_right gt_striped" style="border-top-width: 1px; border-top-style: solid; border-top-color: #a069c4; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: #a069c4;">1</td>
-<td headers="H4" class="gt_row gt_right gt_striped" style="border-top-width: 1px; border-top-style: solid; border-top-color: #a069c4; border-right-width: 1px; border-right-style: solid; border-right-color: #a069c4; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: #a069c4;">0</td>
-</tr>
-<tr>
-<td headers="Intersection" class="gt_row gt_right" style="text-align: center; font-style: italic;">7</td>
-<td headers="H1" class="gt_row gt_right">1</td>
-<td headers="H2" class="gt_row gt_right">0</td>
-<td headers="H3" class="gt_row gt_right">0</td>
-<td headers="H4" class="gt_row gt_right">1</td>
-</tr>
-<tr>
-<td headers="Intersection" class="gt_row gt_right gt_striped" style="text-align: center; font-style: italic;">8</td>
-<td headers="H1" class="gt_row gt_right gt_striped">1</td>
-<td headers="H2" class="gt_row gt_right gt_striped">0</td>
-<td headers="H3" class="gt_row gt_right gt_striped">0</td>
-<td headers="H4" class="gt_row gt_right gt_striped">0</td>
-</tr>
-<tr>
-<td headers="Intersection" class="gt_row gt_right" style="text-align: center; font-style: italic;">9</td>
-<td headers="H1" class="gt_row gt_right">0</td>
-<td headers="H2" class="gt_row gt_right">1</td>
-<td headers="H3" class="gt_row gt_right">1</td>
-<td headers="H4" class="gt_row gt_right">1</td>
-</tr>
-<tr>
-<td headers="Intersection" class="gt_row gt_right gt_striped" style="text-align: center; font-style: italic;">10</td>
-<td headers="H1" class="gt_row gt_right gt_striped">0</td>
-<td headers="H2" class="gt_row gt_right gt_striped">1</td>
-<td headers="H3" class="gt_row gt_right gt_striped">1</td>
-<td headers="H4" class="gt_row gt_right gt_striped">0</td>
-</tr>
-<tr>
-<td headers="Intersection" class="gt_row gt_right" style="text-align: center; font-style: italic;">11</td>
-<td headers="H1" class="gt_row gt_right">0</td>
-<td headers="H2" class="gt_row gt_right">1</td>
-<td headers="H3" class="gt_row gt_right">0</td>
-<td headers="H4" class="gt_row gt_right">1</td>
-</tr>
-<tr>
-<td headers="Intersection" class="gt_row gt_right gt_striped" style="text-align: center; font-style: italic;">12</td>
-<td headers="H1" class="gt_row gt_right gt_striped">0</td>
-<td headers="H2" class="gt_row gt_right gt_striped">1</td>
-<td headers="H3" class="gt_row gt_right gt_striped">0</td>
-<td headers="H4" class="gt_row gt_right gt_striped">0</td>
-</tr>
-<tr>
-<td headers="Intersection" class="gt_row gt_right" style="text-align: center; font-style: italic;">13</td>
-<td headers="H1" class="gt_row gt_right">0</td>
-<td headers="H2" class="gt_row gt_right">0</td>
-<td headers="H3" class="gt_row gt_right">1</td>
-<td headers="H4" class="gt_row gt_right">1</td>
-</tr>
-<tr>
-<td headers="Intersection" class="gt_row gt_right gt_striped" style="text-align: center; font-style: italic;">14</td>
-<td headers="H1" class="gt_row gt_right gt_striped">0</td>
-<td headers="H2" class="gt_row gt_right gt_striped">0</td>
-<td headers="H3" class="gt_row gt_right gt_striped">1</td>
-<td headers="H4" class="gt_row gt_right gt_striped">0</td>
-</tr>
-<tr>
-<td headers="Intersection" class="gt_row gt_right" style="text-align: center; font-style: italic;">15</td>
-<td headers="H1" class="gt_row gt_right">0</td>
-<td headers="H2" class="gt_row gt_right">0</td>
-<td headers="H3" class="gt_row gt_right">0</td>
-<td headers="H4" class="gt_row gt_right">1</td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
-</div>
-</div>
-<div class="section level2">
-<h2 id="strategies">Strategies<a class="anchor" aria-label="anchor" href="#strategies"></a>
-</h2>
-<p>Because the size of the closure grows quickly as graph size increases
-(An n-graph has <code>2^n - 1</code> sub-graphs), calculating the full
-closure for large graphs can be computationally intensive. Optimizing
-this process led to three main strategies:</p>
-<ul>
-<li>The simplest approach, which uses the full graph as the starting
-point for every sub-graph, then deletes the appropriate hypotheses</li>
-<li>A recursive method, which traverses the closure tree, deleting one
-hypothesis each time to step between graphs</li>
-<li>A formulaic shortcut using the order of graphs generated with the
-recursive method</li>
-</ul>
-<p>Note that the discussion of these methods focuses primarily on the
-weights side rather than the powerset side of the closure. This is
-because the fastest methods discovered generate the powerset implicitly
-from missing values in the weights side. For methods such as the simple
-approach, which rely on having the powerset in order to generate
-weights, the powerset can be created efficiently. Here
-<code>num_hyps</code> refers to the number of hypotheses in the initial
-graph.</p>
-<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">powerset</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">as.matrix</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/rev.html" class="external-link">rev</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/expand.grid.html" class="external-link">expand.grid</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">0</span><span class="op">)</span>, <span class="va">num_hyps</span><span class="op">)</span><span class="op">)</span><span class="op">[</span><span class="op">-</span><span class="fl">2</span><span class="op">^</span><span class="va">num_hyps</span>, <span class="op">]</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<div class="section level3">
-<h3 id="simple-approach">Simple approach<a class="anchor" aria-label="anchor" href="#simple-approach"></a>
-</h3>
-<p>The simplest approach to generate the weights of the closure is to
-apply <code><a href="../reference/graph_update.html">graph_update()</a></code> to the initial graph once for each
-sub-graph. This is short and sweet to write, but it’s inefficient
-because each hypothesis gets deleted from the graph multiple times. Here
-is the code for the simple method.</p>
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">ggw_simple</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">graph</span><span class="op">)</span> <span class="op">{</span></span>
-<span>  <span class="va">num_hyps</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">graph</span><span class="op">$</span><span class="va">hypotheses</span><span class="op">)</span></span>
-<span></span>
-<span>  <span class="va">matrix_intersections</span> <span class="op">&lt;-</span></span>
-<span>    <span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">as.matrix</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/rev.html" class="external-link">rev</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/expand.grid.html" class="external-link">expand.grid</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">0</span><span class="op">)</span>, <span class="va">num_hyps</span><span class="op">)</span><span class="op">)</span><span class="op">[</span><span class="op">-</span><span class="fl">2</span><span class="op">^</span><span class="va">num_hyps</span>, <span class="op">]</span><span class="op">)</span><span class="op">)</span></span>
-<span>  <span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">matrix_intersections</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">graph</span><span class="op">$</span><span class="va">hypotheses</span><span class="op">)</span></span>
-<span></span>
-<span>  <span class="va">matrix_weights</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/apply.html" class="external-link">apply</a></span><span class="op">(</span></span>
-<span>    <span class="va">matrix_intersections</span>,</span>
-<span>    <span class="fl">1</span>,</span>
-<span>    <span class="kw">function</span><span class="op">(</span><span class="va">h</span><span class="op">)</span> <span class="fu"><a href="../reference/graph_update.html">graph_update</a></span><span class="op">(</span><span class="va">graph</span>, <span class="op">!</span><span class="va">h</span><span class="op">)</span><span class="op">$</span><span class="va">updated_graph</span><span class="op">$</span><span class="va">hypotheses</span>,</span>
-<span>    simplify <span class="op">=</span> <span class="cn">FALSE</span></span>
-<span>  <span class="op">)</span></span>
-<span></span>
-<span>  <span class="fu"><a href="https://rdrr.io/r/base/cbind.html" class="external-link">cbind</a></span><span class="op">(</span><span class="va">matrix_intersections</span>, <span class="fu"><a href="https://rdrr.io/r/base/do.call.html" class="external-link">do.call</a></span><span class="op">(</span><span class="va">rbind</span>, <span class="va">matrix_weights</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="op">}</span></span></code></pre></div>
-</div>
-<div class="section level3">
-<h3 id="recursive">Recursive<a class="anchor" aria-label="anchor" href="#recursive"></a>
-</h3>
-<p>The recursive method treats the space of sub-graphs as a tree, with
-the initial graph at the root, and other sub-graphs decreasing in size
-going down the branches. The essence of the recursive step is to delete
-a hypothesis in the current graph. But doing this for every hypothesis
-in every sub-graph in the tree would result in taking multiple paths to
-many of the graphs. So a key part of the recursive step is that it has
-memory - Each graph in the tree will only delete the hypotheses that
-come after the hypothesis that was just deleted to reach the current
-graph. The base case also needs memory - It is reached when a graph has
-only one hypothesis left, or when the last-deleted hypothesis number is
-larger than all current hypotheses. This memory in the recursion enables
-the tree traversal to reach each unique graph state exactly once. Here
-is an implementation of the recursion, followed by a wrapper for
-processing the sub-graph list into the standard matrix form.</p>
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">delete_nodes_recursive</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">graph</span>, <span class="va">last</span> <span class="op">=</span> <span class="fl">0</span><span class="op">)</span> <span class="op">{</span></span>
-<span>  <span class="va">init_hypotheses</span> <span class="op">&lt;-</span> <span class="va">hypotheses</span> <span class="op">&lt;-</span> <span class="va">graph</span><span class="op">$</span><span class="va">hypotheses</span></span>
-<span>  <span class="va">init_transitions</span> <span class="op">&lt;-</span> <span class="va">transitions</span> <span class="op">&lt;-</span> <span class="va">graph</span><span class="op">$</span><span class="va">transitions</span></span>
-<span></span>
-<span>  <span class="co">### base case</span></span>
-<span>  <span class="va">int_hyp</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/integer.html" class="external-link">as.integer</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">hypotheses</span><span class="op">)</span><span class="op">)</span></span>
-<span></span>
-<span>  <span class="va">is_single_node</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">hypotheses</span><span class="op">)</span> <span class="op">==</span> <span class="fl">1</span></span>
-<span>  <span class="va">last_is_bigger</span> <span class="op">&lt;-</span> <span class="va">last</span> <span class="op">&gt;</span> <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html" class="external-link">max</a></span><span class="op">(</span><span class="va">int_hyp</span><span class="op">)</span></span>
-<span></span>
-<span>  <span class="kw">if</span> <span class="op">(</span><span class="va">is_single_node</span> <span class="op">||</span> <span class="va">last_is_bigger</span><span class="op">)</span> <span class="op">{</span></span>
-<span>    <span class="kw"><a href="https://rdrr.io/r/base/function.html" class="external-link">return</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">graph</span><span class="op">)</span><span class="op">)</span></span>
-<span>  <span class="op">}</span></span>
-<span></span>
-<span>  <span class="co">### recursive step</span></span>
-<span>  <span class="va">children</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="op">)</span></span>
-<span></span>
-<span>  <span class="kw">for</span> <span class="op">(</span><span class="va">orig_hyp_num</span> <span class="kw">in</span> <span class="va">int_hyp</span><span class="op">[</span><span class="va">int_hyp</span> <span class="op">&gt;</span> <span class="va">last</span><span class="op">]</span><span class="op">)</span> <span class="op">{</span></span>
-<span>    <span class="va">del_index</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/match.html" class="external-link">match</a></span><span class="op">(</span><span class="va">orig_hyp_num</span>, <span class="va">int_hyp</span><span class="op">)</span></span>
-<span>    <span class="va">hyp_nums</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq_along</a></span><span class="op">(</span><span class="va">hypotheses</span><span class="op">)</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq_along</a></span><span class="op">(</span><span class="va">hypotheses</span><span class="op">)</span> <span class="op">!=</span> <span class="va">del_index</span><span class="op">]</span></span>
-<span></span>
-<span>    <span class="kw">for</span> <span class="op">(</span><span class="va">hyp_num</span> <span class="kw">in</span> <span class="va">hyp_nums</span><span class="op">)</span> <span class="op">{</span></span>
-<span>      <span class="va">hypotheses</span><span class="op">[[</span><span class="va">hyp_num</span><span class="op">]</span><span class="op">]</span> <span class="op">&lt;-</span></span>
-<span>        <span class="va">init_hypotheses</span><span class="op">[[</span><span class="va">hyp_num</span><span class="op">]</span><span class="op">]</span> <span class="op">+</span></span>
-<span>        <span class="va">init_hypotheses</span><span class="op">[[</span><span class="va">del_index</span><span class="op">]</span><span class="op">]</span> <span class="op">*</span> <span class="va">init_transitions</span><span class="op">[[</span><span class="va">del_index</span>, <span class="va">hyp_num</span><span class="op">]</span><span class="op">]</span></span>
-<span></span>
-<span>      <span class="va">denominator</span> <span class="op">&lt;-</span> <span class="fl">1</span> <span class="op">-</span> <span class="va">init_transitions</span><span class="op">[[</span><span class="va">hyp_num</span>, <span class="va">del_index</span><span class="op">]</span><span class="op">]</span> <span class="op">*</span></span>
-<span>        <span class="va">init_transitions</span><span class="op">[[</span><span class="va">del_index</span>, <span class="va">hyp_num</span><span class="op">]</span><span class="op">]</span></span>
-<span></span>
-<span>      <span class="kw">for</span> <span class="op">(</span><span class="va">end_num</span> <span class="kw">in</span> <span class="va">hyp_nums</span><span class="op">)</span> <span class="op">{</span></span>
-<span>        <span class="kw">if</span> <span class="op">(</span><span class="va">hyp_num</span> <span class="op">==</span> <span class="va">end_num</span> <span class="op">||</span> <span class="va">denominator</span> <span class="op">&lt;=</span> <span class="fl">0</span><span class="op">)</span> <span class="op">{</span></span>
-<span>          <span class="va">transitions</span><span class="op">[[</span><span class="va">hyp_num</span>, <span class="va">end_num</span><span class="op">]</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="fl">0</span></span>
-<span>        <span class="op">}</span> <span class="kw">else</span> <span class="op">{</span></span>
-<span>          <span class="va">transitions</span><span class="op">[[</span><span class="va">hyp_num</span>, <span class="va">end_num</span><span class="op">]</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="op">(</span></span>
-<span>            <span class="va">init_transitions</span><span class="op">[[</span><span class="va">hyp_num</span>, <span class="va">end_num</span><span class="op">]</span><span class="op">]</span> <span class="op">+</span></span>
-<span>              <span class="va">init_transitions</span><span class="op">[[</span><span class="va">hyp_num</span>, <span class="va">del_index</span><span class="op">]</span><span class="op">]</span> <span class="op">*</span></span>
-<span>                <span class="va">init_transitions</span><span class="op">[[</span><span class="va">del_index</span>, <span class="va">end_num</span><span class="op">]</span><span class="op">]</span></span>
-<span>          <span class="op">)</span> <span class="op">/</span> <span class="va">denominator</span></span>
-<span>        <span class="op">}</span></span>
-<span>      <span class="op">}</span></span>
-<span>    <span class="op">}</span></span>
-<span></span>
-<span>    <span class="va">smaller_graph</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/structure.html" class="external-link">structure</a></span><span class="op">(</span></span>
-<span>      <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
-<span>        hypotheses <span class="op">=</span> <span class="va">hypotheses</span><span class="op">[</span><span class="op">-</span><span class="va">del_index</span><span class="op">]</span>,</span>
-<span>        transitions <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">as.matrix</a></span><span class="op">(</span><span class="va">transitions</span><span class="op">[</span><span class="op">-</span><span class="va">del_index</span>, <span class="op">-</span><span class="va">del_index</span><span class="op">]</span><span class="op">)</span></span>
-<span>      <span class="op">)</span>,</span>
-<span>      class <span class="op">=</span> <span class="st">"initial_graph"</span></span>
-<span>    <span class="op">)</span></span>
-<span></span>
-<span>    <span class="va">children</span><span class="op">[[</span><span class="va">del_index</span><span class="op">]</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="fu">delete_nodes_recursive</span><span class="op">(</span></span>
-<span>      <span class="va">smaller_graph</span>,</span>
-<span>      <span class="va">orig_hyp_num</span></span>
-<span>    <span class="op">)</span></span>
-<span>  <span class="op">}</span></span>
-<span></span>
-<span>  <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span></span>
-<span>    <span class="fu"><a href="https://rdrr.io/r/base/unlist.html" class="external-link">unlist</a></span><span class="op">(</span><span class="va">children</span>, recursive <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>,</span>
-<span>    <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">graph</span><span class="op">)</span></span>
-<span>  <span class="op">)</span></span>
-<span><span class="op">}</span></span></code></pre></div>
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">ggw_recursive</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">graph</span><span class="op">)</span> <span class="op">{</span></span>
-<span>  <span class="co"># The recursion requires the hypotheses to be named sequentially as actual</span></span>
-<span>  <span class="co"># numbers for the memory property to work</span></span>
-<span>  <span class="va">hyp_names</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">graph</span><span class="op">$</span><span class="va">hypotheses</span><span class="op">)</span></span>
-<span>  <span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">graph</span><span class="op">$</span><span class="va">hypotheses</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq_along</a></span><span class="op">(</span><span class="va">graph</span><span class="op">$</span><span class="va">hypotheses</span><span class="op">)</span></span>
-<span>  <span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">graph</span><span class="op">$</span><span class="va">transitions</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">graph</span><span class="op">$</span><span class="va">hypotheses</span><span class="op">)</span></span>
-<span>  <span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">rownames</a></span><span class="op">(</span><span class="va">graph</span><span class="op">$</span><span class="va">transitions</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">graph</span><span class="op">$</span><span class="va">hypotheses</span><span class="op">)</span></span>
-<span></span>
-<span>  <span class="co"># Recursively generate a list of all sub-graphs</span></span>
-<span>  <span class="va">list_subgraphs</span> <span class="op">&lt;-</span> <span class="fu">delete_nodes_recursive</span><span class="op">(</span><span class="va">graph</span><span class="op">)</span></span>
-<span></span>
-<span>  <span class="co"># Process the list of graphs into the normal matrix form</span></span>
-<span>  <span class="va">matrix_weights</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/structure.html" class="external-link">structure</a></span><span class="op">(</span></span>
-<span>    <span class="fu"><a href="https://rdrr.io/r/base/do.call.html" class="external-link">do.call</a></span><span class="op">(</span></span>
-<span>      <span class="va">rbind</span>,</span>
-<span>      <span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">lapply</a></span><span class="op">(</span></span>
-<span>        <span class="va">list_subgraphs</span>,</span>
-<span>        <span class="kw">function</span><span class="op">(</span><span class="va">graph</span><span class="op">)</span> <span class="va">graph</span><span class="op">$</span><span class="va">hypotheses</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/character.html" class="external-link">as.character</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq_along</a></span><span class="op">(</span><span class="va">hyp_names</span><span class="op">)</span><span class="op">)</span><span class="op">]</span></span>
-<span>      <span class="op">)</span></span>
-<span>    <span class="op">)</span>,</span>
-<span>    dimnames <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="op">(</span><span class="fl">2</span><span class="op">^</span><span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">hyp_names</span><span class="op">)</span> <span class="op">-</span> <span class="fl">1</span><span class="op">)</span>, <span class="va">hyp_names</span><span class="op">)</span></span>
-<span>  <span class="op">)</span></span>
-<span></span>
-<span>  <span class="va">matrix_intersections</span> <span class="op">&lt;-</span> <span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html" class="external-link">is.na</a></span><span class="op">(</span><span class="va">matrix_weights</span><span class="op">)</span></span>
-<span>  <span class="va">matrix_weights</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html" class="external-link">is.na</a></span><span class="op">(</span><span class="va">matrix_weights</span><span class="op">)</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="fl">0</span></span>
-<span></span>
-<span>  <span class="fu"><a href="https://rdrr.io/r/base/cbind.html" class="external-link">cbind</a></span><span class="op">(</span><span class="va">matrix_intersections</span>, <span class="va">matrix_weights</span><span class="op">)</span></span>
-<span><span class="op">}</span></span></code></pre></div>
-</div>
-<div class="section level3">
-<h3 id="formula-shortcut">Formula shortcut<a class="anchor" aria-label="anchor" href="#formula-shortcut"></a>
-</h3>
-<p>Finally, the fastest method found so far - the formula shortcut.
-While recursion can save a lot of time over the first method, it still
-has a bit of overhead to get from the list of sub-graphs to the matrix
-form that is standard. This is where the “repeating block” property of
-the closure mentioned earlier is useful. Instead of using recursion to
-connect parent sub-graphs to their children, a pair of formulas can be
-used. One formula generates the parent of each graph that is obtained by
-flipping the left-most 0 to be a 1:
-<code>do.call(c, lapply(2^(seq_len(num_hyps) - 1), seq_len))</code>.
-Note that this is for rows 2 through the (non-existent) row 16, which is
-the empty graph. Row 1 has no parent graph. The left-most 0 in a child
-graph is easy to find, but from the parent graph’s perspective, this
-formula calculates which hypothesis to delete:
-<code>rep(rev(seq_len(num_hyps)), 2^(seq_len(num_hyps) - 1))</code>.
-This also applies to rows 2 through 16.</p>
-<div id="gxpwbwdsof" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
-<style>#gxpwbwdsof table {
-  font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
-
-#gxpwbwdsof thead, #gxpwbwdsof tbody, #gxpwbwdsof tfoot, #gxpwbwdsof tr, #gxpwbwdsof td, #gxpwbwdsof th {
-  border-style: none;
-}
-
-#gxpwbwdsof p {
-  margin: 0;
-  padding: 0;
-}
-
-#gxpwbwdsof .gt_table {
-  display: table;
-  border-collapse: collapse;
-  line-height: normal;
-  margin-left: auto;
-  margin-right: auto;
-  color: #333333;
-  font-size: 16px;
-  font-weight: normal;
-  font-style: normal;
-  background-color: #FFFFFF;
-  width: auto;
-  border-top-style: solid;
-  border-top-width: 2px;
-  border-top-color: #A8A8A8;
-  border-right-style: none;
-  border-right-width: 2px;
-  border-right-color: #D3D3D3;
-  border-bottom-style: solid;
-  border-bottom-width: 2px;
-  border-bottom-color: #A8A8A8;
-  border-left-style: none;
-  border-left-width: 2px;
-  border-left-color: #D3D3D3;
-}
-
-#gxpwbwdsof .gt_caption {
-  padding-top: 4px;
-  padding-bottom: 4px;
-}
-
-#gxpwbwdsof .gt_title {
-  color: #333333;
-  font-size: 125%;
-  font-weight: initial;
-  padding-top: 4px;
-  padding-bottom: 4px;
-  padding-left: 5px;
-  padding-right: 5px;
-  border-bottom-color: #FFFFFF;
-  border-bottom-width: 0;
-}
-
-#gxpwbwdsof .gt_subtitle {
-  color: #333333;
-  font-size: 85%;
-  font-weight: initial;
-  padding-top: 3px;
-  padding-bottom: 5px;
-  padding-left: 5px;
-  padding-right: 5px;
-  border-top-color: #FFFFFF;
-  border-top-width: 0;
-}
-
-#gxpwbwdsof .gt_heading {
-  background-color: #FFFFFF;
-  text-align: center;
-  border-bottom-color: #FFFFFF;
-  border-left-style: none;
-  border-left-width: 1px;
-  border-left-color: #D3D3D3;
-  border-right-style: none;
-  border-right-width: 1px;
-  border-right-color: #D3D3D3;
-}
-
-#gxpwbwdsof .gt_bottom_border {
-  border-bottom-style: solid;
-  border-bottom-width: 2px;
-  border-bottom-color: #D3D3D3;
-}
-
-#gxpwbwdsof .gt_col_headings {
-  border-top-style: solid;
-  border-top-width: 2px;
-  border-top-color: #D3D3D3;
-  border-bottom-style: solid;
-  border-bottom-width: 2px;
-  border-bottom-color: #D3D3D3;
-  border-left-style: none;
-  border-left-width: 1px;
-  border-left-color: #D3D3D3;
-  border-right-style: none;
-  border-right-width: 1px;
-  border-right-color: #D3D3D3;
-}
-
-#gxpwbwdsof .gt_col_heading {
-  color: #333333;
-  background-color: #FFFFFF;
-  font-size: 100%;
-  font-weight: normal;
-  text-transform: inherit;
-  border-left-style: none;
-  border-left-width: 1px;
-  border-left-color: #D3D3D3;
-  border-right-style: none;
-  border-right-width: 1px;
-  border-right-color: #D3D3D3;
-  vertical-align: bottom;
-  padding-top: 5px;
-  padding-bottom: 6px;
-  padding-left: 5px;
-  padding-right: 5px;
-  overflow-x: hidden;
-}
-
-#gxpwbwdsof .gt_column_spanner_outer {
-  color: #333333;
-  background-color: #FFFFFF;
-  font-size: 100%;
-  font-weight: normal;
-  text-transform: inherit;
-  padding-top: 0;
-  padding-bottom: 0;
-  padding-left: 4px;
-  padding-right: 4px;
-}
-
-#gxpwbwdsof .gt_column_spanner_outer:first-child {
-  padding-left: 0;
-}
-
-#gxpwbwdsof .gt_column_spanner_outer:last-child {
-  padding-right: 0;
-}
-
-#gxpwbwdsof .gt_column_spanner {
-  border-bottom-style: solid;
-  border-bottom-width: 2px;
-  border-bottom-color: #D3D3D3;
-  vertical-align: bottom;
-  padding-top: 5px;
-  padding-bottom: 5px;
-  overflow-x: hidden;
-  display: inline-block;
-  width: 100%;
-}
-
-#gxpwbwdsof .gt_spanner_row {
-  border-bottom-style: hidden;
-}
-
-#gxpwbwdsof .gt_group_heading {
-  padding-top: 8px;
-  padding-bottom: 8px;
-  padding-left: 5px;
-  padding-right: 5px;
-  color: #333333;
-  background-color: #FFFFFF;
-  font-size: 100%;
-  font-weight: initial;
-  text-transform: inherit;
-  border-top-style: solid;
-  border-top-width: 2px;
-  border-top-color: #D3D3D3;
-  border-bottom-style: solid;
-  border-bottom-width: 2px;
-  border-bottom-color: #D3D3D3;
-  border-left-style: none;
-  border-left-width: 1px;
-  border-left-color: #D3D3D3;
-  border-right-style: none;
-  border-right-width: 1px;
-  border-right-color: #D3D3D3;
-  vertical-align: middle;
-  text-align: left;
-}
-
-#gxpwbwdsof .gt_empty_group_heading {
-  padding: 0.5px;
-  color: #333333;
-  background-color: #FFFFFF;
-  font-size: 100%;
-  font-weight: initial;
-  border-top-style: solid;
-  border-top-width: 2px;
-  border-top-color: #D3D3D3;
-  border-bottom-style: solid;
-  border-bottom-width: 2px;
-  border-bottom-color: #D3D3D3;
-  vertical-align: middle;
-}
-
-#gxpwbwdsof .gt_from_md > :first-child {
-  margin-top: 0;
-}
-
-#gxpwbwdsof .gt_from_md > :last-child {
-  margin-bottom: 0;
-}
-
-#gxpwbwdsof .gt_row {
-  padding-top: 8px;
-  padding-bottom: 8px;
-  padding-left: 5px;
-  padding-right: 5px;
-  margin: 10px;
-  border-top-style: solid;
-  border-top-width: 1px;
-  border-top-color: #D3D3D3;
-  border-left-style: none;
-  border-left-width: 1px;
-  border-left-color: #D3D3D3;
-  border-right-style: none;
-  border-right-width: 1px;
-  border-right-color: #D3D3D3;
-  vertical-align: middle;
-  overflow-x: hidden;
-}
-
-#gxpwbwdsof .gt_stub {
-  color: #333333;
-  background-color: #FFFFFF;
-  font-size: 100%;
-  font-weight: initial;
-  text-transform: inherit;
-  border-right-style: solid;
-  border-right-width: 2px;
-  border-right-color: #D3D3D3;
-  padding-left: 5px;
-  padding-right: 5px;
-}
-
-#gxpwbwdsof .gt_stub_row_group {
-  color: #333333;
-  background-color: #FFFFFF;
-  font-size: 100%;
-  font-weight: initial;
-  text-transform: inherit;
-  border-right-style: solid;
-  border-right-width: 2px;
-  border-right-color: #D3D3D3;
-  padding-left: 5px;
-  padding-right: 5px;
-  vertical-align: top;
-}
-
-#gxpwbwdsof .gt_row_group_first td {
-  border-top-width: 2px;
-}
-
-#gxpwbwdsof .gt_row_group_first th {
-  border-top-width: 2px;
-}
-
-#gxpwbwdsof .gt_summary_row {
-  color: #333333;
-  background-color: #FFFFFF;
-  text-transform: inherit;
-  padding-top: 8px;
-  padding-bottom: 8px;
-  padding-left: 5px;
-  padding-right: 5px;
-}
-
-#gxpwbwdsof .gt_first_summary_row {
-  border-top-style: solid;
-  border-top-color: #D3D3D3;
-}
-
-#gxpwbwdsof .gt_first_summary_row.thick {
-  border-top-width: 2px;
-}
-
-#gxpwbwdsof .gt_last_summary_row {
-  padding-top: 8px;
-  padding-bottom: 8px;
-  padding-left: 5px;
-  padding-right: 5px;
-  border-bottom-style: solid;
-  border-bottom-width: 2px;
-  border-bottom-color: #D3D3D3;
-}
-
-#gxpwbwdsof .gt_grand_summary_row {
-  color: #333333;
-  background-color: #FFFFFF;
-  text-transform: inherit;
-  padding-top: 8px;
-  padding-bottom: 8px;
-  padding-left: 5px;
-  padding-right: 5px;
-}
-
-#gxpwbwdsof .gt_first_grand_summary_row {
-  padding-top: 8px;
-  padding-bottom: 8px;
-  padding-left: 5px;
-  padding-right: 5px;
-  border-top-style: double;
-  border-top-width: 6px;
-  border-top-color: #D3D3D3;
-}
-
-#gxpwbwdsof .gt_last_grand_summary_row_top {
-  padding-top: 8px;
-  padding-bottom: 8px;
-  padding-left: 5px;
-  padding-right: 5px;
-  border-bottom-style: double;
-  border-bottom-width: 6px;
-  border-bottom-color: #D3D3D3;
-}
-
-#gxpwbwdsof .gt_striped {
-  background-color: rgba(128, 128, 128, 0.05);
-}
-
-#gxpwbwdsof .gt_table_body {
-  border-top-style: solid;
-  border-top-width: 2px;
-  border-top-color: #D3D3D3;
-  border-bottom-style: solid;
-  border-bottom-width: 2px;
-  border-bottom-color: #D3D3D3;
-}
-
-#gxpwbwdsof .gt_footnotes {
-  color: #333333;
-  background-color: #FFFFFF;
-  border-bottom-style: none;
-  border-bottom-width: 2px;
-  border-bottom-color: #D3D3D3;
-  border-left-style: none;
-  border-left-width: 2px;
-  border-left-color: #D3D3D3;
-  border-right-style: none;
-  border-right-width: 2px;
-  border-right-color: #D3D3D3;
-}
-
-#gxpwbwdsof .gt_footnote {
-  margin: 0px;
-  font-size: 90%;
-  padding-top: 4px;
-  padding-bottom: 4px;
-  padding-left: 5px;
-  padding-right: 5px;
-}
-
-#gxpwbwdsof .gt_sourcenotes {
-  color: #333333;
-  background-color: #FFFFFF;
-  border-bottom-style: none;
-  border-bottom-width: 2px;
-  border-bottom-color: #D3D3D3;
-  border-left-style: none;
-  border-left-width: 2px;
-  border-left-color: #D3D3D3;
-  border-right-style: none;
-  border-right-width: 2px;
-  border-right-color: #D3D3D3;
-}
-
-#gxpwbwdsof .gt_sourcenote {
-  font-size: 90%;
-  padding-top: 4px;
-  padding-bottom: 4px;
-  padding-left: 5px;
-  padding-right: 5px;
-}
-
-#gxpwbwdsof .gt_left {
-  text-align: left;
-}
-
-#gxpwbwdsof .gt_center {
-  text-align: center;
-}
-
-#gxpwbwdsof .gt_right {
-  text-align: right;
-  font-variant-numeric: tabular-nums;
-}
-
-#gxpwbwdsof .gt_font_normal {
-  font-weight: normal;
-}
-
-#gxpwbwdsof .gt_font_bold {
-  font-weight: bold;
-}
-
-#gxpwbwdsof .gt_font_italic {
-  font-style: italic;
-}
-
-#gxpwbwdsof .gt_super {
-  font-size: 65%;
-}
-
-#gxpwbwdsof .gt_footnote_marks {
-  font-size: 75%;
-  vertical-align: 0.4em;
-  position: initial;
-}
-
-#gxpwbwdsof .gt_asterisk {
-  font-size: 100%;
-  vertical-align: 0;
-}
-
-#gxpwbwdsof .gt_indent_1 {
-  text-indent: 5px;
-}
-
-#gxpwbwdsof .gt_indent_2 {
-  text-indent: 10px;
-}
-
-#gxpwbwdsof .gt_indent_3 {
-  text-indent: 15px;
-}
-
-#gxpwbwdsof .gt_indent_4 {
-  text-indent: 20px;
-}
-
-#gxpwbwdsof .gt_indent_5 {
-  text-indent: 25px;
-}
-</style>
-<table class="table gt_table" data-quarto-disable-processing="false" data-quarto-bootstrap="false">
-<thead>
-<tr class="gt_heading">
-<td colspan="7" class="gt_heading gt_title gt_font_normal gt_bottom_border" style>Parent-child connections</td>
-    </tr>
-<tr class="gt_col_headings gt_spanner_row">
-<th class="gt_col_heading gt_columns_bottom_border gt_right" rowspan="2" colspan="1" scope="col" id="Intersection">Intersection</th>
-      <th class="gt_col_heading gt_columns_bottom_border gt_right" rowspan="2" colspan="1" scope="col" id="H1">H1</th>
-      <th class="gt_col_heading gt_columns_bottom_border gt_right" rowspan="2" colspan="1" scope="col" id="H2">H2</th>
-      <th class="gt_col_heading gt_columns_bottom_border gt_right" rowspan="2" colspan="1" scope="col" id="H3">H3</th>
-      <th class="gt_col_heading gt_columns_bottom_border gt_right" rowspan="2" colspan="1" scope="col" id="H4">H4</th>
-      <th class="gt_center gt_columns_top_border gt_column_spanner_outer" rowspan="1" colspan="2" scope="colgroup" id="To reach a given row...">
-        <span class="gt_column_spanner">To reach a given row...</span>
-      </th>
-    </tr>
-<tr class="gt_col_headings">
-<th class="gt_col_heading gt_columns_bottom_border gt_right" rowspan="1" colspan="1" scope="col" id="Delete hypothesis no.">Delete hypothesis no.</th>
-      <th class="gt_col_heading gt_columns_bottom_border gt_right" rowspan="1" colspan="1" scope="col" id="From intersection no.">From intersection no.</th>
-    </tr>
-</thead>
-<tbody class="gt_table_body">
-<tr>
-<td headers="Intersection" class="gt_row gt_right" style="text-align: center; font-style: italic;">1</td>
-<td headers="H1" class="gt_row gt_right">1</td>
-<td headers="H2" class="gt_row gt_right">1</td>
-<td headers="H3" class="gt_row gt_right">1</td>
-<td headers="H4" class="gt_row gt_right">1</td>
-<td headers="delete" class="gt_row gt_right" style="text-align: center;">NA</td>
-<td headers="parents" class="gt_row gt_right" style="text-align: center;">NA</td>
-</tr>
-<tr>
-<td headers="Intersection" class="gt_row gt_right" style="text-align: center; font-style: italic;">2</td>
-<td headers="H1" class="gt_row gt_right">1</td>
-<td headers="H2" class="gt_row gt_right">1</td>
-<td headers="H3" class="gt_row gt_right">1</td>
-<td headers="H4" class="gt_row gt_right">0</td>
-<td headers="delete" class="gt_row gt_right" style="text-align: center;">4</td>
-<td headers="parents" class="gt_row gt_right" style="text-align: center;">1</td>
-</tr>
-<tr>
-<td headers="Intersection" class="gt_row gt_right" style="text-align: center; font-style: italic;">3</td>
-<td headers="H1" class="gt_row gt_right">1</td>
-<td headers="H2" class="gt_row gt_right">1</td>
-<td headers="H3" class="gt_row gt_right">0</td>
-<td headers="H4" class="gt_row gt_right">1</td>
-<td headers="delete" class="gt_row gt_right" style="text-align: center;">3</td>
-<td headers="parents" class="gt_row gt_right" style="text-align: center;">1</td>
-</tr>
-<tr>
-<td headers="Intersection" class="gt_row gt_right" style="text-align: center; font-style: italic;">4</td>
-<td headers="H1" class="gt_row gt_right">1</td>
-<td headers="H2" class="gt_row gt_right">1</td>
-<td headers="H3" class="gt_row gt_right">0</td>
-<td headers="H4" class="gt_row gt_right">0</td>
-<td headers="delete" class="gt_row gt_right" style="text-align: center;">3</td>
-<td headers="parents" class="gt_row gt_right" style="text-align: center;">2</td>
-</tr>
-<tr>
-<td headers="Intersection" class="gt_row gt_right" style="text-align: center; font-style: italic;">5</td>
-<td headers="H1" class="gt_row gt_right">1</td>
-<td headers="H2" class="gt_row gt_right">0</td>
-<td headers="H3" class="gt_row gt_right">1</td>
-<td headers="H4" class="gt_row gt_right">1</td>
-<td headers="delete" class="gt_row gt_right" style="text-align: center;">2</td>
-<td headers="parents" class="gt_row gt_right" style="text-align: center;">1</td>
-</tr>
-<tr>
-<td headers="Intersection" class="gt_row gt_right" style="text-align: center; font-style: italic;">6</td>
-<td headers="H1" class="gt_row gt_right">1</td>
-<td headers="H2" class="gt_row gt_right">0</td>
-<td headers="H3" class="gt_row gt_right">1</td>
-<td headers="H4" class="gt_row gt_right">0</td>
-<td headers="delete" class="gt_row gt_right" style="text-align: center;">2</td>
-<td headers="parents" class="gt_row gt_right" style="text-align: center;">2</td>
-</tr>
-<tr>
-<td headers="Intersection" class="gt_row gt_right" style="text-align: center; font-style: italic;">7</td>
-<td headers="H1" class="gt_row gt_right">1</td>
-<td headers="H2" class="gt_row gt_right">0</td>
-<td headers="H3" class="gt_row gt_right">0</td>
-<td headers="H4" class="gt_row gt_right">1</td>
-<td headers="delete" class="gt_row gt_right" style="text-align: center;">2</td>
-<td headers="parents" class="gt_row gt_right" style="text-align: center;">3</td>
-</tr>
-<tr>
-<td headers="Intersection" class="gt_row gt_right" style="text-align: center; font-style: italic;">8</td>
-<td headers="H1" class="gt_row gt_right">1</td>
-<td headers="H2" class="gt_row gt_right">0</td>
-<td headers="H3" class="gt_row gt_right">0</td>
-<td headers="H4" class="gt_row gt_right">0</td>
-<td headers="delete" class="gt_row gt_right" style="text-align: center;">2</td>
-<td headers="parents" class="gt_row gt_right" style="text-align: center;">4</td>
-</tr>
-<tr>
-<td headers="Intersection" class="gt_row gt_right" style="text-align: center; font-style: italic;">9</td>
-<td headers="H1" class="gt_row gt_right">0</td>
-<td headers="H2" class="gt_row gt_right">1</td>
-<td headers="H3" class="gt_row gt_right">1</td>
-<td headers="H4" class="gt_row gt_right">1</td>
-<td headers="delete" class="gt_row gt_right" style="text-align: center;">1</td>
-<td headers="parents" class="gt_row gt_right" style="text-align: center;">1</td>
-</tr>
-<tr>
-<td headers="Intersection" class="gt_row gt_right" style="text-align: center; font-style: italic;">10</td>
-<td headers="H1" class="gt_row gt_right">0</td>
-<td headers="H2" class="gt_row gt_right">1</td>
-<td headers="H3" class="gt_row gt_right">1</td>
-<td headers="H4" class="gt_row gt_right">0</td>
-<td headers="delete" class="gt_row gt_right" style="text-align: center;">1</td>
-<td headers="parents" class="gt_row gt_right" style="text-align: center;">2</td>
-</tr>
-<tr>
-<td headers="Intersection" class="gt_row gt_right" style="text-align: center; font-style: italic;">11</td>
-<td headers="H1" class="gt_row gt_right">0</td>
-<td headers="H2" class="gt_row gt_right">1</td>
-<td headers="H3" class="gt_row gt_right">0</td>
-<td headers="H4" class="gt_row gt_right">1</td>
-<td headers="delete" class="gt_row gt_right" style="text-align: center;">1</td>
-<td headers="parents" class="gt_row gt_right" style="text-align: center;">3</td>
-</tr>
-<tr>
-<td headers="Intersection" class="gt_row gt_right" style="text-align: center; font-style: italic;">12</td>
-<td headers="H1" class="gt_row gt_right">0</td>
-<td headers="H2" class="gt_row gt_right">1</td>
-<td headers="H3" class="gt_row gt_right">0</td>
-<td headers="H4" class="gt_row gt_right">0</td>
-<td headers="delete" class="gt_row gt_right" style="text-align: center;">1</td>
-<td headers="parents" class="gt_row gt_right" style="text-align: center;">4</td>
-</tr>
-<tr>
-<td headers="Intersection" class="gt_row gt_right" style="text-align: center; font-style: italic;">13</td>
-<td headers="H1" class="gt_row gt_right">0</td>
-<td headers="H2" class="gt_row gt_right">0</td>
-<td headers="H3" class="gt_row gt_right">1</td>
-<td headers="H4" class="gt_row gt_right">1</td>
-<td headers="delete" class="gt_row gt_right" style="text-align: center;">1</td>
-<td headers="parents" class="gt_row gt_right" style="text-align: center;">5</td>
-</tr>
-<tr>
-<td headers="Intersection" class="gt_row gt_right" style="text-align: center; font-style: italic;">14</td>
-<td headers="H1" class="gt_row gt_right">0</td>
-<td headers="H2" class="gt_row gt_right">0</td>
-<td headers="H3" class="gt_row gt_right">1</td>
-<td headers="H4" class="gt_row gt_right">0</td>
-<td headers="delete" class="gt_row gt_right" style="text-align: center;">1</td>
-<td headers="parents" class="gt_row gt_right" style="text-align: center;">6</td>
-</tr>
-<tr>
-<td headers="Intersection" class="gt_row gt_right" style="text-align: center; font-style: italic;">15</td>
-<td headers="H1" class="gt_row gt_right">0</td>
-<td headers="H2" class="gt_row gt_right">0</td>
-<td headers="H3" class="gt_row gt_right">0</td>
-<td headers="H4" class="gt_row gt_right">1</td>
-<td headers="delete" class="gt_row gt_right" style="text-align: center;">1</td>
-<td headers="parents" class="gt_row gt_right" style="text-align: center;">7</td>
-</tr>
-</tbody>
-</table>
-</div>
-<p>The formula shortcut also results in simpler code than the recursive
-solution.</p>
-</div>
-</div>
-<div class="section level2">
-<h2 id="performance-gains">Performance gains<a class="anchor" aria-label="anchor" href="#performance-gains"></a>
-</h2>
-<div class="section level3">
-<h3 id="generating-the-closure-1">Generating the closure<a class="anchor" aria-label="anchor" href="#generating-the-closure-1"></a>
-</h3>
-<p>The formula method reduces each step of generating the closure to a
-single deletion from a prior graph, with almost no additional overhead.
-Here’s how the different methods fare, including the version from the
-gMCP package for reference. Also worthy of note is the lrstat package,
-which contains a few MCP-related functions, including generating weights
-of the closure. It uses excellent C++ code to perform even faster, but
-since the speed of the current formula-based method is acceptable,
-adding an Rcpp dependency was not considered to be worth the additional
-time savings.</p>
-<p><img src="img/gw-benchmarks-plot.png"></p>
-</div>
-<div class="section level3">
-<h3 id="power-simulations">Power simulations<a class="anchor" aria-label="anchor" href="#power-simulations"></a>
-</h3>
-<p>While the time savings on the closure are nice, on most graphs the
-savings will not make a big difference compared to the longer run-times
-on e.g. power simulations. However, paying attention to the closure is
-important for other reasons too, such as improving the power
-algorithm.</p>
-<div class="section level4">
-<h4 id="standard-algorithm">Standard algorithm<a class="anchor" aria-label="anchor" href="#standard-algorithm"></a>
-</h4>
-<p>The typical method for running a Bonferroni shortcut procedure on a
-graph is to:</p>
-<ol style="list-style-type: decimal">
-<li>Search a graph for a single hypothesis which can be rejected</li>
-<li>Delete the rejected hypothesis and update weights</li>
-<li>Repeat until there are no more significant hypotheses</li>
-</ol>
-<p>Running this process in either R or a low-level language like C is
-fast for a single procedure, but when it’s run 100,000 times for a power
-simulation, the R version becomes onerous. However, there’s a lot of
-duplication in a power simulation using this method. In many of the
-simulations, the same steps will be taken, which means re-calculating
-the same set of weights many times.</p>
-</div>
-<div class="section level4">
-<h4 id="closure-shortcut">Closure shortcut<a class="anchor" aria-label="anchor" href="#closure-shortcut"></a>
-</h4>
-<p>The <a href="#binary-counting">binary counting</a> property of the
-closure admits a shortcut which can be implemented in R to get a
-scalable competitor to the typical algorithm:</p>
-<ol style="list-style-type: decimal">
-<li>Generate the closure a single time to get all sub-graph weights
-efficiently</li>
-<li>For each simulation: 1. Search a graph for all hypotheses which can
-be rejected - This is fast with vectorization 1. Using the binary
-counting property, index into the row of the closure corresponding to
-all hypotheses rejected so far to get updated weights - This is
-substantially faster than updating a graph and re-calculating weights,
-especially for larger graphs 1. Repeat using the updated weights</li>
-</ol>
-<p>While this method is not as fast as gMCP’s C implementation, it still
-runs substantial power simulations in a matter of seconds. The biggest
-drawback is how it can scale differently for different graph structures.
-For instance a fixed sequence procedure can take longer than a more
-balanced graph, like a Holm procedure, because it takes more steps to
-reject all possible hypotheses.</p>
-<p><img src="img/power-benchmarks-plot.png"></p>
-</div>
+<!-- ################################################################################ -->
+<!-- The closure of a graph is the set of all sub-graphs, along with their weights calculated according to algorithm 1 of Bretz et al (2011). It is primarily used for [closed testing](link%20to%20closed%20test%20vignette), where all sub-graphs are tested for significance, and results are aggregated to determine which null hypotheses are significant globally. -->
+<!-- Throughout this article a common example will be used for demonstrations - the simple successive graph. It has two primary hypotheses, $H_1$ and $H_2$, which have the initial weight evenly split between them. The secondary hypotheses, $H_3$ and $H_4$, only have weight propagated to them if $H_1$ or $H_2$ is deleted, respectively. -->
+<!-- ```{r base-graph, fig.dim=c(6, 6)} -->
+<!-- ss_graph <- simple_successive_2() -->
+<!-- plot(ss_graph, layout = "grid") -->
+<!-- ``` -->
+<!-- ### Components of the closure -->
+<!-- In graphicalMCP, the closure is represented by a matrix, where each row represents a sub-graph (also called an intersection hypothesis), and each column corresponds to an individual hypothesis. This matrix can be created with `graph_generate_weights()`, and it has two parts: An indicator matrix showing which hypotheses are contained in each sub-graph (The so-called powerset of a set), and a weights matrix containing the induced weights of each sub-graph. -->
+<!-- ```{r closure-parts} -->
+<!-- weighting_strategy <- graph_generate_weights(ss_graph) -->
+<!-- matrix_intersections <- weighting_strategy[, seq_along(ss_graph$hypotheses)] -->
+<!-- data.frame(Intersection = seq_len(nrow(weighting_strategy))) |> -->
+<!--   cbind(weighting_strategy) |> -->
+<!--   data.frame() |> -->
+<!--   gt() |> -->
+<!--   tab_header("Closure of the simple successive graph") |> -->
+<!--   tab_spanner("Powerset", H1:H4) |> -->
+<!--   tab_spanner("Weights", H1.1:H4.1) |> -->
+<!--   tab_style( -->
+<!--     cell_text(align = "center", style = "italic"), -->
+<!--     cells_body(Intersection) -->
+<!--   ) |> -->
+<!--   cols_label( -->
+<!--     H1.1 = "H1", -->
+<!--     H2.1 = "H2", -->
+<!--     H3.1 = "H3", -->
+<!--     H4.1 = "H4" -->
+<!--   ) |> -->
+<!--   opt_row_striping() -->
+<!-- ``` -->
+<!-- ### Properties of the closure -->
+<!-- The rows of the closure are generated in a particular way in order to give them some useful properties. -->
+<!-- #### Repeating recursive blocks -->
+<!-- First, notice how each row can be obtained from some row higher up in the matrix by flipping a single 1 to be a 0. For example, go from row 1 to row 3 by flipping $H_3$, or go from row 10 to row 14 by flipping $H_2$. The upper row in a pairing like this can be thought of as the "parent" sub-graph, and the lower row as the "child" sub-graph. Flipping a 0 to be a 1 and moving up the matrix will be called "finding a sub-graph's parent." Now consider the parent-finding strategy where the left-most 0 in each row is flipped. This reveals a pattern between the bottom half and top half, where each row's parent in the bottom half is the corresponding row in the top half, eight rows up. -->
+<!-- ```{r big-pattern} -->
+<!-- data.frame(Intersection = seq_len(nrow(weighting_strategy))) |> -->
+<!--   cbind(matrix_intersections) |> -->
+<!--   data.frame() |> -->
+<!--   gt() |> -->
+<!--   tab_header("The boxes contain identical matrices") |> -->
+<!--   tab_style( -->
+<!--     cell_text(align = "center", style = "italic"), -->
+<!--     cells_body(Intersection) -->
+<!--   ) |> -->
+<!--   tab_style( -->
+<!--     cell_borders("left", "#a069c4", weight = px(2)), -->
+<!--     cells_body(H2, c(1:7, 9:15)) -->
+<!--   ) |> -->
+<!--   tab_style( -->
+<!--     cell_borders("top", "#a069c4", weight = px(2)), -->
+<!--     cells_body(H2:H4, c(1, 9)) -->
+<!--   ) |> -->
+<!--   tab_style( -->
+<!--     cell_borders("right", "#a069c4", weight = px(2)), -->
+<!--     cells_body(H4, c(1:7, 9:15)) -->
+<!--   ) |> -->
+<!--   tab_style( -->
+<!--     cell_borders("bottom", "#a069c4", weight = px(2)), -->
+<!--     cells_body(H2:H4, c(7, 15)) -->
+<!--   ) -->
+<!-- ``` -->
+<!-- The pattern then repeats within each box recursively, with the top half of each box matching the bottom half, if the first missing hypothesis is flipped from 0 to 1. -->
+<!-- ```{r small-pattern} -->
+<!-- data.frame(Intersection = seq_len(nrow(weighting_strategy))) |> -->
+<!--   cbind(matrix_intersections) |> -->
+<!--   data.frame() |> -->
+<!--   gt() |> -->
+<!--   tab_header("The boxes contain identical matrices") |> -->
+<!--   tab_style( -->
+<!--     cell_text(align = "center", style = "italic"), -->
+<!--     cells_body(Intersection) -->
+<!--   ) |> -->
+<!--   tab_style( -->
+<!--     cell_borders("left", "#a069c4", weight = px(2)), -->
+<!--     cells_body(H2, c(1:7, 9:15)) -->
+<!--   ) |> -->
+<!--   tab_style( -->
+<!--     cell_borders("top", "#a069c4", weight = px(2)), -->
+<!--     cells_body(H2:H4, c(1, 9)) -->
+<!--   ) |> -->
+<!--   tab_style( -->
+<!--     cell_borders("right", "#a069c4", weight = px(2)), -->
+<!--     cells_body(H4, c(1:7, 9:15)) -->
+<!--   ) |> -->
+<!--   tab_style( -->
+<!--     cell_borders("bottom", "#a069c4", weight = px(2)), -->
+<!--     cells_body(H2:H4, c(7, 15)) -->
+<!--   ) |> -->
+<!--   tab_style( -->
+<!--     cell_borders("left", "black", weight = px(2)), -->
+<!--     cells_body(H3, c(1:3, 5:7, 9:11, 13:15)) -->
+<!--   ) |> -->
+<!--   tab_style( -->
+<!--     cell_borders("top", "black", weight = px(2)), -->
+<!--     cells_body(H3:H4, c(1, 5, 9, 13)) -->
+<!--   ) |> -->
+<!--   tab_style( -->
+<!--     cell_borders("right", "black", weight = px(2)), -->
+<!--     cells_body(H4, c(1:3, 5:7, 9:11, 13:15)) -->
+<!--   ) |> -->
+<!--   tab_style( -->
+<!--     cell_borders("bottom", "black", weight = px(2)), -->
+<!--     cells_body(H3:H4, c(3, 7, 11, 15)) -->
+<!--   ) -->
+<!-- ``` -->
+<!-- #### Binary counting {#binary-counting} -->
+<!-- The second useful property is somewhat a re-framing of the first, or perhaps could be viewed as a reason why the first is true. Starting with the bottom row, the powerset in this particular order counts up from 1 in binary, incrementing by 1 per row. This means that a row number can be directly calculated from a vector showing which hypotheses are currently deleted from the graph: `row_number == number_of_rows - incl_excl_vec_converted_to_base_10 + 1`. For example, intersection number 6 has hypothesis vector `1010`. When interpreted as binary, this is `1 * 8 + 0 * 4 + 1 * 2 + 0 * 1 = 10` in base 10, and `6 == 15 - 10 + 1`. -->
+<!-- ```{r closure-repeat} -->
+<!-- data.frame(Intersection = seq_len(nrow(weighting_strategy))) |> -->
+<!--   cbind(matrix_intersections) |> -->
+<!--   data.frame() |> -->
+<!--   gt() |> -->
+<!--   tab_header("Binary counting") |> -->
+<!--   tab_style( -->
+<!--     cell_text(align = "center", style = "italic"), -->
+<!--     cells_body(Intersection) -->
+<!--   ) |> -->
+<!--   tab_style(cell_borders("left", "#a069c4"), cells_body(1, 6)) |> -->
+<!--   tab_style(cell_borders("top", "#a069c4"), cells_body(1:5, 6)) |> -->
+<!--   tab_style(cell_borders("right", "#a069c4"), cells_body(5, 6)) |> -->
+<!--   tab_style(cell_borders("bottom", "#a069c4"), cells_body(1:5, 6)) |> -->
+<!--   opt_row_striping() -->
+<!-- ``` -->
+<!-- ## Strategies -->
+<!-- Because the size of the closure grows quickly as graph size increases (An n-graph has `2^n - 1` sub-graphs), calculating the full closure for large graphs can be computationally intensive. Optimizing this process led to three main strategies: -->
+<!-- -   The simplest approach, which uses the full graph as the starting point for every sub-graph, then deletes the appropriate hypotheses -->
+<!-- -   A recursive method, which traverses the closure tree, deleting one hypothesis each time to step between graphs -->
+<!-- -   A formulaic shortcut using the order of graphs generated with the recursive method -->
+<!-- Note that the discussion of these methods focuses primarily on the weights side rather than the powerset side of the closure. This is because the fastest methods discovered generate the powerset implicitly from missing values in the weights side. For methods such as the simple approach, which rely on having the powerset in order to generate weights, the powerset can be created efficiently. Here `num_hyps` refers to the number of hypotheses in the initial graph. -->
+<!-- ```{r powerset, eval=FALSE, echo=TRUE} -->
+<!-- powerset <- as.matrix(rev(expand.grid(rep(list(1:0), num_hyps))[-2^num_hyps, ])) -->
+<!-- ``` -->
+<!-- ### Simple approach -->
+<!-- The simplest approach to generate the weights of the closure is to apply `graph_update()` to the initial graph once for each sub-graph. This is short and sweet to write, but it's inefficient because each hypothesis gets deleted from the graph multiple times. Here is the code for the simple method. -->
+<!-- ```{r ggw-simple, echo=TRUE} -->
+<!-- ggw_simple <- function(graph) { -->
+<!--   num_hyps <- length(graph$hypotheses) -->
+<!--   matrix_intersections <- -->
+<!--     as.matrix(rev(expand.grid(rep(list(1:0), num_hyps))[-2^num_hyps, ])) -->
+<!--   colnames(matrix_intersections) <- names(graph$hypotheses) -->
+<!--   matrix_weights <- apply( -->
+<!--     matrix_intersections, -->
+<!--     1, -->
+<!--     function(h) graph_update(graph, !h)$updated_graph$hypotheses, -->
+<!--     simplify = FALSE -->
+<!--   ) -->
+<!--   cbind(matrix_intersections, do.call(rbind, matrix_weights)) -->
+<!-- } -->
+<!-- ``` -->
+<!-- ### Recursive -->
+<!-- The recursive method treats the space of sub-graphs as a tree, with the initial graph at the root, and other sub-graphs decreasing in size going down the branches. The essence of the recursive step is to delete a hypothesis in the current graph. But doing this for every hypothesis in every sub-graph in the tree would result in taking multiple paths to many of the graphs. So a key part of the recursive step is that it has memory - Each graph in the tree will only delete the hypotheses that come after the hypothesis that was just deleted to reach the current graph. The base case also needs memory - It is reached when a graph has only one hypothesis left, or when the last-deleted hypothesis number is larger than all current hypotheses. This memory in the recursion enables the tree traversal to reach each unique graph state exactly once. Here is an implementation of the recursion, followed by a wrapper for processing the sub-graph list into the standard matrix form. -->
+<!-- ```{r recursion, echo=TRUE} -->
+<!-- delete_nodes_recursive <- function(graph, last = 0) { -->
+<!--   init_hypotheses <- hypotheses <- graph$hypotheses -->
+<!--   init_transitions <- transitions <- graph$transitions -->
+<!--   ### base case -->
+<!--   int_hyp <- as.integer(names(hypotheses)) -->
+<!--   is_single_node <- length(hypotheses) == 1 -->
+<!--   last_is_bigger <- last > max(int_hyp) -->
+<!--   if (is_single_node || last_is_bigger) { -->
+<!--     return(list(graph)) -->
+<!--   } -->
+<!--   ### recursive step -->
+<!--   children <- list() -->
+<!--   for (orig_hyp_num in int_hyp[int_hyp > last]) { -->
+<!--     del_index <- match(orig_hyp_num, int_hyp) -->
+<!--     hyp_nums <- seq_along(hypotheses)[seq_along(hypotheses) != del_index] -->
+<!--     for (hyp_num in hyp_nums) { -->
+<!--       hypotheses[[hyp_num]] <- -->
+<!--         init_hypotheses[[hyp_num]] + -->
+<!--         init_hypotheses[[del_index]] * init_transitions[[del_index, hyp_num]] -->
+<!--       denominator <- 1 - init_transitions[[hyp_num, del_index]] * -->
+<!--         init_transitions[[del_index, hyp_num]] -->
+<!--       for (end_num in hyp_nums) { -->
+<!--         if (hyp_num == end_num || denominator <= 0) { -->
+<!--           transitions[[hyp_num, end_num]] <- 0 -->
+<!--         } else { -->
+<!--           transitions[[hyp_num, end_num]] <- ( -->
+<!--             init_transitions[[hyp_num, end_num]] + -->
+<!--               init_transitions[[hyp_num, del_index]] * -->
+<!--                 init_transitions[[del_index, end_num]] -->
+<!--           ) / denominator -->
+<!--         } -->
+<!--       } -->
+<!--     } -->
+<!--     smaller_graph <- structure( -->
+<!--       list( -->
+<!--         hypotheses = hypotheses[-del_index], -->
+<!--         transitions = as.matrix(transitions[-del_index, -del_index]) -->
+<!--       ), -->
+<!--       class = "initial_graph" -->
+<!--     ) -->
+<!--     children[[del_index]] <- delete_nodes_recursive( -->
+<!--       smaller_graph, -->
+<!--       orig_hyp_num -->
+<!--     ) -->
+<!--   } -->
+<!--   c( -->
+<!--     unlist(children, recursive = FALSE), -->
+<!--     list(graph) -->
+<!--   ) -->
+<!-- } -->
+<!-- ``` -->
+<!-- ```{r ggw-recursive, echo=TRUE} -->
+<!-- ggw_recursive <- function(graph) { -->
+<!--   # The recursion requires the hypotheses to be named sequentially as actual -->
+<!--   # numbers for the memory property to work -->
+<!--   hyp_names <- names(graph$hypotheses) -->
+<!--   names(graph$hypotheses) <- seq_along(graph$hypotheses) -->
+<!--   colnames(graph$transitions) <- names(graph$hypotheses) -->
+<!--   rownames(graph$transitions) <- names(graph$hypotheses) -->
+<!--   # Recursively generate a list of all sub-graphs -->
+<!--   list_subgraphs <- delete_nodes_recursive(graph) -->
+<!--   # Process the list of graphs into the normal matrix form -->
+<!--   matrix_weights <- structure( -->
+<!--     do.call( -->
+<!--       rbind, -->
+<!--       lapply( -->
+<!--         list_subgraphs, -->
+<!--         function(graph) graph$hypotheses[as.character(seq_along(hyp_names))] -->
+<!--       ) -->
+<!--     ), -->
+<!--     dimnames = list(1:(2^length(hyp_names) - 1), hyp_names) -->
+<!--   ) -->
+<!--   matrix_intersections <- !is.na(matrix_weights) -->
+<!--   matrix_weights[is.na(matrix_weights)] <- 0 -->
+<!--   cbind(matrix_intersections, matrix_weights) -->
+<!-- } -->
+<!-- ``` -->
+<!-- ### Formula shortcut -->
+<!-- Finally, the fastest method found so far - the formula shortcut. While recursion can save a lot of time over the first method, it still has a bit of overhead to get from the list of sub-graphs to the matrix form that is standard. This is where the "repeating block" property of the closure mentioned earlier is useful. Instead of using recursion to connect parent sub-graphs to their children, a pair of formulas can be used. One formula generates the parent of each graph that is obtained by flipping the left-most 0 to be a 1: `do.call(c, lapply(2^(seq_len(num_hyps) - 1), seq_len))`. Note that this is for rows 2 through the (non-existent) row 16, which is the empty graph. Row 1 has no parent graph. The left-most 0 in a child graph is easy to find, but from the parent graph's perspective, this formula calculates which hypothesis to delete: `rep(rev(seq_len(num_hyps)), 2^(seq_len(num_hyps) - 1))`. This also applies to rows 2 through 16. -->
+<!-- ```{r parent-child-delete} -->
+<!-- num_hyps <- length(ss_graph$hypotheses) -->
+<!-- parents <- do.call(c, lapply(2^(seq_len(num_hyps) - 1), seq_len)) -->
+<!-- parents <- c(NA, parents[-(2^num_hyps - 1)]) -->
+<!-- delete <- rep(rev(seq_len(num_hyps)), 2^(seq_len(num_hyps) - 1)) -->
+<!-- delete <- c(NA, delete[-(2^num_hyps - 1)]) -->
+<!-- parent_child_demo <- cbind( -->
+<!--   data.frame(Intersection = seq_len(2^num_hyps - 1)), -->
+<!--   weighting_strategy[, seq_len(num_hyps)], -->
+<!--   delete = delete, -->
+<!--   parents = parents -->
+<!-- ) -->
+<!-- gt(parent_child_demo) |> -->
+<!--   tab_header("Parent-child connections") |> -->
+<!--   tab_spanner("To reach a given row...", delete:parents) |> -->
+<!--   tab_style( -->
+<!--     cell_text(align = "center", style = "italic"), -->
+<!--     cells_body(Intersection) -->
+<!--   ) |> -->
+<!--   tab_style( -->
+<!--     cell_text(align = "center"), -->
+<!--     cells_body(c(delete, parents)) -->
+<!--   ) |> -->
+<!--   cols_label( -->
+<!--     delete = "Delete hypothesis no.", -->
+<!--     parents = "From intersection no." -->
+<!--   ) -->
+<!-- ``` -->
+<!-- The formula shortcut also results in simpler code than the recursive solution. -->
+<!-- ## Performance gains -->
+<!-- ### Generating the closure -->
+<!-- The formula method reduces each step of generating the closure to a single deletion from a prior graph, with almost no additional overhead. Here's how the different methods fare, including the version from the gMCP package for reference. Also worthy of note is the lrstat package, which contains a few MCP-related functions, including generating weights of the closure. It uses excellent C++ code to perform even faster, but since the speed of the current formula-based method is acceptable, adding an Rcpp dependency was not considered to be worth the additional time savings. -->
+<!-- ```{r gw-benchmarks, eval=FALSE} -->
+<!-- vec_num_hyps <- 2:8 * 2 -->
+<!-- if (file.exists(here::here("vignettes/cache/gw_benchmark_list.rds"))) { -->
+<!--   benchmarks <- read.csv(here::here("vignettes/cache/gw_benchmarks.csv")) -->
+<!-- } else { -->
+<!--   benchmark_list <- lapply( -->
+<!--     vec_num_hyps, -->
+<!--     function(num_hyps) { -->
+<!--       cat(num_hyps, "\n") -->
+<!--       # A graph for the Holm procedure -->
+<!--       transitions <- matrix(1 / (num_hyps - 1), num_hyps, num_hyps) -->
+<!--       diag(transitions) <- 0 -->
+<!--       graph <- graph_create(rep(1 / num_hyps, num_hyps), transitions) -->
+<!--       # lrstat sometimes errors, even when hypotheses seem to sum to 1. This -->
+<!--       # fixes some of those cases -->
+<!--       graph$hypotheses <- c( -->
+<!--         graph$hypotheses[seq_len(num_hyps - 1)], -->
+<!--         1 - sum(graph$hypotheses[seq_len(num_hyps - 1)]) -->
+<!--       ) -->
+<!--       benchmark <- mark( -->
+<!--         gMCP = generateWeights(graph$transitions, graph$hypotheses), -->
+<!--         `graphicalMCP simple` = ggw_simple(graph), -->
+<!--         `graphicalMCP recursive` = ggw_recursive(graph), -->
+<!--         `graphicalMCP shortcut` = graph_generate_weights(graph), -->
+<!--         # lrstat still errors with graphs occasionally for unknown reasons -->
+<!--         lrstat = if (!num_hyps %in% c(10, 14)) { -->
+<!--           fwgtmat(graph$hypotheses, graph$transitions) -->
+<!--         }, -->
+<!--         check = FALSE, -->
+<!--         memory = FALSE, -->
+<!--         time_unit = "ms", -->
+<!--         min_iterations = 5 -->
+<!--       )[, 1:5] -->
+<!--       # Remove rows for lrstat that weren't actually run -->
+<!--       benchmark <- benchmark[benchmark$median > .002, ] -->
+<!--       benchmark$char_expression <- as.character(benchmark$expression) -->
+<!--       benchmark <- benchmark[, c("char_expression", "median")] -->
+<!--       cbind(data.frame(num_hyps = num_hyps), benchmark) -->
+<!--     } -->
+<!--   ) -->
+<!--   benchmarks <- do.call(rbind, benchmark_list) -->
+<!--   benchmarks$char_expression <- ordered( -->
+<!--     benchmarks$char_expression, -->
+<!--     c( -->
+<!--       "gMCP", -->
+<!--       "graphicalMCP simple", -->
+<!--       "graphicalMCP recursive", -->
+<!--       "graphicalMCP shortcut", -->
+<!--       "lrstat" -->
+<!--     ) -->
+<!--   ) -->
+<!--   write.csv( -->
+<!--     benchmarks, -->
+<!--     here::here("vignettes/cache/gw_benchmarks.csv"), -->
+<!--     row.names = FALSE -->
+<!--   ) -->
+<!--   # saveRDS(benchmark_list, here::here("vignettes/cache/gw_benchmark_list.rds")) -->
+<!-- } -->
+<!-- ``` -->
+<!-- ```{r plot-gw-benchmarks, eval=FALSE, fig.dim=c(8, 5)} -->
+<!-- benchmarks_plot_standard <- -->
+<!--   ggplot(benchmarks, aes(num_hyps, median, color = char_expression)) + -->
+<!--   geom_point() + -->
+<!--   geom_line() + -->
+<!--   theme_minimal() + -->
+<!--   scale_y_continuous(labels = scales::label_comma(suffix = "ms")) + -->
+<!--   scale_color_discrete() + -->
+<!--   labs( -->
+<!--     title = "Generating the weights of the closure", -->
+<!--     subtitle = "Median runtime", -->
+<!--     x = "Number of hypotheses", -->
+<!--     y = NULL, -->
+<!--     color = "Package" -->
+<!--   ) -->
+<!-- benchmarks_plot_standard + -->
+<!--   scale_y_log10(labels = scales::label_comma(suffix = "ms")) + -->
+<!--   labs(subtitle = "Log-10 median runtime") -->
+<!-- ``` -->
+<!-- ![](img/gw-benchmarks-plot.png) -->
+<!-- ### Power simulations -->
+<!-- While the time savings on the closure are nice, on most graphs the savings will not make a big difference compared to the longer run-times on e.g. power simulations. However, paying attention to the closure is important for other reasons too, such as improving the power algorithm. -->
+<!-- #### Standard algorithm -->
+<!-- The typical method for running a Bonferroni shortcut procedure on a graph is to: -->
+<!-- 1.  Search a graph for a single hypothesis which can be rejected -->
+<!-- 2.  Delete the rejected hypothesis and update weights -->
+<!-- 3.  Repeat until there are no more significant hypotheses -->
+<!-- Running this process in either R or a low-level language like C is fast for a single procedure, but when it's run 100,000 times for a power simulation, the R version becomes onerous. However, there's a lot of duplication in a power simulation using this method. In many of the simulations, the same steps will be taken, which means re-calculating the same set of weights many times. -->
+<!-- #### Closure shortcut -->
+<!-- The [binary counting](#binary-counting) property of the closure admits a shortcut which can be implemented in R to get a scalable competitor to the typical algorithm: -->
+<!-- 1.  Generate the closure a single time to get all sub-graph weights efficiently -->
+<!-- 2.  For each simulation: 1. Search a graph for all hypotheses which can be rejected - This is fast with vectorization 1. Using the binary counting property, index into the row of the closure corresponding to all hypotheses rejected so far to get updated weights - This is substantially faster than updating a graph and re-calculating weights, especially for larger graphs 1. Repeat using the updated weights -->
+<!-- While this method is not as fast as gMCP's C implementation, it still runs substantial power simulations in a matter of seconds. The biggest drawback is how it can scale differently for different graph structures. For instance a fixed sequence procedure can take longer than a more balanced graph, like a Holm procedure, because it takes more steps to reject all possible hypotheses. -->
+<!-- ```{r power-benchmarks, eval=FALSE} -->
+<!-- vec_num_hyps <- 2:8 * 2 -->
+<!-- if (file.exists(here::here("vignettes/cache/power_benchmark_list.rds"))) { -->
+<!--   benchmarks <- read.csv(here::here("vignettes/cache/power_benchmarks.csv")) -->
+<!--   benchmarks$char_expression <- ordered( -->
+<!--     benchmarks$char_expression, -->
+<!--     c( -->
+<!--       "graphicalMCP fixed sequence (R)", -->
+<!--       "graphicalMCP Holm (R)", -->
+<!--       "gMCP (C)" -->
+<!--     ) -->
+<!--   ) -->
+<!-- } else { -->
+<!--   benchmark_list <- lapply( -->
+<!--     vec_num_hyps, -->
+<!--     function(num_hyps) { -->
+<!--       # A graph for the Holm procedure -->
+<!--       transitions <- matrix(1 / (num_hyps - 1), num_hyps, num_hyps) -->
+<!--       diag(transitions) <- 0 -->
+<!--       graph <- graph_create(rep(1 / num_hyps, num_hyps), transitions) -->
+<!--       corr <- diag(num_hyps) -->
+<!--       benchmark <- mark( -->
+<!--         `gMCP (C)` = calcPower(graph$hypotheses, .025, graph$transitions, -->
+<!--           n.sim = 2^16, corr.sim = corr -->
+<!--         ), -->
+<!--         `graphicalMCP Holm (R)` = -->
+<!--           graph_calculate_power(graph, .025, -->
+<!--             power_marginal = rep(.9, num_hyps), -->
+<!--             sim_n = 2^16 -->
+<!--           ), -->
+<!--         `graphicalMCP fixed sequence (R)` = -->
+<!--           graph_calculate_power(fixed_sequence(num_hyps), .025, -->
+<!--             power_marginal = rep(.9, num_hyps), -->
+<!--             sim_n = 2^16 -->
+<!--           ), -->
+<!--         check = FALSE, -->
+<!--         memory = FALSE, -->
+<!--         time_unit = "s", -->
+<!--         min_iterations = 5 -->
+<!--       )[, 1:5] -->
+<!--       # Remove rows for gMCP closure that weren't actually run -->
+<!--       benchmark <- benchmark[benchmark$median > .00001, ] -->
+<!--       benchmark$char_expression <- as.character(benchmark$expression) -->
+<!--       benchmark <- benchmark[, c("char_expression", "median")] -->
+<!--       cbind(data.frame(num_hyps = num_hyps), benchmark) -->
+<!--     } -->
+<!--   ) -->
+<!--   benchmarks <- do.call(rbind, benchmark_list) -->
+<!--   benchmarks$char_expression <- ordered( -->
+<!--     benchmarks$char_expression, -->
+<!--     c( -->
+<!--       "graphicalMCP fixed sequence (R)", -->
+<!--       "graphicalMCP Holm (R)", -->
+<!--       "gMCP (C)" -->
+<!--     ) -->
+<!--   ) -->
+<!--   write.csv( -->
+<!--     benchmarks, -->
+<!--     here::here("vignettes/cache/power_benchmarks.csv"), -->
+<!--     row.names = FALSE -->
+<!--   ) -->
+<!--   # saveRDS( -->
+<!--   #   benchmark_list, -->
+<!--   #   here::here("vignettes/cache/power_benchmark_list.rds") -->
+<!--   # ) -->
+<!-- } -->
+<!-- ``` -->
+<!-- ```{r plot-power-benchmarks, eval=FALSE, fig.dim=c(8, 5)} -->
+<!-- benchmarks_plot_standard <- -->
+<!--   ggplot(benchmarks, aes(num_hyps, median, color = char_expression)) + -->
+<!--   geom_point() + -->
+<!--   geom_line() + -->
+<!--   theme_minimal() + -->
+<!--   scale_y_continuous(labels = scales::label_comma(suffix = "s")) + -->
+<!--   scale_color_discrete() + -->
+<!--   labs( -->
+<!--     title = "Power simulations with shortcut testing", -->
+<!--     subtitle = "Median runtime for 65,536 simulations", -->
+<!--     x = "Number of hypotheses", -->
+<!--     y = NULL, -->
+<!--     color = "Package" -->
+<!--   ) -->
+<!-- benchmarks_plot_standard + -->
+<!--   scale_y_log10(labels = scales::label_comma(suffix = "s")) + -->
+<!--   labs(subtitle = "Log-10 median runtime") -->
+<!-- ``` -->
+<!-- ![](img/power-benchmarks-plot.png) -->
 </div>
 </div>
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
