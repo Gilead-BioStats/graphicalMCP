@@ -51,8 +51,11 @@
 <li class="nav-item dropdown">
   <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" id="dropdown-articles">Articles</a>
   <div class="dropdown-menu" aria-labelledby="dropdown-articles">
-    <a class="dropdown-item" href="../articles/graph-examples.html">Commonly-used graph examples</a>
+    <a class="dropdown-item" href="../articles/closed-testing.html">Graphical approaches based on the closure principle</a>
+    <a class="dropdown-item" href="../articles/generate-closure.html">Rationales to generate the closure and the weighting strategy of a graph</a>
+    <a class="dropdown-item" href="../articles/graph-examples.html">Common multiple comparison procedures illustrated using graphicalMCP</a>
     <a class="dropdown-item" href="../articles/shortuct-testing.html">Sequentially rejective graphical approaches based on Bonferroni tests</a>
+    <a class="dropdown-item" href="../articles/validation.html">validation</a>
   </div>
 </li>
       </ul>
@@ -88,1241 +91,404 @@
 
     
     
-<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://gt.rstudio.com/" class="external-link">gt</a></span><span class="op">)</span></span>
-<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="http://gsrmtp.r-forge.r-project.org/" class="external-link">gMCP</a></span><span class="op">)</span></span>
-<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://urban-sniffle-p11zlpj.pages.github.io/">graphicalMCP</a></span><span class="op">)</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Attaching package: 'graphicalMCP'</span></span>
-<span><span class="co">#&gt; The following object is masked from 'package:gMCP':</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;     fallback</span></span></code></pre></div>
+<div class="section level2">
+<h2 id="introduction">Introduction<a class="anchor" aria-label="anchor" href="#introduction"></a>
+</h2>
+<p>A multiple comparison procedure (MCP) is a statistical analysis
+method that allows for assessing the efficacy of multiple endpoints,
+some of which are dependent on each other, in a single clinical trial.
+Endpoints can be different doses, treatment of different conditions,
+combined superiority &amp; non-inferiority testing, or many others. A
+key feature is that MCPs strongly control the type-I error rate at level
+alpha.</p>
+<p>In <a href="https://onlinelibrary.wiley.com/doi/10.1002/bimj.201000239" class="external-link">Bretz
+et al (2011)</a>, a graphical method for MCPs is described, which
+separates the weighting of the clinical endpoints from the particular
+statistical test used to assess each endpoint. A graphical approach can
+also be helpful for communicating study design to clinical teams. This
+package is a low-dependency implementation of those methods.</p>
+</div>
 <div class="section level2">
 <h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
 </h2>
 <p>graphicalMCP is not on CRAN, so install it from GitHub with</p>
-<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># install.packages("pak")</span></span>
-<span><span class="fu">pak</span><span class="fu">::</span><span class="fu"><a href="http://pak.r-lib.org/reference/pak.html" class="external-link">pak</a></span><span class="op">(</span><span class="st">"Gilead-BioStats/graphicalMCP@dev"</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu">pak</span><span class="fu">::</span><span class="fu"><a href="https://pak.r-lib.org/reference/pak.html" class="external-link">pak</a></span><span class="op">(</span><span class="st">"Gilead-BioStats/graphicalMCP@dev"</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level2">
-<h2 id="testing-a-graph">Testing a graph<a class="anchor" aria-label="anchor" href="#testing-a-graph"></a>
+<h2 id="basic-usage">Basic usage<a class="anchor" aria-label="anchor" href="#basic-usage"></a>
 </h2>
-<p>Start testing with a simple successive graph with two primary and two
-secondary hypotheses.</p>
+<div class="section level3">
+<h3 id="initial-graph">Initial graph<a class="anchor" aria-label="anchor" href="#initial-graph"></a>
+</h3>
+<p>The base object in graphicalMCP is an <code>initial_graph</code>,
+which is a weighted, directed graph represented by a matrix of
+transition (edge) weights, and a vector of hypothesis (vertex)
+weights.</p>
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://urban-sniffle-p11zlpj.pages.github.io/">graphicalMCP</a></span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># A graphical multiple comparison procedure with two primary hypotheses (H1</span></span>
+<span><span class="co"># and H2) and two secondary hypotheses (H3 and H4)</span></span>
+<span><span class="co"># See Figure 1 in Bretz, F., Posch, M., Glimm, E., Klinglmueller, F., Maurer,</span></span>
+<span><span class="co"># W., &amp; Rohmeyer, K. (2011). Graphical approaches for multiple comparison</span></span>
+<span><span class="co"># procedures using weighted Bonferroni, Simes, or parametric tests. Biometrical</span></span>
+<span><span class="co"># Journal, 53(6), 894-913.</span></span>
+<span><span class="va">hypotheses</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.5</span>, <span class="fl">0.5</span>, <span class="fl">0</span>, <span class="fl">0</span><span class="op">)</span></span>
+<span><span class="va">transitions</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/cbind.html" class="external-link">rbind</a></span><span class="op">(</span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">0</span>, <span class="fl">1</span>, <span class="fl">0</span><span class="op">)</span>,</span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">0</span>, <span class="fl">0</span>, <span class="fl">1</span><span class="op">)</span>,</span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">1</span>, <span class="fl">0</span>, <span class="fl">0</span><span class="op">)</span>,</span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">0</span>, <span class="fl">0</span>, <span class="fl">0</span><span class="op">)</span></span>
+<span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">hyp_names</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"H1"</span>, <span class="st">"H2"</span>, <span class="st">"H3"</span>, <span class="st">"H4"</span><span class="op">)</span></span>
+<span><span class="va">example_graph</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/graph_create.html">graph_create</a></span><span class="op">(</span><span class="va">hypotheses</span>, <span class="va">transitions</span>, <span class="va">hyp_names</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">example_graph</span>, layout <span class="op">=</span> <span class="st">"grid"</span>, vertex.size <span class="op">=</span> <span class="fl">60</span><span class="op">)</span></span></code></pre></div>
+<p><img src="graphicalMCP_files/figure-html/create-graph-1.png" width="288" style="display: block; margin: auto;"></p>
+</div>
+<div class="section level3">
+<h3 id="update-graph">Update graph<a class="anchor" aria-label="anchor" href="#update-graph"></a>
+</h3>
+<p>Hypotheses can be deleted from the MCP using
+<code><a href="../reference/graph_update.html">graph_update()</a></code>. Updated weights and transitions are
+calculated according to the weighting strategy in Algorithm 1 of <a href="https://onlinelibrary.wiley.com/doi/10.1002/bimj.201000239" class="external-link">Bretz
+et al (2011)</a>. We distinguish <em>deleting</em> from
+<em>rejecting</em> in the <a href="#glossary-of-terms">glossary</a>.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">ss_graph</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/example-graphs.html">simple_successive_2</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"A1"</span>, <span class="st">"B1"</span>, <span class="st">"A2"</span>, <span class="st">"B2"</span><span class="op">)</span><span class="op">)</span></span>
-<span></span>
-<span><span class="va">p_values</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">.012</span>, <span class="fl">.005</span>, <span class="fl">.013</span>, <span class="fl">.0135</span><span class="op">)</span></span>
-<span></span>
-<span><span class="va">ss_graph</span></span>
-<span><span class="co">#&gt; Initial graph</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; --- Hypothesis weights ---</span></span>
-<span><span class="co">#&gt; A1: 0.5</span></span>
-<span><span class="co">#&gt; B1: 0.5</span></span>
-<span><span class="co">#&gt; A2: 0.0</span></span>
-<span><span class="co">#&gt; B2: 0.0</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; --- Transition weights ---</span></span>
-<span><span class="co">#&gt;      A1  B1  A2  B2</span></span>
-<span><span class="co">#&gt;  A1 0.0 0.5 0.5 0.0</span></span>
-<span><span class="co">#&gt;  B1 0.5 0.0 0.0 0.5</span></span>
-<span><span class="co">#&gt;  A2 0.0 1.0 0.0 0.0</span></span>
-<span><span class="co">#&gt;  B2 1.0 0.0 0.0 0.0</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/graph_update.html">graph_update</a></span><span class="op">(</span><span class="va">example_graph</span>, delete <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="cn">FALSE</span>, <span class="cn">TRUE</span>, <span class="cn">TRUE</span>, <span class="cn">FALSE</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+</div>
 <div class="section level3">
-<h3 id="bonferroni">Bonferroni<a class="anchor" aria-label="anchor" href="#bonferroni"></a>
+<h3 id="generate-weights">Generate weights<a class="anchor" aria-label="anchor" href="#generate-weights"></a>
 </h3>
-<p>This graph can be tested most simply with the default weighted
-Bonferroni test. When testing at the global alpha level 0.025, we can
-reject hypotheses A1 and B1, but not A2 or B2.</p>
+<p>The weights of all sub-graphs can be calculated with
+<code><a href="../reference/graph_generate_weights.html">graph_generate_weights()</a></code>. This uses more efficient code
+under the hood than <code><a href="../reference/graph_update.html">graph_update()</a></code> in order to be
+performant for larger graphs.</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/testing.html">graph_test_closure</a></span><span class="op">(</span><span class="va">ss_graph</span>, p <span class="op">=</span> <span class="va">p_values</span>, alpha <span class="op">=</span> <span class="fl">.025</span><span class="op">)</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Test parameters ($inputs) ------------------------------------------------------</span></span>
-<span><span class="co">#&gt;   Initial graph</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;   --- Hypothesis weights ---</span></span>
-<span><span class="co">#&gt;   A1: 0.5</span></span>
-<span><span class="co">#&gt;   B1: 0.5</span></span>
-<span><span class="co">#&gt;   A2: 0.0</span></span>
-<span><span class="co">#&gt;   B2: 0.0</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;   --- Transition weights ---</span></span>
-<span><span class="co">#&gt;       A1  B1  A2  B2</span></span>
-<span><span class="co">#&gt;   A1 0.0 0.5 0.5 0.0</span></span>
-<span><span class="co">#&gt;   B1 0.5 0.0 0.0 0.5</span></span>
-<span><span class="co">#&gt;   A2 0.0 1.0 0.0 0.0</span></span>
-<span><span class="co">#&gt;   B2 1.0 0.0 0.0 0.0</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;   Alpha = 0.025</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;                            A1     B1     A2     B2</span></span>
-<span><span class="co">#&gt;   Unadjusted p-values: 0.0120 0.0050 0.0130 0.0135</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;   Test types</span></span>
-<span><span class="co">#&gt;   bonferroni: (A1, B1, A2, B2)</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Test summary ($outputs) --------------------------------------------------------</span></span>
-<span><span class="co">#&gt;   Hypothesis Adj. P-value Reject</span></span>
-<span><span class="co">#&gt;           A1        0.016   TRUE</span></span>
-<span><span class="co">#&gt;           B1        0.010   TRUE</span></span>
-<span><span class="co">#&gt;           A2        0.026  FALSE</span></span>
-<span><span class="co">#&gt;           B2        0.026  FALSE</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;   Final updated graph after removing rejected hypotheses</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;   --- Hypothesis weights ---</span></span>
-<span><span class="co">#&gt;   A1:  NA</span></span>
-<span><span class="co">#&gt;   B1:  NA</span></span>
-<span><span class="co">#&gt;   A2: 0.5</span></span>
-<span><span class="co">#&gt;   B2: 0.5</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;   --- Transition weights ---</span></span>
-<span><span class="co">#&gt;      A1 B1 A2 B2</span></span>
-<span><span class="co">#&gt;   A1 NA NA NA NA</span></span>
-<span><span class="co">#&gt;   B1 NA NA NA NA</span></span>
-<span><span class="co">#&gt;   A2 NA NA  0  1</span></span>
-<span><span class="co">#&gt;   B2 NA NA  1  0</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/graph_generate_weights.html">graph_generate_weights</a></span><span class="op">(</span><span class="va">example_graph</span><span class="op">)</span></span></code></pre></div>
+<p>More information on the closure can be found in [Link to closure
+vignette].</p>
 </div>
 <div class="section level3">
-<h3 id="simes">Simes<a class="anchor" aria-label="anchor" href="#simes"></a>
+<h3 id="test-hypotheses">Test hypotheses<a class="anchor" aria-label="anchor" href="#test-hypotheses"></a>
 </h3>
-<p>[I don’t like this paragraph, but I’m not sure why]</p>
-<p>Simes testing relies on non-negative dependency between hypotheses to
-increase the weights of some hypotheses. The strength of the Simes test
-is most apparent when multiple p-values fall below the global alpha
-level, but above their local alpha in some intersection(s). In the
-following case, B1 &amp; B2 are rejected in the Bonferroni testing
-procedure for intersection <code>B1 ∩ B2</code> because the p-value is
-greater than <code>alpha * w</code> for each hypothesis in that case.
-However, the Simes test rejects <code>B1 ∩ B2</code> because the weight
-from B1 is added to the weight for B2.</p>
+<p>Bonferroni testing via the shortcut method is supported in
+graphicalMCP. Such a test can be performed with
+<code><a href="../reference/testing.html">graph_test_shortcut()</a></code>, which generates a report showing the
+graph &amp; test results. See more insight about why a hypothesis was
+rejected or not by setting the <code>verbose</code> and
+<code>test_values</code> flags. More details about shortcut testing can
+be found in <code>vignette("shortcut-testing")</code>.</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/testing.html">graph_test_closure</a></span><span class="op">(</span><span class="va">ss_graph</span>, p <span class="op">=</span> <span class="va">p_values</span>, alpha <span class="op">=</span> <span class="fl">.025</span>, test_types <span class="op">=</span> <span class="st">"s"</span><span class="op">)</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Test parameters ($inputs) ------------------------------------------------------</span></span>
-<span><span class="co">#&gt;   Initial graph</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;   --- Hypothesis weights ---</span></span>
-<span><span class="co">#&gt;   A1: 0.5</span></span>
-<span><span class="co">#&gt;   B1: 0.5</span></span>
-<span><span class="co">#&gt;   A2: 0.0</span></span>
-<span><span class="co">#&gt;   B2: 0.0</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;   --- Transition weights ---</span></span>
-<span><span class="co">#&gt;       A1  B1  A2  B2</span></span>
-<span><span class="co">#&gt;   A1 0.0 0.5 0.5 0.0</span></span>
-<span><span class="co">#&gt;   B1 0.5 0.0 0.0 0.5</span></span>
-<span><span class="co">#&gt;   A2 0.0 1.0 0.0 0.0</span></span>
-<span><span class="co">#&gt;   B2 1.0 0.0 0.0 0.0</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;   Alpha = 0.025</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;                            A1     B1     A2     B2</span></span>
-<span><span class="co">#&gt;   Unadjusted p-values: 0.0120 0.0050 0.0130 0.0135</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;   Test types</span></span>
-<span><span class="co">#&gt;   simes: (A1, B1, A2, B2)</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Test summary ($outputs) --------------------------------------------------------</span></span>
-<span><span class="co">#&gt;   Hypothesis Adj. P-value Reject</span></span>
-<span><span class="co">#&gt;           A1       0.0135   TRUE</span></span>
-<span><span class="co">#&gt;           B1       0.0100   TRUE</span></span>
-<span><span class="co">#&gt;           A2       0.0135   TRUE</span></span>
-<span><span class="co">#&gt;           B2       0.0135   TRUE</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;   Final updated graph after removing rejected hypotheses</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;   --- Hypothesis weights ---</span></span>
-<span><span class="co">#&gt;   A1: NA</span></span>
-<span><span class="co">#&gt;   B1: NA</span></span>
-<span><span class="co">#&gt;   A2: NA</span></span>
-<span><span class="co">#&gt;   B2: NA</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;   --- Transition weights ---</span></span>
-<span><span class="co">#&gt;      A1 B1 A2 B2</span></span>
-<span><span class="co">#&gt;   A1 NA NA NA NA</span></span>
-<span><span class="co">#&gt;   B1 NA NA NA NA</span></span>
-<span><span class="co">#&gt;   A2 NA NA NA NA</span></span>
-<span><span class="co">#&gt;   B2 NA NA NA NA</span></span></code></pre></div>
-</div>
-<div class="section level3">
-<h3 id="parametric">Parametric<a class="anchor" aria-label="anchor" href="#parametric"></a>
-</h3>
-<p>If a correlation matrix for the test statistics is partially or fully
-known, a parametric test can be used for any subsets whose correlation
-matrix is fully known. Here B1 &amp; B2 get a <code>c</code> value
-calculated that boosts their testing threshold slightly higher. This
-also demonstrates how to use different test types for different groups
-of hypotheses.</p>
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/testing.html">graph_test_shortcut</a></span><span class="op">(</span><span class="va">example_graph</span>, p <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">.01</span>, <span class="fl">.03</span>, <span class="fl">.02</span>, <span class="fl">.01</span><span class="op">)</span>, alpha <span class="op">=</span> <span class="fl">.025</span><span class="op">)</span></span></code></pre></div>
+<p>A graph can also be tested using Simes- or parametric-based testing
+using the closure test. Other types of tests will be added over time,
+and a combination of tests can be used for groups of hypotheses.
+Additional details about closure testing can be found in
+<code><a href="../articles/closed-testing.html">vignette("closed-testing")</a></code>.</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">corr1</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="cn">NA</span>, <span class="fu"><a href="https://rdrr.io/r/base/cbind.html" class="external-link">rbind</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">.5</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">.5</span>, <span class="fl">1</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
-<span></span>
-<span><span class="fu"><a href="../reference/testing.html">graph_test_closure</a></span><span class="op">(</span><span class="va">ss_graph</span>,</span>
-<span>  p <span class="op">=</span> <span class="va">p_values</span>,</span>
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/testing.html">graph_test_closure</a></span><span class="op">(</span></span>
+<span>  <span class="va">example_graph</span>,</span>
+<span>  p <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">.01</span>, <span class="fl">.03</span>, <span class="fl">.02</span>, <span class="fl">.01</span><span class="op">)</span>,</span>
 <span>  alpha <span class="op">=</span> <span class="fl">.025</span>,</span>
-<span>  groups <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">2</span>, <span class="fl">3</span><span class="op">:</span><span class="fl">4</span><span class="op">)</span>,</span>
-<span>  test_types <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"b"</span>, <span class="st">"p"</span><span class="op">)</span>,</span>
-<span>  corr <span class="op">=</span> <span class="va">corr1</span></span>
-<span><span class="op">)</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Test parameters ($inputs) ------------------------------------------------------</span></span>
-<span><span class="co">#&gt;   Initial graph</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;   --- Hypothesis weights ---</span></span>
-<span><span class="co">#&gt;   A1: 0.5</span></span>
-<span><span class="co">#&gt;   B1: 0.5</span></span>
-<span><span class="co">#&gt;   A2: 0.0</span></span>
-<span><span class="co">#&gt;   B2: 0.0</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;   --- Transition weights ---</span></span>
-<span><span class="co">#&gt;       A1  B1  A2  B2</span></span>
-<span><span class="co">#&gt;   A1 0.0 0.5 0.5 0.0</span></span>
-<span><span class="co">#&gt;   B1 0.5 0.0 0.0 0.5</span></span>
-<span><span class="co">#&gt;   A2 0.0 1.0 0.0 0.0</span></span>
-<span><span class="co">#&gt;   B2 1.0 0.0 0.0 0.0</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;   Alpha = 0.025</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;                            A1     B1     A2     B2</span></span>
-<span><span class="co">#&gt;   Unadjusted p-values: 0.0120 0.0050 0.0130 0.0135</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;   Correlation matrix:     A2  B2</span></span>
-<span><span class="co">#&gt;                       A2 1.0 0.5</span></span>
-<span><span class="co">#&gt;                       B2 0.5 1.0</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;   Test types</span></span>
-<span><span class="co">#&gt;   bonferroni: (A1, B1)</span></span>
-<span><span class="co">#&gt;   parametric: (A2, B2)</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Test summary ($outputs) --------------------------------------------------------</span></span>
-<span><span class="co">#&gt;   Hypothesis Adj. P-value Reject</span></span>
-<span><span class="co">#&gt;           A1      0.01600   TRUE</span></span>
-<span><span class="co">#&gt;           B1      0.01000   TRUE</span></span>
-<span><span class="co">#&gt;           A2      0.02414   TRUE</span></span>
-<span><span class="co">#&gt;           B2      0.02414   TRUE</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;   Final updated graph after removing rejected hypotheses</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;   --- Hypothesis weights ---</span></span>
-<span><span class="co">#&gt;   A1: NA</span></span>
-<span><span class="co">#&gt;   B1: NA</span></span>
-<span><span class="co">#&gt;   A2: NA</span></span>
-<span><span class="co">#&gt;   B2: NA</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;   --- Transition weights ---</span></span>
-<span><span class="co">#&gt;      A1 B1 A2 B2</span></span>
-<span><span class="co">#&gt;   A1 NA NA NA NA</span></span>
-<span><span class="co">#&gt;   B1 NA NA NA NA</span></span>
-<span><span class="co">#&gt;   A2 NA NA NA NA</span></span>
-<span><span class="co">#&gt;   B2 NA NA NA NA</span></span></code></pre></div>
+<span>  test_types <span class="op">=</span> <span class="st">"bonferroni"</span>,</span>
+<span>  test_groups <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">4</span><span class="op">)</span></span>
+<span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level3">
-<h3 id="adjusted-significance-vs-adjusted-p-values">Adjusted significance vs adjusted p-values<a class="anchor" aria-label="anchor" href="#adjusted-significance-vs-adjusted-p-values"></a>
+<h3 id="power-simulations">Power simulations<a class="anchor" aria-label="anchor" href="#power-simulations"></a>
 </h3>
-<p>There are two different testing methods - one which uses weights to
-adjust the significance level, and another which adjusts the p-values.
-The adjusted p-values method is sometimes more efficient, so it is the
-standard method. Additional details about the adjusted p-values
-calculation can be seen by setting <code>verbose = TRUE</code>.</p>
+<p>It’s not always obvious from a graph structure how easy or difficult
+it will be to reject each hypothesis. One way to understand this better
+is to run a power simulation, where many p-values are simulated, and a
+graph is tested against each.</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/testing.html">graph_test_closure</a></span><span class="op">(</span></span>
-<span>  <span class="va">ss_graph</span>,</span>
-<span>  p <span class="op">=</span> <span class="va">p_values</span>,</span>
-<span>  alpha <span class="op">=</span> <span class="fl">.025</span>,</span>
-<span>  corr <span class="op">=</span> <span class="va">corr1</span>,</span>
-<span>  groups <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">2</span>, <span class="fl">3</span><span class="op">:</span><span class="fl">4</span><span class="op">)</span>,</span>
-<span>  test_types <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"s"</span>, <span class="st">"p"</span><span class="op">)</span>,</span>
-<span>  verbose <span class="op">=</span> <span class="cn">TRUE</span></span>
-<span><span class="op">)</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Test parameters ($inputs) ------------------------------------------------------</span></span>
-<span><span class="co">#&gt;   Initial graph</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;   --- Hypothesis weights ---</span></span>
-<span><span class="co">#&gt;   A1: 0.5</span></span>
-<span><span class="co">#&gt;   B1: 0.5</span></span>
-<span><span class="co">#&gt;   A2: 0.0</span></span>
-<span><span class="co">#&gt;   B2: 0.0</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;   --- Transition weights ---</span></span>
-<span><span class="co">#&gt;       A1  B1  A2  B2</span></span>
-<span><span class="co">#&gt;   A1 0.0 0.5 0.5 0.0</span></span>
-<span><span class="co">#&gt;   B1 0.5 0.0 0.0 0.5</span></span>
-<span><span class="co">#&gt;   A2 0.0 1.0 0.0 0.0</span></span>
-<span><span class="co">#&gt;   B2 1.0 0.0 0.0 0.0</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;   Alpha = 0.025</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;                            A1     B1     A2     B2</span></span>
-<span><span class="co">#&gt;   Unadjusted p-values: 0.0120 0.0050 0.0130 0.0135</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;   Correlation matrix:     A2  B2</span></span>
-<span><span class="co">#&gt;                       A2 1.0 0.5</span></span>
-<span><span class="co">#&gt;                       B2 0.5 1.0</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;   Test types</span></span>
-<span><span class="co">#&gt;        simes: (A1, B1)</span></span>
-<span><span class="co">#&gt;   parametric: (A2, B2)</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Test summary ($outputs) --------------------------------------------------------</span></span>
-<span><span class="co">#&gt;   Hypothesis Adj. P-value Reject</span></span>
-<span><span class="co">#&gt;           A1      0.01600   TRUE</span></span>
-<span><span class="co">#&gt;           B1      0.01000   TRUE</span></span>
-<span><span class="co">#&gt;           A2      0.02414   TRUE</span></span>
-<span><span class="co">#&gt;           B2      0.02414   TRUE</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;   Final updated graph after removing rejected hypotheses</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;   --- Hypothesis weights ---</span></span>
-<span><span class="co">#&gt;   A1: NA</span></span>
-<span><span class="co">#&gt;   B1: NA</span></span>
-<span><span class="co">#&gt;   A2: NA</span></span>
-<span><span class="co">#&gt;   B2: NA</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;   --- Transition weights ---</span></span>
-<span><span class="co">#&gt;      A1 B1 A2 B2</span></span>
-<span><span class="co">#&gt;   A1 NA NA NA NA</span></span>
-<span><span class="co">#&gt;   B1 NA NA NA NA</span></span>
-<span><span class="co">#&gt;   A2 NA NA NA NA</span></span>
-<span><span class="co">#&gt;   B2 NA NA NA NA</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Adjusted p details ($details) --------------------------------------------------</span></span>
-<span><span class="co">#&gt;   Intersection       A1       B1       A2       B2 adj_p_grp1 adj_p_grp2</span></span>
-<span><span class="co">#&gt;              1 0.500000 0.500000 0.000000 0.000000   0.010000   1.000000</span></span>
-<span><span class="co">#&gt;              2 0.500000 0.500000 0.000000       NA   0.010000   1.000000</span></span>
-<span><span class="co">#&gt;              3 0.500000 0.500000       NA 0.000000   0.010000   1.000000</span></span>
-<span><span class="co">#&gt;              4 0.500000 0.500000       NA       NA   0.010000   1.000000</span></span>
-<span><span class="co">#&gt;              5 0.750000       NA 0.000000 0.250000   0.016000   0.054000</span></span>
-<span><span class="co">#&gt;              6 1.000000       NA 0.000000       NA   0.012000   1.000000</span></span>
-<span><span class="co">#&gt;              7 0.750000       NA       NA 0.250000   0.016000   0.054000</span></span>
-<span><span class="co">#&gt;              8 1.000000       NA       NA       NA   0.012000   1.000000</span></span>
-<span><span class="co">#&gt;              9       NA 0.750000 0.250000 0.000000   0.006667   0.052000</span></span>
-<span><span class="co">#&gt;             10       NA 0.750000 0.250000       NA   0.006667   0.052000</span></span>
-<span><span class="co">#&gt;   adj_p_inter reject_intersection</span></span>
-<span><span class="co">#&gt;      0.010000                TRUE</span></span>
-<span><span class="co">#&gt;      0.010000                TRUE</span></span>
-<span><span class="co">#&gt;      0.010000                TRUE</span></span>
-<span><span class="co">#&gt;      0.010000                TRUE</span></span>
-<span><span class="co">#&gt;      0.016000                TRUE</span></span>
-<span><span class="co">#&gt;      0.012000                TRUE</span></span>
-<span><span class="co">#&gt;      0.016000                TRUE</span></span>
-<span><span class="co">#&gt;      0.012000                TRUE</span></span>
-<span><span class="co">#&gt;      0.006667                TRUE</span></span>
-<span><span class="co">#&gt;      0.006667                TRUE</span></span>
-<span><span class="co">#&gt;   ... (Use `print(x, rows = &lt;nn&gt;)` for more)</span></span></code></pre></div>
-<p>The adjusted weights method tests every hypothesis in the closure,
-rather than summarizing adjusted p-values before testing. Setting
-<code>test_values = TRUE</code> displays the values used in each of
-these tests. This can provide more detailed information about what
-caused a hypothesis to fail than the adjusted p-values. However, it
-comes with some cost in computation time. Note that the
-<code>Intersection</code> columns in the adjusted p-value and adjusted
-weights sections serve as a persistent index between datasets.</p>
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/graph_calculate_power.html">graph_calculate_power</a></span><span class="op">(</span></span>
+<span>  <span class="va">example_graph</span>,</span>
+<span>  sim_n <span class="op">=</span> <span class="fl">1e5</span>,</span>
+<span>  power_marginal <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">.9</span>, <span class="fl">.9</span>, <span class="fl">.8</span>, <span class="fl">.8</span><span class="op">)</span></span>
+<span><span class="op">)</span></span></code></pre></div>
+<p>All valid test types &amp; hypothesis groupings are valid for power
+simulations as well. Power simulations are discussed further in both the
+<code>vignette("shortcut-testing")</code> and the
+<code><a href="../articles/closed-testing.html">vignette("closed-testing")</a></code>.</p>
+</div>
+</div>
+<div class="section level2">
+<h2 id="related-work">Related work<a class="anchor" aria-label="anchor" href="#related-work"></a>
+</h2>
+<p>These methods were originally implemented in the <a href="https://github.com/kornl/gMCP" class="external-link">gMCP package</a>, which is still
+available on CRAN today. There is also a lighter version of gMCP
+implemented in <a href="https://github.com/allenzhuaz/gMCPmini" class="external-link">gMCPmini</a> and its
+successor, <a href="https://github.com/Merck/gMCPLite" class="external-link">gMCPLite</a>.
+These two contain only a subset of the original functionality, but they
+remove the rJava dependency and add plotting functionality based on
+ggplot2.</p>
+<p>However, because development has ceased on the original package, we
+hope to re-implement the methods with a more general testing framework;
+with fewer dependencies, in particular shedding the Java dependency;
+with simpler, more transparent S3 classes; and with improvements to the
+accuracy of the parametric and Simes test methods.</p>
+<p>A portion of Simes testing is also implemented in the lrstat
+package.</p>
+</div>
+<div class="section level2">
+<h2 id="citation">Citation<a class="anchor" aria-label="anchor" href="#citation"></a>
+</h2>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/testing.html">graph_test_closure</a></span><span class="op">(</span></span>
-<span>  <span class="va">ss_graph</span>,</span>
-<span>  p <span class="op">=</span> <span class="va">p_values</span>,</span>
-<span>  alpha <span class="op">=</span> <span class="fl">.025</span>,</span>
-<span>  corr <span class="op">=</span> <span class="va">corr1</span>,</span>
-<span>  groups <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">2</span>, <span class="fl">3</span><span class="op">:</span><span class="fl">4</span><span class="op">)</span>,</span>
-<span>  test_types <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"s"</span>, <span class="st">"p"</span><span class="op">)</span>,</span>
-<span>  verbose <span class="op">=</span> <span class="cn">TRUE</span>,</span>
-<span>  test_values <span class="op">=</span> <span class="cn">TRUE</span></span>
-<span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/citation.html" class="external-link">citation</a></span><span class="op">(</span><span class="st">"graphicalMCP"</span><span class="op">)</span></span>
+<span><span class="co">#&gt; To cite graphicalMCP in publications use:</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Test parameters ($inputs) ------------------------------------------------------</span></span>
-<span><span class="co">#&gt;   Initial graph</span></span>
+<span><span class="co">#&gt;   Xi, D.; Brockmann, E. (2023). graphicalMCP: Graph-based multiple</span></span>
+<span><span class="co">#&gt;   comparison procedures. version 0.1.0. Gilead Sciences, Inc. Foster</span></span>
+<span><span class="co">#&gt;   City, California. https://github.com/Gilead-BioStats/graphicalMCP</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;   --- Hypothesis weights ---</span></span>
-<span><span class="co">#&gt;   A1: 0.5</span></span>
-<span><span class="co">#&gt;   B1: 0.5</span></span>
-<span><span class="co">#&gt;   A2: 0.0</span></span>
-<span><span class="co">#&gt;   B2: 0.0</span></span>
+<span><span class="co">#&gt;   Frank Bretz, Martin Posch, Ekkehard Glimm, Florian Klinglmueller,</span></span>
+<span><span class="co">#&gt;   Willi Maurer, Kornelius Rohmeyer (2011), Graphical approaches for</span></span>
+<span><span class="co">#&gt;   multiple comparison procedures using weighted Bonferroni, Simes or</span></span>
+<span><span class="co">#&gt;   parametric tests. Biometrical Journal 53 (6), pages 894--913, Wiley.</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;   --- Transition weights ---</span></span>
-<span><span class="co">#&gt;       A1  B1  A2  B2</span></span>
-<span><span class="co">#&gt;   A1 0.0 0.5 0.5 0.0</span></span>
-<span><span class="co">#&gt;   B1 0.5 0.0 0.0 0.5</span></span>
-<span><span class="co">#&gt;   A2 0.0 1.0 0.0 0.0</span></span>
-<span><span class="co">#&gt;   B2 1.0 0.0 0.0 0.0</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;   Alpha = 0.025</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;                            A1     B1     A2     B2</span></span>
-<span><span class="co">#&gt;   Unadjusted p-values: 0.0120 0.0050 0.0130 0.0135</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;   Correlation matrix:     A2  B2</span></span>
-<span><span class="co">#&gt;                       A2 1.0 0.5</span></span>
-<span><span class="co">#&gt;                       B2 0.5 1.0</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;   Test types</span></span>
-<span><span class="co">#&gt;        simes: (A1, B1)</span></span>
-<span><span class="co">#&gt;   parametric: (A2, B2)</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Test summary ($outputs) --------------------------------------------------------</span></span>
-<span><span class="co">#&gt;   Hypothesis Adj. P-value Reject</span></span>
-<span><span class="co">#&gt;           A1      0.01600   TRUE</span></span>
-<span><span class="co">#&gt;           B1      0.01000   TRUE</span></span>
-<span><span class="co">#&gt;           A2      0.02414   TRUE</span></span>
-<span><span class="co">#&gt;           B2      0.02414   TRUE</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;   Final updated graph after removing rejected hypotheses</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;   --- Hypothesis weights ---</span></span>
-<span><span class="co">#&gt;   A1: NA</span></span>
-<span><span class="co">#&gt;   B1: NA</span></span>
-<span><span class="co">#&gt;   A2: NA</span></span>
-<span><span class="co">#&gt;   B2: NA</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;   --- Transition weights ---</span></span>
-<span><span class="co">#&gt;      A1 B1 A2 B2</span></span>
-<span><span class="co">#&gt;   A1 NA NA NA NA</span></span>
-<span><span class="co">#&gt;   B1 NA NA NA NA</span></span>
-<span><span class="co">#&gt;   A2 NA NA NA NA</span></span>
-<span><span class="co">#&gt;   B2 NA NA NA NA</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Adjusted p details ($details) --------------------------------------------------</span></span>
-<span><span class="co">#&gt;   Intersection       A1       B1       A2       B2 adj_p_grp1 adj_p_grp2</span></span>
-<span><span class="co">#&gt;              1 0.500000 0.500000 0.000000 0.000000   0.010000   1.000000</span></span>
-<span><span class="co">#&gt;              2 0.500000 0.500000 0.000000       NA   0.010000   1.000000</span></span>
-<span><span class="co">#&gt;              3 0.500000 0.500000       NA 0.000000   0.010000   1.000000</span></span>
-<span><span class="co">#&gt;              4 0.500000 0.500000       NA       NA   0.010000   1.000000</span></span>
-<span><span class="co">#&gt;              5 0.750000       NA 0.000000 0.250000   0.016000   0.054000</span></span>
-<span><span class="co">#&gt;              6 1.000000       NA 0.000000       NA   0.012000   1.000000</span></span>
-<span><span class="co">#&gt;              7 0.750000       NA       NA 0.250000   0.016000   0.054000</span></span>
-<span><span class="co">#&gt;              8 1.000000       NA       NA       NA   0.012000   1.000000</span></span>
-<span><span class="co">#&gt;              9       NA 0.750000 0.250000 0.000000   0.006667   0.052000</span></span>
-<span><span class="co">#&gt;             10       NA 0.750000 0.250000       NA   0.006667   0.052000</span></span>
-<span><span class="co">#&gt;   adj_p_inter reject_intersection</span></span>
-<span><span class="co">#&gt;      0.010000                TRUE</span></span>
-<span><span class="co">#&gt;      0.010000                TRUE</span></span>
-<span><span class="co">#&gt;      0.010000                TRUE</span></span>
-<span><span class="co">#&gt;      0.010000                TRUE</span></span>
-<span><span class="co">#&gt;      0.016000                TRUE</span></span>
-<span><span class="co">#&gt;      0.012000                TRUE</span></span>
-<span><span class="co">#&gt;      0.016000                TRUE</span></span>
-<span><span class="co">#&gt;      0.012000                TRUE</span></span>
-<span><span class="co">#&gt;      0.006667                TRUE</span></span>
-<span><span class="co">#&gt;      0.006667                TRUE</span></span>
-<span><span class="co">#&gt;   ... (Use `print(x, rows = &lt;nn&gt;)` for more)</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Detailed test values ($test_values) --------------------------------------------</span></span>
-<span><span class="co">#&gt;   Intersection Hypothesis       Test      p &lt;= c_value * Weight * Alpha</span></span>
-<span><span class="co">#&gt;              1         A1      simes 0.0120 &lt;=             1.00 * 0.025</span></span>
-<span><span class="co">#&gt;              1         B1      simes 0.0050 &lt;=             0.50 * 0.025</span></span>
-<span><span class="co">#&gt;              1         A2 parametric 0.0130 &lt;=   1.000 *   0.00 * 0.025</span></span>
-<span><span class="co">#&gt;              1         B2 parametric 0.0135 &lt;=   1.000 *   0.00 * 0.025</span></span>
-<span><span class="co">#&gt;              2         A1      simes 0.0120 &lt;=             1.00 * 0.025</span></span>
-<span><span class="co">#&gt;              2         B1      simes 0.0050 &lt;=             0.50 * 0.025</span></span>
-<span><span class="co">#&gt;              2         A2 parametric 0.0130 &lt;=   1.000 *   0.00 * 0.025</span></span>
-<span><span class="co">#&gt;              3         A1      simes 0.0120 &lt;=             1.00 * 0.025</span></span>
-<span><span class="co">#&gt;              3         B1      simes 0.0050 &lt;=             0.50 * 0.025</span></span>
-<span><span class="co">#&gt;              3         B2 parametric 0.0135 &lt;=   1.000 *   0.00 * 0.025</span></span>
-<span><span class="co">#&gt;   Inequality_holds</span></span>
-<span><span class="co">#&gt;               TRUE</span></span>
-<span><span class="co">#&gt;               TRUE</span></span>
-<span><span class="co">#&gt;              FALSE</span></span>
-<span><span class="co">#&gt;              FALSE</span></span>
-<span><span class="co">#&gt;               TRUE</span></span>
-<span><span class="co">#&gt;               TRUE</span></span>
-<span><span class="co">#&gt;              FALSE</span></span>
-<span><span class="co">#&gt;               TRUE</span></span>
-<span><span class="co">#&gt;               TRUE</span></span>
-<span><span class="co">#&gt;              FALSE</span></span>
-<span><span class="co">#&gt;   ... (Use `print(x, rows = &lt;nn&gt;)` for more)</span></span></code></pre></div>
-</div>
-<div class="section level3">
-<h3 id="bonferroni-shortcut">Bonferroni shortcut<a class="anchor" aria-label="anchor" href="#bonferroni-shortcut"></a>
-</h3>
-<p>Exclusive Bonferroni testing admits a shortcut which allows us to not
-test the full closure of a graph. Use [graph_test_shortcut()] to call
-this shortcut method. In this case, <code>verbose = TRUE</code> adds the
-intermediate graphs after each deletion, and
-<code>test_values = TRUE</code> gives test details for the order in
-which hypotheses are deleted. Overall hypothesis rejection results can
-be found in the <code>Test summary</code> section.</p>
-<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/testing.html">graph_test_shortcut</a></span><span class="op">(</span></span>
-<span>  graph <span class="op">=</span> <span class="va">ss_graph</span>,</span>
-<span>  p <span class="op">=</span> <span class="va">p_values</span>,</span>
-<span>  alpha <span class="op">=</span> <span class="fl">.025</span>,</span>
-<span>  verbose <span class="op">=</span> <span class="cn">TRUE</span>,</span>
-<span>  test_values <span class="op">=</span> <span class="cn">TRUE</span></span>
-<span><span class="op">)</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Test parameters ($inputs) ------------------------------------------------------</span></span>
-<span><span class="co">#&gt;   Initial graph</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;   --- Hypothesis weights ---</span></span>
-<span><span class="co">#&gt;   A1: 0.5</span></span>
-<span><span class="co">#&gt;   B1: 0.5</span></span>
-<span><span class="co">#&gt;   A2: 0.0</span></span>
-<span><span class="co">#&gt;   B2: 0.0</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;   --- Transition weights ---</span></span>
-<span><span class="co">#&gt;       A1  B1  A2  B2</span></span>
-<span><span class="co">#&gt;   A1 0.0 0.5 0.5 0.0</span></span>
-<span><span class="co">#&gt;   B1 0.5 0.0 0.0 0.5</span></span>
-<span><span class="co">#&gt;   A2 0.0 1.0 0.0 0.0</span></span>
-<span><span class="co">#&gt;   B2 1.0 0.0 0.0 0.0</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;   Alpha = 0.025</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;                            A1     B1     A2     B2</span></span>
-<span><span class="co">#&gt;   Unadjusted p-values: 0.0120 0.0050 0.0130 0.0135</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;   Test types</span></span>
-<span><span class="co">#&gt;   bonferroni: (A1, B1, A2, B2)</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Test summary ($outputs) --------------------------------------------------------</span></span>
-<span><span class="co">#&gt;   Hypothesis Adj. P-value Reject</span></span>
-<span><span class="co">#&gt;           A1        0.016   TRUE</span></span>
-<span><span class="co">#&gt;           B1        0.010   TRUE</span></span>
-<span><span class="co">#&gt;           A2        0.026  FALSE</span></span>
-<span><span class="co">#&gt;           B2        0.026  FALSE</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;   Final updated graph after removing rejected hypotheses</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;   --- Hypothesis weights ---</span></span>
-<span><span class="co">#&gt;   A1:  NA</span></span>
-<span><span class="co">#&gt;   B1:  NA</span></span>
-<span><span class="co">#&gt;   A2: 0.5</span></span>
-<span><span class="co">#&gt;   B2: 0.5</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;   --- Transition weights ---</span></span>
-<span><span class="co">#&gt;      A1 B1 A2 B2</span></span>
-<span><span class="co">#&gt;   A1 NA NA NA NA</span></span>
-<span><span class="co">#&gt;   B1 NA NA NA NA</span></span>
-<span><span class="co">#&gt;   A2 NA NA  0  1</span></span>
-<span><span class="co">#&gt;   B2 NA NA  1  0</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Rejection sequence details ($details) ------------------------------------------</span></span>
-<span><span class="co">#&gt;   Initial graph</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;   --- Hypothesis weights ---</span></span>
-<span><span class="co">#&gt;   A1: 0.5</span></span>
-<span><span class="co">#&gt;   B1: 0.5</span></span>
-<span><span class="co">#&gt;   A2: 0.0</span></span>
-<span><span class="co">#&gt;   B2: 0.0</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;   --- Transition weights ---</span></span>
-<span><span class="co">#&gt;       A1  B1  A2  B2</span></span>
-<span><span class="co">#&gt;   A1 0.0 0.5 0.5 0.0</span></span>
-<span><span class="co">#&gt;   B1 0.5 0.0 0.0 0.5</span></span>
-<span><span class="co">#&gt;   A2 0.0 1.0 0.0 0.0</span></span>
-<span><span class="co">#&gt;   B2 1.0 0.0 0.0 0.0</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;     Step 1: Updated graph after removing hypothesis B1</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;     --- Hypothesis weights ---</span></span>
-<span><span class="co">#&gt;     A1: 0.75</span></span>
-<span><span class="co">#&gt;     B1:   NA</span></span>
-<span><span class="co">#&gt;     A2: 0.00</span></span>
-<span><span class="co">#&gt;     B2: 0.25</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;     --- Transition weights ---</span></span>
-<span><span class="co">#&gt;            A1     B1     A2     B2</span></span>
-<span><span class="co">#&gt;     A1 0.0000     NA 0.6667 0.3333</span></span>
-<span><span class="co">#&gt;     B1     NA     NA     NA     NA</span></span>
-<span><span class="co">#&gt;     A2 0.5000     NA 0.0000 0.5000</span></span>
-<span><span class="co">#&gt;     B2 1.0000     NA 0.0000 0.0000</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;       Step 2: Updated graph after removing hypotheses B1, A1</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;       --- Hypothesis weights ---</span></span>
-<span><span class="co">#&gt;       A1:  NA</span></span>
-<span><span class="co">#&gt;       B1:  NA</span></span>
-<span><span class="co">#&gt;       A2: 0.5</span></span>
-<span><span class="co">#&gt;       B2: 0.5</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;       --- Transition weights ---</span></span>
-<span><span class="co">#&gt;          A1 B1 A2 B2</span></span>
-<span><span class="co">#&gt;       A1 NA NA NA NA</span></span>
-<span><span class="co">#&gt;       B1 NA NA NA NA</span></span>
-<span><span class="co">#&gt;       A2 NA NA  0  1</span></span>
-<span><span class="co">#&gt;       B2 NA NA  1  0</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;   Final updated graph after removing rejected hypotheses</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;   --- Hypothesis weights ---</span></span>
-<span><span class="co">#&gt;   A1:  NA</span></span>
-<span><span class="co">#&gt;   B1:  NA</span></span>
-<span><span class="co">#&gt;   A2: 0.5</span></span>
-<span><span class="co">#&gt;   B2: 0.5</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;   --- Transition weights ---</span></span>
-<span><span class="co">#&gt;      A1 B1 A2 B2</span></span>
-<span><span class="co">#&gt;   A1 NA NA NA NA</span></span>
-<span><span class="co">#&gt;   B1 NA NA NA NA</span></span>
-<span><span class="co">#&gt;   A2 NA NA  0  1</span></span>
-<span><span class="co">#&gt;   B2 NA NA  1  0</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Detailed test values ($test_values) --------------------------------------------</span></span>
-<span><span class="co">#&gt;   Step Hypothesis      p &lt;= Weight * Alpha Inequality_holds</span></span>
-<span><span class="co">#&gt;      1         B1 0.0050 &lt;=   0.50 * 0.025             TRUE</span></span>
-<span><span class="co">#&gt;      2         A1 0.0120 &lt;=   0.75 * 0.025             TRUE</span></span>
-<span><span class="co">#&gt;      3         A2 0.0130 &lt;=   0.50 * 0.025            FALSE</span></span>
-<span><span class="co">#&gt;      3         B2 0.0135 &lt;=   0.50 * 0.025            FALSE</span></span></code></pre></div>
-</div>
+<span><span class="co">#&gt; To see these entries in BibTeX format, use 'print(&lt;citation&gt;,</span></span>
+<span><span class="co">#&gt; bibtex=TRUE)', 'toBibtex(.)', or set</span></span>
+<span><span class="co">#&gt; 'options(citation.bibtex.max=999)'.</span></span></code></pre></div>
 </div>
 <div class="section level2">
-<h2 id="test-print-options">Test print options<a class="anchor" aria-label="anchor" href="#test-print-options"></a>
+<h2 id="acknowledgments">Acknowledgments<a class="anchor" aria-label="anchor" href="#acknowledgments"></a>
 </h2>
-<p>The print generic for test results includes a couple of additional
-options. Each section within results is indented 2 spaces by default for
-readability, but this can be adjusted with <code>indent</code> (Note
-that some portions of the output can be indented by a minimum of 1 space
-- These pieces will ignore an indent of 0). Numeric values are rounded
-to 6 significant figures to control the amount of space used, but this
-can be set using the <code>precision</code> argument. Only the printing
-format is impacted, not the underlying values.</p>
-<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">mix_test</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/testing.html">graph_test_closure</a></span><span class="op">(</span></span>
-<span>  <span class="va">ss_graph</span>,</span>
-<span>  p <span class="op">=</span> <span class="va">p_values</span>,</span>
-<span>  alpha <span class="op">=</span> <span class="fl">.025</span>,</span>
-<span>  groups <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">4</span><span class="op">)</span>, <span class="fl">2</span><span class="op">:</span><span class="fl">3</span><span class="op">)</span>,</span>
-<span>  test_types <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"b"</span>, <span class="st">"s"</span><span class="op">)</span>,</span>
-<span>  verbose <span class="op">=</span> <span class="cn">TRUE</span>,</span>
-<span>  test_values <span class="op">=</span> <span class="cn">TRUE</span></span>
-<span><span class="op">)</span></span>
-<span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">mix_test</span><span class="op">)</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Test parameters ($inputs) ------------------------------------------------------</span></span>
-<span><span class="co">#&gt;   Initial graph</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;   --- Hypothesis weights ---</span></span>
-<span><span class="co">#&gt;   A1: 0.5</span></span>
-<span><span class="co">#&gt;   B1: 0.5</span></span>
-<span><span class="co">#&gt;   A2: 0.0</span></span>
-<span><span class="co">#&gt;   B2: 0.0</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;   --- Transition weights ---</span></span>
-<span><span class="co">#&gt;       A1  B1  A2  B2</span></span>
-<span><span class="co">#&gt;   A1 0.0 0.5 0.5 0.0</span></span>
-<span><span class="co">#&gt;   B1 0.5 0.0 0.0 0.5</span></span>
-<span><span class="co">#&gt;   A2 0.0 1.0 0.0 0.0</span></span>
-<span><span class="co">#&gt;   B2 1.0 0.0 0.0 0.0</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;   Alpha = 0.025</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;                            A1     B1     A2     B2</span></span>
-<span><span class="co">#&gt;   Unadjusted p-values: 0.0120 0.0050 0.0130 0.0135</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;   Test types</span></span>
-<span><span class="co">#&gt;   bonferroni: (A1, B2)</span></span>
-<span><span class="co">#&gt;        simes: (B1, A2)</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Test summary ($outputs) --------------------------------------------------------</span></span>
-<span><span class="co">#&gt;   Hypothesis Adj. P-value Reject</span></span>
-<span><span class="co">#&gt;           A1        0.016   TRUE</span></span>
-<span><span class="co">#&gt;           B1        0.010   TRUE</span></span>
-<span><span class="co">#&gt;           A2        0.026  FALSE</span></span>
-<span><span class="co">#&gt;           B2        0.026  FALSE</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;   Final updated graph after removing rejected hypotheses</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;   --- Hypothesis weights ---</span></span>
-<span><span class="co">#&gt;   A1:  NA</span></span>
-<span><span class="co">#&gt;   B1:  NA</span></span>
-<span><span class="co">#&gt;   A2: 0.5</span></span>
-<span><span class="co">#&gt;   B2: 0.5</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;   --- Transition weights ---</span></span>
-<span><span class="co">#&gt;      A1 B1 A2 B2</span></span>
-<span><span class="co">#&gt;   A1 NA NA NA NA</span></span>
-<span><span class="co">#&gt;   B1 NA NA NA NA</span></span>
-<span><span class="co">#&gt;   A2 NA NA  0  1</span></span>
-<span><span class="co">#&gt;   B2 NA NA  1  0</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Adjusted p details ($details) --------------------------------------------------</span></span>
-<span><span class="co">#&gt;   Intersection       A1       B1       A2       B2 adj_p_grp1 adj_p_grp2</span></span>
-<span><span class="co">#&gt;              1 0.500000 0.500000 0.000000 0.000000   0.024000   0.010000</span></span>
-<span><span class="co">#&gt;              2 0.500000 0.500000 0.000000       NA   0.024000   0.010000</span></span>
-<span><span class="co">#&gt;              3 0.500000 0.500000       NA 0.000000   0.024000   0.010000</span></span>
-<span><span class="co">#&gt;              4 0.500000 0.500000       NA       NA   0.024000   0.010000</span></span>
-<span><span class="co">#&gt;              5 0.750000       NA 0.000000 0.250000   0.016000   1.000000</span></span>
-<span><span class="co">#&gt;              6 1.000000       NA 0.000000       NA   0.012000   1.000000</span></span>
-<span><span class="co">#&gt;              7 0.750000       NA       NA 0.250000   0.016000   1.000000</span></span>
-<span><span class="co">#&gt;              8 1.000000       NA       NA       NA   0.012000   1.000000</span></span>
-<span><span class="co">#&gt;              9       NA 0.750000 0.250000 0.000000   1.000000   0.006667</span></span>
-<span><span class="co">#&gt;             10       NA 0.750000 0.250000       NA   1.000000   0.006667</span></span>
-<span><span class="co">#&gt;   adj_p_inter reject_intersection</span></span>
-<span><span class="co">#&gt;      0.010000                TRUE</span></span>
-<span><span class="co">#&gt;      0.010000                TRUE</span></span>
-<span><span class="co">#&gt;      0.010000                TRUE</span></span>
-<span><span class="co">#&gt;      0.010000                TRUE</span></span>
-<span><span class="co">#&gt;      0.016000                TRUE</span></span>
-<span><span class="co">#&gt;      0.012000                TRUE</span></span>
-<span><span class="co">#&gt;      0.016000                TRUE</span></span>
-<span><span class="co">#&gt;      0.012000                TRUE</span></span>
-<span><span class="co">#&gt;      0.006667                TRUE</span></span>
-<span><span class="co">#&gt;      0.006667                TRUE</span></span>
-<span><span class="co">#&gt;   ... (Use `print(x, rows = &lt;nn&gt;)` for more)</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Detailed test values ($test_values) --------------------------------------------</span></span>
-<span><span class="co">#&gt;   Intersection Hypothesis       Test      p &lt;= Weight * Alpha Inequality_holds</span></span>
-<span><span class="co">#&gt;              1         A1 bonferroni 0.0120 &lt;=   0.50 * 0.025             TRUE</span></span>
-<span><span class="co">#&gt;              1         B2 bonferroni 0.0135 &lt;=   0.00 * 0.025            FALSE</span></span>
-<span><span class="co">#&gt;              1         B1      simes 0.0050 &lt;=   0.50 * 0.025             TRUE</span></span>
-<span><span class="co">#&gt;              1         A2      simes 0.0130 &lt;=   0.50 * 0.025            FALSE</span></span>
-<span><span class="co">#&gt;              2         A1 bonferroni 0.0120 &lt;=   0.50 * 0.025             TRUE</span></span>
-<span><span class="co">#&gt;              2         B1      simes 0.0050 &lt;=   0.50 * 0.025             TRUE</span></span>
-<span><span class="co">#&gt;              2         A2      simes 0.0130 &lt;=   0.50 * 0.025            FALSE</span></span>
-<span><span class="co">#&gt;              3         A1 bonferroni 0.0120 &lt;=   0.50 * 0.025             TRUE</span></span>
-<span><span class="co">#&gt;              3         B2 bonferroni 0.0135 &lt;=   0.00 * 0.025            FALSE</span></span>
-<span><span class="co">#&gt;              3         B1      simes 0.0050 &lt;=   0.50 * 0.025             TRUE</span></span>
-<span><span class="co">#&gt;   ... (Use `print(x, rows = &lt;nn&gt;)` for more)</span></span>
-<span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">mix_test</span>, indent <span class="op">=</span> <span class="fl">6</span>, precision <span class="op">=</span> <span class="fl">10</span><span class="op">)</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Test parameters ($inputs) ------------------------------------------------------</span></span>
-<span><span class="co">#&gt;       Initial graph</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;       --- Hypothesis weights ---</span></span>
-<span><span class="co">#&gt;       A1: 0.5</span></span>
-<span><span class="co">#&gt;       B1: 0.5</span></span>
-<span><span class="co">#&gt;       A2: 0.0</span></span>
-<span><span class="co">#&gt;       B2: 0.0</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;       --- Transition weights ---</span></span>
-<span><span class="co">#&gt;           A1  B1  A2  B2</span></span>
-<span><span class="co">#&gt;       A1 0.0 0.5 0.5 0.0</span></span>
-<span><span class="co">#&gt;       B1 0.5 0.0 0.0 0.5</span></span>
-<span><span class="co">#&gt;       A2 0.0 1.0 0.0 0.0</span></span>
-<span><span class="co">#&gt;       B2 1.0 0.0 0.0 0.0</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;       Alpha = 0.025</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;                                A1     B1     A2     B2</span></span>
-<span><span class="co">#&gt;       Unadjusted p-values: 0.0120 0.0050 0.0130 0.0135</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;       Test types</span></span>
-<span><span class="co">#&gt;       bonferroni: (A1, B2)</span></span>
-<span><span class="co">#&gt;            simes: (B1, A2)</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Test summary ($outputs) --------------------------------------------------------</span></span>
-<span><span class="co">#&gt;       Hypothesis Adj. P-value Reject</span></span>
-<span><span class="co">#&gt;               A1        0.016   TRUE</span></span>
-<span><span class="co">#&gt;               B1        0.010   TRUE</span></span>
-<span><span class="co">#&gt;               A2        0.026  FALSE</span></span>
-<span><span class="co">#&gt;               B2        0.026  FALSE</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;       Final updated graph after removing rejected hypotheses</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;       --- Hypothesis weights ---</span></span>
-<span><span class="co">#&gt;       A1:  NA</span></span>
-<span><span class="co">#&gt;       B1:  NA</span></span>
-<span><span class="co">#&gt;       A2: 0.5</span></span>
-<span><span class="co">#&gt;       B2: 0.5</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;       --- Transition weights ---</span></span>
-<span><span class="co">#&gt;          A1 B1 A2 B2</span></span>
-<span><span class="co">#&gt;       A1 NA NA NA NA</span></span>
-<span><span class="co">#&gt;       B1 NA NA NA NA</span></span>
-<span><span class="co">#&gt;       A2 NA NA  0  1</span></span>
-<span><span class="co">#&gt;       B2 NA NA  1  0</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Adjusted p details ($details) --------------------------------------------------</span></span>
-<span><span class="co">#&gt;       Intersection           A1           B1           A2           B2   adj_p_grp1</span></span>
-<span><span class="co">#&gt;                  1 0.5000000000 0.5000000000 0.0000000000 0.0000000000 0.0240000000</span></span>
-<span><span class="co">#&gt;                  2 0.5000000000 0.5000000000 0.0000000000           NA 0.0240000000</span></span>
-<span><span class="co">#&gt;                  3 0.5000000000 0.5000000000           NA 0.0000000000 0.0240000000</span></span>
-<span><span class="co">#&gt;                  4 0.5000000000 0.5000000000           NA           NA 0.0240000000</span></span>
-<span><span class="co">#&gt;                  5 0.7500000000           NA 0.0000000000 0.2500000000 0.0160000000</span></span>
-<span><span class="co">#&gt;                  6 1.0000000000           NA 0.0000000000           NA 0.0120000000</span></span>
-<span><span class="co">#&gt;                  7 0.7500000000           NA           NA 0.2500000000 0.0160000000</span></span>
-<span><span class="co">#&gt;                  8 1.0000000000           NA           NA           NA 0.0120000000</span></span>
-<span><span class="co">#&gt;                  9           NA 0.7500000000 0.2500000000 0.0000000000 1.0000000000</span></span>
-<span><span class="co">#&gt;                 10           NA 0.7500000000 0.2500000000           NA 1.0000000000</span></span>
-<span><span class="co">#&gt;         adj_p_grp2  adj_p_inter reject_intersection</span></span>
-<span><span class="co">#&gt;       0.0100000000 0.0100000000                TRUE</span></span>
-<span><span class="co">#&gt;       0.0100000000 0.0100000000                TRUE</span></span>
-<span><span class="co">#&gt;       0.0100000000 0.0100000000                TRUE</span></span>
-<span><span class="co">#&gt;       0.0100000000 0.0100000000                TRUE</span></span>
-<span><span class="co">#&gt;       1.0000000000 0.0160000000                TRUE</span></span>
-<span><span class="co">#&gt;       1.0000000000 0.0120000000                TRUE</span></span>
-<span><span class="co">#&gt;       1.0000000000 0.0160000000                TRUE</span></span>
-<span><span class="co">#&gt;       1.0000000000 0.0120000000                TRUE</span></span>
-<span><span class="co">#&gt;       0.0066666667 0.0066666667                TRUE</span></span>
-<span><span class="co">#&gt;       0.0066666667 0.0066666667                TRUE</span></span>
-<span><span class="co">#&gt;       ... (Use `print(x, rows = &lt;nn&gt;)` for more)</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Detailed test values ($test_values) --------------------------------------------</span></span>
-<span><span class="co">#&gt;       Intersection Hypothesis       Test      p &lt;= Weight * Alpha Inequality_holds</span></span>
-<span><span class="co">#&gt;                  1         A1 bonferroni 0.0120 &lt;=   0.50 * 0.025             TRUE</span></span>
-<span><span class="co">#&gt;                  1         B2 bonferroni 0.0135 &lt;=   0.00 * 0.025            FALSE</span></span>
-<span><span class="co">#&gt;                  1         B1      simes 0.0050 &lt;=   0.50 * 0.025             TRUE</span></span>
-<span><span class="co">#&gt;                  1         A2      simes 0.0130 &lt;=   0.50 * 0.025            FALSE</span></span>
-<span><span class="co">#&gt;                  2         A1 bonferroni 0.0120 &lt;=   0.50 * 0.025             TRUE</span></span>
-<span><span class="co">#&gt;                  2         B1      simes 0.0050 &lt;=   0.50 * 0.025             TRUE</span></span>
-<span><span class="co">#&gt;                  2         A2      simes 0.0130 &lt;=   0.50 * 0.025            FALSE</span></span>
-<span><span class="co">#&gt;                  3         A1 bonferroni 0.0120 &lt;=   0.50 * 0.025             TRUE</span></span>
-<span><span class="co">#&gt;                  3         B2 bonferroni 0.0135 &lt;=   0.00 * 0.025            FALSE</span></span>
-<span><span class="co">#&gt;                  3         B1      simes 0.0050 &lt;=   0.50 * 0.025             TRUE</span></span>
-<span><span class="co">#&gt;       ... (Use `print(x, rows = &lt;nn&gt;)` for more)</span></span></code></pre></div>
+<p>We owe a debt of gratitude to the authors of gMCP for their
+pioneering work in the field, without which this package would not be
+nearly as extensive as it is.</p>
 </div>
 <div class="section level2">
-<h2 id="power-simulations">Power simulations<a class="anchor" aria-label="anchor" href="#power-simulations"></a>
+<h2 id="glossary-of-terms">Glossary of terms<a class="anchor" aria-label="anchor" href="#glossary-of-terms"></a>
 </h2>
-<p>It’s not always obvious from a given graph how easy or difficult it
-will be to reject each hypothesis. One way to understand this better is
-to run a power simulation. The essence of a power simulation is to
-generate many different p-values using some chosen distribution, then
-test the graph against each set of p-values to see how it performs.</p>
-<div class="section level3">
-<h3 id="bonferroni-shortcut-1">Bonferroni (Shortcut)<a class="anchor" aria-label="anchor" href="#bonferroni-shortcut-1"></a>
-</h3>
-<p>The default for power simulations, like for testing, is to test a
-graph at alpha level .025 with Bonferroni testing. The default number of
-simulations (100) will typically need to be increased for more
-meaningful results. In order to run as efficiently as possible,
-Bonferroni power calculations use a custom shortcut method that is
-highly optimized using vectorization and early exit.</p>
-<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/graph_calculate_power.html">graph_calculate_power</a></span><span class="op">(</span><span class="va">ss_graph</span>, sim_n <span class="op">=</span> <span class="fl">1e5</span><span class="op">)</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Test parameters ($inputs) ------------------------------------------------------</span></span>
-<span><span class="co">#&gt;   Initial graph</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;   --- Hypothesis weights ---</span></span>
-<span><span class="co">#&gt;   A1: 0.5</span></span>
-<span><span class="co">#&gt;   B1: 0.5</span></span>
-<span><span class="co">#&gt;   A2: 0.0</span></span>
-<span><span class="co">#&gt;   B2: 0.0</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;   --- Transition weights ---</span></span>
-<span><span class="co">#&gt;       A1  B1  A2  B2</span></span>
-<span><span class="co">#&gt;   A1 0.0 0.5 0.5 0.0</span></span>
-<span><span class="co">#&gt;   B1 0.5 0.0 0.0 0.5</span></span>
-<span><span class="co">#&gt;   A2 0.0 1.0 0.0 0.0</span></span>
-<span><span class="co">#&gt;   B2 1.0 0.0 0.0 0.0</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;   Alpha = 0.025</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;   Test types</span></span>
-<span><span class="co">#&gt;   bonferroni: (A1, B1, A2, B2)</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Simulation parameters ($inputs) ------------------------------------------------</span></span>
-<span><span class="co">#&gt;   Testing 100,000 simulations with multivariate normal params:</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;                      A1    B1    A2    B2</span></span>
-<span><span class="co">#&gt;   Marginal power: 0.025 0.025 0.025 0.025</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;   Correlation:    A1 B1 A2 B2</span></span>
-<span><span class="co">#&gt;                A1  1  0  0  0</span></span>
-<span><span class="co">#&gt;                B1  0  1  0  0</span></span>
-<span><span class="co">#&gt;                A2  0  0  1  0</span></span>
-<span><span class="co">#&gt;                B2  0  0  0  1</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Power calculation ($power) -----------------------------------------------------</span></span>
-<span><span class="co">#&gt;                                    A1      B1      A2      B2</span></span>
-<span><span class="co">#&gt;                  Local power: 0.01235 0.01305 0.00014 0.00010</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;   Expected no. of rejections: 0.02564</span></span>
-<span><span class="co">#&gt;    Power to reject 1 or more: 0.02506</span></span>
-<span><span class="co">#&gt;          Power to reject all: 0</span></span></code></pre></div>
-</div>
-<div class="section level3">
-<h3 id="other-tests-closure">Other tests (Closure)<a class="anchor" aria-label="anchor" href="#other-tests-closure"></a>
-</h3>
-<p>All valid testing strategies are available for power calculations as
-well - Simes, parametric, Bonferroni, or any combination of the three.
-Note that groups consisting of a single hypothesis will be silently
-converted to Bonferroni. Furthermore, a testing strategy comprised of
-only Bonferroni groups will be silently converted to shortcut testing
-for optimal performance.</p>
-<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">corr2</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">matrix</a></span><span class="op">(</span><span class="fl">.5</span>, nrow <span class="op">=</span> <span class="fl">4</span>, ncol <span class="op">=</span> <span class="fl">4</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/diag.html" class="external-link">diag</a></span><span class="op">(</span><span class="va">corr2</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fl">1</span></span>
-<span><span class="va">corr2</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">corr2</span><span class="op">)</span></span>
-<span></span>
-<span><span class="fu"><a href="../reference/graph_calculate_power.html">graph_calculate_power</a></span><span class="op">(</span></span>
-<span>  <span class="va">ss_graph</span>,</span>
-<span>  test_groups <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">4</span><span class="op">)</span>,</span>
-<span>  test_types <span class="op">=</span> <span class="st">"p"</span>,</span>
-<span>  test_corr <span class="op">=</span> <span class="va">corr2</span>,</span>
-<span>  sim_n <span class="op">=</span> <span class="fl">1e5</span></span>
-<span><span class="op">)</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Test parameters ($inputs) ------------------------------------------------------</span></span>
-<span><span class="co">#&gt;   Initial graph</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;   --- Hypothesis weights ---</span></span>
-<span><span class="co">#&gt;   A1: 0.5</span></span>
-<span><span class="co">#&gt;   B1: 0.5</span></span>
-<span><span class="co">#&gt;   A2: 0.0</span></span>
-<span><span class="co">#&gt;   B2: 0.0</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;   --- Transition weights ---</span></span>
-<span><span class="co">#&gt;       A1  B1  A2  B2</span></span>
-<span><span class="co">#&gt;   A1 0.0 0.5 0.5 0.0</span></span>
-<span><span class="co">#&gt;   B1 0.5 0.0 0.0 0.5</span></span>
-<span><span class="co">#&gt;   A2 0.0 1.0 0.0 0.0</span></span>
-<span><span class="co">#&gt;   B2 1.0 0.0 0.0 0.0</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;   Alpha = 0.025</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;   Parametric testing correlation:     A1  B1  A2  B2</span></span>
-<span><span class="co">#&gt;                                   A1 1.0 0.5 0.5 0.5</span></span>
-<span><span class="co">#&gt;                                   B1 0.5 1.0 0.5 0.5</span></span>
-<span><span class="co">#&gt;                                   A2 0.5 0.5 1.0 0.5</span></span>
-<span><span class="co">#&gt;                                   B2 0.5 0.5 0.5 1.0</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;   Test types</span></span>
-<span><span class="co">#&gt;   parametric: (A1, B1, A2, B2)</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Simulation parameters ($inputs) ------------------------------------------------</span></span>
-<span><span class="co">#&gt;   Testing 100,000 simulations with multivariate normal params:</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;                      A1    B1    A2    B2</span></span>
-<span><span class="co">#&gt;   Marginal power: 0.025 0.025 0.025 0.025</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;   Correlation:    A1 B1 A2 B2</span></span>
-<span><span class="co">#&gt;                A1  1  0  0  0</span></span>
-<span><span class="co">#&gt;                B1  0  1  0  0</span></span>
-<span><span class="co">#&gt;                A2  0  0  1  0</span></span>
-<span><span class="co">#&gt;                B2  0  0  0  1</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Power calculation ($power) -----------------------------------------------------</span></span>
-<span><span class="co">#&gt;                                    A1      B1      A2      B2</span></span>
-<span><span class="co">#&gt;                  Local power: 0.01414 0.01353 0.00007 0.00012</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;   Expected no. of rejections: 0.02786</span></span>
-<span><span class="co">#&gt;    Power to reject 1 or more: 0.02732</span></span>
-<span><span class="co">#&gt;          Power to reject all: 0</span></span></code></pre></div>
-</div>
-<div class="section level3">
-<h3 id="simulation-options">Simulation options<a class="anchor" aria-label="anchor" href="#simulation-options"></a>
-</h3>
-<p>In addition to the testing-related options, there are options which
-control how p-values are simulated from the multivariate normal
-distribution. These parameters control the (estimated) “true”
-distribution of the hypotheses.</p>
-<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">s_corr1</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/cbind.html" class="external-link">rbind</a></span><span class="op">(</span></span>
-<span>  <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">.5</span>, <span class="fl">.5</span>, <span class="fl">.25</span><span class="op">)</span>,</span>
-<span>  <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">.5</span>, <span class="fl">1</span>, <span class="fl">.25</span>, <span class="fl">.5</span><span class="op">)</span>,</span>
-<span>  <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">.5</span>, <span class="fl">.25</span>, <span class="fl">1</span>, <span class="fl">.5</span><span class="op">)</span>,</span>
-<span>  <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">.25</span>, <span class="fl">.5</span>, <span class="fl">.5</span>, <span class="fl">1</span><span class="op">)</span></span>
-<span><span class="op">)</span></span>
-<span></span>
-<span><span class="fu"><a href="../reference/graph_calculate_power.html">graph_calculate_power</a></span><span class="op">(</span></span>
-<span>  <span class="va">ss_graph</span>,</span>
-<span>  test_groups <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">4</span><span class="op">)</span>,</span>
-<span>  test_types <span class="op">=</span> <span class="st">"p"</span>,</span>
-<span>  test_corr <span class="op">=</span> <span class="va">corr2</span>,</span>
-<span>  marginal_power <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">.4</span>, <span class="fl">.4</span>, <span class="fl">.9</span>, <span class="fl">.9</span><span class="op">)</span>,</span>
-<span>  sim_corr <span class="op">=</span> <span class="va">s_corr1</span>,</span>
-<span>  sim_seed <span class="op">=</span> <span class="fl">52423</span>, <span class="co"># Set a seed if you need consistent p-values</span></span>
-<span>  sim_n <span class="op">=</span> <span class="fl">1e5</span></span>
-<span><span class="op">)</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Test parameters ($inputs) ------------------------------------------------------</span></span>
-<span><span class="co">#&gt;   Initial graph</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;   --- Hypothesis weights ---</span></span>
-<span><span class="co">#&gt;   A1: 0.5</span></span>
-<span><span class="co">#&gt;   B1: 0.5</span></span>
-<span><span class="co">#&gt;   A2: 0.0</span></span>
-<span><span class="co">#&gt;   B2: 0.0</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;   --- Transition weights ---</span></span>
-<span><span class="co">#&gt;       A1  B1  A2  B2</span></span>
-<span><span class="co">#&gt;   A1 0.0 0.5 0.5 0.0</span></span>
-<span><span class="co">#&gt;   B1 0.5 0.0 0.0 0.5</span></span>
-<span><span class="co">#&gt;   A2 0.0 1.0 0.0 0.0</span></span>
-<span><span class="co">#&gt;   B2 1.0 0.0 0.0 0.0</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;   Alpha = 0.025</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;   Parametric testing correlation:     A1  B1  A2  B2</span></span>
-<span><span class="co">#&gt;                                   A1 1.0 0.5 0.5 0.5</span></span>
-<span><span class="co">#&gt;                                   B1 0.5 1.0 0.5 0.5</span></span>
-<span><span class="co">#&gt;                                   A2 0.5 0.5 1.0 0.5</span></span>
-<span><span class="co">#&gt;                                   B2 0.5 0.5 0.5 1.0</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;   Test types</span></span>
-<span><span class="co">#&gt;   parametric: (A1, B1, A2, B2)</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Simulation parameters ($inputs) ------------------------------------------------</span></span>
-<span><span class="co">#&gt;   Testing 100,000 simulations - random seed 52423 &amp; multivariate normal params:</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;                    A1  B1  A2  B2</span></span>
-<span><span class="co">#&gt;   Marginal power: 0.4 0.4 0.9 0.9</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;   Correlation:      A1   B1   A2   B2</span></span>
-<span><span class="co">#&gt;                A1 1.00 0.50 0.50 0.25</span></span>
-<span><span class="co">#&gt;                B1 0.50 1.00 0.25 0.50</span></span>
-<span><span class="co">#&gt;                A2 0.50 0.25 1.00 0.50</span></span>
-<span><span class="co">#&gt;                B2 0.25 0.50 0.50 1.00</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Power calculation ($power) -----------------------------------------------------</span></span>
-<span><span class="co">#&gt;                                   A1     B1     A2     B2</span></span>
-<span><span class="co">#&gt;                  Local power: 0.3422 0.3431 0.3269 0.3282</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;   Expected no. of rejections: 1.34</span></span>
-<span><span class="co">#&gt;    Power to reject 1 or more: 0.4541</span></span>
-<span><span class="co">#&gt;          Power to reject all: 0.222</span></span></code></pre></div>
-</div>
-<div class="section level3">
-<h3 id="power-output">Power output<a class="anchor" aria-label="anchor" href="#power-output"></a>
-</h3>
-<p>The four standard power calculations are: - Local power - The rate
-each individual hypothesis is rejected in the power simulation -
-Expected no. of rejections - The average rejections per simulation -
-Power to reject 1 or more - Proportion of simulations that reject at
-least 1 hypothesis - Power to reject all - Proportion of simulations
-that reject every hypothesis</p>
-<p>In addition to these standard calculations, a user can define
-arbitrary “success” power calculations. For instance, in the simple
-successive example, perhaps the clinical trial will only be considered a
-success if both primary hypotheses are rejected.</p>
-<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/graph_calculate_power.html">graph_calculate_power</a></span><span class="op">(</span></span>
-<span>  <span class="va">ss_graph</span>,</span>
-<span>  test_groups <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">4</span><span class="op">)</span>,</span>
-<span>  test_types <span class="op">=</span> <span class="st">"p"</span>,</span>
-<span>  test_corr <span class="op">=</span> <span class="va">corr2</span>,</span>
-<span>  marginal_power <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">.4</span>, <span class="fl">.4</span>, <span class="fl">.9</span>, <span class="fl">.9</span><span class="op">)</span>,</span>
-<span>  sim_corr <span class="op">=</span> <span class="va">s_corr1</span>,</span>
-<span>  sim_seed <span class="op">=</span> <span class="fl">52423</span>,</span>
-<span>  sim_n <span class="op">=</span> <span class="fl">1e5</span>,</span>
-<span>  sim_success <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="va">x</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span> <span class="op">&amp;</span> <span class="va">x</span><span class="op">[</span><span class="fl">2</span><span class="op">]</span></span>
-<span><span class="op">)</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Test parameters ($inputs) ------------------------------------------------------</span></span>
-<span><span class="co">#&gt;   Initial graph</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;   --- Hypothesis weights ---</span></span>
-<span><span class="co">#&gt;   A1: 0.5</span></span>
-<span><span class="co">#&gt;   B1: 0.5</span></span>
-<span><span class="co">#&gt;   A2: 0.0</span></span>
-<span><span class="co">#&gt;   B2: 0.0</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;   --- Transition weights ---</span></span>
-<span><span class="co">#&gt;       A1  B1  A2  B2</span></span>
-<span><span class="co">#&gt;   A1 0.0 0.5 0.5 0.0</span></span>
-<span><span class="co">#&gt;   B1 0.5 0.0 0.0 0.5</span></span>
-<span><span class="co">#&gt;   A2 0.0 1.0 0.0 0.0</span></span>
-<span><span class="co">#&gt;   B2 1.0 0.0 0.0 0.0</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;   Alpha = 0.025</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;   Parametric testing correlation:     A1  B1  A2  B2</span></span>
-<span><span class="co">#&gt;                                   A1 1.0 0.5 0.5 0.5</span></span>
-<span><span class="co">#&gt;                                   B1 0.5 1.0 0.5 0.5</span></span>
-<span><span class="co">#&gt;                                   A2 0.5 0.5 1.0 0.5</span></span>
-<span><span class="co">#&gt;                                   B2 0.5 0.5 0.5 1.0</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;   Test types</span></span>
-<span><span class="co">#&gt;   parametric: (A1, B1, A2, B2)</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Simulation parameters ($inputs) ------------------------------------------------</span></span>
-<span><span class="co">#&gt;   Testing 100,000 simulations - random seed 52423 &amp; multivariate normal params:</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;                    A1  B1  A2  B2</span></span>
-<span><span class="co">#&gt;   Marginal power: 0.4 0.4 0.9 0.9</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;   Correlation:      A1   B1   A2   B2</span></span>
-<span><span class="co">#&gt;                A1 1.00 0.50 0.50 0.25</span></span>
-<span><span class="co">#&gt;                B1 0.50 1.00 0.25 0.50</span></span>
-<span><span class="co">#&gt;                A2 0.50 0.25 1.00 0.50</span></span>
-<span><span class="co">#&gt;                B2 0.25 0.50 0.50 1.00</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Power calculation ($power) -----------------------------------------------------</span></span>
-<span><span class="co">#&gt;                                   A1     B1     A2     B2</span></span>
-<span><span class="co">#&gt;                  Local power: 0.3422 0.3431 0.3269 0.3282</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;   Expected no. of rejections: 1.34</span></span>
-<span><span class="co">#&gt;    Power to reject 1 or more: 0.4541</span></span>
-<span><span class="co">#&gt;          Power to reject all: 0.222</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;              Power to reject:    x[1] &amp; x[2]</span></span>
-<span><span class="co">#&gt;                                       0.2311</span></span></code></pre></div>
-<p>Because success functions could be anything, this parameter has few
-limitations. It is up to the user to understand the meaning of their
-functions. Each user defined function is applied to each simulation’s
-test results, and the resulting vector is averaged.</p>
-<p>Here are a few more success function examples, some of which imitate
-the standard calculations. When using logical operators, make sure to
-use the vectorized operators (|, &amp;), rather than the single-value
-operators (||, &amp;&amp;). Hypotheses can be weighted as well.</p>
-<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/graph_calculate_power.html">graph_calculate_power</a></span><span class="op">(</span></span>
-<span>  <span class="va">ss_graph</span>,</span>
-<span>  test_groups <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">4</span><span class="op">)</span>,</span>
-<span>  test_types <span class="op">=</span> <span class="st">"p"</span>,</span>
-<span>  test_corr <span class="op">=</span> <span class="va">corr2</span>,</span>
-<span>  marginal_power <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">.4</span>, <span class="fl">.4</span>, <span class="fl">.9</span>, <span class="fl">.9</span><span class="op">)</span>,</span>
-<span>  sim_corr <span class="op">=</span> <span class="va">s_corr1</span>,</span>
-<span>  sim_seed <span class="op">=</span> <span class="fl">52423</span>, <span class="co"># Set a seed if you need consistent p-values</span></span>
-<span>  sim_n <span class="op">=</span> <span class="fl">1e5</span>,</span>
-<span>  sim_success <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
-<span>    A1 <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="va">x</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span>,</span>
-<span>    B1 <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="va">x</span><span class="op">[</span><span class="fl">2</span><span class="op">]</span>,</span>
-<span>    `Expected no. of rejections` <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="va">x</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span> <span class="op">+</span> <span class="va">x</span><span class="op">[</span><span class="fl">2</span><span class="op">]</span> <span class="op">+</span> <span class="va">x</span><span class="op">[</span><span class="fl">3</span><span class="op">]</span> <span class="op">+</span> <span class="va">x</span><span class="op">[</span><span class="fl">4</span><span class="op">]</span>,</span>
-<span>    `1 or more` <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="va">x</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span> <span class="op">|</span> <span class="va">x</span><span class="op">[</span><span class="fl">2</span><span class="op">]</span> <span class="op">|</span> <span class="va">x</span><span class="op">[</span><span class="fl">3</span><span class="op">]</span> <span class="op">|</span> <span class="va">x</span><span class="op">[</span><span class="fl">4</span><span class="op">]</span>,</span>
-<span>    `All` <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="va">x</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span> <span class="op">&amp;</span> <span class="va">x</span><span class="op">[</span><span class="fl">2</span><span class="op">]</span> <span class="op">&amp;</span> <span class="va">x</span><span class="op">[</span><span class="fl">3</span><span class="op">]</span> <span class="op">&amp;</span> <span class="va">x</span><span class="op">[</span><span class="fl">4</span><span class="op">]</span>,</span>
-<span>    `All 'A' or all 'B'` <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="op">(</span><span class="va">x</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span> <span class="op">&amp;</span> <span class="va">x</span><span class="op">[</span><span class="fl">3</span><span class="op">]</span><span class="op">)</span> <span class="op">|</span> <span class="op">(</span><span class="va">x</span><span class="op">[</span><span class="fl">2</span><span class="op">]</span> <span class="op">&amp;</span> <span class="va">x</span><span class="op">[</span><span class="fl">4</span><span class="op">]</span><span class="op">)</span>,</span>
-<span>    `Weighted` <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="fl">.75</span> <span class="op">*</span> <span class="op">(</span><span class="va">x</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span> <span class="op">&amp;</span> <span class="va">x</span><span class="op">[</span><span class="fl">3</span><span class="op">]</span><span class="op">)</span> <span class="op">+</span> <span class="fl">.25</span> <span class="op">*</span> <span class="op">(</span><span class="va">x</span><span class="op">[</span><span class="fl">2</span><span class="op">]</span> <span class="op">&amp;</span> <span class="va">x</span><span class="op">[</span><span class="fl">4</span><span class="op">]</span><span class="op">)</span></span>
-<span>  <span class="op">)</span></span>
-<span><span class="op">)</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Test parameters ($inputs) ------------------------------------------------------</span></span>
-<span><span class="co">#&gt;   Initial graph</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;   --- Hypothesis weights ---</span></span>
-<span><span class="co">#&gt;   A1: 0.5</span></span>
-<span><span class="co">#&gt;   B1: 0.5</span></span>
-<span><span class="co">#&gt;   A2: 0.0</span></span>
-<span><span class="co">#&gt;   B2: 0.0</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;   --- Transition weights ---</span></span>
-<span><span class="co">#&gt;       A1  B1  A2  B2</span></span>
-<span><span class="co">#&gt;   A1 0.0 0.5 0.5 0.0</span></span>
-<span><span class="co">#&gt;   B1 0.5 0.0 0.0 0.5</span></span>
-<span><span class="co">#&gt;   A2 0.0 1.0 0.0 0.0</span></span>
-<span><span class="co">#&gt;   B2 1.0 0.0 0.0 0.0</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;   Alpha = 0.025</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;   Parametric testing correlation:     A1  B1  A2  B2</span></span>
-<span><span class="co">#&gt;                                   A1 1.0 0.5 0.5 0.5</span></span>
-<span><span class="co">#&gt;                                   B1 0.5 1.0 0.5 0.5</span></span>
-<span><span class="co">#&gt;                                   A2 0.5 0.5 1.0 0.5</span></span>
-<span><span class="co">#&gt;                                   B2 0.5 0.5 0.5 1.0</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;   Test types</span></span>
-<span><span class="co">#&gt;   parametric: (A1, B1, A2, B2)</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Simulation parameters ($inputs) ------------------------------------------------</span></span>
-<span><span class="co">#&gt;   Testing 100,000 simulations - random seed 52423 &amp; multivariate normal params:</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;                    A1  B1  A2  B2</span></span>
-<span><span class="co">#&gt;   Marginal power: 0.4 0.4 0.9 0.9</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;   Correlation:      A1   B1   A2   B2</span></span>
-<span><span class="co">#&gt;                A1 1.00 0.50 0.50 0.25</span></span>
-<span><span class="co">#&gt;                B1 0.50 1.00 0.25 0.50</span></span>
-<span><span class="co">#&gt;                A2 0.50 0.25 1.00 0.50</span></span>
-<span><span class="co">#&gt;                B2 0.25 0.50 0.50 1.00</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Power calculation ($power) -----------------------------------------------------</span></span>
-<span><span class="co">#&gt;                                   A1     B1     A2     B2</span></span>
-<span><span class="co">#&gt;                  Local power: 0.3422 0.3431 0.3269 0.3282</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;   Expected no. of rejections: 1.34</span></span>
-<span><span class="co">#&gt;    Power to reject 1 or more: 0.4541</span></span>
-<span><span class="co">#&gt;          Power to reject all: 0.222</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;              Power to reject:      A1     B1   Expected no. of rejections</span></span>
-<span><span class="co">#&gt;                                0.3422 0.3431                       1.3403</span></span>
-<span><span class="co">#&gt;    1 or more    All   All 'A' or all 'B'   Weighted</span></span>
-<span><span class="co">#&gt;       0.4541 0.2220               0.4331     0.3272</span></span></code></pre></div>
-</div>
-<div class="section level3">
-<h3 id="verbose-simulation-details">Verbose simulation details<a class="anchor" aria-label="anchor" href="#verbose-simulation-details"></a>
-</h3>
-<p>Finally, power output has a <code>verbose</code> option, which opts
-in to include the full simulation and test results matrices.</p>
-<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/graph_calculate_power.html">graph_calculate_power</a></span><span class="op">(</span></span>
-<span>  <span class="va">ss_graph</span>,</span>
-<span>  test_groups <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">4</span><span class="op">)</span>,</span>
-<span>  test_types <span class="op">=</span> <span class="st">"p"</span>,</span>
-<span>  test_corr <span class="op">=</span> <span class="va">corr2</span>,</span>
-<span>  marginal_power <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">.4</span>, <span class="fl">.4</span>, <span class="fl">.9</span>, <span class="fl">.9</span><span class="op">)</span>,</span>
-<span>  sim_corr <span class="op">=</span> <span class="va">s_corr1</span>,</span>
-<span>  sim_seed <span class="op">=</span> <span class="fl">52423</span>, <span class="co"># Set a seed if you need consistent p-values</span></span>
-<span>  sim_n <span class="op">=</span> <span class="fl">1e5</span>,</span>
-<span>  sim_success <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
-<span>    A1 <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="va">x</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span>,</span>
-<span>    B1 <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="va">x</span><span class="op">[</span><span class="fl">2</span><span class="op">]</span>,</span>
-<span>    `Expected no. of rejections` <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="va">x</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span> <span class="op">+</span> <span class="va">x</span><span class="op">[</span><span class="fl">2</span><span class="op">]</span> <span class="op">+</span> <span class="va">x</span><span class="op">[</span><span class="fl">3</span><span class="op">]</span> <span class="op">+</span> <span class="va">x</span><span class="op">[</span><span class="fl">4</span><span class="op">]</span>,</span>
-<span>    `1 or more` <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="va">x</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span> <span class="op">|</span> <span class="va">x</span><span class="op">[</span><span class="fl">2</span><span class="op">]</span> <span class="op">|</span> <span class="va">x</span><span class="op">[</span><span class="fl">3</span><span class="op">]</span> <span class="op">|</span> <span class="va">x</span><span class="op">[</span><span class="fl">4</span><span class="op">]</span>,</span>
-<span>    `All` <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="va">x</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span> <span class="op">&amp;</span> <span class="va">x</span><span class="op">[</span><span class="fl">2</span><span class="op">]</span> <span class="op">&amp;</span> <span class="va">x</span><span class="op">[</span><span class="fl">3</span><span class="op">]</span> <span class="op">&amp;</span> <span class="va">x</span><span class="op">[</span><span class="fl">4</span><span class="op">]</span>,</span>
-<span>    `All 'A' or all 'B'` <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="op">(</span><span class="va">x</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span> <span class="op">&amp;</span> <span class="va">x</span><span class="op">[</span><span class="fl">3</span><span class="op">]</span><span class="op">)</span> <span class="op">|</span> <span class="op">(</span><span class="va">x</span><span class="op">[</span><span class="fl">2</span><span class="op">]</span> <span class="op">&amp;</span> <span class="va">x</span><span class="op">[</span><span class="fl">4</span><span class="op">]</span><span class="op">)</span>,</span>
-<span>    `Weighted` <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="fl">.75</span> <span class="op">*</span> <span class="op">(</span><span class="va">x</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span> <span class="op">&amp;</span> <span class="va">x</span><span class="op">[</span><span class="fl">3</span><span class="op">]</span><span class="op">)</span> <span class="op">+</span> <span class="fl">.25</span> <span class="op">*</span> <span class="op">(</span><span class="va">x</span><span class="op">[</span><span class="fl">2</span><span class="op">]</span> <span class="op">&amp;</span> <span class="va">x</span><span class="op">[</span><span class="fl">4</span><span class="op">]</span><span class="op">)</span></span>
-<span>  <span class="op">)</span>,</span>
-<span>  verbose <span class="op">=</span> <span class="cn">TRUE</span></span>
-<span><span class="op">)</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Test parameters ($inputs) ------------------------------------------------------</span></span>
-<span><span class="co">#&gt;   Initial graph</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;   --- Hypothesis weights ---</span></span>
-<span><span class="co">#&gt;   A1: 0.5</span></span>
-<span><span class="co">#&gt;   B1: 0.5</span></span>
-<span><span class="co">#&gt;   A2: 0.0</span></span>
-<span><span class="co">#&gt;   B2: 0.0</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;   --- Transition weights ---</span></span>
-<span><span class="co">#&gt;       A1  B1  A2  B2</span></span>
-<span><span class="co">#&gt;   A1 0.0 0.5 0.5 0.0</span></span>
-<span><span class="co">#&gt;   B1 0.5 0.0 0.0 0.5</span></span>
-<span><span class="co">#&gt;   A2 0.0 1.0 0.0 0.0</span></span>
-<span><span class="co">#&gt;   B2 1.0 0.0 0.0 0.0</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;   Alpha = 0.025</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;   Parametric testing correlation:     A1  B1  A2  B2</span></span>
-<span><span class="co">#&gt;                                   A1 1.0 0.5 0.5 0.5</span></span>
-<span><span class="co">#&gt;                                   B1 0.5 1.0 0.5 0.5</span></span>
-<span><span class="co">#&gt;                                   A2 0.5 0.5 1.0 0.5</span></span>
-<span><span class="co">#&gt;                                   B2 0.5 0.5 0.5 1.0</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;   Test types</span></span>
-<span><span class="co">#&gt;   parametric: (A1, B1, A2, B2)</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Simulation parameters ($inputs) ------------------------------------------------</span></span>
-<span><span class="co">#&gt;   Testing 100,000 simulations - random seed 52423 &amp; multivariate normal params:</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;                    A1  B1  A2  B2</span></span>
-<span><span class="co">#&gt;   Marginal power: 0.4 0.4 0.9 0.9</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;   Correlation:      A1   B1   A2   B2</span></span>
-<span><span class="co">#&gt;                A1 1.00 0.50 0.50 0.25</span></span>
-<span><span class="co">#&gt;                B1 0.50 1.00 0.25 0.50</span></span>
-<span><span class="co">#&gt;                A2 0.50 0.25 1.00 0.50</span></span>
-<span><span class="co">#&gt;                B2 0.25 0.50 0.50 1.00</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Power calculation ($power) -----------------------------------------------------</span></span>
-<span><span class="co">#&gt;                                   A1     B1     A2     B2</span></span>
-<span><span class="co">#&gt;                  Local power: 0.3422 0.3431 0.3269 0.3282</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;   Expected no. of rejections: 1.34</span></span>
-<span><span class="co">#&gt;    Power to reject 1 or more: 0.4541</span></span>
-<span><span class="co">#&gt;          Power to reject all: 0.222</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;              Power to reject:      A1     B1   Expected no. of rejections</span></span>
-<span><span class="co">#&gt;                                0.3422 0.3431                       1.3403</span></span>
-<span><span class="co">#&gt;    1 or more    All   All 'A' or all 'B'   Weighted</span></span>
-<span><span class="co">#&gt;       0.4541 0.2220               0.4331     0.3272</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Simulation details ($details) --------------------------------------------------</span></span>
-<span><span class="co">#&gt;     p_sim_A1  p_sim_B1  p_sim_A2  p_sim_B2 rej_A1 rej_B1 rej_A2 rej_B2</span></span>
-<span><span class="co">#&gt;    2.746e-01 3.836e-02 5.868e-05 4.275e-03  FALSE  FALSE  FALSE  FALSE</span></span>
-<span><span class="co">#&gt;    1.331e-02 3.501e-02 1.712e-02 2.017e-02   TRUE  FALSE  FALSE  FALSE</span></span>
-<span><span class="co">#&gt;    8.221e-02 2.626e-03 6.903e-06 1.652e-06  FALSE   TRUE  FALSE   TRUE</span></span>
-<span><span class="co">#&gt;    6.087e-02 2.157e-01 9.007e-05 9.386e-06  FALSE  FALSE  FALSE  FALSE</span></span>
-<span><span class="co">#&gt;    1.552e-01 1.026e-01 8.276e-03 4.360e-02  FALSE  FALSE  FALSE  FALSE</span></span>
-<span><span class="co">#&gt;    3.960e-01 1.613e-01 2.975e-02 6.355e-04  FALSE  FALSE  FALSE  FALSE</span></span>
-<span><span class="co">#&gt;    3.053e-02 2.147e-02 6.007e-04 6.425e-04  FALSE  FALSE  FALSE  FALSE</span></span>
-<span><span class="co">#&gt;    2.216e-03 1.650e-01 2.481e-04 7.847e-03   TRUE  FALSE   TRUE  FALSE</span></span>
-<span><span class="co">#&gt;    6.326e-01 4.070e-01 1.221e-02 5.699e-04  FALSE  FALSE  FALSE  FALSE</span></span>
-<span><span class="co">#&gt;    1.857e-01 2.079e-01 4.602e-03 9.197e-04  FALSE  FALSE  FALSE  FALSE</span></span>
-<span><span class="co">#&gt;   ... (Use `print(x, rows = &lt;nn&gt;)` for more)</span></span></code></pre></div>
-</div>
-</div>
-<div class="section level2">
-<h2 id="power-print-options">Power print options<a class="anchor" aria-label="anchor" href="#power-print-options"></a>
-</h2>
-<p>Like testing, the <code><a href="https://rdrr.io/r/base/print.html" class="external-link">print()</a></code> method for power output uses
-the <code>indent</code> and <code>precision</code> arguments.</p>
+<p>This package seeks to be both accurate and performant, of course. But
+beyond that, much thought has been put into the readability of the code.
+Whether being read by a user validating our methods, a developer
+extending the package to new uses, or a contributor helping enhance the
+core functionality, we hope that the code contained here can serve as an
+educational document to grow people’s understanding of the graphical
+approach to multiple comparison procedures.</p>
+<p>To that end, there are several entities encountered in the world of
+graphical MCPs that we define here. Some of these are used only in the
+internal code of the package, but most are inputs or output in one or
+more exported functions. If you believe any definitions could be
+clarified or improved, please contact the package authors or submit an
+issue to the GitHub repository.</p>
+<table style="width:99%;" class="table">
+<colgroup>
+<col width="9%">
+<col width="59%">
+<col width="11%">
+<col width="9%">
+<col width="9%">
+</colgroup>
+<thead><tr class="header">
+<th>Entity</th>
+<th>Definition</th>
+<th>Aliases</th>
+<th>Variable(s)</th>
+<th>Related</th>
+</tr></thead>
+<tbody>
+<tr class="odd">
+<td><strong>Graph</strong></td>
+<td>A set of nodes and edges representing a clinical trial design</td>
+<td></td>
+<td><code>graph</code></td>
+<td>Hypotheses, Transitions</td>
+</tr>
+<tr class="even">
+<td></td>
+<td>
+<strong>Graphs</strong> are so central that two of their core
+qualities get their own common variable names: Hypothesis names, and
+number of hypotheses</td>
+<td></td>
+<td>
+<code>hyp_names</code>, <code>num_hyps</code>
+</td>
+<td></td>
+</tr>
+<tr class="odd">
+<td><strong>Hypotheses</strong></td>
+<td>The weighted nodes in a <strong>graph</strong>. Each node represents
+a null hypothesis corresponding to a treatment endpoint, and its weight
+the local significance level.</td>
+<td>weights, hypothesis weights</td>
+<td><code>hypotheses</code></td>
+<td>Weighting strategy, Transitions</td>
+</tr>
+<tr class="even">
+<td><strong>Transitions</strong></td>
+<td>The weighted edges in a <strong>graph</strong>. Each edge defines
+how to propagate local significance when a source node is deleted.</td>
+<td></td>
+<td><code>transitions</code></td>
+<td>Hypotheses</td>
+</tr>
+<tr class="odd">
+<td>
+<strong>Intersection</strong> <strong>hypothesis</strong>
+</td>
+<td>A subset of <strong>hypotheses</strong> from a
+<strong>graph</strong>. Plural often implies all such subsets.</td>
+<td>intersection, sub-graph(s), closure</td>
+<td><code>intersections</code></td>
+<td>Weighting strategy</td>
+</tr>
+<tr class="even">
+<td><strong>Weighting strategy</strong></td>
+<td>The set of all <strong>intersections</strong> and their
+<strong>weights</strong> according to Algorithm 1 in Bretz et al
+(2011)</td>
+<td>intersection weights, closure weights</td>
+<td><code>weighting_strategy</code></td>
+<td></td>
+</tr>
+<tr class="odd">
+<td><strong>Adjusted weights</strong></td>
+<td>
+<p>The set of <strong>weights</strong>, adjusted according to a
+testing algorithm:</p>
+<ul>
+<li>Bonferroni: No change</li>
+<li>Simes: Sum weights for hypotheses with smaller p-values</li>
+<li>Parametric: Multiply weights by c-value, based on the joint
+distribution</li>
+</ul>
+</td>
+<td></td>
+<td><code>adjusted_weights</code></td>
+<td></td>
+</tr>
+<tr class="even">
+<td><strong>P-values</strong></td>
+<td>The set of p-values from a real or simulated clinical trial</td>
+<td></td>
+<td><code>p</code></td>
+<td>Adjusted &amp; ordered p-values</td>
+</tr>
+<tr class="odd">
+<td><strong>Ordered p-values</strong></td>
+<td>
+<strong>P-values</strong> sorted from smallest to largest</td>
+<td></td>
+<td><code>ordered_p</code></td>
+<td>(Adjusted) P-values</td>
+</tr>
+<tr class="even">
+<td><strong>Adjusted p-values</strong></td>
+<td>
+<strong>P-values</strong> that have been divided by <strong>adjusted
+weights</strong>, allowing direct comparison to <strong>alpha</strong>
+to determine significance</td>
+<td></td>
+<td><code>adjusted_p</code></td>
+<td>(Ordered) P-values</td>
+</tr>
+<tr class="odd">
+<td><strong>Significance level</strong></td>
+<td>The threshold chosen for results of a clinical trial to be
+considered significant</td>
+<td></td>
+<td><code>alpha</code></td>
+<td>P-values</td>
+</tr>
+<tr class="even">
+<td><strong>Test types</strong></td>
+<td>A specification of which testing algorithm to use - Bonferroni,
+Simes, and parametric are supported</td>
+<td>tests</td>
+<td><code>test_types</code></td>
+<td>Testing strategy</td>
+</tr>
+<tr class="odd">
+<td><strong>Test groups</strong></td>
+<td>A partition of nodes in a <strong>graph</strong> specifying which
+<strong>hypotheses</strong> should be tested together</td>
+<td>groups</td>
+<td>
+<code>groups</code>, <code>test_groups</code>
+</td>
+<td>Testing strategy</td>
+</tr>
+<tr class="even">
+<td><strong>Testing strategy</strong></td>
+<td>
+<strong>Test types</strong> and <strong>test groups</strong>
+combined</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="odd">
+<td><strong>Marginal power</strong></td>
+<td>
+<p>The power to reject each null <strong>hypothesis</strong> at full
+<strong>alpha</strong>. Closely related to the non-centrality parameter,
+which is the mean of each null <strong>hypothesis</strong> in the
+underlying multivariate normal distribution:</p>
+<p><code>ncp = qnorm(1 - alpha) - qnorm(1 - marginal_power)</code></p>
+</td>
+<td></td>
+<td><code>marginal_power</code></td>
+<td>Correlation matrix</td>
+</tr>
+<tr class="even">
+<td><strong>Correlation matrix</strong></td>
+<td>Specification of correlations between <strong>hypotheses</strong>.
+Together with <strong>marginal power</strong>, this specifies the (known
+or assumed) underlying multivariate normal distribution of the null
+<strong>hypotheses</strong>.</td>
+<td></td>
+<td>
+<code>corr</code>, <code>test_corr</code>,
+<code>sim_corr</code>
+</td>
+<td>Marginal power</td>
+</tr>
+<tr class="odd">
+<td><strong>Success</strong></td>
+<td>A specification of which null <strong>hypotheses</strong> must be
+rejected to consider a clinical trial a success</td>
+<td></td>
+<td><code>sim_success</code></td>
+<td></td>
+</tr>
+<tr class="even">
+<td><strong>Power</strong></td>
+<td>Under a given <strong>graph</strong>, <strong>testing
+strategy</strong>, <strong>significance level</strong>, and underlying
+distribution, the estimated likelihood that a particular combination of
+null hypotheses will be rejected</td>
+<td></td>
+<td><code>power_*</code></td>
+<td>Success</td>
+</tr>
+<tr class="odd">
+<td><em>Delete a <strong>hypothesis</strong></em></td>
+<td>Remove a <strong>hypothesis</strong> from a graph, and update the
+graph according to algorithm 1 of Bretz et al. (2011)</td>
+<td></td>
+<td>N/A</td>
+<td>Reject a hypothesis</td>
+</tr>
+<tr class="even">
+<td><em>Reject a <strong>hypothesis</strong></em></td>
+<td>Under a given <strong>graph</strong>, <strong>testing
+strategy</strong>, and <strong>significance level</strong>, find a
+hypothesis (clinical endpoint) to be statistically significant, such
+that the null hypothesis can be rejected</td>
+<td></td>
+<td></td>
+<td>Delete a hypothesis</td>
+</tr>
+</tbody>
+</table>
 </div>
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
     </nav></aside>

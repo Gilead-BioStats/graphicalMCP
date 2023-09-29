@@ -43,6 +43,9 @@
     <div id="navbar" class="collapse navbar-collapse ms-3">
       <ul class="navbar-nav me-auto">
 <li class="nav-item">
+  <a class="nav-link" href="../articles/graphicalMCP.html">Get started</a>
+</li>
+<li class="nav-item">
   <a class="nav-link" href="../reference/index.html">Reference</a>
 </li>
 <li class="active nav-item dropdown">
@@ -52,6 +55,7 @@
     <a class="dropdown-item" href="../articles/generate-closure.html">Rationales to generate the closure and the weighting strategy of a graph</a>
     <a class="dropdown-item" href="../articles/graph-examples.html">Common multiple comparison procedures illustrated using graphicalMCP</a>
     <a class="dropdown-item" href="../articles/shortuct-testing.html">Sequentially rejective graphical approaches based on Bonferroni tests</a>
+    <a class="dropdown-item" href="../articles/validation.html">validation</a>
   </div>
 </li>
       </ul>
@@ -91,12 +95,7 @@
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://gt.rstudio.com/" class="external-link">gt</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="http://gsrmtp.r-forge.r-project.org/" class="external-link">gMCP</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">lrstat</span><span class="op">)</span></span>
-<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://urban-sniffle-p11zlpj.pages.github.io/">graphicalMCP</a></span><span class="op">)</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Attaching package: 'graphicalMCP'</span></span>
-<span><span class="co">#&gt; The following object is masked from 'package:gMCP':</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;     fallback</span></span></code></pre></div>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://urban-sniffle-p11zlpj.pages.github.io/">graphicalMCP</a></span><span class="op">)</span></span></code></pre></div>
 <div class="section level2">
 <h2 id="multiple-comparison-problem">Multiple comparison problem<a class="anchor" aria-label="anchor" href="#multiple-comparison-problem"></a>
 </h2>
@@ -141,12 +140,12 @@ create the following graph.</p>
 <span></span>
 <span><span class="va">epsilon</span> <span class="op">&lt;-</span> <span class="fl">1e-5</span></span>
 <span><span class="va">transitions</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/cbind.html" class="external-link">rbind</a></span><span class="op">(</span></span>
-<span>  <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>,       <span class="fl">0.5</span>,     <span class="fl">0.25</span>,        <span class="fl">0</span>,    <span class="fl">0.25</span>, <span class="fl">0</span><span class="op">)</span>,</span>
-<span>  <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.5</span>,     <span class="fl">0</span>,       <span class="fl">0</span>,           <span class="fl">0.25</span>, <span class="fl">0</span>,    <span class="fl">0.25</span><span class="op">)</span>,</span>
-<span>  <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>,       <span class="fl">0</span>,       <span class="fl">0</span>,           <span class="fl">0</span>,    <span class="fl">1</span>,    <span class="fl">0</span><span class="op">)</span>,</span>
-<span>  <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">epsilon</span>, <span class="fl">0</span>,       <span class="fl">0</span>,           <span class="fl">0</span>,    <span class="fl">0</span>,    <span class="fl">1</span> <span class="op">-</span> <span class="va">epsilon</span><span class="op">)</span>,</span>
-<span>  <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>,       <span class="va">epsilon</span>, <span class="fl">1</span> <span class="op">-</span> <span class="va">epsilon</span>, <span class="fl">0</span>,    <span class="fl">0</span>,    <span class="fl">0</span><span class="op">)</span>,</span>
-<span>  <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>,       <span class="fl">0</span>,       <span class="fl">0</span>,           <span class="fl">1</span>,    <span class="fl">0</span>,    <span class="fl">0</span><span class="op">)</span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">0.5</span>, <span class="fl">0.25</span>, <span class="fl">0</span>, <span class="fl">0.25</span>, <span class="fl">0</span><span class="op">)</span>,</span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.5</span>, <span class="fl">0</span>, <span class="fl">0</span>, <span class="fl">0.25</span>, <span class="fl">0</span>, <span class="fl">0.25</span><span class="op">)</span>,</span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">0</span>, <span class="fl">0</span>, <span class="fl">0</span>, <span class="fl">1</span>, <span class="fl">0</span><span class="op">)</span>,</span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">epsilon</span>, <span class="fl">0</span>, <span class="fl">0</span>, <span class="fl">0</span>, <span class="fl">0</span>, <span class="fl">1</span> <span class="op">-</span> <span class="va">epsilon</span><span class="op">)</span>,</span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="va">epsilon</span>, <span class="fl">1</span> <span class="op">-</span> <span class="va">epsilon</span>, <span class="fl">0</span>, <span class="fl">0</span>, <span class="fl">0</span><span class="op">)</span>,</span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">0</span>, <span class="fl">0</span>, <span class="fl">1</span>, <span class="fl">0</span>, <span class="fl">0</span><span class="op">)</span></span>
 <span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">hyp_names</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"H1"</span>, <span class="st">"H2"</span>, <span class="st">"H3"</span>, <span class="st">"H4"</span>, <span class="st">"H5"</span>, <span class="st">"H6"</span><span class="op">)</span></span>
@@ -155,14 +154,20 @@ create the following graph.</p>
 <span><span class="va">plot_layout</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/cbind.html" class="external-link">rbind</a></span><span class="op">(</span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">.15</span>, <span class="fl">.5</span><span class="op">)</span>,</span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">.65</span>, <span class="fl">.5</span><span class="op">)</span>,</span>
-<span>  <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>  <span class="fl">0</span>,  <span class="fl">0</span><span class="op">)</span>,</span>
-<span>  <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span> <span class="fl">.5</span>,  <span class="fl">0</span><span class="op">)</span>,</span>
-<span>  <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span> <span class="fl">.3</span>,  <span class="fl">0</span><span class="op">)</span>,</span>
-<span>  <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span> <span class="fl">.8</span>,  <span class="fl">0</span><span class="op">)</span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">0</span><span class="op">)</span>,</span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">.5</span>, <span class="fl">0</span><span class="op">)</span>,</span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">.3</span>, <span class="fl">0</span><span class="op">)</span>,</span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">.8</span>, <span class="fl">0</span><span class="op">)</span></span>
 <span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">g</span>, layout <span class="op">=</span> <span class="va">plot_layout</span>, eps <span class="op">=</span> <span class="va">epsilon</span>, edge_curves <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>pairs <span class="op">=</span> <span class="fl">.5</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<p><img src="closed-testing_files/figure-html/create-graph-1.png" width="768"></p>
+<span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span></span>
+<span>  <span class="va">g</span>,</span>
+<span>  layout <span class="op">=</span> <span class="va">plot_layout</span>,</span>
+<span>  eps <span class="op">=</span> <span class="va">epsilon</span>,</span>
+<span>  edge_curves <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>pairs <span class="op">=</span> <span class="fl">.8</span><span class="op">)</span>,</span>
+<span>  vertex.size <span class="op">=</span> <span class="fl">35</span></span>
+<span><span class="op">)</span></span></code></pre></div>
+<p><img src="closed-testing_files/figure-html/create-graph-1.png" width="480" style="display: block; margin: auto;"></p>
 </div>
 <div class="section level2">
 <h2 id="perform-the-graphical-multiple-comparison-procedure-based-on-bonferroni-tests">Perform the graphical multiple comparison procedure based on
@@ -212,136 +217,14 @@ hypothesis.</p>
 <code class="sourceCode R"><span><span class="va">test_results_verbose</span> <span class="op">&lt;-</span></span>
 <span>  <span class="fu"><a href="../reference/testing.html">graph_test_closure</a></span><span class="op">(</span><span class="va">g</span>, p <span class="op">=</span> <span class="va">p_values</span>, alpha <span class="op">=</span> <span class="fl">0.025</span>, verbose <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">test_results_verbose</span><span class="op">$</span><span class="va">details</span><span class="op">)</span> <span class="co"># Print fewer rows, e.g., 5</span></span>
-<span><span class="co">#&gt; $results</span></span>
-<span><span class="co">#&gt;           H1        H2        H3        H4        H5        H6 adj_p_grp1</span></span>
-<span><span class="co">#&gt; 1  0.5000000 0.5000000 0.0000000 0.0000000 0.0000000 0.0000000 0.02600000</span></span>
-<span><span class="co">#&gt; 2  0.5000000 0.5000000 0.0000000 0.0000000 0.0000000        NA 0.02600000</span></span>
-<span><span class="co">#&gt; 3  0.5000000 0.5000000 0.0000000 0.0000000        NA 0.0000000 0.02600000</span></span>
-<span><span class="co">#&gt; 4  0.5000000 0.5000000 0.0000000 0.0000000        NA        NA 0.02600000</span></span>
-<span><span class="co">#&gt; 5  0.5000000 0.5000000 0.0000000        NA 0.0000000 0.0000000 0.02600000</span></span>
-<span><span class="co">#&gt; 6  0.5000000 0.5000000 0.0000000        NA 0.0000000        NA 0.02600000</span></span>
-<span><span class="co">#&gt; 7  0.5000000 0.5000000 0.0000000        NA        NA 0.0000000 0.02600000</span></span>
-<span><span class="co">#&gt; 8  0.5000000 0.5000000 0.0000000        NA        NA        NA 0.02600000</span></span>
-<span><span class="co">#&gt; 9  0.5000000 0.5000000        NA 0.0000000 0.0000000 0.0000000 0.02600000</span></span>
-<span><span class="co">#&gt; 10 0.5000000 0.5000000        NA 0.0000000 0.0000000        NA 0.02600000</span></span>
-<span><span class="co">#&gt; 11 0.5000000 0.5000000        NA 0.0000000        NA 0.0000000 0.02600000</span></span>
-<span><span class="co">#&gt; 12 0.5000000 0.5000000        NA 0.0000000        NA        NA 0.02600000</span></span>
-<span><span class="co">#&gt; 13 0.5000000 0.5000000        NA        NA 0.0000000 0.0000000 0.02600000</span></span>
-<span><span class="co">#&gt; 14 0.5000000 0.5000000        NA        NA 0.0000000        NA 0.02600000</span></span>
-<span><span class="co">#&gt; 15 0.5000000 0.5000000        NA        NA        NA 0.0000000 0.02600000</span></span>
-<span><span class="co">#&gt; 16 0.5000000 0.5000000        NA        NA        NA        NA 0.02600000</span></span>
-<span><span class="co">#&gt; 17 0.7500000        NA 0.0000000 0.1250000 0.0000000 0.1250000 0.02000000</span></span>
-<span><span class="co">#&gt; 18 0.7500000        NA 0.0000000 0.2500000 0.0000000        NA 0.02000000</span></span>
-<span><span class="co">#&gt; 19 0.7500000        NA 0.0000000 0.1250000        NA 0.1250000 0.02000000</span></span>
-<span><span class="co">#&gt; 20 0.7500000        NA 0.0000000 0.2500000        NA        NA 0.02000000</span></span>
-<span><span class="co">#&gt; 21 0.7500012        NA 0.0000000        NA 0.0000000 0.2499987 0.01999997</span></span>
-<span><span class="co">#&gt; 22 1.0000000        NA 0.0000000        NA 0.0000000        NA 0.01500000</span></span>
-<span><span class="co">#&gt; 23 0.7500012        NA 0.0000000        NA        NA 0.2499987 0.01999997</span></span>
-<span><span class="co">#&gt; 24 1.0000000        NA 0.0000000        NA        NA        NA 0.01500000</span></span>
-<span><span class="co">#&gt; 25 0.7500000        NA        NA 0.1250000 0.0000000 0.1250000 0.02000000</span></span>
-<span><span class="co">#&gt; 26 0.7500000        NA        NA 0.2500000 0.0000000        NA 0.02000000</span></span>
-<span><span class="co">#&gt; 27 0.7500000        NA        NA 0.1250000        NA 0.1250000 0.02000000</span></span>
-<span><span class="co">#&gt; 28 0.7500000        NA        NA 0.2500000        NA        NA 0.02000000</span></span>
-<span><span class="co">#&gt; 29 0.7500012        NA        NA        NA 0.0000000 0.2499987 0.01999997</span></span>
-<span><span class="co">#&gt; 30 1.0000000        NA        NA        NA 0.0000000        NA 0.01500000</span></span>
-<span><span class="co">#&gt; 31 0.7500012        NA        NA        NA        NA 0.2499987 0.01999997</span></span>
-<span><span class="co">#&gt; 32 1.0000000        NA        NA        NA        NA        NA 0.01500000</span></span>
-<span><span class="co">#&gt; 33        NA 0.7500000 0.1250000 0.0000000 0.1250000 0.0000000 0.01733333</span></span>
-<span><span class="co">#&gt; 34        NA 0.7500000 0.1250000 0.0000000 0.1250000        NA 0.01733333</span></span>
-<span><span class="co">#&gt; 35        NA 0.7500012 0.2499987 0.0000000        NA 0.0000000 0.01733330</span></span>
-<span><span class="co">#&gt; 36        NA 0.7500012 0.2499987 0.0000000        NA        NA 0.01733330</span></span>
-<span><span class="co">#&gt; 37        NA 0.7500000 0.1250000        NA 0.1250000 0.0000000 0.01733333</span></span>
-<span><span class="co">#&gt; 38        NA 0.7500000 0.1250000        NA 0.1250000        NA 0.01733333</span></span>
-<span><span class="co">#&gt; 39        NA 0.7500012 0.2499987        NA        NA 0.0000000 0.01733330</span></span>
-<span><span class="co">#&gt; 40        NA 0.7500012 0.2499987        NA        NA        NA 0.01733330</span></span>
-<span><span class="co">#&gt; 41        NA 0.7500000        NA 0.0000000 0.2500000 0.0000000 0.01733333</span></span>
-<span><span class="co">#&gt; 42        NA 0.7500000        NA 0.0000000 0.2500000        NA 0.01733333</span></span>
-<span><span class="co">#&gt; 43        NA 1.0000000        NA 0.0000000        NA 0.0000000 0.01300000</span></span>
-<span><span class="co">#&gt; 44        NA 1.0000000        NA 0.0000000        NA        NA 0.01300000</span></span>
-<span><span class="co">#&gt; 45        NA 0.7500000        NA        NA 0.2500000 0.0000000 0.01733333</span></span>
-<span><span class="co">#&gt; 46        NA 0.7500000        NA        NA 0.2500000        NA 0.01733333</span></span>
-<span><span class="co">#&gt; 47        NA 1.0000000        NA        NA        NA 0.0000000 0.01300000</span></span>
-<span><span class="co">#&gt; 48        NA 1.0000000        NA        NA        NA        NA 0.01300000</span></span>
-<span><span class="co">#&gt; 49        NA        NA 0.2500000 0.2500000 0.2500000 0.2500000 0.02800000</span></span>
-<span><span class="co">#&gt; 50        NA        NA 0.2500000 0.5000000 0.2500000        NA 0.01400000</span></span>
-<span><span class="co">#&gt; 51        NA        NA 0.4999983 0.2500008        NA 0.2500008 0.02000007</span></span>
-<span><span class="co">#&gt; 52        NA        NA 0.4999983 0.5000017        NA        NA 0.01399995</span></span>
-<span><span class="co">#&gt; 53        NA        NA 0.2500008        NA 0.2500008 0.4999983 0.02480008</span></span>
-<span><span class="co">#&gt; 54        NA        NA 0.5000000        NA 0.5000000        NA 0.02000000</span></span>
-<span><span class="co">#&gt; 55        NA        NA 0.5000000        NA        NA 0.5000000 0.02000000</span></span>
-<span><span class="co">#&gt; 56        NA        NA 1.0000000        NA        NA        NA 0.01000000</span></span>
-<span><span class="co">#&gt; 57        NA        NA        NA 0.2500000 0.5000000 0.2500000 0.02800000</span></span>
-<span><span class="co">#&gt; 58        NA        NA        NA 0.5000000 0.5000000        NA 0.01400000</span></span>
-<span><span class="co">#&gt; 59        NA        NA        NA 0.5000000        NA 0.5000000 0.01400000</span></span>
-<span><span class="co">#&gt; 60        NA        NA        NA 1.0000000        NA        NA 0.00700000</span></span>
-<span><span class="co">#&gt; 61        NA        NA        NA        NA 0.5000017 0.4999983 0.02480008</span></span>
-<span><span class="co">#&gt; 62        NA        NA        NA        NA 1.0000000        NA 0.10000000</span></span>
-<span><span class="co">#&gt; 63        NA        NA        NA        NA        NA 1.0000000 0.01240000</span></span>
-<span><span class="co">#&gt;    adj_p_inter reject_intersection</span></span>
-<span><span class="co">#&gt; 1   0.02600000                   0</span></span>
-<span><span class="co">#&gt; 2   0.02600000                   0</span></span>
-<span><span class="co">#&gt; 3   0.02600000                   0</span></span>
-<span><span class="co">#&gt; 4   0.02600000                   0</span></span>
-<span><span class="co">#&gt; 5   0.02600000                   0</span></span>
-<span><span class="co">#&gt; 6   0.02600000                   0</span></span>
-<span><span class="co">#&gt; 7   0.02600000                   0</span></span>
-<span><span class="co">#&gt; 8   0.02600000                   0</span></span>
-<span><span class="co">#&gt; 9   0.02600000                   0</span></span>
-<span><span class="co">#&gt; 10  0.02600000                   0</span></span>
-<span><span class="co">#&gt; 11  0.02600000                   0</span></span>
-<span><span class="co">#&gt; 12  0.02600000                   0</span></span>
-<span><span class="co">#&gt; 13  0.02600000                   0</span></span>
-<span><span class="co">#&gt; 14  0.02600000                   0</span></span>
-<span><span class="co">#&gt; 15  0.02600000                   0</span></span>
-<span><span class="co">#&gt; 16  0.02600000                   0</span></span>
-<span><span class="co">#&gt; 17  0.02000000                   1</span></span>
-<span><span class="co">#&gt; 18  0.02000000                   1</span></span>
-<span><span class="co">#&gt; 19  0.02000000                   1</span></span>
-<span><span class="co">#&gt; 20  0.02000000                   1</span></span>
-<span><span class="co">#&gt; 21  0.01999997                   1</span></span>
-<span><span class="co">#&gt; 22  0.01500000                   1</span></span>
-<span><span class="co">#&gt; 23  0.01999997                   1</span></span>
-<span><span class="co">#&gt; 24  0.01500000                   1</span></span>
-<span><span class="co">#&gt; 25  0.02000000                   1</span></span>
-<span><span class="co">#&gt; 26  0.02000000                   1</span></span>
-<span><span class="co">#&gt; 27  0.02000000                   1</span></span>
-<span><span class="co">#&gt; 28  0.02000000                   1</span></span>
-<span><span class="co">#&gt; 29  0.01999997                   1</span></span>
-<span><span class="co">#&gt; 30  0.01500000                   1</span></span>
-<span><span class="co">#&gt; 31  0.01999997                   1</span></span>
-<span><span class="co">#&gt; 32  0.01500000                   1</span></span>
-<span><span class="co">#&gt; 33  0.01733333                   1</span></span>
-<span><span class="co">#&gt; 34  0.01733333                   1</span></span>
-<span><span class="co">#&gt; 35  0.01733330                   1</span></span>
-<span><span class="co">#&gt; 36  0.01733330                   1</span></span>
-<span><span class="co">#&gt; 37  0.01733333                   1</span></span>
-<span><span class="co">#&gt; 38  0.01733333                   1</span></span>
-<span><span class="co">#&gt; 39  0.01733330                   1</span></span>
-<span><span class="co">#&gt; 40  0.01733330                   1</span></span>
-<span><span class="co">#&gt; 41  0.01733333                   1</span></span>
-<span><span class="co">#&gt; 42  0.01733333                   1</span></span>
-<span><span class="co">#&gt; 43  0.01300000                   1</span></span>
-<span><span class="co">#&gt; 44  0.01300000                   1</span></span>
-<span><span class="co">#&gt; 45  0.01733333                   1</span></span>
-<span><span class="co">#&gt; 46  0.01733333                   1</span></span>
-<span><span class="co">#&gt; 47  0.01300000                   1</span></span>
-<span><span class="co">#&gt; 48  0.01300000                   1</span></span>
-<span><span class="co">#&gt; 49  0.02800000                   0</span></span>
-<span><span class="co">#&gt; 50  0.01400000                   1</span></span>
-<span><span class="co">#&gt; 51  0.02000007                   1</span></span>
-<span><span class="co">#&gt; 52  0.01399995                   1</span></span>
-<span><span class="co">#&gt; 53  0.02480008                   1</span></span>
-<span><span class="co">#&gt; 54  0.02000000                   1</span></span>
-<span><span class="co">#&gt; 55  0.02000000                   1</span></span>
-<span><span class="co">#&gt; 56  0.01000000                   1</span></span>
-<span><span class="co">#&gt; 57  0.02800000                   0</span></span>
-<span><span class="co">#&gt; 58  0.01400000                   1</span></span>
-<span><span class="co">#&gt; 59  0.01400000                   1</span></span>
-<span><span class="co">#&gt; 60  0.00700000                   1</span></span>
-<span><span class="co">#&gt; 61  0.02480008                   1</span></span>
-<span><span class="co">#&gt; 62  0.10000000                   0</span></span>
-<span><span class="co">#&gt; 63  0.01240000                   1</span></span></code></pre></div>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">test_results_verbose</span><span class="op">$</span><span class="va">details</span><span class="op">$</span><span class="va">results</span><span class="op">)</span></span>
+<span><span class="co">#&gt;    H1  H2 H3 H4 H5 H6 adj_p_grp1 adj_p_inter reject_intersection</span></span>
+<span><span class="co">#&gt; 1 0.5 0.5  0  0  0  0      0.026       0.026                   0</span></span>
+<span><span class="co">#&gt; 2 0.5 0.5  0  0  0 NA      0.026       0.026                   0</span></span>
+<span><span class="co">#&gt; 3 0.5 0.5  0  0 NA  0      0.026       0.026                   0</span></span>
+<span><span class="co">#&gt; 4 0.5 0.5  0  0 NA NA      0.026       0.026                   0</span></span>
+<span><span class="co">#&gt; 5 0.5 0.5  0 NA  0  0      0.026       0.026                   0</span></span>
+<span><span class="co">#&gt; 6 0.5 0.5  0 NA  0 NA      0.026       0.026                   0</span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="obtain-adjusted-significance-levels">Obtain adjusted significance levels<a class="anchor" aria-label="anchor" href="#obtain-adjusted-significance-levels"></a>
@@ -356,395 +239,18 @@ hypotheses involving it have been rejected. An intersection hypothesis
 is rejected if <em>any</em> null hypotheses within it have been
 rejected.</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">test_results_test_values</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/testing.html">graph_test_closure</a></span><span class="op">(</span><span class="va">g</span>, p <span class="op">=</span> <span class="va">p_values</span>, alpha <span class="op">=</span> <span class="fl">0.025</span>, </span>
-<span>                                               test_values <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
-<span><span class="va">test_results_test_values</span><span class="op">$</span><span class="va">test_values</span><span class="op">$</span><span class="va">results</span></span>
-<span><span class="co">#&gt;      Intersection Hypothesis       Test      p &lt;=    Weight * Alpha</span></span>
-<span><span class="co">#&gt; H1              1         H1 bonferroni 0.0150 &lt;= 0.5000000 * 0.025</span></span>
-<span><span class="co">#&gt; H2              1         H2 bonferroni 0.0130 &lt;= 0.5000000 * 0.025</span></span>
-<span><span class="co">#&gt; H3              1         H3 bonferroni 0.0100 &lt;= 0.0000000 * 0.025</span></span>
-<span><span class="co">#&gt; H4              1         H4 bonferroni 0.0070 &lt;= 0.0000000 * 0.025</span></span>
-<span><span class="co">#&gt; H5              1         H5 bonferroni 0.1000 &lt;= 0.0000000 * 0.025</span></span>
-<span><span class="co">#&gt; H6              1         H6 bonferroni 0.0124 &lt;= 0.0000000 * 0.025</span></span>
-<span><span class="co">#&gt; H11             2         H1 bonferroni 0.0150 &lt;= 0.5000000 * 0.025</span></span>
-<span><span class="co">#&gt; H21             2         H2 bonferroni 0.0130 &lt;= 0.5000000 * 0.025</span></span>
-<span><span class="co">#&gt; H31             2         H3 bonferroni 0.0100 &lt;= 0.0000000 * 0.025</span></span>
-<span><span class="co">#&gt; H41             2         H4 bonferroni 0.0070 &lt;= 0.0000000 * 0.025</span></span>
-<span><span class="co">#&gt; H51             2         H5 bonferroni 0.1000 &lt;= 0.0000000 * 0.025</span></span>
-<span><span class="co">#&gt; H12             3         H1 bonferroni 0.0150 &lt;= 0.5000000 * 0.025</span></span>
-<span><span class="co">#&gt; H22             3         H2 bonferroni 0.0130 &lt;= 0.5000000 * 0.025</span></span>
-<span><span class="co">#&gt; H32             3         H3 bonferroni 0.0100 &lt;= 0.0000000 * 0.025</span></span>
-<span><span class="co">#&gt; H42             3         H4 bonferroni 0.0070 &lt;= 0.0000000 * 0.025</span></span>
-<span><span class="co">#&gt; H61             3         H6 bonferroni 0.0124 &lt;= 0.0000000 * 0.025</span></span>
-<span><span class="co">#&gt; H13             4         H1 bonferroni 0.0150 &lt;= 0.5000000 * 0.025</span></span>
-<span><span class="co">#&gt; H23             4         H2 bonferroni 0.0130 &lt;= 0.5000000 * 0.025</span></span>
-<span><span class="co">#&gt; H33             4         H3 bonferroni 0.0100 &lt;= 0.0000000 * 0.025</span></span>
-<span><span class="co">#&gt; H43             4         H4 bonferroni 0.0070 &lt;= 0.0000000 * 0.025</span></span>
-<span><span class="co">#&gt; H14             5         H1 bonferroni 0.0150 &lt;= 0.5000000 * 0.025</span></span>
-<span><span class="co">#&gt; H24             5         H2 bonferroni 0.0130 &lt;= 0.5000000 * 0.025</span></span>
-<span><span class="co">#&gt; H34             5         H3 bonferroni 0.0100 &lt;= 0.0000000 * 0.025</span></span>
-<span><span class="co">#&gt; H52             5         H5 bonferroni 0.1000 &lt;= 0.0000000 * 0.025</span></span>
-<span><span class="co">#&gt; H62             5         H6 bonferroni 0.0124 &lt;= 0.0000000 * 0.025</span></span>
-<span><span class="co">#&gt; H15             6         H1 bonferroni 0.0150 &lt;= 0.5000000 * 0.025</span></span>
-<span><span class="co">#&gt; H25             6         H2 bonferroni 0.0130 &lt;= 0.5000000 * 0.025</span></span>
-<span><span class="co">#&gt; H35             6         H3 bonferroni 0.0100 &lt;= 0.0000000 * 0.025</span></span>
-<span><span class="co">#&gt; H53             6         H5 bonferroni 0.1000 &lt;= 0.0000000 * 0.025</span></span>
-<span><span class="co">#&gt; H16             7         H1 bonferroni 0.0150 &lt;= 0.5000000 * 0.025</span></span>
-<span><span class="co">#&gt; H26             7         H2 bonferroni 0.0130 &lt;= 0.5000000 * 0.025</span></span>
-<span><span class="co">#&gt; H36             7         H3 bonferroni 0.0100 &lt;= 0.0000000 * 0.025</span></span>
-<span><span class="co">#&gt; H63             7         H6 bonferroni 0.0124 &lt;= 0.0000000 * 0.025</span></span>
-<span><span class="co">#&gt; H17             8         H1 bonferroni 0.0150 &lt;= 0.5000000 * 0.025</span></span>
-<span><span class="co">#&gt; H27             8         H2 bonferroni 0.0130 &lt;= 0.5000000 * 0.025</span></span>
-<span><span class="co">#&gt; H37             8         H3 bonferroni 0.0100 &lt;= 0.0000000 * 0.025</span></span>
-<span><span class="co">#&gt; H18             9         H1 bonferroni 0.0150 &lt;= 0.5000000 * 0.025</span></span>
-<span><span class="co">#&gt; H28             9         H2 bonferroni 0.0130 &lt;= 0.5000000 * 0.025</span></span>
-<span><span class="co">#&gt; H44             9         H4 bonferroni 0.0070 &lt;= 0.0000000 * 0.025</span></span>
-<span><span class="co">#&gt; H54             9         H5 bonferroni 0.1000 &lt;= 0.0000000 * 0.025</span></span>
-<span><span class="co">#&gt; H64             9         H6 bonferroni 0.0124 &lt;= 0.0000000 * 0.025</span></span>
-<span><span class="co">#&gt; H19            10         H1 bonferroni 0.0150 &lt;= 0.5000000 * 0.025</span></span>
-<span><span class="co">#&gt; H29            10         H2 bonferroni 0.0130 &lt;= 0.5000000 * 0.025</span></span>
-<span><span class="co">#&gt; H45            10         H4 bonferroni 0.0070 &lt;= 0.0000000 * 0.025</span></span>
-<span><span class="co">#&gt; H55            10         H5 bonferroni 0.1000 &lt;= 0.0000000 * 0.025</span></span>
-<span><span class="co">#&gt; H110           11         H1 bonferroni 0.0150 &lt;= 0.5000000 * 0.025</span></span>
-<span><span class="co">#&gt; H210           11         H2 bonferroni 0.0130 &lt;= 0.5000000 * 0.025</span></span>
-<span><span class="co">#&gt; H46            11         H4 bonferroni 0.0070 &lt;= 0.0000000 * 0.025</span></span>
-<span><span class="co">#&gt; H65            11         H6 bonferroni 0.0124 &lt;= 0.0000000 * 0.025</span></span>
-<span><span class="co">#&gt; H111           12         H1 bonferroni 0.0150 &lt;= 0.5000000 * 0.025</span></span>
-<span><span class="co">#&gt; H211           12         H2 bonferroni 0.0130 &lt;= 0.5000000 * 0.025</span></span>
-<span><span class="co">#&gt; H47            12         H4 bonferroni 0.0070 &lt;= 0.0000000 * 0.025</span></span>
-<span><span class="co">#&gt; H112           13         H1 bonferroni 0.0150 &lt;= 0.5000000 * 0.025</span></span>
-<span><span class="co">#&gt; H212           13         H2 bonferroni 0.0130 &lt;= 0.5000000 * 0.025</span></span>
-<span><span class="co">#&gt; H56            13         H5 bonferroni 0.1000 &lt;= 0.0000000 * 0.025</span></span>
-<span><span class="co">#&gt; H66            13         H6 bonferroni 0.0124 &lt;= 0.0000000 * 0.025</span></span>
-<span><span class="co">#&gt; H113           14         H1 bonferroni 0.0150 &lt;= 0.5000000 * 0.025</span></span>
-<span><span class="co">#&gt; H213           14         H2 bonferroni 0.0130 &lt;= 0.5000000 * 0.025</span></span>
-<span><span class="co">#&gt; H57            14         H5 bonferroni 0.1000 &lt;= 0.0000000 * 0.025</span></span>
-<span><span class="co">#&gt; H114           15         H1 bonferroni 0.0150 &lt;= 0.5000000 * 0.025</span></span>
-<span><span class="co">#&gt; H214           15         H2 bonferroni 0.0130 &lt;= 0.5000000 * 0.025</span></span>
-<span><span class="co">#&gt; H67            15         H6 bonferroni 0.0124 &lt;= 0.0000000 * 0.025</span></span>
-<span><span class="co">#&gt; H115           16         H1 bonferroni 0.0150 &lt;= 0.5000000 * 0.025</span></span>
-<span><span class="co">#&gt; H215           16         H2 bonferroni 0.0130 &lt;= 0.5000000 * 0.025</span></span>
-<span><span class="co">#&gt; H116           17         H1 bonferroni 0.0150 &lt;= 0.7500000 * 0.025</span></span>
-<span><span class="co">#&gt; H38            17         H3 bonferroni 0.0100 &lt;= 0.0000000 * 0.025</span></span>
-<span><span class="co">#&gt; H48            17         H4 bonferroni 0.0070 &lt;= 0.1250000 * 0.025</span></span>
-<span><span class="co">#&gt; H58            17         H5 bonferroni 0.1000 &lt;= 0.0000000 * 0.025</span></span>
-<span><span class="co">#&gt; H68            17         H6 bonferroni 0.0124 &lt;= 0.1250000 * 0.025</span></span>
-<span><span class="co">#&gt; H117           18         H1 bonferroni 0.0150 &lt;= 0.7500000 * 0.025</span></span>
-<span><span class="co">#&gt; H39            18         H3 bonferroni 0.0100 &lt;= 0.0000000 * 0.025</span></span>
-<span><span class="co">#&gt; H49            18         H4 bonferroni 0.0070 &lt;= 0.2500000 * 0.025</span></span>
-<span><span class="co">#&gt; H59            18         H5 bonferroni 0.1000 &lt;= 0.0000000 * 0.025</span></span>
-<span><span class="co">#&gt; H118           19         H1 bonferroni 0.0150 &lt;= 0.7500000 * 0.025</span></span>
-<span><span class="co">#&gt; H310           19         H3 bonferroni 0.0100 &lt;= 0.0000000 * 0.025</span></span>
-<span><span class="co">#&gt; H410           19         H4 bonferroni 0.0070 &lt;= 0.1250000 * 0.025</span></span>
-<span><span class="co">#&gt; H69            19         H6 bonferroni 0.0124 &lt;= 0.1250000 * 0.025</span></span>
-<span><span class="co">#&gt; H119           20         H1 bonferroni 0.0150 &lt;= 0.7500000 * 0.025</span></span>
-<span><span class="co">#&gt; H311           20         H3 bonferroni 0.0100 &lt;= 0.0000000 * 0.025</span></span>
-<span><span class="co">#&gt; H411           20         H4 bonferroni 0.0070 &lt;= 0.2500000 * 0.025</span></span>
-<span><span class="co">#&gt; H120           21         H1 bonferroni 0.0150 &lt;= 0.7500012 * 0.025</span></span>
-<span><span class="co">#&gt; H312           21         H3 bonferroni 0.0100 &lt;= 0.0000000 * 0.025</span></span>
-<span><span class="co">#&gt; H510           21         H5 bonferroni 0.1000 &lt;= 0.0000000 * 0.025</span></span>
-<span><span class="co">#&gt; H610           21         H6 bonferroni 0.0124 &lt;= 0.2499987 * 0.025</span></span>
-<span><span class="co">#&gt; H121           22         H1 bonferroni 0.0150 &lt;= 1.0000000 * 0.025</span></span>
-<span><span class="co">#&gt; H313           22         H3 bonferroni 0.0100 &lt;= 0.0000000 * 0.025</span></span>
-<span><span class="co">#&gt; H511           22         H5 bonferroni 0.1000 &lt;= 0.0000000 * 0.025</span></span>
-<span><span class="co">#&gt; H122           23         H1 bonferroni 0.0150 &lt;= 0.7500012 * 0.025</span></span>
-<span><span class="co">#&gt; H314           23         H3 bonferroni 0.0100 &lt;= 0.0000000 * 0.025</span></span>
-<span><span class="co">#&gt; H611           23         H6 bonferroni 0.0124 &lt;= 0.2499987 * 0.025</span></span>
-<span><span class="co">#&gt; H123           24         H1 bonferroni 0.0150 &lt;= 1.0000000 * 0.025</span></span>
-<span><span class="co">#&gt; H315           24         H3 bonferroni 0.0100 &lt;= 0.0000000 * 0.025</span></span>
-<span><span class="co">#&gt; H124           25         H1 bonferroni 0.0150 &lt;= 0.7500000 * 0.025</span></span>
-<span><span class="co">#&gt; H412           25         H4 bonferroni 0.0070 &lt;= 0.1250000 * 0.025</span></span>
-<span><span class="co">#&gt; H512           25         H5 bonferroni 0.1000 &lt;= 0.0000000 * 0.025</span></span>
-<span><span class="co">#&gt; H612           25         H6 bonferroni 0.0124 &lt;= 0.1250000 * 0.025</span></span>
-<span><span class="co">#&gt; H125           26         H1 bonferroni 0.0150 &lt;= 0.7500000 * 0.025</span></span>
-<span><span class="co">#&gt; H413           26         H4 bonferroni 0.0070 &lt;= 0.2500000 * 0.025</span></span>
-<span><span class="co">#&gt; H513           26         H5 bonferroni 0.1000 &lt;= 0.0000000 * 0.025</span></span>
-<span><span class="co">#&gt; H126           27         H1 bonferroni 0.0150 &lt;= 0.7500000 * 0.025</span></span>
-<span><span class="co">#&gt; H414           27         H4 bonferroni 0.0070 &lt;= 0.1250000 * 0.025</span></span>
-<span><span class="co">#&gt; H613           27         H6 bonferroni 0.0124 &lt;= 0.1250000 * 0.025</span></span>
-<span><span class="co">#&gt; H127           28         H1 bonferroni 0.0150 &lt;= 0.7500000 * 0.025</span></span>
-<span><span class="co">#&gt; H415           28         H4 bonferroni 0.0070 &lt;= 0.2500000 * 0.025</span></span>
-<span><span class="co">#&gt; H128           29         H1 bonferroni 0.0150 &lt;= 0.7500012 * 0.025</span></span>
-<span><span class="co">#&gt; H514           29         H5 bonferroni 0.1000 &lt;= 0.0000000 * 0.025</span></span>
-<span><span class="co">#&gt; H614           29         H6 bonferroni 0.0124 &lt;= 0.2499987 * 0.025</span></span>
-<span><span class="co">#&gt; H129           30         H1 bonferroni 0.0150 &lt;= 1.0000000 * 0.025</span></span>
-<span><span class="co">#&gt; H515           30         H5 bonferroni 0.1000 &lt;= 0.0000000 * 0.025</span></span>
-<span><span class="co">#&gt; H130           31         H1 bonferroni 0.0150 &lt;= 0.7500012 * 0.025</span></span>
-<span><span class="co">#&gt; H615           31         H6 bonferroni 0.0124 &lt;= 0.2499987 * 0.025</span></span>
-<span><span class="co">#&gt; H131           32         H1 bonferroni 0.0150 &lt;= 1.0000000 * 0.025</span></span>
-<span><span class="co">#&gt; H216           33         H2 bonferroni 0.0130 &lt;= 0.7500000 * 0.025</span></span>
-<span><span class="co">#&gt; H316           33         H3 bonferroni 0.0100 &lt;= 0.1250000 * 0.025</span></span>
-<span><span class="co">#&gt; H416           33         H4 bonferroni 0.0070 &lt;= 0.0000000 * 0.025</span></span>
-<span><span class="co">#&gt; H516           33         H5 bonferroni 0.1000 &lt;= 0.1250000 * 0.025</span></span>
-<span><span class="co">#&gt; H616           33         H6 bonferroni 0.0124 &lt;= 0.0000000 * 0.025</span></span>
-<span><span class="co">#&gt; H217           34         H2 bonferroni 0.0130 &lt;= 0.7500000 * 0.025</span></span>
-<span><span class="co">#&gt; H317           34         H3 bonferroni 0.0100 &lt;= 0.1250000 * 0.025</span></span>
-<span><span class="co">#&gt; H417           34         H4 bonferroni 0.0070 &lt;= 0.0000000 * 0.025</span></span>
-<span><span class="co">#&gt; H517           34         H5 bonferroni 0.1000 &lt;= 0.1250000 * 0.025</span></span>
-<span><span class="co">#&gt; H218           35         H2 bonferroni 0.0130 &lt;= 0.7500012 * 0.025</span></span>
-<span><span class="co">#&gt; H318           35         H3 bonferroni 0.0100 &lt;= 0.2499987 * 0.025</span></span>
-<span><span class="co">#&gt; H418           35         H4 bonferroni 0.0070 &lt;= 0.0000000 * 0.025</span></span>
-<span><span class="co">#&gt; H617           35         H6 bonferroni 0.0124 &lt;= 0.0000000 * 0.025</span></span>
-<span><span class="co">#&gt; H219           36         H2 bonferroni 0.0130 &lt;= 0.7500012 * 0.025</span></span>
-<span><span class="co">#&gt; H319           36         H3 bonferroni 0.0100 &lt;= 0.2499987 * 0.025</span></span>
-<span><span class="co">#&gt; H419           36         H4 bonferroni 0.0070 &lt;= 0.0000000 * 0.025</span></span>
-<span><span class="co">#&gt; H220           37         H2 bonferroni 0.0130 &lt;= 0.7500000 * 0.025</span></span>
-<span><span class="co">#&gt; H320           37         H3 bonferroni 0.0100 &lt;= 0.1250000 * 0.025</span></span>
-<span><span class="co">#&gt; H518           37         H5 bonferroni 0.1000 &lt;= 0.1250000 * 0.025</span></span>
-<span><span class="co">#&gt; H618           37         H6 bonferroni 0.0124 &lt;= 0.0000000 * 0.025</span></span>
-<span><span class="co">#&gt; H221           38         H2 bonferroni 0.0130 &lt;= 0.7500000 * 0.025</span></span>
-<span><span class="co">#&gt; H321           38         H3 bonferroni 0.0100 &lt;= 0.1250000 * 0.025</span></span>
-<span><span class="co">#&gt; H519           38         H5 bonferroni 0.1000 &lt;= 0.1250000 * 0.025</span></span>
-<span><span class="co">#&gt; H222           39         H2 bonferroni 0.0130 &lt;= 0.7500012 * 0.025</span></span>
-<span><span class="co">#&gt; H322           39         H3 bonferroni 0.0100 &lt;= 0.2499987 * 0.025</span></span>
-<span><span class="co">#&gt; H619           39         H6 bonferroni 0.0124 &lt;= 0.0000000 * 0.025</span></span>
-<span><span class="co">#&gt; H223           40         H2 bonferroni 0.0130 &lt;= 0.7500012 * 0.025</span></span>
-<span><span class="co">#&gt; H323           40         H3 bonferroni 0.0100 &lt;= 0.2499987 * 0.025</span></span>
-<span><span class="co">#&gt; H224           41         H2 bonferroni 0.0130 &lt;= 0.7500000 * 0.025</span></span>
-<span><span class="co">#&gt; H420           41         H4 bonferroni 0.0070 &lt;= 0.0000000 * 0.025</span></span>
-<span><span class="co">#&gt; H520           41         H5 bonferroni 0.1000 &lt;= 0.2500000 * 0.025</span></span>
-<span><span class="co">#&gt; H620           41         H6 bonferroni 0.0124 &lt;= 0.0000000 * 0.025</span></span>
-<span><span class="co">#&gt; H225           42         H2 bonferroni 0.0130 &lt;= 0.7500000 * 0.025</span></span>
-<span><span class="co">#&gt; H421           42         H4 bonferroni 0.0070 &lt;= 0.0000000 * 0.025</span></span>
-<span><span class="co">#&gt; H521           42         H5 bonferroni 0.1000 &lt;= 0.2500000 * 0.025</span></span>
-<span><span class="co">#&gt; H226           43         H2 bonferroni 0.0130 &lt;= 1.0000000 * 0.025</span></span>
-<span><span class="co">#&gt; H422           43         H4 bonferroni 0.0070 &lt;= 0.0000000 * 0.025</span></span>
-<span><span class="co">#&gt; H621           43         H6 bonferroni 0.0124 &lt;= 0.0000000 * 0.025</span></span>
-<span><span class="co">#&gt; H227           44         H2 bonferroni 0.0130 &lt;= 1.0000000 * 0.025</span></span>
-<span><span class="co">#&gt; H423           44         H4 bonferroni 0.0070 &lt;= 0.0000000 * 0.025</span></span>
-<span><span class="co">#&gt; H228           45         H2 bonferroni 0.0130 &lt;= 0.7500000 * 0.025</span></span>
-<span><span class="co">#&gt; H522           45         H5 bonferroni 0.1000 &lt;= 0.2500000 * 0.025</span></span>
-<span><span class="co">#&gt; H622           45         H6 bonferroni 0.0124 &lt;= 0.0000000 * 0.025</span></span>
-<span><span class="co">#&gt; H229           46         H2 bonferroni 0.0130 &lt;= 0.7500000 * 0.025</span></span>
-<span><span class="co">#&gt; H523           46         H5 bonferroni 0.1000 &lt;= 0.2500000 * 0.025</span></span>
-<span><span class="co">#&gt; H230           47         H2 bonferroni 0.0130 &lt;= 1.0000000 * 0.025</span></span>
-<span><span class="co">#&gt; H623           47         H6 bonferroni 0.0124 &lt;= 0.0000000 * 0.025</span></span>
-<span><span class="co">#&gt; H231           48         H2 bonferroni 0.0130 &lt;= 1.0000000 * 0.025</span></span>
-<span><span class="co">#&gt; H324           49         H3 bonferroni 0.0100 &lt;= 0.2500000 * 0.025</span></span>
-<span><span class="co">#&gt; H424           49         H4 bonferroni 0.0070 &lt;= 0.2500000 * 0.025</span></span>
-<span><span class="co">#&gt; H524           49         H5 bonferroni 0.1000 &lt;= 0.2500000 * 0.025</span></span>
-<span><span class="co">#&gt; H624           49         H6 bonferroni 0.0124 &lt;= 0.2500000 * 0.025</span></span>
-<span><span class="co">#&gt; H325           50         H3 bonferroni 0.0100 &lt;= 0.2500000 * 0.025</span></span>
-<span><span class="co">#&gt; H425           50         H4 bonferroni 0.0070 &lt;= 0.5000000 * 0.025</span></span>
-<span><span class="co">#&gt; H525           50         H5 bonferroni 0.1000 &lt;= 0.2500000 * 0.025</span></span>
-<span><span class="co">#&gt; H326           51         H3 bonferroni 0.0100 &lt;= 0.4999983 * 0.025</span></span>
-<span><span class="co">#&gt; H426           51         H4 bonferroni 0.0070 &lt;= 0.2500008 * 0.025</span></span>
-<span><span class="co">#&gt; H625           51         H6 bonferroni 0.0124 &lt;= 0.2500008 * 0.025</span></span>
-<span><span class="co">#&gt; H327           52         H3 bonferroni 0.0100 &lt;= 0.4999983 * 0.025</span></span>
-<span><span class="co">#&gt; H427           52         H4 bonferroni 0.0070 &lt;= 0.5000017 * 0.025</span></span>
-<span><span class="co">#&gt; H328           53         H3 bonferroni 0.0100 &lt;= 0.2500008 * 0.025</span></span>
-<span><span class="co">#&gt; H526           53         H5 bonferroni 0.1000 &lt;= 0.2500008 * 0.025</span></span>
-<span><span class="co">#&gt; H626           53         H6 bonferroni 0.0124 &lt;= 0.4999983 * 0.025</span></span>
-<span><span class="co">#&gt; H329           54         H3 bonferroni 0.0100 &lt;= 0.5000000 * 0.025</span></span>
-<span><span class="co">#&gt; H527           54         H5 bonferroni 0.1000 &lt;= 0.5000000 * 0.025</span></span>
-<span><span class="co">#&gt; H330           55         H3 bonferroni 0.0100 &lt;= 0.5000000 * 0.025</span></span>
-<span><span class="co">#&gt; H627           55         H6 bonferroni 0.0124 &lt;= 0.5000000 * 0.025</span></span>
-<span><span class="co">#&gt; H331           56         H3 bonferroni 0.0100 &lt;= 1.0000000 * 0.025</span></span>
-<span><span class="co">#&gt; H428           57         H4 bonferroni 0.0070 &lt;= 0.2500000 * 0.025</span></span>
-<span><span class="co">#&gt; H528           57         H5 bonferroni 0.1000 &lt;= 0.5000000 * 0.025</span></span>
-<span><span class="co">#&gt; H628           57         H6 bonferroni 0.0124 &lt;= 0.2500000 * 0.025</span></span>
-<span><span class="co">#&gt; H429           58         H4 bonferroni 0.0070 &lt;= 0.5000000 * 0.025</span></span>
-<span><span class="co">#&gt; H529           58         H5 bonferroni 0.1000 &lt;= 0.5000000 * 0.025</span></span>
-<span><span class="co">#&gt; H430           59         H4 bonferroni 0.0070 &lt;= 0.5000000 * 0.025</span></span>
-<span><span class="co">#&gt; H629           59         H6 bonferroni 0.0124 &lt;= 0.5000000 * 0.025</span></span>
-<span><span class="co">#&gt; H431           60         H4 bonferroni 0.0070 &lt;= 1.0000000 * 0.025</span></span>
-<span><span class="co">#&gt; H530           61         H5 bonferroni 0.1000 &lt;= 0.5000017 * 0.025</span></span>
-<span><span class="co">#&gt; H630           61         H6 bonferroni 0.0124 &lt;= 0.4999983 * 0.025</span></span>
-<span><span class="co">#&gt; H531           62         H5 bonferroni 0.1000 &lt;= 1.0000000 * 0.025</span></span>
-<span><span class="co">#&gt; H631           63         H6 bonferroni 0.0124 &lt;= 1.0000000 * 0.025</span></span>
-<span><span class="co">#&gt;      Inequality_holds</span></span>
-<span><span class="co">#&gt; H1              FALSE</span></span>
-<span><span class="co">#&gt; H2              FALSE</span></span>
-<span><span class="co">#&gt; H3              FALSE</span></span>
-<span><span class="co">#&gt; H4              FALSE</span></span>
-<span><span class="co">#&gt; H5              FALSE</span></span>
-<span><span class="co">#&gt; H6              FALSE</span></span>
-<span><span class="co">#&gt; H11             FALSE</span></span>
-<span><span class="co">#&gt; H21             FALSE</span></span>
-<span><span class="co">#&gt; H31             FALSE</span></span>
-<span><span class="co">#&gt; H41             FALSE</span></span>
-<span><span class="co">#&gt; H51             FALSE</span></span>
-<span><span class="co">#&gt; H12             FALSE</span></span>
-<span><span class="co">#&gt; H22             FALSE</span></span>
-<span><span class="co">#&gt; H32             FALSE</span></span>
-<span><span class="co">#&gt; H42             FALSE</span></span>
-<span><span class="co">#&gt; H61             FALSE</span></span>
-<span><span class="co">#&gt; H13             FALSE</span></span>
-<span><span class="co">#&gt; H23             FALSE</span></span>
-<span><span class="co">#&gt; H33             FALSE</span></span>
-<span><span class="co">#&gt; H43             FALSE</span></span>
-<span><span class="co">#&gt; H14             FALSE</span></span>
-<span><span class="co">#&gt; H24             FALSE</span></span>
-<span><span class="co">#&gt; H34             FALSE</span></span>
-<span><span class="co">#&gt; H52             FALSE</span></span>
-<span><span class="co">#&gt; H62             FALSE</span></span>
-<span><span class="co">#&gt; H15             FALSE</span></span>
-<span><span class="co">#&gt; H25             FALSE</span></span>
-<span><span class="co">#&gt; H35             FALSE</span></span>
-<span><span class="co">#&gt; H53             FALSE</span></span>
-<span><span class="co">#&gt; H16             FALSE</span></span>
-<span><span class="co">#&gt; H26             FALSE</span></span>
-<span><span class="co">#&gt; H36             FALSE</span></span>
-<span><span class="co">#&gt; H63             FALSE</span></span>
-<span><span class="co">#&gt; H17             FALSE</span></span>
-<span><span class="co">#&gt; H27             FALSE</span></span>
-<span><span class="co">#&gt; H37             FALSE</span></span>
-<span><span class="co">#&gt; H18             FALSE</span></span>
-<span><span class="co">#&gt; H28             FALSE</span></span>
-<span><span class="co">#&gt; H44             FALSE</span></span>
-<span><span class="co">#&gt; H54             FALSE</span></span>
-<span><span class="co">#&gt; H64             FALSE</span></span>
-<span><span class="co">#&gt; H19             FALSE</span></span>
-<span><span class="co">#&gt; H29             FALSE</span></span>
-<span><span class="co">#&gt; H45             FALSE</span></span>
-<span><span class="co">#&gt; H55             FALSE</span></span>
-<span><span class="co">#&gt; H110            FALSE</span></span>
-<span><span class="co">#&gt; H210            FALSE</span></span>
-<span><span class="co">#&gt; H46             FALSE</span></span>
-<span><span class="co">#&gt; H65             FALSE</span></span>
-<span><span class="co">#&gt; H111            FALSE</span></span>
-<span><span class="co">#&gt; H211            FALSE</span></span>
-<span><span class="co">#&gt; H47             FALSE</span></span>
-<span><span class="co">#&gt; H112            FALSE</span></span>
-<span><span class="co">#&gt; H212            FALSE</span></span>
-<span><span class="co">#&gt; H56             FALSE</span></span>
-<span><span class="co">#&gt; H66             FALSE</span></span>
-<span><span class="co">#&gt; H113            FALSE</span></span>
-<span><span class="co">#&gt; H213            FALSE</span></span>
-<span><span class="co">#&gt; H57             FALSE</span></span>
-<span><span class="co">#&gt; H114            FALSE</span></span>
-<span><span class="co">#&gt; H214            FALSE</span></span>
-<span><span class="co">#&gt; H67             FALSE</span></span>
-<span><span class="co">#&gt; H115            FALSE</span></span>
-<span><span class="co">#&gt; H215            FALSE</span></span>
-<span><span class="co">#&gt; H116             TRUE</span></span>
-<span><span class="co">#&gt; H38             FALSE</span></span>
-<span><span class="co">#&gt; H48             FALSE</span></span>
-<span><span class="co">#&gt; H58             FALSE</span></span>
-<span><span class="co">#&gt; H68             FALSE</span></span>
-<span><span class="co">#&gt; H117             TRUE</span></span>
-<span><span class="co">#&gt; H39             FALSE</span></span>
-<span><span class="co">#&gt; H49             FALSE</span></span>
-<span><span class="co">#&gt; H59             FALSE</span></span>
-<span><span class="co">#&gt; H118             TRUE</span></span>
-<span><span class="co">#&gt; H310            FALSE</span></span>
-<span><span class="co">#&gt; H410            FALSE</span></span>
-<span><span class="co">#&gt; H69             FALSE</span></span>
-<span><span class="co">#&gt; H119             TRUE</span></span>
-<span><span class="co">#&gt; H311            FALSE</span></span>
-<span><span class="co">#&gt; H411            FALSE</span></span>
-<span><span class="co">#&gt; H120             TRUE</span></span>
-<span><span class="co">#&gt; H312            FALSE</span></span>
-<span><span class="co">#&gt; H510            FALSE</span></span>
-<span><span class="co">#&gt; H610            FALSE</span></span>
-<span><span class="co">#&gt; H121             TRUE</span></span>
-<span><span class="co">#&gt; H313            FALSE</span></span>
-<span><span class="co">#&gt; H511            FALSE</span></span>
-<span><span class="co">#&gt; H122             TRUE</span></span>
-<span><span class="co">#&gt; H314            FALSE</span></span>
-<span><span class="co">#&gt; H611            FALSE</span></span>
-<span><span class="co">#&gt; H123             TRUE</span></span>
-<span><span class="co">#&gt; H315            FALSE</span></span>
-<span><span class="co">#&gt; H124             TRUE</span></span>
-<span><span class="co">#&gt; H412            FALSE</span></span>
-<span><span class="co">#&gt; H512            FALSE</span></span>
-<span><span class="co">#&gt; H612            FALSE</span></span>
-<span><span class="co">#&gt; H125             TRUE</span></span>
-<span><span class="co">#&gt; H413            FALSE</span></span>
-<span><span class="co">#&gt; H513            FALSE</span></span>
-<span><span class="co">#&gt; H126             TRUE</span></span>
-<span><span class="co">#&gt; H414            FALSE</span></span>
-<span><span class="co">#&gt; H613            FALSE</span></span>
-<span><span class="co">#&gt; H127             TRUE</span></span>
-<span><span class="co">#&gt; H415            FALSE</span></span>
-<span><span class="co">#&gt; H128             TRUE</span></span>
-<span><span class="co">#&gt; H514            FALSE</span></span>
-<span><span class="co">#&gt; H614            FALSE</span></span>
-<span><span class="co">#&gt; H129             TRUE</span></span>
-<span><span class="co">#&gt; H515            FALSE</span></span>
-<span><span class="co">#&gt; H130             TRUE</span></span>
-<span><span class="co">#&gt; H615            FALSE</span></span>
-<span><span class="co">#&gt; H131             TRUE</span></span>
-<span><span class="co">#&gt; H216             TRUE</span></span>
-<span><span class="co">#&gt; H316            FALSE</span></span>
-<span><span class="co">#&gt; H416            FALSE</span></span>
-<span><span class="co">#&gt; H516            FALSE</span></span>
-<span><span class="co">#&gt; H616            FALSE</span></span>
-<span><span class="co">#&gt; H217             TRUE</span></span>
-<span><span class="co">#&gt; H317            FALSE</span></span>
-<span><span class="co">#&gt; H417            FALSE</span></span>
-<span><span class="co">#&gt; H517            FALSE</span></span>
-<span><span class="co">#&gt; H218             TRUE</span></span>
-<span><span class="co">#&gt; H318            FALSE</span></span>
-<span><span class="co">#&gt; H418            FALSE</span></span>
-<span><span class="co">#&gt; H617            FALSE</span></span>
-<span><span class="co">#&gt; H219             TRUE</span></span>
-<span><span class="co">#&gt; H319            FALSE</span></span>
-<span><span class="co">#&gt; H419            FALSE</span></span>
-<span><span class="co">#&gt; H220             TRUE</span></span>
-<span><span class="co">#&gt; H320            FALSE</span></span>
-<span><span class="co">#&gt; H518            FALSE</span></span>
-<span><span class="co">#&gt; H618            FALSE</span></span>
-<span><span class="co">#&gt; H221             TRUE</span></span>
-<span><span class="co">#&gt; H321            FALSE</span></span>
-<span><span class="co">#&gt; H519            FALSE</span></span>
-<span><span class="co">#&gt; H222             TRUE</span></span>
-<span><span class="co">#&gt; H322            FALSE</span></span>
-<span><span class="co">#&gt; H619            FALSE</span></span>
-<span><span class="co">#&gt; H223             TRUE</span></span>
-<span><span class="co">#&gt; H323            FALSE</span></span>
-<span><span class="co">#&gt; H224             TRUE</span></span>
-<span><span class="co">#&gt; H420            FALSE</span></span>
-<span><span class="co">#&gt; H520            FALSE</span></span>
-<span><span class="co">#&gt; H620            FALSE</span></span>
-<span><span class="co">#&gt; H225             TRUE</span></span>
-<span><span class="co">#&gt; H421            FALSE</span></span>
-<span><span class="co">#&gt; H521            FALSE</span></span>
-<span><span class="co">#&gt; H226             TRUE</span></span>
-<span><span class="co">#&gt; H422            FALSE</span></span>
-<span><span class="co">#&gt; H621            FALSE</span></span>
-<span><span class="co">#&gt; H227             TRUE</span></span>
-<span><span class="co">#&gt; H423            FALSE</span></span>
-<span><span class="co">#&gt; H228             TRUE</span></span>
-<span><span class="co">#&gt; H522            FALSE</span></span>
-<span><span class="co">#&gt; H622            FALSE</span></span>
-<span><span class="co">#&gt; H229             TRUE</span></span>
-<span><span class="co">#&gt; H523            FALSE</span></span>
-<span><span class="co">#&gt; H230             TRUE</span></span>
-<span><span class="co">#&gt; H623            FALSE</span></span>
-<span><span class="co">#&gt; H231             TRUE</span></span>
-<span><span class="co">#&gt; H324            FALSE</span></span>
-<span><span class="co">#&gt; H424            FALSE</span></span>
-<span><span class="co">#&gt; H524            FALSE</span></span>
-<span><span class="co">#&gt; H624            FALSE</span></span>
-<span><span class="co">#&gt; H325            FALSE</span></span>
-<span><span class="co">#&gt; H425             TRUE</span></span>
-<span><span class="co">#&gt; H525            FALSE</span></span>
-<span><span class="co">#&gt; H326             TRUE</span></span>
-<span><span class="co">#&gt; H426            FALSE</span></span>
-<span><span class="co">#&gt; H625            FALSE</span></span>
-<span><span class="co">#&gt; H327             TRUE</span></span>
-<span><span class="co">#&gt; H427             TRUE</span></span>
-<span><span class="co">#&gt; H328            FALSE</span></span>
-<span><span class="co">#&gt; H526            FALSE</span></span>
-<span><span class="co">#&gt; H626             TRUE</span></span>
-<span><span class="co">#&gt; H329             TRUE</span></span>
-<span><span class="co">#&gt; H527            FALSE</span></span>
-<span><span class="co">#&gt; H330             TRUE</span></span>
-<span><span class="co">#&gt; H627             TRUE</span></span>
-<span><span class="co">#&gt; H331             TRUE</span></span>
-<span><span class="co">#&gt; H428            FALSE</span></span>
-<span><span class="co">#&gt; H528            FALSE</span></span>
-<span><span class="co">#&gt; H628            FALSE</span></span>
-<span><span class="co">#&gt; H429             TRUE</span></span>
-<span><span class="co">#&gt; H529            FALSE</span></span>
-<span><span class="co">#&gt; H430             TRUE</span></span>
-<span><span class="co">#&gt; H629             TRUE</span></span>
-<span><span class="co">#&gt; H431             TRUE</span></span>
-<span><span class="co">#&gt; H530            FALSE</span></span>
-<span><span class="co">#&gt; H630             TRUE</span></span>
-<span><span class="co">#&gt; H531            FALSE</span></span>
-<span><span class="co">#&gt; H631             TRUE</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">test_results_test_values</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/testing.html">graph_test_closure</a></span><span class="op">(</span><span class="va">g</span>,</span>
+<span>  p <span class="op">=</span> <span class="va">p_values</span>, alpha <span class="op">=</span> <span class="fl">0.025</span>,</span>
+<span>  test_values <span class="op">=</span> <span class="cn">TRUE</span></span>
+<span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">test_results_test_values</span><span class="op">$</span><span class="va">test_values</span><span class="op">$</span><span class="va">results</span><span class="op">)</span></span>
+<span><span class="co">#&gt;    Intersection Hypothesis       Test      p &lt;= Weight * Alpha Inequality_holds</span></span>
+<span><span class="co">#&gt; H1            1         H1 bonferroni 0.0150 &lt;=    0.5 * 0.025            FALSE</span></span>
+<span><span class="co">#&gt; H2            1         H2 bonferroni 0.0130 &lt;=    0.5 * 0.025            FALSE</span></span>
+<span><span class="co">#&gt; H3            1         H3 bonferroni 0.0100 &lt;=    0.0 * 0.025            FALSE</span></span>
+<span><span class="co">#&gt; H4            1         H4 bonferroni 0.0070 &lt;=    0.0 * 0.025            FALSE</span></span>
+<span><span class="co">#&gt; H5            1         H5 bonferroni 0.1000 &lt;=    0.0 * 0.025            FALSE</span></span>
+<span><span class="co">#&gt; H6            1         H6 bonferroni 0.0124 &lt;=    0.0 * 0.025            FALSE</span></span></code></pre></div>
 </div>
 </div>
 <div class="section level2">
@@ -824,7 +330,7 @@ tests.</p>
 <span><span class="co">#&gt;  TRUE  TRUE FALSE FALSE FALSE FALSE</span></span>
 <span></span>
 <span><span class="va">df_adjusted_significance</span> <span class="op">&lt;-</span> <span class="va">test_results_parametric</span><span class="op">$</span><span class="va">test_values</span><span class="op">$</span><span class="va">results</span></span>
-<span><span class="va">df_adjusted_significance</span><span class="op">[</span><span class="va">df_adjusted_significance</span><span class="op">$</span><span class="va">Intersection</span> <span class="op">==</span> <span class="fl">1</span>,<span class="op">]</span></span>
+<span><span class="va">df_adjusted_significance</span><span class="op">[</span><span class="va">df_adjusted_significance</span><span class="op">$</span><span class="va">Intersection</span> <span class="op">==</span> <span class="fl">1</span>, <span class="op">]</span></span>
 <span><span class="co">#&gt;    Intersection Hypothesis       Test      p &lt;=      c_value * Weight * Alpha</span></span>
 <span><span class="co">#&gt; H1            1         H1 parametric 0.0150 &lt;= 1.0782936582 *    0.5 * 0.025</span></span>
 <span><span class="co">#&gt; H2            1         H2 parametric 0.0130 &lt;= 1.0782936582 *    0.5 * 0.025</span></span>
@@ -880,10 +386,12 @@ rejected because of using Simes tests, showing the power improvement of
 using Simes tests.</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">test_results_parametric_simes</span> <span class="op">&lt;-</span></span>
-<span>  <span class="fu"><a href="../reference/testing.html">graph_test_closure</a></span><span class="op">(</span><span class="va">g</span>, p <span class="op">=</span> <span class="va">p_values</span>, alpha <span class="op">=</span> <span class="fl">0.025</span>, </span>
-<span>                     test_groups <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>,<span class="fl">2</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">3</span>, <span class="fl">5</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">4</span>, <span class="fl">6</span><span class="op">)</span><span class="op">)</span>,</span>
-<span>                     test_types <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"parametric"</span>, <span class="st">"simes"</span>, <span class="st">"simes"</span><span class="op">)</span>,</span>
-<span>                     test_corr <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">corr_12</span>, <span class="cn">NA</span>, <span class="cn">NA</span><span class="op">)</span><span class="op">)</span></span>
+<span>  <span class="fu"><a href="../reference/testing.html">graph_test_closure</a></span><span class="op">(</span><span class="va">g</span>,</span>
+<span>    p <span class="op">=</span> <span class="va">p_values</span>, alpha <span class="op">=</span> <span class="fl">0.025</span>,</span>
+<span>    test_groups <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">2</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">3</span>, <span class="fl">5</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">4</span>, <span class="fl">6</span><span class="op">)</span><span class="op">)</span>,</span>
+<span>    test_types <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"parametric"</span>, <span class="st">"simes"</span>, <span class="st">"simes"</span><span class="op">)</span>,</span>
+<span>    test_corr <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">corr_12</span>, <span class="cn">NA</span>, <span class="cn">NA</span><span class="op">)</span></span>
+<span>  <span class="op">)</span></span>
 <span></span>
 <span><span class="va">test_results_parametric_simes</span><span class="op">$</span><span class="va">outputs</span><span class="op">$</span><span class="va">adjusted_p</span></span>
 <span><span class="co">#&gt;         H1         H2         H3         H4         H5         H6 </span></span>
@@ -936,7 +444,9 @@ illustrated below.</p>
 <span>  <span class="va">prop</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span> <span class="op">*</span> <span class="op">(</span><span class="fl">1</span> <span class="op">-</span> <span class="va">prop</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span><span class="op">)</span> <span class="op">/</span> <span class="va">sample_size</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span></span>
 <span><span class="va">noncentrality_parameter_primary</span> <span class="op">&lt;-</span> <span class="op">-</span><span class="op">(</span><span class="va">prop</span><span class="op">[</span><span class="op">-</span><span class="fl">1</span><span class="op">]</span> <span class="op">-</span> <span class="va">prop</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span><span class="op">)</span> <span class="op">/</span> <span class="fu"><a href="https://rdrr.io/r/base/MathFun.html" class="external-link">sqrt</a></span><span class="op">(</span><span class="va">unpooled_variance</span><span class="op">)</span></span>
 <span><span class="va">marginal_power_primary</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">pnorm</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">qnorm</a></span><span class="op">(</span><span class="va">alpha</span>, lower.tail <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>,</span>
-<span>                                <span class="va">noncentrality_parameter_primary</span>, <span class="fl">1</span>, lower.tail <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
+<span>  <span class="va">noncentrality_parameter_primary</span>, <span class="fl">1</span>,</span>
+<span>  lower.tail <span class="op">=</span> <span class="cn">FALSE</span></span>
+<span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">marginal_power_primary</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"H1"</span>, <span class="st">"H2"</span><span class="op">)</span></span>
 <span><span class="va">marginal_power_primary</span></span>
 <span><span class="co">#&gt;        H1        H2 </span></span>
@@ -968,7 +478,9 @@ each at the one-sided significance level 0.025.</p>
 <span><span class="va">noncentrality_parameter_se1</span> <span class="op">&lt;-</span> <span class="op">(</span><span class="va">mean_change_se1</span><span class="op">[</span><span class="op">-</span><span class="fl">1</span><span class="op">]</span> <span class="op">-</span> <span class="va">mean_change_se1</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span><span class="op">)</span> <span class="op">/</span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/base/MathFun.html" class="external-link">sqrt</a></span><span class="op">(</span><span class="va">variance</span><span class="op">)</span></span>
 <span><span class="va">marginal_power_se1</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">pnorm</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">qnorm</a></span><span class="op">(</span><span class="va">alpha</span>, lower.tail <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>,</span>
-<span>                            <span class="va">noncentrality_parameter_se1</span>, <span class="fl">1</span>, lower.tail <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
+<span>  <span class="va">noncentrality_parameter_se1</span>, <span class="fl">1</span>,</span>
+<span>  lower.tail <span class="op">=</span> <span class="cn">FALSE</span></span>
+<span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">marginal_power_se1</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"H3"</span>, <span class="st">"H4"</span><span class="op">)</span></span>
 <span><span class="va">marginal_power_se1</span></span>
 <span><span class="co">#&gt;        H3        H4 </span></span>
@@ -977,7 +489,9 @@ each at the one-sided significance level 0.025.</p>
 <span><span class="va">noncentrality_parameter_se2</span> <span class="op">&lt;-</span> <span class="op">(</span><span class="va">mean_change_se2</span><span class="op">[</span><span class="op">-</span><span class="fl">1</span><span class="op">]</span> <span class="op">-</span> <span class="va">mean_change_se2</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span><span class="op">)</span> <span class="op">/</span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/base/MathFun.html" class="external-link">sqrt</a></span><span class="op">(</span><span class="va">variance</span><span class="op">)</span></span>
 <span><span class="va">marginal_power_se2</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">pnorm</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">qnorm</a></span><span class="op">(</span><span class="va">alpha</span>, lower.tail <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>,</span>
-<span>                            <span class="va">noncentrality_parameter_se2</span>, <span class="fl">1</span>, lower.tail <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
+<span>  <span class="va">noncentrality_parameter_se2</span>, <span class="fl">1</span>,</span>
+<span>  lower.tail <span class="op">=</span> <span class="cn">FALSE</span></span>
+<span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">marginal_power_se2</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"H5"</span>, <span class="st">"H6"</span><span class="op">)</span></span>
 <span><span class="va">marginal_power_se2</span></span>
 <span><span class="co">#&gt;        H5        H6 </span></span>
@@ -1015,7 +529,7 @@ the product rule.</p>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">corr</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">matrix</a></span><span class="op">(</span><span class="fl">0</span>, nrow <span class="op">=</span> <span class="fl">6</span>, ncol <span class="op">=</span> <span class="fl">6</span><span class="op">)</span></span>
 <span><span class="va">corr</span><span class="op">[</span><span class="fl">1</span>, <span class="fl">2</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="va">corr</span><span class="op">[</span><span class="fl">3</span>, <span class="fl">4</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="va">corr</span><span class="op">[</span><span class="fl">5</span>, <span class="fl">6</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/MathFun.html" class="external-link">sqrt</a></span><span class="op">(</span><span class="va">sample_size</span><span class="op">[</span><span class="fl">2</span><span class="op">]</span> <span class="op">/</span> <span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="va">sample_size</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">2</span><span class="op">]</span><span class="op">)</span> <span class="op">*</span></span>
-<span>                                                 <span class="va">sample_size</span><span class="op">[</span><span class="fl">3</span><span class="op">]</span> <span class="op">/</span> <span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="va">sample_size</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">3</span><span class="op">)</span><span class="op">]</span><span class="op">)</span><span class="op">)</span></span>
+<span>  <span class="va">sample_size</span><span class="op">[</span><span class="fl">3</span><span class="op">]</span> <span class="op">/</span> <span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="va">sample_size</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">3</span><span class="op">)</span><span class="op">]</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="va">rho</span> <span class="op">&lt;-</span> <span class="fl">0.5</span></span>
 <span><span class="va">corr</span><span class="op">[</span><span class="fl">1</span>, <span class="fl">3</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="va">corr</span><span class="op">[</span><span class="fl">1</span>, <span class="fl">5</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="va">corr</span><span class="op">[</span><span class="fl">2</span>, <span class="fl">4</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="va">corr</span><span class="op">[</span><span class="fl">2</span>, <span class="fl">6</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="va">corr</span><span class="op">[</span><span class="fl">3</span>, <span class="fl">5</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="va">corr</span><span class="op">[</span><span class="fl">4</span>, <span class="fl">6</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="va">rho</span></span>
 <span><span class="va">corr</span><span class="op">[</span><span class="fl">1</span>, <span class="fl">4</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="va">corr</span><span class="op">[</span><span class="fl">1</span>, <span class="fl">6</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="va">corr</span><span class="op">[</span><span class="fl">2</span>, <span class="fl">3</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="va">corr</span><span class="op">[</span><span class="fl">2</span>, <span class="fl">5</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="va">corr</span><span class="op">[</span><span class="fl">1</span>, <span class="fl">2</span><span class="op">]</span> <span class="op">*</span> <span class="va">rho</span></span>
@@ -1060,8 +574,10 @@ could customize success criteria to define other versions of
 <span><span class="va">`H1andH2`</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="va">x</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span> <span class="op">&amp;</span> <span class="va">x</span><span class="op">[</span><span class="fl">2</span><span class="op">]</span></span>
 <span><span class="co"># Probability to reject all hypotheses for the low dose or the high dose</span></span>
 <span><span class="va">`(H1andH3andH5)or(H2andH4andH6)`</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="op">(</span><span class="va">x</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span> <span class="op">&amp;</span> <span class="va">x</span><span class="op">[</span><span class="fl">3</span><span class="op">]</span> <span class="op">&amp;</span> <span class="va">x</span><span class="op">[</span><span class="fl">5</span><span class="op">]</span><span class="op">)</span> <span class="op">|</span> <span class="op">(</span><span class="va">x</span><span class="op">[</span><span class="fl">2</span><span class="op">]</span> <span class="op">&amp;</span> <span class="va">x</span><span class="op">[</span><span class="fl">4</span><span class="op">]</span> <span class="op">&amp;</span> <span class="va">x</span><span class="op">[</span><span class="fl">6</span><span class="op">]</span><span class="op">)</span></span>
-<span><span class="va">succ</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">H1</span>, <span class="va">`Expected no. of rejections`</span>, <span class="va">`AtLeast1`</span>, <span class="va">`All`</span>, <span class="va">`H1andH2`</span>,</span>
-<span>             <span class="va">`(H1andH3andH5)or(H2andH4andH6)`</span><span class="op">)</span></span></code></pre></div>
+<span><span class="va">succ</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
+<span>  <span class="va">H1</span>, <span class="va">`Expected no. of rejections`</span>, <span class="va">`AtLeast1`</span>, <span class="va">`All`</span>, <span class="va">`H1andH2`</span>,</span>
+<span>  <span class="va">`(H1andH3andH5)or(H2andH4andH6)`</span></span>
+<span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="output-calculate-power">Output: Calculate power<a class="anchor" aria-label="anchor" href="#output-calculate-power"></a>
@@ -1254,8 +770,9 @@ with the default setting of <code>precision = 6</code></p>
 <span><span class="co">#&gt;   ... (Use `print(x, rows = &lt;nn&gt;)` for more)</span></span>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">verbose_output_parametric_simes</span>,</span>
-<span>      indent <span class="op">=</span> <span class="fl">4</span>,</span>
-<span>      precision <span class="op">=</span> <span class="fl">6</span><span class="op">)</span></span>
+<span>  indent <span class="op">=</span> <span class="fl">4</span>,</span>
+<span>  precision <span class="op">=</span> <span class="fl">6</span></span>
+<span><span class="op">)</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Test parameters ($inputs) ------------------------------------------------------</span></span>
 <span><span class="co">#&gt;     Initial graph</span></span>

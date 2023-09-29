@@ -59,6 +59,9 @@
     <div id="navbar" class="collapse navbar-collapse ms-3">
       <ul class="navbar-nav me-auto">
 <li class="nav-item">
+  <a class="nav-link" href="articles/graphicalMCP.html">Get started</a>
+</li>
+<li class="nav-item">
   <a class="nav-link" href="reference/index.html">Reference</a>
 </li>
 <li class="nav-item dropdown">
@@ -68,6 +71,7 @@
     <a class="dropdown-item" href="articles/generate-closure.html">Rationales to generate the closure and the weighting strategy of a graph</a>
     <a class="dropdown-item" href="articles/graph-examples.html">Common multiple comparison procedures illustrated using graphicalMCP</a>
     <a class="dropdown-item" href="articles/shortuct-testing.html">Sequentially rejective graphical approaches based on Bonferroni tests</a>
+    <a class="dropdown-item" href="articles/validation.html">validation</a>
   </div>
 </li>
       </ul>
@@ -137,8 +141,8 @@
 <span><span class="va">hyp_names</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"H1"</span>, <span class="st">"H2"</span>, <span class="st">"H3"</span>, <span class="st">"H4"</span><span class="op">)</span></span>
 <span><span class="va">example_graph</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/graph_create.html">graph_create</a></span><span class="op">(</span><span class="va">hypotheses</span>, <span class="va">transitions</span>, <span class="va">hyp_names</span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">example_graph</span>, layout <span class="op">=</span> <span class="st">"grid"</span><span class="op">)</span></span></code></pre></div>
-<p><img src="reference/figures/README-create-graph-1.png" width="100%"></p>
+<span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">example_graph</span>, layout <span class="op">=</span> <span class="st">"grid"</span>, vertex.size <span class="op">=</span> <span class="fl">60</span><span class="op">)</span></span></code></pre></div>
+<p><img src="reference/figures/README-create-graph-1.png" style="display: block; margin: auto;"></p>
 </div>
 <div class="section level3">
 <h3 id="update-graph">Update graph<a class="anchor" aria-label="anchor" href="#update-graph"></a>
@@ -196,6 +200,7 @@
 </h2>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/citation.html" class="external-link">citation</a></span><span class="op">(</span><span class="st">"graphicalMCP"</span><span class="op">)</span></span>
+<span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; To cite graphicalMCP in publications use:</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt;   Xi, D.; Brockmann, E. (2023). graphicalMCP: Graph-based multiple</span></span>

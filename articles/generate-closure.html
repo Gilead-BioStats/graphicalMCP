@@ -43,6 +43,9 @@
     <div id="navbar" class="collapse navbar-collapse ms-3">
       <ul class="navbar-nav me-auto">
 <li class="nav-item">
+  <a class="nav-link" href="../articles/graphicalMCP.html">Get started</a>
+</li>
+<li class="nav-item">
   <a class="nav-link" href="../reference/index.html">Reference</a>
 </li>
 <li class="active nav-item dropdown">
@@ -52,6 +55,7 @@
     <a class="dropdown-item" href="../articles/generate-closure.html">Rationales to generate the closure and the weighting strategy of a graph</a>
     <a class="dropdown-item" href="../articles/graph-examples.html">Common multiple comparison procedures illustrated using graphicalMCP</a>
     <a class="dropdown-item" href="../articles/shortuct-testing.html">Sequentially rejective graphical approaches based on Bonferroni tests</a>
+    <a class="dropdown-item" href="../articles/validation.html">validation</a>
   </div>
 </li>
       </ul>
@@ -87,11 +91,6 @@
 
     
     
-<pre><code><span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Attaching package: 'gMCP'</span></span>
-<span><span class="co">#&gt; The following object is masked from 'package:graphicalMCP':</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;     fallback</span></span></code></pre>
 <div class="section level2">
 <h2 id="motivating-example">Motivating example<a class="anchor" aria-label="anchor" href="#motivating-example"></a>
 </h2>
@@ -108,7 +107,7 @@ there is an edge from <span class="math inline">\(H_3 (H_4)\)</span> to
 <span class="math inline">\(H_2 (H_1)\)</span> with a transition weight
 of 1. A graphical multiple comparison procedure is illustrated
 below.</p>
-<p><img src="generate-closure_files/figure-html/base-graph-1-1.png" width="576"></p>
+<p><img src="generate-closure_files/figure-html/base-graph-1-1.png" width="288" style="display: block; margin: auto;"></p>
 </div>
 <div class="section level2">
 <h2 id="generating-the-closure">Generating the closure<a class="anchor" aria-label="anchor" href="#generating-the-closure"></a>
@@ -266,7 +265,7 @@ Approach 2 in <code>weighting_strategy::graphicalMCP</code>.</p>
 <span><span class="co">#&gt; <span style="color: #555555;">This warning is displayed once every 8 hours.</span></span></span>
 <span><span class="co">#&gt; <span style="color: #555555;">Call `lifecycle::last_lifecycle_warnings()` to see where this warning was</span></span></span>
 <span><span class="co">#&gt; <span style="color: #555555;">generated.</span></span></span></code></pre>
-<p><img src="generate-closure_files/figure-html/plot-gw-benchmarks-1.png" width="768"></p>
+<p><img src="generate-closure_files/figure-html/plot-gw-benchmarks-1.png" width="768" style="display: block; margin: auto;"></p>
 </div>
 <div class="section level2">
 <h2 id="improving-power-simulations-using-parent-child-relationships">Improving power simulations using parent-child relationships<a class="anchor" aria-label="anchor" href="#improving-power-simulations-using-parent-child-relationships"></a>
@@ -321,25 +320,22 @@ for power simulations.</p>
 <h2 id="comparing-different-approaches-to-power-simulations">Comparing different approaches to power simulations<a class="anchor" aria-label="anchor" href="#comparing-different-approaches-to-power-simulations"></a>
 </h2>
 <p>To benchmark against existing approaches to calculating weighting
-strategies, we compare the following approaches:
-<code>calcPower::gMCP</code>, Approach 1 (graphicalMCP conventional),
-and Approach 2 (graphicalMCP parent-child). Both Holm and fixed sequence
-procedures are considered with the numbers of hypotheses of 4, 8, 12,
-and 16. Computing time (in median log-10 seconds) is plotted below. We
-can see that <code>calcPower::gMCP</code> is the fastest and Approach 1
-(graphicalMCP conventional) is the lowest. Note that
-<code>calcPower::gMCP</code> implements the simulation using C, which is
-known to be faster than R but is not easy to extend to other situations.
-Given that the computing time of Approach 2 (graphicalMCP parent-child)
-is acceptable, we implement it in
-<code>graph_calculate_power::graphicalMCP</code>.</p>
-<div class="section level3">
-<h3 id="add-plot-here">Add plot here<a class="anchor" aria-label="anchor" href="#add-plot-here"></a>
-</h3>
+strategies, we compare the following approaches: [gMCP::calcPower()],
+Approach 1 (graphicalMCP conventional), and Approach 2 (graphicalMCP
+parent-child). Both Holm and fixed sequence procedures are considered
+with the numbers of hypotheses of 4, 8, 12, and 16. Computing time (in
+median log-10 seconds) is plotted below. We can see that
+[gMCP::calcPower()] is the fastest and Approach 1 (graphicalMCP
+conventional) is the lowest. Note that [gMCP::calcPower()] implements
+the simulation using C, which is known to be faster than R but is not
+easy to extend to other situations. Given that the computing time of
+Approach 2 (graphicalMCP parent-child) is acceptable, we implement it in
+[graphicalMCP::graph_calculate_power].</p>
+<p><img src="img/power-benchmarks-plot.png"></p>
 <!-- ################################################################################ -->
 <!-- The closure of a graph is the set of all sub-graphs, along with their weights calculated according to algorithm 1 of Bretz et al (2011). It is primarily used for [closed testing](link%20to%20closed%20test%20vignette), where all sub-graphs are tested for significance, and results are aggregated to determine which null hypotheses are significant globally. -->
 <!-- Throughout this article a common example will be used for demonstrations - the simple successive graph. It has two primary hypotheses, $H_1$ and $H_2$, which have the initial weight evenly split between them. The secondary hypotheses, $H_3$ and $H_4$, only have weight propagated to them if $H_1$ or $H_2$ is deleted, respectively. -->
-<!-- ```{r base-graph, fig.dim=c(6, 6)} -->
+<!-- ```{r base-graph, fig.dim=c(4, 4)} -->
 <!-- ss_graph <- simple_successive_2() -->
 <!-- plot(ss_graph, layout = "grid") -->
 <!-- ``` -->
@@ -692,94 +688,14 @@ is acceptable, we implement it in
 <!-- 1.  Generate the closure a single time to get all sub-graph weights efficiently -->
 <!-- 2.  For each simulation: 1. Search a graph for all hypotheses which can be rejected - This is fast with vectorization 1. Using the binary counting property, index into the row of the closure corresponding to all hypotheses rejected so far to get updated weights - This is substantially faster than updating a graph and re-calculating weights, especially for larger graphs 1. Repeat using the updated weights -->
 <!-- While this method is not as fast as gMCP's C implementation, it still runs substantial power simulations in a matter of seconds. The biggest drawback is how it can scale differently for different graph structures. For instance a fixed sequence procedure can take longer than a more balanced graph, like a Holm procedure, because it takes more steps to reject all possible hypotheses. -->
-<!-- ```{r power-benchmarks, eval=FALSE} -->
-<!-- vec_num_hyps <- 2:8 * 2 -->
-<!-- if (file.exists(here::here("vignettes/cache/power_benchmark_list.rds"))) { -->
-<!--   benchmarks <- read.csv(here::here("vignettes/cache/power_benchmarks.csv")) -->
-<!--   benchmarks$char_expression <- ordered( -->
-<!--     benchmarks$char_expression, -->
-<!--     c( -->
-<!--       "graphicalMCP fixed sequence (R)", -->
-<!--       "graphicalMCP Holm (R)", -->
-<!--       "gMCP (C)" -->
-<!--     ) -->
-<!--   ) -->
-<!-- } else { -->
-<!--   benchmark_list <- lapply( -->
-<!--     vec_num_hyps, -->
-<!--     function(num_hyps) { -->
-<!--       # A graph for the Holm procedure -->
-<!--       transitions <- matrix(1 / (num_hyps - 1), num_hyps, num_hyps) -->
-<!--       diag(transitions) <- 0 -->
-<!--       graph <- graph_create(rep(1 / num_hyps, num_hyps), transitions) -->
-<!--       corr <- diag(num_hyps) -->
-<!--       benchmark <- mark( -->
-<!--         `gMCP (C)` = calcPower(graph$hypotheses, .025, graph$transitions, -->
-<!--           n.sim = 2^16, corr.sim = corr -->
-<!--         ), -->
-<!--         `graphicalMCP Holm (R)` = -->
-<!--           graph_calculate_power(graph, .025, -->
-<!--             power_marginal = rep(.9, num_hyps), -->
-<!--             sim_n = 2^16 -->
-<!--           ), -->
-<!--         `graphicalMCP fixed sequence (R)` = -->
-<!--           graph_calculate_power(fixed_sequence(num_hyps), .025, -->
-<!--             power_marginal = rep(.9, num_hyps), -->
-<!--             sim_n = 2^16 -->
-<!--           ), -->
-<!--         check = FALSE, -->
-<!--         memory = FALSE, -->
-<!--         time_unit = "s", -->
-<!--         min_iterations = 5 -->
-<!--       )[, 1:5] -->
-<!--       # Remove rows for gMCP closure that weren't actually run -->
-<!--       benchmark <- benchmark[benchmark$median > .00001, ] -->
-<!--       benchmark$char_expression <- as.character(benchmark$expression) -->
-<!--       benchmark <- benchmark[, c("char_expression", "median")] -->
-<!--       cbind(data.frame(num_hyps = num_hyps), benchmark) -->
-<!--     } -->
-<!--   ) -->
-<!--   benchmarks <- do.call(rbind, benchmark_list) -->
-<!--   benchmarks$char_expression <- ordered( -->
-<!--     benchmarks$char_expression, -->
-<!--     c( -->
-<!--       "graphicalMCP fixed sequence (R)", -->
-<!--       "graphicalMCP Holm (R)", -->
-<!--       "gMCP (C)" -->
-<!--     ) -->
-<!--   ) -->
-<!--   write.csv( -->
-<!--     benchmarks, -->
-<!--     here::here("vignettes/cache/power_benchmarks.csv"), -->
-<!--     row.names = FALSE -->
-<!--   ) -->
-<!--   # saveRDS( -->
-<!--   #   benchmark_list, -->
-<!--   #   here::here("vignettes/cache/power_benchmark_list.rds") -->
-<!--   # ) -->
-<!-- } -->
-<!-- ``` -->
-<!-- ```{r plot-power-benchmarks, eval=FALSE, fig.dim=c(8, 5)} -->
-<!-- benchmarks_plot_standard <- -->
-<!--   ggplot(benchmarks, aes(num_hyps, median, color = char_expression)) + -->
-<!--   geom_point() + -->
-<!--   geom_line() + -->
-<!--   theme_minimal() + -->
-<!--   scale_y_continuous(labels = scales::label_comma(suffix = "s")) + -->
-<!--   scale_color_discrete() + -->
-<!--   labs( -->
-<!--     title = "Power simulations with shortcut testing", -->
-<!--     subtitle = "Median runtime for 65,536 simulations", -->
-<!--     x = "Number of hypotheses", -->
-<!--     y = NULL, -->
-<!--     color = "Package" -->
-<!--   ) -->
-<!-- benchmarks_plot_standard + -->
-<!--   scale_y_log10(labels = scales::label_comma(suffix = "s")) + -->
-<!--   labs(subtitle = "Log-10 median runtime") -->
-<!-- ``` -->
+<pre><code><span><span class="co">#&gt; Scale for <span style="color: #00BB00;">y</span> is already present.</span></span>
+<span><span class="co">#&gt; Adding another scale for <span style="color: #00BB00;">y</span>, which will replace the existing scale.</span></span></code></pre>
+<p><img src="generate-closure_files/figure-html/plot-power-benchmarks-holm-1.png" width="768" style="display: block; margin: auto;"></p>
+<!-- Fixed sequence -->
+<pre><code><span><span class="co">#&gt; Scale for <span style="color: #00BB00;">y</span> is already present.</span></span>
+<span><span class="co">#&gt; Adding another scale for <span style="color: #00BB00;">y</span>, which will replace the existing scale.</span></span></code></pre>
+<p><img src="generate-closure_files/figure-html/plot-power-benchmarks-fs-1.png" width="768" style="display: block; margin: auto;"></p>
 <!-- ![](img/power-benchmarks-plot.png) -->
-</div>
 </div>
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
     </nav></aside>
