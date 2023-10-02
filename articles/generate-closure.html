@@ -690,13 +690,7 @@ Approach 2 (graphicalMCP parent-child) is acceptable, we implement it in
 <!-- 1.  Generate the closure a single time to get all sub-graph weights efficiently -->
 <!-- 2.  For each simulation: 1. Search a graph for all hypotheses which can be rejected - This is fast with vectorization 1. Using the binary counting property, index into the row of the closure corresponding to all hypotheses rejected so far to get updated weights - This is substantially faster than updating a graph and re-calculating weights, especially for larger graphs 1. Repeat using the updated weights -->
 <!-- While this method is not as fast as gMCP's C implementation, it still runs substantial power simulations in a matter of seconds. The biggest drawback is how it can scale differently for different graph structures. For instance a fixed sequence procedure can take longer than a more balanced graph, like a Holm procedure, because it takes more steps to reject all possible hypotheses. -->
-<pre><code><span><span class="co">#&gt; Scale for <span style="color: #00BB00;">y</span> is already present.</span></span>
-<span><span class="co">#&gt; Adding another scale for <span style="color: #00BB00;">y</span>, which will replace the existing scale.</span></span></code></pre>
-<p><img src="generate-closure_files/figure-html/plot-power-benchmarks-holm-1.png" width="768" style="display: block; margin: auto;"></p>
 <!-- Fixed sequence -->
-<pre><code><span><span class="co">#&gt; Scale for <span style="color: #00BB00;">y</span> is already present.</span></span>
-<span><span class="co">#&gt; Adding another scale for <span style="color: #00BB00;">y</span>, which will replace the existing scale.</span></span></code></pre>
-<p><img src="generate-closure_files/figure-html/plot-power-benchmarks-fs-1.png" width="768" style="display: block; margin: auto;"></p>
 <!-- ![](img/power-benchmarks-plot.png) -->
 </div>
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
