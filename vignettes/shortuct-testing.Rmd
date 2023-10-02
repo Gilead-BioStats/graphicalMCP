@@ -208,14 +208,14 @@ Given the above inputs, we can estimate "power" via simulation for the graphical
 
 ```{r power-calculate-calculate}
 set.seed(1234)
-output <- graph_calculate_power(g,
+power_output <- graph_calculate_power(g,
   alpha = .025,
   sim_corr = corr,
   sim_n = 1e5,
   power_marginal = c(power_marginal_primary, power_marginal_secondary),
   sim_success = succ
 )
-output$power
+power_output$power
 ```
 
 To see the detailed outputs of all simulated p-values and rejection decisions for all hypotheses, specify `verbose = TRUE`. This will produce a lot of outputs. To allow flexible printing functions, a user can change the following:
@@ -225,7 +225,7 @@ To see the detailed outputs of all simulated p-values and rejection decisions fo
 
 ```{r power-calculate-calculate_verbose}
 set.seed(1234)
-verbose_output <- graph_calculate_power(g,
+power_verbose_output <- graph_calculate_power(g,
   alpha = .025,
   sim_corr = corr,
   sim_n = 1e5,
@@ -234,18 +234,15 @@ verbose_output <- graph_calculate_power(g,
   verbose = TRUE
 )
 
-print(verbose_output$details)
+print(power_verbose_output$details)
 
-print(verbose_output, indent = 4, precision = 6)
+print(power_verbose_output$details, indent = 4, precision = 6)
 ```
 
 # Reference
 - Bretz, F., Maurer, W., Brannath, W., & Posch, M. (2009). A graphical approach to sequentially rejective multiple test procedures. Statistics in medicine, 28(4), 586-604.
 - Bretz, F., Maurer, W., & Hommel, G. (2011). Test and power considerations for multiple endpoint analyses using sequentially rejective graphical procedures. Statistics in medicine, 30(13), 1489-1501.
 
-```{r power-calculate-calculate_verbose}
-sessionInfo()
-```
 <!--
 ## Compared with gMCP
 
