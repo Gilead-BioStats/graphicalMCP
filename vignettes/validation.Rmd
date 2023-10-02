@@ -1,8 +1,8 @@
 ---
-title: "validation"
+title: "Validation"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{validation}
+  %\VignetteIndexEntry{Validation}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---

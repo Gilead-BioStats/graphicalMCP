@@ -22,6 +22,20 @@ bonferroni_holm <- function(num_hyps, hyp_names = NULL) {
       (num_hyps == length(hyp_names) || is.null(hyp_names))
   )
 
+  hypotheses <- rep(1 / num_hyps, num_hyps)
+
+  graph_create(hypotheses, matrix(0, num_hyps, num_hyps), hyp_names = hyp_names)
+}
+
+#' @export
+#' @rdname example-graphs
+bonferroni_holm <- function(num_hyps, hyp_names = NULL) {
+  stopifnot(
+    "num_hyps must be an integer" = is.numeric(num_hyps),
+    "names must match size of desired graph" =
+      (num_hyps == length(hyp_names) || is.null(hyp_names))
+  )
+
   transitions <- matrix(rep(1 / (num_hyps - 1), num_hyps^2), nrow = num_hyps)
   diag(transitions) <- rep(0, num_hyps)
 
