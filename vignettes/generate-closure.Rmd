@@ -3,6 +3,7 @@ title: "Rationales to generate the closure and the weighting strategy of a graph
 output:
   rmarkdown::html_vignette:
     code_folding: hide
+bibliography: "`r system.file('references.bib', package='graphicalMCP')`"
 vignette: >
   %\VignetteIndexEntry{Rationales to generate the closure and the weighting strategy of a graph}
   %\VignetteEngine{knitr::rmarkdown}
@@ -27,6 +28,8 @@ library(ggplot2)
 library(bench)
 library(gt)
 ```
+
+@R-base
 
 ## Motivating example
 Consider a simple successive graph with four hypotheses. It has two primary hypotheses 
@@ -316,7 +319,7 @@ write.csv(
 
 ```
 
-```{r plot-gw-benchmarks, fig.dim=c(8, 5)}
+```{r plot-gw-benchmarks, fig.dim=c(8, 5), eval=FALSE}
 benchmarks <- read.csv(here::here("vignettes/cache/gw_benchmarks.csv"))
 benchmarks <- subset(benchmarks, char_expression != "graphicalMCP recursive")
 benchmarks$char_expression <- factor(benchmarks$char_expression,
@@ -843,7 +846,7 @@ we implement it in [graphicalMCP::graph_calculate_power].
 
 <!-- While this method is not as fast as gMCP's C implementation, it still runs substantial power simulations in a matter of seconds. The biggest drawback is how it can scale differently for different graph structures. For instance a fixed sequence procedure can take longer than a more balanced graph, like a Holm procedure, because it takes more steps to reject all possible hypotheses. -->
 
-```{r power-parent-child}
+```{r power-parent-child, eval=FALSE}
 gcp_traditional <- function(graph,
                             alpha = .025,
                             power_marginal =
@@ -961,7 +964,7 @@ gcp_traditional <- function(graph,
 }
 ```
 
-```{r power-benchmarks-holm}
+```{r power-benchmarks-holm, eval=FALSE}
 vec_num_hyps <- 2:8 * 2
 
 if (file.exists(here::here("vignettes/cache/power_benchmarks_holm.csv"))) {
@@ -1034,7 +1037,7 @@ if (file.exists(here::here("vignettes/cache/power_benchmarks_holm.csv"))) {
 }
 ```
 
-```{r plot-power-benchmarks-holm, fig.dim=c(8, 5)}
+```{r plot-power-benchmarks-holm, fig.dim=c(8, 5), eval=FALSE}
 benchmarks_plot_standard <-
   ggplot(benchmarks, aes(num_hyps, median, color = char_expression)) +
   geom_point() +
@@ -1057,7 +1060,7 @@ benchmarks_plot_standard +
 
 <!-- Fixed sequence -->
 
-```{r power-benchmarks-fs}
+```{r power-benchmarks-fs, eval=FALSE}
 vec_num_hyps <- 2:8 * 2
 
 if (file.exists(here::here("vignettes/cache/power_benchmarks_fs.csv"))) {
@@ -1127,7 +1130,7 @@ if (file.exists(here::here("vignettes/cache/power_benchmarks_fs.csv"))) {
 }
 ```
 
-```{r plot-power-benchmarks-fs, fig.dim=c(8, 5)}
+```{r plot-power-benchmarks-fs, fig.dim=c(8, 5), eval=FALSE}
 benchmarks_plot_standard <-
   ggplot(benchmarks, aes(num_hyps, median, color = char_expression)) +
   geom_point() +
@@ -1149,3 +1152,5 @@ benchmarks_plot_standard +
 ```
 
 <!-- ![](img/power-benchmarks-plot.png) -->
+
+

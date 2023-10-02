@@ -15,6 +15,8 @@
 \usage{
 bonferroni_holm(num_hyps, hyp_names = NULL)
 
+bonferroni_holm(num_hyps, hyp_names = NULL)
+
 huque_alosh_bhore_2011(hyp_names = NULL)
 
 wiens_dmitrienko_2005(hyp_names = NULL)
