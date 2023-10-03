@@ -17,7 +17,7 @@ knitr::opts_chunk$set(
 )
 ```
 
-```{r setup, results = "hide"}
+```{r setup, message=FALSE, warning=FALSE}
 library(gt)
 library(graphicalMCP)
 ```

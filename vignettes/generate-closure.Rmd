@@ -842,7 +842,7 @@ we implement it in [graphicalMCP::graph_calculate_power].
 
 <!-- While this method is not as fast as gMCP's C implementation, it still runs substantial power simulations in a matter of seconds. The biggest drawback is how it can scale differently for different graph structures. For instance a fixed sequence procedure can take longer than a more balanced graph, like a Holm procedure, because it takes more steps to reject all possible hypotheses. -->
 
-```{r power-parent-child, eval=FALSE}
+```{r power-parent-child}
 gcp_traditional <- function(graph,
                             alpha = .025,
                             power_marginal =
@@ -960,11 +960,11 @@ gcp_traditional <- function(graph,
 }
 ```
 
-```{r power-benchmarks-holm, eval=FALSE}
+```{r power-benchmarks-holm}
 vec_num_hyps <- 2:8 * 2
 
-if (file.exists(here::here("vignettes/cache/power_benchmarks.csv"))) {
-  benchmarks <- read.csv(here::here("vignettes/cache/power_benchmarks.csv"))
+if (file.exists(here::here("vignettes/cache/power_benchmarks_holm.csv"))) {
+  benchmarks <- read.csv(here::here("vignettes/cache/power_benchmarks_holm.csv"))
 
   benchmarks$char_expression <- ordered(
     benchmarks$char_expression,
@@ -988,17 +988,17 @@ if (file.exists(here::here("vignettes/cache/power_benchmarks.csv"))) {
 
       benchmark <- mark(
         `gMCP (C)` = calcPower(graph$hypotheses, .025, graph$transitions,
-          n.sim = 2^16, corr.sim = corr
+          n.sim = 2^14, corr.sim = corr
         ),
         `graphicalMCP parent-child (R)` =
           graph_calculate_power(graph, .025,
             power_marginal = rep(.9, num_hyps),
-            sim_n = 2^16
+            sim_n = 2^14
           ),
         `graphicalMCP traditional (R)` =
-          gcp_traditional(graph, .025,
+          if (num_hyps <= 10) gcp_traditional(graph, .025,
             power_marginal = rep(.9, num_hyps),
-            sim_n = 2^16
+            sim_n = 2^14
           ),
         check = FALSE,
         memory = FALSE,
@@ -1027,18 +1027,13 @@ if (file.exists(here::here("vignettes/cache/power_benchmarks.csv"))) {
 
   write.csv(
     benchmarks,
-    here::here("vignettes/cache/power_benchmarks.csv"),
+    here::here("vignettes/cache/power_benchmarks_holm.csv"),
     row.names = FALSE
   )
-
-  # saveRDS(
-  #   benchmark_list,
-  #   here::here("vignettes/cache/power_benchmark_list.rds")
-  # )
 }
 ```
 
-```{r plot-power-benchmarks-holm, eval=FALSE, fig.dim=c(8, 5)}
+```{r plot-power-benchmarks-holm, fig.dim=c(8, 5)}
 benchmarks_plot_standard <-
   ggplot(benchmarks, aes(num_hyps, median, color = char_expression)) +
   geom_point() +
@@ -1048,7 +1043,7 @@ benchmarks_plot_standard <-
   scale_color_discrete() +
   labs(
     title = "Power simulations with shortcut testing - Holm",
-    subtitle = "Median runtime for 65,536 simulations",
+    subtitle = "Median runtime for 16,384 simulations",
     x = "Number of hypotheses",
     y = NULL,
     color = "Package"
@@ -1056,16 +1051,16 @@ benchmarks_plot_standard <-
 
 benchmarks_plot_standard +
   scale_y_log10(labels = scales::label_comma(suffix = "s")) +
-  labs(subtitle = "Log-10 median runtime for 65,536 simulations")
+  labs(subtitle = "Log-10 median runtime for 16,384 simulations")
 ```
 
 <!-- Fixed sequence -->
 
-```{r power-benchmarks-fs, eval=FALSE}
+```{r power-benchmarks-fs}
 vec_num_hyps <- 2:8 * 2
 
-if (file.exists(here::here("vignettes/cache/power_benchmarks.csv"))) {
-  benchmarks <- read.csv(here::here("vignettes/cache/power_benchmarks.csv"))
+if (file.exists(here::here("vignettes/cache/power_benchmarks_fs.csv"))) {
+  benchmarks <- read.csv(here::here("vignettes/cache/power_benchmarks_fs.csv"))
 
   benchmarks$char_expression <- ordered(
     benchmarks$char_expression,
@@ -1079,32 +1074,29 @@ if (file.exists(here::here("vignettes/cache/power_benchmarks.csv"))) {
   benchmark_list <- lapply(
     vec_num_hyps,
     function(num_hyps) {
-      # A graph for the Holm procedure
-      transitions <- matrix(1 / (num_hyps - 1), num_hyps, num_hyps)
-      diag(transitions) <- 0
-
-      graph <- graph_create(rep(1 / num_hyps, num_hyps), transitions)
+      # A graph for the fixed sequence procedure
+      graph <- fixed_sequence(num_hyps)
 
       corr <- diag(num_hyps)
 
       benchmark <- mark(
         `gMCP (C)` = calcPower(graph$hypotheses, .025, graph$transitions,
-          n.sim = 2^15, corr.sim = corr
+          n.sim = 2^14, corr.sim = corr
         ),
         `graphicalMCP parent-child (R)` =
           graph_calculate_power(graph, .025,
             power_marginal = rep(.9, num_hyps),
-            sim_n = 2^15
+            sim_n = 2^14
           ),
         `graphicalMCP traditional (R)` =
-          gcp_traditional(graph, .025,
+          if (num_hyps <= 10) gcp_traditional(graph, .025,
             power_marginal = rep(.9, num_hyps),
-            sim_n = 2^15
+            sim_n = 2^14
           ),
         check = FALSE,
         memory = FALSE,
         time_unit = "s",
-        min_iterations = 1
+        min_iterations = 5
       )[, 1:5]
 
       benchmark <- benchmark[benchmark$median > .00001, ]
@@ -1128,18 +1120,13 @@ if (file.exists(here::here("vignettes/cache/power_benchmarks.csv"))) {
 
   write.csv(
     benchmarks,
-    here::here("vignettes/cache/power_benchmarks.csv"),
+    here::here("vignettes/cache/power_benchmarks_fs.csv"),
     row.names = FALSE
   )
-
-  # saveRDS(
-  #   benchmark_list,
-  #   here::here("vignettes/cache/power_benchmark_list.rds")
-  # )
 }
 ```
 
-```{r plot-power-benchmarks-fs, eval=FALSE, fig.dim=c(8, 5)}
+```{r plot-power-benchmarks-fs, fig.dim=c(8, 5)}
 benchmarks_plot_standard <-
   ggplot(benchmarks, aes(num_hyps, median, color = char_expression)) +
   geom_point() +
@@ -1148,8 +1135,8 @@ benchmarks_plot_standard <-
   scale_y_continuous(labels = scales::label_comma(suffix = "s")) +
   scale_color_discrete() +
   labs(
-    title = "Power simulations with shortcut testing - Holm",
-    subtitle = "Median runtime for 65,536 simulations",
+    title = "Power simulations with shortcut testing - Fixed sequence",
+    subtitle = "Median runtime for 16,384 simulations",
     x = "Number of hypotheses",
     y = NULL,
     color = "Package"
@@ -1157,7 +1144,7 @@ benchmarks_plot_standard <-
 
 benchmarks_plot_standard +
   scale_y_log10(labels = scales::label_comma(suffix = "s")) +
-  labs(subtitle = "Log-10 median runtime for 65,536 simulations")
+  labs(subtitle = "Log-10 median runtime for 16,384 simulations")
 ```
 
 <!-- ![](img/power-benchmarks-plot.png) -->
