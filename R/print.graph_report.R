@@ -106,17 +106,13 @@ print.graph_report <- function(x, ..., precision = 4, indent = 2, rows = 10) {
 
   cat("\n")
 
-  na_output_graph <- x$outputs$graph
-  na_output_graph$hypotheses[x$outputs$rejected] <-
-    na_output_graph$transitions[x$outputs$rejected, ] <-
-    na_output_graph$transitions[, x$outputs$rejected] <-
-    NA
+  attr(x$outputs$graph, "title") <-
+    "Final updated graph after removing rejected hypotheses"
 
   print(
-    na_output_graph,
+    x$outputs$graph,
     precision = precision,
-    indent = indent,
-    title = "Final updated graph after removing rejected hypotheses"
+    indent = indent
   )
 
   cat("\n")
@@ -154,37 +150,28 @@ print.graph_report <- function(x, ..., precision = 4, indent = 2, rows = 10) {
         if (i == 0) {
           print(graph_seq[[i + 1]], precision = precision, indent = indent)
         } else {
-          graph_seq_elt_na <- graph_seq[[i + 1]]
-          graph_seq_elt_na$hypotheses[del_seq[seq_len(i)]] <-
-            graph_seq_elt_na$transitions[del_seq[seq_len(i)], ] <-
-            graph_seq_elt_na$transitions[, del_seq[seq_len(i)]] <-
-            NA
+          attr(graph_seq[[i + 1]], "title") <- paste0(
+            "Step ", i, ": Updated graph after removing ",
+            if (i == 1) "hypothesis " else "hypotheses ",
+            paste0(del_seq[seq_len(i)], collapse = ", ")
+          )
 
           print(
-            graph_seq_elt_na,
+            graph_seq[[i + 1]],
             precision = precision,
-            indent = indent * (i + 1),
-            title = paste0(
-              "Step ", i, ": Updated graph after removing ",
-              if (i == 1) "hypothesis " else "hypotheses ",
-              paste0(del_seq[seq_len(i)], collapse = ", ")
-            )
+            indent = indent * (i + 1)
           )
         }
         cat("\n")
       }
 
-      final_graph_na <- graph_seq[[length(graph_seq)]]
-      final_graph_na$hypotheses[del_seq] <-
-        final_graph_na$transitions[del_seq, ] <-
-        final_graph_na$transitions[, del_seq] <-
-        NA
+      attr(graph_seq[[length(graph_seq)]], "title") <-
+        "Final updated graph after removing rejected hypotheses"
 
       print(
-        final_graph_na,
+        graph_seq[[length(graph_seq)]],
         precision = precision,
-        indent = indent,
-        title = "Final updated graph after removing rejected hypotheses"
+        indent = indent
       )
       cat("\n")
     }

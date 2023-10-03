@@ -1,26 +1,20 @@
 ---
-output: github_document
+title: "Get started"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Get started}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
 ---
-
-<!-- README.md is generated from README.Rmd. Please edit that file -->
 
 ```{r, include = FALSE}
 knitr::opts_chunk$set(
   results = "hide",
   collapse = TRUE,
   comment = "#>",
-  fig.path = "man/figures/README-",
-  out.width = "100%"
+  fig.align = "center"
 )
 ```
-
-<!-- badges: start -->
-
-[![CRAN status](https://www.r-pkg.org/badges/version/graphicalMCP)](https://cran.r-project.org/package=graphicalMCP) [![Codecov test coverage](https://codecov.io/gh/Gilead-BioStats/graphicalMCP/branch/s3-graph_mcp/graph/badge.svg)](https://app.codecov.io/gh/Gilead-BioStats/graphicalMCP?branch=s3-graph_mcp) [![R-CMD-check](https://github.com/Gilead-BioStats/graphicalMCP/actions/workflows/R-CMD-check.yaml/badge.svg?branch=%60r%20prompt::git_branch()%60)](https://github.com/Gilead-BioStats/graphicalMCP/actions/workflows/R-CMD-check.yaml)
-
-<!-- badges: end -->
-
-# graphicalMCP <img src="man/figures/logo.png" align="right" height="350"/>
 
 ## Introduction
 
@@ -43,7 +37,7 @@ pak::pak("Gilead-BioStats/graphicalMCP@dev")
 
 The base object in graphicalMCP is an `initial_graph`, which is a weighted, directed graph represented by a matrix of transition (edge) weights, and a vector of hypothesis (vertex) weights.
 
-```{r create-graph}
+```{r create-graph, fig.dim=c(3, 3)}
 library(graphicalMCP)
 
 # A graphical multiple comparison procedure with two primary hypotheses (H1
@@ -63,7 +57,7 @@ transitions <- rbind(
 hyp_names <- c("H1", "H2", "H3", "H4")
 example_graph <- graph_create(hypotheses, transitions, hyp_names)
 
-plot(example_graph, layout = "grid")
+plot(example_graph, layout = "grid", vertex.size = 60)
 ```
 
 ### Update graph
@@ -86,13 +80,13 @@ More information on the closure can be found in [Link to closure vignette].
 
 ### Test hypotheses
 
-Bonferroni testing via the shortcut method is supported in graphicalMCP. Such a test can be performed with `graph_test_shortcut()`, which generates a report showing the graph & test results. See more insight about why a hypothesis was rejected or not by setting the `verbose` and `test_values` flags. More details about shortcut testing can be found in [link to shortcut vignette].
+Bonferroni testing via the shortcut method is supported in graphicalMCP. Such a test can be performed with `graph_test_shortcut()`, which generates a report showing the graph & test results. See more insight about why a hypothesis was rejected or not by setting the `verbose` and `test_values` flags. More details about shortcut testing can be found in `vignette("shortcut-testing")`.
 
 ```{r test-graph-shortcut}
 graph_test_shortcut(example_graph, p = c(.01, .03, .02, .01), alpha = .025)
 ```
 
-A graph can also be tested using Simes- or parametric-based testing using the closure test. Other types of tests will be added over time, and a combination of tests can be used for groups of hypotheses. Additional details about closure testing can be found in [link to closed test vignette].
+A graph can also be tested using Simes- or parametric-based testing using the closure test. Other types of tests will be added over time, and a combination of tests can be used for groups of hypotheses. Additional details about closure testing can be found in `vignette("closed-testing")`.
 
 ```{r test-graph}
 graph_test_closure(
@@ -116,7 +110,7 @@ graph_calculate_power(
 )
 ```
 
-All valid test types & hypothesis groupings are valid for power simulations as well. Power simulations are discussed further in both the [shortcut testing vignette] and the [closure testing vignette].
+All valid test types & hypothesis groupings are valid for power simulations as well. Power simulations are discussed further in both the `vignette("shortcut-testing")` and the `vignette("closed-testing")`.
 
 ## Related work
 
@@ -133,6 +127,8 @@ citation("graphicalMCP")
 ```
 
 ## Acknowledgments
+
+We owe a debt of gratitude to the authors of gMCP for their pioneering work in the field, without which this package would not be nearly as extensive as it is.
 
 ## Glossary of terms {#glossary-of-terms}
 

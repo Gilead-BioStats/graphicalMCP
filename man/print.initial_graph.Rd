@@ -4,7 +4,7 @@
 \alias{print.initial_graph}
 \title{S3 print method for the class \code{initial_graph}}
 \usage{
-\method{print}{initial_graph}(x, ..., precision = 4, indent = 0, title = "Initial graph")
+\method{print}{initial_graph}(x, ..., precision = 4, indent = 0)
 }
 \arguments{
 \item{x}{An object of class \code{initial_graph} to print}
@@ -15,9 +15,6 @@
 to include in numeric values}
 
 \item{indent}{An integer scalar indicating how many spaces to indent results}
-
-\item{title}{First line of printing, used internally to distinguish initial
-graphs from updated graphs}
 }
 \description{
 A printed \code{initial_graph} displays a header stating what the object is, the

@@ -11,6 +11,7 @@ vignette: >
 
 ```{r, include = FALSE}
 knitr::opts_chunk$set(
+  fig.align = "center",
   collapse = TRUE,
   comment = "#>",
   cache.lazy = FALSE
@@ -32,7 +33,7 @@ In addition, there are some statistical considerations to complete the graph. Th
 
 # Create the graph
 
-```{r create-graph, fig.dim = c(5, 5)}
+```{r create-graph, fig.dim=c(3, 3)}
 hypotheses <- c(0.5, 0.5, 0, 0)
 transitions <- rbind(
   c(0, 0.5, 0.5, 0),
@@ -44,7 +45,7 @@ hyp_names <- c("H1", "H2", "H3", "H4")
 
 g <- graph_create(hypotheses, transitions, hyp_names)
 
-plot(g, layout = "grid", vertex.size = 30)
+plot(g, layout = "grid", vertex.size = 60)
 ```
 
 # Perform the graphical multiple comparison procedure

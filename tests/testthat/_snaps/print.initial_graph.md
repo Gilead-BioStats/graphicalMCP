@@ -19,12 +19,12 @@
     Code
       graph_update(graph_create(1, matrix(0, nrow = 1)), TRUE)$updated_graph
     Output
-      Initial graph
+      Updated graph
       
       --- Hypothesis weights ---
-      H1: 0
+      H1: NA
       
       --- Transition weights ---
           H1
-       H1  0
+       H1 NA
 

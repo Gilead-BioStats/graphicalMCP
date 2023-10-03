@@ -103,7 +103,7 @@ plot.initial_graph <- function(x,
 
   # Very small edges should display as epsilon
   edge_labels <- e_attr$weight
-
+  if (is.null(edge_labels)) edge_labels <- numeric(0)
 
   near_0 <- edge_labels <= eps & edge_labels != 0
   near_1 <- edge_labels >= 1 - eps & edge_labels != 1

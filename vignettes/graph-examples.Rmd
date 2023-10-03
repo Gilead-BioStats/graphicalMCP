@@ -2,7 +2,7 @@
 title: "Common multiple comparison procedures illustrated using graphicalMCP"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Common procedures}
+  %\VignetteIndexEntry{Common multiple comparison procedures illustrated using graphicalMCP}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -12,7 +12,7 @@ knitr::opts_chunk$set(
   fig.align = "center",
   collapse = TRUE,
   comment = "#>",
-  fig.dim = c(5, 5)
+  fig.dim = c(3, 3)
 )
 ```
 
@@ -45,19 +45,18 @@ is less than or equal to its significance level. When $w_i=w_j$ for all $i,j$, t
 means an equal split and the test is the Bonferroni test. There is no propagation 
 between any pair of hypothesis.
 
-### error in plotting
-### Error in round(edge_labels, precision) : 
-###  non-numeric argument to mathematical function
-
-### This error is from a previous version - Install the latest version on this branch by pressing "Ctrl + Shift + B" in the RStudio project
-
 ```{r bonferroni}
 set.seed(1234)
 alpha <- 0.025
 m <- 3
 transitions <- matrix(0, m, m)
 bonferroni_graph <- graph_create(rep(1 / m, m), transitions)
-plot(bonferroni_graph, layout = igraph::layout_in_circle, vertex.size = 30)
+plot(
+  bonferroni_graph,
+  layout = igraph::layout_in_circle(as_igraph(bonferroni_graph),
+                                    order = c(2, 1, 3)),
+  vertex.size = 70
+)
 p_values <- runif(m, 0, alpha)
 test_results <- graph_test_shortcut(bonferroni_graph, p = p_values, alpha = alpha)
 test_results$outputs$rejected
@@ -76,7 +75,10 @@ m <- 3
 transitions <- matrix(1 / (m - 1), m, m)
 diag(transitions) <- 0
 holm_graph <- graph_create(rep(1 / m, m), transitions)
-plot(holm_graph, layout = igraph::layout_in_circle, vertex.size = 30)
+plot(holm_graph,
+     layout = igraph::layout_in_circle(as_igraph(holm_graph),
+                                       order = c(2, 1, 3)),
+     vertex.size = 70)
 p_values <- runif(m, 0, alpha)
 test_results <- graph_test_shortcut(holm_graph, p = p_values, alpha = alpha)
 test_results$outputs$rejected
@@ -90,7 +92,7 @@ otherwise the testing stops. If $H_2$ is rejected, it will test $H_3$; otherwise
 the testing stops. For each hypothesis, it will be tested at the full $\alpha$ level, 
 when it can be tested.
 
-```{r fixed-sequence-1, fig.dim=c(6, 2)}
+```{r fixed-sequence-1, fig.dim=c(4.5, .9)}
 set.seed(1234)
 alpha <- 0.025
 m <- 3
@@ -100,7 +102,7 @@ transitions <- rbind(
   c(0, 0, 0)
 )
 fixed_sequence_graph <- graph_create(c(1, 0, 0), transitions)
-plot(fixed_sequence_graph, nrow = 1, asp = .1)
+plot(fixed_sequence_graph, nrow = 1, asp = .05, vertex.size = 40)
 p_values <- runif(m, 0, alpha)
 test_results <- graph_test_shortcut(fixed_sequence_graph, p = p_values, alpha = alpha)
 test_results$outputs$rejected
@@ -111,7 +113,7 @@ test_results$outputs$rejected
 Fallback procedures have one-way propagation (like fixed sequence procedures) but 
 allow hypotheses to be tested at different significance levels.
 
-```{r fixed-sequence, fig.dim=c(6, 2)}
+```{r fixed-sequence, fig.dim=c(4.5, .9)}
 set.seed(1234)
 alpha <- 0.025
 m <- 3
@@ -122,7 +124,7 @@ transitions <- rbind(
   c(0, 0, 0)
 )
 fallback_graph_2003 <- graph_create(rep(1 / m, m), transitions)
-plot(fallback_graph_2003, nrow = 1, asp = .1)
+plot(fallback_graph_2003, nrow = 1, asp = .05, vertex.size = 40)
 p_values <- runif(m, 0, alpha)
 test_results <- graph_test_shortcut(fallback_graph_2003, p = p_values, alpha = alpha)
 test_results$outputs$rejected
@@ -132,7 +134,7 @@ Further they can be improved to allow propagation from later hypotheses to earli
 hypotheses, because it is possible that a later hypothesis is rejected before an earlier 
 hypothesis can be rejected.
 
-```{r fixed-sequence-improved, fig.dim=c(6, 2)}
+```{r fixed-sequence-improved, fig.dim=c(4.5, .9)}
 set.seed(1234)
 alpha <- 0.025
 m <- 3
@@ -143,8 +145,8 @@ transitions <- rbind(
   c(0.5, 0.5, 0)
 )
 fallback_graph_2005 <- graph_create(rep(1 / m, m), transitions)
-plot(fallback_graph_2005, nrow = 1, asp = .1,
-     edge_curves = c("pairs" = -4, "H3|H1" = -4))
+plot(fallback_graph_2005, nrow = 1, asp = .05, vertex.size = 40,
+     edge_curves = c("pairs" = 7, "H3|H1" = -10))
 
 # Hommel and Bretz (2008)
 epsilon <- 0.0001
@@ -154,8 +156,8 @@ transitions <- rbind(
   c(1, 0, 0)
 )
 fallback_graph_2008 <- graph_create(rep(1 / m, m), transitions)
-plot(fallback_graph_2008, nrow = 1, asp = .1, eps = .0001,
-     edge_curves = c("pairs" = -4, "H3|H1" = -5))
+plot(fallback_graph_2008, nrow = 1, asp = .05, eps = .0001,
+     edge_curves = c("pairs" = 7, "H3|H1" = -10), vertex.size = 40)
 p_values <- runif(m, 0, alpha)
 test_results <- graph_test_shortcut(fallback_graph_2008, p = p_values, alpha = alpha)
 test_results$outputs$rejected
@@ -177,7 +179,7 @@ weight of $H_2$ will be propagated to $H_3$. Here $\varepsilon$ is assigned to b
 0.0001 and in practice, the value could be adjusted but it should be much smaller 
 than the smallest p-value observed.
 
-```{r serial-gatekeeping, fig.dim=c(6, 2)}
+```{r serial-gatekeeping, fig.dim=c(4.5, .9)}
 set.seed(1234)
 alpha <- 0.025
 m <- 3
@@ -188,8 +190,8 @@ transitions <- rbind(
   c(0, 0, 0)
 )
 serial_gatekeeping_graph <- graph_create(c(0.5, 0.5, 0), transitions)
-plot(serial_gatekeeping_graph, nrow = 1, asp = .1, eps = .0001,
-     edge_curves = c("pairs" = -4, "H3|H1" = -5))
+plot(serial_gatekeeping_graph, nrow = 1, asp = .05, eps = .0001,
+     edge_curves = c("pairs" = 7, "H3|H1" = -10), vertex.size = 40)
 p_values <- runif(m, 0, alpha)
 test_results <- graph_test_shortcut(serial_gatekeeping_graph, p = p_values, alpha = alpha)
 test_results$outputs$rejected
@@ -218,7 +220,7 @@ transitions <- rbind(
   c(0, 0, 1,   0)
 )
 parallel_gatekeeping_graph <- graph_create(c(0.5, 0.5, 0, 0), transitions)
-plot(parallel_gatekeeping_graph)
+plot(parallel_gatekeeping_graph, vertex.size = 70)
 p_values <- runif(m, 0, alpha)
 test_results <- graph_test_shortcut(parallel_gatekeeping_graph, p = p_values, alpha = alpha)
 test_results$outputs$rejected
@@ -241,7 +243,7 @@ transitions <- rbind(
   c(0, epsilon, 1 - epsilon,   0)
 )
 parallel_gatekeeping_improved_graph <- graph_create(c(0.5, 0.5, 0, 0), transitions)
-plot(parallel_gatekeeping_improved_graph, eps = .0001)
+plot(parallel_gatekeeping_improved_graph, eps = .0001, vertex.size = 70)
 p_values <- runif(m, 0, alpha)
 test_results <- graph_test_shortcut(parallel_gatekeeping_improved_graph, 
                                     p = p_values, alpha = alpha)
@@ -274,7 +276,7 @@ transitions <- rbind(
 )
 #  Maurer et al. (2011)
 simple_successive_graph <- graph_create(c(0.5, 0.5, 0, 0), transitions)
-plot(simple_successive_graph, layout = "grid", nrow = 2, vertex.size = 30)
+plot(simple_successive_graph, layout = "grid", nrow = 2, vertex.size = 70)
 p_values <- runif(m, 0, alpha)
 test_results <- graph_test_shortcut(simple_successive_graph, p = p_values, alpha = alpha)
 test_results$outputs$rejected
@@ -301,7 +303,7 @@ successive_var <- simple_successive_var <- function(gamma) {
   )
 }
 successive_var_graph <- successive_var(0.5)
-plot(successive_var_graph, layout = "grid", nrow = 2, vertex.size = 30)
+plot(successive_var_graph, layout = "grid", nrow = 2, vertex.size = 70)
 p_values <- runif(m, 0, alpha)
 test_results <- graph_test_shortcut(successive_var_graph, p = p_values, alpha = alpha)
 test_results$outputs$rejected
@@ -323,7 +325,12 @@ m <- 3
 transitions <- matrix(1 / (m - 1), m, m)
 diag(transitions) <- 0
 hommel_graph <- graph_create(rep(1 / m, m), transitions)
-plot(hommel_graph, layout = igraph::layout_in_circle, vertex.size = 30)
+plot(
+  hommel_graph,
+  layout = igraph::layout_in_circle(as_igraph(hommel_graph),
+                                    order = c(2, 1, 3)),
+  vertex.size = 70
+)
 p_values <- runif(m, 0, alpha)
 test_results <- graph_test_closure(hommel_graph, p = p_values, alpha = alpha, 
                                    test_types = "simes")
@@ -348,7 +355,12 @@ m <- 3
 transitions <- matrix(1 / (m - 1), m, m)
 diag(transitions) <- 0
 dunnett_graph <- graph_create(rep(1 / m, m), transitions)
-plot(dunnett_graph, layout = igraph::layout_in_circle, vertex.size = 30)
+plot(
+  dunnett_graph,
+  layout = igraph::layout_in_circle(as_igraph(dunnett_graph),
+                                    order = c(2, 1, 3)),
+  vertex.size = 70
+)
 p_values <- runif(m, 0, alpha)
 corr <- matrix(0.5, m, m)
 diag(corr) <- 1

@@ -11,6 +11,7 @@ vignette: >
 
 ```{r, include = FALSE}
 knitr::opts_chunk$set(
+  fig.align = "center",
   collapse = TRUE,
   comment = "#>",
   cache.lazy = FALSE
@@ -34,17 +35,17 @@ In addition, there are some statistical considerations to complete the graph. Th
 
 ## Create a graph
 
-```{r create-graph, fig.dim=c(8, 5)}
+```{r create-graph, fig.dim=c(5, 3.4)}
 hypotheses <- c(0.5, 0.5, 0, 0, 0, 0)
 
 epsilon <- 1e-5
 transitions <- rbind(
-  c(0,       0.5,     0.25,        0,    0.25, 0),
-  c(0.5,     0,       0,           0.25, 0,    0.25),
-  c(0,       0,       0,           0,    1,    0),
-  c(epsilon, 0,       0,           0,    0,    1 - epsilon),
-  c(0,       epsilon, 1 - epsilon, 0,    0,    0),
-  c(0,       0,       0,           1,    0,    0)
+  c(0, 0.5, 0.25, 0, 0.25, 0),
+  c(0.5, 0, 0, 0.25, 0, 0.25),
+  c(0, 0, 0, 0, 1, 0),
+  c(epsilon, 0, 0, 0, 0, 1 - epsilon),
+  c(0, epsilon, 1 - epsilon, 0, 0, 0),
+  c(0, 0, 0, 1, 0, 0)
 )
 
 hyp_names <- c("H1", "H2", "H3", "H4", "H5", "H6")
@@ -53,13 +54,19 @@ g <- graph_create(hypotheses, transitions, hyp_names)
 plot_layout <- rbind(
   c(.15, .5),
   c(.65, .5),
-  c(  0,  0),
-  c( .5,  0),
-  c( .3,  0),
-  c( .8,  0)
+  c(0, 0),
+  c(.5, 0),
+  c(.3, 0),
+  c(.8, 0)
 )
 
-plot(g, layout = plot_layout, eps = epsilon, edge_curves = c(pairs = .5))
+plot(
+  g,
+  layout = plot_layout,
+  eps = epsilon,
+  edge_curves = c(pairs = .8),
+  vertex.size = 35
+)
 ```
 
 ## Perform the graphical multiple comparison procedure based on Bonferroni tests
@@ -86,7 +93,7 @@ Adjusted p-values are initially calculated by groups of hypotheses. In this case
 test_results_verbose <-
   graph_test_closure(g, p = p_values, alpha = 0.025, verbose = TRUE)
 
-head(test_results_verbose$details) # Print fewer rows, e.g., 5
+head(test_results_verbose$details$results)
 ```
 
 ### Obtain adjusted significance levels
@@ -94,9 +101,11 @@ head(test_results_verbose$details) # Print fewer rows, e.g., 5
 An equivalent way to obtain rejections is via adjusting significance levels. A hypothesis is rejected if its p-value is less than or equal to its adjusted significance level. One can obtain adjusted significance levels for every hypothesis in every intersection hypothesis in the closure by specifying `test_values = TRUE`. A hypothesis is rejected by the closed testing procedure if *all* intersection hypotheses involving it have been rejected. An intersection hypothesis is rejected if *any* null hypotheses within it have been rejected. 
 
 ```{r graph-test-test_values}
-test_results_test_values <- graph_test_closure(g, p = p_values, alpha = 0.025, 
-                                               test_values = TRUE)
-test_results_test_values$test_values$results
+test_results_test_values <- graph_test_closure(g,
+  p = p_values, alpha = 0.025,
+  test_values = TRUE
+)
+head(test_results_test_values$test_values$results)
 ```
 
 ## Mixed procedures for graphical approaches
@@ -130,7 +139,7 @@ test_results_parametric$outputs$adjusted_p
 test_results_parametric$outputs$rejected
 
 df_adjusted_significance <- test_results_parametric$test_values$results
-df_adjusted_significance[df_adjusted_significance$Intersection == 1,]
+df_adjusted_significance[df_adjusted_significance$Intersection == 1, ]
 ```
 
 ### Parametric tests for primary hypotheses and Simes tests for secondary hypotheses
@@ -145,10 +154,12 @@ To implement this procedure, we create three subgroups: one for $H_1$ and $H_2$,
 
 ```{r graph-test-parametric-simes}
 test_results_parametric_simes <-
-  graph_test_closure(g, p = p_values, alpha = 0.025, 
-                     test_groups = list(c(1,2), c(3, 5), c(4, 6)),
-                     test_types = c("parametric", "simes", "simes"),
-                     test_corr = list(corr_12, NA, NA))
+  graph_test_closure(g,
+    p = p_values, alpha = 0.025,
+    test_groups = list(c(1, 2), c(3, 5), c(4, 6)),
+    test_types = c("parametric", "simes", "simes"),
+    test_corr = list(corr_12, NA, NA)
+  )
 
 test_results_parametric_simes$outputs$adjusted_p
 test_results_parametric_simes$outputs$rejected
@@ -170,7 +181,9 @@ unpooled_variance <- prop[-1] * (1 - prop[-1]) / sample_size[-1] +
   prop[1] * (1 - prop[1]) / sample_size[1]
 noncentrality_parameter_primary <- -(prop[-1] - prop[1]) / sqrt(unpooled_variance)
 marginal_power_primary <- pnorm(qnorm(alpha, lower.tail = FALSE),
-                                noncentrality_parameter_primary, 1, lower.tail = FALSE)
+  noncentrality_parameter_primary, 1,
+  lower.tail = FALSE
+)
 names(marginal_power_primary) <- c("H1", "H2")
 marginal_power_primary
 ```
@@ -186,14 +199,18 @@ variance <- sd[-1]^2 / sample_size[-1] + sd[1]^2 / sample_size[1]
 noncentrality_parameter_se1 <- (mean_change_se1[-1] - mean_change_se1[1]) /
   sqrt(variance)
 marginal_power_se1 <- pnorm(qnorm(alpha, lower.tail = FALSE),
-                            noncentrality_parameter_se1, 1, lower.tail = FALSE)
+  noncentrality_parameter_se1, 1,
+  lower.tail = FALSE
+)
 names(marginal_power_se1) <- c("H3", "H4")
 marginal_power_se1
 mean_change_se2 <- c(6, 8, 9)
 noncentrality_parameter_se2 <- (mean_change_se2[-1] - mean_change_se2[1]) /
   sqrt(variance)
 marginal_power_se2 <- pnorm(qnorm(alpha, lower.tail = FALSE),
-                            noncentrality_parameter_se2, 1, lower.tail = FALSE)
+  noncentrality_parameter_se2, 1,
+  lower.tail = FALSE
+)
 names(marginal_power_se2) <- c("H5", "H6")
 marginal_power_se2
 ```
@@ -205,7 +222,7 @@ In addition to the marginal power, we also need to make assumptions about the jo
 ```{r power-calculate-correlation}
 corr <- matrix(0, nrow = 6, ncol = 6)
 corr[1, 2] <- corr[3, 4] <- corr[5, 6] <- sqrt(sample_size[2] / sum(sample_size[1:2]) *
-                                                 sample_size[3] / sum(sample_size[c(1, 3)]))
+  sample_size[3] / sum(sample_size[c(1, 3)]))
 rho <- 0.5
 corr[1, 3] <- corr[1, 5] <- corr[2, 4] <- corr[2, 6] <- corr[3, 5] <- corr[4, 6] <- rho
 corr[1, 4] <- corr[1, 6] <- corr[2, 3] <- corr[2, 5] <- corr[1, 2] * rho
@@ -240,8 +257,10 @@ H1 <- function(x) x[1]
 `H1andH2` <- function(x) x[1] & x[2]
 # Probability to reject all hypotheses for the low dose or the high dose
 `(H1andH3andH5)or(H2andH4andH6)` <- function(x) (x[1] & x[3] & x[5]) | (x[2] & x[4] & x[6])
-succ <- list(H1, `Expected no. of rejections`, `AtLeast1`, `All`, `H1andH2`,
-             `(H1andH3andH5)or(H2andH4andH6)`)
+succ <- list(
+  H1, `Expected no. of rejections`, `AtLeast1`, `All`, `H1andH2`,
+  `(H1andH3andH5)or(H2andH4andH6)`
+)
 ```
 
 ### Output: Calculate power
@@ -331,6 +350,7 @@ verbose_output_parametric_simes <- graph_calculate_power(
 print(verbose_output_parametric_simes)
 
 print(verbose_output_parametric_simes,
-      indent = 4,
-      precision = 6)
+  indent = 4,
+  precision = 6
+)
 ```

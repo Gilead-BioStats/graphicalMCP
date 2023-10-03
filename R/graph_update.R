@@ -73,9 +73,12 @@ graph_update <- function(graph, delete) {
   }
 
   initial_graph <- graph
+  cume_delete <- integer(0)
 
   # Iterate over the hypotheses to delete
   for (delete_num in delete) {
+    cume_delete <- c(cume_delete, delete_num)
+
     # Save current state of the graph to use in calculations
     # Also make a copy of graph elements for storing new values in
     init_hypotheses <- hypotheses <- graph$hypotheses
@@ -120,7 +123,9 @@ graph_update <- function(graph, delete) {
     # loop to the next hypothesis to delete
     graph <- structure(
       list(hypotheses = hypotheses, transitions = transitions),
-      class = "initial_graph"
+      class = "initial_graph",
+      title = "Updated graph",
+      deleted = cume_delete
     )
 
     if (ordered) intermediate_graphs <- c(intermediate_graphs, list(graph))

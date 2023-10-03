@@ -4,13 +4,14 @@ output:
   rmarkdown::html_vignette:
     code_folding: hide
 vignette: >
-  %\VignetteIndexEntry{Generating the closure of a graph}
+  %\VignetteIndexEntry{Rationales to generate the closure and the weighting strategy of a graph}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
 
 ```{r, include = FALSE}
 knitr::opts_chunk$set(
+  fig.align = "center",
   echo = FALSE,
   collapse = TRUE,
   comment = "#>"
@@ -39,10 +40,10 @@ weights are propagated to $H_1$. Thus there is an edge from $H_3 (H_4)$ to $H_2 
 with a transition weight of 1. A graphical multiple comparison procedure is illustrated 
 below.
 
-```{r base-graph-1, fig.dim=c(6, 6)}
+```{r base-graph-1, fig.dim=c(3, 3)}
 ss_graph <- simple_successive_2()
 
-plot(ss_graph, layout = "grid")
+plot(ss_graph, layout = "grid", vertex.size = 60)
 ```
 
 ## Generating the closure
@@ -408,7 +409,7 @@ we implement it in [graphicalMCP::graph_calculate_power].
 
 <!-- Throughout this article a common example will be used for demonstrations - the simple successive graph. It has two primary hypotheses, $H_1$ and $H_2$, which have the initial weight evenly split between them. The secondary hypotheses, $H_3$ and $H_4$, only have weight propagated to them if $H_1$ or $H_2$ is deleted, respectively. -->
 
-<!-- ```{r base-graph, fig.dim=c(6, 6)} -->
+<!-- ```{r base-graph, fig.dim=c(4, 4)} -->
 <!-- ss_graph <- simple_successive_2() -->
 
 <!-- plot(ss_graph, layout = "grid") -->

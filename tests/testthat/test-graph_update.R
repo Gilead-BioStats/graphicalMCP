@@ -16,6 +16,16 @@ test_that("basic updating & structure", {
   expect_s3_class(graph_update(g, c(FALSE, FALSE, TRUE, TRUE)), "updated_graph")
   expect_equal(graph_update(g, c(FALSE, FALSE, FALSE, TRUE))$initial_graph, g)
   expect_equal(graph_update(g, c(1, 2, 3, 4))$initial_graph, g)
+  expect_length(graph_update(g, c(FALSE, FALSE, TRUE, TRUE)), 4)
+  expect_length(graph_update(g, 1:2), 4)
+  expect_equal(
+    attr(graph_update(g, c(FALSE, FALSE, TRUE, TRUE))$updated_graph, "title"),
+    "Updated graph"
+  )
+  expect_equal(
+    attr(graph_update(g, c(FALSE, FALSE, TRUE, TRUE))$updated_graph, "deleted"),
+    3:4
+  )
 })
 
 test_that("invalid input", {

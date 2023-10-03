@@ -66,10 +66,10 @@ transitions <- rbind(
 hyp_names <- c("H1", "H2", "H3", "H4")
 example_graph <- graph_create(hypotheses, transitions, hyp_names)
 
-plot(example_graph, layout = "grid")
+plot(example_graph, layout = "grid", vertex.size = 60)
 ```
 
-<img src="man/figures/README-create-graph-1.png" width="100%" />
+<img src="man/figures/README-create-graph-1.png" style="display: block; margin: auto;" />
 
 ### Update graph
 
@@ -167,6 +167,7 @@ A portion of Simes testing is also implemented in the lrstat package.
 
 ``` r
 citation("graphicalMCP")
+#> 
 #> To cite graphicalMCP in publications use:
 #> 
 #>   Xi, D.; Brockmann, E. (2023). graphicalMCP: Graph-based multiple

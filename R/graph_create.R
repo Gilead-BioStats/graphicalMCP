@@ -186,7 +186,9 @@ graph_create <- function(hypotheses, transitions, hyp_names = NULL) {
   # Create an initial graph object ---------------------------------------------
   new_graph <- structure(
     list(hypotheses = hypotheses, transitions = transitions),
-    class = "initial_graph"
+    class = "initial_graph",
+    title = "Initial graph",
+    deleted = NULL
   )
   new_graph
 }
