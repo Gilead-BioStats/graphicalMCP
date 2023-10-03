@@ -54,8 +54,7 @@
     <a class="dropdown-item" href="../articles/closed-testing.html">Graphical approaches based on the closure principle</a>
     <a class="dropdown-item" href="../articles/generate-closure.html">Rationales to generate the closure and the weighting strategy of a graph</a>
     <a class="dropdown-item" href="../articles/graph-examples.html">Common multiple comparison procedures illustrated using graphicalMCP</a>
-    <a class="dropdown-item" href="../articles/shortuct-testing.html">Sequentially rejective graphical approaches based on Bonferroni tests</a>
-    <a class="dropdown-item" href="../articles/temp-bib.html">temp-bib</a>
+    <a class="dropdown-item" href="../articles/shortuct-testing.html">Sequentially rejective graphical multiple comparison procedures based on Bonferroni tests</a>
     <a class="dropdown-item" href="../articles/validation.html">Validation</a>
   </div>
 </li>
@@ -134,7 +133,8 @@ hypothesis.</p>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span></span>
 <span>  <span class="va">bonferroni_graph</span>,</span>
 <span>  layout <span class="op">=</span> <span class="fu">igraph</span><span class="fu">::</span><span class="fu"><a href="https://r.igraph.org/reference/layout_in_circle.html" class="external-link">layout_in_circle</a></span><span class="op">(</span><span class="fu"><a href="../reference/as-graph.html">as_igraph</a></span><span class="op">(</span><span class="va">bonferroni_graph</span><span class="op">)</span>,</span>
-<span>                                    order <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">2</span>, <span class="fl">1</span>, <span class="fl">3</span><span class="op">)</span><span class="op">)</span>,</span>
+<span>    order <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">2</span>, <span class="fl">1</span>, <span class="fl">3</span><span class="op">)</span></span>
+<span>  <span class="op">)</span>,</span>
 <span>  vertex.size <span class="op">=</span> <span class="fl">70</span></span>
 <span><span class="op">)</span></span></code></pre></div>
 <p><img src="graph-examples_files/figure-html/bonferroni-1.png" width="288" style="display: block; margin: auto;"></p>
@@ -160,9 +160,11 @@ Bonferroni tests.</p>
 <span><span class="fu"><a href="https://rdrr.io/r/base/diag.html" class="external-link">diag</a></span><span class="op">(</span><span class="va">transitions</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fl">0</span></span>
 <span><span class="va">holm_graph</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/graph_create.html">graph_create</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="fl">1</span> <span class="op">/</span> <span class="va">m</span>, <span class="va">m</span><span class="op">)</span>, <span class="va">transitions</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">holm_graph</span>,</span>
-<span>     layout <span class="op">=</span> <span class="fu">igraph</span><span class="fu">::</span><span class="fu"><a href="https://r.igraph.org/reference/layout_in_circle.html" class="external-link">layout_in_circle</a></span><span class="op">(</span><span class="fu"><a href="../reference/as-graph.html">as_igraph</a></span><span class="op">(</span><span class="va">holm_graph</span><span class="op">)</span>,</span>
-<span>                                       order <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">2</span>, <span class="fl">1</span>, <span class="fl">3</span><span class="op">)</span><span class="op">)</span>,</span>
-<span>     vertex.size <span class="op">=</span> <span class="fl">70</span><span class="op">)</span></span></code></pre></div>
+<span>  layout <span class="op">=</span> <span class="fu">igraph</span><span class="fu">::</span><span class="fu"><a href="https://r.igraph.org/reference/layout_in_circle.html" class="external-link">layout_in_circle</a></span><span class="op">(</span><span class="fu"><a href="../reference/as-graph.html">as_igraph</a></span><span class="op">(</span><span class="va">holm_graph</span><span class="op">)</span>,</span>
+<span>    order <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">2</span>, <span class="fl">1</span>, <span class="fl">3</span><span class="op">)</span></span>
+<span>  <span class="op">)</span>,</span>
+<span>  vertex.size <span class="op">=</span> <span class="fl">70</span></span>
+<span><span class="op">)</span></span></code></pre></div>
 <p><img src="graph-examples_files/figure-html/bonferroni-holm-1.png" width="288" style="display: block; margin: auto;"></p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">p_values</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/Uniform.html" class="external-link">runif</a></span><span class="op">(</span><span class="va">m</span>, <span class="fl">0</span>, <span class="va">alpha</span><span class="op">)</span></span>
@@ -238,8 +240,10 @@ hypothesis is rejected before an earlier hypothesis can be rejected.</p>
 <span>  <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.5</span>, <span class="fl">0.5</span>, <span class="fl">0</span><span class="op">)</span></span>
 <span><span class="op">)</span></span>
 <span><span class="va">fallback_graph_2005</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/graph_create.html">graph_create</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="fl">1</span> <span class="op">/</span> <span class="va">m</span>, <span class="va">m</span><span class="op">)</span>, <span class="va">transitions</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">fallback_graph_2005</span>, nrow <span class="op">=</span> <span class="fl">1</span>, asp <span class="op">=</span> <span class="fl">.05</span>, vertex.size <span class="op">=</span> <span class="fl">40</span>,</span>
-<span>     edge_curves <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"pairs"</span> <span class="op">=</span> <span class="fl">7</span>, <span class="st">"H3|H1"</span> <span class="op">=</span> <span class="op">-</span><span class="fl">10</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">fallback_graph_2005</span>,</span>
+<span>  nrow <span class="op">=</span> <span class="fl">1</span>, asp <span class="op">=</span> <span class="fl">.05</span>, vertex.size <span class="op">=</span> <span class="fl">40</span>,</span>
+<span>  edge_curves <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"pairs"</span> <span class="op">=</span> <span class="fl">7</span>, <span class="st">"H3|H1"</span> <span class="op">=</span> <span class="op">-</span><span class="fl">10</span><span class="op">)</span></span>
+<span><span class="op">)</span></span></code></pre></div>
 <p><img src="graph-examples_files/figure-html/fixed-sequence-improved-1.png" width="432" style="display: block; margin: auto;"></p>
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span></span>
@@ -251,8 +255,10 @@ hypothesis is rejected before an earlier hypothesis can be rejected.</p>
 <span>  <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">0</span>, <span class="fl">0</span><span class="op">)</span></span>
 <span><span class="op">)</span></span>
 <span><span class="va">fallback_graph_2008</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/graph_create.html">graph_create</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="fl">1</span> <span class="op">/</span> <span class="va">m</span>, <span class="va">m</span><span class="op">)</span>, <span class="va">transitions</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">fallback_graph_2008</span>, nrow <span class="op">=</span> <span class="fl">1</span>, asp <span class="op">=</span> <span class="fl">.05</span>, eps <span class="op">=</span> <span class="fl">.0001</span>,</span>
-<span>     edge_curves <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"pairs"</span> <span class="op">=</span> <span class="fl">7</span>, <span class="st">"H3|H1"</span> <span class="op">=</span> <span class="op">-</span><span class="fl">10</span><span class="op">)</span>, vertex.size <span class="op">=</span> <span class="fl">40</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">fallback_graph_2008</span>,</span>
+<span>  nrow <span class="op">=</span> <span class="fl">1</span>, asp <span class="op">=</span> <span class="fl">.05</span>, eps <span class="op">=</span> <span class="fl">.0001</span>,</span>
+<span>  edge_curves <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"pairs"</span> <span class="op">=</span> <span class="fl">7</span>, <span class="st">"H3|H1"</span> <span class="op">=</span> <span class="op">-</span><span class="fl">10</span><span class="op">)</span>, vertex.size <span class="op">=</span> <span class="fl">40</span></span>
+<span><span class="op">)</span></span></code></pre></div>
 <p><img src="graph-examples_files/figure-html/fixed-sequence-improved-2.png" width="432" style="display: block; margin: auto;"></p>
 <div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">p_values</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/Uniform.html" class="external-link">runif</a></span><span class="op">(</span><span class="va">m</span>, <span class="fl">0</span>, <span class="va">alpha</span><span class="op">)</span></span>
@@ -290,8 +296,10 @@ than the smallest p-value observed.</p>
 <span>  <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">0</span>, <span class="fl">0</span><span class="op">)</span></span>
 <span><span class="op">)</span></span>
 <span><span class="va">serial_gatekeeping_graph</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/graph_create.html">graph_create</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.5</span>, <span class="fl">0.5</span>, <span class="fl">0</span><span class="op">)</span>, <span class="va">transitions</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">serial_gatekeeping_graph</span>, nrow <span class="op">=</span> <span class="fl">1</span>, asp <span class="op">=</span> <span class="fl">.05</span>, eps <span class="op">=</span> <span class="fl">.0001</span>,</span>
-<span>     edge_curves <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"pairs"</span> <span class="op">=</span> <span class="fl">7</span>, <span class="st">"H3|H1"</span> <span class="op">=</span> <span class="op">-</span><span class="fl">10</span><span class="op">)</span>, vertex.size <span class="op">=</span> <span class="fl">40</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">serial_gatekeeping_graph</span>,</span>
+<span>  nrow <span class="op">=</span> <span class="fl">1</span>, asp <span class="op">=</span> <span class="fl">.05</span>, eps <span class="op">=</span> <span class="fl">.0001</span>,</span>
+<span>  edge_curves <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"pairs"</span> <span class="op">=</span> <span class="fl">7</span>, <span class="st">"H3|H1"</span> <span class="op">=</span> <span class="op">-</span><span class="fl">10</span><span class="op">)</span>, vertex.size <span class="op">=</span> <span class="fl">40</span></span>
+<span><span class="op">)</span></span></code></pre></div>
 <p><img src="graph-examples_files/figure-html/serial-gatekeeping-1.png" width="432" style="display: block; margin: auto;"></p>
 <div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">p_values</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/Uniform.html" class="external-link">runif</a></span><span class="op">(</span><span class="va">m</span>, <span class="fl">0</span>, <span class="va">alpha</span><span class="op">)</span></span>
@@ -319,8 +327,8 @@ otherwise <span class="math inline">\(H_3\)</span> and <span class="math inline"
 <span><span class="va">transitions</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/cbind.html" class="external-link">rbind</a></span><span class="op">(</span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">0</span>, <span class="fl">0.5</span>, <span class="fl">0.5</span><span class="op">)</span>,</span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">0</span>, <span class="fl">0.5</span>, <span class="fl">0.5</span><span class="op">)</span>,</span>
-<span>  <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">0</span>, <span class="fl">0</span>,   <span class="fl">1</span><span class="op">)</span>,</span>
-<span>  <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">0</span>, <span class="fl">1</span>,   <span class="fl">0</span><span class="op">)</span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">0</span>, <span class="fl">0</span>, <span class="fl">1</span><span class="op">)</span>,</span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">0</span>, <span class="fl">1</span>, <span class="fl">0</span><span class="op">)</span></span>
 <span><span class="op">)</span></span>
 <span><span class="va">parallel_gatekeeping_graph</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/graph_create.html">graph_create</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.5</span>, <span class="fl">0.5</span>, <span class="fl">0</span>, <span class="fl">0</span><span class="op">)</span>, <span class="va">transitions</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">parallel_gatekeeping_graph</span>, vertex.size <span class="op">=</span> <span class="fl">70</span><span class="op">)</span></span></code></pre></div>
@@ -344,16 +352,17 @@ hypothesis not rejected.</p>
 <span><span class="va">transitions</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/cbind.html" class="external-link">rbind</a></span><span class="op">(</span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">0</span>, <span class="fl">0.5</span>, <span class="fl">0.5</span><span class="op">)</span>,</span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">0</span>, <span class="fl">0.5</span>, <span class="fl">0.5</span><span class="op">)</span>,</span>
-<span>  <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">epsilon</span>, <span class="fl">0</span>, <span class="fl">0</span>,   <span class="fl">1</span> <span class="op">-</span> <span class="va">epsilon</span><span class="op">)</span>,</span>
-<span>  <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="va">epsilon</span>, <span class="fl">1</span> <span class="op">-</span> <span class="va">epsilon</span>,   <span class="fl">0</span><span class="op">)</span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">epsilon</span>, <span class="fl">0</span>, <span class="fl">0</span>, <span class="fl">1</span> <span class="op">-</span> <span class="va">epsilon</span><span class="op">)</span>,</span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="va">epsilon</span>, <span class="fl">1</span> <span class="op">-</span> <span class="va">epsilon</span>, <span class="fl">0</span><span class="op">)</span></span>
 <span><span class="op">)</span></span>
 <span><span class="va">parallel_gatekeeping_improved_graph</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/graph_create.html">graph_create</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.5</span>, <span class="fl">0.5</span>, <span class="fl">0</span>, <span class="fl">0</span><span class="op">)</span>, <span class="va">transitions</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">parallel_gatekeeping_improved_graph</span>, eps <span class="op">=</span> <span class="fl">.0001</span>, vertex.size <span class="op">=</span> <span class="fl">70</span><span class="op">)</span></span></code></pre></div>
 <p><img src="graph-examples_files/figure-html/parallel-gatekeeping-improved-1.png" width="288" style="display: block; margin: auto;"></p>
 <div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">p_values</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/Uniform.html" class="external-link">runif</a></span><span class="op">(</span><span class="va">m</span>, <span class="fl">0</span>, <span class="va">alpha</span><span class="op">)</span></span>
-<span><span class="va">test_results</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/testing.html">graph_test_shortcut</a></span><span class="op">(</span><span class="va">parallel_gatekeeping_improved_graph</span>, </span>
-<span>                                    p <span class="op">=</span> <span class="va">p_values</span>, alpha <span class="op">=</span> <span class="va">alpha</span><span class="op">)</span></span>
+<span><span class="va">test_results</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/testing.html">graph_test_shortcut</a></span><span class="op">(</span><span class="va">parallel_gatekeeping_improved_graph</span>,</span>
+<span>  p <span class="op">=</span> <span class="va">p_values</span>, alpha <span class="op">=</span> <span class="va">alpha</span></span>
+<span><span class="op">)</span></span>
 <span><span class="va">test_results</span><span class="op">$</span><span class="va">outputs</span><span class="op">$</span><span class="va">rejected</span></span>
 <span><span class="co">#&gt;    H1    H2    H3    H4 </span></span>
 <span><span class="co">#&gt;  TRUE FALSE FALSE FALSE</span></span></code></pre></div>
@@ -445,14 +454,17 @@ specify <code>test_type</code> to be <code>simes</code>.</p>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span></span>
 <span>  <span class="va">hommel_graph</span>,</span>
 <span>  layout <span class="op">=</span> <span class="fu">igraph</span><span class="fu">::</span><span class="fu"><a href="https://r.igraph.org/reference/layout_in_circle.html" class="external-link">layout_in_circle</a></span><span class="op">(</span><span class="fu"><a href="../reference/as-graph.html">as_igraph</a></span><span class="op">(</span><span class="va">hommel_graph</span><span class="op">)</span>,</span>
-<span>                                    order <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">2</span>, <span class="fl">1</span>, <span class="fl">3</span><span class="op">)</span><span class="op">)</span>,</span>
+<span>    order <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">2</span>, <span class="fl">1</span>, <span class="fl">3</span><span class="op">)</span></span>
+<span>  <span class="op">)</span>,</span>
 <span>  vertex.size <span class="op">=</span> <span class="fl">70</span></span>
 <span><span class="op">)</span></span></code></pre></div>
 <p><img src="graph-examples_files/figure-html/hommel-1.png" width="288" style="display: block; margin: auto;"></p>
 <div class="sourceCode" id="cb24"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">p_values</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/Uniform.html" class="external-link">runif</a></span><span class="op">(</span><span class="va">m</span>, <span class="fl">0</span>, <span class="va">alpha</span><span class="op">)</span></span>
-<span><span class="va">test_results</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/testing.html">graph_test_closure</a></span><span class="op">(</span><span class="va">hommel_graph</span>, p <span class="op">=</span> <span class="va">p_values</span>, alpha <span class="op">=</span> <span class="va">alpha</span>, </span>
-<span>                                   test_types <span class="op">=</span> <span class="st">"simes"</span><span class="op">)</span></span>
+<span><span class="va">test_results</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/testing.html">graph_test_closure</a></span><span class="op">(</span><span class="va">hommel_graph</span>,</span>
+<span>  p <span class="op">=</span> <span class="va">p_values</span>, alpha <span class="op">=</span> <span class="va">alpha</span>,</span>
+<span>  test_types <span class="op">=</span> <span class="st">"simes"</span></span>
+<span><span class="op">)</span></span>
 <span><span class="va">test_results</span><span class="op">$</span><span class="va">outputs</span><span class="op">$</span><span class="va">rejected</span></span>
 <span><span class="co">#&gt;   H1   H2   H3 </span></span>
 <span><span class="co">#&gt; TRUE TRUE TRUE</span></span></code></pre></div>
@@ -482,7 +494,8 @@ correlation matrix.</p>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span></span>
 <span>  <span class="va">dunnett_graph</span>,</span>
 <span>  layout <span class="op">=</span> <span class="fu">igraph</span><span class="fu">::</span><span class="fu"><a href="https://r.igraph.org/reference/layout_in_circle.html" class="external-link">layout_in_circle</a></span><span class="op">(</span><span class="fu"><a href="../reference/as-graph.html">as_igraph</a></span><span class="op">(</span><span class="va">dunnett_graph</span><span class="op">)</span>,</span>
-<span>                                    order <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">2</span>, <span class="fl">1</span>, <span class="fl">3</span><span class="op">)</span><span class="op">)</span>,</span>
+<span>    order <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">2</span>, <span class="fl">1</span>, <span class="fl">3</span><span class="op">)</span></span>
+<span>  <span class="op">)</span>,</span>
 <span>  vertex.size <span class="op">=</span> <span class="fl">70</span></span>
 <span><span class="op">)</span></span></code></pre></div>
 <p><img src="graph-examples_files/figure-html/dunnett-1.png" width="288" style="display: block; margin: auto;"></p>
@@ -490,9 +503,11 @@ correlation matrix.</p>
 <code class="sourceCode R"><span><span class="va">p_values</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/Uniform.html" class="external-link">runif</a></span><span class="op">(</span><span class="va">m</span>, <span class="fl">0</span>, <span class="va">alpha</span><span class="op">)</span></span>
 <span><span class="va">corr</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">matrix</a></span><span class="op">(</span><span class="fl">0.5</span>, <span class="va">m</span>, <span class="va">m</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/diag.html" class="external-link">diag</a></span><span class="op">(</span><span class="va">corr</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fl">1</span></span>
-<span><span class="va">test_results</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/testing.html">graph_test_closure</a></span><span class="op">(</span><span class="va">dunnett_graph</span>, p <span class="op">=</span> <span class="va">p_values</span>, alpha <span class="op">=</span> <span class="va">alpha</span>, </span>
-<span>                                   test_types <span class="op">=</span> <span class="st">"parametric"</span>,</span>
-<span>                                   test_corr <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">corr</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="va">test_results</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/testing.html">graph_test_closure</a></span><span class="op">(</span><span class="va">dunnett_graph</span>,</span>
+<span>  p <span class="op">=</span> <span class="va">p_values</span>, alpha <span class="op">=</span> <span class="va">alpha</span>,</span>
+<span>  test_types <span class="op">=</span> <span class="st">"parametric"</span>,</span>
+<span>  test_corr <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">corr</span><span class="op">)</span></span>
+<span><span class="op">)</span></span>
 <span><span class="va">test_results</span><span class="op">$</span><span class="va">outputs</span><span class="op">$</span><span class="va">rejected</span></span>
 <span><span class="co">#&gt;    H1    H2    H3 </span></span>
 <span><span class="co">#&gt;  TRUE FALSE FALSE</span></span></code></pre></div>

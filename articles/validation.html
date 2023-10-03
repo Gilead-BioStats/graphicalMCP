@@ -54,8 +54,7 @@
     <a class="dropdown-item" href="../articles/closed-testing.html">Graphical approaches based on the closure principle</a>
     <a class="dropdown-item" href="../articles/generate-closure.html">Rationales to generate the closure and the weighting strategy of a graph</a>
     <a class="dropdown-item" href="../articles/graph-examples.html">Common multiple comparison procedures illustrated using graphicalMCP</a>
-    <a class="dropdown-item" href="../articles/shortuct-testing.html">Sequentially rejective graphical approaches based on Bonferroni tests</a>
-    <a class="dropdown-item" href="../articles/temp-bib.html">temp-bib</a>
+    <a class="dropdown-item" href="../articles/shortuct-testing.html">Sequentially rejective graphical multiple comparison procedures based on Bonferroni tests</a>
     <a class="dropdown-item" href="../articles/validation.html">Validation</a>
   </div>
 </li>
@@ -171,13 +170,15 @@ between packages.</p>
 <span></span>
 <span><span class="va">graphicalmcp_test_para</span> <span class="op">&lt;-</span></span>
 <span>  <span class="fu"><a href="../reference/testing.html">graph_test_closure</a></span><span class="op">(</span><span class="va">ss_graph</span>, <span class="va">p</span>,</span>
-<span>                     test_groups <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">2</span>, <span class="fl">3</span><span class="op">:</span><span class="fl">4</span><span class="op">)</span>,</span>
-<span>                     test_types <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"p"</span>, <span class="st">"b"</span><span class="op">)</span>,</span>
-<span>                     test_corr <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">test_corr</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">2</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">2</span><span class="op">]</span>, <span class="cn">NA</span><span class="op">)</span><span class="op">)</span></span>
+<span>    test_groups <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">2</span>, <span class="fl">3</span><span class="op">:</span><span class="fl">4</span><span class="op">)</span>,</span>
+<span>    test_types <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"p"</span>, <span class="st">"b"</span><span class="op">)</span>,</span>
+<span>    test_corr <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">test_corr</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">2</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">2</span><span class="op">]</span>, <span class="cn">NA</span><span class="op">)</span></span>
+<span>  <span class="op">)</span></span>
 <span></span>
 <span><span class="va">gmcp_test_para</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/gMCP/man/gMCP.html" class="external-link">gMCP</a></span><span class="op">(</span><span class="fu"><a href="../reference/as-graph.html">as_graphMCP</a></span><span class="op">(</span><span class="va">ss_graph</span><span class="op">)</span>, <span class="va">p</span>,</span>
-<span>                       alpha <span class="op">=</span> <span class="fl">.025</span>,</span>
-<span>                       correlation <span class="op">=</span> <span class="va">test_corr</span><span class="op">)</span></span>
+<span>  alpha <span class="op">=</span> <span class="fl">.025</span>,</span>
+<span>  correlation <span class="op">=</span> <span class="va">test_corr</span></span>
+<span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/all.equal.html" class="external-link">all.equal</a></span><span class="op">(</span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/base/Round.html" class="external-link">round</a></span><span class="op">(</span><span class="va">graphicalmcp_test_para</span><span class="op">$</span><span class="va">outputs</span><span class="op">$</span><span class="va">adjusted_p</span>, <span class="fl">10</span><span class="op">)</span>,</span>
@@ -202,15 +203,17 @@ to slight differences in power.</p>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">92123</span><span class="op">)</span></span>
 <span><span class="va">graphicalmcp_power</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/graph_calculate_power.html">graph_calculate_power</a></span><span class="op">(</span><span class="va">ss_graph</span>,</span>
-<span>                                            power_marginal <span class="op">=</span> <span class="va">marginal_power</span>,</span>
-<span>                                            sim_corr <span class="op">=</span> <span class="va">sim_corr</span>,</span>
-<span>                                            sim_n <span class="op">=</span> <span class="fl">2</span><span class="op">^</span><span class="fl">17</span><span class="op">)</span></span>
+<span>  power_marginal <span class="op">=</span> <span class="va">marginal_power</span>,</span>
+<span>  sim_corr <span class="op">=</span> <span class="va">sim_corr</span>,</span>
+<span>  sim_n <span class="op">=</span> <span class="fl">2</span><span class="op">^</span><span class="fl">17</span></span>
+<span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">92123</span><span class="op">)</span></span>
 <span><span class="va">gmcp_power</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/gMCP/man/calcPower.html" class="external-link">calcPower</a></span><span class="op">(</span><span class="va">ss_graph</span><span class="op">$</span><span class="va">hypotheses</span>, <span class="fl">.025</span>, <span class="va">ss_graph</span><span class="op">$</span><span class="va">transitions</span>,</span>
-<span>                        mean <span class="op">=</span> <span class="va">noncentrality_parameter</span>,</span>
-<span>                        corr.sim <span class="op">=</span> <span class="va">sim_corr</span>,</span>
-<span>                        n.sim <span class="op">=</span> <span class="fl">2</span><span class="op">^</span><span class="fl">17</span><span class="op">)</span></span>
+<span>  mean <span class="op">=</span> <span class="va">noncentrality_parameter</span>,</span>
+<span>  corr.sim <span class="op">=</span> <span class="va">sim_corr</span>,</span>
+<span>  n.sim <span class="op">=</span> <span class="fl">2</span><span class="op">^</span><span class="fl">17</span></span>
+<span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="st">"Power differences"</span><span class="op">)</span></span>
 <span><span class="co">#&gt; [1] "Power differences"</span></span>
@@ -241,19 +244,21 @@ to slight differences in power.</p>
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">92123</span><span class="op">)</span></span>
 <span><span class="va">graphicalmcp_power_para</span> <span class="op">&lt;-</span></span>
 <span>  <span class="fu"><a href="../reference/graph_calculate_power.html">graph_calculate_power</a></span><span class="op">(</span><span class="va">ss_graph</span>,</span>
-<span>                        test_groups <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">2</span>, <span class="fl">3</span><span class="op">:</span><span class="fl">4</span><span class="op">)</span>,</span>
-<span>                        test_types <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"p"</span>, <span class="st">"b"</span><span class="op">)</span>,</span>
-<span>                        test_corr <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">test_corr</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">2</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">2</span><span class="op">]</span>, <span class="cn">NA</span><span class="op">)</span>,</span>
-<span>                        power_marginal <span class="op">=</span> <span class="va">marginal_power</span>,</span>
-<span>                        sim_corr <span class="op">=</span> <span class="va">sim_corr</span>,</span>
-<span>                        sim_n <span class="op">=</span> <span class="fl">2</span><span class="op">^</span><span class="fl">13</span><span class="op">)</span></span>
+<span>    test_groups <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">2</span>, <span class="fl">3</span><span class="op">:</span><span class="fl">4</span><span class="op">)</span>,</span>
+<span>    test_types <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"p"</span>, <span class="st">"b"</span><span class="op">)</span>,</span>
+<span>    test_corr <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">test_corr</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">2</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">2</span><span class="op">]</span>, <span class="cn">NA</span><span class="op">)</span>,</span>
+<span>    power_marginal <span class="op">=</span> <span class="va">marginal_power</span>,</span>
+<span>    sim_corr <span class="op">=</span> <span class="va">sim_corr</span>,</span>
+<span>    sim_n <span class="op">=</span> <span class="fl">2</span><span class="op">^</span><span class="fl">13</span></span>
+<span>  <span class="op">)</span></span>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">92123</span><span class="op">)</span></span>
 <span><span class="va">gmcp_power_para</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/gMCP/man/calcPower.html" class="external-link">calcPower</a></span><span class="op">(</span><span class="va">ss_graph</span><span class="op">$</span><span class="va">hypotheses</span>, <span class="fl">.025</span>, <span class="va">ss_graph</span><span class="op">$</span><span class="va">transitions</span>,</span>
-<span>                        corr.test <span class="op">=</span> <span class="va">test_corr</span>,</span>
-<span>                        mean <span class="op">=</span> <span class="va">noncentrality_parameter</span>,</span>
-<span>                        corr.sim <span class="op">=</span> <span class="va">sim_corr</span>,</span>
-<span>                        n.sim <span class="op">=</span> <span class="fl">2</span><span class="op">^</span><span class="fl">13</span><span class="op">)</span></span>
+<span>  corr.test <span class="op">=</span> <span class="va">test_corr</span>,</span>
+<span>  mean <span class="op">=</span> <span class="va">noncentrality_parameter</span>,</span>
+<span>  corr.sim <span class="op">=</span> <span class="va">sim_corr</span>,</span>
+<span>  n.sim <span class="op">=</span> <span class="fl">2</span><span class="op">^</span><span class="fl">13</span></span>
+<span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="st">"Power differences"</span><span class="op">)</span></span>
 <span><span class="co">#&gt; [1] "Power differences"</span></span>
@@ -302,8 +307,9 @@ it a good validation complement to gMCP.</p>
 </h4>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">graphicalmcp_test_simes</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/testing.html">graph_test_closure</a></span><span class="op">(</span><span class="va">ss_graph</span>, <span class="va">p</span>,</span>
-<span>                                              test_groups <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">2</span>, <span class="fl">3</span><span class="op">:</span><span class="fl">4</span><span class="op">)</span>,</span>
-<span>                                              test_types <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"s"</span>, <span class="st">"b"</span><span class="op">)</span><span class="op">)</span></span>
+<span>  test_groups <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">2</span>, <span class="fl">3</span><span class="op">:</span><span class="fl">4</span><span class="op">)</span>,</span>
+<span>  test_types <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"s"</span>, <span class="st">"b"</span><span class="op">)</span></span>
+<span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">family</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/cbind.html" class="external-link">rbind</a></span><span class="op">(</span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">1</span>, <span class="fl">0</span>, <span class="fl">0</span><span class="op">)</span>,</span>
@@ -335,14 +341,15 @@ the same.</p>
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">92123</span><span class="op">)</span></span>
 <span><span class="va">graphicalmcp_power_simes</span> <span class="op">&lt;-</span></span>
 <span>  <span class="fu"><a href="../reference/graph_calculate_power.html">graph_calculate_power</a></span><span class="op">(</span><span class="va">ss_graph</span>,</span>
-<span>                        power_marginal <span class="op">=</span> <span class="va">marginal_power</span>,</span>
-<span>                        test_groups <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">2</span>, <span class="fl">3</span><span class="op">:</span><span class="fl">4</span><span class="op">)</span>,</span>
-<span>                        test_types <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"s"</span>, <span class="st">"b"</span><span class="op">)</span>,</span>
-<span>                        sim_corr <span class="op">=</span> <span class="va">sim_corr</span>,</span>
-<span>                        sim_n <span class="op">=</span> <span class="fl">1e5</span><span class="op">)</span></span>
+<span>    power_marginal <span class="op">=</span> <span class="va">marginal_power</span>,</span>
+<span>    test_groups <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">2</span>, <span class="fl">3</span><span class="op">:</span><span class="fl">4</span><span class="op">)</span>,</span>
+<span>    test_types <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"s"</span>, <span class="st">"b"</span><span class="op">)</span>,</span>
+<span>    sim_corr <span class="op">=</span> <span class="va">sim_corr</span>,</span>
+<span>    sim_n <span class="op">=</span> <span class="fl">1e5</span></span>
+<span>  <span class="op">)</span></span>
 <span></span>
 <span><span class="va">noncentrality_parameter</span> <span class="op">&lt;-</span></span>
-<span>  <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">qnorm</a></span><span class="op">(</span><span class="fl">1</span> <span class="op">-</span> <span class="fl">.025</span>, lower.tail <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span> <span class="op">-</span> </span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">qnorm</a></span><span class="op">(</span><span class="fl">1</span> <span class="op">-</span> <span class="fl">.025</span>, lower.tail <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span> <span class="op">-</span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">qnorm</a></span><span class="op">(</span><span class="fl">1</span> <span class="op">-</span> <span class="va">marginal_power</span>, lower.tail <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Simulate p-values the same way as graph_calculate_power()</span></span>
