@@ -3,6 +3,7 @@ title: "Sequentially rejective graphical multiple comparison procedures based on
 output:
   rmarkdown::html_vignette:
     code_folding: "show"
+bibliography: "`r system.file('references.bib', package='graphicalMCP')`"
 vignette: >
   %\VignetteIndexEntry{Sequentially rejective graphical approaches based on Bonferroni tests}
   %\VignetteEngine{knitr::rmarkdown}
@@ -71,8 +72,10 @@ test_results$outputs$graph # Final graph after H1, H2 and H4 rejected (as NA's)
 test_results$outputs$graph$hypotheses # Hypothesis weights of the final graph
 test_results$outputs$graph$transitions # Transition weights of the final graph
 
-test_results_verbose <- graph_test_shortcut(g, p = p_values, alpha = 0.025,
-                                            verbose = TRUE)
+test_results_verbose <- graph_test_shortcut(g,
+  p = p_values, alpha = 0.025,
+  verbose = TRUE
+)
 test_results_verbose$details$results[[3]] # Intermediate graph after H1 and H2 rejected
 ```
 ## Obtain possible orders of rejections
@@ -108,12 +111,11 @@ alpha <- 0.025
 prop <- c(0.3, 0.181, 0.181)
 sample_size <- rep(200, 3)
 
-unpooled_variance <- prop[-1] * (1 - prop[-1]) / sample_size[-1] +  prop[1] * (1 - prop[1]) / sample_size[1]
+unpooled_variance <- prop[-1] * (1 - prop[-1]) / sample_size[-1] + prop[1] * (1 - prop[1]) / sample_size[1]
 
 noncentrality_parameter_primary <- -(prop[-1] - prop[1]) / sqrt(unpooled_variance)
 
-power_marginal_primary <- pnorm(qnorm(alpha, lower.tail = FALSE), noncentrality_parameter_primary, 1, lower.tail = FALSE
-)
+power_marginal_primary <- pnorm(qnorm(alpha, lower.tail = FALSE), noncentrality_parameter_primary, 1, lower.tail = FALSE)
 
 names(power_marginal_primary) <- c("H1", "H2")
 power_marginal_primary
@@ -235,9 +237,9 @@ power_verbose_output <- graph_calculate_power(g,
   verbose = TRUE
 )
 
-print(power_verbose_output$details)
+head(power_verbose_output$details$p_sim, 10)
 
-print(power_verbose_output$details, indent = 4, precision = 6)
+print(power_verbose_output, indent = 4, precision = 6)
 ```
 
 # Reference
@@ -247,7 +249,8 @@ print(power_verbose_output$details, indent = 4, precision = 6)
 <!--
 ## Compared with gMCP
 
-```{r power-gMCP}
+```{r power-gMCP, eval=FALSE}
+library(gMCP)
 g_gMCP <- as_graphMCP(g)
 set.seed(1234)
 result <- calcPower(

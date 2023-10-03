@@ -1,6 +1,7 @@
 ---
 title: "Common multiple comparison procedures illustrated using graphicalMCP"
 output: rmarkdown::html_vignette
+bibliography: "`r system.file('references.bib', package='graphicalMCP')`"
 vignette: >
   %\VignetteIndexEntry{Common multiple comparison procedures illustrated using graphicalMCP}
   %\VignetteEngine{knitr::rmarkdown}
@@ -54,7 +55,8 @@ bonferroni_graph <- graph_create(rep(1 / m, m), transitions)
 plot(
   bonferroni_graph,
   layout = igraph::layout_in_circle(as_igraph(bonferroni_graph),
-                                    order = c(2, 1, 3)),
+    order = c(2, 1, 3)
+  ),
   vertex.size = 70
 )
 p_values <- runif(m, 0, alpha)
@@ -76,9 +78,11 @@ transitions <- matrix(1 / (m - 1), m, m)
 diag(transitions) <- 0
 holm_graph <- graph_create(rep(1 / m, m), transitions)
 plot(holm_graph,
-     layout = igraph::layout_in_circle(as_igraph(holm_graph),
-                                       order = c(2, 1, 3)),
-     vertex.size = 70)
+  layout = igraph::layout_in_circle(as_igraph(holm_graph),
+    order = c(2, 1, 3)
+  ),
+  vertex.size = 70
+)
 p_values <- runif(m, 0, alpha)
 test_results <- graph_test_shortcut(holm_graph, p = p_values, alpha = alpha)
 test_results$outputs$rejected
@@ -145,8 +149,10 @@ transitions <- rbind(
   c(0.5, 0.5, 0)
 )
 fallback_graph_2005 <- graph_create(rep(1 / m, m), transitions)
-plot(fallback_graph_2005, nrow = 1, asp = .05, vertex.size = 40,
-     edge_curves = c("pairs" = 7, "H3|H1" = -10))
+plot(fallback_graph_2005,
+  nrow = 1, asp = .05, vertex.size = 40,
+  edge_curves = c("pairs" = 7, "H3|H1" = -10)
+)
 
 # Hommel and Bretz (2008)
 epsilon <- 0.0001
@@ -156,8 +162,10 @@ transitions <- rbind(
   c(1, 0, 0)
 )
 fallback_graph_2008 <- graph_create(rep(1 / m, m), transitions)
-plot(fallback_graph_2008, nrow = 1, asp = .05, eps = .0001,
-     edge_curves = c("pairs" = 7, "H3|H1" = -10), vertex.size = 40)
+plot(fallback_graph_2008,
+  nrow = 1, asp = .05, eps = .0001,
+  edge_curves = c("pairs" = 7, "H3|H1" = -10), vertex.size = 40
+)
 p_values <- runif(m, 0, alpha)
 test_results <- graph_test_shortcut(fallback_graph_2008, p = p_values, alpha = alpha)
 test_results$outputs$rejected
@@ -190,8 +198,10 @@ transitions <- rbind(
   c(0, 0, 0)
 )
 serial_gatekeeping_graph <- graph_create(c(0.5, 0.5, 0), transitions)
-plot(serial_gatekeeping_graph, nrow = 1, asp = .05, eps = .0001,
-     edge_curves = c("pairs" = 7, "H3|H1" = -10), vertex.size = 40)
+plot(serial_gatekeeping_graph,
+  nrow = 1, asp = .05, eps = .0001,
+  edge_curves = c("pairs" = 7, "H3|H1" = -10), vertex.size = 40
+)
 p_values <- runif(m, 0, alpha)
 test_results <- graph_test_shortcut(serial_gatekeeping_graph, p = p_values, alpha = alpha)
 test_results$outputs$rejected
@@ -216,8 +226,8 @@ m <- 4
 transitions <- rbind(
   c(0, 0, 0.5, 0.5),
   c(0, 0, 0.5, 0.5),
-  c(0, 0, 0,   1),
-  c(0, 0, 1,   0)
+  c(0, 0, 0, 1),
+  c(0, 0, 1, 0)
 )
 parallel_gatekeeping_graph <- graph_create(c(0.5, 0.5, 0, 0), transitions)
 plot(parallel_gatekeeping_graph, vertex.size = 70)
@@ -239,14 +249,15 @@ epsilon <- 0.0001
 transitions <- rbind(
   c(0, 0, 0.5, 0.5),
   c(0, 0, 0.5, 0.5),
-  c(epsilon, 0, 0,   1 - epsilon),
-  c(0, epsilon, 1 - epsilon,   0)
+  c(epsilon, 0, 0, 1 - epsilon),
+  c(0, epsilon, 1 - epsilon, 0)
 )
 parallel_gatekeeping_improved_graph <- graph_create(c(0.5, 0.5, 0, 0), transitions)
 plot(parallel_gatekeeping_improved_graph, eps = .0001, vertex.size = 70)
 p_values <- runif(m, 0, alpha)
-test_results <- graph_test_shortcut(parallel_gatekeeping_improved_graph, 
-                                    p = p_values, alpha = alpha)
+test_results <- graph_test_shortcut(parallel_gatekeeping_improved_graph,
+  p = p_values, alpha = alpha
+)
 test_results$outputs$rejected
 ```
 
@@ -328,12 +339,15 @@ hommel_graph <- graph_create(rep(1 / m, m), transitions)
 plot(
   hommel_graph,
   layout = igraph::layout_in_circle(as_igraph(hommel_graph),
-                                    order = c(2, 1, 3)),
+    order = c(2, 1, 3)
+  ),
   vertex.size = 70
 )
 p_values <- runif(m, 0, alpha)
-test_results <- graph_test_closure(hommel_graph, p = p_values, alpha = alpha, 
-                                   test_types = "simes")
+test_results <- graph_test_closure(hommel_graph,
+  p = p_values, alpha = alpha,
+  test_types = "simes"
+)
 test_results$outputs$rejected
 ```
 
@@ -358,14 +372,17 @@ dunnett_graph <- graph_create(rep(1 / m, m), transitions)
 plot(
   dunnett_graph,
   layout = igraph::layout_in_circle(as_igraph(dunnett_graph),
-                                    order = c(2, 1, 3)),
+    order = c(2, 1, 3)
+  ),
   vertex.size = 70
 )
 p_values <- runif(m, 0, alpha)
 corr <- matrix(0.5, m, m)
 diag(corr) <- 1
-test_results <- graph_test_closure(dunnett_graph, p = p_values, alpha = alpha, 
-                                   test_types = "parametric",
-                                   test_corr = list(corr))
+test_results <- graph_test_closure(dunnett_graph,
+  p = p_values, alpha = alpha,
+  test_types = "parametric",
+  test_corr = list(corr)
+)
 test_results$outputs$rejected
 ```

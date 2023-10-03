@@ -12,7 +12,7 @@ coverage](https://codecov.io/gh/Gilead-BioStats/graphicalMCP/branch/s3-graph_mcp
 
 # graphicalMCP <img src="man/figures/logo.png" align="right" height="350"/>
 
-## Introduction
+# Introduction
 
 A multiple comparison procedure (MCP) is a statistical analysis method
 that allows for assessing the efficacy of multiple endpoints, some of
@@ -21,15 +21,13 @@ can be different doses, treatment of different conditions, combined
 superiority & non-inferiority testing, or many others. A key feature is
 that MCPs strongly control the type-I error rate at level alpha.
 
-In [Bretz et al
-(2011)](https://onlinelibrary.wiley.com/doi/10.1002/bimj.201000239), a
-graphical method for MCPs is described, which separates the weighting of
-the clinical endpoints from the particular statistical test used to
-assess each endpoint. A graphical approach can also be helpful for
-communicating study design to clinical teams. This package is a
-low-dependency implementation of those methods.
+In (Bretz et al. 2011), a graphical method for MCPs is described, which
+separates the weighting of the clinical endpoints from the particular
+statistical test used to assess each endpoint. A graphical approach can
+also be helpful for communicating study design to clinical teams. This
+package is a low-dependency implementation of those methods.
 
-## Installation
+# Installation
 
 graphicalMCP is not on CRAN, so install it from GitHub with
 
@@ -38,9 +36,9 @@ graphicalMCP is not on CRAN, so install it from GitHub with
 pak::pak("Gilead-BioStats/graphicalMCP@dev")
 ```
 
-## Basic usage
+# Basic usage
 
-### Initial graph
+## Initial graph
 
 The base object in graphicalMCP is an `initial_graph`, which is a
 weighted, directed graph represented by a matrix of transition (edge)
@@ -66,25 +64,32 @@ transitions <- rbind(
 hyp_names <- c("H1", "H2", "H3", "H4")
 example_graph <- graph_create(hypotheses, transitions, hyp_names)
 
+example_graph
+
 plot(example_graph, layout = "grid", vertex.size = 60)
 ```
 
 <img src="man/figures/README-create-graph-1.png" style="display: block; margin: auto;" />
 
-### Update graph
+## Update graph
 
 Hypotheses can be deleted from the MCP using `graph_update()`. Updated
 weights and transitions are calculated according to the weighting
-strategy in Algorithm 1 of [Bretz et al
-(2011)](https://onlinelibrary.wiley.com/doi/10.1002/bimj.201000239). We
-distinguish *deleting* from *rejecting* in the
-[glossary](#glossary-of-terms).
+strategy in Algorithm 1 of (Bretz et al. 2011). We distinguish
+*deleting* from *rejecting* in the [glossary](#glossary-of-terms).
 
 ``` r
-graph_update(example_graph, delete = c(FALSE, TRUE, TRUE, FALSE))
+updated_example <- graph_update(example_graph,
+                                delete = c(FALSE, TRUE, TRUE, FALSE))
+
+updated_example
+
+plot(updated_example)
 ```
 
-### Generate weights
+<img src="man/figures/README-update-graph-1.png" style="display: block; margin: auto;" />
+
+## Generate weights
 
 The weights of all sub-graphs can be calculated with
 `graph_generate_weights()`. This uses more efficient code under the hood
@@ -94,17 +99,17 @@ than `graph_update()` in order to be performant for larger graphs.
 graph_generate_weights(example_graph)
 ```
 
-More information on the closure can be found in \[Link to closure
-vignette\].
+More information on the closure can be found in
+`vignette("generate-closure")`.
 
-### Test hypotheses
+## Test hypotheses
 
 Bonferroni testing via the shortcut method is supported in graphicalMCP.
 Such a test can be performed with `graph_test_shortcut()`, which
 generates a report showing the graph & test results. See more insight
 about why a hypothesis was rejected or not by setting the `verbose` and
 `test_values` flags. More details about shortcut testing can be found in
-\[link to shortcut vignette\].
+`vignette("shortcut-testing")`.
 
 ``` r
 graph_test_shortcut(example_graph, p = c(.01, .03, .02, .01), alpha = .025)
@@ -113,8 +118,8 @@ graph_test_shortcut(example_graph, p = c(.01, .03, .02, .01), alpha = .025)
 A graph can also be tested using Simes- or parametric-based testing
 using the closure test. Other types of tests will be added over time,
 and a combination of tests can be used for groups of hypotheses.
-Additional details about closure testing can be found in \[link to
-closed test vignette\].
+Additional details about closure testing can be found in
+`vignette("closed-testing")`.
 
 ``` r
 graph_test_closure(
@@ -126,7 +131,7 @@ graph_test_closure(
 )
 ```
 
-### Power simulations
+## Power simulations
 
 It’s not always obvious from a graph structure how easy or difficult it
 will be to reject each hypothesis. One way to understand this better is
@@ -143,9 +148,9 @@ graph_calculate_power(
 
 All valid test types & hypothesis groupings are valid for power
 simulations as well. Power simulations are discussed further in both the
-\[shortcut testing vignette\] and the \[closure testing vignette\].
+`vignette("shortcut-testing")` and the `vignette("closed-testing")`.
 
-## Related work
+# Related work
 
 These methods were originally implemented in the [gMCP
 package](https://github.com/kornl/gMCP), which is still available on
@@ -163,7 +168,7 @@ accuracy of the parametric and Simes test methods.
 
 A portion of Simes testing is also implemented in the lrstat package.
 
-## Citation
+# Citation
 
 ``` r
 citation("graphicalMCP")
@@ -184,9 +189,13 @@ citation("graphicalMCP")
 #> 'options(citation.bibtex.max=999)'.
 ```
 
-## Acknowledgments
+# Acknowledgments
 
-## Glossary of terms
+We owe a debt of gratitude to the authors of gMCP for their pioneering
+work in the field, without which this package would not be nearly as
+extensive as it is.
+
+# Glossary of terms
 
 This package seeks to be both accurate and performant, of course. But
 beyond that, much thought has been put into the readability of the code.
@@ -400,3 +409,19 @@ that the null hypothesis can be rejected</td>
 </tr>
 </tbody>
 </table>
+
+# References
+
+<div id="refs" class="references csl-bib-body hanging-indent">
+
+<div id="ref-bretz-2011" class="csl-entry">
+
+Bretz, Frank, Martin Posch, Ekkehard Glimm, Florian Klinglmueller, Willi
+Maurer, and Kornelius Rohmeyer. 2011. “Graphical Approaches for Multiple
+Comparison Procedures Using Weighted Bonferroni, Simes, or Parametric
+Tests.” *Biometrical Journal* 53 (6): 894–913.
+<https://onlinelibrary.wiley.com/doi/10.1002/bimj.201000239>.
+
+</div>
+
+</div>

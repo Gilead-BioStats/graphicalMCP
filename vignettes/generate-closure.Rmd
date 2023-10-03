@@ -264,16 +264,16 @@ benchmark_list <- lapply(
     # A graph for the Holm procedure
     transitions <- matrix(1 / (num_hyps - 1), num_hyps, num_hyps)
     diag(transitions) <- 0
-    
+
     graph <- graph_create(rep(1 / num_hyps, num_hyps), transitions)
-    
+
     # lrstat sometimes errors, even when hypotheses seem to sum to 1. This
     # fixes some of those cases
     graph$hypotheses <- c(
       graph$hypotheses[seq_len(num_hyps - 1)],
       1 - sum(graph$hypotheses[seq_len(num_hyps - 1)])
     )
-    
+
     benchmark <- mark(
       gMCP = generateWeights(graph$transitions, graph$hypotheses),
       `graphicalMCP simple` = ggw_simple(graph),
@@ -288,12 +288,12 @@ benchmark_list <- lapply(
       time_unit = "ms",
       min_iterations = 5
     )[, 1:5]
-    
+
     # Remove rows for lrstat that weren't actually run
     benchmark <- benchmark[benchmark$median > 0.005, ]
     benchmark$char_expression <- as.character(benchmark$expression)
     benchmark <- benchmark[, c("char_expression", "median")]
-    
+
     cbind(data.frame(num_hyps = num_hyps), benchmark)
   }
 )
@@ -316,18 +316,19 @@ write.csv(
   here::here("vignettes/cache/gw_benchmarks.csv"),
   row.names = FALSE
 )
-
 ```
 
 ```{r plot-gw-benchmarks, fig.dim=c(8, 5), eval=FALSE}
 benchmarks <- read.csv(here::here("vignettes/cache/gw_benchmarks.csv"))
 benchmarks <- subset(benchmarks, char_expression != "graphicalMCP recursive")
 benchmarks$char_expression <- factor(benchmarks$char_expression,
-                                     levels = c("gMCP",
-                                                "graphicalMCP simple",
-                                                "graphicalMCP parent-child",
-                                                "lrstat")
-                                     )
+  levels = c(
+    "gMCP",
+    "graphicalMCP simple",
+    "graphicalMCP parent-child",
+    "lrstat"
+  )
+)
 benchmarks_plot_standard <-
   ggplot(benchmarks, aes(num_hyps, median, color = char_expression)) +
   geom_point(size = 2) +
@@ -340,9 +341,11 @@ benchmarks_plot_standard <-
     x = "Number of hypotheses",
     y = NULL,
     color = "Approach"
-    ) +
-  scale_y_log10(breaks = c(0, 0.1, 1, 10, 100, 1000, 100000),
-                labels = c("0", "0.1", "1", "10", "100", "1,000", "100,000")) +
+  ) +
+  scale_y_log10(
+    breaks = c(0, 0.1, 1, 10, 100, 1000, 100000),
+    labels = c("0", "0.1", "1", "10", "100", "1,000", "100,000")
+  ) +
   labs(subtitle = "Log10(median runtime) in milliseconds")
 benchmarks_plot_standard
 ```
@@ -883,7 +886,7 @@ gcp_traditional <- function(graph,
     ncol = length(power_marginal),
     dimnames = list(seq_len(sim_n), hyp_names)
   )
-  
+
   for (row in seq_len(sim_n)) {
     simulation_test_results[row, ] <-
       graph_test_shortcut(graph, p_sim[row, ], alpha)$outputs$rejected
@@ -1000,10 +1003,12 @@ if (file.exists(here::here("vignettes/cache/power_benchmarks_holm.csv"))) {
             sim_n = 2^14
           ),
         `graphicalMCP traditional (R)` =
-          if (num_hyps <= 10) gcp_traditional(graph, .025,
-            power_marginal = rep(.9, num_hyps),
-            sim_n = 2^14
-          ),
+          if (num_hyps <= 10) {
+            gcp_traditional(graph, .025,
+              power_marginal = rep(.9, num_hyps),
+              sim_n = 2^14
+            )
+          },
         check = FALSE,
         memory = FALSE,
         time_unit = "s",
@@ -1093,10 +1098,12 @@ if (file.exists(here::here("vignettes/cache/power_benchmarks_fs.csv"))) {
             sim_n = 2^14
           ),
         `graphicalMCP traditional (R)` =
-          if (num_hyps <= 10) gcp_traditional(graph, .025,
-            power_marginal = rep(.9, num_hyps),
-            sim_n = 2^14
-          ),
+          if (num_hyps <= 10) {
+            gcp_traditional(graph, .025,
+              power_marginal = rep(.9, num_hyps),
+              sim_n = 2^14
+            )
+          },
         check = FALSE,
         memory = FALSE,
         time_unit = "s",

@@ -3,6 +3,7 @@ title: "Graphical approaches based on the closure principle"
 output:
   rmarkdown::html_vignette:
     code_folding: "show"
+bibliography: "`r system.file('references.bib', package='graphicalMCP')`"
 vignette: >
   %\VignetteIndexEntry{Graphical approaches based on the closure principle}
   %\VignetteEngine{knitr::rmarkdown}

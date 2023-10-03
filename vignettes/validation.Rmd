@@ -1,6 +1,7 @@
 ---
 title: "Validation"
 output: rmarkdown::html_vignette
+bibliography: "`r system.file('references.bib', package='graphicalMCP')`"
 vignette: >
   %\VignetteIndexEntry{Validation}
   %\VignetteEngine{knitr::rmarkdown}
@@ -85,13 +86,15 @@ test_corr <- rbind(
 
 graphicalmcp_test_para <-
   graph_test_closure(ss_graph, p,
-                     test_groups = list(1:2, 3:4),
-                     test_types = c("p", "b"),
-                     test_corr = list(test_corr[1:2, 1:2], NA))
+    test_groups = list(1:2, 3:4),
+    test_types = c("p", "b"),
+    test_corr = list(test_corr[1:2, 1:2], NA)
+  )
 
 gmcp_test_para <- gMCP(as_graphMCP(ss_graph), p,
-                       alpha = .025,
-                       correlation = test_corr)
+  alpha = .025,
+  correlation = test_corr
+)
 
 all.equal(
   round(graphicalmcp_test_para$outputs$adjusted_p, 10),
@@ -115,15 +118,17 @@ diag(sim_corr) <- 1
 
 set.seed(92123)
 graphicalmcp_power <- graph_calculate_power(ss_graph,
-                                            power_marginal = marginal_power,
-                                            sim_corr = sim_corr,
-                                            sim_n = 2^17)
+  power_marginal = marginal_power,
+  sim_corr = sim_corr,
+  sim_n = 2^17
+)
 
 set.seed(92123)
 gmcp_power <- calcPower(ss_graph$hypotheses, .025, ss_graph$transitions,
-                        mean = noncentrality_parameter,
-                        corr.sim = sim_corr,
-                        n.sim = 2^17)
+  mean = noncentrality_parameter,
+  corr.sim = sim_corr,
+  n.sim = 2^17
+)
 
 print("Power differences")
 structure(
@@ -141,19 +146,21 @@ structure(
 set.seed(92123)
 graphicalmcp_power_para <-
   graph_calculate_power(ss_graph,
-                        test_groups = list(1:2, 3:4),
-                        test_types = c("p", "b"),
-                        test_corr = list(test_corr[1:2, 1:2], NA),
-                        power_marginal = marginal_power,
-                        sim_corr = sim_corr,
-                        sim_n = 2^13)
+    test_groups = list(1:2, 3:4),
+    test_types = c("p", "b"),
+    test_corr = list(test_corr[1:2, 1:2], NA),
+    power_marginal = marginal_power,
+    sim_corr = sim_corr,
+    sim_n = 2^13
+  )
 
 set.seed(92123)
 gmcp_power_para <- calcPower(ss_graph$hypotheses, .025, ss_graph$transitions,
-                        corr.test = test_corr,
-                        mean = noncentrality_parameter,
-                        corr.sim = sim_corr,
-                        n.sim = 2^13)
+  corr.test = test_corr,
+  mean = noncentrality_parameter,
+  corr.sim = sim_corr,
+  n.sim = 2^13
+)
 
 print("Power differences")
 structure(
@@ -185,8 +192,9 @@ all.equal(lrstat_weights, unname(graphicalmcp_weights[, 5:8]))
 
 ```{r test-simes}
 graphicalmcp_test_simes <- graph_test_closure(ss_graph, p,
-                                              test_groups = list(1:2, 3:4),
-                                              test_types = c("s", "b"))
+  test_groups = list(1:2, 3:4),
+  test_types = c("s", "b")
+)
 
 family <- rbind(
   c(1, 1, 0, 0),
@@ -214,14 +222,15 @@ lrstat doesn't have a built-in MCP power function, but it can calculate many adj
 set.seed(92123)
 graphicalmcp_power_simes <-
   graph_calculate_power(ss_graph,
-                        power_marginal = marginal_power,
-                        test_groups = list(1:2, 3:4),
-                        test_types = c("s", "b"),
-                        sim_corr = sim_corr,
-                        sim_n = 1e5)
+    power_marginal = marginal_power,
+    test_groups = list(1:2, 3:4),
+    test_types = c("s", "b"),
+    sim_corr = sim_corr,
+    sim_n = 1e5
+  )
 
 noncentrality_parameter <-
-  qnorm(1 - .025, lower.tail = TRUE) - 
+  qnorm(1 - .025, lower.tail = TRUE) -
   qnorm(1 - marginal_power, lower.tail = TRUE)
 
 # Simulate p-values the same way as graph_calculate_power()

@@ -1,5 +1,6 @@
 ---
 output: github_document
+bibliography: "`r system.file('references.bib', package='graphicalMCP')`"
 ---
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
@@ -16,19 +17,19 @@ knitr::opts_chunk$set(
 
 <!-- badges: start -->
 
-[![CRAN status](https://www.r-pkg.org/badges/version/graphicalMCP)](https://cran.r-project.org/package=graphicalMCP) [![Codecov test coverage](https://codecov.io/gh/Gilead-BioStats/graphicalMCP/branch/s3-graph_mcp/graph/badge.svg)](https://app.codecov.io/gh/Gilead-BioStats/graphicalMCP?branch=s3-graph_mcp) [![R-CMD-check](https://github.com/Gilead-BioStats/graphicalMCP/actions/workflows/R-CMD-check.yaml/badge.svg?branch=%60r%20prompt::git_branch()%60)](https://github.com/Gilead-BioStats/graphicalMCP/actions/workflows/R-CMD-check.yaml)
+[![CRAN status](https://www.r-pkg.org/badges/version/graphicalMCP)](https://cran.r-project.org/package=graphicalMCP)
 
 <!-- badges: end -->
 
 # graphicalMCP <img src="man/figures/logo.png" align="right" height="350"/>
 
-## Introduction
+# Introduction
 
 A multiple comparison procedure (MCP) is a statistical analysis method that allows for assessing the efficacy of multiple endpoints, some of which are dependent on each other, in a single clinical trial. Endpoints can be different doses, treatment of different conditions, combined superiority & non-inferiority testing, or many others. A key feature is that MCPs strongly control the type-I error rate at level alpha.
 
-In [Bretz et al (2011)](https://onlinelibrary.wiley.com/doi/10.1002/bimj.201000239), a graphical method for MCPs is described, which separates the weighting of the clinical endpoints from the particular statistical test used to assess each endpoint. A graphical approach can also be helpful for communicating study design to clinical teams. This package is a low-dependency implementation of those methods.
+In [@bretz-2011], a graphical method for MCPs is described, which separates the weighting of the clinical endpoints from the particular statistical test used to assess each endpoint. A graphical approach can also be helpful for communicating study design to clinical teams. This package is a low-dependency implementation of those methods.
 
-## Installation
+# Installation
 
 graphicalMCP is not on CRAN, so install it from GitHub with
 
@@ -37,9 +38,9 @@ graphicalMCP is not on CRAN, so install it from GitHub with
 pak::pak("Gilead-BioStats/graphicalMCP@dev")
 ```
 
-## Basic usage
+# Basic usage
 
-### Initial graph
+## Initial graph
 
 The base object in graphicalMCP is an `initial_graph`, which is a weighted, directed graph represented by a matrix of transition (edge) weights, and a vector of hypothesis (vertex) weights.
 
@@ -63,18 +64,25 @@ transitions <- rbind(
 hyp_names <- c("H1", "H2", "H3", "H4")
 example_graph <- graph_create(hypotheses, transitions, hyp_names)
 
+example_graph
+
 plot(example_graph, layout = "grid", vertex.size = 60)
 ```
 
-### Update graph
+## Update graph
 
-Hypotheses can be deleted from the MCP using `graph_update()`. Updated weights and transitions are calculated according to the weighting strategy in Algorithm 1 of [Bretz et al (2011)](https://onlinelibrary.wiley.com/doi/10.1002/bimj.201000239). We distinguish *deleting* from *rejecting* in the [glossary](#glossary-of-terms).
+Hypotheses can be deleted from the MCP using `graph_update()`. Updated weights and transitions are calculated according to the weighting strategy in Algorithm 1 of [@bretz-2011]. We distinguish *deleting* from *rejecting* in the [glossary](#glossary-of-terms).
 
 ```{r update-graph}
-graph_update(example_graph, delete = c(FALSE, TRUE, TRUE, FALSE))
+updated_example <- graph_update(example_graph,
+                                delete = c(FALSE, TRUE, TRUE, FALSE))
+
+updated_example
+
+plot(updated_example)
 ```
 
-### Generate weights
+## Generate weights
 
 The weights of all sub-graphs can be calculated with `graph_generate_weights()`. This uses more efficient code under the hood than `graph_update()` in order to be performant for larger graphs.
 
@@ -82,9 +90,9 @@ The weights of all sub-graphs can be calculated with `graph_generate_weights()`.
 graph_generate_weights(example_graph)
 ```
 
-More information on the closure can be found in [Link to closure vignette].
+More information on the closure can be found in `vignette("generate-closure")`.
 
-### Test hypotheses
+## Test hypotheses
 
 Bonferroni testing via the shortcut method is supported in graphicalMCP. Such a test can be performed with `graph_test_shortcut()`, which generates a report showing the graph & test results. See more insight about why a hypothesis was rejected or not by setting the `verbose` and `test_values` flags. More details about shortcut testing can be found in `vignette("shortcut-testing")`.
 
@@ -104,7 +112,7 @@ graph_test_closure(
 )
 ```
 
-### Power simulations
+## Power simulations
 
 It's not always obvious from a graph structure how easy or difficult it will be to reject each hypothesis. One way to understand this better is to run a power simulation, where many p-values are simulated, and a graph is tested against each.
 
@@ -118,7 +126,7 @@ graph_calculate_power(
 
 All valid test types & hypothesis groupings are valid for power simulations as well. Power simulations are discussed further in both the `vignette("shortcut-testing")` and the `vignette("closed-testing")`.
 
-## Related work
+# Related work
 
 These methods were originally implemented in the [gMCP package](https://github.com/kornl/gMCP), which is still available on CRAN today. There is also a lighter version of gMCP implemented in [gMCPmini](https://github.com/allenzhuaz/gMCPmini) and its successor, [gMCPLite](https://github.com/Merck/gMCPLite). These two contain only a subset of the original functionality, but they remove the rJava dependency and add plotting functionality based on ggplot2.
 
@@ -126,17 +134,17 @@ However, because development has ceased on the original package, we hope to re-i
 
 A portion of Simes testing is also implemented in the lrstat package.
 
-## Citation
+# Citation
 
 ```{r citation, results="markup"}
 citation("graphicalMCP")
 ```
 
-## Acknowledgments
+# Acknowledgments
 
 We owe a debt of gratitude to the authors of gMCP for their pioneering work in the field, without which this package would not be nearly as extensive as it is.
 
-## Glossary of terms {#glossary-of-terms}
+# Glossary of terms {#glossary-of-terms}
 
 This package seeks to be both accurate and performant, of course. But beyond that, much thought has been put into the readability of the code. Whether being read by a user validating our methods, a developer extending the package to new uses, or a contributor helping enhance the core functionality, we hope that the code contained here can serve as an educational document to grow people's understanding of the graphical approach to multiple comparison procedures.
 
@@ -191,3 +199,5 @@ To that end, there are several entities encountered in the world of graphical MC
 +---------------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+---------------------------------------+---------------------------------+---------------------------------+
 | *Reject a **hypothesis***       | Under a given **graph**, **testing strategy**, and **significance level**, find a hypothesis (clinical endpoint) to be statistically significant, such that the null hypothesis can be rejected                    |                                       |                                 | Delete a hypothesis             |
 +---------------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+---------------------------------------+---------------------------------+---------------------------------+
+
+# References
