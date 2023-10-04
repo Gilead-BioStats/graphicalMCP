@@ -415,6 +415,24 @@ that the null hypothesis can be rejected</td>
 
 <div id="refs" class="references csl-bib-body hanging-indent">
 
+<div id="ref-bretz-2009-graphs" class="csl-entry">
+
+Bretz, Frank, Willi Maurer, Werner Branath, and Martin Posch. 2009. “A
+Graphical Approach to Sequentially Rejective Multiple Test Procedures.”
+*Statistics in Medicine* 53 (4): 586–604.
+<https://onlinelibrary.wiley.com/doi/abs/10.1002/sim.3495>.
+
+</div>
+
+<div id="ref-bretz-2011-power" class="csl-entry">
+
+Bretz, Frank, Willi Maurer, and Gerhard Hommel. 2011. “Test and Power
+Considerations for Multiple Endpoint Analyses Using Sequentially
+Rejective Graphical Procedures.” *Statistics in Medicine* 30 (13):
+1489–1501. <https://onlinelibrary.wiley.com/doi/abs/10.1002/sim.3988>.
+
+</div>
+
 <div id="ref-bretz-2011-tests" class="csl-entry">
 
 Bretz, Frank, Martin Posch, Ekkehard Glimm, Florian Klinglmueller, Willi
