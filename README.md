@@ -4,9 +4,6 @@
 
 [![CRAN
 status](https://www.r-pkg.org/badges/version/graphicalMCP)](https://cran.r-project.org/package=graphicalMCP)
-[![Codecov test
-coverage](https://codecov.io/gh/Gilead-BioStats/graphicalMCP/branch/s3-graph_mcp/graph/badge.svg)](https://app.codecov.io/gh/Gilead-BioStats/graphicalMCP?branch=s3-graph_mcp)
-[![R-CMD-check](https://github.com/Gilead-BioStats/graphicalMCP/actions/workflows/R-CMD-check.yaml/badge.svg?branch=%60r%20prompt::git_branch()%60)](https://github.com/Gilead-BioStats/graphicalMCP/actions/workflows/R-CMD-check.yaml)
 
 <!-- badges: end -->
 
@@ -65,11 +62,13 @@ hyp_names <- c("H1", "H2", "H3", "H4")
 example_graph <- graph_create(hypotheses, transitions, hyp_names)
 
 example_graph
-
-plot(example_graph, layout = "grid", vertex.size = 60)
 ```
 
-<img src="man/figures/README-create-graph-1.png" style="display: block; margin: auto;" />
+``` r
+plot(example_graph, vertex.size = 60)
+```
+
+<img src="man/figures/README-plot-graph-1.png" style="display: block; margin: auto;" />
 
 ## Update graph
 
@@ -83,11 +82,13 @@ updated_example <- graph_update(example_graph,
                                 delete = c(FALSE, TRUE, TRUE, FALSE))
 
 updated_example
-
-plot(updated_example)
 ```
 
-<img src="man/figures/README-update-graph-1.png" style="display: block; margin: auto;" />
+``` r
+plot(updated_example, vertex.size = 60)
+```
+
+<img src="man/figures/README-plot-updated-graph-1.png" style="display: block; margin: auto;" />
 
 ## Generate weights
 
@@ -147,8 +148,8 @@ graph_calculate_power(
 ```
 
 All valid test types & hypothesis groupings are valid for power
-simulations as well. Power simulations are discussed further in both the
-`vignette("shortcut-testing")` and the `vignette("closed-testing")`.
+simulations as well. Power simulations are discussed further in both
+`vignette("shortcut-testing")` and `vignette("closed-testing")`.
 
 # Related work
 
@@ -414,7 +415,7 @@ that the null hypothesis can be rejected</td>
 
 <div id="refs" class="references csl-bib-body hanging-indent">
 
-<div id="ref-bretz-2011" class="csl-entry">
+<div id="ref-bretz-2011-tests" class="csl-entry">
 
 Bretz, Frank, Martin Posch, Ekkehard Glimm, Florian Klinglmueller, Willi
 Maurer, and Kornelius Rohmeyer. 2011. “Graphical Approaches for Multiple

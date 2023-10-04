@@ -4,6 +4,8 @@ output:
   rmarkdown::html_vignette:
     code_folding: hide
 bibliography: "`r system.file('references.bib', package='graphicalMCP')`"
+nocite: |
+  @bretz-2009-graphs, @bretz-2011-tests, @bretz-2011-power
 vignette: >
   %\VignetteIndexEntry{Rationales to generate the closure and the weighting strategy of a graph}
   %\VignetteEngine{knitr::rmarkdown}

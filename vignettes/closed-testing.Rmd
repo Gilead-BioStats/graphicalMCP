@@ -1,11 +1,13 @@
 ---
-title: "Graphical approaches based on the closure principle"
+title: "Graphical multiple comparison procedures based on the closure principle"
 output:
   rmarkdown::html_vignette:
     code_folding: "show"
 bibliography: "`r system.file('references.bib', package='graphicalMCP')`"
+nocite: |
+  @bretz-2009-graphs, @bretz-2011-tests, @bretz-2011-power
 vignette: >
-  %\VignetteIndexEntry{Graphical approaches based on the closure principle}
+  %\VignetteIndexEntry{Graphical multiple comparison procedures based on the closure principle}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -72,7 +74,7 @@ plot(
 
 ## Perform the graphical multiple comparison procedure based on Bonferroni tests
 
-Given a set of p-values for $H_1, \ldots, H_6$, the graphical multiple comparison procedure can be performed to control the familywise error rate (FWER) at the significance level `alpha`. For one-sided p-values, `alpha` is often set to 0.025 (default). First, we perform a Bonferroni-based procedure. After running the procedure, none of these hypotheses is rejected. [names] showed in their [year] paper that the shortcut graphical procedure is equivalent to the closed graphical approach using Bonferroni tests only, so these results are identical to using [graph_test_shortcut()].
+Given a set of p-values for $H_1, \ldots, H_6$, the graphical multiple comparison procedure can be performed to control the family-wise error rate (FWER) at the significance level `alpha`. For one-sided p-values, `alpha` is often set to 0.025 (default). First, we perform a Bonferroni-based procedure. After running the procedure, none of these hypotheses is rejected. These results are identical to using [graph_test_shortcut()].
 
 ```{r graph-test-bonferroni}
 p_values <- c(0.015, 0.013, 0.01, 0.007, 0.1, 0.0124)
@@ -92,7 +94,12 @@ Adjusted p-values are initially calculated by groups of hypotheses. In this case
 
 ```{r graph-test-verbose}
 test_results_verbose <-
-  graph_test_closure(g, p = p_values, alpha = 0.025, verbose = TRUE)
+  graph_test_closure(
+    g,
+    p = p_values,
+    alpha = 0.025,
+    verbose = TRUE
+  )
 
 head(test_results_verbose$details$results)
 ```
@@ -102,10 +109,14 @@ head(test_results_verbose$details$results)
 An equivalent way to obtain rejections is via adjusting significance levels. A hypothesis is rejected if its p-value is less than or equal to its adjusted significance level. One can obtain adjusted significance levels for every hypothesis in every intersection hypothesis in the closure by specifying `test_values = TRUE`. A hypothesis is rejected by the closed testing procedure if *all* intersection hypotheses involving it have been rejected. An intersection hypothesis is rejected if *any* null hypotheses within it have been rejected. 
 
 ```{r graph-test-test_values}
-test_results_test_values <- graph_test_closure(g,
-  p = p_values, alpha = 0.025,
-  test_values = TRUE
-)
+test_results_test_values <-
+  graph_test_closure(
+    g,
+    p = p_values,
+    alpha = 0.025,
+    test_values = TRUE
+  )
+
 head(test_results_test_values$test_values$results)
 ```
 
@@ -139,8 +150,7 @@ test_results_parametric <-
 test_results_parametric$outputs$adjusted_p
 test_results_parametric$outputs$rejected
 
-df_adjusted_significance <- test_results_parametric$test_values$results
-df_adjusted_significance[df_adjusted_significance$Intersection == 1, ]
+head(test_results_parametric$test_values$results)
 ```
 
 ### Parametric tests for primary hypotheses and Simes tests for secondary hypotheses
@@ -155,7 +165,8 @@ To implement this procedure, we create three subgroups: one for $H_1$ and $H_2$,
 
 ```{r graph-test-parametric-simes}
 test_results_parametric_simes <-
-  graph_test_closure(g,
+  graph_test_closure(
+    g,
     p = p_values, alpha = 0.025,
     test_groups = list(c(1, 2), c(3, 5), c(4, 6)),
     test_types = c("parametric", "simes", "simes"),
@@ -178,13 +189,21 @@ Assume that the primary endpoint is about the occurrence of an unfavorable clini
 alpha <- 0.025
 prop <- c(0.3, 0.181, 0.181)
 sample_size <- rep(200, 3)
-unpooled_variance <- prop[-1] * (1 - prop[-1]) / sample_size[-1] +
-  prop[1] * (1 - prop[1]) / sample_size[1]
-noncentrality_parameter_primary <- -(prop[-1] - prop[1]) / sqrt(unpooled_variance)
-marginal_power_primary <- pnorm(qnorm(alpha, lower.tail = FALSE),
-  noncentrality_parameter_primary, 1,
+
+unpooled_variance <-
+  prop[-1] * (1 - prop[-1]) / sample_size[-1] +
+  prop[1]  * (1 - prop[1])  / sample_size[1]
+
+noncentrality_parameter_primary <-
+  -(prop[-1] - prop[1]) / sqrt(unpooled_variance)
+
+marginal_power_primary <- pnorm(
+  qnorm(alpha, lower.tail = FALSE),
+  mean = noncentrality_parameter_primary,
+  sd = 1,
   lower.tail = FALSE
 )
+
 names(marginal_power_primary) <- c("H1", "H2")
 marginal_power_primary
 ```
@@ -197,21 +216,34 @@ Assume that the secondary endpoint (SE1) is about the change in total medication
 mean_change_se1 <- c(5, 7.5, 8.25)
 sd <- rep(10, 3)
 variance <- sd[-1]^2 / sample_size[-1] + sd[1]^2 / sample_size[1]
-noncentrality_parameter_se1 <- (mean_change_se1[-1] - mean_change_se1[1]) /
+
+noncentrality_parameter_se1 <-
+  (mean_change_se1[-1] - mean_change_se1[1]) /
   sqrt(variance)
-marginal_power_se1 <- pnorm(qnorm(alpha, lower.tail = FALSE),
-  noncentrality_parameter_se1, 1,
+
+marginal_power_se1 <- pnorm(
+  qnorm(alpha, lower.tail = FALSE),
+  mean = noncentrality_parameter_se1,
+  sd = 1,
   lower.tail = FALSE
 )
+
 names(marginal_power_se1) <- c("H3", "H4")
 marginal_power_se1
+
 mean_change_se2 <- c(6, 8, 9)
-noncentrality_parameter_se2 <- (mean_change_se2[-1] - mean_change_se2[1]) /
+
+noncentrality_parameter_se2 <-
+  (mean_change_se2[-1] - mean_change_se2[1]) /
   sqrt(variance)
-marginal_power_se2 <- pnorm(qnorm(alpha, lower.tail = FALSE),
-  noncentrality_parameter_se2, 1,
+
+marginal_power_se2 <- pnorm(
+  qnorm(alpha, lower.tail = FALSE),
+  mean = noncentrality_parameter_se2,
+  sd = 1,
   lower.tail = FALSE
 )
+
 names(marginal_power_se2) <- c("H5", "H6")
 marginal_power_se2
 ```
@@ -222,13 +254,30 @@ In addition to the marginal power, we also need to make assumptions about the jo
 
 ```{r power-calculate-correlation}
 corr <- matrix(0, nrow = 6, ncol = 6)
-corr[1, 2] <- corr[3, 4] <- corr[5, 6] <- sqrt(sample_size[2] / sum(sample_size[1:2]) *
-  sample_size[3] / sum(sample_size[c(1, 3)]))
+
+corr[1, 2] <-
+  corr[3, 4] <-
+  corr[5, 6] <-
+  sqrt(
+    sample_size[2] / sum(sample_size[1:2]) *
+      sample_size[3] / sum(sample_size[c(1, 3)])
+  )
+
 rho <- 0.5
-corr[1, 3] <- corr[1, 5] <- corr[2, 4] <- corr[2, 6] <- corr[3, 5] <- corr[4, 6] <- rho
+
+corr[1, 3] <-
+  corr[1, 5] <-
+  corr[2, 4] <-
+  corr[2, 6] <-
+  corr[3, 5] <-
+  corr[4, 6] <-
+  rho
+
 corr[1, 4] <- corr[1, 6] <- corr[2, 3] <- corr[2, 5] <- corr[1, 2] * rho
+
 corr[3, 6] <- corr[1, 3] * corr[1, 6]
 corr[4, 5] <- corr[1, 4] * corr[1, 6]
+
 corr <- corr + t(corr)
 diag(corr) <- 1
 colnames(corr) <- hyp_names
@@ -246,21 +295,26 @@ As mentioned earlier, there are multiple versions of "power" when there are mult
 These are the default outputs from the `graph_calculate_power` function. In addition, an user could customize success criteria to define other versions of "power".
 
 ```{r power-calculate-success}
-# Probability to reject H1
-H1 <- function(x) x[1]
-# Expected number of rejections
-`Expected no. of rejections` <- function(x) x[1] + x[2] + x[3] + x[4]
-# Probability to reject at least one hypothesis
-`AtLeast1` <- function(x) x[1] | x[2] | x[3] | x[4] | x[5] | x[6]
-# Probability to reject all hypotheses
-`All` <- function(x) x[1] & x[2] & x[3] & x[4] & x[5] & x[6]
-# Probability to reject both H1 and H2
-`H1andH2` <- function(x) x[1] & x[2]
-# Probability to reject all hypotheses for the low dose or the high dose
-`(H1andH3andH5)or(H2andH4andH6)` <- function(x) (x[1] & x[3] & x[5]) | (x[2] & x[4] & x[6])
-succ <- list(
-  H1, `Expected no. of rejections`, `AtLeast1`, `All`, `H1andH2`,
-  `(H1andH3andH5)or(H2andH4andH6)`
+success_fns <- list(
+  # Probability to reject H1
+  H1 = function(x) x[1],
+  
+  # Expected number of rejections
+  `Expected no. of rejections` =
+    function(x) x[1] + x[2] + x[3] + x[4] + x[5] + x[6],
+
+  # Probability to reject at least one hypothesis
+  `AtLeast1` = function(x) x[1] | x[2] | x[3] | x[4] | x[5] | x[6],
+  
+  # Probability to reject all hypotheses
+  `All` = function(x) x[1] & x[2] & x[3] & x[4] & x[5] & x[6],
+  
+  # Probability to reject both H1 and H2
+  `H1andH2` = function(x) x[1] & x[2],
+  
+  # Probability to reject all hypotheses for the low dose or the high dose
+  `(H1andH3andH5)or(H2andH4andH6)` <-
+    function(x) (x[1] & x[3] & x[5]) | (x[2] & x[4] & x[6])
 )
 ```
 
@@ -284,8 +338,9 @@ power_bonferroni <- graph_calculate_power(
     marginal_power_se1,
     marginal_power_se2
   ),
-  sim_success = succ
+  sim_success = success_fns
 )
+
 round(power_bonferroni$power$power_local, 3)
 
 set.seed(1234)
@@ -302,8 +357,9 @@ power_parametric <- graph_calculate_power(
   test_groups = list(c(1, 2), 3:6),
   test_types = c("parametric", "bonferroni"),
   test_corr = list(corr_12, NA),
-  sim_success = succ
+  sim_success = success_fns
 )
+
 round(power_parametric$power$power_local, 3)
 
 set.seed(1234)
@@ -320,8 +376,9 @@ power_parametric_simes <- graph_calculate_power(
   test_groups = list(c(1, 2), c(3, 5), c(4, 6)),
   test_types = c("parametric", "simes", "simes"),
   test_corr = list(corr_12, NA, NA),
-  sim_success = succ
+  sim_success = success_fns
 )
+
 round(power_parametric_simes$power$power_local, 3)
 ```
 
@@ -344,7 +401,7 @@ verbose_output_parametric_simes <- graph_calculate_power(
   test_groups = list(c(1, 2), c(3, 5), c(4, 6)),
   test_types = c("parametric", "simes", "simes"),
   test_corr = list(corr_12, NA, NA),
-  sim_success = succ,
+  sim_success = success_fns,
   verbose = TRUE
 )
 

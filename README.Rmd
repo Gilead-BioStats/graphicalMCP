@@ -1,6 +1,8 @@
 ---
 output: github_document
 bibliography: "`r system.file('references.bib', package='graphicalMCP')`"
+nocite: |
+  @bretz-2009-graphs, @bretz-2011-tests, @bretz-2011-power
 ---
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
@@ -27,7 +29,7 @@ knitr::opts_chunk$set(
 
 A multiple comparison procedure (MCP) is a statistical analysis method that allows for assessing the efficacy of multiple endpoints, some of which are dependent on each other, in a single clinical trial. Endpoints can be different doses, treatment of different conditions, combined superiority & non-inferiority testing, or many others. A key feature is that MCPs strongly control the type-I error rate at level alpha.
 
-In [@bretz-2011], a graphical method for MCPs is described, which separates the weighting of the clinical endpoints from the particular statistical test used to assess each endpoint. A graphical approach can also be helpful for communicating study design to clinical teams. This package is a low-dependency implementation of those methods.
+In [@bretz-2011-tests], a graphical method for MCPs is described, which separates the weighting of the clinical endpoints from the particular statistical test used to assess each endpoint. A graphical approach can also be helpful for communicating study design to clinical teams. This package is a low-dependency implementation of those methods.
 
 # Installation
 
@@ -65,21 +67,25 @@ hyp_names <- c("H1", "H2", "H3", "H4")
 example_graph <- graph_create(hypotheses, transitions, hyp_names)
 
 example_graph
+```
 
-plot(example_graph, layout = "grid", vertex.size = 60)
+```{r plot-graph, fig.dim=c(3, 3)}
+plot(example_graph, vertex.size = 60)
 ```
 
 ## Update graph
 
-Hypotheses can be deleted from the MCP using `graph_update()`. Updated weights and transitions are calculated according to the weighting strategy in Algorithm 1 of [@bretz-2011]. We distinguish *deleting* from *rejecting* in the [glossary](#glossary-of-terms).
+Hypotheses can be deleted from the MCP using `graph_update()`. Updated weights and transitions are calculated according to the weighting strategy in Algorithm 1 of [@bretz-2011-tests]. We distinguish *deleting* from *rejecting* in the [glossary](#glossary-of-terms).
 
 ```{r update-graph}
 updated_example <- graph_update(example_graph,
                                 delete = c(FALSE, TRUE, TRUE, FALSE))
 
 updated_example
+```
 
-plot(updated_example)
+```{r plot-updated-graph, fig.dim=c(3, 3)}
+plot(updated_example, vertex.size = 60)
 ```
 
 ## Generate weights
@@ -124,7 +130,7 @@ graph_calculate_power(
 )
 ```
 
-All valid test types & hypothesis groupings are valid for power simulations as well. Power simulations are discussed further in both the `vignette("shortcut-testing")` and the `vignette("closed-testing")`.
+All valid test types & hypothesis groupings are valid for power simulations as well. Power simulations are discussed further in both `vignette("shortcut-testing")` and `vignette("closed-testing")`.
 
 # Related work
 
