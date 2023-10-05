@@ -25,20 +25,43 @@ knitr::opts_chunk$set(
 
 # graphicalMCP <img src="man/figures/logo.png" align="right" height="350"/>
 
-# Introduction
+## Introduction
 
-A multiple comparison procedure (MCP) is a statistical analysis method that allows for assessing the efficacy of multiple endpoints, some of which are dependent on each other, in a single clinical trial. Endpoints can be different doses, treatment of different conditions, combined superiority & non-inferiority testing, or many others. A key feature is that MCPs strongly control the type-I error rate at level alpha.
+Graphical approaches for multiple comparison procedures (MCPs) are a general framework to control the familywise error rate strongly as a pre-specified significance level $0<\alpha<1$. This approach includes many commonly used MCPs as special cases and is transparent in visualizing MCPs for better communications. `graphicalMCP` is designed to design and analyze graphical MCPs in a flexible, informative and efficient way.
 
-In [@bretz-2011-tests], a graphical method for MCPs is described, which separates the weighting of the clinical endpoints from the particular statistical test used to assess each endpoint. A graphical approach can also be helpful for communicating study design to clinical teams. This package is a low-dependency implementation of those methods.
+## Installation
 
-# Installation
+`graphicalMCP` is current not on CRAN but can be installed from GitHub using the follow code:
 
-graphicalMCP is not on CRAN, so install it from GitHub with
-
-```{r eval=FALSE}
+```{r eval = FALSE}
 # install.packages("pak")
 pak::pak("Gilead-BioStats/graphicalMCP@dev")
 ```
+
+## Documentation
+
+- To get started, see `vignette("graphicalMCP")`
+- Te get familiar with glossary and functions, see ``
+- To learn examples of how to use `graphicalMCP`,
+  - see `vignette("shortcut-testing")` for sequentially rejective graphical multiple comparison procedures based on Bonferroni tests
+  - see `vignette("closed-testing")` for graphical multiple comparison procedures based on the closure principle
+  - see `vignette("graph-examples")` for common multiple comparison procedures illustrated using `graphicalMCP`
+  - see `vignette("generate-closure")` for rationales to generate the closure and the weighting strategy of a graph
+  - see `vignette("comparisons")` comparisons to other R packages
+
+## Citation
+
+```{r citation, results="markup"}
+citation("graphicalMCP")
+```
+
+## Acknowledgments
+
+Along with the authors and contributors, thanks to the following people for their suggestions and inspirations on the package:
+
+Frank Bretz, Willi Maurer, Ekkehard Glimm, and Ron Yu
+
+We owe a debt of gratitude to the authors of `gMCP` for their pioneering work, without which this package would not be nearly as extensive as it is.
 
 # Basic usage
 
