@@ -113,6 +113,8 @@ power_results$power$power_local
 
 # References
 
+################################################################################
+
 # Glossary of terms {#glossary-of-terms}
 
 This package seeks to be both accurate and performant, of course. But beyond that, much thought has been put into the readability of the code. Whether being read by a user validating our methods, a developer extending the package to new uses, or a contributor helping enhance the core functionality, we hope that the code contained here can serve as an educational document to grow people's understanding of the graphical approach to multiple comparison procedures.

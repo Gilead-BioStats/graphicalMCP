@@ -71,6 +71,7 @@ Frank Bretz, Willi Maurer, Ekkehard Glimm, and Ron Yu
 
 We owe a debt of gratitude to the authors of `gMCP` for their pioneering work, without which this package would not be nearly as extensive as it is.
 
+################################################################################
 # Basic usage
 
 ## Initial graph
