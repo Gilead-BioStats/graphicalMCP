@@ -49,6 +49,14 @@ pak::pak("Gilead-BioStats/graphicalMCP@dev")
   - see `vignette("generate-closure")` for rationales to generate the closure and the weighting strategy of a graph
   - see `vignette("comparisons")` comparisons to other R packages
 
+## Related work
+
+- Graphical MCPs [gMCP](https://cran.r-project.org/package=gMCP)
+- Lighter version of `gMCP` which removes the rJava dependency [gMCPLite](https://cran.r-project.org/package=gMCPLite)
+- Graphical MCPs with Simes tests [lrstat](https://cran.r-project.org/package=lrstat)
+
+Built upon these packages, we hope to implement graphical MCPs in a more general framework, with fewer dependencies and simpler S3 classes, and without losing computational efficiency.
+
 ## Citation
 
 ```{r citation, results="markup"}
