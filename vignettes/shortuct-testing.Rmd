@@ -21,7 +21,7 @@ knitr::opts_chunk$set(
 )
 ```
 
-```{r setup, message=FALSE, warning=FALSE}
+```{r setup, message = FALSE, warning = FALSE}
 library(gt)
 library(graphicalMCP)
 ```
@@ -78,7 +78,8 @@ test_results$outputs$graph$transitions # Transition weights of the final graph
 
 test_results_verbose <- graph_test_shortcut(
   g,
-  p = p_values, alpha = 0.025,
+  p = p_values,
+  alpha = 0.025,
   verbose = TRUE
 )
 
@@ -145,7 +146,7 @@ names(power_marginal_primary) <- c("H1", "H2")
 power_marginal_primary
 ```
 
-### Input: Marginal power for secondary hypotheses
+## Input: Marginal power for secondary hypotheses
 
 Assume that the secondary endpoint is about the change in total medication score from baseline, which is a continuous outcome. To evaluate the treatment effect, the mean change is calculated, and greater reduction is preferred. Assume that the mean change from baseline is the reduction of 7.5 and 8.25, respectively for the low and the high doses, and 5 for control. Further assume a known common standard deviation of 10. Given the sample size of 200 per treatment group, the marginal power is 71\% and 90\% for $H_3$ and $H_4$, respectively, using the two-sample $z$-test for the difference in means each at the one-sided significance level 0.025.
 
