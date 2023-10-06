@@ -23,16 +23,7 @@ knitr::opts_chunk$set(
 
 Graphical approaches for multiple comparison procedures (MCPs) are a general framework to control the familywise error rate strongly as a pre-specified significance level $0<\alpha<1$. This approach includes many commonly used MCPs as special cases and is transparent in visualizing MCPs for better communications. `graphicalMCP` is designed to design and analyze graphical MCPs in a flexible, informative and efficient way.
 
-# Installation
-
-`graphicalMCP` is current not on CRAN but can be installed from GitHub using the follow code:
-
-```{r eval = FALSE}
-# install.packages("pak")
-pak::pak("Gilead-BioStats/graphicalMCP@dev")
-```
-
-# Graphs
+# Basic usage
 
 ## Initial graph
 
@@ -62,8 +53,10 @@ plot(example_graph, vertex.size = 60)
 When a hypothesis is removed from the graph, hypothesis and transition weights of remaining hypotheses should be updated according to Algorithm 1 in @bretz-2011-tests. For example, assume that hypotheses H1, H2 and H4 are removed from the graph. The updated graph after removing three hypotheses is below.
 
 ```{r update-graph}
-updated_example <- graph_update(example_graph,
-                                delete = c(TRUE, TRUE, FALSE, TRUE))
+updated_example <- graph_update(
+  example_graph,
+  delete = c(TRUE, TRUE, FALSE, TRUE)
+)
 
 updated_example
 ```

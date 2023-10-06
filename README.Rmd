@@ -27,11 +27,11 @@ knitr::opts_chunk$set(
 
 ## Introduction
 
-Graphical approaches for multiple comparison procedures (MCPs) are a general framework to control the familywise error rate strongly as a pre-specified significance level $0<\alpha<1$. This approach includes many commonly used MCPs as special cases and is transparent in visualizing MCPs for better communications. `graphicalMCP` is designed to design and analyze graphical MCPs in a flexible, informative and efficient way.
+Graphical approaches for multiple comparison procedures (MCPs) are a general framework to control the family-wise error rate strongly at a pre-specified significance level $0<\alpha<1$. This approach includes many commonly used MCPs as special cases and is transparent in visualizing MCPs for better communications. `graphicalMCP` is designed to design and analyze graphical MCPs in a flexible, informative and efficient way.
 
 ## Installation
 
-`graphicalMCP` is current not on CRAN but can be installed from GitHub using the follow code:
+`graphicalMCP` is currently not on CRAN but can be installed from GitHub using the following code:
 
 ```{r eval = FALSE}
 # install.packages("pak")
@@ -40,14 +40,22 @@ pak::pak("Gilead-BioStats/graphicalMCP@dev")
 
 ## Documentation
 
-- To get started, see `vignette("graphicalMCP")`
-- Te get familiar with glossary and functions, see ``
+- For basic usage instructions, see [vignette("graphicalMCP")]
+- To become familiar with graphical MCP terminology, see [vignette("glossary")]
 - To learn examples of how to use `graphicalMCP`,
-  - see `vignette("shortcut-testing")` for sequentially rejective graphical multiple comparison procedures based on Bonferroni tests
-  - see `vignette("closed-testing")` for graphical multiple comparison procedures based on the closure principle
-  - see `vignette("graph-examples")` for common multiple comparison procedures illustrated using `graphicalMCP`
-  - see `vignette("generate-closure")` for rationales to generate the closure and the weighting strategy of a graph
-  - see `vignette("comparisons")` comparisons to other R packages
+  - see [vignette("shortcut-testing")] for sequentially rejective graphical multiple comparison procedures based on Bonferroni tests
+  - see [vignette("closed-testing")] for graphical multiple comparison procedures based on the closure principle
+  - see [vignette("graph-examples")] for common multiple comparison procedures illustrated using `graphicalMCP`
+  - see [vignette("generate-closure")] for rationales to generate the closure and the weighting strategy of a graph
+  - see [vignette("validation")] for comparisons to other R packages
+
+## Related work
+
+- Graphical MCPs - [gMCP](https://cran.r-project.org/package=gMCP)
+- Lighter version of `gMCP` which removes the rJava dependency - [gMCPLite](https://cran.r-project.org/package=gMCPLite)
+- Graphical MCPs with Simes tests - [lrstat](https://cran.r-project.org/package=lrstat)
+
+Built upon these packages, we hope to implement graphical MCPs in a more general framework, with fewer dependencies and simpler S3 classes, and without losing computational efficiency.
 
 ## Related work
 
@@ -71,115 +79,4 @@ Frank Bretz, Willi Maurer, Ekkehard Glimm, and Ron Yu
 
 We owe a debt of gratitude to the authors of `gMCP` for their pioneering work, without which this package would not be nearly as extensive as it is.
 
-################################################################################
-# Basic usage
-
-## Initial graph
-
-The base object in graphicalMCP is an `initial_graph`, which is a weighted, directed graph represented by a matrix of transition (edge) weights, and a vector of hypothesis (vertex) weights.
-
-```{r create-graph, fig.dim=c(3, 3)}
-library(graphicalMCP)
-
-# A graphical multiple comparison procedure with two primary hypotheses (H1
-# and H2) and two secondary hypotheses (H3 and H4)
-# See Figure 1 in Bretz, F., Posch, M., Glimm, E., Klinglmueller, F., Maurer,
-# W., & Rohmeyer, K. (2011). Graphical approaches for multiple comparison
-# procedures using weighted Bonferroni, Simes, or parametric tests. Biometrical
-# Journal, 53(6), 894-913.
-hypotheses <- c(0.5, 0.5, 0, 0)
-transitions <- rbind(
-  c(0, 0, 1, 0),
-  c(0, 0, 0, 1),
-  c(0, 1, 0, 0),
-  c(1, 0, 0, 0)
-)
-
-hyp_names <- c("H1", "H2", "H3", "H4")
-example_graph <- graph_create(hypotheses, transitions, hyp_names)
-
-example_graph
-```
-
-```{r plot-graph, fig.dim=c(3, 3)}
-plot(example_graph, vertex.size = 60)
-```
-
-## Update graph
-
-Hypotheses can be deleted from the MCP using `graph_update()`. Updated weights and transitions are calculated according to the weighting strategy in Algorithm 1 of [@bretz-2011-tests]. We distinguish *deleting* from *rejecting* in the [glossary](#glossary-of-terms).
-
-```{r update-graph}
-updated_example <- graph_update(example_graph,
-                                delete = c(FALSE, TRUE, TRUE, FALSE))
-
-updated_example
-```
-
-```{r plot-updated-graph, fig.dim=c(3, 3)}
-plot(updated_example, vertex.size = 60)
-```
-
-## Generate weights
-
-The weights of all sub-graphs can be calculated with `graph_generate_weights()`. This uses more efficient code under the hood than `graph_update()` in order to be performant for larger graphs.
-
-```{r generate-weights}
-graph_generate_weights(example_graph)
-```
-
-More information on the closure can be found in `vignette("generate-closure")`.
-
-## Test hypotheses
-
-Bonferroni testing via the shortcut method is supported in graphicalMCP. Such a test can be performed with `graph_test_shortcut()`, which generates a report showing the graph & test results. See more insight about why a hypothesis was rejected or not by setting the `verbose` and `test_values` flags. More details about shortcut testing can be found in `vignette("shortcut-testing")`.
-
-```{r test-graph-shortcut}
-graph_test_shortcut(example_graph, p = c(.01, .03, .02, .01), alpha = .025)
-```
-
-A graph can also be tested using Simes- or parametric-based testing using the closure test. Other types of tests will be added over time, and a combination of tests can be used for groups of hypotheses. Additional details about closure testing can be found in `vignette("closed-testing")`.
-
-```{r test-graph}
-graph_test_closure(
-  example_graph,
-  p = c(.01, .03, .02, .01),
-  alpha = .025,
-  test_types = "bonferroni",
-  test_groups = list(1:4)
-)
-```
-
-## Power simulations
-
-It's not always obvious from a graph structure how easy or difficult it will be to reject each hypothesis. One way to understand this better is to run a power simulation, where many p-values are simulated, and a graph is tested against each.
-
-```{r power}
-graph_calculate_power(
-  example_graph,
-  sim_n = 1e5,
-  power_marginal = c(.9, .9, .8, .8)
-)
-```
-
-All valid test types & hypothesis groupings are valid for power simulations as well. Power simulations are discussed further in both `vignette("shortcut-testing")` and `vignette("closed-testing")`.
-
-# Related work
-
-These methods were originally implemented in the [gMCP package](https://github.com/kornl/gMCP), which is still available on CRAN today. There is also a lighter version of gMCP implemented in [gMCPmini](https://github.com/allenzhuaz/gMCPmini) and its successor, [gMCPLite](https://github.com/Merck/gMCPLite). These two contain only a subset of the original functionality, but they remove the rJava dependency and add plotting functionality based on ggplot2.
-
-However, because development has ceased on the original package, we hope to re-implement the methods with a more general testing framework; with fewer dependencies, in particular shedding the Java dependency; with simpler, more transparent S3 classes; and with improvements to the accuracy of the parametric and Simes test methods.
-
-A portion of Simes testing is also implemented in the lrstat package.
-
-# Citation
-
-```{r citation, results="markup"}
-citation("graphicalMCP")
-```
-
-# Acknowledgments
-
-We owe a debt of gratitude to the authors of gMCP for their pioneering work in the field, without which this package would not be nearly as extensive as it is.
-u98uyu88888888888888u888
 # References
