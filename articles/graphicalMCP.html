@@ -46,18 +46,25 @@
   <a class="nav-link" href="../articles/graphicalMCP.html">Get started</a>
 </li>
 <li class="nav-item">
-  <a class="nav-link" href="../reference/index.html">Reference</a>
+  <a class="nav-link" href="../articles/glossary.html">Glossary</a>
+</li>
+<li class="nav-item">
+  <a class="nav-link" href="../reference/index.html">Function index</a>
 </li>
 <li class="nav-item dropdown">
   <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" id="dropdown-articles">Articles</a>
   <div class="dropdown-menu" aria-labelledby="dropdown-articles">
     <a class="dropdown-item" href="../articles/closed-testing.html">Graphical multiple comparison procedures based on the closure principle</a>
     <a class="dropdown-item" href="../articles/generate-closure.html">Rationales to generate the closure and the weighting strategy of a graph</a>
+    <a class="dropdown-item" href="../articles/glossary.html">Glossary of terms</a>
     <a class="dropdown-item" href="../articles/graph-examples.html">Common multiple comparison procedures illustrated using graphicalMCP</a>
     <a class="dropdown-item" href="../articles/shortcut-testing.html">Sequentially rejective graphical multiple comparison procedures based on Bonferroni tests</a>
     <a class="dropdown-item" href="../articles/shortuct-testing.html">Sequentially rejective graphical multiple comparison procedures based on Bonferroni tests</a>
     <a class="dropdown-item" href="../articles/validation.html">Validation</a>
   </div>
+</li>
+<li class="nav-item">
+  <a class="nav-link" href="../news/index.html">Changelog</a>
 </li>
       </ul>
 <form class="form-inline my-2 my-lg-0" role="search">
@@ -269,234 +276,6 @@ package.</p>
 <p>We owe a debt of gratitude to the authors of gMCP for their
 pioneering work in the field, without which this package would not be
 nearly as extensive as it is.</p>
-</div>
-<div class="section level2">
-<h2 id="glossary-of-terms">Glossary of terms<a class="anchor" aria-label="anchor" href="#glossary-of-terms"></a>
-</h2>
-<p>This package seeks to be both accurate and performant, of course. But
-beyond that, much thought has been put into the readability of the code.
-Whether being read by a user validating our methods, a developer
-extending the package to new uses, or a contributor helping enhance the
-core functionality, we hope that the code contained here can serve as an
-educational document to grow people’s understanding of the graphical
-approach to multiple comparison procedures.</p>
-<p>To that end, there are several entities encountered in the world of
-graphical MCPs that we define here. Some of these are used only in the
-internal code of the package, but most are inputs or output in one or
-more exported functions. If you believe any definitions could be
-clarified or improved, please contact the package authors or submit an
-issue to the GitHub repository.</p>
-<table style="width:99%;" class="table">
-<colgroup>
-<col width="9%">
-<col width="59%">
-<col width="11%">
-<col width="9%">
-<col width="9%">
-</colgroup>
-<thead><tr class="header">
-<th>Entity</th>
-<th>Definition</th>
-<th>Aliases</th>
-<th>Variable(s)</th>
-<th>Related</th>
-</tr></thead>
-<tbody>
-<tr class="odd">
-<td><strong>Graph</strong></td>
-<td>A set of nodes and edges representing a clinical trial design</td>
-<td></td>
-<td><code>graph</code></td>
-<td>Hypotheses, Transitions</td>
-</tr>
-<tr class="even">
-<td></td>
-<td>
-<strong>Graphs</strong> are so central that two of their core
-qualities get their own common variable names: Hypothesis names, and
-number of hypotheses</td>
-<td></td>
-<td>
-<code>hyp_names</code>, <code>num_hyps</code>
-</td>
-<td></td>
-</tr>
-<tr class="odd">
-<td><strong>Hypotheses</strong></td>
-<td>The weighted nodes in a <strong>graph</strong>. Each node represents
-a null hypothesis corresponding to a treatment endpoint, and its weight
-the local significance level.</td>
-<td>weights, hypothesis weights</td>
-<td><code>hypotheses</code></td>
-<td>Weighting strategy, Transitions</td>
-</tr>
-<tr class="even">
-<td><strong>Transitions</strong></td>
-<td>The weighted edges in a <strong>graph</strong>. Each edge defines
-how to propagate local significance when a source node is deleted.</td>
-<td></td>
-<td><code>transitions</code></td>
-<td>Hypotheses</td>
-</tr>
-<tr class="odd">
-<td>
-<strong>Intersection</strong> <strong>hypothesis</strong>
-</td>
-<td>A subset of <strong>hypotheses</strong> from a
-<strong>graph</strong>. Plural often implies all such subsets.</td>
-<td>intersection, sub-graph(s), closure</td>
-<td><code>intersections</code></td>
-<td>Weighting strategy</td>
-</tr>
-<tr class="even">
-<td><strong>Weighting strategy</strong></td>
-<td>The set of all <strong>intersections</strong> and their
-<strong>weights</strong> according to Algorithm 1 in Bretz et al
-(2011)</td>
-<td>intersection weights, closure weights</td>
-<td><code>weighting_strategy</code></td>
-<td></td>
-</tr>
-<tr class="odd">
-<td><strong>Adjusted weights</strong></td>
-<td>
-<p>The set of <strong>weights</strong>, adjusted according to a
-testing algorithm:</p>
-<ul>
-<li>Bonferroni: No change</li>
-<li>Simes: Sum weights for hypotheses with smaller p-values</li>
-<li>Parametric: Multiply weights by c-value, based on the joint
-distribution</li>
-</ul>
-</td>
-<td></td>
-<td><code>adjusted_weights</code></td>
-<td></td>
-</tr>
-<tr class="even">
-<td><strong>P-values</strong></td>
-<td>The set of p-values from a real or simulated clinical trial</td>
-<td></td>
-<td><code>p</code></td>
-<td>Adjusted &amp; ordered p-values</td>
-</tr>
-<tr class="odd">
-<td><strong>Ordered p-values</strong></td>
-<td>
-<strong>P-values</strong> sorted from smallest to largest</td>
-<td></td>
-<td><code>ordered_p</code></td>
-<td>(Adjusted) P-values</td>
-</tr>
-<tr class="even">
-<td><strong>Adjusted p-values</strong></td>
-<td>
-<strong>P-values</strong> that have been divided by <strong>adjusted
-weights</strong>, allowing direct comparison to <strong>alpha</strong>
-to determine significance</td>
-<td></td>
-<td><code>adjusted_p</code></td>
-<td>(Ordered) P-values</td>
-</tr>
-<tr class="odd">
-<td><strong>Significance level</strong></td>
-<td>The threshold chosen for results of a clinical trial to be
-considered significant</td>
-<td></td>
-<td><code>alpha</code></td>
-<td>P-values</td>
-</tr>
-<tr class="even">
-<td><strong>Test types</strong></td>
-<td>A specification of which testing algorithm to use - Bonferroni,
-Simes, and parametric are supported</td>
-<td>tests</td>
-<td><code>test_types</code></td>
-<td>Testing strategy</td>
-</tr>
-<tr class="odd">
-<td><strong>Test groups</strong></td>
-<td>A partition of nodes in a <strong>graph</strong> specifying which
-<strong>hypotheses</strong> should be tested together</td>
-<td>groups</td>
-<td>
-<code>groups</code>, <code>test_groups</code>
-</td>
-<td>Testing strategy</td>
-</tr>
-<tr class="even">
-<td><strong>Testing strategy</strong></td>
-<td>
-<strong>Test types</strong> and <strong>test groups</strong>
-combined</td>
-<td></td>
-<td></td>
-<td></td>
-</tr>
-<tr class="odd">
-<td><strong>Marginal power</strong></td>
-<td>
-<p>The power to reject each null <strong>hypothesis</strong> at full
-<strong>alpha</strong>. Closely related to the non-centrality parameter,
-which is the mean of each null <strong>hypothesis</strong> in the
-underlying multivariate normal distribution:</p>
-<p><code>ncp = qnorm(1 - alpha) - qnorm(1 - marginal_power)</code></p>
-</td>
-<td></td>
-<td><code>marginal_power</code></td>
-<td>Correlation matrix</td>
-</tr>
-<tr class="even">
-<td><strong>Correlation matrix</strong></td>
-<td>Specification of correlations between <strong>hypotheses</strong>.
-Together with <strong>marginal power</strong>, this specifies the (known
-or assumed) underlying multivariate normal distribution of the null
-<strong>hypotheses</strong>.</td>
-<td></td>
-<td>
-<code>corr</code>, <code>test_corr</code>,
-<code>sim_corr</code>
-</td>
-<td>Marginal power</td>
-</tr>
-<tr class="odd">
-<td><strong>Success</strong></td>
-<td>A specification of which null <strong>hypotheses</strong> must be
-rejected to consider a clinical trial a success</td>
-<td></td>
-<td><code>sim_success</code></td>
-<td></td>
-</tr>
-<tr class="even">
-<td><strong>Power</strong></td>
-<td>Under a given <strong>graph</strong>, <strong>testing
-strategy</strong>, <strong>significance level</strong>, and underlying
-distribution, the estimated likelihood that a particular combination of
-null hypotheses will be rejected</td>
-<td></td>
-<td><code>power_*</code></td>
-<td>Success</td>
-</tr>
-<tr class="odd">
-<td><em>Delete a <strong>hypothesis</strong></em></td>
-<td>Remove a <strong>hypothesis</strong> from a graph, and update the
-graph according to algorithm 1 of Bretz et al. (2011)</td>
-<td></td>
-<td>N/A</td>
-<td>Reject a hypothesis</td>
-</tr>
-<tr class="even">
-<td><em>Reject a <strong>hypothesis</strong></em></td>
-<td>Under a given <strong>graph</strong>, <strong>testing
-strategy</strong>, and <strong>significance level</strong>, find a
-hypothesis (clinical endpoint) to be statistically significant, such
-that the null hypothesis can be rejected</td>
-<td></td>
-<td></td>
-<td>Delete a hypothesis</td>
-</tr>
-</tbody>
-</table>
 </div>
 <div class="section level2">
 <h2 class="unnumbered" id="references">References<a class="anchor" aria-label="anchor" href="#references"></a>

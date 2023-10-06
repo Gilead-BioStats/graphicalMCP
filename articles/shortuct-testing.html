@@ -46,18 +46,25 @@
   <a class="nav-link" href="../articles/graphicalMCP.html">Get started</a>
 </li>
 <li class="nav-item">
-  <a class="nav-link" href="../reference/index.html">Reference</a>
+  <a class="nav-link" href="../articles/glossary.html">Glossary</a>
+</li>
+<li class="nav-item">
+  <a class="nav-link" href="../reference/index.html">Function index</a>
 </li>
 <li class="active nav-item dropdown">
   <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" id="dropdown-articles">Articles</a>
   <div class="dropdown-menu" aria-labelledby="dropdown-articles">
     <a class="dropdown-item" href="../articles/closed-testing.html">Graphical multiple comparison procedures based on the closure principle</a>
     <a class="dropdown-item" href="../articles/generate-closure.html">Rationales to generate the closure and the weighting strategy of a graph</a>
+    <a class="dropdown-item" href="../articles/glossary.html">Glossary of terms</a>
     <a class="dropdown-item" href="../articles/graph-examples.html">Common multiple comparison procedures illustrated using graphicalMCP</a>
     <a class="dropdown-item" href="../articles/shortcut-testing.html">Sequentially rejective graphical multiple comparison procedures based on Bonferroni tests</a>
     <a class="dropdown-item" href="../articles/shortuct-testing.html">Sequentially rejective graphical multiple comparison procedures based on Bonferroni tests</a>
     <a class="dropdown-item" href="../articles/validation.html">Validation</a>
   </div>
+</li>
+<li class="nav-item">
+  <a class="nav-link" href="../news/index.html">Changelog</a>
 </li>
       </ul>
 <form class="form-inline my-2 my-lg-0" role="search">
@@ -227,7 +234,8 @@ graph after <span class="math inline">\(H_2\)</span> and <span class="math inlin
 <span></span>
 <span><span class="va">test_results_verbose</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/testing.html">graph_test_shortcut</a></span><span class="op">(</span></span>
 <span>  <span class="va">g</span>,</span>
-<span>  p <span class="op">=</span> <span class="va">p_values</span>, alpha <span class="op">=</span> <span class="fl">0.025</span>,</span>
+<span>  p <span class="op">=</span> <span class="va">p_values</span>,</span>
+<span>  alpha <span class="op">=</span> <span class="fl">0.025</span>,</span>
 <span>  verbose <span class="op">=</span> <span class="cn">TRUE</span></span>
 <span><span class="op">)</span></span>
 <span></span>
@@ -377,9 +385,10 @@ below.</p>
 <span><span class="va">power_marginal_primary</span></span>
 <span><span class="co">#&gt;        H1        H2 </span></span>
 <span><span class="co">#&gt; 0.8028315 0.8028315</span></span></code></pre></div>
-<div class="section level4">
-<h4 id="input-marginal-power-for-secondary-hypotheses">Input: Marginal power for secondary hypotheses<a class="anchor" aria-label="anchor" href="#input-marginal-power-for-secondary-hypotheses"></a>
-</h4>
+</div>
+<div class="section level3">
+<h3 id="input-marginal-power-for-secondary-hypotheses">Input: Marginal power for secondary hypotheses<a class="anchor" aria-label="anchor" href="#input-marginal-power-for-secondary-hypotheses"></a>
+</h3>
 <p>Assume that the secondary endpoint is about the change in total
 medication score from baseline, which is a continuous outcome. To
 evaluate the treatment effect, the mean change is calculated, and
@@ -409,7 +418,6 @@ each at the one-sided significance level 0.025.</p>
 <span><span class="va">power_marginal_secondary</span></span>
 <span><span class="co">#&gt;        H3        H4 </span></span>
 <span><span class="co">#&gt; 0.7054139 0.9014809</span></span></code></pre></div>
-</div>
 </div>
 <div class="section level3">
 <h3 id="input-correlation-structure-to-simulate-test-statistics">Input: Correlation structure to simulate test statistics<a class="anchor" aria-label="anchor" href="#input-correlation-structure-to-simulate-test-statistics"></a>
