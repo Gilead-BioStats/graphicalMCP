@@ -7,7 +7,7 @@ bibliography: "`r system.file('references.bib', package='graphicalMCP')`"
 nocite: |
   @bretz-2009-graphs, @bretz-2011-tests, @bretz-2011-power
 vignette: >
-  %\VignetteIndexEntry{Sequentially rejective graphical approaches based on Bonferroni tests}
+  %\VignetteIndexEntry{Sequentially rejective graphical multiple comparison procedures based on Bonferroni tests}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -21,7 +21,7 @@ knitr::opts_chunk$set(
 )
 ```
 
-```{r setup, message=FALSE, warning=FALSE}
+```{r setup, message = FALSE, warning = FALSE}
 library(gt)
 library(graphicalMCP)
 ```
@@ -48,10 +48,11 @@ hyp_names <- c("H1", "H2", "H3", "H4")
 
 g <- graph_create(hypotheses, transitions, hyp_names)
 
-plot(g, layout = "grid", vertex.size = 60)
+plot(g, vertex.size = 60)
 ```
 
 # Perform the graphical multiple comparison procedure
+
 ## Adjusted p-values and rejections
 
 Given a set of p-values for $H_1, \ldots, H_4$, the graphical multiple comparison procedure can be performed to control the familywise error rate (FWER) at the significance level `alpha`. The `graph_test_shortcut` function is agnostic to one-sided or two-sided tests. For one-sided p-values, `alpha` is often set to 0.025 (default); for two-sided p-values, `alpha` is often set to 0.05. We consider one-sided tests here. A hypothesis is rejected if its adjusted p-value is less than or equal to `alpha`. After running the procedure, hypotheses $H_1$, $H_2$, and $H_4$ are rejected with their adjusted p-value calculated. 
@@ -59,6 +60,7 @@ Given a set of p-values for $H_1, \ldots, H_4$, the graphical multiple compariso
 ```{r graph-test}
 p_values <- c(.018, .01, .105, .006)
 test_results <- graph_test_shortcut(g, p = p_values, alpha = 0.025)
+
 test_results$outputs$adjusted_p # Adjusted p-values
 test_results$outputs$rejected # Rejections
 ```
@@ -74,20 +76,28 @@ test_results$outputs$graph # Final graph after H1, H2 and H4 rejected (as NA's)
 test_results$outputs$graph$hypotheses # Hypothesis weights of the final graph
 test_results$outputs$graph$transitions # Transition weights of the final graph
 
-test_results_verbose <- graph_test_shortcut(g,
-  p = p_values, alpha = 0.025,
+test_results_verbose <- graph_test_shortcut(
+  g,
+  p = p_values,
+  alpha = 0.025,
   verbose = TRUE
 )
-test_results_verbose$details$results[[3]] # Intermediate graph after H1 and H2 rejected
+
+# Intermediate graph after H1 and H2 rejected
+test_results_verbose$details$results[[3]]
 ```
+
 ## Obtain possible orders of rejections
 
 The order of rejections may not be unique and not all orders are valid. For this example, the rejected hypotheses are $H_1$, $H_2$ and $H_4$. The default order of rejections is $H_2 \rightarrow H_1 \rightarrow H_4$. Another valid order of rejections is $H_2 \rightarrow H_4 \rightarrow H_1$. However, the first rejected hypothesis can not be $H_1$ or $H_4$. To obtain all possible rejection orders, one can use the function `graph_rejection_orderings`. Then intermediate and final graphs can be obtained by using the function `graph_update` with a particular order of rejections.
 
 ```{r graph-test-order}
-orders <- graph_rejection_orderings(test_results)$valid_orderings # Obtain all valid orders of rejections
+# Obtain all valid orders of rejections
+orders <- graph_rejection_orderings(test_results)$valid_orderings 
 orders
-graph_update(g, delete = orders[[2]])$intermediate_graphs[[3]] # Intermediate graphs following the order of H2 and H4
+
+# Intermediate graphs following the order of H2 and H4
+graph_update(g, delete = orders[[2]])$intermediate_graphs[[3]]
 ```
 
 ## Obtain adjusted significance levels
@@ -95,8 +105,13 @@ graph_update(g, delete = orders[[2]])$intermediate_graphs[[3]] # Intermediate gr
 An equivalent way to obtain rejections is by adjusting significance levels. A hypothesis is rejected if its p-value is less than or equal to its adjusted significance level. The adjusted significance levels are calculated in the same order as adjusted p-values: $H_2 \rightarrow H_1 \rightarrow H_4$, and there are four steps of checking for rejections. First, $H_2$ is rejected at an adjusted significance level of `0.5 * alpha`. Second, $H_1$ is rejected at an adjusted significance level of `0.75 * alpha`, after $H_2$ is rejected. Third, $H_4$ is rejected at an adjusted significance level of `0.5 * alpha`, after $H_1$ and $H_2$ are rejected. Fourth and finally, $H_3$ cannot be rejected at an adjusted significance level of `alpha`, after $H_1$, $H_2$ and $H_4$ are rejected. These results can be obtained by specifying `test_values = TRUE`.
 
 ```{r graph-test-test_values}
-test_results_test_values <-
-  graph_test_shortcut(g, p = p_values, alpha = 0.025, test_values = TRUE)
+test_results_test_values <- graph_test_shortcut(
+  g,
+  p = p_values,
+  alpha = 0.025,
+  test_values = TRUE
+)
+
 test_results_test_values$test_values$results
 ```
 
@@ -113,17 +128,25 @@ alpha <- 0.025
 prop <- c(0.3, 0.181, 0.181)
 sample_size <- rep(200, 3)
 
-unpooled_variance <- prop[-1] * (1 - prop[-1]) / sample_size[-1] + prop[1] * (1 - prop[1]) / sample_size[1]
+unpooled_variance <-
+  prop[-1] * (1 - prop[-1]) / sample_size[-1] +
+  prop[1]  * (1 - prop[1] ) / sample_size[1]
 
-noncentrality_parameter_primary <- -(prop[-1] - prop[1]) / sqrt(unpooled_variance)
+noncentrality_parameter_primary <-
+  -(prop[-1] - prop[1]) / sqrt(unpooled_variance)
 
-power_marginal_primary <- pnorm(qnorm(alpha, lower.tail = FALSE), noncentrality_parameter_primary, 1, lower.tail = FALSE)
+power_marginal_primary <- pnorm(
+  qnorm(alpha, lower.tail = FALSE),
+  mean = noncentrality_parameter_primary,
+  sd = 1,
+  lower.tail = FALSE
+)
 
 names(power_marginal_primary) <- c("H1", "H2")
 power_marginal_primary
 ```
 
-### Input: Marginal power for secondary hypotheses
+## Input: Marginal power for secondary hypotheses
 
 Assume that the secondary endpoint is about the change in total medication score from baseline, which is a continuous outcome. To evaluate the treatment effect, the mean change is calculated, and greater reduction is preferred. Assume that the mean change from baseline is the reduction of 7.5 and 8.25, respectively for the low and the high doses, and 5 for control. Further assume a known common standard deviation of 10. Given the sample size of 200 per treatment group, the marginal power is 71\% and 90\% for $H_3$ and $H_4$, respectively, using the two-sample $z$-test for the difference in means each at the one-sided significance level 0.025.
 
@@ -132,11 +155,13 @@ mean_change <- c(5, 7.5, 8.25)
 sd <- rep(10, 3)
 variance <- sd[-1]^2 / sample_size[-1] + sd[1]^2 / sample_size[1]
 
-noncentrality_parameter_secondary <- (mean_change[-1] - mean_change[1]) /
-  sqrt(variance)
+noncentrality_parameter_secondary <-
+  (mean_change[-1] - mean_change[1]) / sqrt(variance)
 
-power_marginal_secondary <- pnorm(qnorm(alpha, lower.tail = FALSE),
-  noncentrality_parameter_secondary, 1,
+power_marginal_secondary <- pnorm(
+  qnorm(alpha, lower.tail = FALSE),
+  mean = noncentrality_parameter_secondary,
+  sd = 1,
   lower.tail = FALSE
 )
 
@@ -151,8 +176,12 @@ In addition to the marginal power, we also need to make assumptions about the jo
 ```{r power-calculate-correlation}
 corr <- matrix(0, nrow = 4, ncol = 4)
 
-corr[1, 2] <- corr[3, 4] <- sqrt(sample_size[2] / sum(sample_size[1:2]) *
-  sample_size[3] / sum(sample_size[c(1, 3)]))
+corr[1, 2] <-
+  corr[3, 4] <-
+  sqrt(
+    sample_size[2] / sum(sample_size[1:2]) *
+      sample_size[3] / sum(sample_size[c(1, 3)])
+  )
 
 rho <- 0.5
 corr[1, 3] <- corr[2, 4] <- rho
@@ -176,34 +205,24 @@ As mentioned earlier, there are multiple versions of "power" when there are mult
 These are the default outputs from the `graph_calculate_power` function. In addition, a user can customize success criteria to define other versions of "power".
 
 ```{r power-calculate-success}
-# Probability to reject H1
-H1 <- function(x) x[1]
+success_fns <- list(
+  # Probability to reject H1
+  H1 = function(x) x[1],
+  
+  # Expected number of rejections
+  `Expected no. of rejections` = function(x) x[1] + x[2] + x[3] + x[4],
 
-# Expected number of rejections
-`Expected no. of rejections` <- function(x) x[1] + x[2] + x[3] + x[4]
-
-# Probability to reject at least one hypothesis
-`AtLeast1` <- function(x) x[1] | x[2] | x[3] | x[4]
-
-# Probability to reject all hypotheses
-`All` <- function(x) x[1] & x[2] & x[3] & x[4]
-
-# Probability to reject both H1 and H2
-`H1andH2` <- function(x) x[1] & x[2]
-
-# Probability to reject both hypotheses for the low dose or the high dose
-`(H1andH3)or(H2andH4)` <- function(x) (x[1] & x[3]) | (x[2] & x[4])
-succ <- list(
-  H1, `Expected no. of rejections`, `AtLeast1`, `All`, `H1andH2`,
-  `(H1andH3)or(H2andH4)`
-)
-
-succ <- setNames(
-  succ,
-  c(
-    "H1", "Expected no. of rejections", "AtLeast1", "All", "H1andH2",
-    "(H1andH3)or(H2andH4)"
-  )
+  # Probability to reject at least one hypothesis
+  `AtLeast1` = function(x) x[1] | x[2] | x[3] | x[4],
+  
+  # Probability to reject all hypotheses
+  `All` = function(x) x[1] & x[2] & x[3] & x[4],
+  
+  # Probability to reject both H1 and H2
+  `H1andH2` = function(x) x[1] & x[2],
+  
+  # Probability to reject both hypotheses for the low dose or the high dose
+  `(H1andH3)or(H2andH4)` = function(x) (x[1] & x[3]) | (x[2] & x[4])
 )
 ```
 
@@ -213,13 +232,15 @@ Given the above inputs, we can estimate "power" via simulation for the graphical
 
 ```{r power-calculate-calculate}
 set.seed(1234)
-power_output <- graph_calculate_power(g,
+power_output <- graph_calculate_power(
+  g,
   alpha = .025,
   sim_corr = corr,
   sim_n = 1e5,
   power_marginal = c(power_marginal_primary, power_marginal_secondary),
-  sim_success = succ
+  sim_success = success_fns
 )
+
 power_output$power
 ```
 
@@ -230,12 +251,13 @@ To see the detailed outputs of all simulated p-values and rejection decisions fo
 
 ```{r power-calculate-calculate_verbose}
 set.seed(1234)
-power_verbose_output <- graph_calculate_power(g,
+power_verbose_output <- graph_calculate_power(
+  g,
   alpha = .025,
   sim_corr = corr,
   sim_n = 1e5,
   power_marginal = c(power_marginal_primary, power_marginal_secondary),
-  sim_success = succ,
+  sim_success = success_fns,
   verbose = TRUE
 )
 
@@ -245,21 +267,20 @@ print(power_verbose_output, indent = 4, precision = 6)
 ```
 
 # Reference
-- Bretz, F., Maurer, W., Brannath, W., & Posch, M. (2009). A graphical approach to sequentially rejective multiple test procedures. Statistics in medicine, 28(4), 586-604.
-- Bretz, F., Maurer, W., & Hommel, G. (2011). Test and power considerations for multiple endpoint analyses using sequentially rejective graphical procedures. Statistics in medicine, 30(13), 1489-1501.
 
-<!--
+```{r power-gMCP, eval=FALSE, echo=FALSE}
 ## Compared with gMCP
 
-```{r power-gMCP, eval=FALSE}
 library(gMCP)
+
 g_gMCP <- as_graphMCP(g)
+
 set.seed(1234)
 result <- calcPower(
   graph = g_gMCP, mean = c(
     noncentrality_parameter_primary,
     noncentrality_parameter_secondary
-  ), f = succ, corr.sim = corr, alpha = 0.025,
+  ), f = success_fns, corr.sim = corr, alpha = 0.025,
   n.sim = 1e+05
 )
 
@@ -270,4 +291,3 @@ result$LocalPower
 as.numeric(output$power$power_success)
 c(result$func1, result$func2, result$func3, result$func4, result$func5, result$func6)
 ```
--->
