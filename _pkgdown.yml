@@ -46,3 +46,14 @@ reference:
   - simple_successive_1
   - simple_successive_2
   - wiens_dmitrienko_2005
+
+navbar:
+  structure:
+    left:  [intro, glossary, reference, articles, tutorials, news]
+  components:
+    glossary:
+      text: Glossary
+      href: articles/glossary.html
+    reference:
+      text: Function index
+      href: reference/index.html
