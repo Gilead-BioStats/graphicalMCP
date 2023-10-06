@@ -54,12 +54,13 @@
 <li class="active nav-item dropdown">
   <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" id="dropdown-articles">Articles</a>
   <div class="dropdown-menu" aria-labelledby="dropdown-articles">
+    <a class="dropdown-item" href="../articles/shortcut-testing.html">Sequentially rejective graphical multiple comparison procedures based on Bonferroni tests</a>
     <a class="dropdown-item" href="../articles/closed-testing.html">Graphical multiple comparison procedures based on the closure principle</a>
     <a class="dropdown-item" href="../articles/generate-closure.html">Rationales to generate the closure and the weighting strategy of a graph</a>
-    <a class="dropdown-item" href="../articles/glossary.html">Glossary of terms</a>
     <a class="dropdown-item" href="../articles/graph-examples.html">Common multiple comparison procedures illustrated using graphicalMCP</a>
-    <a class="dropdown-item" href="../articles/shortcut-testing.html">Sequentially rejective graphical multiple comparison procedures based on Bonferroni tests</a>
     <a class="dropdown-item" href="../articles/validation.html">Validation of methods against existing packages</a>
+    <div class="dropdown-divider"></div>
+    <a class="dropdown-item" href="../articles/index.html">More articles...</a>
   </div>
 </li>
 <li class="nav-item">
@@ -253,20 +254,21 @@ strategies<a class="anchor" aria-label="anchor" href="#comparing-different-appro
 </h2>
 <p>To benchmark against existing approaches to calculating weighting
 strategies, we compare the following approaches:
-<code>generateWeights::gMCP</code>, <code>fwgtmat::lrstat</code>,
+<code><a href="https://rdrr.io/pkg/gMCP/man/generateWeights.html" class="external-link">gMCP::generateWeights()</a></code>, <code><a href="https://rdrr.io/pkg/lrstat/man/fwgtmat.html" class="external-link">lrstat::fwgtmat()</a></code>,
 Approach 1 (graphicalMCP simple) and Approach 2 (graphicalMCP
 parent-child). Random graphs are generated for the numbers of hypotheses
 of 4, 8, 12, and 16. Computing time (in median log-10 milliseconds) is
-plotted below. We can see that <code>generateWeights::gMCP</code> is the
-slowest and <code>fwgtmat::lrstat</code> is the fastest. Approach 2
-(graphicalMCP parent-child) is faster than Approach 1 (graphicalMCP
-simple). Note that <code>fwgtmat::lrstat</code> implements the
+plotted below. We can see that <code><a href="https://rdrr.io/pkg/gMCP/man/generateWeights.html" class="external-link">gMCP::generateWeights()</a></code> is
+the slowest and <code><a href="https://rdrr.io/pkg/lrstat/man/fwgtmat.html" class="external-link">lrstat::fwgtmat()</a></code> is the fastest. Approach
+2 (graphicalMCP parent-child) is faster than Approach 1 (graphicalMCP
+simple). Note that <code><a href="https://rdrr.io/pkg/lrstat/man/fwgtmat.html" class="external-link">lrstat::fwgtmat()</a></code> implements the
 calculation using C++, which is known to be faster than R. But it is
 less stable than other approaches, e.g., giving errors more often than
 others. Given that the computing time of R-based approaches is
-acceptable, adding Rcpp dependency is not considered in
+acceptable, adding an Rcpp dependency is not considered worthwhile in
 <code>graphicalMCP</code>. For these considerations, we implement
-Approach 2 in <code>weighting_strategy::graphicalMCP</code>.</p>
+Approach 2 in <code><a href="../reference/graph_generate_weights.html">graphicalMCP::graph_generate_weights()</a></code>.</p>
+<p><img src="img/gw-benchmarks-plot.png"></p>
 </div>
 <div class="section level2">
 <h2 id="improving-power-simulations-using-parent-child-relationships">Improving power simulations using parent-child relationships<a class="anchor" aria-label="anchor" href="#improving-power-simulations-using-parent-child-relationships"></a>
@@ -275,11 +277,18 @@ Approach 2 in <code>weighting_strategy::graphicalMCP</code>.</p>
 <h3 id="conventional-approach-for-power-simulations">Conventional approach for power simulations<a class="anchor" aria-label="anchor" href="#conventional-approach-for-power-simulations"></a>
 </h3>
 <p>The conventional approach for power simulations is to repeat the
-following process many times, e.g., 100,000 times. 1. Simulate a set of
-p-values 2. Run the graphical multiple comparison procedure to +
-Determine which hypothesis can be rejected + Remove the rejected
-hypothesis and update the graph + Repeat until no more hypotheses can be
-rejected Note that the same step to update the graph may repeat in many
+following process many times, e.g., 100,000 times.</p>
+<ol style="list-style-type: decimal">
+<li>Simulate a set of p-values</li>
+<li>Run the graphical multiple comparison procedure to
+<ul>
+<li>Determine which hypothesis can be rejected</li>
+<li>Remove the rejected hypothesis and update the graph</li>
+<li>Repeat until no more hypotheses can be rejected</li>
+</ul>
+</li>
+</ol>
+<p>Note that the same step to update the graph may repeat in many
 replications, which may be repetitive. For <span class="math inline">\(m\)</span> hypotheses, there are at most <span class="math inline">\(2^m-1\)</span> graphs depending on which
 hypotheses are rejected. These graphs corresponds to the closure and the
 weighting strategy. Thus an idea to avoid redundant updating of graphs
@@ -308,31 +317,44 @@ XXXX=1010, its row number should be
 <code>(1 - 1) * 8 + (1 - 0) * 4 + (1 - 1) * 2 + (1 - 0) * 1 + 1 = 16 - 10 = 6</code>.</p>
 <p>With the above way of efficiently identifying rows of
 <code>weighting_strategy</code>, power simulations could be implemented
-as follows: 1. Obtain the weighting strategy (once for all simulations)
-2. Simulate a set of p-values 3. Run the graphical multiple comparison
-procedure to + Determine which hypothesis can be rejected + Remove the
-rejected hypothesis and identify the row of the weighting strategy +
-Repeat until no more hypotheses can be rejected The small modification
-in Step 3b make this approach much faster than the conventional approach
-for power simulations.</p>
+as follows:</p>
+<ol style="list-style-type: decimal">
+<li>Obtain the weighting strategy (once for all simulations)</li>
+<li>Simulate a set of p-values</li>
+<li>Run the graphical multiple comparison procedure to
+<ul>
+<li>Determine which hypothesis can be rejected</li>
+<li>Remove the rejected hypothesis and identify the row of the weighting
+strategy</li>
+<li>Repeat until no more hypotheses can be rejected</li>
+</ul>
+</li>
+</ol>
+<p>The small modification in Step 3b make this approach much faster than
+the conventional approach for power simulations.</p>
 </div>
 </div>
 <div class="section level2">
 <h2 id="comparing-different-approaches-to-power-simulations">Comparing different approaches to power simulations<a class="anchor" aria-label="anchor" href="#comparing-different-approaches-to-power-simulations"></a>
 </h2>
 <p>To benchmark against existing approaches to calculating weighting
-strategies, we compare the following approaches: [gMCP::calcPower()],
-Approach 1 (graphicalMCP conventional), and Approach 2 (graphicalMCP
-parent-child). Both Holm and fixed sequence procedures are considered
-with the numbers of hypotheses of 4, 8, 12, and 16. Computing time (in
-median log-10 seconds) is plotted below. We can see that
-[gMCP::calcPower()] is the fastest and Approach 1 (graphicalMCP
-conventional) is the lowest. Note that [gMCP::calcPower()] implements
-the simulation using C, which is known to be faster than R but is not
-easy to extend to other situations. Given that the computing time of
-Approach 2 (graphicalMCP parent-child) is acceptable, we implement it in
-[graphicalMCP::graph_calculate_power].</p>
+strategies, we compare the following approaches:
+<code><a href="https://rdrr.io/pkg/gMCP/man/calcPower.html" class="external-link">gMCP::calcPower()</a></code>, Approach 1 (graphicalMCP conventional),
+and Approach 2 (graphicalMCP parent-child). Both Holm and fixed sequence
+procedures are considered with the numbers of hypotheses of 4, 8, 12,
+and 16. Computing time (in median log-10 seconds) is plotted below. We
+can see that <code><a href="https://rdrr.io/pkg/gMCP/man/calcPower.html" class="external-link">gMCP::calcPower()</a></code> is the fastest and Approach
+1 (graphicalMCP conventional) is the lowest. Note that
+<code><a href="https://rdrr.io/pkg/gMCP/man/calcPower.html" class="external-link">gMCP::calcPower()</a></code> implements the simulation using C, which
+is known to be faster than R but is not easy to extend to other
+situations. Given that the computing time of Approach 2 (graphicalMCP
+parent-child) is acceptable, we implement it in
+<code><a href="../reference/graph_calculate_power.html">graphicalMCP::graph_calculate_power()</a></code>.</p>
 <p><img src="img/power-benchmarks-plot.png"></p>
+</div>
+<div class="section level2">
+<h2 id="references">References<a class="anchor" aria-label="anchor" href="#references"></a>
+</h2>
 <!-- ################################################################################ -->
 <!-- The closure of a graph is the set of all sub-graphs, along with their weights calculated according to algorithm 1 of Bretz et al (2011). It is primarily used for [closed testing](link%20to%20closed%20test%20vignette), where all sub-graphs are tested for significance, and results are aggregated to determine which null hypotheses are significant globally. -->
 <!-- Throughout this article a common example will be used for demonstrations - the simple successive graph. It has two primary hypotheses, $H_1$ and $H_2$, which have the initial weight evenly split between them. The secondary hypotheses, $H_3$ and $H_4$, only have weight propagated to them if $H_1$ or $H_2$ is deleted, respectively. -->

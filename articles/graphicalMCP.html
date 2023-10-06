@@ -54,12 +54,13 @@
 <li class="nav-item dropdown">
   <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" id="dropdown-articles">Articles</a>
   <div class="dropdown-menu" aria-labelledby="dropdown-articles">
+    <a class="dropdown-item" href="../articles/shortcut-testing.html">Sequentially rejective graphical multiple comparison procedures based on Bonferroni tests</a>
     <a class="dropdown-item" href="../articles/closed-testing.html">Graphical multiple comparison procedures based on the closure principle</a>
     <a class="dropdown-item" href="../articles/generate-closure.html">Rationales to generate the closure and the weighting strategy of a graph</a>
-    <a class="dropdown-item" href="../articles/glossary.html">Glossary of terms</a>
     <a class="dropdown-item" href="../articles/graph-examples.html">Common multiple comparison procedures illustrated using graphicalMCP</a>
-    <a class="dropdown-item" href="../articles/shortcut-testing.html">Sequentially rejective graphical multiple comparison procedures based on Bonferroni tests</a>
     <a class="dropdown-item" href="../articles/validation.html">Validation of methods against existing packages</a>
+    <div class="dropdown-divider"></div>
+    <a class="dropdown-item" href="../articles/index.html">More articles...</a>
   </div>
 </li>
 <li class="nav-item">
@@ -178,7 +179,7 @@ performant for larger graphs.</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/graph_generate_weights.html">graph_generate_weights</a></span><span class="op">(</span><span class="va">example_graph</span><span class="op">)</span></span></code></pre></div>
 <p>More information on the closure can be found in
-[vignette(“generate-closure”)].</p>
+<code><a href="../articles/generate-closure.html">vignette("generate-closure")</a></code>.</p>
 </div>
 <div class="section level3">
 <h3 id="test-hypotheses">Test hypotheses<a class="anchor" aria-label="anchor" href="#test-hypotheses"></a>
@@ -189,14 +190,14 @@ graphicalMCP. Such a test can be performed with
 graph &amp; test results. See more insight about why a hypothesis was
 rejected or not by setting the <code>verbose</code> and
 <code>test_values</code> flags. More details about shortcut testing can
-be found in [vignette(“shortcut-testing”)].</p>
+be found in <code><a href="../articles/shortcut-testing.html">vignette("shortcut-testing")</a></code>.</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/testing.html">graph_test_shortcut</a></span><span class="op">(</span><span class="va">example_graph</span>, p <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">.01</span>, <span class="fl">.03</span>, <span class="fl">.02</span>, <span class="fl">.01</span><span class="op">)</span>, alpha <span class="op">=</span> <span class="fl">.025</span><span class="op">)</span></span></code></pre></div>
 <p>A graph can also be tested using Simes- or parametric-based testing
 using the closure test. Other types of tests will be added over time,
 and a combination of tests can be used for groups of hypotheses.
 Additional details about closure testing can be found in
-[vignette(“closed-testing”)].</p>
+<code><a href="../articles/closed-testing.html">vignette("closed-testing")</a></code>.</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/testing.html">graph_test_closure</a></span><span class="op">(</span></span>
 <span>  <span class="va">example_graph</span>,</span>
@@ -221,7 +222,8 @@ graph is tested against each.</p>
 <span><span class="op">)</span></span></code></pre></div>
 <p>All valid test types &amp; hypothesis groupings are valid for power
 simulations as well. Power simulations are discussed further in both
-[vignette(“shortcut-testing”)] and [vignette(“closed-testing”)].</p>
+<code><a href="../articles/shortcut-testing.html">vignette("shortcut-testing")</a></code> and
+<code><a href="../articles/closed-testing.html">vignette("closed-testing")</a></code>.</p>
 </div>
 </div>
 <div class="section level2">
