@@ -43,7 +43,8 @@ bonferroni_graph <- bonferroni(m)
 
 plot(
   bonferroni_graph,
-  layout = igraph::layout_in_circle(as_igraph(bonferroni_graph),
+  layout = igraph::layout_in_circle(
+    as_igraph(bonferroni_graph),
     order = c(2, 1, 3)
   ),
   vertex.size = 70
@@ -75,7 +76,8 @@ holm_graph <- bonferroni_holm(m)
 # holm_graph <- graph_create(rep(1 / m, m), transitions)
 
 plot(holm_graph,
-  layout = igraph::layout_in_circle(as_igraph(holm_graph),
+  layout = igraph::layout_in_circle(
+    as_igraph(holm_graph),
     order = c(2, 1, 3)
   ),
   vertex.size = 70
@@ -388,7 +390,8 @@ hommel_graph <- bonferroni_holm(m)
 
 plot(
   hommel_graph,
-  layout = igraph::layout_in_circle(as_igraph(hommel_graph),
+  layout = igraph::layout_in_circle(
+    as_igraph(hommel_graph),
     order = c(2, 1, 3)
   ),
   vertex.size = 70
@@ -406,7 +409,7 @@ test_results <- graph_test_closure(
 test_results$outputs$rejected
 ```
 
-# parametric procedures
+# Parametric procedures
 
 ## Dunnett procedure
 
@@ -420,7 +423,8 @@ dunnett_graph <- bonferroni_holm(m)
 
 plot(
   dunnett_graph,
-  layout = igraph::layout_in_circle(as_igraph(dunnett_graph),
+  layout = igraph::layout_in_circle(
+    as_igraph(dunnett_graph),
     order = c(2, 1, 3)
   ),
   vertex.size = 70

@@ -1,11 +1,11 @@
 ---
-title: "Validation"
+title: "Validation of methods against existing packages"
 output: rmarkdown::html_vignette
 bibliography: "`r system.file('references.bib', package='graphicalMCP')`"
 nocite: |
   @bretz-2009-graphs, @bretz-2011-tests, @bretz-2011-power
 vignette: >
-  %\VignetteIndexEntry{Validation}
+  %\VignetteIndexEntry{Validation of methods against existing packages}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
