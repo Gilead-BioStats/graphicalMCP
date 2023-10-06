@@ -69,6 +69,7 @@ plot(updated_example, vertex.size = 60)
 
 Given the set of p-values of all hypotheses, graphical MCPs can be performed using `graph_test_shortcut()` to determine which hypotheses can be rejected at the significance level `alpha`. Assume p-values are 0.01, 0.005, 0.03, and 0.01 for hypotheses H1-H4. With a one-sided significance level `alpha = 0.025`, rejected hypotheses are H1, H2, and H4. More details about the shortcut testing can be found in `vignette("shortcut-testing")`.
 
+
 ```{r test-graph-shortcut}
 test_results <- graph_test_shortcut(
   example_graph,

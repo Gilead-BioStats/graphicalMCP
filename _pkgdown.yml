@@ -57,3 +57,17 @@ navbar:
     reference:
       text: Function index
       href: reference/index.html
+
+articles:
+- title: Vignettes
+  navbar: ~
+  contents:
+  - shortcut-testing
+  - closed-testing
+  - generate-closure
+  - graph-examples
+  - validation
+
+- title: Glossary
+  contents:
+  - glossary

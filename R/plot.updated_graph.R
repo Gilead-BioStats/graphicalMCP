@@ -19,8 +19,8 @@
 #'   layout = "grid"
 #' )
 plot.updated_graph <- function(x, ...) {
-  v_colors <- rep("#e8c2ff", length(x$updated_graph$hypotheses))
-  v_colors[x$deleted] <- "grey80"
+  v_colors <- rep("#6baed6", length(x$updated_graph$hypotheses))
+  v_colors[x$deleted] <- "#cccccc"
 
   plot(x$updated_graph, vertex.color = v_colors, ...)
 }

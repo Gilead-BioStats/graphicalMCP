@@ -7,7 +7,7 @@ status](https://www.r-pkg.org/badges/version/graphicalMCP)](https://cran.r-proje
 
 <!-- badges: end -->
 
-# graphicalMCP <img src="man/figures/logo.png" align="right" height="350"/>
+# graphicalMCP <a href="https://urban-sniffle-p11zlpj.pages.github.io/"><img src="man/figures/logo.png" align="right" height="139" /></a>
 
 ## Introduction
 
@@ -31,19 +31,19 @@ pak::pak("Gilead-BioStats/graphicalMCP@dev")
 
 ## Documentation
 
-- For basic usage instructions, see \[vignette(“graphicalMCP”)\]
+- For basic usage instructions, see `vignette("graphicalMCP")`
 - To become familiar with graphical MCP terminology, see
-  \[vignette(“glossary”)\]
+  `vignette("glossary")`
 - To learn examples of how to use `graphicalMCP`,
-  - see \[vignette(“shortcut-testing”)\] for sequentially rejective
+  - see `vignette("shortcut-testing")` for sequentially rejective
     graphical multiple comparison procedures based on Bonferroni tests
-  - see \[vignette(“closed-testing”)\] for graphical multiple comparison
+  - see `vignette("closed-testing")` for graphical multiple comparison
     procedures based on the closure principle
-  - see \[vignette(“graph-examples”)\] for common multiple comparison
+  - see `vignette("graph-examples")` for common multiple comparison
     procedures illustrated using `graphicalMCP`
-  - see \[vignette(“generate-closure”)\] for rationales to generate the
+  - see `vignette("generate-closure")` for rationales to generate the
     closure and the weighting strategy of a graph
-  - see \[vignette(“validation”)\] for comparisons to other R packages
+  - see `vignette("validation")` for comparisons to other R packages
 
 ## Related work
 

@@ -141,19 +141,21 @@ $m$ is the number of hypotheses.
 # Comparing different approaches to calculating weighting strategies
 
 To benchmark against existing approaches to calculating weighting strategies, we 
-compare the following approaches: `generateWeights::gMCP`, `fwgtmat::lrstat`, 
+compare the following approaches: `gMCP::generateWeights()`, `lrstat::fwgtmat()`, 
 Approach 1 (graphicalMCP simple) and Approach 2 (graphicalMCP parent-child). Random 
 graphs are generated for the numbers of hypotheses of 4, 8, 12, and 16. Computing 
-time (in median log-10 milliseconds) is plotted below. We can see that `generateWeights::gMCP` 
-is the slowest and `fwgtmat::lrstat` is the fastest. Approach 2 
+time (in median log-10 milliseconds) is plotted below. We can see that `gMCP::generateWeights()` 
+is the slowest and `lrstat::fwgtmat()` is the fastest. Approach 2 
 (graphicalMCP parent-child) is faster than Approach 1 (graphicalMCP simple). Note 
-that `fwgtmat::lrstat` implements the calculation using C++, which is known to be 
+that `lrstat::fwgtmat()` implements the calculation using C++, which is known to be 
 faster than R. But it is less stable than other approaches, e.g., giving errors more 
 often than others. Given that the computing time of R-based approaches is acceptable, 
-adding Rcpp dependency is not considered in `graphicalMCP`. For these considerations, 
-we implement Approach 2 in `weighting_strategy::graphicalMCP`.
+adding an Rcpp dependency is not considered worthwhile in `graphicalMCP`. For these considerations, 
+we implement Approach 2 in `graphicalMCP::graph_generate_weights()`.
 
-```{r gw-benchmarks-functions, eval = FALSE}
+![](img/gw-benchmarks-plot.png)
+
+```{r gw-benchmarks-functions, eval=FALSE}
 ggw_simple <- function(graph) {
   num_hyps <- length(graph$hypotheses)
 
@@ -169,97 +171,6 @@ ggw_simple <- function(graph) {
   )
 
   cbind(matrix_intersections, do.call(rbind, matrix_weights))
-}
-
-delete_nodes_recursive <- function(graph, last = 0) {
-  init_hypotheses <- hypotheses <- graph$hypotheses
-  init_transitions <- transitions <- graph$transitions
-
-  ### base case
-  int_hyp <- as.integer(names(hypotheses))
-
-  is_single_node <- length(hypotheses) == 1
-  last_is_bigger <- last > max(int_hyp)
-
-  if (is_single_node || last_is_bigger) {
-    return(list(graph))
-  }
-
-  ### recursive step
-  children <- list()
-
-  for (orig_hyp_num in int_hyp[int_hyp > last]) {
-    del_index <- match(orig_hyp_num, int_hyp)
-    hyp_nums <- seq_along(hypotheses)[seq_along(hypotheses) != del_index]
-
-    for (hyp_num in hyp_nums) {
-      hypotheses[[hyp_num]] <-
-        init_hypotheses[[hyp_num]] +
-        init_hypotheses[[del_index]] * init_transitions[[del_index, hyp_num]]
-
-      denominator <- 1 - init_transitions[[hyp_num, del_index]] *
-        init_transitions[[del_index, hyp_num]]
-
-      for (end_num in hyp_nums) {
-        if (hyp_num == end_num || denominator <= 0) {
-          transitions[[hyp_num, end_num]] <- 0
-        } else {
-          transitions[[hyp_num, end_num]] <- (
-            init_transitions[[hyp_num, end_num]] +
-              init_transitions[[hyp_num, del_index]] *
-                init_transitions[[del_index, end_num]]
-          ) / denominator
-        }
-      }
-    }
-
-    smaller_graph <- structure(
-      list(
-        hypotheses = hypotheses[-del_index],
-        transitions = as.matrix(transitions[-del_index, -del_index])
-      ),
-      class = "initial_graph"
-    )
-
-    children[[del_index]] <- delete_nodes_recursive(
-      smaller_graph,
-      orig_hyp_num
-    )
-  }
-
-  c(
-    unlist(children, recursive = FALSE),
-    list(graph)
-  )
-}
-
-ggw_recursive <- function(graph) {
-  # The recursion requires the hypotheses to be named sequentially as actual
-  # numbers for the memory property to work
-  hyp_names <- names(graph$hypotheses)
-  names(graph$hypotheses) <- seq_along(graph$hypotheses)
-  colnames(graph$transitions) <- names(graph$hypotheses)
-  rownames(graph$transitions) <- names(graph$hypotheses)
-
-  # Recursively generate a list of all sub-graphs
-  list_subgraphs <- delete_nodes_recursive(graph)
-
-  # Process the list of graphs into the normal matrix form
-  matrix_weights <- structure(
-    do.call(
-      rbind,
-      lapply(
-        list_subgraphs,
-        function(graph) graph$hypotheses[as.character(seq_along(hyp_names))]
-      )
-    ),
-    dimnames = list(1:(2^length(hyp_names) - 1), hyp_names)
-  )
-
-  matrix_intersections <- !is.na(matrix_weights)
-  matrix_weights[is.na(matrix_weights)] <- 0
-
-  cbind(matrix_intersections, matrix_weights)
 }
 
 vec_num_hyps <- 2:8 * 2
@@ -284,7 +195,6 @@ benchmark_list <- lapply(
     benchmark <- mark(
       gMCP = generateWeights(graph$transitions, graph$hypotheses),
       `graphicalMCP simple` = ggw_simple(graph),
-      `graphicalMCP recursive` = ggw_recursive(graph),
       `graphicalMCP parent-child` = graph_generate_weights(graph),
       # lrstat still errors with graphs occasionally for unknown reasons
       lrstat = if (!num_hyps %in% c(10, 14)) {
@@ -328,6 +238,7 @@ write.csv(
 ```{r plot-gw-benchmarks, fig.dim=c(8, 5), eval=FALSE}
 benchmarks <- read.csv(here::here("vignettes/cache/gw_benchmarks.csv"))
 benchmarks <- subset(benchmarks, char_expression != "graphicalMCP recursive")
+
 benchmarks$char_expression <- factor(benchmarks$char_expression,
   levels = c(
     "gMCP",
@@ -336,6 +247,7 @@ benchmarks$char_expression <- factor(benchmarks$char_expression,
     "lrstat"
   )
 )
+
 benchmarks_plot_standard <-
   ggplot(benchmarks, aes(num_hyps, median, color = char_expression)) +
   geom_point(size = 2) +
@@ -354,6 +266,7 @@ benchmarks_plot_standard <-
     labels = c("0", "0.1", "1", "10", "100", "1,000", "100,000")
   ) +
   labs(subtitle = "Log10(median runtime) in milliseconds")
+
 benchmarks_plot_standard
 ```
 
@@ -363,11 +276,13 @@ benchmarks_plot_standard
 
 The conventional approach for power simulations is to repeat the following process 
 many times, e.g., 100,000 times.
+
 1. Simulate a set of p-values
 2. Run the graphical multiple comparison procedure to
     + Determine which hypothesis can be rejected
     + Remove the rejected hypothesis and update the graph
     + Repeat until no more hypotheses can be rejected
+
 Note that the same step to update the graph may repeat in many replications, which 
 may be repetitive. For $m$ hypotheses, there are at most $2^m-1$ graphs depending 
 on which hypotheses are rejected. These graphs corresponds to the closure and the 
@@ -393,29 +308,33 @@ be 6. A useful way to calculate the row number for an index of XXXX is
 
 With the above way of efficiently identifying rows of `weighting_strategy`, power 
 simulations could be implemented as follows:
+
 1. Obtain the weighting strategy (once for all simulations)
 2. Simulate a set of p-values
 3. Run the graphical multiple comparison procedure to
     + Determine which hypothesis can be rejected
     + Remove the rejected hypothesis and identify the row of the weighting strategy
     + Repeat until no more hypotheses can be rejected
+
 The small modification in Step 3b make this approach much faster than the conventional 
 approach for power simulations.
 
 # Comparing different approaches to power simulations
 
 To benchmark against existing approaches to calculating weighting strategies, we 
-compare the following approaches: [gMCP::calcPower()], Approach 1 
+compare the following approaches: `gMCP::calcPower()`, Approach 1 
 (graphicalMCP conventional), and Approach 2 (graphicalMCP parent-child). Both Holm 
 and fixed sequence procedures are considered with the numbers of hypotheses of 4, 
 8, 12, and 16. Computing time (in median log-10 seconds) is plotted below. We can 
-see that [gMCP::calcPower()] is the fastest and Approach 1 (graphicalMCP conventional) 
-is the lowest. Note that [gMCP::calcPower()] implements the simulation using C, which 
+see that `gMCP::calcPower()` is the fastest and Approach 1 (graphicalMCP conventional) 
+is the lowest. Note that `gMCP::calcPower()` implements the simulation using C, which 
 is known to be faster than R but is not easy to extend to other situations. Given 
 that the computing time of Approach 2 (graphicalMCP parent-child) is acceptable, 
-we implement it in [graphicalMCP::graph_calculate_power].
+we implement it in `graphicalMCP::graph_calculate_power()`.
 
 ![](img/power-benchmarks-plot.png)
+
+# References
 
 <!-- ################################################################################ -->
 

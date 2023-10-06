@@ -74,7 +74,7 @@ plot(
 
 ## Perform the graphical multiple comparison procedure based on Bonferroni tests
 
-Given a set of p-values for $H_1, \ldots, H_6$, the graphical multiple comparison procedure can be performed to control the family-wise error rate (FWER) at the significance level `alpha`. For one-sided p-values, `alpha` is often set to 0.025 (default). First, we perform a Bonferroni-based procedure. After running the procedure, none of these hypotheses is rejected. These results are identical to using [graph_test_shortcut()].
+Given a set of p-values for $H_1, \ldots, H_6$, the graphical multiple comparison procedure can be performed to control the family-wise error rate (FWER) at the significance level `alpha`. For one-sided p-values, `alpha` is often set to 0.025 (default). First, we perform a Bonferroni-based procedure. After running the procedure, none of these hypotheses is rejected. These results are identical to using `graph_test_shortcut()`.
 
 ```{r graph-test-bonferroni}
 p_values <- c(0.015, 0.013, 0.01, 0.007, 0.1, 0.0124)
