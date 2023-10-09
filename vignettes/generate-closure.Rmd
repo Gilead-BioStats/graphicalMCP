@@ -5,7 +5,7 @@ output:
     code_folding: hide
 bibliography: "`r system.file('references.bib', package='graphicalMCP')`"
 nocite: |
-  @bretz-2009-graphs, @bretz-2011-tests, @bretz-2011-power
+  @bretz-2009-graphical, @bretz-2011-test, @bretz-2011-graphical
 vignette: >
   %\VignetteIndexEntry{Rationales to generate the closure and the weighting strategy of a graph}
   %\VignetteEngine{knitr::rmarkdown}

@@ -3,7 +3,7 @@ title: "Common multiple comparison procedures illustrated using graphicalMCP"
 output: rmarkdown::html_vignette
 bibliography: "`r system.file('references.bib', package='graphicalMCP')`"
 nocite: |
-  @bretz-2009-graphs, @bretz-2011-tests, @bretz-2011-power
+  @bretz-2009-graphical, @bretz-2011-graphical
 vignette: >
   %\VignetteIndexEntry{Common multiple comparison procedures illustrated using graphicalMCP}
   %\VignetteEngine{knitr::rmarkdown}
