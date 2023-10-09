@@ -5,7 +5,7 @@ output:
     code_folding: "show"
 bibliography: "`r system.file('references.bib', package='graphicalMCP')`"
 nocite: |
-  @bretz-2009-graphs, @bretz-2011-tests, @bretz-2011-power
+  @bretz-2009-graphical, @bretz-2011-test, @bretz-2011-graphical
 vignette: >
   %\VignetteIndexEntry{Graphical multiple comparison procedures based on the closure principle}
   %\VignetteEngine{knitr::rmarkdown}
@@ -21,14 +21,14 @@ knitr::opts_chunk$set(
 )
 ```
 
-```{r setup, message=FALSE, warning=FALSE}
+```{r setup, message = FALSE, warning = FALSE}
 library(gt)
 library(gMCP)
 library(lrstat)
 library(graphicalMCP)
 ```
 
-## Multiple comparison problem
+# Motivating example
 
 Consider a confirmatory clinical trial comparing a test treatment (treatment) against the control treatment (control) for a disease. There are two doses of treatment: the low dose and the high dose. There are three endpoints included in the multiplicity adjustment strategy, which are the primary endpoint (PE) and two secondary endpoints (SE1 and SE2). In total, there are six null hypotheses: $H_1$, $H_3$ and $H_5$ are the primary hypothesis and two secondary hypotheses respectively for the low dose versus control; $H_2$, $H_4$ and $H_6$ are the primary hypothesis and two secondary hypotheses respectively for the high dose versus control.
 
@@ -72,9 +72,10 @@ plot(
 )
 ```
 
-## Perform the graphical multiple comparison procedure based on Bonferroni tests
+# Perform the graphical multiple comparison procedure based on the closure principle
 
-Given a set of p-values for $H_1, \ldots, H_6$, the graphical multiple comparison procedure can be performed to control the family-wise error rate (FWER) at the significance level `alpha`. For one-sided p-values, `alpha` is often set to 0.025 (default). First, we perform a Bonferroni-based procedure. After running the procedure, none of these hypotheses is rejected. These results are identical to using [graph_test_shortcut()].
+## Bonferroni tests
+Given a set of p-values for $H_1, \ldots, H_6$, the graphical multiple comparison procedure can be performed to control the family-wise error rate (FWER) at the significance level `alpha`. For one-sided p-values, `alpha` is often set to 0.025 (default). First, we perform a Bonferroni-based procedure using the closure principle [@bretz-2009-graphical]. After running the procedure, none of these hypotheses is rejected. These results are identical to using [graph_test_shortcut()].
 
 ```{r graph-test-bonferroni}
 p_values <- c(0.015, 0.013, 0.01, 0.007, 0.1, 0.0124)
@@ -83,14 +84,15 @@ test_results <- graph_test_closure(g, p = p_values, alpha = 0.025)
 test_results$outputs$adjusted_p
 
 test_results$outputs$rejected
-# Same testing results as 'graph_test_shortcut(g, p = p_values, alpha = 0.025)'
+# Same testing results as
+# 'graph_test_shortcut(g, p = p_values, alpha = 0.025)$outputs$rejected'
 ```
 
 ### Obtain the closure
 
 To investigate the closure and how every intersection hypothesis is rejected, one could obtain the detailed output by specifying `verbose = TRUE`. Because all hypotheses are tested using Bonferroni tests, the adjusted p-value for every intersection hypothesis is the same as the adjusted p-value for group 1 (meaning all hypotheses are in the same group for Bonferroni tests). An intersection hypothesis is rejected if its adjusted p-value is less than or equal to `alpha`.
 
-Adjusted p-values are initially calculated by groups of hypotheses. In this case there is only one group, which includes all hypotheses, but there can be more. The adjusted p-value for an intersection hypothesis is the minimum across groups within that intersection. Finally, the adjusted p-value for an individual hypothesis for the whole procedure is equal to the max adjusted p-value across intersections containing that hypothesis.
+Adjusted p-values are initially calculated by groups of hypotheses. In this case there is only one group, which includes all hypotheses, but there can be more. The adjusted p-value for an intersection hypothesis is the minimum across groups within that intersection. Finally, the adjusted p-value for an individual hypothesis for the whole procedure is equal to the maximum of adjusted p-values across intersections involving that hypothesis.
 
 ```{r graph-test-verbose}
 test_results_verbose <-
@@ -122,7 +124,7 @@ head(test_results_test_values$test_values$results)
 
 ## Mixed procedures for graphical approaches
 
-The framework of graphicalMCP allows a mixture of tests to improve the performance from the Bonferroni-based graphical approaches. We can group hypotheses into multiple subgroups and perform a separate test for every subgroup. Currently, graphicalMCP supports Bonferroni, parametric and Simes tests. To connect results from subgroups, Bonferroni tests are used. Here, we will show two examples. The first example applies parametric tests to primary hypotheses, and the second example applies Simes tests to two subgroups of secondary hypotheses in addition to parametric tests to primary hypotheses.
+The framework of graphicalMCP allows a mixture of tests to improve the performance from the Bonferroni-based graphical approaches. We can group hypotheses into multiple subgroups and perform a separate test for every subgroup. Currently, graphicalMCP supports Bonferroni, parametric and Simes tests. To connect results from different subgroups of hypotheses, Bonferroni tests are used. Here, we will show two examples. The first example applies parametric tests to primary hypotheses [@xi-2017-unified], and the second example applies Simes tests to two subgroups of secondary hypotheses in addition to parametric tests to primary hypotheses.
 
 ### Parametric tests for primary hypotheses
 
@@ -130,7 +132,7 @@ In this example, we assume that the test statistics for primary hypotheses follo
 
 For the intersection hypothesis $H_1\cap H_2\cap H_3\cap H_4\cap H_5\cap H_6$, hypothesis weights are 0.5, 0.5, 0, 0, 0, and 0, respectively for $H_1,\ldots, H_6$. Assume one-sided p-values for these hypotheses are $p_1,\ldots,p_6$, respectively. The intersection hypothesis is rejected by the Bonferroni test if $p_1\leq 0.5\alpha$ or $p_2\leq 0.5\alpha$. Alternatively, a parametric test utilizes the correlation between test statistics $t_1=\Phi^{-1}(1 - p_1)$ and $t_2=\Phi^{-1}(1 - p_2)$. The intersection hypothesis can be rejected if $p_1\leq c\times 0.5\alpha$ or $p_2\leq c\times 0.5\alpha$, where the $c$ value is the adjustment due to the correlation between $t_1$ and $t_2$. More specifically, $c$ can be solved as a solution to $Pr\{(p_1\leq c\times 0.5\alpha)\cup (p_2\leq c\times 0.5\alpha)\}=\alpha$. For a given correlation $\rho_{12}$, the $c$ value can be solved using the `uniroot` function and the `mvtnorm` package. For example, if $\rho_{12}=0.5$, the $c$ value is 1.078. Then we can obtain the adjusted significance level for $H_1$ and $H_2$ as $c\times 0.5\alpha$. Alternatively, we can calculate the adjusted p-value for $H_1\cap H_2\cap H_3\cap H_4\cap H_5\cap H_6$ as $Pr\{(P_1\leq \min{\{p_1, p_2\}})\cup (P_2\leq \min{\{p_1, p_2\}})\}$.
 
-To implement this procedure, we need to create two subgroups: one for $H_1$ and $H_2$, and one for the rest of the hypotheses. For the first subgroup of hypotheses, we apply parametric tests; for the second subgroup, we apply Bonferroni tests. Three additional inputs are needed to specify the grouping information with `test_groups`, to identify the types of tests for every subgroup with `test_types`, and to provide the correlation matrix for parametric tests with `test_corr`. Assuming a correlation of 0.5 between test statistics for primary hypotheses, $H_1$ and $H_2$ are rejected, but no others are rejected using the Bonferroni-based graphical approach. This illustrates the power improvement of using parametric tests over Bonferroni tests.
+To implement this procedure, we need to create two subgroups: one for $H_1$ and $H_2$, and one for the rest of the hypotheses. For the first subgroup of hypotheses, we apply parametric tests; for the second subgroup (and its subsets), we apply Bonferroni tests. Three additional inputs are needed: to specify the grouping information with `test_groups`, to identify the types of tests for every subgroup with `test_types`, and to provide the correlation matrix for parametric tests with `test_corr`. Assume the correlation is 0.5 between test statistics for primary hypotheses. The procedure rejects $H_1$ and $H_2$, but no others. Compared with the Bonferroni-based graphical approach which didn't rejected any hypothesis, this illustrates the power improvement of using parametric tests over Bonferroni tests.
 
 ```{r graph-test-parametric}
 corr_12 <- matrix(0.5, nrow = 2, ncol = 2)
@@ -155,13 +157,13 @@ head(test_results_parametric$test_values$results)
 
 ### Parametric tests for primary hypotheses and Simes tests for secondary hypotheses
 
-In addition to using parametric tests for primary hypotheses, there are other ways to improve the Bonferroni-based graphical approaches. One way is to apply Simes tests to secondary hypotheses. Simes tests improve over Bonferroni tests because they may reject an intersection hypothesis if all p-values are relatively small, even if they're larger than adjusted significance levels of Bonferroni tests.
+In addition to using parametric tests for primary hypotheses, there are other ways to improve the Bonferroni-based graphical approaches. One way is to apply Simes tests to secondary hypotheses[@bretz-2011-graphical;@lu-2016-graphical]. Simes tests improve over Bonferroni tests because they may reject an intersection hypothesis if all p-values are relatively small, even if they're larger than adjusted significance levels of Bonferroni tests.
 
-For the intersection hypothesis $H_1\cap H_2\cap H_3\cap H_4\cap H_5\cap H_6$, hypothesis weights are 0.5, 0.5, 0, 0, 0, and 0, respectively for $H_1,\ldots, H_6$. The intersection hypothesis is rejected by the Bonferroni test if $p_1\leq 0.5\alpha$ or $p_2\leq 0.5\alpha$. In addition to these conditions, the Simes test can also reject the intersection hypothesis if both $p_1$ and $p_2$ are less than or equal to $\alpha$. In order to control the Type I error for the Simes test, a distributional requirement is needed, which is called $MTP_2$. In this case, it means that the correlation between test statistics for $H_1$ and $H_2$ should be non-negative.
+For the intersection hypothesis $H_3\cap H_5$, hypothesis weights are 0.5 and 0.5, respectively for $H_3$ and $H_5$. The intersection hypothesis is rejected by the Bonferroni test if $p_3\leq 0.5\alpha$ or $p_5\leq 0.5\alpha$. In addition to these conditions, the Simes test can also reject the intersection hypothesis if both $p_3$ and $p_5$ are less than or equal to $\alpha$. In order to control the Type I error for the Simes test, a distributional requirement is needed, which is called $MTP_2$ [@sarkar-1998-some]. In this case, it means that the correlation between test statistics for $H_3$ and $H_5$ should be non-negative.
 
-To illustrate the possibility of using mixed tests in this example, we keep parametric tests for primary hypotheses and apply Simes tests for secondary hypotheses. There are two sets of secondary hypotheses: $H_3$ and $H_5$ for the secondary hypotheses for the low dose versus control, and $H_4$ and $H_6$ for the secondary hypotheses for the high dose versus control. It is believed that the correlation between test statistics for $H_3$ and $H_5$ is non-negative and it is a similar case for $H_4$ and $H_6$. Thus one can apply Simes tests to $H_3$ and $H_5$, and separately to $H_4$ and $H_6$. Note that this is different from applying Simes tests to all $H_3\ldots,H_6$ which requires a stronger $MTP^2$ condition.
+To illustrate the possibility of using mixed tests in this example, we keep parametric tests for primary hypotheses and apply Simes tests for secondary hypotheses. There are two sets of secondary hypotheses: $H_3$ and $H_5$ for the secondary hypotheses for the low dose versus control, and $H_4$ and $H_6$ for the secondary hypotheses for the high dose versus control. It is believed that the correlation between test statistics for $H_3$ and $H_5$ is non-negative and it is the same case for $H_4$ and $H_6$. Thus one can apply Simes tests to $H_3$ and $H_5$, and separately to $H_4$ and $H_6$. Note that this is different from applying Simes tests to all $H_3\ldots,H_6$ which requires a stronger $MTP_2$ condition.
 
-To implement this procedure, we create three subgroups: one for $H_1$ and $H_2$, one for $H_3$ and $H_5$, and one for $H_4$ and $H_6$. For the first subgroup of hypotheses, we apply the parametric tests; for the second and the third subgroups, we apply separate Simes tests. Assuming a correlation of 0.5 between test statistics for primary hypotheses, $H_1$, $H_2$, $H_4$, $H_6$, and $H_3$ are rejected. Compared to the results of using the Bonferroni tests for secondary hypotheses, $H_3$, $H_4$ and $H_6$ are the additional hypotheses rejected because of using Simes tests, showing the power improvement of using Simes tests.
+To implement this procedure, we create three subgroups: one for $H_1$ and $H_2$, one for $H_3$ and $H_5$, and one for $H_4$ and $H_6$. For the first subgroup of hypotheses, we apply the parametric tests; for the second and the third subgroups, we apply separate Simes tests. Assume the correlation is 0.5 between test statistics for primary hypotheses. The procedure rejects $H_1$, $H_2$, $H_4$, $H_6$, and $H_3$. Compared to the results of only using parametric tests for primary hypotheses (and Bonferroni tests for secondary hypotheses), $H_3$, $H_4$ and $H_6$ are the additional hypotheses rejected because of using Simes tests, showing the power improvement of using Simes tests.
 
 ```{r graph-test-parametric-simes}
 test_results_parametric_simes <-
@@ -170,11 +172,14 @@ test_results_parametric_simes <-
     p = p_values, alpha = 0.025,
     test_groups = list(c(1, 2), c(3, 5), c(4, 6)),
     test_types = c("parametric", "simes", "simes"),
-    test_corr = list(corr_12, NA, NA)
+    test_corr = list(corr_12, NA, NA),
+    test_values = TRUE
   )
 
 test_results_parametric_simes$outputs$adjusted_p
 test_results_parametric_simes$outputs$rejected
+
+head(test_results_parametric_simes$test_values$results)
 ```
 
 ## Power calculation
@@ -323,8 +328,7 @@ success_fns <- list(
 Given the above inputs, we can calculate power via simulation for the graphical multiple comparison procedure at one-sided significance level `alpha = 0.025` using `sim_n = 1e5` simulations and the random seed 1234. There are three procedures to compare: the Bonferroni-based procedure, the procedure using parametric tests for primary hypotheses, and the procedure using parametric tests for primary hypotheses and Simes tests for two sets of secondary hypotheses separately. The local power for hypotheses $H_1, \ldots, H_6$ is 
 - 0.760, 0.752, 0.510, 0.665, 0.391, and 0.625, respectively using the Bonferroni-based procedure,
 - 0.764, 0.756, 0.511, 0.668, 0.392, and 0.628, respectively using the procedure using parametric tests for primary hypotheses,
-- 0.764, 0.757, 0.521, 0.673, 0.402, and 0.633, respectively using the procedure using parametric tests for primary hypotheses and Simes tests for two sets of secondary hypotheses separately.
-Note that the local power is improved for all hypotheses after parametric tests and Simes tests being applied over the Bonferroni-based procedure.
+- 0.764, 0.757, 0.521, 0.673, 0.402, and 0.633, respectively using the procedure using parametric tests for primary hypotheses and Simes tests for two sets of secondary hypotheses separately. Note that the local power is improved for all hypotheses after parametric tests and Simes tests being applied over the Bonferroni-based procedure.
 
 ```{r power-calculate-calculate}
 set.seed(1234)
@@ -388,7 +392,7 @@ To see the detailed outputs of all simulated p-values and rejection decisions fo
 
 ```{r power-calculate-calculate_verbose}
 set.seed(1234)
-verbose_output_parametric_simes <- graph_calculate_power(
+power_verbose_output_parametric_simes <- graph_calculate_power(
   g,
   alpha = 0.025,
   sim_corr = corr,
@@ -405,10 +409,12 @@ verbose_output_parametric_simes <- graph_calculate_power(
   verbose = TRUE
 )
 
-print(verbose_output_parametric_simes)
+head(power_verbose_output_parametric_simes$details$p_sim, 10)
 
-print(verbose_output_parametric_simes,
+print(power_verbose_output_parametric_simes,
   indent = 4,
   precision = 6
 )
 ```
+
+# Reference
