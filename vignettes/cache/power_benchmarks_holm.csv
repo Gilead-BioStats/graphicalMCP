@@ -1,19 +1,22 @@
 "num_hyps","char_expression","median"
-4,"gMCP (C)",0.0352094999999935
-4,"graphicalMCP parent-child (R)",0.420787300000001
-4,"graphicalMCP traditional (R)",14.7642886
-6,"gMCP (C)",0.0360315500000183
-6,"graphicalMCP parent-child (R)",0.277848700000021
-6,"graphicalMCP traditional (R)",18.9451786
-8,"gMCP (C)",0.0323956000000152
-8,"graphicalMCP parent-child (R)",0.247601700000018
-8,"graphicalMCP traditional (R)",42.9586019
-10,"gMCP (C)",0.0463124999999991
-10,"graphicalMCP parent-child (R)",0.373921600000017
-10,"graphicalMCP traditional (R)",69.1639984
-12,"gMCP (C)",0.0701753000000025
-12,"graphicalMCP parent-child (R)",0.578401799999995
-14,"gMCP (C)",0.0689050000000293
-14,"graphicalMCP parent-child (R)",1.4641086
-16,"gMCP (C)",0.0869936000000138
-16,"graphicalMCP parent-child (R)",5.4519641
+4,"gMCP (C)",0.0238305000000008
+4,"graphicalMCP conventional (R)",7.1016341
+4,"graphicalMCP parent-child (R)",0.133238600000002
+6,"gMCP (C)",0.0250533000000015
+6,"graphicalMCP conventional (R)",12.3999523
+6,"graphicalMCP parent-child (R)",0.1700523
+8,"gMCP (C)",0.0441957999999998
+8,"graphicalMCP conventional (R)",21.4898488
+8,"graphicalMCP parent-child (R)",0.196084400000002
+10,"gMCP (C)",0.0517875500000011
+10,"graphicalMCP conventional (R)",37.5187789
+10,"graphicalMCP parent-child (R)",0.2433665
+12,"gMCP (C)",0.0567057000000002
+12,"graphicalMCP conventional (R)",60.0837836
+12,"graphicalMCP parent-child (R)",0.3502963
+14,"gMCP (C)",0.0733688000000008
+14,"graphicalMCP conventional (R)",97.3078827
+14,"graphicalMCP parent-child (R)",0.927549600000001
+16,"gMCP (C)",0.0826242999999991
+16,"graphicalMCP conventional (R)",142.9901201
+16,"graphicalMCP parent-child (R)",3.0425396
