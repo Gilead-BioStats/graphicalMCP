@@ -228,12 +228,15 @@ graph_test_closure <- function(graph,
 
   # Adjusted p-value details ---------------------------------------------------
   # Reported adjusted p-values shouldn't exceed 1
+  intersections <- apply(matrix_intersections, 1, paste, collapse = "")
+
   detail_results <- list(
     results = cbind(
+      data.frame(Intersection = intersections),
       weighting_strategy_compact,
       pmin(adjusted_p, 1 + 1e-14),
-      adj_p_inter = pmin(adjusted_p_intersection, 1 + 1e-14),
-      reject_intersection = reject_intersection
+      data.frame(adj_p_inter = pmin(adjusted_p_intersection, 1 + 1e-14)),
+      data.frame(reject_intersection = reject_intersection)
     )
   )
 
@@ -246,13 +249,15 @@ graph_test_closure <- function(graph,
     test_values_index <- 1
     test_values_list <- vector("list", num_intersections * num_groups)
 
-    # adjusted weights are calculated for each group in each intersection of the
+    # Adjusted weights are calculated for each group in each intersection of the
     # closure
     for (intersection_index in seq_len(num_intersections)) {
       vec_intersection <-
         matrix_intersections[intersection_index, , drop = TRUE]
       vec_weights <-
         weighting_strategy_compact[intersection_index, , drop = TRUE]
+
+      str_intersection <- paste(vec_intersection, collapse = "")
 
       for (group_index in seq_len(num_groups)) {
         group <- test_groups[[group_index]]
@@ -271,21 +276,21 @@ graph_test_closure <- function(graph,
             p[group_by_intersection],
             vec_weights[group_by_intersection],
             alpha,
-            intersection_index
+            str_intersection
           )
         } else if (test == "simes") {
           test_values_list[[test_values_index]] <- test_values_simes(
             p[group_by_intersection],
             vec_weights[group_by_intersection],
             alpha,
-            intersection_index
+            str_intersection
           )
         } else if (test == "parametric") {
           test_values_list[[test_values_index]] <- test_values_parametric(
             p[group_by_intersection],
             vec_weights[group_by_intersection],
             alpha,
-            intersection_index,
+            str_intersection,
             test_corr[group_by_intersection,
               group_by_intersection,
               drop = FALSE
@@ -300,6 +305,9 @@ graph_test_closure <- function(graph,
     }
 
     df_test_values <- do.call(rbind, test_values_list)
+    rownames(df_test_values) <- NULL
+
+
 
     # "c" value is only used in parametric testing, so there's no need to
     # include this column when there are no parametric groups
