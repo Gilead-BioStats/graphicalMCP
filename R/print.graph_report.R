@@ -119,11 +119,15 @@ print.graph_report <- function(x, ..., precision = 4, indent = 2, rows = 10) {
 
   # Adjusted p/rejection sequence details --------------------------------------
   if (!is.null(x$details)) {
-    if (is.matrix(x$details$results)) {
-      df_details <- as.data.frame(format(x$details$results, digits = precision))
-      df_details$reject_intersection <-
-        as.logical(as.numeric(df_details$reject_intersection))
-      df_details <- cbind(Intersection = rownames(df_details), df_details)
+    if (is.data.frame(x$details$results)) {
+      df_details <- x$details$results
+
+      for (col_num in seq_along(df_details)) {
+        if (is.numeric(df_details[[col_num]])) {
+          df_details[[col_num]] <-
+            format(df_details[[col_num]], digits = precision)
+        }
+      }
 
       max_print_old <- getOption("max.print")
       options(max.print = 99999)

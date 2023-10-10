@@ -130,9 +130,13 @@ test_that("verbose/test values output is only present when asked for", {
   expect_null(graph_test_closure(rando, rep(.01, 6))$details)
   expect_null(graph_test_closure(rando, rep(.01, 6))$test_values)
 
-  expect_type(
-    graph_test_closure(rando, rep(.01, 6), verbose = TRUE)$details$results,
-    "double"
+  expect_s3_class(
+    graph_test_closure(
+      rando,
+      rep(.01, 6),
+      verbose = TRUE
+    )$details$results,
+    "data.frame"
   )
   expect_s3_class(
     graph_test_closure(
@@ -373,15 +377,9 @@ test_that("parametric floating point errors", {
     c(H1 = TRUE, H2 = TRUE, H3 = TRUE)
   )
 
-  expect_equal(
-    res_para$details$results[, "reject_intersection"],
-    setNames(rep(1, 7), seq_len(7))
-  )
+  expect_equal(res_para$details$results$reject_intersection, rep(TRUE, 7))
 
-  expect_equal(
-    res_para$test_values$results$Inequality_holds,
-    rep(TRUE, 12)
-  )
+  expect_equal(res_para$test_values$results$Inequality_holds, rep(TRUE, 12))
 })
 
 test_that("adjusted p that exceeds alpha by floating point diff is rejected", {
