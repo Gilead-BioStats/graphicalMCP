@@ -59,7 +59,7 @@ plot(example_graph, vertex.size = 60)
 
 ## Update graph
 
-When a hypothesis is removed from the graph, hypothesis and transition weights of remaining hypotheses should be updated according to Algorithm 1 in @bretz-2011-tests. For example, assume that hypotheses H1, H2 and H4 are removed from the graph. The updated graph after removing three hypotheses is below.
+When a hypothesis is removed from the graph, hypothesis and transition weights of remaining hypotheses should be updated according to Algorithm 1 in @bretz-2011-graphical. For example, assume that hypotheses H1, H2 and H4 are removed from the graph. The updated graph after removing three hypotheses is below.
 
 ```{r update-graph}
 updated_example <- graph_update(example_graph,
