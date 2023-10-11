@@ -21,64 +21,52 @@ test_that("improper inputs throw errors", {
 test_that("power results are identical under a given seed", {
   rando <- random_graph(2)
 
-  expect_equal(
-    graph_calculate_power(rando, sim_n = 1e5, sim_seed = 42823),
-    graph_calculate_power(rando, sim_n = 1e5, sim_seed = 42823)
+  set.seed(42823)
+  bonf_1 <- graph_calculate_power(rando, sim_n = 1e5)
+
+  set.seed(42823)
+  bonf_2 <- graph_calculate_power(rando, sim_n = 1e5)
+
+  expect_equal(bonf_1, bonf_2)
+
+  set.seed(42824)
+  simes_1 <- graph_calculate_power(rando, test_types = "s", sim_n = 1e5)
+
+  set.seed(42824)
+  simes_2 <- graph_calculate_power(rando, test_types = "s", sim_n = 1e5)
+
+  expect_equal(simes_1, simes_2)
+
+  set.seed(42825)
+  para_1 <- graph_calculate_power(
+    rando,
+    test_types = "p",
+    test_corr = list(diag(2)),
+    sim_n = 1e4
   )
 
-  expect_equal(
-    graph_calculate_power(
-      rando,
-      test_types = "s",
-      sim_n = 1e5,
-      sim_seed = 42823
-    ),
-    graph_calculate_power(
-      rando,
-      test_types = "s",
-      sim_n = 1e5,
-      sim_seed = 42823
-    )
+  set.seed(42825)
+  para_2 <- graph_calculate_power(
+    rando,
+    test_types = "p",
+    test_corr = list(diag(2)),
+    sim_n = 1e4
   )
 
-  expect_equal(
-    graph_calculate_power(
-      rando,
-      test_types = "p",
-      test_corr = list(diag(2)),
-      sim_n = 1e4,
-      sim_seed = 42823
-    ),
-    graph_calculate_power(
-      rando,
-      test_types = "p",
-      test_corr = list(diag(2)),
-      sim_n = 1e4,
-      sim_seed = 42823
-    )
-  )
-})
-
-test_that("results are identical whether using closure test or shortcut", {
-  g <- wiens_dmitrienko_2005()
-
-  expect_equal(
-    graph_calculate_power(g, sim_seed = 51123),
-    graph_calculate_power(g, sim_seed = 51123, force_closure = TRUE)
-  )
+  expect_equal(para_1, para_2)
 })
 
 test_that("size one groups are turned into Bonferroni", {
   g <- fallback()
 
+  set.seed(42823)
   expect_equal(
     graph_calculate_power(
       graph = g,
       alpha = .05,
       test_groups = list(1, 2, 3),
       test_types = c("s", "p", "p"),
-      sim_n = 1e5,
-      sim_seed = 42823
+      sim_n = 1e5
     )$inputs$test_types,
     c("bonferroni", "bonferroni", "bonferroni"),
     ignore_attr = TRUE

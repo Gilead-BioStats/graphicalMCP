@@ -15,6 +15,22 @@
 #'
 #' @examples
 #' bonferroni_holm(3, hyp_names = paste("dose", letters[1:3]))
+bonferroni <- function(num_hyps, hyp_names = NULL) {
+  stopifnot(
+    "num_hyps must be an integer" = is.numeric(num_hyps),
+    "names must match size of desired graph" =
+      (num_hyps == length(hyp_names) || is.null(hyp_names))
+  )
+
+  transitions <- matrix(0, num_hyps, num_hyps)
+
+  hypotheses <- rep(1 / num_hyps, num_hyps)
+
+  graph_create(hypotheses, transitions, hyp_names = hyp_names)
+}
+
+#' @export
+#' @rdname example-graphs
 bonferroni_holm <- function(num_hyps, hyp_names = NULL) {
   stopifnot(
     "num_hyps must be an integer" = is.numeric(num_hyps),

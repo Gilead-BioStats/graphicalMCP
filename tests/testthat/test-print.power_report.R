@@ -1,56 +1,37 @@
-test_that("printing Bonferroni power - sequential & closure", {
+test_that("printing Bonferroni power - sequential", {
   g <- huque_alosh_bhore_2011()
 
-  expect_snapshot(graph_calculate_power(g, sim_seed = 51223))
-  expect_snapshot(
-    print(
-      graph_calculate_power(g, sim_seed = 51223),
-      indent = 6,
-      precision = 3
-    )
-  )
+  set.seed(51223)
+  expect_snapshot(graph_calculate_power(g))
 
-  expect_snapshot(
-    print(
-      graph_calculate_power(g, sim_seed = 51223, force_closure = TRUE),
-      indent = 6,
-      precision = 3
-    )
-  )
+  set.seed(51223)
+  expect_snapshot(print(graph_calculate_power(g), indent = 6, precision = 3))
 })
 
 test_that("printing Simes power", {
   g <- simple_successive_1()
 
-  expect_snapshot(graph_calculate_power(g, sim_seed = 51223, test_types = "s"))
+  set.seed(51223)
+  expect_snapshot(graph_calculate_power(g, test_types = "s"))
+
+  set.seed(51223)
   expect_snapshot(
-    print(
-      graph_calculate_power(g, sim_seed = 51223, test_types = "s"),
-      indent = 6,
-      precision = 3
-    )
+    print(graph_calculate_power(g, test_types = "s"), indent = 6, precision = 3)
   )
 })
 
 test_that("printing parametric power", {
   g <- fixed_sequence(4)
 
+  set.seed(51223)
   expect_snapshot(
-    graph_calculate_power(
-      g,
-      sim_seed = 51223,
-      test_types = "p",
-      test_corr = list(diag(4))
-    )
+    graph_calculate_power(g, test_types = "p", test_corr = list(diag(4)))
   )
+
+  set.seed(51223)
   expect_snapshot(
     print(
-      graph_calculate_power(
-        g,
-        sim_seed = 51223,
-        test_types = "p",
-        test_corr = list(diag(4))
-      ),
+      graph_calculate_power(g, test_types = "p", test_corr = list(diag(4))),
       indent = 6,
       precision = 3
     )
@@ -66,6 +47,7 @@ test_that("printing blended power", {
   s_corr <- matrix(pi / 4, nrow = 6, ncol = 6)
   diag(s_corr) <- 1
 
+  set.seed(51223)
   expect_snapshot(
     print(
       graph_calculate_power(
@@ -80,8 +62,7 @@ test_that("printing blended power", {
         sim_success = list(
           function(.) .[1] || .[5] || .[6],
           function(.) .[2] && (.[5] || .[6])
-        ),
-        sim_seed = 51223
+        )
       ),
       indent = 0,
       precision = 10

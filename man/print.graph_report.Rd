@@ -11,21 +11,21 @@
 
 \item{...}{Other values passed on to other methods (currently unused)}
 
-\item{precision}{An integer scalar indicating the maximum number of decimals
-to include in numeric values}
+\item{precision}{An integer scalar indicating the number of significant
+figures to include in numeric values}
 
 \item{indent}{An integer scalar indicating how many spaces to indent results}
 
-\item{rows}{An integer scalar indicating how many rows of verbose and
-test values output to print}
+\item{rows}{An integer scalar indicating how many rows of verbose and test
+values output to print}
 }
 \description{
 A graph report displays
 \itemize{
 \item The initial graph being tested,
-\item p-values & alpha used for tests,
+\item p-values & significance level used for tests,
 \item Which hypotheses can be rejected, and
-\item Detailed test results matrix, including the results of
-\code{\link[=graph_generate_weights]{graph_generate_weights()}} & test results for each intersection hypothesis
+\item Optional detailed test results, which vary depending on whether shortcut or
+closed testing was used
 }
 }

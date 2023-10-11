@@ -1,102 +1,356 @@
 ---
-title: "Common procedures"
+title: "Common multiple comparison procedures illustrated using graphicalMCP"
 output: rmarkdown::html_vignette
+bibliography: "`r system.file('references.bib', package='graphicalMCP')`"
 vignette: >
-  %\VignetteIndexEntry{Common procedures}
+  %\VignetteIndexEntry{Common multiple comparison procedures illustrated using graphicalMCP}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
 
-```{r, include = FALSE}
+```{r, include=FALSE}
 knitr::opts_chunk$set(
   fig.align = "center",
   collapse = TRUE,
   comment = "#>",
-  fig.dim = c(5, 5)
+  fig.dim = c(3, 3)
 )
 ```
 
-```{r setup}
+```{r setup, warning=FALSE, message=FALSE}
 library(graphicalMCP)
 ```
 
 # Introduction
 
-In confirmatory clinical trials with multiple endpoints, regulations mandate the strong control of the family-wise error rate to reduce the risk of false positives. Multiple comparison procedures (MCPs) are used to spread the total significance out over multiple hypotheses. In this article we'll demonstrate how to go from a few standard procedures to more advanced procedures using the graphical approach.
+In confirmatory clinical trials, regulatory guidelines mandate the strong control of the family-wise error rate at a prespecified level $\alpha$. Many multiple comparison procedures (MCPs) have been proposed for this purpose. The graphical approaches are a general framework that include many common MCPs as special cases. In this vignette, we illustrate how to use graphicalMCP to perform some common MCPs.
 
-# Simple procedures
+To test $m$ hypotheses using a graphical MCP, each hypothesis $H_i$ receives a weight $0\leq w_i\leq 1$ (called hypothesis weight), where $\sum_{i=1}^{m}w_i\leq 1$. From $H_i$ to $H_j$, there could be a directed and weighted edge $0\leq g_{ij}\leq 1$, which means that when $H_i$ is rejected, its hypothesis weight will be propagated (or transferred) to $H_j$ and $g_{ij}$ determines how much of the propagation. We also require $\sum_{j=1}^{m}g_{ij}\leq 1$ and $g_{ii}=0$.
 
-## Bonferroni
+# Bonferroni-based procedures
 
-Probably the most common MCP is the Bonferroni correction. It simply divides the alpha level evenly between all hypotheses. No significance adjustment is made if a hypothesis is rejected. The Bonferroni correction can be performed easily without a graphical approach, but here is a graphical example of it.
+## Weighted Bonferroni test
+
+A weighted Bonferroni test splits $\alpha$ among hypotheses by testing every hypothesis at a significance level of $w_i\alpha$. Thus it rejects a hypothesis if its p-value is less than or equal to its significance level. When $w_i=w_j$ for all $i,j$, this means an equal split and the test is the Bonferroni test. There is no propagation between any pair of hypothesis.
 
 ```{r bonferroni}
-transitions <- matrix(0, 5, 5)
+set.seed(1234)
+alpha <- 0.025
+m <- 3
+bonferroni_graph <- bonferroni(m)
+# transitions <- matrix(0, m, m)
+# bonferroni_graph <- graph_create(rep(1 / m, m), transitions)
 
-bonferroni_graph <- graph_create(rep(1 / 5, 5), transitions)
+plot(
+  bonferroni_graph,
+  layout = igraph::layout_in_circle(
+    as_igraph(bonferroni_graph),
+    order = c(2, 1, 3)
+  ),
+  vertex.size = 70
+)
 
-plot(bonferroni_graph, layout = igraph::layout_in_circle, vertex.size = 30)
+p_values <- runif(m, 0, alpha)
+
+test_results <-
+  graph_test_shortcut(
+    bonferroni_graph,
+    p = p_values,
+    alpha = alpha
+  )
+
+test_results$outputs$rejected
 ```
 
-## Holm
+## Holm Procedure
 
-The Holm procedure starts with identical weights to Bonferroni, but weights are updated uniformly when a hypothesis is rejected. Because of this updating, it is always at least as powerful as the Bonferroni procedure.
+Holm (or Bonferroni-Holm) procedures improve over Bonferroni tests by allowing propagation [@holm-1979-simple]. In other words, transition weights between hypotheses may not be zero. So it is uniformly more powerful than Bonferroni tests.
 
 ```{r bonferroni-holm}
-transitions <- matrix(1 / 4, 5, 5)
-diag(transitions) <- 0
+set.seed(1234)
+alpha <- 0.025
+m <- 3
+holm_graph <- bonferroni_holm(m)
+# transitions <- matrix(1 / (m - 1), m, m)
+# diag(transitions) <- 0
+# holm_graph <- graph_create(rep(1 / m, m), transitions)
 
-holm_graph <- graph_create(rep(1 / 5, 5), transitions)
-
-plot(holm_graph, layout = igraph::layout_in_circle, vertex.size = 30)
-```
-
-## Fixed sequence
-
-Another common procedure because of its simplicity is the fixed sequence procedure. It places more emphasis on rejecting hypotheses when most hypotheses are expected to have p-values only slightly below alpha, where the reduced weights of the Holm procedure would cause most or all hypotheses to not be rejected from the start.
-
-```{r fixed-sequence, fig.dim=c(6, 2)}
-fixed_sequence_graph <- graph_create(
-  c(1, 0, 0, 0),
-  rbind(
-    c(0, 1, 0, 0),
-    c(0, 0, 1, 0),
-    c(0, 0, 0, 1),
-    c(0, 0, 0, 0)
-  )
+plot(holm_graph,
+  layout = igraph::layout_in_circle(
+    as_igraph(holm_graph),
+    order = c(2, 1, 3)
+  ),
+  vertex.size = 70
 )
 
-plot(fixed_sequence_graph, nrow = 1, asp = .1)
+p_values <- runif(m, 0, alpha)
+
+test_results <- graph_test_shortcut(holm_graph, p = p_values, alpha = alpha)
+
+test_results$outputs$rejected
 ```
 
-<!-- This paragraph needs work -->
+## Fixed sequence procedure
 
-These procedures are popular because they control the FWER while being simple, allowing them to be easily understood and communicated about. However, they're not always the procedures which fit the study best, and using more complex procedures can make communication difficult. The graphical approach can enable more powerful procedures to be used while enabling clinical teams to understand and communicate the procedures.
+Fixed sequence (or hierarchical) procedures pre-specify an order of testing [@maurer-1995-multiple;westfall-2001-optimally]. For example, the procedure will test $H_1$ first. If it is rejected, it will test $H_2$; otherwise the testing stops. If $H_2$ is rejected, it will test $H_3$; otherwise the testing stops. For each hypothesis, it will be tested at the full $\alpha$ level, when it can be tested.
 
-# Complex procedures
+```{r fixed-sequence-1, fig.dim=c(4.5, .9)}
+set.seed(1234)
+alpha <- 0.025
+m <- 3
+fixed_sequence_graph <- fixed_sequence(m)
+# transitions <- rbind(
+#   c(0, 1, 0),
+#   c(0, 0, 1),
+#   c(0, 0, 0)
+# )
+# fixed_sequence_graph <- graph_create(c(1, 0, 0), transitions)
 
-## Simple successive
+plot(fixed_sequence_graph, nrow = 1, asp = .05, vertex.size = 40)
 
-The simple successive procedure was introduced by [names] in their [year] paper, [*title*]. It is designed for experiments involving four hypotheses: Two pairs of hypotheses, each containing a primary and a related secondary hypothesis. Initial weight is split equally between pairs and is passed from one pair to the other only when both hypotheses in a pair are rejected.
+p_values <- runif(m, 0, alpha)
 
-```{r simple-successive}
-simple_successive_graph <- graph_create(
-  c(.5, .5, 0, 0),
-  rbind(
-    c(0, 0, 1, 0),
-    c(0, 0, 0, 1),
-    c(0, 1, 0, 0),
-    c(1, 0, 0, 0)
+test_results <-
+  graph_test_shortcut(
+    fixed_sequence_graph,
+    p = p_values,
+    alpha = alpha
   )
+
+test_results$outputs$rejected
+```
+
+## Fallback procedure
+
+Fallback procedures have one-way propagation (like fixed sequence procedures) but allow hypotheses to be tested at different significance levels [@wiens-2003-fixed].
+
+```{r fallback, fig.dim=c(4.5, .9)}
+set.seed(1234)
+alpha <- 0.025
+m <- 3
+
+transitions <- rbind(
+  c(0, 1, 0),
+  c(0, 0, 1),
+  c(0, 0, 0)
 )
 
-plot(simple_successive_graph, layout = "grid", nrow = 2, vertex.size = 30)
+fallback_graph_2003 <- graph_create(rep(1 / m, m), transitions)
+
+plot(fallback_graph_2003, nrow = 1, asp = .05, vertex.size = 40)
+
+p_values <- runif(m, 0, alpha)
+
+test_results <-
+  graph_test_shortcut(
+    fallback_graph_2003,
+    p = p_values,
+    alpha = alpha
+  )
+
+test_results$outputs$rejected
 ```
 
-General successive graphs are a good example where multiple variations may be useful with slight differences in starting edge weights. Variable edge weights are not currently supported, but they can be done for a particular graph with a light wrapper.
+Further they can be improved to allow propagation from later hypotheses to earlier 
+hypotheses, because it is possible that a later hypothesis is rejected before an earlier 
+hypothesis can be rejected [@wiens-2005-fallback;@hommel-2008-aesthetics].
 
-```{r simple-successive-var-fun}
-simple_successive_var <- function(gamma) {
+```{r fallback-improved, fig.dim=c(4.5, .9)}
+set.seed(1234)
+alpha <- 0.025
+m <- 3
+
+transitions <- rbind(
+  c(0, 1, 0),
+  c(0, 0, 1),
+  c(0.5, 0.5, 0)
+)
+# Wiens and Dmitrienko (2005)
+fallback_graph_2005 <- graph_create(rep(1 / m, m), transitions)
+
+plot(
+  fallback_graph_2005,
+  nrow = 1,
+  asp = .05,
+  vertex.size = 40,
+  edge_curves = c("pairs" = 7, "H3|H1" = -10)
+)
+
+epsilon <- 0.0001
+
+transitions <- rbind(
+  c(0, 1, 0),
+  c(1 - epsilon, 0, epsilon),
+  c(1, 0, 0)
+)
+# Hommel and Bretz (2008)
+fallback_graph_2008 <- graph_create(rep(1 / m, m), transitions)
+
+plot(
+  fallback_graph_2008,
+  nrow = 1,
+  asp = .05,
+  eps = .0001,
+  edge_curves = c("pairs" = 7, "H3|H1" = -10),
+  vertex.size = 40
+)
+
+p_values <- runif(m, 0, alpha)
+
+test_results <-
+  graph_test_shortcut(
+    fallback_graph_2008,
+    p = p_values,
+    alpha = alpha
+  )
+
+test_results$outputs$rejected
+```
+
+## Serial gatekeeping procedure
+
+Serial gatekeeping procedures involve ordered multiple families of hypotheses, where all hypotheses of a family of hypotheses must be rejected before proceeding in the test sequence. The example below considers a primary family consisting of two hypotheses $H_1$ and $H_2$ and a secondary family consisting of a single hypothesis $H_3$. In the primary family, the Holm procedure is applied. If both $H_1$ and $H_2$ are rejected, $H_3$ can be tested at level $\alpha$; otherwise $H_3$ cannot be rejected. To allow the conditional propagation to $H_3$, an $\varepsilon$ edge is used from $H_2$ to $H_3$. It has a very small transition weight so that $H_2$ propagates most of its hypothesis weight to $H_1$ (if not already rejected) and retains a small (non-zero) weight for $H_3$ so that if $H_1$ has been rejected, all hypothesis weight of $H_2$ will be propagated to $H_3$. Here $\varepsilon$ is assigned to be 0.0001 and in practice, the value could be adjusted but it should be much smaller than the smallest p-value observed.
+
+```{r serial-gatekeeping, fig.dim=c(4.5, .9)}
+set.seed(1234)
+alpha <- 0.025
+m <- 3
+epsilon <- 0.0001
+
+transitions <- rbind(
+  c(0, 1, 0),
+  c(1 - epsilon, 0, epsilon),
+  c(0, 0, 0)
+)
+
+serial_gatekeeping_graph <- graph_create(c(0.5, 0.5, 0), transitions)
+
+plot(
+  serial_gatekeeping_graph,
+  nrow = 1,
+  asp = .05,
+  eps = .0001,
+  edge_curves = c("pairs" = 7, "H3|H1" = -10),
+  vertex.size = 40
+)
+
+p_values <- runif(m, 0, alpha)
+
+test_results <-
+  graph_test_shortcut(
+    serial_gatekeeping_graph,
+    p = p_values,
+    alpha = alpha
+  )
+
+test_results$outputs$rejected
+```
+
+## Parallel gatekeeping procedure
+
+Parallel gatekeeping procedures also involve multiple ordered families of hypotheses, where any null hypotheses of a family of hypotheses must be rejected before proceeding in the test sequence [@dmitrienko-2003-gatekeeping]. The example below considers a primary family consisting of two hypotheses $H_1$ and $H_2$ and a secondary family consisting of two hypotheses $H_3$ and $H_4$. In the primary family, the Bonferroni test is applied. If any of $H_1$ and $H_2$ is rejected, $H_3$ and $H_4$ can be tested at level $\alpha/2$ using the Holm procedure; if both $H_1$ and $H_2$ are rejected, $H_3$ and $H_4$ can be tested at level $\alpha$ using the Holm procedure; otherwise $H_3$ and $H_4$ cannot be 
+rejected.
+
+```{r parallel-gatekeeping}
+set.seed(1234)
+alpha <- 0.025
+m <- 4
+
+transitions <- rbind(
+  c(0, 0, 0.5, 0.5),
+  c(0, 0, 0.5, 0.5),
+  c(0, 0, 0, 1),
+  c(0, 0, 1, 0)
+)
+
+parallel_gatekeeping_graph <- graph_create(c(0.5, 0.5, 0, 0), transitions)
+
+plot(parallel_gatekeeping_graph, vertex.size = 70)
+
+p_values <- runif(m, 0, alpha)
+
+test_results <-
+  graph_test_shortcut(
+    parallel_gatekeeping_graph,
+    p = p_values,
+    alpha = alpha
+  )
+
+test_results$outputs$rejected
+```
+
+The above parallel gatekeeping procedure can be improved by adding $\varepsilon$ edges from secondary hypotheses to primary hypotheses, because it is possible that both secondary hypotheses are rejected but there is still a remaining primary hypothesis 
+not rejected [@bretz-2009-graphical].
+
+```{r parallel-gatekeeping-improved}
+set.seed(1234)
+alpha <- 0.025
+m <- 4
+epsilon <- 0.0001
+
+transitions <- rbind(
+  c(0, 0, 0.5, 0.5),
+  c(0, 0, 0.5, 0.5),
+  c(epsilon, 0, 0, 1 - epsilon),
+  c(0, epsilon, 1 - epsilon, 0)
+)
+
+parallel_gatekeeping_improved_graph <-
+  graph_create(c(0.5, 0.5, 0, 0), transitions)
+
+plot(parallel_gatekeeping_improved_graph, eps = .0001, vertex.size = 70)
+
+p_values <- runif(m, 0, alpha)
+
+test_results <-
+  graph_test_shortcut(
+    parallel_gatekeeping_improved_graph,
+    p = p_values,
+    alpha = alpha
+  )
+
+test_results$outputs$rejected
+```
+
+## Successive procedure
+
+Successive procedures incorporate successive relationships between hypotheses. For example, the secondary hypothesis is not tested until the primary hypothesis has been rejected. This is similar to using the fixed sequence procedure as a component of a graph. The example below considers two primary hypotheses $H_1$ and $H_2$ and two secondary hypotheses $H_3$ and $H_4$. Primary hypotheses $H_1$ and $H_2$ receive the equal hypothesis weight of 0.5; secondary hypotheses $H_3$ and $H_4$ receive the hypothesis weight of 0. A secondary hypothesis $H_3 (H_4)$ can be tested only if the corresponding primary hypothesis $H_1 (H_2)$ has been rejected. This represents the successive relationships between $H_1$ and $H_3$, and $H_2$ and $H_4$, respectively [@maurer-2011-multiple]. If both $H_1$ and $H_3$ are rejected, their hypothesis weights are propagated to $H_2$ and $H_4$, and vice versa.
+
+```{r simple-successive-1}
+set.seed(1234)
+alpha <- 0.025
+m <- 4
+simple_successive_graph <- simple_successive_1()
+# transitions <- rbind(
+#   c(0, 0, 1, 0),
+#   c(0, 0, 0, 1),
+#   c(0, 1, 0, 0),
+#   c(1, 0, 0, 0)
+# )
+# simple_successive_graph <- graph_create(c(0.5, 0.5, 0, 0), transitions)
+
+plot(simple_successive_graph, layout = "grid", nrow = 2, vertex.size = 70)
+
+p_values <- runif(m, 0, alpha)
+
+test_results <-
+  graph_test_shortcut(
+    simple_successive_graph,
+    p = p_values,
+    alpha = alpha
+  )
+
+test_results$outputs$rejected
+```
+
+The above graph could be generalized to allow propagation between primary hypotheses [@maurer-2011-multiple]. A general successive graph is illustrate below with a variable to determine the propagation between $H_1$ and $H_2$.
+
+```{r simple-successive-var}
+set.seed(1234)
+alpha <- 0.025
+m <- 4
+
+successive_var <- simple_successive_var <- function(gamma) {
   graph_create(
     c(.5, .5, 0, 0),
     rbind(
@@ -107,143 +361,87 @@ simple_successive_var <- function(gamma) {
     )
   )
 }
-```
 
-Then multiple variations can be created and compared easily. A similar approach could be used for deviating from the equal split of hypothesis weights as well.
+successive_var_graph <- successive_var(0.5)
+plot(successive_var_graph, layout = "grid", nrow = 2, vertex.size = 70)
+p_values <- runif(m, 0, alpha)
 
-```{r simple-successive-var, fig.show="hold", fig.align='default', out.width="47%"}
-plot(
-  simple_successive_var(.75),
-  layout = "grid",
-  nrow = 2,
-  vertex.label.cex = 1.4,
-  edge.label.cex = 1.4,
-  vertex.size = 30
-)
-
-plot(
-  simple_successive_var(.9),
-  layout = "grid",
-  nrow = 2,
-  vertex.label.cex = 1.4,
-  edge.label.cex = 1.4,
-  vertex.size = 30
-)
-```
-
-## Huque-Alosh-Bhore (2011)
-
-In 2011, Huque, Alosh, and Bhore proposed another size 4 procedure. What's this one particularly meant for?
-
-```{r huque-alosh-bhore}
-hab_2011_graph <- graph_create(
-  c(1, 0, 0, 0),
-  rbind(
-    c(0, .5, .5, 0),
-    c(0, 0, 0, 1),
-    c(0, .5, 0, .5),
-    c(0, 1, 0, 0)
+test_results <-
+  graph_test_shortcut(
+    successive_var_graph,
+    p = p_values,
+    alpha = alpha
   )
-)
 
-plot(hab_2011_graph, layout = "grid", vertex.size = 30)
+test_results$outputs$rejected
 ```
 
-## Wiens-Dmitrienko (2005)
+# Simes-based procedures
 
-```{r wiens-dmitrienko, fig.dim=c(6, 2)}
-wd_2005_graph <- graph_create(
-  c(1 / 3, 1 / 3, 1 / 3),
-  rbind(
-    c(0, 1, 0),
-    c(0, 0, 1),
-    c(.5, .5, 0)
-  )
-)
+## Hommel procedure
+
+Hommel (1988) procedure is a closed test procedure which uses Simes tests for every intersection hypothesis. According to Xi and Bretz (2019), the graph for Hommel procedures is the same as the graph for Holm procedures. Thus to perform Hommel procedure, we just need to specify `test_type` to be `simes`.
+
+```{r hommel}
+set.seed(1234)
+alpha <- 0.025
+m <- 3
+hommel_graph <- bonferroni_holm(m)
 
 plot(
-  wd_2005_graph,
-  layout = "grid",
-  nrow = 1,
-  edge_curves = c(pairs = -4, "H3|H1" = -4),
-  vertex.size = 30,
-  asp = .1
-)
-```
-
-## Parallel gate-keeping
-
-In [year], [names] introduced the parallel gate-keeping procedure. It is useful when...?
-
-```{r parallel-gatekeeping}
-par_gate_graph <- graph_create(
-  c(.5, .5, 0, 0),
-  rbind(
-    c(0, 0, .5, .5),
-    c(0, 0, .5, .5),
-    c(0, 0, 0, 1),
-    c(0, 0, 1, 0)
-  )
+  hommel_graph,
+  layout = igraph::layout_in_circle(
+    as_igraph(hommel_graph),
+    order = c(2, 1, 3)
+  ),
+  vertex.size = 70
 )
 
+p_values <- runif(m, 0, alpha)
 
-plot(par_gate_graph, layout = "grid", nrow = 2, vertex.size = 30)
-```
-
-## Improved parallel gate-keeping
-
-One shortcoming of the parallel gate-keeping approach is in the case where e.g. H2, H3, and H4 are found to be significant. Once these three have been deleted, H1 is left with only 0.5 weight. This makes the graph sub-optimal.
-
-```{r parallel-gatekeeping-update}
-plot(graph_update(par_gate_graph, 2:4), vertex.size = 30)
-```
-
-The graph can be made optimal by adding epsilon edges going back up from the secondary to the primary hypotheses. Epsilon edges have some infinitesimal weight which creates a connection between hypotheses that effectively only propagates weight when it's the only edge left exiting a hypothesis. This yields the improved parallel gate-keeping procedure.
-
-```{r improved-parallel-gatekeeping}
-imp_par_gate_graph <- graph_create(
-  c(.5, .5, 0, 0),
-  rbind(
-    c(0, 0, .5, .5),
-    c(0, 0, .5, .5),
-    c(.0001, 0, 0, .9999),
-    c(0, .0001, .9999, 0)
-  )
+test_results <- graph_test_closure(
+  hommel_graph,
+  p = p_values,
+  alpha = alpha,
+  test_types = "simes"
 )
+
+test_results$outputs$rejected
+```
+
+# Parametric procedures
+
+## Dunnett procedure
+
+Step-down Dunnett procedures are a closed test procedure and an improvement from Holm procedures by incorporating the correlation structure between test statistics [@dunnett-1991-stepdown]. Thus they are the same graph as Holm procedures. Assume an equi-correlated case, where the correlation between any pair of test statistics is the same, e.g., 0.5. Then we can perform the step-down Dunnett procedure by specifying `test_type` to be `parametric` and providing the correlation matrix.
+
+```{r dunnett}
+set.seed(1234)
+alpha <- 0.025
+m <- 3
+dunnett_graph <- bonferroni_holm(m)
 
 plot(
-  imp_par_gate_graph,
-  layout = "grid",
-  nrow = 2,
-  eps = .001,
-  vertex.size = 30
+  dunnett_graph,
+  layout = igraph::layout_in_circle(
+    as_igraph(dunnett_graph),
+    order = c(2, 1, 3)
+  ),
+  vertex.size = 70
 )
+
+p_values <- runif(m, 0, alpha)
+corr <- matrix(0.5, m, m)
+diag(corr) <- 1
+
+test_results <- graph_test_closure(
+  dunnett_graph,
+  p = p_values, alpha = alpha,
+  test_types = "parametric",
+  test_corr = list(corr)
+)
+
+test_results$outputs$rejected
 ```
 
-```{r improved-parallel-gatekeeping-update, fig.show="hold", fig.align='default', out.width="30%"}
-plot(
-  graph_update(imp_par_gate_graph, c(2)),
-  vertex.size = 60,
-  vertex.label.cex = 2.5,
-  edge.label.cex = 2.5,
-  eps = 1e-3
-)
-
-plot(
-  graph_update(imp_par_gate_graph, c(2, 4)),
-  vertex.size = 60,
-  vertex.label.cex = 2.5,
-  edge.label.cex = 2.5
-)
-
-plot(
-  graph_update(imp_par_gate_graph, c(2, 4, 3)),
-  vertex.size = 60,
-  vertex.label.cex = 2.5,
-  edge.label.cex = 2.5
-)
-```
-
-# Conclusion
-
-These examples are just a few of the unlimited possibilities enabled by the graphical approach to MCPs. Graphs can be customized based on priorities in trial design, marginal power of the endpoints, and other assumptions, such as expected or known correlation between endpoints. The graphical approach allows these complex procedures to maximize the chances of having a successful trial while enabling better communication and insight about the procedures.
+# Reference

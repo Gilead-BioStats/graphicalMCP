@@ -1,37 +1,50 @@
 #' Report details of hypothesis rejections
 #'
-#' The slower graph testing functions have design choices made that favor ease
-#' of interpreting results over speed. Results include hypothesis rejection
-#' decisions, but also the test values that led to the final result. The
-#' functions include options for reporting details using the adjusted p-value
-#' method or adjusted weight method.
+#' The graph testing functions apply a specified test strategy to a graph and a
+#' set of p-values, giving rich information on which hypotheses are significant,
+#' and why. Results include hypothesis rejection decisions, but also the test
+#' values that led to the final result. The functions include options for
+#' reporting details using the adjusted p-value method or adjusted significance
+#' method.
+#'
+#' The test specification (`test_groups`, `test_types`, and `test_corr`) can be
+#' specified either named or unnamed. If unnamed, it's assumed that all 3 are
+#' ordered the same way, i.e. the nth elements of `test_types` and `test_corr`
+#' apply to the nth group in `test_groups`. Naming each element with consistent
+#' names across the three vectors will mean that they do not have to retain the
+#' same order, and also may be a more robust way to keep track of testing
+#' details.
 #'
 #' @param graph An initial graph as returned by [graph_create()]
 #' @param p A numeric vector of p-values
-#' @param alpha A numeric scalar specifying the global significance level for
-#'   testing
+#' @param alpha A numeric scalar specifying the significance level for testing
 #' @param test_groups A list of numeric vectors specifying hypotheses to test
-#'   together
-#' @param test_types A character vector of tests to apply to the given groups
-#' @param test_corr (Optional) A numeric matrix of correlations between
-#'   hypotheses' test statistics
-#' @param verbose A logical scalar specifying whether the results for each
-#'   intersection hypothesis should be included
-#' @param test_values A logical scalar specifying whether hypothesis-level
-#'   detail should be included in the results, including calculating adjusted
-#'   weights for parametric tests
+#'   together. Part 1 of the test specification.
+#' @param test_types A character vector of tests to apply to the test groups.
+#'   Part 2 of the test specification.
+#' @param test_corr (Optional) A list of numeric matrices. Part 3 of the test
+#'   specification. Each test group must have exactly one entry in the list:
+#'   Bonferroni and Simes test groups should have entries of NULL, and
+#'   parametric test groups should have numeric matrices specifying the (known
+#'   or estimated) pairwise correlations between the test statistics of all
+#'   hypotheses in the group.
+#' @param verbose A logical scalar specifying whether the details of the
+#'   adjusted p-value calculations should be included in results
+#' @param test_values A logical scalar specifying whether details of the
+#'   adjusted significance calculations should be included in results
 #'
 #' @return A `graph_report` object, a list of 4 elements: `inputs`, `outputs`,
 #'   `details`, and `test_values`
 #'   * Inputs - A list of the input parameters used to run the test
 #'   * Outputs - A list of global test results
-#'   * Details - A matrix with detailed adjusted p-value results (graph deletion
-#'   sequence for shortcut testing)
-#'   * Test values - A data frame with hypothesis-level test details for each
-#'   intersection (each step for shortcut testing)
+#'   * Details - A list of detailed adjusted p-value calculations (graph
+#'   deletion sequence for shortcut testing)
+#'   * Test values - A list with hypothesis-level test details for each
+#'   intersection using the adjusted significance method (Details about each
+#'   step taken for shortcut testing)
 #'
 #' @rdname testing
-#' @seealso [graph_test_closure_fast()], [graph_test_shortcut_fast()]
+#'
 #' @export
 #'
 #' @template references
@@ -49,7 +62,7 @@
 #' g <- graph_create(hypotheses, transitions)
 #' p <- c(.01, .005, .015, .022)
 #'
-#' test_corr <- list(NA, matrix(c(1, .5, .5, 1), nrow = 2, byrow = TRUE))
+#' corr_list <- list(NA, matrix(c(1, .5, .5, 1), nrow = 2, byrow = TRUE))
 #'
 #' # The default is all Bonferroni with alpha = .025
 #' graph_test_closure(g, p)
@@ -61,7 +74,7 @@
 #'   alpha = .025,
 #'   test_groups = list(1:2, 3:4),
 #'   test_types = c("bonferroni", "parametric"),
-#'   test_corr = test_corr
+#'   test_corr = corr_list
 #' )
 graph_test_closure <- function(graph,
                                p,
@@ -215,12 +228,15 @@ graph_test_closure <- function(graph,
 
   # Adjusted p-value details ---------------------------------------------------
   # Reported adjusted p-values shouldn't exceed 1
+  intersections <- apply(matrix_intersections, 1, paste, collapse = "")
+
   detail_results <- list(
     results = cbind(
+      data.frame(Intersection = intersections),
       weighting_strategy_compact,
       pmin(adjusted_p, 1 + 1e-14),
-      adj_p_inter = pmin(adjusted_p_intersection, 1 + 1e-14),
-      reject_intersection = reject_intersection
+      data.frame(adj_p_inter = pmin(adjusted_p_intersection, 1 + 1e-14)),
+      data.frame(reject_intersection = reject_intersection)
     )
   )
 
@@ -233,13 +249,15 @@ graph_test_closure <- function(graph,
     test_values_index <- 1
     test_values_list <- vector("list", num_intersections * num_groups)
 
-    # adjusted weights are calculated for each group in each intersection of the
+    # Adjusted weights are calculated for each group in each intersection of the
     # closure
     for (intersection_index in seq_len(num_intersections)) {
       vec_intersection <-
         matrix_intersections[intersection_index, , drop = TRUE]
       vec_weights <-
         weighting_strategy_compact[intersection_index, , drop = TRUE]
+
+      str_intersection <- paste(vec_intersection, collapse = "")
 
       for (group_index in seq_len(num_groups)) {
         group <- test_groups[[group_index]]
@@ -258,21 +276,21 @@ graph_test_closure <- function(graph,
             p[group_by_intersection],
             vec_weights[group_by_intersection],
             alpha,
-            intersection_index
+            str_intersection
           )
         } else if (test == "simes") {
           test_values_list[[test_values_index]] <- test_values_simes(
             p[group_by_intersection],
             vec_weights[group_by_intersection],
             alpha,
-            intersection_index
+            str_intersection
           )
         } else if (test == "parametric") {
           test_values_list[[test_values_index]] <- test_values_parametric(
             p[group_by_intersection],
             vec_weights[group_by_intersection],
             alpha,
-            intersection_index,
+            str_intersection,
             test_corr[group_by_intersection,
               group_by_intersection,
               drop = FALSE
@@ -287,6 +305,9 @@ graph_test_closure <- function(graph,
     }
 
     df_test_values <- do.call(rbind, test_values_list)
+    rownames(df_test_values) <- NULL
+
+
 
     # "c" value is only used in parametric testing, so there's no need to
     # include this column when there are no parametric groups

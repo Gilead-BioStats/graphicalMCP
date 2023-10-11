@@ -1,8 +1,14 @@
-#' Convert between gMCP and graphicalMCP graph classes
+#' Convert between graphicalMCP, gMCP, and igraph graph classes
+#'
+#' Graphs are handled with a different object in graphicalMCP, gMCP, and igraph.
+#' These functions convert minimally between the different classes.
+#'
+#' Note that igraph and gMCP can set various attributes for vertices, edges, or
+#' a graph itself. These conversion functions only handle attributes related to
+#' names and weights. Other attributes will be dropped when converting.
 #'
 #' @param graph An `initial_graph` object from graphicalMCP, a `graphMCP` object
-#'   from gMCP, or an `igraph` object from igraph, depending on which direction
-#'   you're converting
+#'   from gMCP, or an `igraph` object from igraph, depending on conversion type
 #'
 #' @return For `as_graphMCP()`, a gMCP graph object, for `as_igraph()`, an
 #'   igraph object, and for `as_initial_graph()`, a graphicalMCP graph object

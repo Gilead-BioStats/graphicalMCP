@@ -1,15 +1,14 @@
 #' S3 print method for class `power_report`
 #'
-#' A power report displays
+#' A power report displays:
 #'   * The initial graph being tested,
 #'   * Testing and simulation options,
 #'   * Final power calculations, and
-#'   * (Partial) Detailed p-values and test results - The underlying object
-#' contains the full tables
+#'   * (Optionally) Detailed p-values and test results for each simulation
 #'
 #' @param x An object of class `power_report` to print
 #' @param ... Other values passed on to other methods (currently unused)
-#' @param precision An integer scalar indicating the maximum number of decimals
+#' @param precision An integer scalar indicating the number of significant figures
 #'   to include in numeric values
 #' @param indent An integer scalar indicating how many spaces to indent results
 #' @param rows An integer scalar indicating how many rows of verbose output to
@@ -98,13 +97,7 @@ print.power_report <- function(x, ..., precision = 4, indent = 2, rows = 10) {
   cat(paste0(
     paste0(pad, "Testing "),
     format(x$inputs$sim_n, scientific = FALSE, big.mark = ","),
-    " simulations ",
-    ifelse(
-      is.null(x$inputs$sim_seed),
-      "with",
-      paste0("- random seed ", x$inputs$sim_seed, " &")
-    ),
-    " multivariate normal params:"
+    " simulations with multivariate normal params:"
   ))
   cat("\n\n")
 
@@ -153,19 +146,13 @@ print.power_report <- function(x, ..., precision = 4, indent = 2, rows = 10) {
   if (!length(x$power$power_success) == 0) {
     cat("\n")
 
-    success_mat <- matrix(
-      c("", format(x$power$power_success, digits = precision)),
-      nrow = 1,
-      dimnames = list(
-        "",
-        c(
-          paste0(pad, "          Power to reject: "),
-          paste0("  ", names(x$power$power_success))
-        )
-      ),
+    success_df <- data.frame(
+      ` Success measure` = paste0(pad_less_1, names(x$power$power_success)),
+      `Power` = format(x$power$power_success, digits = precision),
+      check.names = FALSE
     )
 
-    print(as.data.frame(format(success_mat, digits = precision)))
+    print(success_df, row.names = FALSE)
   }
   cat("\n")
 

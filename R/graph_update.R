@@ -3,7 +3,7 @@
 #' It is not always obvious what a graph's weights will look like after deleting
 #' one or more hypotheses. While [`graph_generate_weights()`] calculates all
 #' sub-graphs' hypothesis weights, `graph_update()` gives a more detailed view
-#' for a single set of deletions, including transition weights as well.
+#' for a single set of deletions, including transition weights.
 #'
 #' @param graph An initial graph as returned by [graph_create()]
 #' @param delete A logical or integer vector, denoting which hypotheses to
@@ -15,10 +15,12 @@
 #'   mode," where selected hypotheses are deleted in the order they appear in
 #'   `delete`
 #'
-#' @return An object of class `updated_graph` with 3 elements
+#' @return An object of class `updated_graph` with 4 elements
 #'   * The initial graph object
-#'   * The Boolean vector indicating which hypotheses are kept/deleted
-#'   * The updated graph object with specific hypotheses deleted
+#'   * The updated graph object with specified hypotheses deleted
+#'   * A numeric vector indicating which hypotheses were deleted
+#'   * When using ordered mode, a list of intermediate graphs for each deletion
+#'   step
 #'
 #' @export
 #'
@@ -34,11 +36,11 @@
 #' )
 #' g <- graph_create(hypotheses, transitions)
 #'
-#' # Delete the second hypothesis
-#' graph_update(g, c(TRUE, FALSE, TRUE, TRUE))
-#' # Equivalent
-#' # graph_update(g, 2)
+#' # Delete the second and third hypotheses in any order
+#' graph_update(g, c(FALSE, TRUE, TRUE, FALSE))
 #'
+#' # Equivalent in ordered mode
+#' graph_update(g, 2:3)
 graph_update <- function(graph, delete) {
   # Basic type checking
   stopifnot(
@@ -71,9 +73,12 @@ graph_update <- function(graph, delete) {
   }
 
   initial_graph <- graph
+  cume_delete <- integer(0)
 
   # Iterate over the hypotheses to delete
   for (delete_num in delete) {
+    cume_delete <- c(cume_delete, delete_num)
+
     # Save current state of the graph to use in calculations
     # Also make a copy of graph elements for storing new values in
     init_hypotheses <- hypotheses <- graph$hypotheses
@@ -118,7 +123,9 @@ graph_update <- function(graph, delete) {
     # loop to the next hypothesis to delete
     graph <- structure(
       list(hypotheses = hypotheses, transitions = transitions),
-      class = "initial_graph"
+      class = "initial_graph",
+      title = "Updated graph",
+      deleted = cume_delete
     )
 
     if (ordered) intermediate_graphs <- c(intermediate_graphs, list(graph))

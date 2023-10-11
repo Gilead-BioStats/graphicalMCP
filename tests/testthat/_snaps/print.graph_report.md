@@ -104,17 +104,17 @@
         H4 NA NA NA NA
       
       Adjusted p details ($details) --------------------------------------------------
-        Intersection   H1   H2   H3   H4 adj_p_grp1 adj_p_inter reject_intersection
-                   1 0.50 0.50 0.00 0.00       0.02        0.02                TRUE
-                   2 0.50 0.50 0.00   NA       0.02        0.02                TRUE
-                   3 0.50 0.50   NA 0.00       0.02        0.02                TRUE
-                   4 0.50 0.50   NA   NA       0.02        0.02                TRUE
-                   5 0.50   NA 0.00 0.50       0.02        0.02                TRUE
-                   6 1.00   NA 0.00   NA       0.01        0.01                TRUE
-                   7 0.50   NA   NA 0.50       0.02        0.02                TRUE
-                   8 1.00   NA   NA   NA       0.01        0.01                TRUE
-                   9   NA 0.50 0.50 0.00       0.02        0.02                TRUE
-                  10   NA 0.50 0.50   NA       0.02        0.02                TRUE
+        Intersection  H1  H2  H3  H4 adj_p_grp1 adj_p_inter reject_intersection
+                1111 0.5 0.5 0.0 0.0       0.02        0.02                TRUE
+                1110 0.5 0.5 0.0  NA       0.02        0.02                TRUE
+                1101 0.5 0.5  NA 0.0       0.02        0.02                TRUE
+                1100 0.5 0.5  NA  NA       0.02        0.02                TRUE
+                1011 0.5  NA 0.0 0.5       0.02        0.02                TRUE
+                1010 1.0  NA 0.0  NA       0.01        0.01                TRUE
+                1001 0.5  NA  NA 0.5       0.02        0.02                TRUE
+                1000 1.0  NA  NA  NA       0.01        0.01                TRUE
+                0111  NA 0.5 0.5 0.0       0.02        0.02                TRUE
+                0110  NA 0.5 0.5  NA       0.02        0.02                TRUE
         ... (Use `print(x, rows = <nn>)` for more)
       
 
@@ -172,16 +172,16 @@
       
       Detailed test values ($test_values) --------------------------------------------
         Intersection Hypothesis       Test    p <= Weight * Alpha Inequality_holds
-                   1         H1 bonferroni 0.01 <=    0.5 * 0.025             TRUE
-                   1         H2 bonferroni 0.01 <=    0.5 * 0.025             TRUE
-                   1         H3 bonferroni 0.01 <=    0.0 * 0.025            FALSE
-                   1         H4 bonferroni 0.01 <=    0.0 * 0.025            FALSE
-                   2         H1 bonferroni 0.01 <=    0.5 * 0.025             TRUE
-                   2         H2 bonferroni 0.01 <=    0.5 * 0.025             TRUE
-                   2         H3 bonferroni 0.01 <=    0.0 * 0.025            FALSE
-                   3         H1 bonferroni 0.01 <=    0.5 * 0.025             TRUE
-                   3         H2 bonferroni 0.01 <=    0.5 * 0.025             TRUE
-                   3         H4 bonferroni 0.01 <=    0.0 * 0.025            FALSE
+                1111         H1 bonferroni 0.01 <=    0.5 * 0.025             TRUE
+                1111         H2 bonferroni 0.01 <=    0.5 * 0.025             TRUE
+                1111         H3 bonferroni 0.01 <=    0.0 * 0.025            FALSE
+                1111         H4 bonferroni 0.01 <=    0.0 * 0.025            FALSE
+                1110         H1 bonferroni 0.01 <=    0.5 * 0.025             TRUE
+                1110         H2 bonferroni 0.01 <=    0.5 * 0.025             TRUE
+                1110         H3 bonferroni 0.01 <=    0.0 * 0.025            FALSE
+                1101         H1 bonferroni 0.01 <=    0.5 * 0.025             TRUE
+                1101         H2 bonferroni 0.01 <=    0.5 * 0.025             TRUE
+                1101         H4 bonferroni 0.01 <=    0.0 * 0.025            FALSE
         ... (Use `print(x, rows = <nn>)` for more)
       
 
@@ -305,17 +305,17 @@
         H4 NA NA NA NA
       
       Adjusted p details ($details) --------------------------------------------------
-        Intersection     H1     H2     H3     H4 adj_p_grp1 adj_p_grp2 adj_p_inter
-                   1 0.5000 0.5000 0.0000 0.0000     0.0199     1.0000      0.0199
-                   2 0.5000 0.5000 0.0000     NA     0.0199     1.0000      0.0199
-                   3 0.5000 0.5000     NA 0.0000     0.0199     1.0000      0.0199
-                   4 0.5000 0.5000     NA     NA     0.0199     1.0000      0.0199
-                   5 0.5000     NA 0.0000 0.5000     0.0200     0.0200      0.0200
-                   6 1.0000     NA 0.0000     NA     0.0100     1.0000      0.0100
-                   7 0.5000     NA     NA 0.5000     0.0200     0.0200      0.0200
-                   8 1.0000     NA     NA     NA     0.0100     1.0000      0.0100
-                   9     NA 0.5000 0.5000 0.0000     0.0200     0.0200      0.0200
-                  10     NA 0.5000 0.5000     NA     0.0200     0.0200      0.0200
+        Intersection  H1  H2  H3  H4 adj_p_grp1 adj_p_grp2 adj_p_inter
+                1111 0.5 0.5 0.0 0.0     0.0199       1.00      0.0199
+                1110 0.5 0.5 0.0  NA     0.0199       1.00      0.0199
+                1101 0.5 0.5  NA 0.0     0.0199       1.00      0.0199
+                1100 0.5 0.5  NA  NA     0.0199       1.00      0.0199
+                1011 0.5  NA 0.0 0.5     0.0200       0.02      0.0200
+                1010 1.0  NA 0.0  NA     0.0100       1.00      0.0100
+                1001 0.5  NA  NA 0.5     0.0200       0.02      0.0200
+                1000 1.0  NA  NA  NA     0.0100       1.00      0.0100
+                0111  NA 0.5 0.5 0.0     0.0200       0.02      0.0200
+                0110  NA 0.5 0.5  NA     0.0200       0.02      0.0200
         reject_intersection
                        TRUE
                        TRUE
@@ -331,16 +331,16 @@
       
       Detailed test values ($test_values) --------------------------------------------
         Intersection Hypothesis       Test    p <= c_value * Weight * Alpha
-                   1         H1 parametric 0.01 <=   1.006 *    0.5 * 0.025
-                   1         H2 parametric 0.01 <=   1.006 *    0.5 * 0.025
-                   1         H3      simes 0.01 <=              0.0 * 0.025
-                   1         H4      simes 0.01 <=              0.0 * 0.025
-                   2         H1 parametric 0.01 <=   1.006 *    0.5 * 0.025
-                   2         H2 parametric 0.01 <=   1.006 *    0.5 * 0.025
-                   2         H3      simes 0.01 <=              0.0 * 0.025
-                   3         H1 parametric 0.01 <=   1.006 *    0.5 * 0.025
-                   3         H2 parametric 0.01 <=   1.006 *    0.5 * 0.025
-                   3         H4      simes 0.01 <=              0.0 * 0.025
+                1111         H1 parametric 0.01 <=   1.006 *    0.5 * 0.025
+                1111         H2 parametric 0.01 <=   1.006 *    0.5 * 0.025
+                1111         H3      simes 0.01 <=              0.0 * 0.025
+                1111         H4      simes 0.01 <=              0.0 * 0.025
+                1110         H1 parametric 0.01 <=   1.006 *    0.5 * 0.025
+                1110         H2 parametric 0.01 <=   1.006 *    0.5 * 0.025
+                1110         H3      simes 0.01 <=              0.0 * 0.025
+                1101         H1 parametric 0.01 <=   1.006 *    0.5 * 0.025
+                1101         H2 parametric 0.01 <=   1.006 *    0.5 * 0.025
+                1101         H4      simes 0.01 <=              0.0 * 0.025
         Inequality_holds
                     TRUE
                     TRUE
@@ -417,17 +417,17 @@
         H4 NA NA NA NA
       
       Adjusted p details ($details) --------------------------------------------------
-        Intersection     H1     H2     H3     H4 adj_p_grp1 adj_p_grp2 adj_p_inter
-                   1 0.5000 0.5000 0.0000 0.0000     0.0199     1.0000      0.0199
-                   2 0.5000 0.5000 0.0000     NA     0.0199     1.0000      0.0199
-                   3 0.5000 0.5000     NA 0.0000     0.0199     1.0000      0.0199
-                   4 0.5000 0.5000     NA     NA     0.0199     1.0000      0.0199
-                   5 0.5000     NA 0.0000 0.5000     0.0200     0.0200      0.0200
-                   6 1.0000     NA 0.0000     NA     0.0100     1.0000      0.0100
-                   7 0.5000     NA     NA 0.5000     0.0200     0.0200      0.0200
-                   8 1.0000     NA     NA     NA     0.0100     1.0000      0.0100
-                   9     NA 0.5000 0.5000 0.0000     0.0200     0.0200      0.0200
-                  10     NA 0.5000 0.5000     NA     0.0200     0.0200      0.0200
+        Intersection  H1  H2  H3  H4 adj_p_grp1 adj_p_grp2 adj_p_inter
+                1111 0.5 0.5 0.0 0.0     0.0199     1.0000      0.0199
+                1110 0.5 0.5 0.0  NA     0.0199     1.0000      0.0199
+                1101 0.5 0.5  NA 0.0     0.0199     1.0000      0.0199
+                1100 0.5 0.5  NA  NA     0.0199     1.0000      0.0199
+                1011 0.5  NA 0.0 0.5     0.0200     0.0200      0.0200
+                1010 1.0  NA 0.0  NA     0.0100     1.0000      0.0100
+                1001 0.5  NA  NA 0.5     0.0200     0.0200      0.0200
+                1000 1.0  NA  NA  NA     0.0100     1.0000      0.0100
+                0111  NA 0.5 0.5 0.0     0.0200     0.0200      0.0200
+                0110  NA 0.5 0.5  NA     0.0200     0.0200      0.0200
         reject_intersection
                        TRUE
                        TRUE
@@ -443,16 +443,16 @@
       
       Detailed test values ($test_values) --------------------------------------------
         Intersection Hypothesis       Test    p <= c_value * Weight * Alpha
-                   1         H1 parametric 0.01 <=   1.006 *    0.5 * 0.025
-                   1         H2 parametric 0.01 <=   1.006 *    0.5 * 0.025
-                   1         H3 parametric 0.01 <=   1.000 *    0.0 * 0.025
-                   1         H4 parametric 0.01 <=   1.000 *    0.0 * 0.025
-                   2         H1 parametric 0.01 <=   1.006 *    0.5 * 0.025
-                   2         H2 parametric 0.01 <=   1.006 *    0.5 * 0.025
-                   2         H3 parametric 0.01 <=   1.000 *    0.0 * 0.025
-                   3         H1 parametric 0.01 <=   1.006 *    0.5 * 0.025
-                   3         H2 parametric 0.01 <=   1.006 *    0.5 * 0.025
-                   3         H4 parametric 0.01 <=   1.000 *    0.0 * 0.025
+                1111         H1 parametric 0.01 <=   1.006 *    0.5 * 0.025
+                1111         H2 parametric 0.01 <=   1.006 *    0.5 * 0.025
+                1111         H3 parametric 0.01 <=   1.000 *    0.0 * 0.025
+                1111         H4 parametric 0.01 <=   1.000 *    0.0 * 0.025
+                1110         H1 parametric 0.01 <=   1.006 *    0.5 * 0.025
+                1110         H2 parametric 0.01 <=   1.006 *    0.5 * 0.025
+                1110         H3 parametric 0.01 <=   1.000 *    0.0 * 0.025
+                1101         H1 parametric 0.01 <=   1.006 *    0.5 * 0.025
+                1101         H2 parametric 0.01 <=   1.006 *    0.5 * 0.025
+                1101         H4 parametric 0.01 <=   1.000 *    0.0 * 0.025
         Inequality_holds
                     TRUE
                     TRUE
@@ -574,31 +574,31 @@
           H4 NA NA NA NA
       
       Adjusted p details ($details) --------------------------------------------------
-          Intersection   H1   H2   H3   H4 adj_p_grp1 adj_p_inter reject_intersection
-                     1 0.50 0.50 0.00 0.00       0.02        0.02                TRUE
-                     2 0.50 0.50 0.00   NA       0.02        0.02                TRUE
-                     3 0.50 0.50   NA 0.00       0.02        0.02                TRUE
-                     4 0.50 0.50   NA   NA       0.02        0.02                TRUE
-                     5 0.50   NA 0.00 0.50       0.02        0.02                TRUE
-                     6 1.00   NA 0.00   NA       0.01        0.01                TRUE
-                     7 0.50   NA   NA 0.50       0.02        0.02                TRUE
-                     8 1.00   NA   NA   NA       0.01        0.01                TRUE
-                     9   NA 0.50 0.50 0.00       0.02        0.02                TRUE
-                    10   NA 0.50 0.50   NA       0.02        0.02                TRUE
+          Intersection  H1  H2  H3  H4 adj_p_grp1 adj_p_inter reject_intersection
+                  1111 0.5 0.5 0.0 0.0       0.02        0.02                TRUE
+                  1110 0.5 0.5 0.0  NA       0.02        0.02                TRUE
+                  1101 0.5 0.5  NA 0.0       0.02        0.02                TRUE
+                  1100 0.5 0.5  NA  NA       0.02        0.02                TRUE
+                  1011 0.5  NA 0.0 0.5       0.02        0.02                TRUE
+                  1010 1.0  NA 0.0  NA       0.01        0.01                TRUE
+                  1001 0.5  NA  NA 0.5       0.02        0.02                TRUE
+                  1000 1.0  NA  NA  NA       0.01        0.01                TRUE
+                  0111  NA 0.5 0.5 0.0       0.02        0.02                TRUE
+                  0110  NA 0.5 0.5  NA       0.02        0.02                TRUE
           ... (Use `print(x, rows = <nn>)` for more)
       
       Detailed test values ($test_values) --------------------------------------------
           Intersection Hypothesis       Test    p <= Weight * Alpha Inequality_holds
-                     1         H1 bonferroni 0.01 <=    0.5 * 0.025             TRUE
-                     1         H2 bonferroni 0.01 <=    0.5 * 0.025             TRUE
-                     1         H3 bonferroni 0.01 <=    0.0 * 0.025            FALSE
-                     1         H4 bonferroni 0.01 <=    0.0 * 0.025            FALSE
-                     2         H1 bonferroni 0.01 <=    0.5 * 0.025             TRUE
-                     2         H2 bonferroni 0.01 <=    0.5 * 0.025             TRUE
-                     2         H3 bonferroni 0.01 <=    0.0 * 0.025            FALSE
-                     3         H1 bonferroni 0.01 <=    0.5 * 0.025             TRUE
-                     3         H2 bonferroni 0.01 <=    0.5 * 0.025             TRUE
-                     3         H4 bonferroni 0.01 <=    0.0 * 0.025            FALSE
+                  1111         H1 bonferroni 0.01 <=    0.5 * 0.025             TRUE
+                  1111         H2 bonferroni 0.01 <=    0.5 * 0.025             TRUE
+                  1111         H3 bonferroni 0.01 <=    0.0 * 0.025            FALSE
+                  1111         H4 bonferroni 0.01 <=    0.0 * 0.025            FALSE
+                  1110         H1 bonferroni 0.01 <=    0.5 * 0.025             TRUE
+                  1110         H2 bonferroni 0.01 <=    0.5 * 0.025             TRUE
+                  1110         H3 bonferroni 0.01 <=    0.0 * 0.025            FALSE
+                  1101         H1 bonferroni 0.01 <=    0.5 * 0.025             TRUE
+                  1101         H2 bonferroni 0.01 <=    0.5 * 0.025             TRUE
+                  1101         H4 bonferroni 0.01 <=    0.0 * 0.025            FALSE
           ... (Use `print(x, rows = <nn>)` for more)
       
 
