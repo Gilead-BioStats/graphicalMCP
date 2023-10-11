@@ -43,7 +43,7 @@ pak::pak("Gilead-BioStats/graphicalMCP@dev")
     procedures illustrated using `graphicalMCP`
   - see `vignette("generate-closure")` for rationales to generate the
     closure and the weighting strategy of a graph
-  - see `vignette("validation")` for comparisons to other R packages
+  - see `vignette("comparison")` for comparisons to other R packages
 
 ## Related work
 
@@ -51,6 +51,18 @@ pak::pak("Gilead-BioStats/graphicalMCP@dev")
 - Lighter version of `gMCP` which removes the rJava dependency -
   [gMCPLite](https://cran.r-project.org/package=gMCPLite)
 - Graphical MCPs with Simes tests -
+  [lrstat](https://cran.r-project.org/package=lrstat)
+
+Built upon these packages, we hope to implement graphical MCPs in a more
+general framework, with fewer dependencies and simpler S3 classes, and
+without losing computational efficiency.
+
+## Related work
+
+- Graphical MCPs [gMCP](https://cran.r-project.org/package=gMCP)
+- Lighter version of `gMCP` which removes the rJava dependency
+  [gMCPLite](https://cran.r-project.org/package=gMCPLite)
+- Graphical MCPs with Simes tests
   [lrstat](https://cran.r-project.org/package=lrstat)
 
 Built upon these packages, we hope to implement graphical MCPs in a more
@@ -81,44 +93,11 @@ citation("graphicalMCP")
 ## Acknowledgments
 
 Along with the authors and contributors, thanks to the following people
-for their suggestions and inspirations on the package:
+for their suggestions and inspirations on the package: Frank Bretz,
+Willi Maurer, Ekkehard Glimm, Nan Chen, Jeremy Wildfire, Spencer
+Childress, Colleen McLaughlin, Matt Roumaya, Chelsea Dickens, and Ron Yu
 
-Frank Bretz, Willi Maurer, Ekkehard Glimm, and Ron Yu
-
-We owe a debt of gratitude to the authors of `gMCP` for their pioneering
+We owe a debt of gratitude to the authors of
+[gMCP](https://cran.r-project.org/package=gMCP) for their pioneering
 work, without which this package would not be nearly as extensive as it
 is.
-
-# References
-
-<div id="refs" class="references csl-bib-body hanging-indent">
-
-<div id="ref-bretz-2009-graphs" class="csl-entry">
-
-Bretz, Frank, Willi Maurer, Werner Branath, and Martin Posch. 2009. “A
-Graphical Approach to Sequentially Rejective Multiple Test Procedures.”
-*Statistics in Medicine* 53 (4): 586–604.
-<https://onlinelibrary.wiley.com/doi/abs/10.1002/sim.3495>.
-
-</div>
-
-<div id="ref-bretz-2011-power" class="csl-entry">
-
-Bretz, Frank, Willi Maurer, and Gerhard Hommel. 2011. “Test and Power
-Considerations for Multiple Endpoint Analyses Using Sequentially
-Rejective Graphical Procedures.” *Statistics in Medicine* 30 (13):
-1489–1501. <https://onlinelibrary.wiley.com/doi/abs/10.1002/sim.3988>.
-
-</div>
-
-<div id="ref-bretz-2011-tests" class="csl-entry">
-
-Bretz, Frank, Martin Posch, Ekkehard Glimm, Florian Klinglmueller, Willi
-Maurer, and Kornelius Rohmeyer. 2011. “Graphical Approaches for Multiple
-Comparison Procedures Using Weighted Bonferroni, Simes, or Parametric
-Tests.” *Biometrical Journal* 53 (6): 894–913.
-<https://onlinelibrary.wiley.com/doi/10.1002/bimj.201000239>.
-
-</div>
-
-</div>

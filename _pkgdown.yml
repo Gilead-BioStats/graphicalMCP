@@ -38,6 +38,7 @@ reference:
 - title: Example graphs
 - desc: Functions for creating example graphs from a variety of papers
 - contents:
+  - bonferroni
   - bonferroni_holm
   - fallback
   - fixed_sequence
@@ -55,7 +56,7 @@ navbar:
       text: Glossary
       href: articles/glossary.html
     reference:
-      text: Function index
+      text: Function reference
       href: reference/index.html
 
 articles:
@@ -66,7 +67,7 @@ articles:
   - closed-testing
   - generate-closure
   - graph-examples
-  - validation
+  - comparisons
 
 - title: Glossary
   contents:

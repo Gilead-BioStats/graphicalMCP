@@ -28,30 +28,30 @@ There are two R packages that cover graphical multiple comparison procedures (MC
 # List of comparisons
 
 - Weighting strategy for the closure
-  - `graphicalMCP::graph_generate_weights`
-  - `gMCP::generateWeights`
+  - `graphicalMCP::graph_generate_weights()`
+  - `gMCP::generateWeights()`
 - Sequentially rejective procedures based on Bonferroni tests
-  - `graphical::graph_test_shortcut`
-  - `gMCP::gMCP`
+  - `graphicalMCP::graph_test_shortcut()`
+  - `gMCP::gMCP()`
 - Power simulation for sequentially rejective procedures
-  - `graphicalMCP::graph_calculate_power`
-  - `gMCP::calcPower`
+  - `graphicalMCP::graph_calculate_power()`
+  - `gMCP::calcPower()`
 - Closed procedures with parametric tests
-  - `graphicalMCP::graph_test_closure`
-  - `gMCP::gMCP`
+  - `graphicalMCP::graph_test_closure()`
+  - `gMCP::gMCP()`
 - Power simulation for closed procedures with parametric tests
-  - `graphicalMCP::graph_calculate_power`
-  - `gMCP::calcPower`
+  - `graphicalMCP::graph_calculate_power()`
+  - `gMCP::calcPower()`
 - Closed procedures with Simes tests
-  - `graphicalMCP::graph_test_closure`
-  - `gMCP::gMCP`
+  - `graphicalMCP::graph_test_closure()`
+  - `gMCP::gMCP()`
 - Power simulation for closed procedures with Simes tests
-  - `graphicalMCP::graph_calculate_power`
-  - `gMCP::calcPower`
+  - `graphicalMCP::graph_calculate_power()`
+  - `gMCP::calcPower()`
 
 # Comparisons of weighting strategies
 
-A random graph for five hypotheses will be generated and used for the comparison. Weighting strategies from the following two functions will be compared: `graphicalMCP::graph_generate_weights` and `gMCP::generateWeights`. This process is repeated 1000 times. Weighting strategies are matched for all 1000 cases.
+A random graph for five hypotheses will be generated and used for the comparison. Weighting strategies from the following two functions will be compared: `graphicalMCP::graph_generate_weights()` and `gMCP::generateWeights()`. This process is repeated 1000 times. Weighting strategies are matched for all 1000 cases.
 
 ```{r generate-weights}
 set.seed(1234)
@@ -74,7 +74,7 @@ all(identical)
 # Comparisons of sequentially rejective procedures based on Bonferroni tests
 
 ## Adjusted p-values for testing
-A random graph for five hypotheses will be generated and used for the comparison. A set of p-values is randomly generated to be used for the graphical MCP. Adjusted p-values are calculated and compared using the following functions: `graphical::graph_test_shortcut` and `gMCP::gMCP`. This process is repeated 10000 times. Adjusted p-values are matched for all 10000 cases.
+A random graph for five hypotheses will be generated and used for the comparison. A set of p-values is randomly generated to be used for the graphical MCP. Adjusted p-values are calculated and compared using the following functions: `graphicalMCP::graph_test_shortcut()` and `gMCP::gMCP()`. This process is repeated 10000 times. Adjusted p-values are matched for all 10000 cases.
 
 ```{r shortcut}
 set.seed(1234)
@@ -97,7 +97,7 @@ all(identical)
 
 ## Power simulations
 
-A random graph for five hypotheses will be generated and used for the comparison. A set of marginal power (without multiplicity adjustment) is randomly generated. Local power (with multiplicity adjustment) is calculated and compared using the following functions: `graphical::graph_calculate_power` and `gMCP::calcPower`. Since different simulation methods are used, results are slightly different. The maximum absolute difference in local power is 0.0051 (0.51%) among 1000 cases, which is relatively small.
+A random graph for five hypotheses will be generated and used for the comparison. A set of marginal power (without multiplicity adjustment) is randomly generated. Local power (with multiplicity adjustment) is calculated and compared using the following functions: `graphicalMCP::graph_calculate_power()` and `gMCP::calcPower()`. Since different simulation methods are used, results are slightly different. The maximum absolute difference in local power is 0.0051 (0.51%) among 1000 cases, which is relatively small.
 
 ```{r power-shortcut, eval = FALSE}
 set.seed(1234)
@@ -167,7 +167,7 @@ round(
 # Comparisons of closed test procedures with parametric tests
 
 ## Adjusted p-values for testing
-A successive graph with two primary and two secondary hypotheses will be generated and used for the comparison. A set of p-values is randomly generated to be used for the graphical MCP. Adjusted p-values are calculated and compared using the following functions: `graphical::graph_test_closure` and `gMCP::gMCP`. Parametric tests are used for two primary hypotheses. This process is repeated 10000 times. Adjusted p-values are matched for all 10000 cases.
+A successive graph with two primary and two secondary hypotheses will be generated and used for the comparison. A set of p-values is randomly generated to be used for the graphical MCP. Adjusted p-values are calculated and compared using the following functions: `graphicalMCP::graph_test_closure()` and `gMCP::gMCP()`. Parametric tests are used for two primary hypotheses. This process is repeated 10000 times. Adjusted p-values are matched for all 10000 cases.
 
 ```{r parametric}
 hypotheses <- c(.5, .5, 0, 0)
@@ -214,7 +214,7 @@ all(identical)
 
 ## Power simulations
 
-A successive graph with two primary and two secondary hypotheses will be generated and used for the comparison. A set of marginal power (without multiplicity adjustment) is randomly generated. Local power (with multiplicity adjustment) is calculated and compared using the following functions: `graphical::graph_calculate_power` and `gMCP::calcPower`. Parametric tests are used for two primary hypotheses. This process is repeated 100 times. Since different simulation methods are used, results are slightly different. The maximum absolute difference in local power is 0.0142 (1.42%) among 100 cases, which is small.
+A successive graph with two primary and two secondary hypotheses will be generated and used for the comparison. A set of marginal power (without multiplicity adjustment) is randomly generated. Local power (with multiplicity adjustment) is calculated and compared using the following functions: `graphicalMCP::graph_calculate_power()` and `gMCP::calcPower()`. Parametric tests are used for two primary hypotheses. This process is repeated 100 times. Since different simulation methods are used, results are slightly different. The maximum absolute difference in local power is 0.0142 (1.42%) among 100 cases, which is small.
 
 ```{r power-parametric, eval = FALSE}
 hypotheses <- c(.5, .5, 0, 0)
@@ -300,7 +300,7 @@ round(
 # Comparisons of closed test procedures with Simes tests
 
 ## Adjusted p-values for testing
-A successive graph with two primary and two secondary hypotheses will be generated and used for the comparison. A set of p-values is randomly generated to be used for the graphical MCP. Adjusted p-values are calculated and compared using the following functions: `graphical::graph_test_closure` and `lrstat::fadjpsim`. Simes tests are used for two primary hypotheses. This process is repeated 10000 times. Adjusted p-values are matched for all 10000 cases.
+A successive graph with two primary and two secondary hypotheses will be generated and used for the comparison. A set of p-values is randomly generated to be used for the graphical MCP. Adjusted p-values are calculated and compared using the following functions: `graphicalMCP::graph_test_closure()` and `lrstat::fadjpsim()`. Simes tests are used for two primary hypotheses. This process is repeated 10000 times. Adjusted p-values are matched for all 10000 cases.
 
 ```{r simes}
 hypotheses <- c(.5, .5, 0, 0)
@@ -348,6 +348,6 @@ all(identical)
 
 ## Power simulations
 
-Power simulations are not available in `lrstat`. Thus a comparison could be done to compare `graphical::graph_calculate_power` and a manual repetition of `lrstat::fadjpsim` for many sets of marginal power. This process is the same as the above comparison of adjusted p-values, and thus omitted.
+Power simulations are not available in `lrstat`. Thus a comparison could be done to compare `graphicalMCP::graph_calculate_power()` and a manual repetition of `lrstat::fadjpsim()` for many sets of marginal power. This process is the same as the above comparison of adjusted p-values, and thus omitted.
 
 # Reference
