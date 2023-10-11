@@ -105,7 +105,7 @@
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">lrstat</span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://urban-sniffle-p11zlpj.pages.github.io/">graphicalMCP</a></span><span class="op">)</span></span></code></pre></div>
 <div class="section level2">
-<h2 id="multiple-comparison-problem">Multiple comparison problem<a class="anchor" aria-label="anchor" href="#multiple-comparison-problem"></a>
+<h2 id="motivating-example">Motivating example<a class="anchor" aria-label="anchor" href="#motivating-example"></a>
 </h2>
 <p>Consider a confirmatory clinical trial comparing a test treatment
 (treatment) against the control treatment (control) for a disease. There
@@ -139,10 +139,9 @@ propagated to the primary hypothesis for the other dose-control
 comparison, but only after all hypotheses in the first dose-control
 comparison group have been deleted. With these specifications, we can
 create the following graph.</p>
-</div>
-<div class="section level2">
-<h2 id="create-a-graph">Create a graph<a class="anchor" aria-label="anchor" href="#create-a-graph"></a>
-</h2>
+<div class="section level3">
+<h3 id="create-a-graph">Create a graph<a class="anchor" aria-label="anchor" href="#create-a-graph"></a>
+</h3>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">hypotheses</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.5</span>, <span class="fl">0.5</span>, <span class="fl">0</span>, <span class="fl">0</span>, <span class="fl">0</span>, <span class="fl">0</span><span class="op">)</span></span>
 <span></span>
@@ -177,18 +176,22 @@ create the following graph.</p>
 <span><span class="op">)</span></span></code></pre></div>
 <p><img src="closed-testing_files/figure-html/create-graph-1.png" width="480" style="display: block; margin: auto;"></p>
 </div>
+</div>
 <div class="section level2">
-<h2 id="perform-the-graphical-multiple-comparison-procedure-based-on-bonferroni-tests">Perform the graphical multiple comparison procedure based on
-Bonferroni tests<a class="anchor" aria-label="anchor" href="#perform-the-graphical-multiple-comparison-procedure-based-on-bonferroni-tests"></a>
+<h2 id="perform-the-graphical-multiple-comparison-procedure-based-on-the-closure-principle">Perform the graphical multiple comparison procedure based on the
+closure principle<a class="anchor" aria-label="anchor" href="#perform-the-graphical-multiple-comparison-procedure-based-on-the-closure-principle"></a>
 </h2>
+<div class="section level3">
+<h3 id="bonferroni-tests">Bonferroni tests<a class="anchor" aria-label="anchor" href="#bonferroni-tests"></a>
+</h3>
 <p>Given a set of p-values for <span class="math inline">\(H_1, \ldots,
 H_6\)</span>, the graphical multiple comparison procedure can be
 performed to control the family-wise error rate (FWER) at the
 significance level <code>alpha</code>. For one-sided p-values,
 <code>alpha</code> is often set to 0.025 (default). First, we perform a
-Bonferroni-based procedure. After running the procedure, none of these
-hypotheses is rejected. These results are identical to using
-<code><a href="../reference/testing.html">graph_test_shortcut()</a></code>.</p>
+Bonferroni-based procedure using the closure principle <span class="citation">(Bretz et al. 2009)</span>. After running the
+procedure, none of these hypotheses is rejected. These results are
+identical to using [graph_test_shortcut()].</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">p_values</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.015</span>, <span class="fl">0.013</span>, <span class="fl">0.01</span>, <span class="fl">0.007</span>, <span class="fl">0.1</span>, <span class="fl">0.0124</span><span class="op">)</span></span>
 <span><span class="va">test_results</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/testing.html">graph_test_closure</a></span><span class="op">(</span><span class="va">g</span>, p <span class="op">=</span> <span class="va">p_values</span>, alpha <span class="op">=</span> <span class="fl">0.025</span><span class="op">)</span></span>
@@ -200,10 +203,11 @@ hypotheses is rejected. These results are identical to using
 <span><span class="va">test_results</span><span class="op">$</span><span class="va">outputs</span><span class="op">$</span><span class="va">rejected</span></span>
 <span><span class="co">#&gt;    H1    H2    H3    H4    H5    H6 </span></span>
 <span><span class="co">#&gt; FALSE FALSE FALSE FALSE FALSE FALSE</span></span>
-<span><span class="co"># Same testing results as 'graph_test_shortcut(g, p = p_values, alpha = 0.025)'</span></span></code></pre></div>
-<div class="section level3">
-<h3 id="obtain-the-closure">Obtain the closure<a class="anchor" aria-label="anchor" href="#obtain-the-closure"></a>
-</h3>
+<span><span class="co"># Same testing results as</span></span>
+<span><span class="co"># 'graph_test_shortcut(g, p = p_values, alpha = 0.025)$outputs$rejected'</span></span></code></pre></div>
+<div class="section level4">
+<h4 id="obtain-the-closure">Obtain the closure<a class="anchor" aria-label="anchor" href="#obtain-the-closure"></a>
+</h4>
 <p>To investigate the closure and how every intersection hypothesis is
 rejected, one could obtain the detailed output by specifying
 <code>verbose = TRUE</code>. Because all hypotheses are tested using
@@ -217,8 +221,8 @@ In this case there is only one group, which includes all hypotheses, but
 there can be more. The adjusted p-value for an intersection hypothesis
 is the minimum across groups within that intersection. Finally, the
 adjusted p-value for an individual hypothesis for the whole procedure is
-equal to the max adjusted p-value across intersections containing that
-hypothesis.</p>
+equal to the maximum of adjusted p-values across intersections involving
+that hypothesis.</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">test_results_verbose</span> <span class="op">&lt;-</span></span>
 <span>  <span class="fu"><a href="../reference/testing.html">graph_test_closure</a></span><span class="op">(</span></span>
@@ -229,17 +233,17 @@ hypothesis.</p>
 <span>  <span class="op">)</span></span>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">test_results_verbose</span><span class="op">$</span><span class="va">details</span><span class="op">$</span><span class="va">results</span><span class="op">)</span></span>
-<span><span class="co">#&gt;    H1  H2 H3 H4 H5 H6 adj_p_grp1 adj_p_inter reject_intersection</span></span>
-<span><span class="co">#&gt; 1 0.5 0.5  0  0  0  0      0.026       0.026                   0</span></span>
-<span><span class="co">#&gt; 2 0.5 0.5  0  0  0 NA      0.026       0.026                   0</span></span>
-<span><span class="co">#&gt; 3 0.5 0.5  0  0 NA  0      0.026       0.026                   0</span></span>
-<span><span class="co">#&gt; 4 0.5 0.5  0  0 NA NA      0.026       0.026                   0</span></span>
-<span><span class="co">#&gt; 5 0.5 0.5  0 NA  0  0      0.026       0.026                   0</span></span>
-<span><span class="co">#&gt; 6 0.5 0.5  0 NA  0 NA      0.026       0.026                   0</span></span></code></pre></div>
+<span><span class="co">#&gt;   Intersection  H1  H2 H3 H4 H5 H6 adj_p_grp1 adj_p_inter reject_intersection</span></span>
+<span><span class="co">#&gt; 1       111111 0.5 0.5  0  0  0  0      0.026       0.026               FALSE</span></span>
+<span><span class="co">#&gt; 2       111110 0.5 0.5  0  0  0 NA      0.026       0.026               FALSE</span></span>
+<span><span class="co">#&gt; 3       111101 0.5 0.5  0  0 NA  0      0.026       0.026               FALSE</span></span>
+<span><span class="co">#&gt; 4       111100 0.5 0.5  0  0 NA NA      0.026       0.026               FALSE</span></span>
+<span><span class="co">#&gt; 5       111011 0.5 0.5  0 NA  0  0      0.026       0.026               FALSE</span></span>
+<span><span class="co">#&gt; 6       111010 0.5 0.5  0 NA  0 NA      0.026       0.026               FALSE</span></span></code></pre></div>
 </div>
-<div class="section level3">
-<h3 id="obtain-adjusted-significance-levels">Obtain adjusted significance levels<a class="anchor" aria-label="anchor" href="#obtain-adjusted-significance-levels"></a>
-</h3>
+<div class="section level4">
+<h4 id="obtain-adjusted-significance-levels">Obtain adjusted significance levels<a class="anchor" aria-label="anchor" href="#obtain-adjusted-significance-levels"></a>
+</h4>
 <p>An equivalent way to obtain rejections is via adjusting significance
 levels. A hypothesis is rejected if its p-value is less than or equal to
 its adjusted significance level. One can obtain adjusted significance
@@ -259,30 +263,30 @@ rejected.</p>
 <span>  <span class="op">)</span></span>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">test_results_test_values</span><span class="op">$</span><span class="va">test_values</span><span class="op">$</span><span class="va">results</span><span class="op">)</span></span>
-<span><span class="co">#&gt;    Intersection Hypothesis       Test      p &lt;= Weight * Alpha Inequality_holds</span></span>
-<span><span class="co">#&gt; H1            1         H1 bonferroni 0.0150 &lt;=    0.5 * 0.025            FALSE</span></span>
-<span><span class="co">#&gt; H2            1         H2 bonferroni 0.0130 &lt;=    0.5 * 0.025            FALSE</span></span>
-<span><span class="co">#&gt; H3            1         H3 bonferroni 0.0100 &lt;=    0.0 * 0.025            FALSE</span></span>
-<span><span class="co">#&gt; H4            1         H4 bonferroni 0.0070 &lt;=    0.0 * 0.025            FALSE</span></span>
-<span><span class="co">#&gt; H5            1         H5 bonferroni 0.1000 &lt;=    0.0 * 0.025            FALSE</span></span>
-<span><span class="co">#&gt; H6            1         H6 bonferroni 0.0124 &lt;=    0.0 * 0.025            FALSE</span></span></code></pre></div>
+<span><span class="co">#&gt;   Intersection Hypothesis       Test      p &lt;= Weight * Alpha Inequality_holds</span></span>
+<span><span class="co">#&gt; 1       111111         H1 bonferroni 0.0150 &lt;=    0.5 * 0.025            FALSE</span></span>
+<span><span class="co">#&gt; 2       111111         H2 bonferroni 0.0130 &lt;=    0.5 * 0.025            FALSE</span></span>
+<span><span class="co">#&gt; 3       111111         H3 bonferroni 0.0100 &lt;=    0.0 * 0.025            FALSE</span></span>
+<span><span class="co">#&gt; 4       111111         H4 bonferroni 0.0070 &lt;=    0.0 * 0.025            FALSE</span></span>
+<span><span class="co">#&gt; 5       111111         H5 bonferroni 0.1000 &lt;=    0.0 * 0.025            FALSE</span></span>
+<span><span class="co">#&gt; 6       111111         H6 bonferroni 0.0124 &lt;=    0.0 * 0.025            FALSE</span></span></code></pre></div>
 </div>
 </div>
-<div class="section level2">
-<h2 id="mixed-procedures-for-graphical-approaches">Mixed procedures for graphical approaches<a class="anchor" aria-label="anchor" href="#mixed-procedures-for-graphical-approaches"></a>
-</h2>
+<div class="section level3">
+<h3 id="mixed-procedures-for-graphical-approaches">Mixed procedures for graphical approaches<a class="anchor" aria-label="anchor" href="#mixed-procedures-for-graphical-approaches"></a>
+</h3>
 <p>The framework of graphicalMCP allows a mixture of tests to improve
 the performance from the Bonferroni-based graphical approaches. We can
 group hypotheses into multiple subgroups and perform a separate test for
 every subgroup. Currently, graphicalMCP supports Bonferroni, parametric
-and Simes tests. To connect results from subgroups, Bonferroni tests are
-used. Here, we will show two examples. The first example applies
-parametric tests to primary hypotheses, and the second example applies
+and Simes tests. To connect results from different subgroups of
+hypotheses, Bonferroni tests are used. Here, we will show two examples.
+The first example applies parametric tests to primary hypotheses <span class="citation">(Xi et al. 2017)</span>, and the second example applies
 Simes tests to two subgroups of secondary hypotheses in addition to
 parametric tests to primary hypotheses.</p>
-<div class="section level3">
-<h3 id="parametric-tests-for-primary-hypotheses">Parametric tests for primary hypotheses<a class="anchor" aria-label="anchor" href="#parametric-tests-for-primary-hypotheses"></a>
-</h3>
+<div class="section level4">
+<h4 id="parametric-tests-for-primary-hypotheses">Parametric tests for primary hypotheses<a class="anchor" aria-label="anchor" href="#parametric-tests-for-primary-hypotheses"></a>
+</h4>
 <p>In this example, we assume that the test statistics for primary
 hypotheses follow an asymptotic bivariate normal distribution. Under
 their null hypotheses <span class="math inline">\(H_1\)</span> and <span class="math inline">\(H_2\)</span>, the mean of the distribution is 0.
@@ -313,15 +317,16 @@ H_2\cap H_3\cap H_4\cap H_5\cap H_6\)</span> as <span class="math inline">\(Pr\{
 <p>To implement this procedure, we need to create two subgroups: one for
 <span class="math inline">\(H_1\)</span> and <span class="math inline">\(H_2\)</span>, and one for the rest of the
 hypotheses. For the first subgroup of hypotheses, we apply parametric
-tests; for the second subgroup, we apply Bonferroni tests. Three
-additional inputs are needed to specify the grouping information with
-<code>test_groups</code>, to identify the types of tests for every
-subgroup with <code>test_types</code>, and to provide the correlation
-matrix for parametric tests with <code>test_corr</code>. Assuming a
-correlation of 0.5 between test statistics for primary hypotheses, <span class="math inline">\(H_1\)</span> and <span class="math inline">\(H_2\)</span> are rejected, but no others are
-rejected using the Bonferroni-based graphical approach. This illustrates
-the power improvement of using parametric tests over Bonferroni
-tests.</p>
+tests; for the second subgroup (and its subsets), we apply Bonferroni
+tests. Three additional inputs are needed: to specify the grouping
+information with <code>test_groups</code>, to identify the types of
+tests for every subgroup with <code>test_types</code>, and to provide
+the correlation matrix for parametric tests with <code>test_corr</code>.
+Assume the correlation is 0.5 between test statistics for primary
+hypotheses. The procedure rejects <span class="math inline">\(H_1\)</span> and <span class="math inline">\(H_2\)</span>, but no others. Compared with the
+Bonferroni-based graphical approach which didn’t rejected any
+hypothesis, this illustrates the power improvement of using parametric
+tests over Bonferroni tests.</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">corr_12</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">matrix</a></span><span class="op">(</span><span class="fl">0.5</span>, nrow <span class="op">=</span> <span class="fl">2</span>, ncol <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/diag.html" class="external-link">diag</a></span><span class="op">(</span><span class="va">corr_12</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fl">1</span></span>
@@ -345,40 +350,40 @@ tests.</p>
 <span><span class="co">#&gt;  TRUE  TRUE FALSE FALSE FALSE FALSE</span></span>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">test_results_parametric</span><span class="op">$</span><span class="va">test_values</span><span class="op">$</span><span class="va">results</span><span class="op">)</span></span>
-<span><span class="co">#&gt;    Intersection Hypothesis       Test      p &lt;=      c_value * Weight * Alpha</span></span>
-<span><span class="co">#&gt; H1            1         H1 parametric 0.0150 &lt;= 1.0782936582 *    0.5 * 0.025</span></span>
-<span><span class="co">#&gt; H2            1         H2 parametric 0.0130 &lt;= 1.0782936582 *    0.5 * 0.025</span></span>
-<span><span class="co">#&gt; H3            1         H3 bonferroni 0.0100 &lt;=                   0.0 * 0.025</span></span>
-<span><span class="co">#&gt; H4            1         H4 bonferroni 0.0070 &lt;=                   0.0 * 0.025</span></span>
-<span><span class="co">#&gt; H5            1         H5 bonferroni 0.1000 &lt;=                   0.0 * 0.025</span></span>
-<span><span class="co">#&gt; H6            1         H6 bonferroni 0.0124 &lt;=                   0.0 * 0.025</span></span>
-<span><span class="co">#&gt;    Inequality_holds</span></span>
-<span><span class="co">#&gt; H1            FALSE</span></span>
-<span><span class="co">#&gt; H2             TRUE</span></span>
-<span><span class="co">#&gt; H3            FALSE</span></span>
-<span><span class="co">#&gt; H4            FALSE</span></span>
-<span><span class="co">#&gt; H5            FALSE</span></span>
-<span><span class="co">#&gt; H6            FALSE</span></span></code></pre></div>
+<span><span class="co">#&gt;   Intersection Hypothesis       Test      p &lt;=      c_value * Weight * Alpha</span></span>
+<span><span class="co">#&gt; 1       111111         H1 parametric 0.0150 &lt;= 1.0782936582 *    0.5 * 0.025</span></span>
+<span><span class="co">#&gt; 2       111111         H2 parametric 0.0130 &lt;= 1.0782936582 *    0.5 * 0.025</span></span>
+<span><span class="co">#&gt; 3       111111         H3 bonferroni 0.0100 &lt;=                   0.0 * 0.025</span></span>
+<span><span class="co">#&gt; 4       111111         H4 bonferroni 0.0070 &lt;=                   0.0 * 0.025</span></span>
+<span><span class="co">#&gt; 5       111111         H5 bonferroni 0.1000 &lt;=                   0.0 * 0.025</span></span>
+<span><span class="co">#&gt; 6       111111         H6 bonferroni 0.0124 &lt;=                   0.0 * 0.025</span></span>
+<span><span class="co">#&gt;   Inequality_holds</span></span>
+<span><span class="co">#&gt; 1            FALSE</span></span>
+<span><span class="co">#&gt; 2             TRUE</span></span>
+<span><span class="co">#&gt; 3            FALSE</span></span>
+<span><span class="co">#&gt; 4            FALSE</span></span>
+<span><span class="co">#&gt; 5            FALSE</span></span>
+<span><span class="co">#&gt; 6            FALSE</span></span></code></pre></div>
 </div>
-<div class="section level3">
-<h3 id="parametric-tests-for-primary-hypotheses-and-simes-tests-for-secondary-hypotheses">Parametric tests for primary hypotheses and Simes tests for
+<div class="section level4">
+<h4 id="parametric-tests-for-primary-hypotheses-and-simes-tests-for-secondary-hypotheses">Parametric tests for primary hypotheses and Simes tests for
 secondary hypotheses<a class="anchor" aria-label="anchor" href="#parametric-tests-for-primary-hypotheses-and-simes-tests-for-secondary-hypotheses"></a>
-</h3>
+</h4>
 <p>In addition to using parametric tests for primary hypotheses, there
 are other ways to improve the Bonferroni-based graphical approaches. One
-way is to apply Simes tests to secondary hypotheses. Simes tests improve
-over Bonferroni tests because they may reject an intersection hypothesis
-if all p-values are relatively small, even if they’re larger than
-adjusted significance levels of Bonferroni tests.</p>
-<p>For the intersection hypothesis <span class="math inline">\(H_1\cap
-H_2\cap H_3\cap H_4\cap H_5\cap H_6\)</span>, hypothesis weights are
-0.5, 0.5, 0, 0, 0, and 0, respectively for <span class="math inline">\(H_1,\ldots, H_6\)</span>. The intersection
-hypothesis is rejected by the Bonferroni test if <span class="math inline">\(p_1\leq 0.5\alpha\)</span> or <span class="math inline">\(p_2\leq 0.5\alpha\)</span>. In addition to these
-conditions, the Simes test can also reject the intersection hypothesis
-if both <span class="math inline">\(p_1\)</span> and <span class="math inline">\(p_2\)</span> are less than or equal to <span class="math inline">\(\alpha\)</span>. In order to control the Type I
+way is to apply Simes tests to secondary hypotheses<span class="citation">(Bretz et al. 2011; Lu 2016)</span>. Simes tests
+improve over Bonferroni tests because they may reject an intersection
+hypothesis if all p-values are relatively small, even if they’re larger
+than adjusted significance levels of Bonferroni tests.</p>
+<p>For the intersection hypothesis <span class="math inline">\(H_3\cap
+H_5\)</span>, hypothesis weights are 0.5 and 0.5, respectively for <span class="math inline">\(H_3\)</span> and <span class="math inline">\(H_5\)</span>. The intersection hypothesis is
+rejected by the Bonferroni test if <span class="math inline">\(p_3\leq
+0.5\alpha\)</span> or <span class="math inline">\(p_5\leq
+0.5\alpha\)</span>. In addition to these conditions, the Simes test can
+also reject the intersection hypothesis if both <span class="math inline">\(p_3\)</span> and <span class="math inline">\(p_5\)</span> are less than or equal to <span class="math inline">\(\alpha\)</span>. In order to control the Type I
 error for the Simes test, a distributional requirement is needed, which
-is called <span class="math inline">\(MTP_2\)</span>. In this case, it
-means that the correlation between test statistics for <span class="math inline">\(H_1\)</span> and <span class="math inline">\(H_2\)</span> should be non-negative.</p>
+is called <span class="math inline">\(MTP_2\)</span> <span class="citation">(Sarkar 1998)</span>. In this case, it means that the
+correlation between test statistics for <span class="math inline">\(H_3\)</span> and <span class="math inline">\(H_5\)</span> should be non-negative.</p>
 <p>To illustrate the possibility of using mixed tests in this example,
 we keep parametric tests for primary hypotheses and apply Simes tests
 for secondary hypotheses. There are two sets of secondary hypotheses:
@@ -386,16 +391,18 @@ for secondary hypotheses. There are two sets of secondary hypotheses:
 low dose versus control, and <span class="math inline">\(H_4\)</span>
 and <span class="math inline">\(H_6\)</span> for the secondary
 hypotheses for the high dose versus control. It is believed that the
-correlation between test statistics for <span class="math inline">\(H_3\)</span> and <span class="math inline">\(H_5\)</span> is non-negative and it is a similar
+correlation between test statistics for <span class="math inline">\(H_3\)</span> and <span class="math inline">\(H_5\)</span> is non-negative and it is the same
 case for <span class="math inline">\(H_4\)</span> and <span class="math inline">\(H_6\)</span>. Thus one can apply Simes tests to
 <span class="math inline">\(H_3\)</span> and <span class="math inline">\(H_5\)</span>, and separately to <span class="math inline">\(H_4\)</span> and <span class="math inline">\(H_6\)</span>. Note that this is different from
 applying Simes tests to all <span class="math inline">\(H_3\ldots,H_6\)</span> which requires a stronger
-<span class="math inline">\(MTP^2\)</span> condition.</p>
+<span class="math inline">\(MTP_2\)</span> condition.</p>
 <p>To implement this procedure, we create three subgroups: one for <span class="math inline">\(H_1\)</span> and <span class="math inline">\(H_2\)</span>, one for <span class="math inline">\(H_3\)</span> and <span class="math inline">\(H_5\)</span>, and one for <span class="math inline">\(H_4\)</span> and <span class="math inline">\(H_6\)</span>. For the first subgroup of
 hypotheses, we apply the parametric tests; for the second and the third
-subgroups, we apply separate Simes tests. Assuming a correlation of 0.5
-between test statistics for primary hypotheses, <span class="math inline">\(H_1\)</span>, <span class="math inline">\(H_2\)</span>, <span class="math inline">\(H_4\)</span>, <span class="math inline">\(H_6\)</span>, and <span class="math inline">\(H_3\)</span> are rejected. Compared to the results
-of using the Bonferroni tests for secondary hypotheses, <span class="math inline">\(H_3\)</span>, <span class="math inline">\(H_4\)</span> and <span class="math inline">\(H_6\)</span> are the additional hypotheses
+subgroups, we apply separate Simes tests. Assume the correlation is 0.5
+between test statistics for primary hypotheses. The procedure rejects
+<span class="math inline">\(H_1\)</span>, <span class="math inline">\(H_2\)</span>, <span class="math inline">\(H_4\)</span>, <span class="math inline">\(H_6\)</span>, and <span class="math inline">\(H_3\)</span>. Compared to the results of only
+using parametric tests for primary hypotheses (and Bonferroni tests for
+secondary hypotheses), <span class="math inline">\(H_3\)</span>, <span class="math inline">\(H_4\)</span> and <span class="math inline">\(H_6\)</span> are the additional hypotheses
 rejected because of using Simes tests, showing the power improvement of
 using Simes tests.</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
@@ -405,7 +412,8 @@ using Simes tests.</p>
 <span>    p <span class="op">=</span> <span class="va">p_values</span>, alpha <span class="op">=</span> <span class="fl">0.025</span>,</span>
 <span>    test_groups <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">2</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">3</span>, <span class="fl">5</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">4</span>, <span class="fl">6</span><span class="op">)</span><span class="op">)</span>,</span>
 <span>    test_types <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"parametric"</span>, <span class="st">"simes"</span>, <span class="st">"simes"</span><span class="op">)</span>,</span>
-<span>    test_corr <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">corr_12</span>, <span class="cn">NA</span>, <span class="cn">NA</span><span class="op">)</span></span>
+<span>    test_corr <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">corr_12</span>, <span class="cn">NA</span>, <span class="cn">NA</span><span class="op">)</span>,</span>
+<span>    test_values <span class="op">=</span> <span class="cn">TRUE</span></span>
 <span>  <span class="op">)</span></span>
 <span></span>
 <span><span class="va">test_results_parametric_simes</span><span class="op">$</span><span class="va">outputs</span><span class="op">$</span><span class="va">adjusted_p</span></span>
@@ -413,12 +421,28 @@ using Simes tests.</p>
 <span><span class="co">#&gt; 0.02413846 0.02413846 0.02480008 0.02480000 0.10000000 0.02480008</span></span>
 <span><span class="va">test_results_parametric_simes</span><span class="op">$</span><span class="va">outputs</span><span class="op">$</span><span class="va">rejected</span></span>
 <span><span class="co">#&gt;    H1    H2    H3    H4    H5    H6 </span></span>
-<span><span class="co">#&gt;  TRUE  TRUE  TRUE  TRUE FALSE  TRUE</span></span></code></pre></div>
+<span><span class="co">#&gt;  TRUE  TRUE  TRUE  TRUE FALSE  TRUE</span></span>
+<span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">test_results_parametric_simes</span><span class="op">$</span><span class="va">test_values</span><span class="op">$</span><span class="va">results</span><span class="op">)</span></span>
+<span><span class="co">#&gt;   Intersection Hypothesis       Test      p &lt;=      c_value * Weight * Alpha</span></span>
+<span><span class="co">#&gt; 1       111111         H1 parametric 0.0150 &lt;= 1.0782936582 *    0.5 * 0.025</span></span>
+<span><span class="co">#&gt; 2       111111         H2 parametric 0.0130 &lt;= 1.0782936582 *    0.5 * 0.025</span></span>
+<span><span class="co">#&gt; 3       111111         H3      simes 0.0100 &lt;=                   0.0 * 0.025</span></span>
+<span><span class="co">#&gt; 4       111111         H5      simes 0.1000 &lt;=                   0.0 * 0.025</span></span>
+<span><span class="co">#&gt; 5       111111         H4      simes 0.0070 &lt;=                   0.0 * 0.025</span></span>
+<span><span class="co">#&gt; 6       111111         H6      simes 0.0124 &lt;=                   0.0 * 0.025</span></span>
+<span><span class="co">#&gt;   Inequality_holds</span></span>
+<span><span class="co">#&gt; 1            FALSE</span></span>
+<span><span class="co">#&gt; 2             TRUE</span></span>
+<span><span class="co">#&gt; 3            FALSE</span></span>
+<span><span class="co">#&gt; 4            FALSE</span></span>
+<span><span class="co">#&gt; 5            FALSE</span></span>
+<span><span class="co">#&gt; 6            FALSE</span></span></code></pre></div>
 </div>
 </div>
-<div class="section level2">
-<h2 id="power-calculation">Power calculation<a class="anchor" aria-label="anchor" href="#power-calculation"></a>
-</h2>
+<div class="section level3">
+<h3 id="power-calculation">Power calculation<a class="anchor" aria-label="anchor" href="#power-calculation"></a>
+</h3>
 <p>Given the above graph, the trial team is often interested in the
 power of the trial. For a single null hypothesis, the power is the
 probability to reject the null hypothesis at the significance level
@@ -431,9 +455,9 @@ important to understand the power to reject each hypothesis, given the
 multiplicity adjustment. Sometimes, a team may want to customize
 definitions of power to define success. Thus power calculation is an
 important aspect of trial design.</p>
-<div class="section level3">
-<h3 id="input-marginal-power-for-primary-hypotheses">Input: Marginal power for primary hypotheses<a class="anchor" aria-label="anchor" href="#input-marginal-power-for-primary-hypotheses"></a>
-</h3>
+<div class="section level4">
+<h4 id="input-marginal-power-for-primary-hypotheses">Input: Marginal power for primary hypotheses<a class="anchor" aria-label="anchor" href="#input-marginal-power-for-primary-hypotheses"></a>
+</h4>
 <p>Assume that the primary endpoint is about the occurrence of an
 unfavorable clinical event. To evaluate the treatment effect, the
 proportion of patients with this event is calculated and it is the lower
@@ -475,9 +499,9 @@ illustrated below.</p>
 <span><span class="co">#&gt;        H1        H2 </span></span>
 <span><span class="co">#&gt; 0.8028315 0.8028315</span></span></code></pre></div>
 </div>
-<div class="section level3">
-<h3 id="input-marginal-power-for-secondary-hypotheses">Input: Marginal power for secondary hypotheses<a class="anchor" aria-label="anchor" href="#input-marginal-power-for-secondary-hypotheses"></a>
-</h3>
+<div class="section level4">
+<h4 id="input-marginal-power-for-secondary-hypotheses">Input: Marginal power for secondary hypotheses<a class="anchor" aria-label="anchor" href="#input-marginal-power-for-secondary-hypotheses"></a>
+</h4>
 <p>Assume that the secondary endpoint (SE1) is about the change in total
 medication score from baseline, which is a continuous outcome. Also
 assume that the secondary endpoint (SE2) is about the change in another
@@ -533,9 +557,9 @@ each at the one-sided significance level 0.025.</p>
 <span><span class="co">#&gt;        H5        H6 </span></span>
 <span><span class="co">#&gt; 0.5159678 0.8508384</span></span></code></pre></div>
 </div>
-<div class="section level3">
-<h3 id="input-correlation-structure-to-simulate-test-statistics">Input: Correlation structure to simulate test statistics<a class="anchor" aria-label="anchor" href="#input-correlation-structure-to-simulate-test-statistics"></a>
-</h3>
+<div class="section level4">
+<h4 id="input-correlation-structure-to-simulate-test-statistics">Input: Correlation structure to simulate test statistics<a class="anchor" aria-label="anchor" href="#input-correlation-structure-to-simulate-test-statistics"></a>
+</h4>
 <p>In addition to the marginal power, we also need to make assumptions
 about the joint distribution of test statistics. In this example, we
 assume that they follow a multivariate normal distribution which means
@@ -601,9 +625,9 @@ the product rule.</p>
 <span><span class="co">#&gt; H5 0.50 0.25 0.500 0.0625 1.0000 0.500</span></span>
 <span><span class="co">#&gt; H6 0.25 0.50 0.125 0.5000 0.5000 1.000</span></span></code></pre></div>
 </div>
-<div class="section level3">
-<h3 id="user-defined-success-criteria">User-defined success criteria<a class="anchor" aria-label="anchor" href="#user-defined-success-criteria"></a>
-</h3>
+<div class="section level4">
+<h4 id="user-defined-success-criteria">User-defined success criteria<a class="anchor" aria-label="anchor" href="#user-defined-success-criteria"></a>
+</h4>
 <p>As mentioned earlier, there are multiple versions of “power” when
 there are multiple hypotheses. Commonly used “power” definitions
 include: - Local power: The probability of each hypothesis being
@@ -637,9 +661,9 @@ could customize success criteria to define other versions of
 <span>    <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="op">(</span><span class="va">x</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span> <span class="op">&amp;</span> <span class="va">x</span><span class="op">[</span><span class="fl">3</span><span class="op">]</span> <span class="op">&amp;</span> <span class="va">x</span><span class="op">[</span><span class="fl">5</span><span class="op">]</span><span class="op">)</span> <span class="op">|</span> <span class="op">(</span><span class="va">x</span><span class="op">[</span><span class="fl">2</span><span class="op">]</span> <span class="op">&amp;</span> <span class="va">x</span><span class="op">[</span><span class="fl">4</span><span class="op">]</span> <span class="op">&amp;</span> <span class="va">x</span><span class="op">[</span><span class="fl">6</span><span class="op">]</span><span class="op">)</span></span>
 <span><span class="op">)</span></span></code></pre></div>
 </div>
-<div class="section level3">
-<h3 id="output-calculate-power">Output: Calculate power<a class="anchor" aria-label="anchor" href="#output-calculate-power"></a>
-</h3>
+<div class="section level4">
+<h4 id="output-calculate-power">Output: Calculate power<a class="anchor" aria-label="anchor" href="#output-calculate-power"></a>
+</h4>
 <p>Given the above inputs, we can calculate power via simulation for the
 graphical multiple comparison procedure at one-sided significance level
 <code>alpha = 0.025</code> using <code>sim_n = 1e5</code> simulations
@@ -725,7 +749,7 @@ The precision of numeric values (i.e., the number of decimal places)
 with the default setting of <code>precision = 6</code></p>
 <div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">1234</span><span class="op">)</span></span>
-<span><span class="va">verbose_output_parametric_simes</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/graph_calculate_power.html">graph_calculate_power</a></span><span class="op">(</span></span>
+<span><span class="va">power_verbose_output_parametric_simes</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/graph_calculate_power.html">graph_calculate_power</a></span><span class="op">(</span></span>
 <span>  <span class="va">g</span>,</span>
 <span>  alpha <span class="op">=</span> <span class="fl">0.025</span>,</span>
 <span>  sim_corr <span class="op">=</span> <span class="va">corr</span>,</span>
@@ -742,95 +766,31 @@ with the default setting of <code>precision = 6</code></p>
 <span>  verbose <span class="op">=</span> <span class="cn">TRUE</span></span>
 <span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">verbose_output_parametric_simes</span><span class="op">)</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Test parameters ($inputs) ------------------------------------------------------</span></span>
-<span><span class="co">#&gt;   Initial graph</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;   --- Hypothesis weights ---</span></span>
-<span><span class="co">#&gt;   H1: 0.5</span></span>
-<span><span class="co">#&gt;   H2: 0.5</span></span>
-<span><span class="co">#&gt;   H3: 0.0</span></span>
-<span><span class="co">#&gt;   H4: 0.0</span></span>
-<span><span class="co">#&gt;   H5: 0.0</span></span>
-<span><span class="co">#&gt;   H6: 0.0</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;   --- Transition weights ---</span></span>
-<span><span class="co">#&gt;           H1      H2      H3      H4      H5      H6</span></span>
-<span><span class="co">#&gt;   H1 0.00000 0.50000 0.25000 0.00000 0.25000 0.00000</span></span>
-<span><span class="co">#&gt;   H2 0.50000 0.00000 0.00000 0.25000 0.00000 0.25000</span></span>
-<span><span class="co">#&gt;   H3 0.00000 0.00000 0.00000 0.00000 1.00000 0.00000</span></span>
-<span><span class="co">#&gt;   H4 0.00001 0.00000 0.00000 0.00000 0.00000 0.99999</span></span>
-<span><span class="co">#&gt;   H5 0.00000 0.00001 0.99999 0.00000 0.00000 0.00000</span></span>
-<span><span class="co">#&gt;   H6 0.00000 0.00000 0.00000 1.00000 0.00000 0.00000</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;   Alpha = 0.025</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;   Parametric testing correlation:     H1  H2</span></span>
-<span><span class="co">#&gt;                                   H1 1.0 0.5</span></span>
-<span><span class="co">#&gt;                                   H2 0.5 1.0</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;   Test types</span></span>
-<span><span class="co">#&gt;   parametric: (H1, H2)</span></span>
-<span><span class="co">#&gt;        simes: (H3, H5)</span></span>
-<span><span class="co">#&gt;        simes: (H4, H6)</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Simulation parameters ($inputs) ------------------------------------------------</span></span>
-<span><span class="co">#&gt;   Testing 100,000 simulations with multivariate normal params:</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;                       H1     H2     H3     H4     H5     H6</span></span>
-<span><span class="co">#&gt;   Marginal power: 0.8028 0.8028 0.7054 0.9015 0.5160 0.8508</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;   Correlation:        H1     H2     H3     H4     H5     H6</span></span>
-<span><span class="co">#&gt;                H1 1.0000 0.5000 0.5000 0.2500 0.5000 0.2500</span></span>
-<span><span class="co">#&gt;                H2 0.5000 1.0000 0.2500 0.5000 0.2500 0.5000</span></span>
-<span><span class="co">#&gt;                H3 0.5000 0.2500 1.0000 0.5000 0.5000 0.1250</span></span>
-<span><span class="co">#&gt;                H4 0.2500 0.5000 0.5000 1.0000 0.0625 0.5000</span></span>
-<span><span class="co">#&gt;                H5 0.5000 0.2500 0.5000 0.0625 1.0000 0.5000</span></span>
-<span><span class="co">#&gt;                H6 0.2500 0.5000 0.1250 0.5000 0.5000 1.0000</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Power calculation ($power) -----------------------------------------------------</span></span>
-<span><span class="co">#&gt;                                   H1     H2     H3     H4     H5     H6</span></span>
-<span><span class="co">#&gt;                  Local power: 0.7644 0.7566 0.5209 0.6730 0.4023 0.6329</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;   Expected no. of rejections: 3.75</span></span>
-<span><span class="co">#&gt;    Power to reject 1 or more: 0.8628</span></span>
-<span><span class="co">#&gt;          Power to reject all: 0.3254</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;              Success measure  Power</span></span>
-<span><span class="co">#&gt;                           H1 0.7644</span></span>
-<span><span class="co">#&gt;   Expected no. of rejections 3.7501</span></span>
-<span><span class="co">#&gt;                     AtLeast1 0.8628</span></span>
-<span><span class="co">#&gt;                          All 0.3254</span></span>
-<span><span class="co">#&gt;                      H1andH2 0.6582</span></span>
-<span><span class="co">#&gt;                              0.6332</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Simulation details ($details) --------------------------------------------------</span></span>
-<span><span class="co">#&gt;     p_sim_H1  p_sim_H2  p_sim_H3  p_sim_H4  p_sim_H5  p_sim_H6 rej_H1 rej_H2</span></span>
-<span><span class="co">#&gt;    2.365e-02 6.962e-03 3.835e-03 6.156e-02 3.403e-03 1.842e-03  FALSE   TRUE</span></span>
-<span><span class="co">#&gt;    3.670e-02 4.681e-02 6.858e-02 2.848e-02 1.496e-01 5.521e-02  FALSE  FALSE</span></span>
-<span><span class="co">#&gt;    1.575e-02 6.544e-03 1.153e-03 7.655e-04 8.362e-02 2.553e-02   TRUE   TRUE</span></span>
-<span><span class="co">#&gt;    5.337e-03 8.700e-07 9.953e-03 2.429e-04 3.699e-02 1.346e-04   TRUE   TRUE</span></span>
-<span><span class="co">#&gt;    3.427e-02 1.789e-01 6.203e-03 3.059e-02 4.616e-02 6.661e-02  FALSE  FALSE</span></span>
-<span><span class="co">#&gt;    1.114e-03 1.784e-02 6.084e-02 8.707e-03 3.865e-01 8.674e-02   TRUE   TRUE</span></span>
-<span><span class="co">#&gt;    2.541e-01 2.101e-01 2.617e-02 2.774e-02 9.249e-03 2.977e-02  FALSE  FALSE</span></span>
-<span><span class="co">#&gt;    9.081e-02 4.433e-02 1.904e-01 4.188e-02 3.997e-01 1.097e-01  FALSE  FALSE</span></span>
-<span><span class="co">#&gt;    7.396e-02 4.728e-02 3.779e-01 2.962e-02 4.447e-01 6.206e-02  FALSE  FALSE</span></span>
-<span><span class="co">#&gt;    3.354e-04 1.049e-03 1.247e-05 3.230e-03 1.601e-04 1.146e-02   TRUE   TRUE</span></span>
-<span><span class="co">#&gt;    rej_H3 rej_H4 rej_H5 rej_H6</span></span>
-<span><span class="co">#&gt;     FALSE  FALSE  FALSE   TRUE</span></span>
-<span><span class="co">#&gt;     FALSE  FALSE  FALSE  FALSE</span></span>
-<span><span class="co">#&gt;      TRUE   TRUE  FALSE  FALSE</span></span>
-<span><span class="co">#&gt;      TRUE   TRUE  FALSE   TRUE</span></span>
-<span><span class="co">#&gt;     FALSE  FALSE  FALSE  FALSE</span></span>
-<span><span class="co">#&gt;     FALSE  FALSE  FALSE  FALSE</span></span>
-<span><span class="co">#&gt;     FALSE  FALSE  FALSE  FALSE</span></span>
-<span><span class="co">#&gt;     FALSE  FALSE  FALSE  FALSE</span></span>
-<span><span class="co">#&gt;     FALSE  FALSE  FALSE  FALSE</span></span>
-<span><span class="co">#&gt;      TRUE   TRUE   TRUE   TRUE</span></span>
-<span><span class="co">#&gt;   ... (Use `print(x, rows = &lt;nn&gt;)` for more)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">power_verbose_output_parametric_simes</span><span class="op">$</span><span class="va">details</span><span class="op">$</span><span class="va">p_sim</span>, <span class="fl">10</span><span class="op">)</span></span>
+<span><span class="co">#&gt;                 H1           H2           H3           H4           H5</span></span>
+<span><span class="co">#&gt;  [1,] 0.0236514114 6.962444e-03 3.835101e-03 0.0615622415 0.0034034237</span></span>
+<span><span class="co">#&gt;  [2,] 0.0367030430 4.681135e-02 6.857853e-02 0.0284812435 0.1496042440</span></span>
+<span><span class="co">#&gt;  [3,] 0.0157541925 6.543826e-03 1.152738e-03 0.0007655046 0.0836186744</span></span>
+<span><span class="co">#&gt;  [4,] 0.0053369856 8.699959e-07 9.952719e-03 0.0002429371 0.0369937655</span></span>
+<span><span class="co">#&gt;  [5,] 0.0342665326 1.788794e-01 6.202961e-03 0.0305855529 0.0461642736</span></span>
+<span><span class="co">#&gt;  [6,] 0.0011139852 1.783703e-02 6.083855e-02 0.0087065723 0.3865009844</span></span>
+<span><span class="co">#&gt;  [7,] 0.2540774514 2.101193e-01 2.616673e-02 0.0277425681 0.0092489689</span></span>
+<span><span class="co">#&gt;  [8,] 0.0908135583 4.433230e-02 1.903718e-01 0.0418782572 0.3996511810</span></span>
+<span><span class="co">#&gt;  [9,] 0.0739568465 4.728371e-02 3.778643e-01 0.0296172396 0.4446759145</span></span>
+<span><span class="co">#&gt; [10,] 0.0003353917 1.048743e-03 1.246528e-05 0.0032298980 0.0001601294</span></span>
+<span><span class="co">#&gt;                 H6</span></span>
+<span><span class="co">#&gt;  [1,] 0.0018417304</span></span>
+<span><span class="co">#&gt;  [2,] 0.0552141940</span></span>
+<span><span class="co">#&gt;  [3,] 0.0255279965</span></span>
+<span><span class="co">#&gt;  [4,] 0.0001345536</span></span>
+<span><span class="co">#&gt;  [5,] 0.0666051161</span></span>
+<span><span class="co">#&gt;  [6,] 0.0867387423</span></span>
+<span><span class="co">#&gt;  [7,] 0.0297658510</span></span>
+<span><span class="co">#&gt;  [8,] 0.1097032475</span></span>
+<span><span class="co">#&gt;  [9,] 0.0620564532</span></span>
+<span><span class="co">#&gt; [10,] 0.0114581872</span></span>
 <span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">verbose_output_parametric_simes</span>,</span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">power_verbose_output_parametric_simes</span>,</span>
 <span>  indent <span class="op">=</span> <span class="fl">4</span>,</span>
 <span>  precision <span class="op">=</span> <span class="fl">6</span></span>
 <span><span class="op">)</span></span>
@@ -920,20 +880,45 @@ with the default setting of <code>precision = 6</code></p>
 <span><span class="co">#&gt;       FALSE  FALSE  FALSE  FALSE  FALSE</span></span>
 <span><span class="co">#&gt;        TRUE   TRUE   TRUE   TRUE   TRUE</span></span>
 <span><span class="co">#&gt;     ... (Use `print(x, rows = &lt;nn&gt;)` for more)</span></span></code></pre></div>
+</div>
+</div>
+</div>
+<div class="section level2">
+<h2 class="unnumbered" id="reference">Reference<a class="anchor" aria-label="anchor" href="#reference"></a>
+</h2>
 <div id="refs" class="references csl-bib-body hanging-indent">
-<div id="ref-bretz-2011-power" class="csl-entry">
+<div id="ref-bretz-2009-graphical" class="csl-entry">
+Bretz, Frank, Willi Maurer, Werner Branath, and Martin Posch. 2009.
+<span>“A Graphical Approach to Sequentially Rejective Multiple Test
+Procedures.”</span> <em>Statistics in Medicine</em> 53 (4): 586–604. <a href="https://onlinelibrary.wiley.com/doi/abs/10.1002/sim.3495" class="external-link">https://onlinelibrary.wiley.com/doi/abs/10.1002/sim.3495</a>.
+</div>
+<div id="ref-bretz-2011-test" class="csl-entry">
 Bretz, Frank, Willi Maurer, and Gerhard Hommel. 2011. <span>“Test and
 Power Considerations for Multiple Endpoint Analyses Using Sequentially
 Rejective Graphical Procedures.”</span> <em>Statistics in Medicine</em>
 30 (13): 1489–1501. <a href="https://onlinelibrary.wiley.com/doi/abs/10.1002/sim.3988" class="external-link">https://onlinelibrary.wiley.com/doi/abs/10.1002/sim.3988</a>.
 </div>
-<div id="ref-bretz-2011-tests" class="csl-entry">
+<div id="ref-bretz-2011-graphical" class="csl-entry">
 Bretz, Frank, Martin Posch, Ekkehard Glimm, Florian Klinglmueller, Willi
 Maurer, and Kornelius Rohmeyer. 2011. <span>“Graphical Approaches for
 Multiple Comparison Procedures Using Weighted Bonferroni, Simes, or
 Parametric Tests.”</span> <em>Biometrical Journal</em> 53 (6): 894–913.
 <a href="https://onlinelibrary.wiley.com/doi/10.1002/bimj.201000239" class="external-link">https://onlinelibrary.wiley.com/doi/10.1002/bimj.201000239</a>.
 </div>
+<div id="ref-lu-2016-graphical" class="csl-entry">
+Lu, Kaifeng. 2016. <span>“Graphical Approaches Using a Bonferroni
+Mixture of Weighted Simes Tests.”</span> <em>Statistics in Medicine</em>
+35 (22): 4041–55. <a href="https://onlinelibrary.wiley.com/doi/10.1002/sim.6985" class="external-link">https://onlinelibrary.wiley.com/doi/10.1002/sim.6985</a>.
+</div>
+<div id="ref-sarkar-1998-some" class="csl-entry">
+Sarkar, Sanat K. 1998. <span>“Some Probability Inequalities for Ordered
+MTP2 Random Variables: A Proof of the Simes Conjecture.”</span>
+<em>Annals of Statistics</em> 26 (2): 494–504. <a href="https://www.jstor.org/stable/120038" class="external-link">https://www.jstor.org/stable/120038</a>.
+</div>
+<div id="ref-xi-2017-unified" class="csl-entry">
+Xi, Dong, Ekkehard Glimm, Willi Maurer, and Frank Bretz. 2017. <span>“A
+Unified Framework for Weighted Parametric Multiple Test
+Procedures.”</span> <em>Biometrical Journal</em> 59 (5): 918–31. <a href="https://onlinelibrary.wiley.com/doi/10.1002/bimj.201600233" class="external-link">https://onlinelibrary.wiley.com/doi/10.1002/bimj.201600233</a>.
 </div>
 </div>
 </div>

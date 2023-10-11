@@ -101,9 +101,9 @@
     
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://urban-sniffle-p11zlpj.pages.github.io/">graphicalMCP</a></span><span class="op">)</span></span></code></pre></div>
-<div class="section level3">
-<h3 id="introduction">Introduction<a class="anchor" aria-label="anchor" href="#introduction"></a>
-</h3>
+<div class="section level2">
+<h2 id="introduction">Introduction<a class="anchor" aria-label="anchor" href="#introduction"></a>
+</h2>
 <p>In confirmatory clinical trials, regulatory guidelines mandate the
 strong control of the family-wise error rate at a prespecified level
 <span class="math inline">\(\alpha\)</span>. Many multiple comparison
@@ -111,9 +111,10 @@ procedures (MCPs) have been proposed for this purpose. The graphical
 approaches are a general framework that include many common MCPs as
 special cases. In this vignette, we illustrate how to use graphicalMCP
 to perform some common MCPs.</p>
-<p>In graphical approaches to test <span class="math inline">\(m\)</span> hypotheses, each hypothesis <span class="math inline">\(H_i\)</span> receives a weight <span class="math inline">\(0\leq w_i\leq 1\)</span> (called hypothesis
-weight), where <span class="math inline">\(\sum_{i=1}^{m}w_i\leq
-1\)</span>. From <span class="math inline">\(H_i\)</span> to <span class="math inline">\(H_j\)</span>, there could be a directed and
+<p>To test <span class="math inline">\(m\)</span> hypotheses using a
+graphical MCP, each hypothesis <span class="math inline">\(H_i\)</span>
+receives a weight <span class="math inline">\(0\leq w_i\leq 1\)</span>
+(called hypothesis weight), where <span class="math inline">\(\sum_{i=1}^{m}w_i\leq 1\)</span>. From <span class="math inline">\(H_i\)</span> to <span class="math inline">\(H_j\)</span>, there could be a directed and
 weighted edge <span class="math inline">\(0\leq g_{ij}\leq 1\)</span>,
 which means that when <span class="math inline">\(H_i\)</span> is
 rejected, its hypothesis weight will be propagated (or transferred) to
@@ -136,8 +137,9 @@ hypothesis.</p>
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">1234</span><span class="op">)</span></span>
 <span><span class="va">alpha</span> <span class="op">&lt;-</span> <span class="fl">0.025</span></span>
 <span><span class="va">m</span> <span class="op">&lt;-</span> <span class="fl">3</span></span>
-<span><span class="va">transitions</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">matrix</a></span><span class="op">(</span><span class="fl">0</span>, <span class="va">m</span>, <span class="va">m</span><span class="op">)</span></span>
-<span><span class="va">bonferroni_graph</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/graph_create.html">graph_create</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="fl">1</span> <span class="op">/</span> <span class="va">m</span>, <span class="va">m</span><span class="op">)</span>, <span class="va">transitions</span><span class="op">)</span></span>
+<span><span class="va">bonferroni_graph</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/example-graphs.html">bonferroni</a></span><span class="op">(</span><span class="va">m</span><span class="op">)</span></span>
+<span><span class="co"># transitions &lt;- matrix(0, m, m)</span></span>
+<span><span class="co"># bonferroni_graph &lt;- graph_create(rep(1 / m, m), transitions)</span></span>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span></span>
 <span>  <span class="va">bonferroni_graph</span>,</span>
@@ -167,16 +169,17 @@ hypothesis.</p>
 <h3 id="holm-procedure">Holm Procedure<a class="anchor" aria-label="anchor" href="#holm-procedure"></a>
 </h3>
 <p>Holm (or Bonferroni-Holm) procedures improve over Bonferroni tests by
-allowing propagation. In other words, transition weights between
-hypotheses may not be zero. So it is uniformly more powerful than
-Bonferroni tests.</p>
+allowing propagation <span class="citation">(Holm 1979)</span>. In other
+words, transition weights between hypotheses may not be zero. So it is
+uniformly more powerful than Bonferroni tests.</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">1234</span><span class="op">)</span></span>
 <span><span class="va">alpha</span> <span class="op">&lt;-</span> <span class="fl">0.025</span></span>
 <span><span class="va">m</span> <span class="op">&lt;-</span> <span class="fl">3</span></span>
-<span><span class="va">transitions</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">matrix</a></span><span class="op">(</span><span class="fl">1</span> <span class="op">/</span> <span class="op">(</span><span class="va">m</span> <span class="op">-</span> <span class="fl">1</span><span class="op">)</span>, <span class="va">m</span>, <span class="va">m</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/diag.html" class="external-link">diag</a></span><span class="op">(</span><span class="va">transitions</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fl">0</span></span>
-<span><span class="va">holm_graph</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/graph_create.html">graph_create</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="fl">1</span> <span class="op">/</span> <span class="va">m</span>, <span class="va">m</span><span class="op">)</span>, <span class="va">transitions</span><span class="op">)</span></span>
+<span><span class="va">holm_graph</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/example-graphs.html">bonferroni_holm</a></span><span class="op">(</span><span class="va">m</span><span class="op">)</span></span>
+<span><span class="co"># transitions &lt;- matrix(1 / (m - 1), m, m)</span></span>
+<span><span class="co"># diag(transitions) &lt;- 0</span></span>
+<span><span class="co"># holm_graph &lt;- graph_create(rep(1 / m, m), transitions)</span></span>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">holm_graph</span>,</span>
 <span>  layout <span class="op">=</span> <span class="fu">igraph</span><span class="fu">::</span><span class="fu"><a href="https://r.igraph.org/reference/layout_in_circle.html" class="external-link">layout_in_circle</a></span><span class="op">(</span></span>
@@ -200,27 +203,30 @@ Bonferroni tests.</p>
 <h3 id="fixed-sequence-procedure">Fixed sequence procedure<a class="anchor" aria-label="anchor" href="#fixed-sequence-procedure"></a>
 </h3>
 <p>Fixed sequence (or hierarchical) procedures pre-specify an order of
-testing. For example, the procedure will test <span class="math inline">\(H_1\)</span> first. If it is rejected, it will
-test <span class="math inline">\(H_2\)</span>; otherwise the testing
-stops. If <span class="math inline">\(H_2\)</span> is rejected, it will
-test <span class="math inline">\(H_3\)</span>; otherwise the testing
-stops. For each hypothesis, it will be tested at the full <span class="math inline">\(\alpha\)</span> level, when it can be tested.</p>
+testing [<span class="citation">Maurer, Hothorn, and Lehmacher
+(1995)</span>;westfall-2001-optimally]. For example, the procedure will
+test <span class="math inline">\(H_1\)</span> first. If it is rejected,
+it will test <span class="math inline">\(H_2\)</span>; otherwise the
+testing stops. If <span class="math inline">\(H_2\)</span> is rejected,
+it will test <span class="math inline">\(H_3\)</span>; otherwise the
+testing stops. For each hypothesis, it will be tested at the full <span class="math inline">\(\alpha\)</span> level, when it can be tested.</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">1234</span><span class="op">)</span></span>
 <span><span class="va">alpha</span> <span class="op">&lt;-</span> <span class="fl">0.025</span></span>
 <span><span class="va">m</span> <span class="op">&lt;-</span> <span class="fl">3</span></span>
+<span><span class="va">fixed_sequence_graph</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/example-graphs.html">fixed_sequence</a></span><span class="op">(</span><span class="va">m</span><span class="op">)</span></span>
+<span><span class="co"># transitions &lt;- rbind(</span></span>
+<span><span class="co">#   c(0, 1, 0),</span></span>
+<span><span class="co">#   c(0, 0, 1),</span></span>
+<span><span class="co">#   c(0, 0, 0)</span></span>
+<span><span class="co"># )</span></span>
+<span><span class="co"># fixed_sequence_graph &lt;- graph_create(c(1, 0, 0), transitions)</span></span>
 <span></span>
-<span><span class="va">transitions</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/cbind.html" class="external-link">rbind</a></span><span class="op">(</span></span>
-<span>  <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">1</span>, <span class="fl">0</span><span class="op">)</span>,</span>
-<span>  <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">0</span>, <span class="fl">1</span><span class="op">)</span>,</span>
-<span>  <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">0</span>, <span class="fl">0</span><span class="op">)</span></span>
-<span><span class="op">)</span></span>
-<span></span>
-<span><span class="va">fixed_sequence_graph</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/graph_create.html">graph_create</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">0</span>, <span class="fl">0</span><span class="op">)</span>, <span class="va">transitions</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">fixed_sequence_graph</span>, nrow <span class="op">=</span> <span class="fl">1</span>, asp <span class="op">=</span> <span class="fl">.05</span>, vertex.size <span class="op">=</span> <span class="fl">40</span><span class="op">)</span></span></code></pre></div>
 <p><img src="graph-examples_files/figure-html/fixed-sequence-1-1.png" width="432" style="display: block; margin: auto;"></p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">p_values</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/Uniform.html" class="external-link">runif</a></span><span class="op">(</span><span class="va">m</span>, <span class="fl">0</span>, <span class="va">alpha</span><span class="op">)</span></span>
+<code class="sourceCode R"><span></span>
+<span><span class="va">p_values</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/Uniform.html" class="external-link">runif</a></span><span class="op">(</span><span class="va">m</span>, <span class="fl">0</span>, <span class="va">alpha</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">test_results</span> <span class="op">&lt;-</span></span>
 <span>  <span class="fu"><a href="../reference/testing.html">graph_test_shortcut</a></span><span class="op">(</span></span>
@@ -238,13 +244,12 @@ stops. For each hypothesis, it will be tested at the full <span class="math inli
 </h3>
 <p>Fallback procedures have one-way propagation (like fixed sequence
 procedures) but allow hypotheses to be tested at different significance
-levels.</p>
+levels <span class="citation">(Wiens 2003)</span>.</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">1234</span><span class="op">)</span></span>
 <span><span class="va">alpha</span> <span class="op">&lt;-</span> <span class="fl">0.025</span></span>
 <span><span class="va">m</span> <span class="op">&lt;-</span> <span class="fl">3</span></span>
 <span></span>
-<span><span class="co"># Wiens (2003)</span></span>
 <span><span class="va">transitions</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/cbind.html" class="external-link">rbind</a></span><span class="op">(</span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">1</span>, <span class="fl">0</span><span class="op">)</span>,</span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">0</span>, <span class="fl">1</span><span class="op">)</span>,</span>
@@ -252,10 +257,12 @@ levels.</p>
 <span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">fallback_graph_2003</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/graph_create.html">graph_create</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="fl">1</span> <span class="op">/</span> <span class="va">m</span>, <span class="va">m</span><span class="op">)</span>, <span class="va">transitions</span><span class="op">)</span></span>
+<span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">fallback_graph_2003</span>, nrow <span class="op">=</span> <span class="fl">1</span>, asp <span class="op">=</span> <span class="fl">.05</span>, vertex.size <span class="op">=</span> <span class="fl">40</span><span class="op">)</span></span></code></pre></div>
-<p><img src="graph-examples_files/figure-html/fixed-sequence-1.png" width="432" style="display: block; margin: auto;"></p>
+<p><img src="graph-examples_files/figure-html/fallback-1.png" width="432" style="display: block; margin: auto;"></p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">p_values</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/Uniform.html" class="external-link">runif</a></span><span class="op">(</span><span class="va">m</span>, <span class="fl">0</span>, <span class="va">alpha</span><span class="op">)</span></span>
+<code class="sourceCode R"><span></span>
+<span><span class="va">p_values</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/Uniform.html" class="external-link">runif</a></span><span class="op">(</span><span class="va">m</span>, <span class="fl">0</span>, <span class="va">alpha</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">test_results</span> <span class="op">&lt;-</span></span>
 <span>  <span class="fu"><a href="../reference/testing.html">graph_test_shortcut</a></span><span class="op">(</span></span>
@@ -269,19 +276,20 @@ levels.</p>
 <span><span class="co">#&gt; TRUE TRUE TRUE</span></span></code></pre></div>
 <p>Further they can be improved to allow propagation from later
 hypotheses to earlier hypotheses, because it is possible that a later
-hypothesis is rejected before an earlier hypothesis can be rejected.</p>
+hypothesis is rejected before an earlier hypothesis can be rejected
+<span class="citation">(Wiens and Dmitrienko 2005; Hommel and Bretz
+2008)</span>.</p>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">1234</span><span class="op">)</span></span>
 <span><span class="va">alpha</span> <span class="op">&lt;-</span> <span class="fl">0.025</span></span>
 <span><span class="va">m</span> <span class="op">&lt;-</span> <span class="fl">3</span></span>
 <span></span>
-<span><span class="co"># Wiens and Dmitrienko (2005)</span></span>
 <span><span class="va">transitions</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/cbind.html" class="external-link">rbind</a></span><span class="op">(</span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">1</span>, <span class="fl">0</span><span class="op">)</span>,</span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">0</span>, <span class="fl">1</span><span class="op">)</span>,</span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.5</span>, <span class="fl">0.5</span>, <span class="fl">0</span><span class="op">)</span></span>
 <span><span class="op">)</span></span>
-<span></span>
+<span><span class="co"># Wiens and Dmitrienko (2005)</span></span>
 <span><span class="va">fallback_graph_2005</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/graph_create.html">graph_create</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="fl">1</span> <span class="op">/</span> <span class="va">m</span>, <span class="va">m</span><span class="op">)</span>, <span class="va">transitions</span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span></span>
@@ -291,10 +299,9 @@ hypothesis is rejected before an earlier hypothesis can be rejected.</p>
 <span>  vertex.size <span class="op">=</span> <span class="fl">40</span>,</span>
 <span>  edge_curves <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"pairs"</span> <span class="op">=</span> <span class="fl">7</span>, <span class="st">"H3|H1"</span> <span class="op">=</span> <span class="op">-</span><span class="fl">10</span><span class="op">)</span></span>
 <span><span class="op">)</span></span></code></pre></div>
-<p><img src="graph-examples_files/figure-html/fixed-sequence-improved-1.png" width="432" style="display: block; margin: auto;"></p>
+<p><img src="graph-examples_files/figure-html/fallback-improved-1.png" width="432" style="display: block; margin: auto;"></p>
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span></span>
-<span><span class="co"># Hommel and Bretz (2008)</span></span>
 <span><span class="va">epsilon</span> <span class="op">&lt;-</span> <span class="fl">0.0001</span></span>
 <span></span>
 <span><span class="va">transitions</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/cbind.html" class="external-link">rbind</a></span><span class="op">(</span></span>
@@ -302,7 +309,7 @@ hypothesis is rejected before an earlier hypothesis can be rejected.</p>
 <span>  <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span> <span class="op">-</span> <span class="va">epsilon</span>, <span class="fl">0</span>, <span class="va">epsilon</span><span class="op">)</span>,</span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">0</span>, <span class="fl">0</span><span class="op">)</span></span>
 <span><span class="op">)</span></span>
-<span></span>
+<span><span class="co"># Hommel and Bretz (2008)</span></span>
 <span><span class="va">fallback_graph_2008</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/graph_create.html">graph_create</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="fl">1</span> <span class="op">/</span> <span class="va">m</span>, <span class="va">m</span><span class="op">)</span>, <span class="va">transitions</span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span></span>
@@ -313,7 +320,7 @@ hypothesis is rejected before an earlier hypothesis can be rejected.</p>
 <span>  edge_curves <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"pairs"</span> <span class="op">=</span> <span class="fl">7</span>, <span class="st">"H3|H1"</span> <span class="op">=</span> <span class="op">-</span><span class="fl">10</span><span class="op">)</span>,</span>
 <span>  vertex.size <span class="op">=</span> <span class="fl">40</span></span>
 <span><span class="op">)</span></span></code></pre></div>
-<p><img src="graph-examples_files/figure-html/fixed-sequence-improved-2.png" width="432" style="display: block; margin: auto;"></p>
+<p><img src="graph-examples_files/figure-html/fallback-improved-2.png" width="432" style="display: block; margin: auto;"></p>
 <div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span></span>
 <span><span class="va">p_values</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/Uniform.html" class="external-link">runif</a></span><span class="op">(</span><span class="va">m</span>, <span class="fl">0</span>, <span class="va">alpha</span><span class="op">)</span></span>
@@ -388,9 +395,9 @@ than the smallest p-value observed.</p>
 <div class="section level3">
 <h3 id="parallel-gatekeeping-procedure">Parallel gatekeeping procedure<a class="anchor" aria-label="anchor" href="#parallel-gatekeeping-procedure"></a>
 </h3>
-<p>Parallel gatekeeping procedures also involves multiple ordered
+<p>Parallel gatekeeping procedures also involve multiple ordered
 families of hypotheses, where any null hypotheses of a family of
-hypotheses must be rejected before proceeding in the test sequence. The
+hypotheses must be rejected before proceeding in the test sequence <span class="citation">(Dmitrienko, Offen, and Westfall 2003)</span>. The
 example below considers a primary family consisting of two hypotheses
 <span class="math inline">\(H_1\)</span> and <span class="math inline">\(H_2\)</span> and a secondary family consisting of
 two hypotheses <span class="math inline">\(H_3\)</span> and <span class="math inline">\(H_4\)</span>. In the primary family, the
@@ -431,7 +438,8 @@ otherwise <span class="math inline">\(H_3\)</span> and <span class="math inline"
 <span class="math inline">\(\varepsilon\)</span> edges from secondary
 hypotheses to primary hypotheses, because it is possible that both
 secondary hypotheses are rejected but there is still a remaining primary
-hypothesis not rejected.</p>
+hypothesis not rejected <span class="citation">(Bretz et al.
+2009)</span>.</p>
 <div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">1234</span><span class="op">)</span></span>
 <span><span class="va">alpha</span> <span class="op">&lt;-</span> <span class="fl">0.025</span></span>
@@ -478,23 +486,21 @@ and <span class="math inline">\(H_4\)</span> receive the hypothesis
 weight of 0. A secondary hypothesis <span class="math inline">\(H_3
 (H_4)\)</span> can be tested only if the corresponding primary
 hypothesis <span class="math inline">\(H_1 (H_2)\)</span> has been
-rejected. This represents the successive relationships between <span class="math inline">\(H_1\)</span> and <span class="math inline">\(H_3\)</span>, and <span class="math inline">\(H_2\)</span> and <span class="math inline">\(H_4\)</span>, respectively. If both <span class="math inline">\(H_1\)</span> and <span class="math inline">\(H_3\)</span> are rejected, their hypothesis
+rejected. This represents the successive relationships between <span class="math inline">\(H_1\)</span> and <span class="math inline">\(H_3\)</span>, and <span class="math inline">\(H_2\)</span> and <span class="math inline">\(H_4\)</span>, respectively <span class="citation">(Maurer, Glimm, and Bretz 2011)</span>. If both <span class="math inline">\(H_1\)</span> and <span class="math inline">\(H_3\)</span> are rejected, their hypothesis
 weights are propagated to <span class="math inline">\(H_2\)</span> and
 <span class="math inline">\(H_4\)</span>, and vice versa.</p>
 <div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">1234</span><span class="op">)</span></span>
 <span><span class="va">alpha</span> <span class="op">&lt;-</span> <span class="fl">0.025</span></span>
 <span><span class="va">m</span> <span class="op">&lt;-</span> <span class="fl">4</span></span>
-<span></span>
-<span><span class="va">transitions</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/cbind.html" class="external-link">rbind</a></span><span class="op">(</span></span>
-<span>  <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">0</span>, <span class="fl">1</span>, <span class="fl">0</span><span class="op">)</span>,</span>
-<span>  <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">0</span>, <span class="fl">0</span>, <span class="fl">1</span><span class="op">)</span>,</span>
-<span>  <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">1</span>, <span class="fl">0</span>, <span class="fl">0</span><span class="op">)</span>,</span>
-<span>  <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">0</span>, <span class="fl">0</span>, <span class="fl">0</span><span class="op">)</span></span>
-<span><span class="op">)</span></span>
-<span></span>
-<span><span class="co">#  Maurer et al. (2011)</span></span>
-<span><span class="va">simple_successive_graph</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/graph_create.html">graph_create</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.5</span>, <span class="fl">0.5</span>, <span class="fl">0</span>, <span class="fl">0</span><span class="op">)</span>, <span class="va">transitions</span><span class="op">)</span></span>
+<span><span class="va">simple_successive_graph</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/example-graphs.html">simple_successive_1</a></span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="co"># transitions &lt;- rbind(</span></span>
+<span><span class="co">#   c(0, 0, 1, 0),</span></span>
+<span><span class="co">#   c(0, 0, 0, 1),</span></span>
+<span><span class="co">#   c(0, 1, 0, 0),</span></span>
+<span><span class="co">#   c(1, 0, 0, 0)</span></span>
+<span><span class="co"># )</span></span>
+<span><span class="co"># simple_successive_graph &lt;- graph_create(c(0.5, 0.5, 0, 0), transitions)</span></span>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">simple_successive_graph</span>, layout <span class="op">=</span> <span class="st">"grid"</span>, nrow <span class="op">=</span> <span class="fl">2</span>, vertex.size <span class="op">=</span> <span class="fl">70</span><span class="op">)</span></span></code></pre></div>
 <p><img src="graph-examples_files/figure-html/simple-successive-1-1.png" width="288" style="display: block; margin: auto;"></p>
@@ -513,14 +519,14 @@ weights are propagated to <span class="math inline">\(H_2\)</span> and
 <span><span class="co">#&gt;    H1    H2    H3    H4 </span></span>
 <span><span class="co">#&gt;  TRUE FALSE FALSE FALSE</span></span></code></pre></div>
 <p>The above graph could be generalized to allow propagation between
-primary hypotheses. A general successive graph is illustrate below with
-a variable to determine the propagation between <span class="math inline">\(H_1\)</span> and <span class="math inline">\(H_2\)</span>.</p>
+primary hypotheses <span class="citation">(Maurer, Glimm, and Bretz
+2011)</span>. A general successive graph is illustrate below with a
+variable to determine the propagation between <span class="math inline">\(H_1\)</span> and <span class="math inline">\(H_2\)</span>.</p>
 <div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">1234</span><span class="op">)</span></span>
 <span><span class="va">alpha</span> <span class="op">&lt;-</span> <span class="fl">0.025</span></span>
 <span><span class="va">m</span> <span class="op">&lt;-</span> <span class="fl">4</span></span>
 <span></span>
-<span><span class="co">#  Maurer et al. (2011)</span></span>
 <span><span class="va">successive_var</span> <span class="op">&lt;-</span> <span class="va">simple_successive_var</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">gamma</span><span class="op">)</span> <span class="op">{</span></span>
 <span>  <span class="fu"><a href="../reference/graph_create.html">graph_create</a></span><span class="op">(</span></span>
 <span>    <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">.5</span>, <span class="fl">.5</span>, <span class="fl">0</span>, <span class="fl">0</span><span class="op">)</span>,</span>
@@ -535,7 +541,7 @@ a variable to determine the propagation between <span class="math inline">\(H_1\
 <span></span>
 <span><span class="va">successive_var_graph</span> <span class="op">&lt;-</span> <span class="fu">successive_var</span><span class="op">(</span><span class="fl">0.5</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">successive_var_graph</span>, layout <span class="op">=</span> <span class="st">"grid"</span>, nrow <span class="op">=</span> <span class="fl">2</span>, vertex.size <span class="op">=</span> <span class="fl">70</span><span class="op">)</span></span></code></pre></div>
-<p><img src="graph-examples_files/figure-html/simple-successive-var-1-1.png" width="288" style="display: block; margin: auto;"></p>
+<p><img src="graph-examples_files/figure-html/simple-successive-var-1.png" width="288" style="display: block; margin: auto;"></p>
 <div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">p_values</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/Uniform.html" class="external-link">runif</a></span><span class="op">(</span><span class="va">m</span>, <span class="fl">0</span>, <span class="va">alpha</span><span class="op">)</span></span>
 <span></span>
@@ -566,9 +572,7 @@ specify <code>test_type</code> to be <code>simes</code>.</p>
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">1234</span><span class="op">)</span></span>
 <span><span class="va">alpha</span> <span class="op">&lt;-</span> <span class="fl">0.025</span></span>
 <span><span class="va">m</span> <span class="op">&lt;-</span> <span class="fl">3</span></span>
-<span><span class="va">transitions</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">matrix</a></span><span class="op">(</span><span class="fl">1</span> <span class="op">/</span> <span class="op">(</span><span class="va">m</span> <span class="op">-</span> <span class="fl">1</span><span class="op">)</span>, <span class="va">m</span>, <span class="va">m</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/diag.html" class="external-link">diag</a></span><span class="op">(</span><span class="va">transitions</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fl">0</span></span>
-<span><span class="va">hommel_graph</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/graph_create.html">graph_create</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="fl">1</span> <span class="op">/</span> <span class="va">m</span>, <span class="va">m</span><span class="op">)</span>, <span class="va">transitions</span><span class="op">)</span></span>
+<span><span class="va">hommel_graph</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/example-graphs.html">bonferroni_holm</a></span><span class="op">(</span><span class="va">m</span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span></span>
 <span>  <span class="va">hommel_graph</span>,</span>
@@ -603,19 +607,17 @@ specify <code>test_type</code> to be <code>simes</code>.</p>
 </h3>
 <p>Step-down Dunnett procedures are a closed test procedure and an
 improvement from Holm procedures by incorporating the correlation
-structure between test statistics. Thus they are the same graph as Holm
-procedures. Assume an equi-correlated case, where the correlation
-between any pair of test statistics is the same, e.g., 0.5. Then we can
-perform the step-down Dunnett procedure by specifying
-<code>test_type</code> to be <code>parametric</code> and providing the
-correlation matrix.</p>
+structure between test statistics <span class="citation">(Dunnett and
+Tamhane 1991)</span>. Thus they are the same graph as Holm procedures.
+Assume an equi-correlated case, where the correlation between any pair
+of test statistics is the same, e.g., 0.5. Then we can perform the
+step-down Dunnett procedure by specifying <code>test_type</code> to be
+<code>parametric</code> and providing the correlation matrix.</p>
 <div class="sourceCode" id="cb25"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">1234</span><span class="op">)</span></span>
 <span><span class="va">alpha</span> <span class="op">&lt;-</span> <span class="fl">0.025</span></span>
 <span><span class="va">m</span> <span class="op">&lt;-</span> <span class="fl">3</span></span>
-<span><span class="va">transitions</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">matrix</a></span><span class="op">(</span><span class="fl">1</span> <span class="op">/</span> <span class="op">(</span><span class="va">m</span> <span class="op">-</span> <span class="fl">1</span><span class="op">)</span>, <span class="va">m</span>, <span class="va">m</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/diag.html" class="external-link">diag</a></span><span class="op">(</span><span class="va">transitions</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fl">0</span></span>
-<span><span class="va">dunnett_graph</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/graph_create.html">graph_create</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="fl">1</span> <span class="op">/</span> <span class="va">m</span>, <span class="va">m</span><span class="op">)</span>, <span class="va">transitions</span><span class="op">)</span></span>
+<span><span class="va">dunnett_graph</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/example-graphs.html">bonferroni_holm</a></span><span class="op">(</span><span class="va">m</span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span></span>
 <span>  <span class="va">dunnett_graph</span>,</span>
@@ -642,20 +644,60 @@ correlation matrix.</p>
 <span><span class="va">test_results</span><span class="op">$</span><span class="va">outputs</span><span class="op">$</span><span class="va">rejected</span></span>
 <span><span class="co">#&gt;    H1    H2    H3 </span></span>
 <span><span class="co">#&gt;  TRUE FALSE FALSE</span></span></code></pre></div>
+</div>
+</div>
+<div class="section level2">
+<h2 class="unnumbered" id="reference">Reference<a class="anchor" aria-label="anchor" href="#reference"></a>
+</h2>
 <div id="refs" class="references csl-bib-body hanging-indent">
-<div id="ref-bretz-2011-power" class="csl-entry">
-Bretz, Frank, Willi Maurer, and Gerhard Hommel. 2011. <span>“Test and
-Power Considerations for Multiple Endpoint Analyses Using Sequentially
-Rejective Graphical Procedures.”</span> <em>Statistics in Medicine</em>
-30 (13): 1489–1501. <a href="https://onlinelibrary.wiley.com/doi/abs/10.1002/sim.3988" class="external-link">https://onlinelibrary.wiley.com/doi/abs/10.1002/sim.3988</a>.
+<div id="ref-bretz-2009-graphical" class="csl-entry">
+Bretz, Frank, Willi Maurer, Werner Branath, and Martin Posch. 2009.
+<span>“A Graphical Approach to Sequentially Rejective Multiple Test
+Procedures.”</span> <em>Statistics in Medicine</em> 53 (4): 586–604. <a href="https://onlinelibrary.wiley.com/doi/abs/10.1002/sim.3495" class="external-link">https://onlinelibrary.wiley.com/doi/abs/10.1002/sim.3495</a>.
 </div>
-<div id="ref-bretz-2011-tests" class="csl-entry">
-Bretz, Frank, Martin Posch, Ekkehard Glimm, Florian Klinglmueller, Willi
-Maurer, and Kornelius Rohmeyer. 2011. <span>“Graphical Approaches for
-Multiple Comparison Procedures Using Weighted Bonferroni, Simes, or
-Parametric Tests.”</span> <em>Biometrical Journal</em> 53 (6): 894–913.
-<a href="https://onlinelibrary.wiley.com/doi/10.1002/bimj.201000239" class="external-link">https://onlinelibrary.wiley.com/doi/10.1002/bimj.201000239</a>.
+<div id="ref-dmitrienko-2003-gatekeeping" class="csl-entry">
+Dmitrienko, Alexei, Walter W. Offen, and Peter H. Westfall. 2003.
+<span>“Gatekeeping Strategies for Clinical Trials That Do Not Require
+All Primary Effects to Be Significant.”</span> <em>Statistics in
+Medicine</em> 22 (15): 2387–2400. <a href="https://onlinelibrary.wiley.com/doi/pdf/10.1002/sim.1526" class="external-link">https://onlinelibrary.wiley.com/doi/pdf/10.1002/sim.1526</a>.
 </div>
+<div id="ref-dunnett-1991-stepdown" class="csl-entry">
+Dunnett, Charles W., and Ajit C. Tamhane. 1991. <span>“Step-down
+Multiple Tests for Comparing Treatments with a Control in Unbalanced
+One-Way Layouts.”</span> <em>Statistics in Medicine</em> 10 (6): 939–47.
+<a href="https://onlinelibrary.wiley.com/doi/10.1002/sim.4780100614" class="external-link">https://onlinelibrary.wiley.com/doi/10.1002/sim.4780100614</a>.
+</div>
+<div id="ref-holm-1979-simple" class="csl-entry">
+Holm, Sture. 1979. <span>“A Simple Sequentially Rejective Multiple Test
+Procedure.”</span> <em>Scandinavian Journal of Statistics</em> 75:
+65–70. <a href="http://www.jstor.org/stable/4615733" class="external-link">http://www.jstor.org/stable/4615733</a>.
+</div>
+<div id="ref-hommel-2008-aesthetics" class="csl-entry">
+Hommel, Gerhard, and Frank Bretz. 2008. <span>“Aesthetics and Power
+Considerations in Multiple Testing - a Contradiction?”</span>
+<em>Biometrical Journal</em> 50 (5): 657–66. <a href="https://onlinelibrary.wiley.com/doi/10.1002/bimj.200710463" class="external-link">https://onlinelibrary.wiley.com/doi/10.1002/bimj.200710463</a>.
+</div>
+<div id="ref-maurer-2011-multiple" class="csl-entry">
+Maurer, Willi, Ekkehard Glimm, and Frank Bretz. 2011. <span>“Multiple
+and Repeated Testing of Primary, Coprimary, and Secondary
+Hypotheses.”</span> <em>Statistics in Biopharmaceutical Research</em> 3
+(2): 336–52. <a href="https://www.tandfonline.com/doi/abs/10.1198/sbr.2010.10010" class="external-link">https://www.tandfonline.com/doi/abs/10.1198/sbr.2010.10010</a>.
+</div>
+<div id="ref-maurer-1995-multiple" class="csl-entry">
+Maurer, Willi, Ludwig Hothorn, and Walter Lehmacher. 1995.
+<span>“Multiple Comparisons in Drug Clinical Trials and Preclinical
+Assays: A-Priori Ordered Hypotheses.”</span> <em>Biometrie in Der
+Chemisch-in-Pharmazeutischen Industrie</em> 6: 3–18.
+</div>
+<div id="ref-wiens-2003-fixed" class="csl-entry">
+Wiens, Brian L. 2003. <span>“A Fixed Sequence Bonferroni Procedure for
+Testing Multiple Endpoints.”</span> <em>Pharmaceutical Statistics</em> 2
+(3): 211–15. <a href="https://onlinelibrary.wiley.com/doi/10.1002/pst.64" class="external-link">https://onlinelibrary.wiley.com/doi/10.1002/pst.64</a>.
+</div>
+<div id="ref-wiens-2005-fallback" class="csl-entry">
+Wiens, Brian L., and Alexei Dmitrienko. 2005. <span>“The Fallback
+Procedure for Evaluating a Aingle Family of Hypotheses.”</span>
+<em>Journal of Biopharmaceutical Statistics</em> 15 (6): 929–42. <a href="https://www.tandfonline.com/doi/full/10.1080/10543400500265660" class="external-link">https://www.tandfonline.com/doi/full/10.1080/10543400500265660</a>.
 </div>
 </div>
 </div>
