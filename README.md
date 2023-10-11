@@ -43,7 +43,7 @@ pak::pak("Gilead-BioStats/graphicalMCP@dev")
     procedures illustrated using `graphicalMCP`
   - see `vignette("generate-closure")` for rationales to generate the
     closure and the weighting strategy of a graph
-  - see `vignette("comparison")` for comparisons to other R packages
+  - see `vignette("comparisons")` for comparisons to other R packages
 
 ## Related work
 
