@@ -16,6 +16,24 @@ test_that("improper inputs throw errors", {
   expect_error(graph_calculate_power(rando, sim_corr = corr_inval))
 
   expect_error(graph_calculate_power(rando, sim_success = "non-function"))
+
+  expect_error(
+    graph_calculate_power(
+      rando,
+      test_groups = list(f1 = 1:2, f2 = 3),
+      test_types = c(f2 = "b", f1 = "s"),
+      test_corr = list(f3 = NA, f1 = NA)
+    )
+  )
+
+  expect_no_error(
+    graph_calculate_power(
+      rando,
+      test_groups = list(f1 = 1:2, f2 = 3),
+      test_types = c(f2 = "b", f1 = "s"),
+      test_corr = list(f2 = NA, f1 = NA)
+    )
+  )
 })
 
 test_that("power results are identical under a given seed", {
@@ -92,7 +110,7 @@ test_that("multi-group/multi-test type runs without error", {
   )
 })
 
-test_that("complex example runs without error", {
+test_that("medium graph runs without error", {
   # random positive definite matrix - not sure if the diag override can break
   # this, but it's at least better than my last try
   t_corr <- matrix(abs(stats::rWishart(1, 9, diag(9))), 9, 9)
@@ -102,7 +120,7 @@ test_that("complex example runs without error", {
 
   expect_no_error(
     graph_calculate_power(
-      graph = complex_example_2(),
+      graph = bonferroni(9),
       alpha = .025,
       test_groups = list(c(1, 4, 7), 2:3, 5:6, 8:9),
       test_types = c("p", "s", "s", "s"),
@@ -112,5 +130,25 @@ test_that("complex example runs without error", {
       sim_corr = diag(9),
       sim_success = function(.) .[1] || .[4] || .[7]
     )
+  )
+})
+
+test_that("verbose output", {
+  t_corr <- matrix(abs(stats::rWishart(1, 9, diag(9))), 9, 9)
+  t_corr <- t_corr / max(t_corr)
+  diag(t_corr) <- 1
+  t_corr_para <- t_corr[c(1, 4, 7), c(1, 4, 7)]
+
+  expect_equal(
+    names(
+      graph_calculate_power(
+        graph = wiens_dmitrienko_2005(),
+        alpha = .025,
+        sim_n = 1e4,
+        power_marginal = runif(3, min = 0, max = 1),
+        verbose = TRUE
+      )$details
+    ),
+    c("p_sim", "test_results")
   )
 })

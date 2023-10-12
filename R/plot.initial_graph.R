@@ -7,12 +7,13 @@
 #' There are a few values for [igraph::plot.igraph()] that get their defaults
 #' changed for graphicalMCP. These values can still be changed by passing them
 #' as arguments to `plot.initial_graph()`. Here are the new defaults:
-#'   * vertex.color = "#e8c2ff",
-#'   * vertex.label.color = "black",
-#'   * vertex.size = 20,
-#'   * edge.arrow.size = 1,
-#'   * edge.arrow.width = 1,
-#'   * asp = 0
+#'   * `vertex.color = "#6baed6"`,
+#'   * `vertex.label.color = "black"`,
+#'   * `vertex.size = 20`,
+#'   * `edge.arrow.size = 1`,
+#'   * `edge.arrow.width = 1`,
+#'   * `edge.label.color = "black"`
+#'   * `asp = 0`
 #'
 #' Neither graphicalMCP nor igraph does anything about overlapping edge labels.
 #' If you run into this problem, and vertices can't practically be moved enough

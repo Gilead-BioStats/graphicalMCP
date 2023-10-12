@@ -520,6 +520,313 @@
         H4 NA NA NA NA
       
 
+---
+
+    Code
+      graph_test_shortcut(simple_successive_1(), rep(0.01, 4), verbose = TRUE)
+    Output
+      
+      Test parameters ($inputs) ------------------------------------------------------
+        Initial graph
+      
+        --- Hypothesis weights ---
+        H1: 0.5
+        H2: 0.5
+        H3: 0.0
+        H4: 0.0
+      
+        --- Transition weights ---
+           H1 H2 H3 H4
+        H1  0  0  1  0
+        H2  0  0  0  1
+        H3  0  1  0  0
+        H4  1  0  0  0
+      
+        Alpha = 0.025
+      
+                               H1   H2   H3   H4
+        Unadjusted p-values: 0.01 0.01 0.01 0.01
+      
+        Test types
+        bonferroni: (H1, H2, H3, H4)
+      
+      Test summary ($outputs) --------------------------------------------------------
+        Hypothesis Adj. P-value Reject
+                H1         0.02   TRUE
+                H2         0.02   TRUE
+                H3         0.02   TRUE
+                H4         0.02   TRUE
+      
+        Final updated graph after removing rejected hypotheses
+      
+        --- Hypothesis weights ---
+        H1: NA
+        H2: NA
+        H3: NA
+        H4: NA
+      
+        --- Transition weights ---
+           H1 H2 H3 H4
+        H1 NA NA NA NA
+        H2 NA NA NA NA
+        H3 NA NA NA NA
+        H4 NA NA NA NA
+      
+      Rejection sequence details ($details) ------------------------------------------
+        Initial graph
+      
+        --- Hypothesis weights ---
+        H1: 0.5
+        H2: 0.5
+        H3: 0.0
+        H4: 0.0
+      
+        --- Transition weights ---
+           H1 H2 H3 H4
+        H1  0  0  1  0
+        H2  0  0  0  1
+        H3  0  1  0  0
+        H4  1  0  0  0
+      
+          Step 1: Updated graph after removing hypothesis H1
+      
+          --- Hypothesis weights ---
+          H1:  NA
+          H2: 0.5
+          H3: 0.5
+          H4: 0.0
+      
+          --- Transition weights ---
+             H1 H2 H3 H4
+          H1 NA NA NA NA
+          H2 NA  0  0  1
+          H3 NA  1  0  0
+          H4 NA  0  1  0
+      
+            Step 2: Updated graph after removing hypotheses H1, H2
+      
+            --- Hypothesis weights ---
+            H1:  NA
+            H2:  NA
+            H3: 0.5
+            H4: 0.5
+      
+            --- Transition weights ---
+               H1 H2 H3 H4
+            H1 NA NA NA NA
+            H2 NA NA NA NA
+            H3 NA NA  0  1
+            H4 NA NA  1  0
+      
+              Step 3: Updated graph after removing hypotheses H1, H2, H3
+      
+              --- Hypothesis weights ---
+              H1: NA
+              H2: NA
+              H3: NA
+              H4:  1
+      
+              --- Transition weights ---
+                 H1 H2 H3 H4
+              H1 NA NA NA NA
+              H2 NA NA NA NA
+              H3 NA NA NA NA
+              H4 NA NA NA  0
+      
+                Step 4: Updated graph after removing hypotheses H1, H2, H3, H4
+      
+                --- Hypothesis weights ---
+                H1: NA
+                H2: NA
+                H3: NA
+                H4: NA
+      
+                --- Transition weights ---
+                   H1 H2 H3 H4
+                H1 NA NA NA NA
+                H2 NA NA NA NA
+                H3 NA NA NA NA
+                H4 NA NA NA NA
+      
+        Final updated graph after removing rejected hypotheses
+      
+        --- Hypothesis weights ---
+        H1: NA
+        H2: NA
+        H3: NA
+        H4: NA
+      
+        --- Transition weights ---
+           H1 H2 H3 H4
+        H1 NA NA NA NA
+        H2 NA NA NA NA
+        H3 NA NA NA NA
+        H4 NA NA NA NA
+      
+
+# add alternate orderings
+
+    Code
+      test_res_alt
+    Output
+      
+      Test parameters ($inputs) ------------------------------------------------------
+        Initial graph
+      
+        --- Hypothesis weights ---
+        H1: 0.5
+        H2: 0.5
+        H3: 0.0
+        H4: 0.0
+      
+        --- Transition weights ---
+           H1 H2 H3 H4
+        H1  0  0  1  0
+        H2  0  0  0  1
+        H3  0  1  0  0
+        H4  1  0  0  0
+      
+        Alpha = 0.025
+      
+                               H1   H2   H3   H4
+        Unadjusted p-values: 0.01 0.01 0.01 0.01
+      
+        Test types
+        bonferroni: (H1, H2, H3, H4)
+      
+      Test summary ($outputs) --------------------------------------------------------
+        Hypothesis Adj. P-value Reject
+                H1         0.02   TRUE
+                H2         0.02   TRUE
+                H3         0.02   TRUE
+                H4         0.02   TRUE
+      
+        Final updated graph after removing rejected hypotheses
+      
+        --- Hypothesis weights ---
+        H1: NA
+        H2: NA
+        H3: NA
+        H4: NA
+      
+        --- Transition weights ---
+           H1 H2 H3 H4
+        H1 NA NA NA NA
+        H2 NA NA NA NA
+        H3 NA NA NA NA
+        H4 NA NA NA NA
+      
+      Rejection sequence details ($details) ------------------------------------------
+        Initial graph
+      
+        --- Hypothesis weights ---
+        H1: 0.5
+        H2: 0.5
+        H3: 0.0
+        H4: 0.0
+      
+        --- Transition weights ---
+           H1 H2 H3 H4
+        H1  0  0  1  0
+        H2  0  0  0  1
+        H3  0  1  0  0
+        H4  1  0  0  0
+      
+          Step 1: Updated graph after removing hypothesis H1
+      
+          --- Hypothesis weights ---
+          H1:  NA
+          H2: 0.5
+          H3: 0.5
+          H4: 0.0
+      
+          --- Transition weights ---
+             H1 H2 H3 H4
+          H1 NA NA NA NA
+          H2 NA  0  0  1
+          H3 NA  1  0  0
+          H4 NA  0  1  0
+      
+            Step 2: Updated graph after removing hypotheses H1, H2
+      
+            --- Hypothesis weights ---
+            H1:  NA
+            H2:  NA
+            H3: 0.5
+            H4: 0.5
+      
+            --- Transition weights ---
+               H1 H2 H3 H4
+            H1 NA NA NA NA
+            H2 NA NA NA NA
+            H3 NA NA  0  1
+            H4 NA NA  1  0
+      
+              Step 3: Updated graph after removing hypotheses H1, H2, H3
+      
+              --- Hypothesis weights ---
+              H1: NA
+              H2: NA
+              H3: NA
+              H4:  1
+      
+              --- Transition weights ---
+                 H1 H2 H3 H4
+              H1 NA NA NA NA
+              H2 NA NA NA NA
+              H3 NA NA NA NA
+              H4 NA NA NA  0
+      
+                Step 4: Updated graph after removing hypotheses H1, H2, H3, H4
+      
+                --- Hypothesis weights ---
+                H1: NA
+                H2: NA
+                H3: NA
+                H4: NA
+      
+                --- Transition weights ---
+                   H1 H2 H3 H4
+                H1 NA NA NA NA
+                H2 NA NA NA NA
+                H3 NA NA NA NA
+                H4 NA NA NA NA
+      
+        Final updated graph after removing rejected hypotheses
+      
+        --- Hypothesis weights ---
+        H1: NA
+        H2: NA
+        H3: NA
+        H4: NA
+      
+        --- Transition weights ---
+           H1 H2 H3 H4
+        H1 NA NA NA NA
+        H2 NA NA NA NA
+        H3 NA NA NA NA
+        H4 NA NA NA NA
+      
+      Alternate rejection orderings ($valid_rejection_orderings) ---------------------
+      H1 H2 H3 H4 
+       1  2  3  4 
+      
+      H1 H2 H4 H3 
+       1  2  4  3 
+      
+      H1 H3 H2 H4 
+       1  3  2  4 
+      
+      H2 H1 H3 H4 
+       2  1  3  4 
+      
+      H2 H1 H4 H3 
+       2  1  4  3 
+      
+      H2 H4 H1 H3 
+       2  4  1  3 
+      
+
 # additional printing options for graph report
 
     Code
@@ -948,4 +1255,147 @@
            5         H3 0.015 <=   0.50 * 0.025            FALSE
            5         H2 0.020 <=   0.50 * 0.025            FALSE
       
+
+---
+
+    Code
+      print(graph_rejection_orderings(graph_test_shortcut(complex_example_2(), 8:0 /
+        200, verbose = TRUE, test_values = TRUE)))
+    Output
+      
+      Test parameters ($inputs) ------------------------------------------------------
+        Initial graph
+      
+        --- Hypothesis weights ---
+        H1: 0.3333
+        H2: 0.0000
+        H3: 0.0000
+        H4: 0.3333
+        H5: 0.0000
+        H6: 0.0000
+        H7: 0.3333
+        H8: 0.0000
+        H9: 0.0000
+      
+        --- Transition weights ---
+                H1      H2      H3      H4      H5      H6      H7      H8      H9
+        H1 0.00000 0.50000 0.50000 0.00000 0.00000 0.00000 0.00000 0.00000 0.00000
+        H2 0.00000 0.00000 1.00000 0.00000 0.00000 0.00000 0.00000 0.00000 0.00000
+        H3 0.00000 0.99990 0.00000 0.00005 0.00000 0.00000 0.00005 0.00000 0.00000
+        H4 0.00000 0.00000 0.00000 0.00000 0.50000 0.50000 0.00000 0.00000 0.00000
+        H5 0.00000 0.00000 0.00000 0.00000 0.00000 1.00000 0.00000 0.00000 0.00000
+        H6 0.00005 0.00000 0.00000 0.00000 0.99990 0.00000 0.00005 0.00000 0.00000
+        H7 0.00000 0.00000 0.00000 0.00000 0.00000 0.00000 0.00000 0.50000 0.50000
+        H8 0.00000 0.00000 0.00000 0.00000 0.00000 0.00000 0.00000 0.00000 1.00000
+        H9 0.00005 0.00000 0.00000 0.00005 0.00000 0.00000 0.00000 0.99990 0.00000
+      
+        Alpha = 0.025
+      
+                                H1    H2    H3    H4    H5    H6    H7    H8    H9
+        Unadjusted p-values: 0.040 0.035 0.030 0.025 0.020 0.015 0.010 0.005 0.000
+      
+        Test types
+        bonferroni: (H1, H2, H3, H4, H5, H6, H7, H8, H9)
+      
+      Test summary ($outputs) --------------------------------------------------------
+        Hypothesis Adj. P-value Reject
+                H1         0.06  FALSE
+                H2         0.06  FALSE
+                H3         0.06  FALSE
+                H4         0.05  FALSE
+                H5         0.06  FALSE
+                H6         0.06  FALSE
+                H7         0.03  FALSE
+                H8         0.03  FALSE
+                H9         0.03  FALSE
+      
+        Final updated graph after removing rejected hypotheses
+      
+        --- Hypothesis weights ---
+        H1: 0.3333
+        H2: 0.0000
+        H3: 0.0000
+        H4: 0.3333
+        H5: 0.0000
+        H6: 0.0000
+        H7: 0.3333
+        H8: 0.0000
+        H9: 0.0000
+      
+        --- Transition weights ---
+                H1      H2      H3      H4      H5      H6      H7      H8      H9
+        H1 0.00000 0.50000 0.50000 0.00000 0.00000 0.00000 0.00000 0.00000 0.00000
+        H2 0.00000 0.00000 1.00000 0.00000 0.00000 0.00000 0.00000 0.00000 0.00000
+        H3 0.00000 0.99990 0.00000 0.00005 0.00000 0.00000 0.00005 0.00000 0.00000
+        H4 0.00000 0.00000 0.00000 0.00000 0.50000 0.50000 0.00000 0.00000 0.00000
+        H5 0.00000 0.00000 0.00000 0.00000 0.00000 1.00000 0.00000 0.00000 0.00000
+        H6 0.00005 0.00000 0.00000 0.00000 0.99990 0.00000 0.00005 0.00000 0.00000
+        H7 0.00000 0.00000 0.00000 0.00000 0.00000 0.00000 0.00000 0.50000 0.50000
+        H8 0.00000 0.00000 0.00000 0.00000 0.00000 0.00000 0.00000 0.00000 1.00000
+        H9 0.00005 0.00000 0.00000 0.00005 0.00000 0.00000 0.00000 0.99990 0.00000
+      
+      Rejection sequence details ($details) ------------------------------------------
+        Initial graph
+      
+        --- Hypothesis weights ---
+        H1: 0.3333
+        H2: 0.0000
+        H3: 0.0000
+        H4: 0.3333
+        H5: 0.0000
+        H6: 0.0000
+        H7: 0.3333
+        H8: 0.0000
+        H9: 0.0000
+      
+        --- Transition weights ---
+                H1      H2      H3      H4      H5      H6      H7      H8      H9
+        H1 0.00000 0.50000 0.50000 0.00000 0.00000 0.00000 0.00000 0.00000 0.00000
+        H2 0.00000 0.00000 1.00000 0.00000 0.00000 0.00000 0.00000 0.00000 0.00000
+        H3 0.00000 0.99990 0.00000 0.00005 0.00000 0.00000 0.00005 0.00000 0.00000
+        H4 0.00000 0.00000 0.00000 0.00000 0.50000 0.50000 0.00000 0.00000 0.00000
+        H5 0.00000 0.00000 0.00000 0.00000 0.00000 1.00000 0.00000 0.00000 0.00000
+        H6 0.00005 0.00000 0.00000 0.00000 0.99990 0.00000 0.00005 0.00000 0.00000
+        H7 0.00000 0.00000 0.00000 0.00000 0.00000 0.00000 0.00000 0.50000 0.50000
+        H8 0.00000 0.00000 0.00000 0.00000 0.00000 0.00000 0.00000 0.00000 1.00000
+        H9 0.00005 0.00000 0.00000 0.00005 0.00000 0.00000 0.00000 0.99990 0.00000
+      
+        Final updated graph after removing rejected hypotheses
+      
+        --- Hypothesis weights ---
+        H1: 0.3333
+        H2: 0.0000
+        H3: 0.0000
+        H4: 0.3333
+        H5: 0.0000
+        H6: 0.0000
+        H7: 0.3333
+        H8: 0.0000
+        H9: 0.0000
+      
+        --- Transition weights ---
+                H1      H2      H3      H4      H5      H6      H7      H8      H9
+        H1 0.00000 0.50000 0.50000 0.00000 0.00000 0.00000 0.00000 0.00000 0.00000
+        H2 0.00000 0.00000 1.00000 0.00000 0.00000 0.00000 0.00000 0.00000 0.00000
+        H3 0.00000 0.99990 0.00000 0.00005 0.00000 0.00000 0.00005 0.00000 0.00000
+        H4 0.00000 0.00000 0.00000 0.00000 0.50000 0.50000 0.00000 0.00000 0.00000
+        H5 0.00000 0.00000 0.00000 0.00000 0.00000 1.00000 0.00000 0.00000 0.00000
+        H6 0.00005 0.00000 0.00000 0.00000 0.99990 0.00000 0.00005 0.00000 0.00000
+        H7 0.00000 0.00000 0.00000 0.00000 0.00000 0.00000 0.00000 0.50000 0.50000
+        H8 0.00000 0.00000 0.00000 0.00000 0.00000 0.00000 0.00000 0.00000 1.00000
+        H9 0.00005 0.00000 0.00000 0.00005 0.00000 0.00000 0.00000 0.99990 0.00000
+      
+      Detailed test values ($test_values) --------------------------------------------
+        Step Hypothesis     p <= Weight * Alpha Inequality_holds
+           1         H7 0.010 <= 0.3333 * 0.025            FALSE
+           1         H9 0.000 <= 0.0000 * 0.025               NA
+           1         H8 0.005 <= 0.0000 * 0.025            FALSE
+           1         H4 0.025 <= 0.3333 * 0.025            FALSE
+           1         H6 0.015 <= 0.0000 * 0.025            FALSE
+           1         H5 0.020 <= 0.0000 * 0.025            FALSE
+           1         H1 0.040 <= 0.3333 * 0.025            FALSE
+           1         H3 0.030 <= 0.0000 * 0.025            FALSE
+           1         H2 0.035 <= 0.0000 * 0.025            FALSE
+      
+      Alternate rejection orderings ($valid_rejection_orderings) ---------------------
 

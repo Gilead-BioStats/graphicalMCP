@@ -98,7 +98,8 @@ graph_calculate_power <- function(graph,
   # Input sanitization ---------------------------------------------------------
   # Test types should be passed as full names or first letter, case-insensitive,
   # and a single provided type should get expanded to all groups
-  test_options <- c(
+  test_types_names <- names(test_types)
+  test_opts <- c(
     bonferroni = "bonferroni",
     parametric = "parametric",
     simes = "simes",
@@ -106,7 +107,8 @@ graph_calculate_power <- function(graph,
     p = "parametric",
     s = "simes"
   )
-  test_types <- test_options[tolower(test_types)]
+  test_types <- test_opts[tolower(test_types)]
+  names(test_types) <- test_types_names
   if (length(test_types) == 1) {
     test_types <- rep(test_types, length(test_groups))
   }

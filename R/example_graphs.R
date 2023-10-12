@@ -154,8 +154,6 @@ random_graph <- function(num_hyps, hyp_names = NULL) {
   graph_create(hypotheses, transitions, hyp_names)
 }
 
-#' @export
-#' @rdname example-graphs
 complex_example_1 <- function(hyp_names = NULL) {
   eps <- .0001
 
@@ -172,29 +170,6 @@ complex_example_1 <- function(hyp_names = NULL) {
   graph_create(weights, transitions, hyp_names = hyp_names)
 }
 
-#' @export
-#' @rdname example-graphs
-complex_example_2 <- function(hyp_names = NULL) {
-  eps <- .0001
-
-  weights <- c(rep(c(1 / 3, 0, 0), 3))
-  transitions <- rbind(
-    c(0, .5, .5, 0, 0, 0, 0, 0, 0), # 1 --> 2 & 3
-    c(0, 0, 1, 0, 0, 0, 0, 0, 0), # 2 --> 3
-    c(0, 1 - eps, 0, eps / 2, 0, 0, eps / 2, 0, 0), # 3 --> 2, 3 - - > 4 & 7
-    c(0, 0, 0, 0, .5, .5, 0, 0, 0), # 4 --> 5 & 6
-    c(0, 0, 0, 0, 0, 1, 0, 0, 0), # 5 --> 6
-    c(eps / 2, 0, 0, 0, 1 - eps, 0, eps / 2, 0, 0), # 6 --> 5, 6 - - > 1 & 7
-    c(0, 0, 0, 0, 0, 0, 0, .5, .5), # 7 --> 8 & 9
-    c(0, 0, 0, 0, 0, 0, 0, 0, 1), # 8 --> 9
-    c(eps / 2, 0, 0, eps / 2, 0, 0, 0, 1 - eps, 0) # 9 --> 8, 9 - - > 1 & 4
-  )
-
-  graph_create(weights, transitions, hyp_names = hyp_names)
-}
-
-#' @export
-#' @rdname example-graphs
 complex_example_2 <- function(hyp_names = NULL) {
   eps <- .0001
 

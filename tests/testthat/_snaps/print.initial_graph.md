@@ -28,3 +28,19 @@
           H1
        H1 NA
 
+# print default title with no title attribute
+
+    Code
+      no_attr
+    Output
+      Initial graph
+      
+      --- Hypothesis weights ---
+      H1: 0.5
+      H2: 0.5
+      
+      --- Transition weights ---
+          H1 H2
+       H1  0  1
+       H2  1  0
+
