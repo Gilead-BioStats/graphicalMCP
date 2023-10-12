@@ -4,8 +4,6 @@ output:
   rmarkdown::html_vignette:
     code_folding: hide
 bibliography: "`r system.file('references.bib', package='graphicalMCP')`"
-# nocite: |
-#   @bretz-2009-graphical, @bretz-2011-test, @bretz-2011-graphical
 vignette: >
   %\VignetteIndexEntry{Rationales to generate the closure and the weighting strategy of a graph}
   %\VignetteEngine{knitr::rmarkdown}
@@ -76,7 +74,7 @@ $m$ is the number of hypotheses.
 
 ## Comparing different approaches to calculating weighting strategies
 
-To benchmark against existing approaches to calculating weighting strategies, we compare the following approaches: [gMCP::generateWeights()] [@rohmeyer-2020-gmcp], [lrstat::fwgtmat()] [lu-2016-graphical], Approach 1 (graphicalMCP simple) and Approach 2 (graphicalMCP parent-child). Random graphs are generated for the numbers of hypotheses of 4, 8, 12, and 16. Computing time (in median log-10 milliseconds) is plotted below. We can see that [gMCP::generateWeights()] is the slowest and [lrstat::fwgtmat()] is the fastest. Approach 2 (graphicalMCP parent-child) is faster than Approach 1 (graphicalMCP simple). Note that [lrstat::fwgtmat()] implements the calculation using C++, which is known to be faster than R. But it is less stable than other approaches, e.g., giving errors more often than others. Given that the computing time of R-based approaches is acceptable, adding Rcpp dependency is not considered in `graphicalMCP`. For these considerations, we implement Approach 2 in [graphicalMCP::graph_generate_weights()].
+To benchmark against existing approaches to calculating weighting strategies, we compare the following approaches: `gMCP::generateWeights()` [@rohmeyer-2020-gmcp], `lrstat::fwgtmat()` [@lu-2016-graphical], Approach 1 (graphicalMCP simple) and Approach 2 (graphicalMCP parent-child). Random graphs are generated for the numbers of hypotheses of 4, 8, 12, and 16. Computing time (in median log-10 milliseconds) is plotted below. We can see that `gMCP::generateWeights()` is the slowest and `lrstat::fwgtmat()` is the fastest. Approach 2 (graphicalMCP parent-child) is faster than Approach 1 (graphicalMCP simple). Note that `lrstat::fwgtmat()` implements the calculation using C++, which is known to be faster than R. But it is less stable than other approaches, e.g., giving errors more often than others. Given that the computing time of R-based approaches is acceptable, adding Rcpp dependency is not considered in `graphicalMCP`. For these considerations, we implement Approach 2 in `graphicalMCP::graph_generate_weights()`.
 
 ![](img/gw-benchmarks-plot.png)
 
@@ -350,7 +348,7 @@ The small modification in Step 3b makes this approach much faster than the conve
 
 ## Comparing different approaches to power simulations
 
-To benchmark against existing approaches to calculating weighting strategies, we compare the following approaches: [gMCP::calcPower()], Approach 1 (graphicalMCP conventional), and Approach 2 (graphicalMCP parent-child). Both Holm and fixed sequence procedures are considered with the numbers of hypotheses of 4, 8, 12, and 16. Computing time (in median log-10 seconds) is plotted below. We can see that [gMCP::calcPower()] is the fastest and Approach 1 (graphicalMCP conventional) is the lowest. Note that [gMCP::calcPower()] implements the simulation using C, which is known to be faster than R but is not easy to extend to other situations. Given that the computing time of Approach 2 (graphicalMCP parent-child) is acceptable, we implement it in [graphicalMCP::graph_calculate_power()].
+To benchmark against existing approaches to calculating weighting strategies, we compare the following approaches: `gMCP::calcPower()`, Approach 1 (graphicalMCP conventional), and Approach 2 (graphicalMCP parent-child). Both Holm and fixed sequence procedures are considered with the numbers of hypotheses of 4, 8, 12, and 16. Computing time (in median log-10 seconds) is plotted below. We can see that `gMCP::calcPower()` is the fastest and Approach 1 (graphicalMCP conventional) is the lowest. Note that `gMCP::calcPower()` implements the simulation using C, which is known to be faster than R but is not easy to extend to other situations. Given that the computing time of Approach 2 (graphicalMCP parent-child) is acceptable, we implement it in `graphicalMCP::graph_calculate_power()`.
 
 ![](img/power-benchmarks-plot.png)
 

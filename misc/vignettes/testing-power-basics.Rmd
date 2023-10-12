@@ -95,7 +95,7 @@ graph_test_closure(
 )
 ```
 
-When using only Bonferroni testing, there is a shortcut in testing which allows us to not test the full closure of a graph. Use [graph_test_shortcut()] to call this shortcut method. In this case, `critical = TRUE` instead gives information about the order in which hypotheses are deleted. Note that the `res` column of the critical output here tells **what would have happened if sequential testing reached a given point**. However, sequential testing stops at the first non-rejected hypothesis. Global rejection results can be found in the `Global test summary` section.
+When using only Bonferroni testing, there is a shortcut in testing which allows us to not test the full closure of a graph. Use `graph_test_shortcut()` to call this shortcut method. In this case, `critical = TRUE` instead gives information about the order in which hypotheses are deleted. Note that the `res` column of the critical output here tells **what would have happened if sequential testing reached a given point**. However, sequential testing stops at the first non-rejected hypothesis. Global rejection results can be found in the `Global test summary` section.
 
 ```{r sequential}
 graph_test_shortcut(ss_graph, p = pvals, alpha = .05, critical = TRUE)

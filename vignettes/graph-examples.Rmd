@@ -380,7 +380,7 @@ test_results$outputs$rejected
 
 ## Hommel procedure
 
-Hommel (1988) procedure is a closed test procedure which uses Simes tests for every intersection hypothesis. According to Xi and Bretz (2019), the graph for Hommel procedures is the same as the graph for Holm procedures. Thus to perform Hommel procedure, we just need to specify `test_type` to be `simes`.
+Hommel procedure [@hommel-1988-stagewise] is a closed test procedure which uses Simes tests for every intersection hypothesis. According to @xi-2019-symmetric, the graph for Hommel procedures is the same as the graph for Holm procedures. Thus to perform Hommel procedure, we just need to specify `test_type` to be `simes`.
 
 ```{r hommel}
 set.seed(1234)

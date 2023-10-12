@@ -59,11 +59,7 @@ cbind(gw, cJ)
 # calculation above
 p_vals <- c(.01, .02, .005, .5)
 
-<<<<<<< HEAD
 gMCP(as_graphMCP(g), p_vals, alpha = alpha, correlation = corr,
-=======
-gMCP(as_gmcp_graph(g), p_vals, alpha = alpha, correlation = test_corr,
->>>>>>> test-specification
      test = "parametric")@rejected
 graph_test_closure(g, p_vals, alpha = alpha, test_corr = test_corr,
            tests = list(parametric = list(1:4)))$hypotheses_rejected
