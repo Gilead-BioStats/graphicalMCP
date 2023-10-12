@@ -49,7 +49,7 @@
   <a class="nav-link" href="../articles/glossary.html">Glossary</a>
 </li>
 <li class="nav-item">
-  <a class="nav-link" href="../reference/index.html">Function index</a>
+  <a class="nav-link" href="../reference/index.html">Function reference</a>
 </li>
 <li class="active nav-item dropdown">
   <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" id="dropdown-articles">Articles</a>
@@ -58,7 +58,7 @@
     <a class="dropdown-item" href="../articles/closed-testing.html">Graphical multiple comparison procedures based on the closure principle</a>
     <a class="dropdown-item" href="../articles/generate-closure.html">Rationales to generate the closure and the weighting strategy of a graph</a>
     <a class="dropdown-item" href="../articles/graph-examples.html">Common multiple comparison procedures illustrated using graphicalMCP</a>
-    <a class="dropdown-item" href="../articles/validation.html">Validation of methods against existing packages</a>
+    <a class="dropdown-item" href="../articles/comparisons.html">Comparisons with other packages</a>
     <div class="dropdown-divider"></div>
     <a class="dropdown-item" href="../articles/index.html">More articles...</a>
   </div>
@@ -563,10 +563,11 @@ variable to determine the propagation between <span class="math inline">\(H_1\)<
 <div class="section level3">
 <h3 id="hommel-procedure">Hommel procedure<a class="anchor" aria-label="anchor" href="#hommel-procedure"></a>
 </h3>
-<p>Hommel (1988) procedure is a closed test procedure which uses Simes
-tests for every intersection hypothesis. According to Xi and Bretz
-(2019), the graph for Hommel procedures is the same as the graph for
-Holm procedures. Thus to perform Hommel procedure, we just need to
+<p>Hommel procedure <span class="citation">(Hommel 1988)</span> is a
+closed test procedure which uses Simes tests for every intersection
+hypothesis. According to <span class="citation">Xi and Bretz
+(2019)</span>, the graph for Hommel procedures is the same as the graph
+for Holm procedures. Thus to perform Hommel procedure, we just need to
 specify <code>test_type</code> to be <code>simes</code>.</p>
 <div class="sourceCode" id="cb23"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">1234</span><span class="op">)</span></span>
@@ -672,6 +673,11 @@ Holm, Sture. 1979. <span>“A Simple Sequentially Rejective Multiple Test
 Procedure.”</span> <em>Scandinavian Journal of Statistics</em> 75:
 65–70. <a href="http://www.jstor.org/stable/4615733" class="external-link">http://www.jstor.org/stable/4615733</a>.
 </div>
+<div id="ref-hommel-1988-stagewise" class="csl-entry">
+Hommel, Gerhard. 1988. <span>“A Stagewise Rejective Multiple Test
+Procedure Based on a Modified Bonferroni Test.”</span>
+<em>Biometrika</em> 75 (2): 383–86. <a href="https://doi.org/10.1093/biomet/75.2.383" class="external-link">https://doi.org/10.1093/biomet/75.2.383</a>.
+</div>
 <div id="ref-hommel-2008-aesthetics" class="csl-entry">
 Hommel, Gerhard, and Frank Bretz. 2008. <span>“Aesthetics and Power
 Considerations in Multiple Testing - a Contradiction?”</span>
@@ -698,6 +704,11 @@ Testing Multiple Endpoints.”</span> <em>Pharmaceutical Statistics</em> 2
 Wiens, Brian L., and Alexei Dmitrienko. 2005. <span>“The Fallback
 Procedure for Evaluating a Aingle Family of Hypotheses.”</span>
 <em>Journal of Biopharmaceutical Statistics</em> 15 (6): 929–42. <a href="https://www.tandfonline.com/doi/full/10.1080/10543400500265660" class="external-link">https://www.tandfonline.com/doi/full/10.1080/10543400500265660</a>.
+</div>
+<div id="ref-xi-2019-symmetric" class="csl-entry">
+Xi, Dong, and Frank Bretz. 2019. <span>“Symmetric Graphs for Equally
+Weighted Tests, with Application to the Hochberg Procedure.”</span>
+<em>Statistics in Medicine</em> 38 (27): 5268–82. <a href="https://onlinelibrary.wiley.com/doi/10.1002/sim.8375" class="external-link">https://onlinelibrary.wiley.com/doi/10.1002/sim.8375</a>.
 </div>
 </div>
 </div>

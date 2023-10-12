@@ -65,7 +65,7 @@
   <a class="nav-link" href="articles/glossary.html">Glossary</a>
 </li>
 <li class="nav-item">
-  <a class="nav-link" href="reference/index.html">Function index</a>
+  <a class="nav-link" href="reference/index.html">Function reference</a>
 </li>
 <li class="nav-item dropdown">
   <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" id="dropdown-articles">Articles</a>
@@ -74,7 +74,7 @@
     <a class="dropdown-item" href="articles/closed-testing.html">Graphical multiple comparison procedures based on the closure principle</a>
     <a class="dropdown-item" href="articles/generate-closure.html">Rationales to generate the closure and the weighting strategy of a graph</a>
     <a class="dropdown-item" href="articles/graph-examples.html">Common multiple comparison procedures illustrated using graphicalMCP</a>
-    <a class="dropdown-item" href="articles/validation.html">Validation of methods against existing packages</a>
+    <a class="dropdown-item" href="articles/comparisons.html">Comparisons with other packages</a>
     <div class="dropdown-divider"></div>
     <a class="dropdown-item" href="articles/index.html">More articles...</a>
   </div>
@@ -137,7 +137,7 @@
 <li>see <code><a href="articles/graph-examples.html">vignette("graph-examples")</a></code> for common multiple comparison procedures illustrated using <code>graphicalMCP</code>
 </li>
 <li>see <code><a href="articles/generate-closure.html">vignette("generate-closure")</a></code> for rationales to generate the closure and the weighting strategy of a graph</li>
-<li>see <code><a href="articles/validation.html">vignette("validation")</a></code> for comparisons to other R packages</li>
+<li>see <code><a href="articles/comparisons.html">vignette("comparisons")</a></code> for comparisons to other R packages</li>
 </ul>
 </li>
 </ul>
@@ -151,6 +151,19 @@
 <li>Lighter version of <code>gMCP</code> which removes the rJava dependency - <a href="https://cran.r-project.org/package=gMCPLite" class="external-link">gMCPLite</a>
 </li>
 <li>Graphical MCPs with Simes tests - <a href="https://cran.r-project.org/package=lrstat" class="external-link">lrstat</a>
+</li>
+</ul>
+<p>Built upon these packages, we hope to implement graphical MCPs in a more general framework, with fewer dependencies and simpler S3 classes, and without losing computational efficiency.</p>
+</div>
+<div class="section level2">
+<h2 id="related-work-1">Related work<a class="anchor" aria-label="anchor" href="#related-work-1"></a>
+</h2>
+<ul>
+<li>Graphical MCPs <a href="https://cran.r-project.org/package=gMCP" class="external-link">gMCP</a>
+</li>
+<li>Lighter version of <code>gMCP</code> which removes the rJava dependency <a href="https://cran.r-project.org/package=gMCPLite" class="external-link">gMCPLite</a>
+</li>
+<li>Graphical MCPs with Simes tests <a href="https://cran.r-project.org/package=lrstat" class="external-link">lrstat</a>
 </li>
 </ul>
 <p>Built upon these packages, we hope to implement graphical MCPs in a more general framework, with fewer dependencies and simpler S3 classes, and without losing computational efficiency.</p>
@@ -179,24 +192,8 @@
 <div class="section level2">
 <h2 id="acknowledgments">Acknowledgments<a class="anchor" aria-label="anchor" href="#acknowledgments"></a>
 </h2>
-<p>Along with the authors and contributors, thanks to the following people for their suggestions and inspirations on the package:</p>
-<p>Frank Bretz, Willi Maurer, Ekkehard Glimm, and Ron Yu</p>
-<p>We owe a debt of gratitude to the authors of <code>gMCP</code> for their pioneering work, without which this package would not be nearly as extensive as it is.</p>
-</div>
-</div>
-<div class="section level1">
-<h1 id="references">References<a class="anchor" aria-label="anchor" href="#references"></a>
-</h1>
-<div id="refs" class="references csl-bib-body hanging-indent">
-<div id="ref-bretz-2009-graphs" class="csl-entry">
-Bretz, Frank, Willi Maurer, Werner Branath, and Martin Posch. 2009. “A Graphical Approach to Sequentially Rejective Multiple Test Procedures.” <em>Statistics in Medicine</em> 53 (4): 586–604. <a href="https://onlinelibrary.wiley.com/doi/abs/10.1002/sim.3495" class="external-link uri">https://onlinelibrary.wiley.com/doi/abs/10.1002/sim.3495</a>.
-</div>
-<div id="ref-bretz-2011-power" class="csl-entry">
-Bretz, Frank, Willi Maurer, and Gerhard Hommel. 2011. “Test and Power Considerations for Multiple Endpoint Analyses Using Sequentially Rejective Graphical Procedures.” <em>Statistics in Medicine</em> 30 (13): 1489–1501. <a href="https://onlinelibrary.wiley.com/doi/abs/10.1002/sim.3988" class="external-link uri">https://onlinelibrary.wiley.com/doi/abs/10.1002/sim.3988</a>.
-</div>
-<div id="ref-bretz-2011-tests" class="csl-entry">
-Bretz, Frank, Martin Posch, Ekkehard Glimm, Florian Klinglmueller, Willi Maurer, and Kornelius Rohmeyer. 2011. “Graphical Approaches for Multiple Comparison Procedures Using Weighted Bonferroni, Simes, or Parametric Tests.” <em>Biometrical Journal</em> 53 (6): 894–913. <a href="https://onlinelibrary.wiley.com/doi/10.1002/bimj.201000239" class="external-link uri">https://onlinelibrary.wiley.com/doi/10.1002/bimj.201000239</a>.
-</div>
+<p>Along with the authors and contributors, thanks to the following people for their suggestions and inspirations on the package: Frank Bretz, Willi Maurer, Ekkehard Glimm, Nan Chen, Jeremy Wildfire, Spencer Childress, Colleen McLaughlin, Matt Roumaya, Chelsea Dickens, and Ron Yu</p>
+<p>We owe a debt of gratitude to the authors of <a href="https://cran.r-project.org/package=gMCP" class="external-link">gMCP</a> for their pioneering work, without which this package would not be nearly as extensive as it is.</p>
 </div>
 </div>
 

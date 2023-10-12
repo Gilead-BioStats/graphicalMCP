@@ -3,13 +3,13 @@ pkgdown: 2.0.7
 pkgdown_sha: ~
 articles:
   closed-testing: closed-testing.html
+  comparisons: comparisons.html
   generate-closure: generate-closure.html
   glossary: glossary.html
   graph-examples: graph-examples.html
   graphicalMCP: graphicalMCP.html
   shortcut-testing: shortcut-testing.html
-  validation: validation.html
-last_built: 2023-10-11T01:29Z
+last_built: 2023-10-12T15:35Z
 urls:
   reference: https://urban-sniffle-p11zlpj.pages.github.io/reference
   article: https://urban-sniffle-p11zlpj.pages.github.io/articles
