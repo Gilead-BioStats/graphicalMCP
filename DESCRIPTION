@@ -21,7 +21,6 @@ License: Apache License (>= 2)
 URL: https://urban-sniffle-p11zlpj.pages.github.io/
 BugReports: https://github.com/Gilead-BioStats/graphicalMCP/issues
 Imports: 
-    igraph,
     matrixStats,
     mvtnorm
 Suggests: 
@@ -33,6 +32,7 @@ Suggests:
     gt,
     here,
     htmltools,
+    igraph,
     knitr,
     lrstat,
     prompt,
