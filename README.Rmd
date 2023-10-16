@@ -38,7 +38,7 @@ pak::pak("Gilead-BioStats/graphicalMCP@dev")
 
 # Documentation
 - For basic usage instructions, see `vignette("graphicalMCP")`
-- To become familiar with graphical MCP terminology, see `vignette("glossary")`
+- To become familiar with graphical MCP terminologies, see `vignette("glossary")`
 - To learn examples of how to use `graphicalMCP`,
   - see `vignette("shortcut-testing")` for sequentially rejective graphical multiple comparison procedures based on Bonferroni tests
   - see `vignette("closed-testing")` for graphical multiple comparison procedures based on the closure principle
