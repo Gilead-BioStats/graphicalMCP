@@ -68,12 +68,13 @@ There are a few values for \code{\link[igraph:plot.igraph]{igraph::plot.igraph()
 changed for graphicalMCP. These values can still be changed by passing them
 as arguments to \code{plot.initial_graph()}. Here are the new defaults:
 \itemize{
-\item vertex.color = "#e8c2ff",
-\item vertex.label.color = "black",
-\item vertex.size = 20,
-\item edge.arrow.size = 1,
-\item edge.arrow.width = 1,
-\item asp = 0
+\item \code{vertex.color = "#6baed6"},
+\item \code{vertex.label.color = "black"},
+\item \code{vertex.size = 20},
+\item \code{edge.arrow.size = 1},
+\item \code{edge.arrow.width = 1},
+\item \code{edge.label.color = "black"}
+\item \code{asp = 0}
 }
 
 Neither graphicalMCP nor igraph does anything about overlapping edge labels.

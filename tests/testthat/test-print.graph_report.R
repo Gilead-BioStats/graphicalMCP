@@ -106,8 +106,8 @@ test_that("additional printing options for graph report", {
     print(
       graph_rejection_orderings(
         graph_test_shortcut(
-          complex_example_2(),
-          9:1 / 800,
+          complex_example_1(),
+          6:1 / 400,
           verbose = TRUE,
           test_values = TRUE
         )

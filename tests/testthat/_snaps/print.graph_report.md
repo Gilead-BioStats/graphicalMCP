@@ -1259,143 +1259,246 @@
 ---
 
     Code
-      print(graph_rejection_orderings(graph_test_shortcut(complex_example_2(), 8:0 /
-        200, verbose = TRUE, test_values = TRUE)))
+      print(graph_rejection_orderings(graph_test_shortcut(complex_example_1(), 6:1 /
+        400, verbose = TRUE, test_values = TRUE)))
     Output
       
       Test parameters ($inputs) ------------------------------------------------------
         Initial graph
       
         --- Hypothesis weights ---
-        H1: 0.3333
-        H2: 0.0000
-        H3: 0.0000
-        H4: 0.3333
-        H5: 0.0000
-        H6: 0.0000
-        H7: 0.3333
-        H8: 0.0000
-        H9: 0.0000
+        H1: 0.5
+        H2: 0.0
+        H3: 0.0
+        H4: 0.5
+        H5: 0.0
+        H6: 0.0
       
         --- Transition weights ---
-                H1      H2      H3      H4      H5      H6      H7      H8      H9
-        H1 0.00000 0.50000 0.50000 0.00000 0.00000 0.00000 0.00000 0.00000 0.00000
-        H2 0.00000 0.00000 1.00000 0.00000 0.00000 0.00000 0.00000 0.00000 0.00000
-        H3 0.00000 0.99990 0.00000 0.00005 0.00000 0.00000 0.00005 0.00000 0.00000
-        H4 0.00000 0.00000 0.00000 0.00000 0.50000 0.50000 0.00000 0.00000 0.00000
-        H5 0.00000 0.00000 0.00000 0.00000 0.00000 1.00000 0.00000 0.00000 0.00000
-        H6 0.00005 0.00000 0.00000 0.00000 0.99990 0.00000 0.00005 0.00000 0.00000
-        H7 0.00000 0.00000 0.00000 0.00000 0.00000 0.00000 0.00000 0.50000 0.50000
-        H8 0.00000 0.00000 0.00000 0.00000 0.00000 0.00000 0.00000 0.00000 1.00000
-        H9 0.00005 0.00000 0.00000 0.00005 0.00000 0.00000 0.00000 0.99990 0.00000
+               H1     H2     H3     H4     H5     H6
+        H1 0.0000 0.5000 0.5000 0.0000 0.0000 0.0000
+        H2 0.0000 0.0000 1.0000 0.0000 0.0000 0.0000
+        H3 0.0000 0.9999 0.0000 0.0001 0.0000 0.0000
+        H4 0.0000 0.0000 0.0000 0.0000 0.5000 0.5000
+        H5 0.0000 0.0000 0.0000 0.0000 0.0000 1.0000
+        H6 0.0001 0.0000 0.0000 0.0000 0.9999 0.0000
       
         Alpha = 0.025
       
-                                H1    H2    H3    H4    H5    H6    H7    H8    H9
-        Unadjusted p-values: 0.040 0.035 0.030 0.025 0.020 0.015 0.010 0.005 0.000
+                                 H1     H2     H3     H4     H5     H6
+        Unadjusted p-values: 0.0150 0.0125 0.0100 0.0075 0.0050 0.0025
       
         Test types
-        bonferroni: (H1, H2, H3, H4, H5, H6, H7, H8, H9)
+        bonferroni: (H1, H2, H3, H4, H5, H6)
       
       Test summary ($outputs) --------------------------------------------------------
         Hypothesis Adj. P-value Reject
-                H1         0.06  FALSE
-                H2         0.06  FALSE
-                H3         0.06  FALSE
-                H4         0.05  FALSE
-                H5         0.06  FALSE
-                H6         0.06  FALSE
-                H7         0.03  FALSE
-                H8         0.03  FALSE
-                H9         0.03  FALSE
+                H1        0.015   TRUE
+                H2        0.020   TRUE
+                H3        0.020   TRUE
+                H4        0.015   TRUE
+                H5        0.015   TRUE
+                H6        0.015   TRUE
       
         Final updated graph after removing rejected hypotheses
       
         --- Hypothesis weights ---
-        H1: 0.3333
-        H2: 0.0000
-        H3: 0.0000
-        H4: 0.3333
-        H5: 0.0000
-        H6: 0.0000
-        H7: 0.3333
-        H8: 0.0000
-        H9: 0.0000
+        H1: NA
+        H2: NA
+        H3: NA
+        H4: NA
+        H5: NA
+        H6: NA
       
         --- Transition weights ---
-                H1      H2      H3      H4      H5      H6      H7      H8      H9
-        H1 0.00000 0.50000 0.50000 0.00000 0.00000 0.00000 0.00000 0.00000 0.00000
-        H2 0.00000 0.00000 1.00000 0.00000 0.00000 0.00000 0.00000 0.00000 0.00000
-        H3 0.00000 0.99990 0.00000 0.00005 0.00000 0.00000 0.00005 0.00000 0.00000
-        H4 0.00000 0.00000 0.00000 0.00000 0.50000 0.50000 0.00000 0.00000 0.00000
-        H5 0.00000 0.00000 0.00000 0.00000 0.00000 1.00000 0.00000 0.00000 0.00000
-        H6 0.00005 0.00000 0.00000 0.00000 0.99990 0.00000 0.00005 0.00000 0.00000
-        H7 0.00000 0.00000 0.00000 0.00000 0.00000 0.00000 0.00000 0.50000 0.50000
-        H8 0.00000 0.00000 0.00000 0.00000 0.00000 0.00000 0.00000 0.00000 1.00000
-        H9 0.00005 0.00000 0.00000 0.00005 0.00000 0.00000 0.00000 0.99990 0.00000
+           H1 H2 H3 H4 H5 H6
+        H1 NA NA NA NA NA NA
+        H2 NA NA NA NA NA NA
+        H3 NA NA NA NA NA NA
+        H4 NA NA NA NA NA NA
+        H5 NA NA NA NA NA NA
+        H6 NA NA NA NA NA NA
       
       Rejection sequence details ($details) ------------------------------------------
         Initial graph
       
         --- Hypothesis weights ---
-        H1: 0.3333
-        H2: 0.0000
-        H3: 0.0000
-        H4: 0.3333
-        H5: 0.0000
-        H6: 0.0000
-        H7: 0.3333
-        H8: 0.0000
-        H9: 0.0000
+        H1: 0.5
+        H2: 0.0
+        H3: 0.0
+        H4: 0.5
+        H5: 0.0
+        H6: 0.0
       
         --- Transition weights ---
-                H1      H2      H3      H4      H5      H6      H7      H8      H9
-        H1 0.00000 0.50000 0.50000 0.00000 0.00000 0.00000 0.00000 0.00000 0.00000
-        H2 0.00000 0.00000 1.00000 0.00000 0.00000 0.00000 0.00000 0.00000 0.00000
-        H3 0.00000 0.99990 0.00000 0.00005 0.00000 0.00000 0.00005 0.00000 0.00000
-        H4 0.00000 0.00000 0.00000 0.00000 0.50000 0.50000 0.00000 0.00000 0.00000
-        H5 0.00000 0.00000 0.00000 0.00000 0.00000 1.00000 0.00000 0.00000 0.00000
-        H6 0.00005 0.00000 0.00000 0.00000 0.99990 0.00000 0.00005 0.00000 0.00000
-        H7 0.00000 0.00000 0.00000 0.00000 0.00000 0.00000 0.00000 0.50000 0.50000
-        H8 0.00000 0.00000 0.00000 0.00000 0.00000 0.00000 0.00000 0.00000 1.00000
-        H9 0.00005 0.00000 0.00000 0.00005 0.00000 0.00000 0.00000 0.99990 0.00000
+               H1     H2     H3     H4     H5     H6
+        H1 0.0000 0.5000 0.5000 0.0000 0.0000 0.0000
+        H2 0.0000 0.0000 1.0000 0.0000 0.0000 0.0000
+        H3 0.0000 0.9999 0.0000 0.0001 0.0000 0.0000
+        H4 0.0000 0.0000 0.0000 0.0000 0.5000 0.5000
+        H5 0.0000 0.0000 0.0000 0.0000 0.0000 1.0000
+        H6 0.0001 0.0000 0.0000 0.0000 0.9999 0.0000
+      
+          Step 1: Updated graph after removing hypothesis H4
+      
+          --- Hypothesis weights ---
+          H1: 0.50
+          H2: 0.00
+          H3: 0.00
+          H4:   NA
+          H5: 0.25
+          H6: 0.25
+      
+          --- Transition weights ---
+                  H1      H2      H3      H4      H5      H6
+          H1 0.00000 0.50000 0.50000      NA 0.00000 0.00000
+          H2 0.00000 0.00000 1.00000      NA 0.00000 0.00000
+          H3 0.00000 0.99990 0.00000      NA 0.00005 0.00005
+          H4      NA      NA      NA      NA      NA      NA
+          H5 0.00000 0.00000 0.00000      NA 0.00000 1.00000
+          H6 0.00010 0.00000 0.00000      NA 0.99990 0.00000
+      
+            Step 2: Updated graph after removing hypotheses H4, H6
+      
+            --- Hypothesis weights ---
+            H1: 0.5
+            H2: 0.0
+            H3: 0.0
+            H4:  NA
+            H5: 0.5
+            H6:  NA
+      
+            --- Transition weights ---
+                        H1          H2          H3          H4          H5
+            H1 0.000000000 0.500000000 0.500000000          NA 0.000000000
+            H2 0.000000000 0.000000000 1.000000000          NA 0.000000000
+            H3 0.000000005 0.999900000 0.000000000          NA 0.000099995
+            H4          NA          NA          NA          NA          NA
+            H5 1.000000000 0.000000000 0.000000000          NA 0.000000000
+            H6          NA          NA          NA          NA          NA
+                H6
+                NA
+                NA
+                NA
+                NA
+                NA
+                NA
+      
+              Step 3: Updated graph after removing hypotheses H4, H6, H5
+      
+              --- Hypothesis weights ---
+              H1:  1
+              H2:  0
+              H3:  0
+              H4: NA
+              H5: NA
+              H6: NA
+      
+              --- Transition weights ---
+                     H1     H2     H3     H4     H5     H6
+              H1 0.0000 0.5000 0.5000     NA     NA     NA
+              H2 0.0000 0.0000 1.0000     NA     NA     NA
+              H3 0.0001 0.9999 0.0000     NA     NA     NA
+              H4     NA     NA     NA     NA     NA     NA
+              H5     NA     NA     NA     NA     NA     NA
+              H6     NA     NA     NA     NA     NA     NA
+      
+                Step 4: Updated graph after removing hypotheses H4, H6, H5, H1
+      
+                --- Hypothesis weights ---
+                H1:  NA
+                H2: 0.5
+                H3: 0.5
+                H4:  NA
+                H5:  NA
+                H6:  NA
+      
+                --- Transition weights ---
+                   H1 H2 H3 H4 H5 H6
+                H1 NA NA NA NA NA NA
+                H2 NA  0  1 NA NA NA
+                H3 NA  1  0 NA NA NA
+                H4 NA NA NA NA NA NA
+                H5 NA NA NA NA NA NA
+                H6 NA NA NA NA NA NA
+      
+                  Step 5: Updated graph after removing hypotheses H4, H6, H5, H1, H3
+      
+                  --- Hypothesis weights ---
+                  H1: NA
+                  H2:  1
+                  H3: NA
+                  H4: NA
+                  H5: NA
+                  H6: NA
+      
+                  --- Transition weights ---
+                     H1 H2 H3 H4 H5 H6
+                  H1 NA NA NA NA NA NA
+                  H2 NA  0 NA NA NA NA
+                  H3 NA NA NA NA NA NA
+                  H4 NA NA NA NA NA NA
+                  H5 NA NA NA NA NA NA
+                  H6 NA NA NA NA NA NA
+      
+                    Step 6: Updated graph after removing hypotheses H4, H6, H5, H1, H3, H2
+      
+                    --- Hypothesis weights ---
+                    H1: NA
+                    H2: NA
+                    H3: NA
+                    H4: NA
+                    H5: NA
+                    H6: NA
+      
+                    --- Transition weights ---
+                       H1 H2 H3 H4 H5 H6
+                    H1 NA NA NA NA NA NA
+                    H2 NA NA NA NA NA NA
+                    H3 NA NA NA NA NA NA
+                    H4 NA NA NA NA NA NA
+                    H5 NA NA NA NA NA NA
+                    H6 NA NA NA NA NA NA
       
         Final updated graph after removing rejected hypotheses
       
         --- Hypothesis weights ---
-        H1: 0.3333
-        H2: 0.0000
-        H3: 0.0000
-        H4: 0.3333
-        H5: 0.0000
-        H6: 0.0000
-        H7: 0.3333
-        H8: 0.0000
-        H9: 0.0000
+        H1: NA
+        H2: NA
+        H3: NA
+        H4: NA
+        H5: NA
+        H6: NA
       
         --- Transition weights ---
-                H1      H2      H3      H4      H5      H6      H7      H8      H9
-        H1 0.00000 0.50000 0.50000 0.00000 0.00000 0.00000 0.00000 0.00000 0.00000
-        H2 0.00000 0.00000 1.00000 0.00000 0.00000 0.00000 0.00000 0.00000 0.00000
-        H3 0.00000 0.99990 0.00000 0.00005 0.00000 0.00000 0.00005 0.00000 0.00000
-        H4 0.00000 0.00000 0.00000 0.00000 0.50000 0.50000 0.00000 0.00000 0.00000
-        H5 0.00000 0.00000 0.00000 0.00000 0.00000 1.00000 0.00000 0.00000 0.00000
-        H6 0.00005 0.00000 0.00000 0.00000 0.99990 0.00000 0.00005 0.00000 0.00000
-        H7 0.00000 0.00000 0.00000 0.00000 0.00000 0.00000 0.00000 0.50000 0.50000
-        H8 0.00000 0.00000 0.00000 0.00000 0.00000 0.00000 0.00000 0.00000 1.00000
-        H9 0.00005 0.00000 0.00000 0.00005 0.00000 0.00000 0.00000 0.99990 0.00000
+           H1 H2 H3 H4 H5 H6
+        H1 NA NA NA NA NA NA
+        H2 NA NA NA NA NA NA
+        H3 NA NA NA NA NA NA
+        H4 NA NA NA NA NA NA
+        H5 NA NA NA NA NA NA
+        H6 NA NA NA NA NA NA
       
       Detailed test values ($test_values) --------------------------------------------
-        Step Hypothesis     p <= Weight * Alpha Inequality_holds
-           1         H7 0.010 <= 0.3333 * 0.025            FALSE
-           1         H9 0.000 <= 0.0000 * 0.025               NA
-           1         H8 0.005 <= 0.0000 * 0.025            FALSE
-           1         H4 0.025 <= 0.3333 * 0.025            FALSE
-           1         H6 0.015 <= 0.0000 * 0.025            FALSE
-           1         H5 0.020 <= 0.0000 * 0.025            FALSE
-           1         H1 0.040 <= 0.3333 * 0.025            FALSE
-           1         H3 0.030 <= 0.0000 * 0.025            FALSE
-           1         H2 0.035 <= 0.0000 * 0.025            FALSE
+        Step Hypothesis      p <= Weight * Alpha Inequality_holds
+           1         H4 0.0075 <=   0.50 * 0.025             TRUE
+           2         H6 0.0025 <=   0.25 * 0.025             TRUE
+           3         H5 0.0050 <=   0.50 * 0.025             TRUE
+           4         H1 0.0150 <=   1.00 * 0.025             TRUE
+           5         H3 0.0100 <=   0.50 * 0.025             TRUE
+           6         H2 0.0125 <=   1.00 * 0.025             TRUE
       
       Alternate rejection orderings ($valid_rejection_orderings) ---------------------
+      H4 H5 H6 H1 H2 H3 
+       4  5  6  1  2  3 
+      
+      H4 H5 H6 H1 H3 H2 
+       4  5  6  1  3  2 
+      
+      H4 H6 H5 H1 H2 H3 
+       4  6  5  1  2  3 
+      
+      H4 H6 H5 H1 H3 H2 
+       4  6  5  1  3  2 
+      
 

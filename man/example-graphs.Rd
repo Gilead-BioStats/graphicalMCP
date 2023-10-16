@@ -10,8 +10,6 @@
 \alias{simple_successive_1}
 \alias{simple_successive_2}
 \alias{random_graph}
-\alias{complex_example_1}
-\alias{complex_example_2}
 \title{Example graphs from a selection of papers}
 \usage{
 bonferroni(num_hyps, hyp_names = NULL)
@@ -31,12 +29,6 @@ simple_successive_1(hyp_names = NULL)
 simple_successive_2(hyp_names = NULL)
 
 random_graph(num_hyps, hyp_names = NULL)
-
-complex_example_1(hyp_names = NULL)
-
-complex_example_2(hyp_names = NULL)
-
-complex_example_2(hyp_names = NULL)
 }
 \arguments{
 \item{num_hyps}{Number of vertices in the graph}
