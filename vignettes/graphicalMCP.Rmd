@@ -12,7 +12,6 @@ vignette: >
 
 ```{r, include = FALSE}
 knitr::opts_chunk$set(
-  results = "hide",
   collapse = TRUE,
   comment = "#>",
   fig.align = "center"
@@ -27,7 +26,7 @@ Graphical approaches for multiple comparison procedures (MCPs) are a general fra
 
 ## Initial graph
 
-The base object in `graphicalMCP` is an `initial_graph`, which consists of a vector of hypothesis weights and a matrix of transition weights [@bretz-2009-graphical]. In the graphical representation, hypotheses are denoted as nodes (or vertices) associated with hypothesis weights. A directed edge from a hypothesis to another indicates the direction of propagation of the hypothesis weight from the origin hypothesis to the end hypothesis. The edge is weighted by a transition weight indicating the proportion of propagation.
+The base object in `graphicalMCP` is an `initial_graph`, which consists of a vector of hypothesis weights and a matrix of transition weights [@bretz-2009-graphical]. This object can be created via `graph_create()`. In the graphical representation, hypotheses are denoted as nodes (or vertices) associated with hypothesis weights. A directed edge from a hypothesis to another indicates the direction of propagation of the hypothesis weight from the origin hypothesis to the end hypothesis. The edge is weighted by a transition weight indicating the proportion of propagation.
 
 ```{r create-graph, fig.dim=c(3, 3)}
 library(graphicalMCP)
@@ -93,7 +92,7 @@ test_results_closed$outputs$rejected
 
 # Power simulations
 
-With multiplicity adjustment, such as graphical MCPs, the "power" to reject each hypothesis will be affected, compared to its marginal power. The latter is the power to rejected a hypothesis at the significance level `alpha` without multiplicity adjustment. The marginal power is usually obtained from other pieces of statistical software. `graph_calculate_power` performs power simulations to assess the power after adjusting for the graphical MCP. Assume that the marginal power to reject H1-H4 is 90%, 90%, 80%, and 80% and all test statistics are independent of each other. The local power after the multiplicity adjustment is 87.7%, 87.7, 67.2%, and 67.2% respectively for H1-H4. Additional details about closed testing can be found in `vignette("shortcut-testing")` and `vignette("closed-testing")`.
+With multiplicity adjustment, such as graphical MCPs, the "power" to reject each hypothesis will be affected, compared to its marginal power. The latter is the power to rejected a hypothesis at the significance level `alpha` without multiplicity adjustment. The marginal power is usually obtained from other pieces of statistical software. `graph_calculate_power()` performs power simulations to assess the power after adjusting for the graphical MCP. Assume that the marginal power to reject H1-H4 is 90%, 90%, 80%, and 80% and all test statistics are independent of each other. The local power after the multiplicity adjustment is 87.7%, 87.7, 67.2%, and 67.2% respectively for H1-H4. Additional details about power simulations can be found in `vignette("shortcut-testing")` and `vignette("closed-testing")`.
 
 ```{r power}
 set.seed(1234)
