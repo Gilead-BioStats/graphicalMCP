@@ -65,9 +65,9 @@ articles:
   contents:
   - shortcut-testing
   - closed-testing
-  - generate-closure
   - graph-examples
   - comparisons
+  - generate-closure
 
 - title: Glossary
   contents:

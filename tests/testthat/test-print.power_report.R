@@ -2,7 +2,7 @@ test_that("printing Bonferroni power - sequential", {
   g <- huque_alosh_bhore_2011()
 
   set.seed(51223)
-  expect_snapshot(graph_calculate_power(g))
+  expect_snapshot(graph_calculate_power(g, sim_n = 5, verbose = TRUE))
 
   set.seed(51223)
   expect_snapshot(print(graph_calculate_power(g), indent = 6, precision = 3))
@@ -62,7 +62,8 @@ test_that("printing blended power", {
         sim_success = list(
           function(.) .[1] || .[5] || .[6],
           function(.) .[2] && (.[5] || .[6])
-        )
+        ),
+        verbose = TRUE
       ),
       indent = 0,
       precision = 10

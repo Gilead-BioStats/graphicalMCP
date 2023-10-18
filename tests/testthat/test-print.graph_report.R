@@ -47,6 +47,19 @@ test_that("printing parametric closure test", {
 
 test_that("printing Bonferroni sequential results", {
   expect_snapshot(graph_test_shortcut(simple_successive_1(), rep(.01, 4)))
+
+  expect_snapshot(
+    graph_test_shortcut(simple_successive_1(), rep(.01, 4), verbose = TRUE)
+  )
+})
+
+test_that("add alternate orderings", {
+  test_res <-
+    graph_test_shortcut(simple_successive_1(), rep(.01, 4), verbose = TRUE)
+
+  test_res_alt <- graph_rejection_orderings(test_res)
+
+  expect_snapshot(test_res_alt)
 })
 
 test_that("additional printing options for graph report", {
@@ -85,6 +98,19 @@ test_that("additional printing options for graph report", {
         5:0 / 200,
         verbose = TRUE,
         test_values = TRUE
+      )
+    )
+  )
+
+  expect_snapshot(
+    print(
+      graph_rejection_orderings(
+        graph_test_shortcut(
+          complex_example_1(),
+          6:1 / 400,
+          verbose = TRUE,
+          test_values = TRUE
+        )
       )
     )
   )

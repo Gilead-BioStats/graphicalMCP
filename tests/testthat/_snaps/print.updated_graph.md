@@ -1,6 +1,76 @@
 # snapshot print method
 
     Code
+      graph_update(g, integer(0))
+    Output
+      Initial and final graphs -------------------------------------------------------
+      
+      Initial graph
+      
+      --- Hypothesis weights ---
+      H1: 0.5
+      H2: 0.5
+      H3: 0.0
+      H4: 0.0
+      
+      --- Transition weights ---
+          H1 H2 H3 H4
+       H1  0  0  1  0
+       H2  0  0  0  1
+       H3  0  1  0  0
+       H4  1  0  0  0
+      
+      Updated graph after deleting no hypotheses
+      
+      --- Hypothesis weights ---
+      H1: 0.5
+      H2: 0.5
+      H3: 0.0
+      H4: 0.0
+      
+      --- Transition weights ---
+          H1 H2 H3 H4
+       H1  0  0  1  0
+       H2  0  0  0  1
+       H3  0  1  0  0
+       H4  1  0  0  0
+      
+      Deletion sequence ($intermediate_graphs) ---------------------------------------
+      
+        Initial graph
+      
+        --- Hypothesis weights ---
+        H1: 0.5
+        H2: 0.5
+        H3: 0.0
+        H4: 0.0
+      
+        --- Transition weights ---
+           H1 H2 H3 H4
+        H1  0  0  1  0
+        H2  0  0  0  1
+        H3  0  1  0  0
+        H4  1  0  0  0
+      
+        Final updated graph after removing deleted hypotheses
+      
+        --- Hypothesis weights ---
+        H1: 0.5
+        H2: 0.5
+        H3: 0.0
+        H4: 0.0
+      
+        --- Transition weights ---
+           H1 H2 H3 H4
+        H1  0  0  1  0
+        H2  0  0  0  1
+        H3  0  1  0  0
+        H4  1  0  0  0
+      
+
+---
+
+    Code
       graph_update(g, c(FALSE, FALSE, FALSE, TRUE))
     Output
       Initial and final graphs -------------------------------------------------------

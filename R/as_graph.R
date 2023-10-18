@@ -42,8 +42,17 @@ as_initial_graph.graphMCP <- function(graph) {
 #' @rdname as-graph
 #' @export
 as_initial_graph.igraph <- function(graph) {
-  cat("igraph method")
-  invisible(graph)
+  hypotheses <- igraph::vertex_attr(graph, "weight")
+  names(hypotheses) <- igraph::vertex_attr(graph, "name")
+
+  transitions <- matrix(0, length(graph), length(graph))
+  dimnames(transitions) <- rep(list(igraph::vertex_attr(graph, "name")), 2)
+
+  for (tail in seq_along(graph)) {
+    transitions[tail, ] <- graph[tail]
+  }
+
+  graph_create(hypotheses, transitions)
 }
 
 #' @rdname as-graph

@@ -88,6 +88,7 @@ graph_test_closure <- function(graph,
   # Test types should be specified as full names or first initial,
   # case-insensitive. A single provided test type should be applied to all
   # groups.
+  test_types_names <- names(test_types)
   test_opts <- c(
     bonferroni = "bonferroni",
     parametric = "parametric",
@@ -97,6 +98,7 @@ graph_test_closure <- function(graph,
     s = "simes"
   )
   test_types <- test_opts[tolower(test_types)]
+  names(test_types) <- test_types_names
   if (length(test_types) == 1) {
     test_types <- rep(test_types, length(test_groups))
   }
