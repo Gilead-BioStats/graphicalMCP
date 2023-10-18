@@ -56,9 +56,9 @@
   <div class="dropdown-menu" aria-labelledby="dropdown-articles">
     <a class="dropdown-item" href="../articles/shortcut-testing.html">Sequentially rejective graphical multiple comparison procedures based on Bonferroni tests</a>
     <a class="dropdown-item" href="../articles/closed-testing.html">Graphical multiple comparison procedures based on the closure principle</a>
-    <a class="dropdown-item" href="../articles/generate-closure.html">Rationales to generate the closure and the weighting strategy of a graph</a>
     <a class="dropdown-item" href="../articles/graph-examples.html">Common multiple comparison procedures illustrated using graphicalMCP</a>
     <a class="dropdown-item" href="../articles/comparisons.html">Comparisons with other packages</a>
+    <a class="dropdown-item" href="../articles/generate-closure.html">Rationales to generate the closure and the weighting strategy of a graph</a>
     <div class="dropdown-divider"></div>
     <a class="dropdown-item" href="../articles/index.html">More articles...</a>
   </div>
@@ -119,8 +119,9 @@ and efficient way.</p>
 <p>The base object in <code>graphicalMCP</code> is an
 <code>initial_graph</code>, which consists of a vector of hypothesis
 weights and a matrix of transition weights <span class="citation">(Bretz
-et al. 2009)</span>. In the graphical representation, hypotheses are
-denoted as nodes (or vertices) associated with hypothesis weights. A
+et al. 2009)</span>. This object can be created via
+<code><a href="../reference/graph_create.html">graph_create()</a></code>. In the graphical representation, hypotheses
+are denoted as nodes (or vertices) associated with hypothesis weights. A
 directed edge from a hypothesis to another indicates the direction of
 propagation of the hypothesis weight from the origin hypothesis to the
 end hypothesis. The edge is weighted by a transition weight indicating
@@ -137,7 +138,21 @@ the proportion of propagation.</p>
 <span><span class="op">)</span></span>
 <span><span class="va">hyp_names</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"H1"</span>, <span class="st">"H2"</span>, <span class="st">"H3"</span>, <span class="st">"H4"</span><span class="op">)</span></span>
 <span><span class="va">example_graph</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/graph_create.html">graph_create</a></span><span class="op">(</span><span class="va">hypotheses</span>, <span class="va">transitions</span>, <span class="va">hyp_names</span><span class="op">)</span></span>
-<span><span class="va">example_graph</span></span></code></pre></div>
+<span><span class="va">example_graph</span></span>
+<span><span class="co">#&gt; Initial graph</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; --- Hypothesis weights ---</span></span>
+<span><span class="co">#&gt; H1: 0.5</span></span>
+<span><span class="co">#&gt; H2: 0.5</span></span>
+<span><span class="co">#&gt; H3: 0.0</span></span>
+<span><span class="co">#&gt; H4: 0.0</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; --- Transition weights ---</span></span>
+<span><span class="co">#&gt;     H1 H2 H3 H4</span></span>
+<span><span class="co">#&gt;  H1  0  0  1  0</span></span>
+<span><span class="co">#&gt;  H2  0  0  0  1</span></span>
+<span><span class="co">#&gt;  H3  0  1  0  0</span></span>
+<span><span class="co">#&gt;  H4  1  0  0  0</span></span></code></pre></div>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">example_graph</span>, vertex.size <span class="op">=</span> <span class="fl">60</span><span class="op">)</span></span></code></pre></div>
 <p><img src="graphicalMCP_files/figure-html/plot-graph-1.png" width="288" style="display: block; margin: auto;"></p>
@@ -156,7 +171,38 @@ graph. The updated graph after removing three hypotheses is below.</p>
 <span>  delete <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="cn">TRUE</span>, <span class="cn">TRUE</span>, <span class="cn">FALSE</span>, <span class="cn">TRUE</span><span class="op">)</span></span>
 <span><span class="op">)</span></span>
 <span></span>
-<span><span class="va">updated_example</span></span></code></pre></div>
+<span><span class="va">updated_example</span></span>
+<span><span class="co">#&gt; Initial and final graphs -------------------------------------------------------</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; Initial graph</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; --- Hypothesis weights ---</span></span>
+<span><span class="co">#&gt; H1: 0.5</span></span>
+<span><span class="co">#&gt; H2: 0.5</span></span>
+<span><span class="co">#&gt; H3: 0.0</span></span>
+<span><span class="co">#&gt; H4: 0.0</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; --- Transition weights ---</span></span>
+<span><span class="co">#&gt;     H1 H2 H3 H4</span></span>
+<span><span class="co">#&gt;  H1  0  0  1  0</span></span>
+<span><span class="co">#&gt;  H2  0  0  0  1</span></span>
+<span><span class="co">#&gt;  H3  0  1  0  0</span></span>
+<span><span class="co">#&gt;  H4  1  0  0  0</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; Updated graph after deleting hypotheses 1, 2, 4</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; --- Hypothesis weights ---</span></span>
+<span><span class="co">#&gt; H1: NA</span></span>
+<span><span class="co">#&gt; H2: NA</span></span>
+<span><span class="co">#&gt; H3:  1</span></span>
+<span><span class="co">#&gt; H4: NA</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; --- Transition weights ---</span></span>
+<span><span class="co">#&gt;     H1 H2 H3 H4</span></span>
+<span><span class="co">#&gt;  H1 NA NA NA NA</span></span>
+<span><span class="co">#&gt;  H2 NA NA NA NA</span></span>
+<span><span class="co">#&gt;  H3 NA NA  0 NA</span></span>
+<span><span class="co">#&gt;  H4 NA NA NA NA</span></span></code></pre></div>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">updated_example</span>, vertex.size <span class="op">=</span> <span class="fl">60</span><span class="op">)</span></span></code></pre></div>
 <p><img src="graphicalMCP_files/figure-html/plot-updated-graph-1.png" width="288" style="display: block; margin: auto;"></p>
@@ -177,7 +223,9 @@ can be found in <code><a href="../articles/shortcut-testing.html">vignette("shor
 <span>  <span class="va">example_graph</span>,</span>
 <span>  p <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">.01</span>, <span class="fl">.005</span>, <span class="fl">.03</span>, <span class="fl">.01</span><span class="op">)</span>,</span>
 <span>  alpha <span class="op">=</span> <span class="fl">.025</span><span class="op">)</span></span>
-<span><span class="va">test_results</span><span class="op">$</span><span class="va">outputs</span><span class="op">$</span><span class="va">rejected</span></span></code></pre></div>
+<span><span class="va">test_results</span><span class="op">$</span><span class="va">outputs</span><span class="op">$</span><span class="va">rejected</span></span>
+<span><span class="co">#&gt;    H1    H2    H3    H4 </span></span>
+<span><span class="co">#&gt;  TRUE  TRUE FALSE  TRUE</span></span></code></pre></div>
 <p>A similar testing procedure can be performed using the closure
 principle. This will allow more tests for intersection hypotheses, e.g.,
 Simes, parametric and a mixture of them. If the test type is Bonferroni,
@@ -192,7 +240,9 @@ above. Additional details about closed testing can be found in
 <span>  test_types <span class="op">=</span> <span class="st">"bonferroni"</span>,</span>
 <span>  test_groups <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">4</span><span class="op">)</span></span>
 <span><span class="op">)</span></span>
-<span><span class="va">test_results_closed</span><span class="op">$</span><span class="va">outputs</span><span class="op">$</span><span class="va">rejected</span></span></code></pre></div>
+<span><span class="va">test_results_closed</span><span class="op">$</span><span class="va">outputs</span><span class="op">$</span><span class="va">rejected</span></span>
+<span><span class="co">#&gt;    H1    H2    H3    H4 </span></span>
+<span><span class="co">#&gt;  TRUE  TRUE FALSE  TRUE</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="power-simulations">Power simulations<a class="anchor" aria-label="anchor" href="#power-simulations"></a>
@@ -202,12 +252,12 @@ reject each hypothesis will be affected, compared to its marginal power.
 The latter is the power to rejected a hypothesis at the significance
 level <code>alpha</code> without multiplicity adjustment. The marginal
 power is usually obtained from other pieces of statistical software.
-<code>graph_calculate_power</code> performs power simulations to assess
-the power after adjusting for the graphical MCP. Assume that the
-marginal power to reject H1-H4 is 90%, 90%, 80%, and 80% and all test
-statistics are independent of each other. The local power after the
+<code><a href="../reference/graph_calculate_power.html">graph_calculate_power()</a></code> performs power simulations to
+assess the power after adjusting for the graphical MCP <span class="citation">(Bretz, Maurer, and Hommel 2011)</span>. Assume that
+the marginal power to reject H1-H4 is 90%, 90%, 80%, and 80% and all
+test statistics are independent of each other. The local power after the
 multiplicity adjustment is 87.7%, 87.7, 67.2%, and 67.2% respectively
-for H1-H4. Additional details about closed testing can be found in
+for H1-H4. Additional details about power simulations can be found in
 <code><a href="../articles/shortcut-testing.html">vignette("shortcut-testing")</a></code> and
 <code><a href="../articles/closed-testing.html">vignette("closed-testing")</a></code>.</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
@@ -217,7 +267,9 @@ for H1-H4. Additional details about closed testing can be found in
 <span>  sim_n <span class="op">=</span> <span class="fl">1e6</span>,</span>
 <span>  power_marginal <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">.9</span>, <span class="fl">.9</span>, <span class="fl">.8</span>, <span class="fl">.8</span><span class="op">)</span></span>
 <span><span class="op">)</span></span>
-<span><span class="va">power_results</span><span class="op">$</span><span class="va">power</span><span class="op">$</span><span class="va">power_local</span></span></code></pre></div>
+<span><span class="va">power_results</span><span class="op">$</span><span class="va">power</span><span class="op">$</span><span class="va">power_local</span></span>
+<span><span class="co">#&gt;       H1       H2       H3       H4 </span></span>
+<span><span class="co">#&gt; 0.875760 0.876295 0.670470 0.671431</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 class="unnumbered" id="references">References<a class="anchor" aria-label="anchor" href="#references"></a>

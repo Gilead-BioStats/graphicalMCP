@@ -36,9 +36,9 @@ hypothesis names and weights, and edges are labeled with weights."><meta propert
   <div class="dropdown-menu" aria-labelledby="dropdown-articles">
     <a class="dropdown-item" href="../articles/shortcut-testing.html">Sequentially rejective graphical multiple comparison procedures based on Bonferroni tests</a>
     <a class="dropdown-item" href="../articles/closed-testing.html">Graphical multiple comparison procedures based on the closure principle</a>
-    <a class="dropdown-item" href="../articles/generate-closure.html">Rationales to generate the closure and the weighting strategy of a graph</a>
     <a class="dropdown-item" href="../articles/graph-examples.html">Common multiple comparison procedures illustrated using graphicalMCP</a>
     <a class="dropdown-item" href="../articles/comparisons.html">Comparisons with other packages</a>
+    <a class="dropdown-item" href="../articles/generate-closure.html">Rationales to generate the closure and the weighting strategy of a graph</a>
     <div class="dropdown-divider"></div>
     <a class="dropdown-item" href="../articles/index.html">More articles...</a>
   </div>
@@ -159,12 +159,13 @@ passed directly to <code><a href="https://rdrr.io/r/graphics/par.html" class="ex
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
     <p>There are a few values for <code><a href="https://r.igraph.org/reference/plot.igraph.html" class="external-link">igraph::plot.igraph()</a></code> that get their defaults
 changed for graphicalMCP. These values can still be changed by passing them
-as arguments to <code>plot.initial_graph()</code>. Here are the new defaults:</p><ul><li><p>vertex.color = "#e8c2ff",</p></li>
-<li><p>vertex.label.color = "black",</p></li>
-<li><p>vertex.size = 20,</p></li>
-<li><p>edge.arrow.size = 1,</p></li>
-<li><p>edge.arrow.width = 1,</p></li>
-<li><p>asp = 0</p></li>
+as arguments to <code>plot.initial_graph()</code>. Here are the new defaults:</p><ul><li><p><code>vertex.color = "#6baed6"</code>,</p></li>
+<li><p><code>vertex.label.color = "black"</code>,</p></li>
+<li><p><code>vertex.size = 20</code>,</p></li>
+<li><p><code>edge.arrow.size = 1</code>,</p></li>
+<li><p><code>edge.arrow.width = 1</code>,</p></li>
+<li><p><code>edge.label.color = "black"</code></p></li>
+<li><p><code>asp = 0</code></p></li>
 </ul><p>Neither graphicalMCP nor igraph does anything about overlapping edge labels.
 If you run into this problem, and vertices can't practically be moved enough
 to avoid collisions of edge labels, using edge curves can help. igraph puts

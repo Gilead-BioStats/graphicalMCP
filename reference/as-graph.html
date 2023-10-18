@@ -34,9 +34,9 @@ These functions convert minimally between the different classes."><meta property
   <div class="dropdown-menu" aria-labelledby="dropdown-articles">
     <a class="dropdown-item" href="../articles/shortcut-testing.html">Sequentially rejective graphical multiple comparison procedures based on Bonferroni tests</a>
     <a class="dropdown-item" href="../articles/closed-testing.html">Graphical multiple comparison procedures based on the closure principle</a>
-    <a class="dropdown-item" href="../articles/generate-closure.html">Rationales to generate the closure and the weighting strategy of a graph</a>
     <a class="dropdown-item" href="../articles/graph-examples.html">Common multiple comparison procedures illustrated using graphicalMCP</a>
     <a class="dropdown-item" href="../articles/comparisons.html">Comparisons with other packages</a>
+    <a class="dropdown-item" href="../articles/generate-closure.html">Rationales to generate the closure and the weighting strategy of a graph</a>
     <div class="dropdown-divider"></div>
     <a class="dropdown-item" href="../articles/index.html">More articles...</a>
   </div>
@@ -128,20 +128,7 @@ names and weights. Other attributes will be dropped when converting.</p>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span>  <span class="fu"><a href="https://rdrr.io/r/base/all.equal.html" class="external-link">all.equal</a></span><span class="op">(</span><span class="va">g1</span>, <span class="fu">as_initial_graph</span><span class="op">(</span><span class="va">g3</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="op">}</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> igraph method</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [1] "names for target but not for current"                             </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [2] "Attributes: &lt; Length mismatch: comparison on first 1 components &gt;"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [3] "Attributes: &lt; Component “class”: 1 string mismatch &gt;"             </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [4] "Length mismatch: comparison on first 2 components"                </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [5] "Component 1: names for target but not for current"                </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [6] "Component 1: Numeric: lengths (5, 1) differ"                      </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [7] "Component 2: Modes: numeric, logical"                             </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [8] "Component 2: Lengths: 25, 1"                                      </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [9] "Component 2: Attributes: &lt; Modes: list, NULL &gt;"                   </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [10] "Component 2: Attributes: &lt; Lengths: 2, 0 &gt;"                       </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [11] "Component 2: Attributes: &lt; names for target but not for current &gt;"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [12] "Component 2: Attributes: &lt; current is not list-like &gt;"            </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [13] "Component 2: target is matrix, current is logical"                </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] TRUE</span>
 </code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
