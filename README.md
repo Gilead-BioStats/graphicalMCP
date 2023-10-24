@@ -9,7 +9,7 @@ status](https://www.r-pkg.org/badges/version/graphicalMCP)](https://cran.r-proje
 
 # graphicalMCP <a href="https://urban-sniffle-p11zlpj.pages.github.io/"><img src="man/figures/logo.png" align="right" height="139" /></a>
 
-## Introduction
+# Introduction
 
 Graphical approaches for multiple comparison procedures (MCPs) are a
 general framework to control the family-wise error rate strongly at a
@@ -19,7 +19,7 @@ visualizing MCPs for better communications. `graphicalMCP` is designed
 to design and analyze graphical MCPs in a flexible, informative and
 efficient way.
 
-## Installation
+# Installation
 
 `graphicalMCP` is currently not on CRAN but can be installed from GitHub
 using the following code:
@@ -29,10 +29,10 @@ using the following code:
 pak::pak("Gilead-BioStats/graphicalMCP@dev")
 ```
 
-## Documentation
+# Documentation
 
 - For basic usage instructions, see `vignette("graphicalMCP")`
-- To become familiar with graphical MCP terminology, see
+- To become familiar with graphical MCP terminologies, see
   `vignette("glossary")`
 - To learn examples of how to use `graphicalMCP`,
   - see `vignette("shortcut-testing")` for sequentially rejective
@@ -45,7 +45,7 @@ pak::pak("Gilead-BioStats/graphicalMCP@dev")
     closure and the weighting strategy of a graph
   - see `vignette("comparisons")` for comparisons to other R packages
 
-## Related work
+# Related work
 
 - Graphical MCPs - [gMCP](https://cran.r-project.org/package=gMCP)
 - Lighter version of `gMCP` which removes the rJava dependency -
@@ -57,45 +57,36 @@ Built upon these packages, we hope to implement graphical MCPs in a more
 general framework, with fewer dependencies and simpler S3 classes, and
 without losing computational efficiency.
 
-## Related work
-
-- Graphical MCPs [gMCP](https://cran.r-project.org/package=gMCP)
-- Lighter version of `gMCP` which removes the rJava dependency
-  [gMCPLite](https://cran.r-project.org/package=gMCPLite)
-- Graphical MCPs with Simes tests
-  [lrstat](https://cran.r-project.org/package=lrstat)
-
-Built upon these packages, we hope to implement graphical MCPs in a more
-general framework, with fewer dependencies and simpler S3 classes, and
-without losing computational efficiency.
-
-## Citation
+# Citation
 
 ``` r
 citation("graphicalMCP")
-#> 
 #> To cite graphicalMCP in publications use:
 #> 
 #>   Xi, D.; Brockmann, E. (2023). graphicalMCP: Graph-based multiple
 #>   comparison procedures. version 0.1.0. Gilead Sciences, Inc. Foster
 #>   City, California. https://github.com/Gilead-BioStats/graphicalMCP
 #> 
-#>   Frank Bretz, Martin Posch, Ekkehard Glimm, Florian Klinglmueller,
-#>   Willi Maurer, Kornelius Rohmeyer (2011), Graphical approaches for
-#>   multiple comparison procedures using weighted Bonferroni, Simes or
-#>   parametric tests. Biometrical Journal 53 (6), pages 894--913, Wiley.
+#> A BibTeX entry for LaTeX users is
 #> 
-#> To see these entries in BibTeX format, use 'print(<citation>,
-#> bibtex=TRUE)', 'toBibtex(.)', or set
-#> 'options(citation.bibtex.max=999)'.
+#>   @Manual{,
+#>     title = {{graphicalMCP}: Graph-based multiple comparison procedures.},
+#>     author = {Dong Xi and Ethan Brockmann},
+#>     organization = {Gilead Sciences, Inc},
+#>     note = {version 0.1.0},
+#>     year = {2023},
+#>     url = {https://github.com/Gilead-BioStats/graphicalMCP},
+#>   }
 ```
 
-## Acknowledgments
+# Acknowledgments
 
 Along with the authors and contributors, thanks to the following people
-for their suggestions and inspirations on the package: Frank Bretz,
-Willi Maurer, Ekkehard Glimm, Nan Chen, Jeremy Wildfire, Spencer
-Childress, Colleen McLaughlin, Matt Roumaya, Chelsea Dickens, and Ron Yu
+for their suggestions and inspirations on the package:
+
+Frank Bretz, Willi Maurer, Ekkehard Glimm, Nan Chen, Jeremy Wildfire,
+Spencer Childress, Colleen McLaughlin, Matt Roumaya, Chelsea Dickens,
+and Ron Yu
 
 We owe a debt of gratitude to the authors of
 [gMCP](https://cran.r-project.org/package=gMCP) for their pioneering
