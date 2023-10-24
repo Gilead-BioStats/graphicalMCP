@@ -109,26 +109,27 @@
 <a class="anchor" aria-label="anchor" href="#graphicalmcp-"></a>
 </h1>
 </div>
-<div class="section level2">
-<h2 id="introduction">Introduction<a class="anchor" aria-label="anchor" href="#introduction"></a>
-</h2>
+</div>
+<div class="section level1">
+<h1 id="introduction">Introduction<a class="anchor" aria-label="anchor" href="#introduction"></a>
+</h1>
 <p>Graphical approaches for multiple comparison procedures (MCPs) are a general framework to control the family-wise error rate strongly at a pre-specified significance level <span class="math inline">0 &lt; <em>α</em> &lt; 1</span>. This approach includes many commonly used MCPs as special cases and is transparent in visualizing MCPs for better communications. <code>graphicalMCP</code> is designed to design and analyze graphical MCPs in a flexible, informative and efficient way.</p>
 </div>
-<div class="section level2">
-<h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
-</h2>
+<div class="section level1">
+<h1 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
+</h1>
 <p><code>graphicalMCP</code> is currently not on CRAN but can be installed from GitHub using the following code:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># install.packages("pak")</span></span>
 <span><span class="fu">pak</span><span class="fu">::</span><span class="fu"><a href="https://pak.r-lib.org/reference/pak.html" class="external-link">pak</a></span><span class="op">(</span><span class="st">"Gilead-BioStats/graphicalMCP@dev"</span><span class="op">)</span></span></code></pre></div>
 </div>
-<div class="section level2">
-<h2 id="documentation">Documentation<a class="anchor" aria-label="anchor" href="#documentation"></a>
-</h2>
+<div class="section level1">
+<h1 id="documentation">Documentation<a class="anchor" aria-label="anchor" href="#documentation"></a>
+</h1>
 <ul>
 <li>For basic usage instructions, see <code><a href="articles/graphicalMCP.html">vignette("graphicalMCP")</a></code>
 </li>
-<li>To become familiar with graphical MCP terminology, see <code><a href="articles/glossary.html">vignette("glossary")</a></code>
+<li>To become familiar with graphical MCP terminologies, see <code><a href="articles/glossary.html">vignette("glossary")</a></code>
 </li>
 <li>To learn examples of how to use <code>graphicalMCP</code>,
 <ul>
@@ -142,9 +143,9 @@
 </li>
 </ul>
 </div>
-<div class="section level2">
-<h2 id="related-work">Related work<a class="anchor" aria-label="anchor" href="#related-work"></a>
-</h2>
+<div class="section level1">
+<h1 id="related-work">Related work<a class="anchor" aria-label="anchor" href="#related-work"></a>
+</h1>
 <ul>
 <li>Graphical MCPs - <a href="https://cran.r-project.org/package=gMCP" class="external-link">gMCP</a>
 </li>
@@ -155,46 +156,34 @@
 </ul>
 <p>Built upon these packages, we hope to implement graphical MCPs in a more general framework, with fewer dependencies and simpler S3 classes, and without losing computational efficiency.</p>
 </div>
-<div class="section level2">
-<h2 id="related-work-1">Related work<a class="anchor" aria-label="anchor" href="#related-work-1"></a>
-</h2>
-<ul>
-<li>Graphical MCPs <a href="https://cran.r-project.org/package=gMCP" class="external-link">gMCP</a>
-</li>
-<li>Lighter version of <code>gMCP</code> which removes the rJava dependency <a href="https://cran.r-project.org/package=gMCPLite" class="external-link">gMCPLite</a>
-</li>
-<li>Graphical MCPs with Simes tests <a href="https://cran.r-project.org/package=lrstat" class="external-link">lrstat</a>
-</li>
-</ul>
-<p>Built upon these packages, we hope to implement graphical MCPs in a more general framework, with fewer dependencies and simpler S3 classes, and without losing computational efficiency.</p>
-</div>
-<div class="section level2">
-<h2 id="citation">Citation<a class="anchor" aria-label="anchor" href="#citation"></a>
-</h2>
+<div class="section level1">
+<h1 id="citation">Citation<a class="anchor" aria-label="anchor" href="#citation"></a>
+</h1>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/citation.html" class="external-link">citation</a></span><span class="op">(</span><span class="st">"graphicalMCP"</span><span class="op">)</span></span>
-<span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; To cite graphicalMCP in publications use:</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt;   Xi, D.; Brockmann, E. (2023). graphicalMCP: Graph-based multiple</span></span>
 <span><span class="co">#&gt;   comparison procedures. version 0.1.0. Gilead Sciences, Inc. Foster</span></span>
 <span><span class="co">#&gt;   City, California. https://github.com/Gilead-BioStats/graphicalMCP</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;   Frank Bretz, Martin Posch, Ekkehard Glimm, Florian Klinglmueller,</span></span>
-<span><span class="co">#&gt;   Willi Maurer, Kornelius Rohmeyer (2011), Graphical approaches for</span></span>
-<span><span class="co">#&gt;   multiple comparison procedures using weighted Bonferroni, Simes or</span></span>
-<span><span class="co">#&gt;   parametric tests. Biometrical Journal 53 (6), pages 894--913, Wiley.</span></span>
+<span><span class="co">#&gt; A BibTeX entry for LaTeX users is</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; To see these entries in BibTeX format, use 'print(&lt;citation&gt;,</span></span>
-<span><span class="co">#&gt; bibtex=TRUE)', 'toBibtex(.)', or set</span></span>
-<span><span class="co">#&gt; 'options(citation.bibtex.max=999)'.</span></span></code></pre></div>
+<span><span class="co">#&gt;   @Manual{,</span></span>
+<span><span class="co">#&gt;     title = {{graphicalMCP}: Graph-based multiple comparison procedures.},</span></span>
+<span><span class="co">#&gt;     author = {Dong Xi and Ethan Brockmann},</span></span>
+<span><span class="co">#&gt;     organization = {Gilead Sciences, Inc},</span></span>
+<span><span class="co">#&gt;     note = {version 0.1.0},</span></span>
+<span><span class="co">#&gt;     year = {2023},</span></span>
+<span><span class="co">#&gt;     url = {https://github.com/Gilead-BioStats/graphicalMCP},</span></span>
+<span><span class="co">#&gt;   }</span></span></code></pre></div>
 </div>
-<div class="section level2">
-<h2 id="acknowledgments">Acknowledgments<a class="anchor" aria-label="anchor" href="#acknowledgments"></a>
-</h2>
-<p>Along with the authors and contributors, thanks to the following people for their suggestions and inspirations on the package: Frank Bretz, Willi Maurer, Ekkehard Glimm, Nan Chen, Jeremy Wildfire, Spencer Childress, Colleen McLaughlin, Matt Roumaya, Chelsea Dickens, and Ron Yu</p>
+<div class="section level1">
+<h1 id="acknowledgments">Acknowledgments<a class="anchor" aria-label="anchor" href="#acknowledgments"></a>
+</h1>
+<p>Along with the authors and contributors, thanks to the following people for their suggestions and inspirations on the package:</p>
+<p>Frank Bretz, Willi Maurer, Ekkehard Glimm, Nan Chen, Jeremy Wildfire, Spencer Childress, Colleen McLaughlin, Matt Roumaya, Chelsea Dickens, and Ron Yu</p>
 <p>We owe a debt of gratitude to the authors of <a href="https://cran.r-project.org/package=gMCP" class="external-link">gMCP</a> for their pioneering work, without which this package would not be nearly as extensive as it is.</p>
-</div>
 </div>
 
   </main><aside class="col-md-3"><div class="links">
