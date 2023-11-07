@@ -79,6 +79,7 @@ hypothesis names and weights, and edges are labeled with weights.</p>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span></span>
 <span>  <span class="va">x</span>,</span>
 <span>  <span class="va">...</span>,</span>
+<span>  v_palette <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"#6baed6"</span>, <span class="st">"#cccccc"</span><span class="op">)</span>,</span>
 <span>  layout <span class="op">=</span> <span class="st">"grid"</span>,</span>
 <span>  nrow <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  ncol <span class="op">=</span> <span class="cn">NULL</span>,</span>
@@ -98,6 +99,12 @@ hypothesis names and weights, and edges are labeled with weights.</p>
 
 <dt>...</dt>
 <dd><p>Other arguments passed on to <code><a href="https://r.igraph.org/reference/plot.igraph.html" class="external-link">igraph::plot.igraph()</a></code></p></dd>
+
+
+<dt>v_palette</dt>
+<dd><p>A character vector of length two specifying the colors for
+retained and deleted hypotheses. More extensive color customization must be
+done with <code>vertex.color</code></p></dd>
 
 
 <dt>layout</dt>

@@ -105,40 +105,40 @@ graphical approach to multiple comparison procedures. Most terms are
 inputs or outputs of exported functions and some are used only in the
 internal code. If any definition could be clarified or improved, please
 submit an issue to the GitHub repository.</p>
-<table style="width:99%;" class="table">
+<table style="width:100%;" class="table">
 <colgroup>
-<col width="9%">
-<col width="59%">
-<col width="11%">
-<col width="9%">
-<col width="9%">
+<col width="5%">
+<col width="78%">
+<col width="5%">
+<col width="4%">
+<col width="5%">
 </colgroup>
 <thead><tr class="header">
 <th>Entity</th>
 <th>Definition</th>
-<th>Aliases</th>
-<th>Variable(s)</th>
-<th>Related</th>
+<th>A liases</th>
+<th>Varia ble(s)</th>
+<th>R elated</th>
 </tr></thead>
 <tbody>
 <tr class="odd">
-<td><strong>Graph</strong></td>
+<td><strong>G raph</strong></td>
 <td>A set of nodes and directed edges representing a graphical multiple
 comparison procedure.</td>
 <td></td>
 <td><code>graph</code></td>
-<td>Hypotheses, Transitions</td>
+<td>Hypot heses, Trans itions</td>
 </tr>
 <tr class="even">
-<td><strong>Hypotheses</strong></td>
+<td><strong>Hypoth eses</strong></td>
 <td>The nodes with weights in a <strong>graph</strong>. Each node
 represents a null hypothesis, associated with a
 <strong>hypothesis</strong> weights. The corresponding
 <strong>significance level</strong> is the weight times
 <code>alpha</code>.</td>
-<td>weights, hypothesis weights</td>
-<td><code>hypotheses</code></td>
-<td>Weighting strategy, Transitions</td>
+<td>we ights, hypo thesis w eights</td>
+<td><code>hypot heses</code></td>
+<td>Wei ghting str ategy, Trans itions</td>
 </tr>
 <tr class="odd">
 <td></td>
@@ -146,112 +146,117 @@ represents a null hypothesis, associated with a
 names: hypothesis names, and number of hypotheses.</td>
 <td></td>
 <td>
-<code>hyp_names</code>, <code>num_hyps</code>
+<code>hyp_n ames</code>, <code>num _hyps</code>
 </td>
 <td></td>
 </tr>
 <tr class="even">
-<td><strong>Transitions</strong></td>
+<td><strong>T ransit ions</strong></td>
 <td>The directed edges with weights in a <strong>graph</strong>. Each
 edge defines the proportion of the <strong>hypothesis</strong> weight to
 be propagated from the origin hypothesis to the end hypothesis, when the
 origin is rejected.</td>
 <td></td>
-<td><code>transitions</code></td>
-<td>Hypotheses</td>
+<td><code>transi tions</code></td>
+<td>Hypo theses</td>
 </tr>
 <tr class="odd">
 <td>
-<strong>Intersection</strong> <strong>hypothesis</strong>
+<strong>In tersec tion</strong> <strong>hypoth esis</strong>
 </td>
 <td>An intersection hypothesis is an intersection of multiple null
 hypotheses, which means that all associated hypotheses are true. Plural
 often implies all intersections of all subsets of hypotheses.</td>
-<td>intersection, sub-graph(s), closure</td>
-<td><code>intersections</code></td>
-<td>Weighting strategy</td>
+<td>i nterse ction, s ub-gra ph(s), c losure</td>
+<td><code>in tersec tions</code></td>
+<td>Wei ghting st rategy</td>
 </tr>
 <tr class="even">
-<td><strong>Weighting strategy</strong></td>
+<td><strong>Wei ghting stra tegy</strong></td>
 <td>The set of all <strong>intersections</strong> and their hypothesis
 <strong>weights</strong> according to Algorithm 1 in <span class="citation">Bretz et al. (2011)</span>.</td>
-<td>intersection weights, closure weights</td>
-<td><code>weighting_strategy</code></td>
+<td>inters ection we ights, c losure w eights</td>
+<td><code>w eighti ng_str ategy</code></td>
 <td></td>
 </tr>
 <tr class="odd">
-<td><strong>Adjusted weights</strong></td>
-<td>The set of hypothesis <strong>weights</strong>, adjusted according
-to a multiple comparison procedure: - Bonferroni: No change from the
-hypothesis weights from a graph - Simes: Sum of hypothesis weights for
-hypotheses with smaller p-values in an intersection hypothesis -
-Parametric: Multiply Bonferroni weights by c-value, which is calculated
-based on the joint distribution of test statistics of the associated
-intersection hypothesis A hypothesis may be rejected if its
+<td><strong>Ad justed wei ghts</strong></td>
+<td>
+<p>The set of hypothesis <strong>weights</strong>, adjusted
+according to a multiple comparison procedure:</p>
+<ul>
+<li>Bonferroni: No change from the hypothesis weights from a graph</li>
+<li>Simes: Sum of hypothesis weights for hypotheses with smaller
+p-values in an intersection hypothesis</li>
+<li>Parametric: Multiply Bonferroni weights by c-value, which is
+calculated based on the joint distribution of test statistics of the
+associated intersection hypothesis A hypothesis may be rejected if its
 <strong>p-value</strong> is less than or equal to its <strong>adjusted
-weight</strong> times <code>alpha</code>.</td>
+weight</strong> times <code>alpha</code>.</li>
+</ul>
+</td>
 <td></td>
-<td><code>adjusted_weights</code></td>
+<td><code>adjus ted_we ights</code></td>
 <td></td>
 </tr>
 <tr class="even">
-<td><strong>P-values</strong></td>
+<td><strong>P-va lues</strong></td>
 <td>The set of p-values before multiplicity adjustment.</td>
 <td></td>
 <td><code>p</code></td>
-<td>Adjusted &amp; ordered p-values</td>
+<td>Ad justed &amp; o rdered p- values</td>
 </tr>
 <tr class="odd">
-<td><strong>Ordered p-values</strong></td>
+<td><strong>O rdered p-va lues</strong></td>
 <td>
 <strong>P-values</strong> sorted from the smallest to the largest.
 They are mainly used for Simes tests.</td>
 <td></td>
-<td><code>ordered_p</code></td>
-<td>(Adjusted) P-values</td>
+<td><code>orde red_p</code></td>
+<td>(Adj usted) P- values</td>
 </tr>
 <tr class="even">
-<td><strong>Adjusted p-values</strong></td>
+<td><strong>Ad justed p-va lues</strong></td>
 <td>
 <strong>P-values</strong> that have been adjusted according to the
 multiple comparison procedure. A hypothesis may be rejected if its
 <strong>adjusted p-value</strong> is less than or equal to
 <code>alpha</code>.</td>
 <td></td>
-<td><code>adjusted_p</code></td>
-<td>(Ordered) P-values</td>
+<td><code>adjus ted_p</code></td>
+<td>(Or dered) P- values</td>
 </tr>
 <tr class="odd">
-<td><strong>Significance level</strong></td>
+<td><strong>Signif icance l evel</strong></td>
 <td>The threshold chosen to test a null hypothesis, which may be
 rejected if its <strong>p-value</strong> is less than or equal to its
 <strong>significance level</strong>.</td>
 <td></td>
 <td><code>alpha</code></td>
-<td>P-values</td>
+<td>P- values</td>
 </tr>
 <tr class="even">
-<td><strong>Test types</strong></td>
+<td><strong>Test t ypes</strong></td>
 <td>A specification of which testing type to use for intersection
 hypotheses - Bonferroni, Simes, and parametric are currently
 supported.</td>
 <td>tests</td>
-<td><code>test_types</code></td>
-<td>Testing strategy</td>
+<td><code>test_ types</code></td>
+<td>T esting st rategy</td>
 </tr>
 <tr class="odd">
-<td><strong>Test groups</strong></td>
+<td><strong>Test gr oups</strong></td>
 <td>A partition of all null hypotheses in a <strong>graph</strong>
 specifying which <strong>hypotheses</strong> should be tested
 together.</td>
 <td>groups</td>
 <td>
-<code>groups</code>, <code>test_groups</code>
+<code>gr oups</code>, <code>test_g roups</code>
 </td>
-<td>Testing strategy</td>
+<td>T esting st rategy</td>
 </tr>
 <tr class="even">
-<td><strong>Testing strategy</strong></td>
+<td><strong>T esting stra tegy</strong></td>
 <td>
 <strong>Test types</strong> and <strong>test groups</strong>
 combined with a <strong>graph</strong>.</td>
@@ -260,22 +265,25 @@ combined with a <strong>graph</strong>.</td>
 <td></td>
 </tr>
 <tr class="odd">
-<td><strong>Marginal power</strong></td>
+<td><strong>Ma rginal p ower</strong></td>
 <td>The power to reject a null <strong>hypothesis</strong> at the
-significance level <code>alpha</code> (without multiplicity adjustment).
-This is closely related to the non-centrality parameter, which is the
-expected mean of the standardized test statistics under the alternative
-hypothesis. In this package, the asymptotic normal distribution with a
-variance of 1 is assumed and then the non-centrality is the mean of this
-distribution. The relationship between the <strong>marginal
-power</strong> and the non-centrality parameter is
-<code>noncentrality_parameter = qnorm(1 - alpha) - qnorm(1 - marginal_power)</code>.</td>
+<strong>significance level</strong> <code>alpha</code> (without
+multiplicity adjustment). This is closely related to the non-centrality
+parameter, which is the expected mean of the standardized test
+statistics under the alternative hypothesis. In this package, the
+asymptotic normal distribution with a variance of 1 is assumed and then
+the non-centrality is the mean of this distribution. The relationship
+between the <strong>marginal power</strong> and the non-centrality
+parameter is
+<code>noncentral ity_parameter = qnorm(1 - alpha ) - qnorm(1 - marginal_power)</code>.</td>
 <td></td>
-<td><code>marginal_power</code></td>
+<td><code>mar ginal_ power</code></td>
 <td></td>
 </tr>
 <tr class="even">
-<td><strong>Correlation matrix</strong></td>
+<td><ul>
+<li>*Corre lation ma trix**</li>
+</ul></td>
 <td>Specification of correlations between test statistics for
 <strong>hypotheses</strong>. There are two types of the correlation
 matrix. The correlation for testing <code>test_corr</code> is used to
@@ -286,47 +294,51 @@ correlation for simulation <code>test_sim</code> is used to simulate
 <code>NA</code>s.</td>
 <td></td>
 <td>
-<code>corr</code>, <code>test_corr</code>,
-<code>sim_corr</code>
+<code>corr</code>, <code>test_ corr</code>,
+<code>sim _corr</code>
 </td>
-<td>Testing strategy &amp; power</td>
+<td>T esting st rategy &amp; power</td>
 </tr>
 <tr class="odd">
-<td><strong>Success</strong></td>
+<td><strong>Suc cess</strong></td>
 <td>A specification of which null <strong>hypotheses</strong> must be
 rejected to consider a clinical trial a success.</td>
 <td></td>
-<td><code>sim_success</code></td>
+<td><code>sim_su ccess</code></td>
 <td>Power</td>
 </tr>
 <tr class="even">
-<td><strong>Power</strong></td>
+<td><strong>P ower</strong></td>
 <td>With a given <strong>graph</strong>, <strong>testing
 strategy</strong>, <code>alpha</code>, and the underlying
 distributionunder the alternative hypotheses, the estimated likelihood
 that a particular combination of null hypotheses will be rejected.</td>
 <td></td>
-<td><code>power_*</code></td>
-<td>Success</td>
+<td><code>po wer_*</code></td>
+<td>S uccess</td>
 </tr>
 <tr class="odd">
-<td><em>Delete a <strong>hypothesis</strong></em></td>
+<td><ul>
+<li>Delete a <strong>h ypothe sis</strong>*</li>
+</ul></td>
 <td>Remove a <strong>hypothesis</strong> from a graph, and update the
 graph according to algorithm 1 of <span class="citation">Bretz et al.
 (2011)</span>. This is an operation on a graph.</td>
 <td></td>
 <td></td>
-<td>Reject a hypothesis</td>
+<td>Reject a hypo thesis</td>
 </tr>
 <tr class="even">
-<td><em>Reject a <strong>hypothesis</strong></em></td>
+<td><ul>
+<li>Reject a <strong>h ypothe sis</strong>*</li>
+</ul></td>
 <td>Under a given <strong>graph</strong>, <strong>testing
 strategy</strong>, and <code>alpha</code>, a hypothesis is rejected if
 its <strong>p-value</strong> is sufficiently small, which is determined
 by the graphical multiple comparison procedure.</td>
 <td></td>
 <td></td>
-<td>Delete a hypothesis</td>
+<td>Delete a hypo thesis</td>
 </tr>
 </tbody>
 </table>
