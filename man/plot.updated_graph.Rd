@@ -12,6 +12,9 @@
 \item{...}{
   Arguments passed on to \code{\link[=plot.initial_graph]{plot.initial_graph}}
   \describe{
+    \item{\code{v_palette}}{A character vector of length two specifying the colors for
+retained and deleted hypotheses. More extensive color customization must be
+done with \code{vertex.color}}
     \item{\code{layout}}{An igraph layout specification (See \code{?igraph.plotting}), or
 \code{"grid"}, which lays out hypotheses left-to-right and top-to-bottom. \code{nrow}
 and \code{ncol} control the grid shape}

@@ -7,6 +7,7 @@
 \method{plot}{initial_graph}(
   x,
   ...,
+  v_palette = c("#6baed6", "#cccccc"),
   layout = "grid",
   nrow = NULL,
   ncol = NULL,
@@ -21,6 +22,10 @@
 \item{x}{An initial graph as returned by \code{\link[=graph_create]{graph_create()}}}
 
 \item{...}{Other arguments passed on to \code{\link[igraph:plot.igraph]{igraph::plot.igraph()}}}
+
+\item{v_palette}{A character vector of length two specifying the colors for
+retained and deleted hypotheses. More extensive color customization must be
+done with \code{vertex.color}}
 
 \item{layout}{An igraph layout specification (See \code{?igraph.plotting}), or
 \code{"grid"}, which lays out hypotheses left-to-right and top-to-bottom. \code{nrow}

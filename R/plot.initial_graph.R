@@ -25,6 +25,9 @@
 #'
 #' @param x An initial graph as returned by [graph_create()]
 #' @param ... Other arguments passed on to [igraph::plot.igraph()]
+#' @param v_palette A character vector of length two specifying the colors for
+#'   retained and deleted hypotheses. More extensive color customization must be
+#'   done with `vertex.color`
 #' @param layout An igraph layout specification (See `?igraph.plotting`), or
 #'   `"grid"`, which lays out hypotheses left-to-right and top-to-bottom. `nrow`
 #'   and `ncol` control the grid shape
@@ -83,6 +86,7 @@
 #' plot(g, layout = plot_layout, eps = epsilon, edge_curves = c(pairs = .5))
 plot.initial_graph <- function(x,
                                ...,
+                               v_palette = c("#6baed6", "#cccccc"),
                                layout = "grid",
                                nrow = NULL,
                                ncol = NULL,
@@ -91,6 +95,10 @@ plot.initial_graph <- function(x,
                                eps = NULL,
                                background_color = "white",
                                margins = c(0, 0, 0, 0)) {
+  if (length(v_palette) != 2) {
+    stop("Choose 2 palette colors or use `vertex.color` for more customization")
+  }
+
   graph_size <- length(x$hypotheses)
   graph_seq <- seq_along(x$hypotheses)
 
@@ -98,6 +106,10 @@ plot.initial_graph <- function(x,
 
   v_attr <- igraph::vertex_attr(graph_igraph)
   e_attr <- igraph::edge_attr(graph_igraph)
+
+  # Vertex colors --------------------------------------------------------------
+  v_color <- rep(v_palette[[1]], length(x$hypotheses))
+  v_color[attr(x, "deleted")] <- v_palette[[2]]
 
   # Make labels ----------------------------------------------------------------
   v_labels <- paste(v_attr$name, round(v_attr$weight, precision), sep = "\n")
@@ -127,8 +139,12 @@ plot.initial_graph <- function(x,
 
   # Vertex pairs connected in both directions should get a small default so
   # their edges don't overlap each other
-  if (!is.null(edge_curves["pairs"])) {
-    edge_pair_curve <- edge_curves["pairs"]
+  if (!is.null(edge_curves)) {
+    if (!is.na(edge_curves["pairs"])) {
+      edge_pair_curve <- edge_curves["pairs"]
+    } else {
+      edge_pair_curve <- .25
+    }
   } else {
     edge_pair_curve <- .25
   }
@@ -170,7 +186,7 @@ plot.initial_graph <- function(x,
     graph_igraph,
     ...,
     layout = layout,
-    vertex.color = "#6baed6",
+    vertex.color = v_color,
     vertex.label = v_labels,
     vertex.label.color = "black",
     vertex.size = 20,

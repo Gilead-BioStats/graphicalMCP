@@ -64,7 +64,7 @@ plot_layout <- rbind(
 )
 
 plot(
-  g,
+  graph_update(g, c(2, 4)),
   layout = plot_layout,
   eps = epsilon,
   edge_curves = c(pairs = .8),
@@ -79,7 +79,7 @@ Given a set of p-values for $H_1, \ldots, H_6$, the graphical multiple compariso
 
 ```{r graph-test-bonferroni}
 p_values <- c(0.015, 0.013, 0.01, 0.007, 0.1, 0.0124)
-test_results <- graph_test_closure(g, p = p_values, alpha = 0.025)
+test_results <- graph_test_closure(g, p = p_values, alpha = 0.025, verbose = TRUE, test_values = TRUE)
 
 test_results$outputs$adjusted_p
 
