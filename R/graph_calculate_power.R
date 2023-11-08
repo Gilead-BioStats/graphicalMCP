@@ -46,14 +46,19 @@
 #'   matrix of test results for the simulation, resulting in a `sim_n` length
 #'   vector. The mean of this vector is returned as "Probability of success"
 #'
-#' @return A list with five elements
-#'   * power_local - rejection proportion for each hypothesis individually
-#'   * power_expected - average number of hypotheses rejected in a single
-#'   simulation
-#'   * power_at_least_1 - proportion of simulations which reject any hypothesis
-#'   * power_all - proportion of simulations which reject all hypotheses
-#'   * power_success - proportion of simulations which reject any of the
+#' @return A list with three elements
+#'   * inputs - A list of input parameters
+#'   * power - A list of measures of how often hypotheses are rejected
+#'       * power_local - Rejection proportion for each hypothesis individually
+#'       * power_expected - Average number of hypotheses rejected in a single
+#'       simulation
+#'       * power_at_least_1 - Proportion of simulations which reject any
+#'       hypothesis
+#'       * power_all - Proportion of simulations which reject all hypotheses
+#'       * power_success - Proportion of simulations which reject any of the
 #'   hypotheses specified in `sim_success`
+#'   * details - An optional list of datasets showing simulated p-values and
+#'   results for each simulation
 #'
 #' @export
 #'
