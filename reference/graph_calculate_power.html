@@ -156,13 +156,18 @@ simulations and test results should be included in the output or not</p></dd>
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
     
 
-<p>A list with five elements</p><ul><li><p>power_local - rejection proportion for each hypothesis individually</p></li>
-<li><p>power_expected - average number of hypotheses rejected in a single
+<p>A list with three elements</p><ul><li><p>inputs - A list of input parameters</p></li>
+<li><p>power - A list of measures of how often hypotheses are rejected</p><ul><li><p>power_local - Rejection proportion for each hypothesis individually</p></li>
+<li><p>power_expected - Average number of hypotheses rejected in a single
 simulation</p></li>
-<li><p>power_at_least_1 - proportion of simulations which reject any hypothesis</p></li>
-<li><p>power_all - proportion of simulations which reject all hypotheses</p></li>
-<li><p>power_success - proportion of simulations which reject any of the
+<li><p>power_at_least_1 - Proportion of simulations which reject any
+hypothesis</p></li>
+<li><p>power_all - Proportion of simulations which reject all hypotheses</p></li>
+<li><p>power_success - Proportion of simulations which reject any of the
 hypotheses specified in <code>sim_success</code></p></li>
+</ul></li>
+<li><p>details - An optional list of datasets showing simulated p-values and
+results for each simulation</p></li>
 </ul></div>
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
@@ -187,24 +192,24 @@ vector. The mean of this vector is returned as "Probability of success"</p>
     <h2 id="references">References<a class="anchor" aria-label="anchor" href="#references"></a></h2>
     <p>Bretz, F., Maurer, W., Brannath, W., and Posch, M. (2009). A graphical
 approach to sequentially rejective multiple test procedures. Statistics in
-Medicine, 28(4), 586b</p>
+Medicine, 28(4), 586–604. <a href="https://doi.org/10.1002/sim.3495" class="external-link">https://doi.org/10.1002/sim.3495</a></p>
 <p>Bretz, F., Maurer, W., and Hommel, G. (2011). Test and power considerations
 for multiple endpoint analyses using sequentially rejective graphical
-procedures. Statistics in Medicine, 30(13), 1489b
+procedures. Statistics in Medicine, 30(13), 1489–1501.
 <a href="https://doi.org/10.1002/sim.3988" class="external-link">https://doi.org/10.1002/sim.3988</a></p>
 <p>Bretz, F., Posch, M., Glimm, E., Klinglmueller, F., Maurer, W., and Rohmeyer,
 K. (2011). Graphical approaches for multiple comparison procedures using
 weighted Bonferroni, Simes, or parametric tests. Biometrical Journal, 53(6),
-894b</p>
+894–913. <a href="https://doi.org/10.1002/bimj.201000239" class="external-link">https://doi.org/10.1002/bimj.201000239</a></p>
 <p>Lu, K. (2016). Graphical approaches using a Bonferroni mixture of weighted
-Simes tests. Statistics in Medicine, 35(22), 4041b
+Simes tests. Statistics in Medicine, 35(22), 4041–4055.
 <a href="https://doi.org/10.1002/sim.6985" class="external-link">https://doi.org/10.1002/sim.6985</a></p>
 <p>Xi, D., Glimm, E., Maurer, W., and Bretz, F. (2017). A unified framework for
 weighted parametric multiple test procedures. Biometrical Journal, 59(5),
-918b</p>
+918–931. <a href="https://doi.org/10.1002/bimj.201600233" class="external-link">https://doi.org/10.1002/bimj.201600233</a></p>
 <p>Xi, D., and Bretz, F. (2019). Symmetric graphs for equally weighted tests,
 with application to the Hochberg procedure. Statistics in Medicine, 38(27),
-5268b</p>
+5268–5282. <a href="https://doi.org/10.1002/sim.8375" class="external-link">https://doi.org/10.1002/sim.8375</a></p>
 <p>Rohmeyer K, Klinglmueller F (2020). <em>gMCP: Graph Based Multiple Test
 Procedures</em>. R package version 0.8-15,
 <a href="https://cran.r-project.org/package=gMCP" class="external-link">https://cran.r-project.org/package=gMCP</a>.</p>
