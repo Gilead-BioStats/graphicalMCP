@@ -12,6 +12,8 @@ graph_test_closure(
   test_groups = list(seq_along(graph$hypotheses)),
   test_types = c("bonferroni"),
   test_corr = rep(list(NA), length(test_types)),
+  custom_test = NULL,
+  custom_test_args = list(),
   verbose = FALSE,
   test_values = FALSE
 )

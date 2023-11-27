@@ -1,7 +1,15 @@
 #' Calculate adjusted p-values
 #'
+#' Currently only Bonferroni, parametric, and Simes adjusted p-value
+#' calculations are available in this package. However, there is a mechanism for
+#' users to insert their own custom test type by defining a new adjusted p-value
+#' function, which matches the format of existing ones. See
+#' `vignette("custom-tests")` for more details.
+#'
 #' @param p A numeric vector of p-values
 #' @param hypotheses A numeric vector of hypothesis weights
+#' @param group A numeric vector used to subset p-values, hypotheses, and any
+#'   other arguments
 #' @param test_corr (Optional) A numeric matrix of correlations between
 #'   hypotheses' test statistics
 #'
@@ -11,7 +19,7 @@
 #'
 #' @keywords internal
 #'
-#' @template references
+#' @export
 #'
 #' @examples
 #' set.seed(22723)
@@ -19,40 +27,53 @@
 #' w <- c("H1" = .75, "H2" = .25, "H3" = 0)
 #' p <- c("H1" = .019, "H2" = .025, "H3" = .05)
 #'
-#' graphicalMCP:::adjust_p_bonferroni(p, w)
-#' graphicalMCP:::adjust_p_simes(p, w)
+#' adjust_p_bonferroni(p, w)
+#' adjust_p_simes(p, w)
 #'
 #' corr1 <- diag(3)
 #' corr2 <- corr1
 #' corr2[lower.tri(corr2)] <- corr2[upper.tri(corr2)] <- runif(3, -1, 1)
 #'
 #' # No correlation
-#' graphicalMCP:::adjust_p_parametric(p, w, corr1)
+#' adjust_p_parametric(p, w, corr1)
 #'
 #' # Uniform random pairwise correlations
-#' graphicalMCP:::adjust_p_parametric(p, w, corr2)
-adjust_p_bonferroni <- function(p, hypotheses) {
-  if (sum(hypotheses) == 0) {
+#' adjust_p_parametric(p, w, corr2)
+adjust_p_bonferroni <- function(p, hypotheses, group) {
+  p <- p[group]
+  hypotheses <- hypotheses[group]
+
+  if (sum(hypotheses, na.rm = TRUE) == 0) {
     return(Inf)
   }
+
+  w_nonzero <- hypotheses > 0 & !is.na(hypotheses)
 
   # We need na.rm = TRUE to handle the 0 / 0 case. This may be too blunt a way
   # to handle it, but I suspect it's the fastest. Another option is to reduce p
   # and weights by keeping only indices where `!(p == 0 & weights == 0)`.
   # Considering that p-values are validated in the test function, this should be
   # safe
-  round(min(p / hypotheses, na.rm = TRUE), 10)
+  round(min(p[w_nonzero] / hypotheses[w_nonzero], na.rm = TRUE), 10)
 }
 
 #' @rdname adjust_p
-adjust_p_parametric <- function(p, hypotheses, test_corr = NULL) {
-  if (sum(hypotheses) == 0) {
+#' @export
+adjust_p_parametric <- function(p, hypotheses, group, test_corr = NULL) {
+  p <- p[group]
+  hypotheses <- hypotheses[group]
+  test_corr <- test_corr[group, group, drop = FALSE]
+
+  if (sum(hypotheses, na.rm = TRUE) == 0) {
     return(Inf)
   }
 
-  w_nonzero <- hypotheses > 0
-  q <- min(p[w_nonzero] / hypotheses[w_nonzero])
-  q <- q * hypotheses[w_nonzero]
+  w_nonzero <- hypotheses > 0 & !is.na(hypotheses)
+  p <- p[w_nonzero]
+  hypotheses <- hypotheses[w_nonzero]
+
+  q <- min(p / hypotheses)
+  q <- q * hypotheses
   z <- stats::qnorm(q, lower.tail = FALSE)
   prob_less_than_z <- ifelse(
     length(z) == 1,
@@ -72,10 +93,18 @@ adjust_p_parametric <- function(p, hypotheses, test_corr = NULL) {
 }
 
 #' @rdname adjust_p
-adjust_p_simes <- function(p, hypotheses) {
-  if (sum(hypotheses) == 0) {
+#' @export
+adjust_p_simes <- function(p, hypotheses, group) {
+  p <- p[group]
+  hypotheses <- hypotheses[group]
+
+  if (sum(hypotheses, na.rm = TRUE) == 0) {
     return(Inf)
   }
+
+  w_nonzero <- hypotheses > 0 & !is.na(hypotheses)
+  hypotheses <- hypotheses[w_nonzero]
+  p <- p[w_nonzero]
 
   adjusted_p <- Inf
   for (i in seq_along(hypotheses)) {

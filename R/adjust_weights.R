@@ -33,8 +33,6 @@
 #'
 #' @keywords internal
 #'
-#' @template references
-#'
 #' @examples
 #' p <- 1:6 / 200
 #'

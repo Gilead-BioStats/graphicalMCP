@@ -62,8 +62,6 @@
 #'
 #' @export
 #'
-#' @template references
-#'
 #' @examples
 #' par_gate <- simple_successive_1()
 #'

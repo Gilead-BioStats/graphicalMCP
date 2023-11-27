@@ -331,8 +331,8 @@ test_that("closure internal consistency", {
     list(1:2, 3:4, 5:6),
     c("b", "p", "s"),
     list(NA, diag(2), NA),
-    TRUE,
-    TRUE
+    verbose = TRUE,
+    test_values = TRUE
   )
 
   num_hyps <- length(rando$hypotheses)
@@ -428,3 +428,4 @@ test_that("adjusted p that exceeds alpha by floating point diff is rejected", {
     c(H1 = TRUE, H2 = TRUE, H3 = FALSE, H4 = TRUE, H5 = FALSE, H6 = FALSE)
   )
 })
+

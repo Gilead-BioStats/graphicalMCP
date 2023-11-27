@@ -28,6 +28,11 @@
 #'   parametric test groups should have numeric matrices specifying the (known
 #'   or estimated) pairwise correlations between the test statistics of all
 #'   hypotheses in the group.
+#' @param custom_test (Optional) A function that implements a new testing
+#'   algorithm. The inputs and outputs must match the input and output format of
+#'   the other `adjust_p_*` functions
+#' @param custom_test_args (Optional) A list of additional arguments passed
+#'   on when `custom_test` is called
 #' @param verbose A logical scalar specifying whether the details of the
 #'   adjusted p-value calculations should be included in results
 #' @param test_values A logical scalar specifying whether details of the
@@ -46,8 +51,6 @@
 #' @rdname testing
 #'
 #' @export
-#'
-#' @template references
 #'
 #' @examples
 #'
@@ -82,6 +85,8 @@ graph_test_closure <- function(graph,
                                test_groups = list(seq_along(graph$hypotheses)),
                                test_types = c("bonferroni"),
                                test_corr = rep(list(NA), length(test_types)),
+                               custom_test = NULL,
+                               custom_test_args = list(),
                                verbose = FALSE,
                                test_values = FALSE) {
   # Input validation & sanitization --------------------------------------------
@@ -93,9 +98,11 @@ graph_test_closure <- function(graph,
     bonferroni = "bonferroni",
     parametric = "parametric",
     simes = "simes",
+    other = "other",
     b = "bonferroni",
     p = "parametric",
-    s = "simes"
+    s = "simes",
+    o = "other"
   )
   test_types <- test_opts[tolower(test_types)]
   names(test_types) <- test_types_names
@@ -195,19 +202,33 @@ graph_test_closure <- function(graph,
       # returns a single value as output (adjusted p-value for the whole group)
       if (test == "bonferroni") {
         adjusted_p[[intersection_index, group_index]] <- adjust_p_bonferroni(
-          p[group_by_intersection],
-          vec_weights[group_by_intersection]
+          p,
+          vec_weights,
+          group
         )
       } else if (test == "simes") {
         adjusted_p[[intersection_index, group_index]] <- adjust_p_simes(
-          p[group_by_intersection],
-          vec_weights[group_by_intersection]
+          p,
+          vec_weights,
+          group
         )
       } else if (test == "parametric") {
         adjusted_p[[intersection_index, group_index]] <- adjust_p_parametric(
-          p[group_by_intersection],
-          vec_weights[group_by_intersection],
-          test_corr[group_by_intersection, group_by_intersection, drop = FALSE]
+          p,
+          vec_weights,
+          group,
+          test_corr
+        )
+      } else if (test == "other") {
+        adjusted_p[[intersection_index, group_index]] <- do.call(
+          custom_test,
+          c(
+            list(
+              p = p,
+              hypotheses = vec_weights
+            ),
+            custom_test_args
+          )
         )
       } else {
         stop(paste(test, "testing is not supported at this time"))

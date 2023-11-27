@@ -35,8 +35,6 @@
 #'
 #' @export
 #'
-#' @template references
-#'
 #' @examples
 #' # A graphical multiple comparison procedure with two primary hypotheses (H1
 #' # and H2) and two secondary hypotheses (H3 and H4)

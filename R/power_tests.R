@@ -30,8 +30,6 @@
 #'
 #' @seealso [graph_test_closure()], [graph_test_shortcut()]
 #'
-#' @template references
-#'
 #' @examples
 #' par_gate <- simple_successive_1()
 #' num_hyps <- length(par_gate$hypotheses)

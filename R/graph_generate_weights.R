@@ -22,8 +22,6 @@
 #'
 #' @export
 #'
-#' @template references
-#'
 #' @examples
 #'
 #' par_gate <- graph_create(

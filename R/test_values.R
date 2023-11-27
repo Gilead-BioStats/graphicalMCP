@@ -16,8 +16,6 @@
 #'
 #' @keywords internal
 #'
-#' @template references
-#'
 #' @examples
 #' w <- c(H1 = .5, H2 = .5, H3 = 0, H4 = 0)
 #'

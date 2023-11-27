@@ -24,8 +24,6 @@
 #'
 #' @export
 #'
-#' @template references
-#'
 #' @examples
 #' hypotheses <- c(0.5, 0.5, 0, 0)
 #' transitions <- rbind(
