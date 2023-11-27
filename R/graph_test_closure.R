@@ -265,77 +265,81 @@ graph_test_closure <- function(graph,
 
   # Adjusted weight details ----------------------------------------------------
   if (test_values) {
-    # Adjusted weights are recorded in a dataframe, which doesn't store in a
-    # matrix. So for the test values loops, each group's adjusted weight
-    # dataframe is stored in a list. These are the initialized list and counter
-    # for indexing into it.
-    test_values_index <- 1
-    test_values_list <- vector("list", num_intersections * num_groups)
+    if (test == "other") {
+      warning("Custom tests with `test_values` not currently supported")
 
-    # Adjusted weights are calculated for each group in each intersection of the
-    # closure
-    for (intersection_index in seq_len(num_intersections)) {
-      vec_intersection <-
-        matrix_intersections[intersection_index, , drop = TRUE]
-      vec_weights <-
-        weighting_strategy_compact[intersection_index, , drop = TRUE]
+      test_values <- FALSE
+    } else {
+      # Adjusted weights are recorded in a dataframe, which doesn't store in a
+      # matrix. So for the test values loops, each group's adjusted weight
+      # dataframe is stored in a list. These are the initialized list and counter
+      # for indexing into it.
+      test_values_index <- 1
+      test_values_list <- vector("list", num_intersections * num_groups)
 
-      str_intersection <- paste(vec_intersection, collapse = "")
+      # Adjusted weights are calculated for each group in each intersection of the
+      # closure
+      for (intersection_index in seq_len(num_intersections)) {
+        vec_intersection <-
+          matrix_intersections[intersection_index, , drop = TRUE]
+        vec_weights <-
+          weighting_strategy_compact[intersection_index, , drop = TRUE]
 
-      for (group_index in seq_len(num_groups)) {
-        group <- test_groups[[group_index]]
-        test <- test_types[[group_index]]
+        str_intersection <- paste(vec_intersection, collapse = "")
 
-        # Hypotheses to include in adjusted weight calculations must be in both
-        # the current group and the current intersection
-        group_by_intersection <- group[as.logical(vec_intersection[group])]
+        for (group_index in seq_len(num_groups)) {
+          group <- test_groups[[group_index]]
+          test <- test_types[[group_index]]
 
-        # adjusted weights, like adjusted p-values, must be calculated at both
-        # the group and intersection level. Inputs are for a single group, and
-        # output is a dataframe containing adjusted weight test information at
-        # the hypothesis/operand level.
-        if (test == "bonferroni") {
-          test_values_list[[test_values_index]] <- test_values_bonferroni(
-            p[group_by_intersection],
-            vec_weights[group_by_intersection],
-            alpha,
-            str_intersection
-          )
-        } else if (test == "simes") {
-          test_values_list[[test_values_index]] <- test_values_simes(
-            p[group_by_intersection],
-            vec_weights[group_by_intersection],
-            alpha,
-            str_intersection
-          )
-        } else if (test == "parametric") {
-          test_values_list[[test_values_index]] <- test_values_parametric(
-            p[group_by_intersection],
-            vec_weights[group_by_intersection],
-            alpha,
-            str_intersection,
-            test_corr[group_by_intersection,
-              group_by_intersection,
-              drop = FALSE
-            ]
-          )
-        } else {
-          stop(paste(test, "testing is not supported at this time"))
+          # Hypotheses to include in adjusted weight calculations must be in both
+          # the current group and the current intersection
+          group_by_intersection <- group[as.logical(vec_intersection[group])]
+
+          # adjusted weights, like adjusted p-values, must be calculated at both
+          # the group and intersection level. Inputs are for a single group, and
+          # output is a dataframe containing adjusted weight test information at
+          # the hypothesis/operand level.
+          if (test == "bonferroni") {
+            test_values_list[[test_values_index]] <- test_values_bonferroni(
+              p[group_by_intersection],
+              vec_weights[group_by_intersection],
+              alpha,
+              str_intersection
+            )
+          } else if (test == "simes") {
+            test_values_list[[test_values_index]] <- test_values_simes(
+              p[group_by_intersection],
+              vec_weights[group_by_intersection],
+              alpha,
+              str_intersection
+            )
+          } else if (test == "parametric") {
+            test_values_list[[test_values_index]] <- test_values_parametric(
+              p[group_by_intersection],
+              vec_weights[group_by_intersection],
+              alpha,
+              str_intersection,
+              test_corr[group_by_intersection,
+                        group_by_intersection,
+                        drop = FALSE
+              ]
+            )
+          } else {
+            stop(paste(test, "testing is not supported at this time"))
+          }
+
+          test_values_index <- test_values_index + 1
         }
-
-        test_values_index <- test_values_index + 1
       }
-    }
 
-    df_test_values <- do.call(rbind, test_values_list)
-    rownames(df_test_values) <- NULL
+      df_test_values <- do.call(rbind, test_values_list)
+      rownames(df_test_values) <- NULL
 
-
-
-    # "c" value is only used in parametric testing, so there's no need to
-    # include this column when there are no parametric groups
-    if (!any(test_types == "parametric")) {
-      df_test_values[c("c_value", "*")] <- NULL
+      # "c" value is only used in parametric testing, so there's no need to
+      # include this column when there are no parametric groups
+      if (!any(test_types == "parametric")) {
+        df_test_values[c("c_value", "*")] <- NULL
+      }
     }
   }
 
