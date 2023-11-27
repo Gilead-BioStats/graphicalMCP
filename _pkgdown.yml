@@ -30,6 +30,9 @@ reference:
   - graph_test_shortcut
   - print.graph_report
   - graph_rejection_orderings
+  - adjust_p_bonferroni
+  - adjust_p_simes
+  - adjust_p_parametric
 - title: Run a power simulation
 - desc: Functions for running power simulations
 - contents:
