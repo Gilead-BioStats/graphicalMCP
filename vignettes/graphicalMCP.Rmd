@@ -72,7 +72,8 @@ Given the set of p-values of all hypotheses, graphical MCPs can be performed usi
 test_results <- graph_test_shortcut(
   example_graph,
   p = c(.01, .005, .03, .01),
-  alpha = .025)
+  alpha = .025
+)
 test_results$outputs$rejected
 ```
 

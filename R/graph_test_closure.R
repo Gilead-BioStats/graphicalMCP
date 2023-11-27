@@ -320,8 +320,8 @@ graph_test_closure <- function(graph,
               alpha,
               str_intersection,
               test_corr[group_by_intersection,
-                        group_by_intersection,
-                        drop = FALSE
+                group_by_intersection,
+                drop = FALSE
               ]
             )
           } else {

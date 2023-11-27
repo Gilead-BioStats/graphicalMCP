@@ -308,7 +308,6 @@ test_that("compare adjusted p-values to lrstat - Bonferroni & Simes", {
         ignore_attr = TRUE
       )
     }
-
   }
 })
 
@@ -428,4 +427,3 @@ test_that("adjusted p that exceeds alpha by floating point diff is rejected", {
     c(H1 = TRUE, H2 = TRUE, H3 = FALSE, H4 = TRUE, H5 = FALSE, H6 = FALSE)
   )
 })
-
