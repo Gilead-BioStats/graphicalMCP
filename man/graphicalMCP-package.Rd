@@ -19,7 +19,7 @@ Useful links:
 
 }
 \author{
-\strong{Maintainer}: Dong Xi \email{dong.xi@gilead.com}
+\strong{Maintainer}: Dong Xi \email{dong.xi1@gilead.com}
 
 Authors:
 \itemize{

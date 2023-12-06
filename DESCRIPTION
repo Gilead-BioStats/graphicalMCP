@@ -3,7 +3,7 @@ Package: graphicalMCP
 Title: Graphical Approach for Multiple Comparison Procedures
 Version: 0.1.0
 Authors@R: c(
-    person("Dong", "Xi", , "dong.xi@gilead.com", role = c("aut", "cre")),
+    person("Dong", "Xi", , "dong.xi1@gilead.com", role = c("aut", "cre")),
     person("Ethan", "Brockmann", , "ethan.brockmann@atorusresearch.com", role = "aut"),
     person("Gilead Biostatistics", role = c("cph", "fnd")),
     person("Atorus Research LLC", role = "cph")

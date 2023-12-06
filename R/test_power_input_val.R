@@ -10,11 +10,11 @@ test_input_val <- function(graph,
     bonferroni = "bonferroni",
     parametric = "parametric",
     simes = "simes",
-    other = "other",
+    custom = "custom",
     b = "bonferroni",
     p = "parametric",
     s = "simes",
-    o = "other"
+    c = "custom"
   )
 
   corr_is_matrix_list <- is.list(test_corr) &&

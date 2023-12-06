@@ -169,7 +169,8 @@ To implement this procedure, we create three subgroups: one for $H_1$ and $H_2$,
 test_results_parametric_simes <-
   graph_test_closure(
     g,
-    p = p_values, alpha = 0.025,
+    p = p_values,
+    alpha = 0.025,
     test_groups = list(c(1, 2), c(3, 5), c(4, 6)),
     test_types = c("parametric", "simes", "simes"),
     test_corr = list(corr_12, NA, NA),
@@ -180,6 +181,74 @@ test_results_parametric_simes$outputs$adjusted_p
 test_results_parametric_simes$outputs$rejected
 
 head(test_results_parametric_simes$test_values$results)
+```
+
+### Custom adjusted p-value algorithms
+
+The three core algorithms to calculate adjusted p-values available in graphicalMCP are Bonferroni, Simes, and parametric. While more testing options may be added over time, there is also an option for a user to define their own custom algorithm to adjust p-values. This custom function must match the base input and output structure of the other adjusted p-value functions: `p`, `hypotheses`, and `group` as inputs, and a single numeric value as output. As an example, let's implement an adjusted p-value algorithm similar to Bonferroni, but instead of choosing the minimum adjusted p-value, it chooses one randomly.
+
+```{r adjust-p-brockmann}
+adjust_p_brockmann <- function(p, hypotheses, group) {
+  p <- p[group]
+  hypotheses <- hypotheses[group]
+
+  if (sum(hypotheses, na.rm = TRUE) == 0) {
+    return(Inf)
+  }
+
+  w_nonzero <- hypotheses > 0 & !is.na(hypotheses)
+
+  sample(p[w_nonzero] / hypotheses[w_nonzero], size = 1)
+}
+```
+
+To use a new algorithm, use closure testing. The new adjusted p-value function can be passed as the `adjust_p_custom` parameter, and it will be applied group-wise to each sub-graph in the closure.
+
+```{r test-brockmann-1}
+test_results_brockmann <- 
+  graph_test_closure(
+    g,
+    p = c(0.005, 0.013, 0.01, 0.007, 0.1, 0.0124),
+    alpha = 0.025,
+    test_groups = list(1:6),
+    test_types = c("custom"),
+    adjust_p_custom = adjust_p_brockmann
+  )
+
+test_results_brockmann$outputs$adjusted_p
+test_results_brockmann$outputs$rejected
+```
+
+Some adjusted p-value functions may require additional arguments besides the three standard inputs. In our example, we may want to control the proportion that each hypothesis is selected when sampling. These additional arguments can be handled with `addl_args_custom`. Note that the adjusted p-value function must handle sub-setting these additional arguments by group internally.
+
+```{r test-brockmann-2}
+adjust_p_brockmann_2 <- function(p, hypotheses, group, prob) {
+  p <- p[group]
+  hypotheses <- hypotheses[group]
+  prob <- prob[group]
+
+  if (sum(hypotheses, na.rm = TRUE) == 0) {
+    return(Inf)
+  }
+
+  w_nonzero <- hypotheses > 0 & !is.na(hypotheses)
+
+  sample(p[w_nonzero] / hypotheses[w_nonzero], size = 1, prob = prob[w_nonzero])
+}
+
+test_results_brockmann_2 <- 
+  graph_test_closure(
+    g,
+    p = c(0.005, 0.013, 0.01, 0.007, 0.1, 0.0124),
+    alpha = 0.025,
+    test_groups = list(1:6),
+    test_types = c("custom"),
+    adjust_p_custom = adjust_p_brockmann_2,
+    addl_args_custom = list(prob = c(.95, .01, .01, .01, .01, .01))
+  )
+
+test_results_brockmann_2$outputs$adjusted_p
+test_results_brockmann_2$outputs$rejected
 ```
 
 ## Power calculation

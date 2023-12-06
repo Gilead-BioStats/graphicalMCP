@@ -28,11 +28,11 @@
 #'   parametric test groups should have numeric matrices specifying the (known
 #'   or estimated) pairwise correlations between the test statistics of all
 #'   hypotheses in the group.
-#' @param custom_test (Optional) A function that implements a new testing
-#'   algorithm. The inputs and outputs must match the input and output format of
-#'   the other `adjust_p_*` functions
-#' @param custom_test_args (Optional) A list of additional arguments passed
-#'   on when `custom_test` is called
+#' @param adjust_p_custom (Optional) A function that implements a new testing
+#'   algorithm. The inputs and outputs must match the input and output structure
+#'   of the other `adjust_p_*` functions
+#' @param addl_args_custom (Optional) A list of additional arguments passed
+#'   on when `adjust_p_custom` is called
 #' @param verbose A logical scalar specifying whether the details of the
 #'   adjusted p-value calculations should be included in results
 #' @param test_values A logical scalar specifying whether details of the
@@ -85,8 +85,8 @@ graph_test_closure <- function(graph,
                                test_groups = list(seq_along(graph$hypotheses)),
                                test_types = c("bonferroni"),
                                test_corr = rep(list(NA), length(test_types)),
-                               custom_test = NULL,
-                               custom_test_args = list(),
+                               adjust_p_custom = NULL,
+                               addl_args_custom = list(),
                                verbose = FALSE,
                                test_values = FALSE) {
   # Input validation & sanitization --------------------------------------------
@@ -98,11 +98,11 @@ graph_test_closure <- function(graph,
     bonferroni = "bonferroni",
     parametric = "parametric",
     simes = "simes",
-    other = "other",
+    custom = "custom",
     b = "bonferroni",
     p = "parametric",
     s = "simes",
-    o = "other"
+    c = "custom"
   )
   test_types <- test_opts[tolower(test_types)]
   names(test_types) <- test_types_names
@@ -219,15 +219,15 @@ graph_test_closure <- function(graph,
           group,
           test_corr
         )
-      } else if (test == "other") {
+      } else if (test == "custom") {
         adjusted_p[[intersection_index, group_index]] <- do.call(
-          custom_test,
+          adjust_p_custom,
           c(
             list(
               p = p,
               hypotheses = vec_weights
             ),
-            custom_test_args
+            addl_args_custom
           )
         )
       } else {
@@ -265,7 +265,7 @@ graph_test_closure <- function(graph,
 
   # Adjusted weight details ----------------------------------------------------
   if (test_values) {
-    if (test == "other") {
+    if (test == "custom") {
       warning("Custom tests with `test_values` not currently supported")
 
       test_values <- FALSE

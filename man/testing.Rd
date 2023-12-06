@@ -12,8 +12,8 @@ graph_test_closure(
   test_groups = list(seq_along(graph$hypotheses)),
   test_types = c("bonferroni"),
   test_corr = rep(list(NA), length(test_types)),
-  custom_test = NULL,
-  custom_test_args = list(),
+  adjust_p_custom = NULL,
+  addl_args_custom = list(),
   verbose = FALSE,
   test_values = FALSE
 )
@@ -46,12 +46,12 @@ parametric test groups should have numeric matrices specifying the (known
 or estimated) pairwise correlations between the test statistics of all
 hypotheses in the group.}
 
-\item{custom_test}{(Optional) A function that implements a new testing
-algorithm. The inputs and outputs must match the input and output format of
-the other \verb{adjust_p_*} functions}
+\item{adjust_p_custom}{(Optional) A function that implements a new testing
+algorithm. The inputs and outputs must match the input and output structure
+of the other \verb{adjust_p_*} functions}
 
-\item{custom_test_args}{(Optional) A list of additional arguments passed
-on when \code{custom_test} is called}
+\item{addl_args_custom}{(Optional) A list of additional arguments passed
+on when \code{adjust_p_custom} is called}
 
 \item{verbose}{A logical scalar specifying whether the details of the
 adjusted p-value calculations should be included in results}
