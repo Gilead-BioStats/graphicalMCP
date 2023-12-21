@@ -70,8 +70,7 @@
 #' # The default is to test all hypotheses with: Bonferroni testing at alpha
 #' # level .025, 0 mean under the alternative, and 0 correlation between
 #' # hypotheses under the alternative
-#' # The default of 100 simulations will usually need to be increased
-#' graph_calculate_power(par_gate, sim_n = 1e5)
+#' graph_calculate_power(par_gate, sim_n = 1e4)
 #'
 #' # But any test group/type combination that works for [graph_test_closure()]
 #' # can be used
@@ -81,7 +80,7 @@
 #'   test_groups = list(1:2, 3:4),
 #'   test_types = c("s", "p"),
 #'   test_corr = list(NA, diag(2)),
-#'   sim_n = 1e5,
+#'   sim_n = 1e4,
 #'   sim_success = list(
 #'     function(.) .[1] || .[2],
 #'     function(.) .[1] && .[2]
