@@ -5,7 +5,7 @@ Version: 0.1.0
 Authors@R: c(
     person("Dong", "Xi", , "dong.xi1@gilead.com", role = c("aut", "cre")),
     person("Ethan", "Brockmann", , "ethan.brockmann@atorusresearch.com", role = "aut"),
-    person("Gilead Biostatistics", role = c("cph", "fnd")),
+    person("Gilead Sciences, Inc.", role = c("cph", "fnd")),
     person("Atorus Research LLC", role = "cph")
   )
 Description: A multiple comparison procedure (or multiple test procedure)
@@ -20,6 +20,8 @@ Description: A multiple comparison procedure (or multiple test procedure)
 License: Apache License (>= 2)
 URL: https://urban-sniffle-p11zlpj.pages.github.io/
 BugReports: https://github.com/Gilead-BioStats/graphicalMCP/issues
+Depends:
+    R (>= 3.5.0)
 Imports: 
     matrixStats,
     mvtnorm

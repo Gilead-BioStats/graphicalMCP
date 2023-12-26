@@ -19,7 +19,7 @@ Useful links:
 
 }
 \author{
-\strong{Maintainer}: Dong Xi \email{dong.xi@gilead.com}
+\strong{Maintainer}: Dong Xi \email{dong.xi1@gilead.com}
 
 Authors:
 \itemize{
@@ -28,7 +28,7 @@ Authors:
 
 Other contributors:
 \itemize{
-  \item Gilead Biostatistics [copyright holder, funder]
+  \item Gilead Sciences, Inc. [copyright holder, funder]
   \item Atorus Research LLC [copyright holder]
 }
 

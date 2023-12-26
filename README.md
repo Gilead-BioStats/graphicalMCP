@@ -57,28 +57,6 @@ Built upon these packages, we hope to implement graphical MCPs in a more
 general framework, with fewer dependencies and simpler S3 classes, and
 without losing computational efficiency.
 
-# Citation
-
-``` r
-citation("graphicalMCP")
-#> To cite graphicalMCP in publications use:
-#> 
-#>   Xi, D.; Brockmann, E. (2023). graphicalMCP: Graph-based multiple
-#>   comparison procedures. version 0.1.0. Gilead Sciences, Inc. Foster
-#>   City, California. https://github.com/Gilead-BioStats/graphicalMCP
-#> 
-#> A BibTeX entry for LaTeX users is
-#> 
-#>   @Manual{,
-#>     title = {{graphicalMCP}: Graph-based multiple comparison procedures.},
-#>     author = {Dong Xi and Ethan Brockmann},
-#>     organization = {Gilead Sciences, Inc},
-#>     note = {version 0.1.0},
-#>     year = {2023},
-#>     url = {https://github.com/Gilead-BioStats/graphicalMCP},
-#>   }
-```
-
 # Acknowledgments
 
 Along with the authors and contributors, thanks to the following people

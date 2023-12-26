@@ -30,7 +30,7 @@
   "copyrightHolder": [
     {
       "@type": "Organization",
-      "name": "Gilead Biostatistics"
+      "name": "Gilead Sciences, Inc."
     },
     {
       "@type": "Organization",
@@ -40,7 +40,7 @@
   "funder": [
     {
       "@type": "Organization",
-      "name": "Gilead Biostatistics"
+      "name": "Gilead Sciences, Inc."
     }
   ],
   "maintainer": [
