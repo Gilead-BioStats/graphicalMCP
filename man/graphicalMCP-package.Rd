@@ -29,7 +29,6 @@ Authors:
 Other contributors:
 \itemize{
   \item Gilead Sciences, Inc. [copyright holder, funder]
-  \item Atorus Research LLC [copyright holder]
 }
 
 }
