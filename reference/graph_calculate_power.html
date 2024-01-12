@@ -222,8 +222,7 @@ Procedures</em>. R package version 0.8-15,
 <span class="r-in"><span><span class="co"># The default is to test all hypotheses with: Bonferroni testing at alpha</span></span></span>
 <span class="r-in"><span><span class="co"># level .025, 0 mean under the alternative, and 0 correlation between</span></span></span>
 <span class="r-in"><span><span class="co"># hypotheses under the alternative</span></span></span>
-<span class="r-in"><span><span class="co"># The default of 100 simulations will usually need to be increased</span></span></span>
-<span class="r-in"><span><span class="fu">graph_calculate_power</span><span class="op">(</span><span class="va">par_gate</span>, sim_n <span class="op">=</span> <span class="fl">1e5</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu">graph_calculate_power</span><span class="op">(</span><span class="va">par_gate</span>, sim_n <span class="op">=</span> <span class="fl">1e4</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Test parameters ($inputs) ------------------------------------------------------</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   Initial graph</span>
@@ -247,7 +246,7 @@ Procedures</em>. R package version 0.8-15,
 <span class="r-out co"><span class="r-pr">#&gt;</span>   bonferroni: (H1, H2, H3, H4)</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Simulation parameters ($inputs) ------------------------------------------------</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   Testing 100,000 simulations with multivariate normal params:</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Testing 10,000 simulations with multivariate normal params:</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                      H1    H2    H3    H4</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   Marginal power: 0.025 0.025 0.025 0.025</span>
@@ -259,11 +258,11 @@ Procedures</em>. R package version 0.8-15,
 <span class="r-out co"><span class="r-pr">#&gt;</span>                H4  0  0  0  1</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Power calculation ($power) -----------------------------------------------------</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                                    H1      H2      H3      H4</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                  Local power: 0.01201 0.01166 0.00016 0.00019</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                                   H1     H2     H3     H4</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                  Local power: 0.0108 0.0082 0.0002 0.0002</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   Expected no. of rejections: 0.02402</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    Power to reject 1 or more: 0.02349</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Expected no. of rejections: 0.0194</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    Power to reject 1 or more: 0.0188</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>          Power to reject all: 0</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-in"><span></span></span>
@@ -275,7 +274,7 @@ Procedures</em>. R package version 0.8-15,
 <span class="r-in"><span>  test_groups <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">2</span>, <span class="fl">3</span><span class="op">:</span><span class="fl">4</span><span class="op">)</span>,</span></span>
 <span class="r-in"><span>  test_types <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"s"</span>, <span class="st">"p"</span><span class="op">)</span>,</span></span>
 <span class="r-in"><span>  test_corr <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="cn">NA</span>, <span class="fu"><a href="https://rdrr.io/r/base/diag.html" class="external-link">diag</a></span><span class="op">(</span><span class="fl">2</span><span class="op">)</span><span class="op">)</span>,</span></span>
-<span class="r-in"><span>  sim_n <span class="op">=</span> <span class="fl">1e5</span>,</span></span>
+<span class="r-in"><span>  sim_n <span class="op">=</span> <span class="fl">1e4</span>,</span></span>
 <span class="r-in"><span>  sim_success <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span></span>
 <span class="r-in"><span>    <span class="kw">function</span><span class="op">(</span><span class="va">.</span><span class="op">)</span> <span class="va">.</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span> <span class="op">||</span> <span class="va">.</span><span class="op">[</span><span class="fl">2</span><span class="op">]</span>,</span></span>
 <span class="r-in"><span>    <span class="kw">function</span><span class="op">(</span><span class="va">.</span><span class="op">)</span> <span class="va">.</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span> <span class="op">&amp;&amp;</span> <span class="va">.</span><span class="op">[</span><span class="fl">2</span><span class="op">]</span></span></span>
@@ -309,7 +308,7 @@ Procedures</em>. R package version 0.8-15,
 <span class="r-out co"><span class="r-pr">#&gt;</span>   parametric: (H3, H4)</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Simulation parameters ($inputs) ------------------------------------------------</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   Testing 100,000 simulations with multivariate normal params:</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Testing 10,000 simulations with multivariate normal params:</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                      H1    H2    H3    H4</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   Marginal power: 0.025 0.025 0.025 0.025</span>
@@ -321,16 +320,16 @@ Procedures</em>. R package version 0.8-15,
 <span class="r-out co"><span class="r-pr">#&gt;</span>                H4  0  0  0  1</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Power calculation ($power) -----------------------------------------------------</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                                    H1      H2      H3      H4</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                  Local power: 0.01203 0.01215 0.00018 0.00021</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                                   H1     H2     H3     H4</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                  Local power: 0.0103 0.0150 0.0001 0.0004</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   Expected no. of rejections: 0.02457</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    Power to reject 1 or more: 0.02403</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Expected no. of rejections: 0.0258</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    Power to reject 1 or more: 0.0252</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>          Power to reject all: 0</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   Success measure   Power</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>      .[1] || .[2] 0.02403</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>      .[1] &amp;&amp; .[2] 0.00015</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Success measure  Power</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>      .[1] || .[2] 0.0252</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>      .[1] &amp;&amp; .[2] 0.0001</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-in"><span></span></span>
 </code></pre></div>
@@ -340,7 +339,7 @@ Procedures</em>. R package version 0.8-15,
 
 
     <footer><div class="pkgdown-footer-left">
-  <p></p><p>Developed by Dong Xi, Ethan Brockmann, Gilead Biostatistics.</p>
+  <p></p><p>Developed by Dong Xi, Ethan Brockmann, Gilead Sciences, Inc..</p>
 </div>
 
 <div class="pkgdown-footer-right">
