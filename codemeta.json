@@ -18,7 +18,7 @@
       "@type": "Person",
       "givenName": "Dong",
       "familyName": "Xi",
-      "email": "dong.xi@gilead.com"
+      "email": "dong.xi1@gilead.com"
     },
     {
       "@type": "Person",
@@ -30,7 +30,7 @@
   "copyrightHolder": [
     {
       "@type": "Organization",
-      "name": "Gilead Biostatistics"
+      "name": "Gilead Sciences, Inc."
     },
     {
       "@type": "Organization",
@@ -40,7 +40,7 @@
   "funder": [
     {
       "@type": "Organization",
-      "name": "Gilead Biostatistics"
+      "name": "Gilead Sciences, Inc."
     }
   ],
   "maintainer": [
@@ -48,7 +48,7 @@
       "@type": "Person",
       "givenName": "Dong",
       "familyName": "Xi",
-      "email": "dong.xi@gilead.com"
+      "email": "dong.xi1@gilead.com"
     }
   ],
   "softwareSuggestions": [

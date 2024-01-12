@@ -3,10 +3,9 @@ Package: graphicalMCP
 Title: Graphical Approach for Multiple Comparison Procedures
 Version: 0.1.0
 Authors@R: c(
-    person("Dong", "Xi", , "dong.xi@gilead.com", role = c("aut", "cre")),
+    person("Dong", "Xi", , "dong.xi1@gilead.com", role = c("aut", "cre")),
     person("Ethan", "Brockmann", , "ethan.brockmann@atorusresearch.com", role = "aut"),
-    person("Gilead Biostatistics", role = c("cph", "fnd")),
-    person("Atorus Research LLC", role = "cph")
+    person("Gilead Sciences, Inc.", role = c("cph", "fnd"))
   )
 Description: A multiple comparison procedure (or multiple test procedure)
     is a a statistical analysis method for determining efficacy of
@@ -20,6 +19,8 @@ Description: A multiple comparison procedure (or multiple test procedure)
 License: Apache License (>= 2)
 URL: https://urban-sniffle-p11zlpj.pages.github.io/
 BugReports: https://github.com/Gilead-BioStats/graphicalMCP/issues
+Depends:
+    R (>= 4.1.0)
 Imports: 
     matrixStats,
     mvtnorm
@@ -49,4 +50,4 @@ Config/testthat/edition: 3
 Encoding: UTF-8
 LazyData: true
 Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.2.3
+RoxygenNote: 7.3.0
