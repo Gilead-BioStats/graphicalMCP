@@ -64,7 +64,7 @@ plot_layout <- rbind(
 )
 
 plot(
-  graph_update(g, c(2, 4)),
+  g,
   layout = plot_layout,
   eps = epsilon,
   edge_curves = c(pairs = .8),
