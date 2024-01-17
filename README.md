@@ -64,7 +64,7 @@ for their suggestions and inspirations on the package:
 
 Frank Bretz, Willi Maurer, Ekkehard Glimm, Nan Chen, Jeremy Wildfire,
 Spencer Childress, Colleen McLaughlin, Matt Roumaya, Chelsea Dickens,
-and Ron Yu
+and Ron Yu.
 
 We owe a debt of gratitude to the authors of
 [gMCP](https://cran.r-project.org/package=gMCP) for their pioneering
