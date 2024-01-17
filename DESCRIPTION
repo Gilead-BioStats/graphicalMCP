@@ -1,21 +1,17 @@
 Type: Package
 Package: graphicalMCP
-Title: Graphical Approach for Multiple Comparison Procedures
+Title: Graphical Multiple Comparison Procedures
 Version: 0.1.0
 Authors@R: c(
-    person("Dong", "Xi", , "dong.xi1@gilead.com", role = c("aut", "cre")),
-    person("Ethan", "Brockmann", , "ethan.brockmann@atorusresearch.com", role = "aut"),
+    person("Dong", "Xi", "dong.xi1@gilead.com", role = c("aut", "cre")),
+    person("Ethan", "Brockmann", "ethan.brockmann@atorusresearch.com", role = "aut"),
     person("Gilead Sciences, Inc.", role = c("cph", "fnd"))
   )
-Description: A multiple comparison procedure (or multiple test procedure)
-    is a a statistical analysis method for determining efficacy of
-    multiple drugs, or multiple doses of the same drug, in a single
-    clinical trial. (Bretz et al., 2011) laid out a graph-based approach
-    to these multiple comparison procedures, in which the weights of the
-    vertices and edges of the graph are determined independently of the
-    particular statistical test used to assess results. This is a
-    low-dependency implementation of the methods described in that and
-    subsequent papers.
+Description: Graphical multiple comparison procedures (MCPs) control
+    the familywise error rate. This class includes many commonly used 
+    procedures as special cases. This package is a low-dependency
+    implementation of graphical MCPs which allow mixed types of tests.
+    It also includes power simulations and visualization of graphical MCPs.
 License: Apache License (>= 2)
 URL: https://urban-sniffle-p11zlpj.pages.github.io/
 BugReports: https://github.com/Gilead-BioStats/graphicalMCP/issues
