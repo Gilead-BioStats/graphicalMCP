@@ -12,7 +12,7 @@ status](https://www.r-pkg.org/badges/version/graphicalMCP)](https://cran.r-proje
 # Introduction
 
 Graphical approaches for multiple comparison procedures (MCPs) are a
-general framework to control the family-wise error rate strongly at a
+general framework to control the familywise error rate strongly at a
 pre-specified significance level $0<\alpha<1$. This approach includes
 many commonly used MCPs as special cases and is transparent in
 visualizing MCPs for better communications. `graphicalMCP` is designed
