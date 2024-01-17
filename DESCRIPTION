@@ -3,8 +3,8 @@ Package: graphicalMCP
 Title: Graphical Multiple Comparison Procedures
 Version: 0.1.0
 Authors@R: c(
-    person("Dong", "Xi", "dong.xi1@gilead.com", role = c("aut", "cre")),
-    person("Ethan", "Brockmann", "ethan.brockmann@atorusresearch.com", role = "aut"),
+    person("Dong", "Xi", , "dong.xi1@gilead.com", role = c("aut", "cre")),
+    person("Ethan", "Brockmann", , "ethan.brockmann@atorusresearch.com", role = "aut"),
     person("Gilead Sciences, Inc.", role = c("cph", "fnd"))
   )
 Description: Graphical multiple comparison procedures (MCPs) control
