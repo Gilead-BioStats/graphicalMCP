@@ -2,8 +2,8 @@
   "@context": "https://doi.org/10.5063/schema/codemeta-2.0",
   "@type": "SoftwareSourceCode",
   "identifier": "graphicalMCP",
-  "description": "Graphical multiple comparison procedures (MCPs) control the familywise error rate. This class includes many commonly used procedures as special cases. This package is a low-dependency implementation of graphical MCPs which allow mixed types of tests. It also includes power simulations and visualization of graphical MCPs.",
-  "name": "graphicalMCP: Graphical Multiple Comparison Procedures",
+  "description": "Graphical multiple comparison procedures (MCPs) control the familywise error rate. This class includes many commonly used procedures as special cases. This package is a low-dependency implementation of graphical MCPs which allow mixed types of tests. It also includes power simulations and visualization of graphical MCPs",
+  "name": "graphicalMCP: Graphical multiple comparison procedures",
   "codeRepository": "https://github.com/Gilead-BioStats/graphicalMCP",
   "license": "https://www.apache.org/licenses/LICENSE-2.0",
   "version": "0.1.0",
@@ -218,7 +218,7 @@
   "citation": [
     {
       "@type": "SoftwareSourceCode",
-      "datePublished": "2023",
+      "datePublished": "2024",
       "author": [
         {
           "@type": "Person",
@@ -231,7 +231,7 @@
           "familyName": "Brockmann"
         }
       ],
-      "name": "{graphicalMCP}: Graphical multiple comparison procedures.",
+      "name": "{graphicalMCP}: Graphical multiple comparison procedures",
       "url": "https://github.com/Gilead-BioStats/graphicalMCP",
       "description": "version 0.1.0"
     }
