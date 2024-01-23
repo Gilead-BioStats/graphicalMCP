@@ -1,0 +1,532 @@
+---
+title: "Rationales to generate the closure and the weighting strategy of a graph"
+output:
+  rmarkdown::html_vignette:
+    code_folding: hide
+bibliography: "`r system.file('references.bib', package='graphicalMCP')`"
+vignette: >
+  %\VignetteIndexEntry{Rationales to generate the closure and the weighting strategy of a graph}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  fig.align = "center",
+  echo = FALSE,
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup, results="hide", message=FALSE, warning=FALSE}
+library(graphicalMCP)
+library(lrstat)
+library(gMCP)
+
+library(ggplot2)
+library(bench)
+library(gt)
+```
+
+# Motivating example
+
+# Motivating example
+
+Consider a simple successive graph with four hypotheses. It has two primary hypotheses $H_1$ and $H_2$ and two secondary hypotheses $H_3$ and $H_4$. Initially, hypothesis weights are split equally between $H_1$ and $H_2$ with 0.5. Hypotheses $H_3$ and $H_4$ receive 0 hypothesis weights because $H_3 (H_4)$ is tested only if $H_1 (H_2)$ is rejected. Thus there is an edge from $H_1 (H_2)$ to $H_3 (H_4)$ with a transition weight of 1. When both $H_1$ and $H_3$ are rejected, their hypothesis weights are propagated to $H_2$; similarly, when both $H_2$ and $H_4$ are rejected, their hypothesis weights are propagated to $H_1$. Thus there is an edge from $H_3 (H_4)$ to $H_2 (H_1)$ with a transition weight of 1. A graphical multiple comparison procedure is illustrated below.
+
+```{r base-graph-1, fig.dim=c(3, 3)}
+ss_graph <- simple_successive_2()
+
+plot(ss_graph, layout = "grid", vertex.size = 60)
+```
+
+# Generating the closure
+
+The closure of this multiple comparison procedure is a collection of intersection hypotheses $H_1\cap H_2\cap H_3\cap H_4$, $H_1\cap H_2\cap H_3$, $H_1\cap H_2\cap H_4$, $H_1\cap H_3\cap H_4$, $H_2\cap H_3\cap H_4\ \ldots, H_1, H_2, H_3$, and $H_4$. In other words, these intersection hypotheses consist of intersections based on all non-empty subsets of $\{1, 2, 3, 4\}$, e.g., $\{1, 2, 3\}$, $\{1, 2, 4\}$, $\{1, 3, 4\}$, $\{2, 3, 4\}$, $\ldots$. Thus there are $2^4-1$ intersection hypotheses. An equivalent way to generate all intersection hypotheses is to use a binary representation. For example, the intersection hypothesis $H_1\cap H_2\cap H_3\cap H_4$ corresponds to $(1, 1, 1, 1)$ and $H_1\cap H_2\cap H_3$ corresponds to $(1, 1, 1, 0)$. Then the closure can be indexed by the power set of $\{1, 2, 3, 4\}$ as below. In general, one can use `rev(expand.grid(rep(list(1:0), m)))` to general the closure, where $m$ is the number of hypotheses.
+
+```{r closure-intersections}
+weighting_strategy <- graph_generate_weights(ss_graph)
+matrix_intersections <- weighting_strategy[, seq_along(ss_graph$hypotheses)]
+matrix_intersections
+```
+
+## Calculating the weighting strategy
+
+Given the closure, one can calculate the hypothesis weight associated with every hypothesis in every intersection hypothesis using Algorithm 1 [@bretz-2011-graphical]. The whole collection of hypothesis weights is called a weighting strategy. For example, hypothesis weights are $(0.5, 0.5, 0, 0)$ for the intersection hypothesis $H_1\cap H_2 \cap H_3\cap H_4$. Then hypothesis weights for the intersection hypothesis $H_1\cap H_2 \cap H_3$ are $(0.5, 0.5, 0, 0)$, which can be calculated by removing $H_4$ from the initial graph and applying Algorithm 1 [@bretz-2011-graphical]. The algorithm calculates hypothesis weights in a step-by-step fashion. For example, for the intersection hypothesis $H_1\cap H_2$, it can start from $H_1\cap H_2 \cap H_3\cap H_4$ and calculates hypothesis weights for $H_1\cap H_2 \cap H_3$ by removing $H_4$ and then calculates hypothesis weights for $H_1\cap H_2$ by removing $H_3$; it can also start from $H_1\cap H_2 \cap H_3$ (assuming its hypotheses weights are stored) and calculates hypothesis weights for $H_1\cap H_2$ by removing $H_3$. Therefore, there are two strategies to calculate the weighting strategy.
+
+```{r closure-weights}
+matrix_weights <- weighting_strategy[, -seq_along(ss_graph$hypotheses)]
+matrix_weights
+```
+
+### Approach 1: Simple approach
+
+The first strategy utilizes the initial graph as the starting point and calculates hypothesis weights for all other intersection hypotheses. For example, to calculate hypothesis weights for $H_1\cap H_2$, it will start with the intersection hypothesis $H_1\cap H_2 \cap H_3\cap H_4$ and sequentially remove $H_4$ and $H_3$ (or in the other order). This approach is simple to implement since hypothesis weights for $H_1\cap H_2 \cap H_3\cap H_4$ are determined by the initial graph and always available. This approach is similar to the one implemented in the `gMCP` R package. The drawback is that it does not use other information to reduce the number of calculations. For example, it is possible that hypothesis weights for $H_1\cap H_2 \cap H_3$ have been calculated when calculating for $H_1\cap H_2$. Using the information from $H_1\cap H_2 \cap H_3$ would only need the one-step calculation, compared to the two-step calculation using $H_1\cap H_2 \cap H_3\cap H_4$.
+
+### Approach 2: Parent-child approach
+
+This approach tries to avoid the drawback of Approach 1 by saving intermediate graphs. Then it only performs one-step calculation which could save time. In general, an intersection hypothesis has a parent intersection hypothesis, which involves all hypotheses involved in the first intersection and has one extra hypothesis. For example, the second row of `matrix_intersections` is $H_1\cap H_2 \cap H_3$ and its parent intersection is $H_1\cap H_2 \cap H_3\cap H_4$ in the first row; the third row of `matrix_intersections` is $H_1\cap H_2 \cap H_4$ and its parent intersection is $H_1\cap H_2 \cap H_3\cap H_4$ in the first row. Thus we can identify the parent intersection hypothesis for each row in `matrix_intersections` (except row 1) as the row number 1, 1, 2, 1, 2, 3, 4, 1, 2, 3, 4, 5, 6, 7. Given this sequence of parent hypotheses, it is simple to obtain hypothesis weights for an intersection hypothesis based on its parent intersection hypothesis via one-step calculation.
+
+It is of interest to understand this pattern and obtain it efficiently. First, between the bottom half (rows 9 - 15) and top half (rows 1 - 7), each row's parent in the bottom half is the corresponding row in the top half, eight rows up, because the only difference is the flipping of $H_1$ from 1 in the top half to 0 in the bottom half. For example, row 15's parent is in row 15 - 8 = 7. Using this observation, we can determine parent hypotheses for rows from 9 to 15 as 1, 2, 3, 4, 5, 6, 7. A similar pattern can be observed for rows from 5 to 8. Their parent hypotheses are in rows 1, 2, 3, 4, respectively, by flipping $H_2$ from 1 to 0. For rows 3 - 4, their parent hypotheses are in rows 1, 2, respectively, by flipping $H_3$ from 1 to 0. Lastly for row 2, its parent hypothesis is in row 1. The row number of the parent hypothesis can be efficiently generated by running `do.call(c, lapply(2^(seq_len(m) - 1), seq_len))[-2^m, ]`, where 
+$m$ is the number of hypotheses.
+
+
+## Comparing different approaches to calculating weighting strategies
+
+To benchmark against existing approaches to calculating weighting strategies, we compare the following approaches: `gMCP::generateWeights()` [@rohmeyer-2020-gmcp], `lrstat::fwgtmat()` [@lu-2016-graphical], Approach 1 (graphicalMCP simple) and Approach 2 (graphicalMCP parent-child). Random graphs are generated for the numbers of hypotheses of 4, 8, 12, and 16. Computing time (in median log-10 milliseconds) is plotted below. We can see that `gMCP::generateWeights()` is the slowest and `lrstat::fwgtmat()` is the fastest. Approach 2 (graphicalMCP parent-child) is faster than Approach 1 (graphicalMCP simple). Note that `lrstat::fwgtmat()` implements the calculation using C++, which is known to be faster than R. But it is less stable than other approaches, e.g., giving errors more often than others. Given that the computing time of R-based approaches is acceptable, adding Rcpp dependency is not considered in `graphicalMCP`. For these considerations, we implement Approach 2 in `graphicalMCP::graph_generate_weights()`.
+
+![](img/gw-benchmarks-plot.png)
+
+```{r gw-benchmarks-functions, eval=FALSE}
+ggw_simple <- function(graph) {
+  num_hyps <- length(graph$hypotheses)
+
+  matrix_intersections <-
+    as.matrix(rev(expand.grid(rep(list(1:0), num_hyps))[-2^num_hyps, ]))
+  colnames(matrix_intersections) <- names(graph$hypotheses)
+
+  matrix_weights <- apply(
+    matrix_intersections,
+    1,
+    function(h) graph_update(graph, !h)$updated_graph$hypotheses,
+    simplify = FALSE
+  )
+
+  cbind(matrix_intersections, do.call(rbind, matrix_weights))
+}
+
+vec_num_hyps <- 2:8 * 2
+
+benchmark_list <- lapply(
+  vec_num_hyps,
+  function(num_hyps) {
+    cat(num_hyps, "\n")
+    # A graph for the Holm procedure
+    transitions <- matrix(1 / (num_hyps - 1), num_hyps, num_hyps)
+    diag(transitions) <- 0
+
+    graph <- graph_create(rep(1 / num_hyps, num_hyps), transitions)
+
+    # lrstat sometimes errors, even when hypotheses seem to sum to 1. This
+    # fixes some of those cases
+    graph$hypotheses <- c(
+      graph$hypotheses[seq_len(num_hyps - 1)],
+      1 - sum(graph$hypotheses[seq_len(num_hyps - 1)])
+    )
+
+    benchmark <- mark(
+      gMCP = generateWeights(graph$transitions, graph$hypotheses),
+      `graphicalMCP simple` = ggw_simple(graph),
+      `graphicalMCP parent-child` = graph_generate_weights(graph),
+      # lrstat still errors with graphs occasionally for unknown reasons
+      lrstat = if (!num_hyps %in% c(10, 14)) {
+        fwgtmat(graph$hypotheses, graph$transitions)
+      },
+      check = FALSE,
+      memory = FALSE,
+      time_unit = "ms",
+      min_iterations = 5
+    )[, 1:5]
+
+    # Remove rows for lrstat that weren't actually run
+    benchmark <- benchmark[benchmark$median > 0.005, ]
+    benchmark$char_expression <- as.character(benchmark$expression)
+    benchmark <- benchmark[, c("char_expression", "median")]
+
+    cbind(data.frame(num_hyps = num_hyps), benchmark)
+  }
+)
+
+benchmarks <- do.call(rbind, benchmark_list)
+
+benchmarks$char_expression <- ordered(
+  benchmarks$char_expression,
+  c(
+    "gMCP",
+    "graphicalMCP simple",
+    "graphicalMCP recursive",
+    "graphicalMCP parent-child",
+    "lrstat"
+  )
+)
+
+write.csv(
+  benchmarks,
+  here::here("vignettes/cache/gw_benchmarks.csv"),
+  row.names = FALSE
+)
+```
+
+```{r plot-gw-benchmarks, fig.dim=c(8, 5), eval=FALSE}
+benchmarks <- read.csv(here::here("vignettes/cache/gw_benchmarks.csv"))
+benchmarks <- subset(benchmarks, char_expression != "graphicalMCP recursive")
+
+benchmarks$char_expression <- factor(benchmarks$char_expression,
+  levels = c(
+    "gMCP",
+    "graphicalMCP simple",
+    "graphicalMCP parent-child",
+    "lrstat"
+  )
+)
+
+benchmarks_plot_standard <-
+  ggplot(benchmarks, aes(num_hyps, median, color = char_expression)) +
+  geom_point(size = 2) +
+  geom_line(size = 1) +
+  # scale_y_continuous(labels = scales::label_comma(suffix = "ms")) +
+  scale_color_discrete() +
+  labs(
+    title = "Computing time to generate weighting strategies",
+    subtitle = "Median runtime in milliseconds",
+    x = "Number of hypotheses",
+    y = NULL,
+    color = "Approach"
+  ) +
+  scale_y_log10(
+    breaks = c(0, 0.1, 1, 10, 100, 1000, 100000),
+    labels = c("0", "0.1", "1", "10", "100", "1,000", "100,000")
+  ) +
+  labs(subtitle = "Log10(median runtime) in milliseconds")
+
+benchmarks_plot_standard
+```
+
+# Improving power simulations using parent-child relationships
+
+## Conventional approach for power simulations
+
+The conventional approach for power simulations is to repeat the following process many times, e.g., 100,000 times.
+
+1. Simulate a set of p-values
+2. Run the graphical multiple comparison procedure to
+    + Determine which hypothesis can be rejected
+    + Remove the rejected hypothesis and update the graph
+    + Repeat until no more hypotheses can be rejected
+
+Note that the same step to update the graph may repeat in many replications, whichmay be repetitive. For $m$ hypotheses, there are at most $2^m-1$ graphs depending on which hypotheses are rejected. These graphs correspond to the closure and the weighting strategy. Thus an idea to avoid redundant updating of graphs is to utilize the weighting strategy.
+
+```{r power-conventional, eval = FALSE}
+gcp_conventional <- function(
+    graph,
+    alpha = .025,
+    power_marginal = rep(alpha, length(graph$hypotheses)),
+    sim_n = 100,
+    sim_corr = diag(length(graph$hypotheses)),
+    sim_success = NULL,
+    verbose = FALSE) {
+  hyp_names <- names(graph$hypotheses)
+  num_hyps <- length(graph$hypotheses)
+
+  graphicalMCP:::power_input_val(
+    graph, 
+    sim_n, 
+    power_marginal, 
+    sim_corr, 
+    sim_success
+  )
+
+  # Simulated p-values are generated by sampling from the multivariate normal
+  # distribution. The means are set with `power_marginal`, and the correlations
+  # are set with `sim_corr`. Random samples are converted to p-values with a
+  # one-sided test.
+  noncentrality_parameter <-
+    stats::qnorm(1 - alpha, lower.tail = TRUE) -
+    stats::qnorm(1 - power_marginal, lower.tail = TRUE)
+
+  p_sim <- stats::pnorm(
+    mvtnorm::rmvnorm(
+      sim_n,
+      noncentrality_parameter,
+      sigma = sim_corr
+    ),
+    lower.tail = FALSE
+  )
+
+  simulation_test_results <- matrix(
+    NA,
+    nrow = sim_n,
+    ncol = length(power_marginal),
+    dimnames = list(seq_len(sim_n), hyp_names)
+  )
+
+  for (row in seq_len(sim_n)) {
+    simulation_test_results[row, ] <-
+      graph_test_shortcut(graph, p_sim[row, ], alpha)$outputs$rejected
+  }
+
+  # Summarize power results ----------------------------------------------------
+  # Each user-defined function provided as a "success" measure should take a
+  # logical vector (a single simulation's test results) as input, and return a
+  # logical scalar. Applying such a function to each simulation, results in a
+  # success indicator vector with one entry per simulation. The average of this
+  # vector is the probability of "success".
+  power_success <- vapply(
+    sim_success,
+    function(fn_success) mean(apply(simulation_test_results, 1, fn_success)),
+    numeric(1)
+  )
+
+  # If the success functions are not named, set names according to each
+  # function's body
+  if (is.null(names(power_success))) {
+    success_fun_bodies <- vapply(
+      sim_success,
+      function(fn_success) deparse(fn_success)[[2]],
+      character(1)
+    )
+
+    names(power_success) <- success_fun_bodies
+  }
+
+  # Power summaries:
+  # * Local power is the probability of rejecting each individual hypothesis:
+  # Mean of results for each hypothesis individually.
+  # * Expected rejections is the total number of rejections divided by the total
+  # possible rejections.
+  # * Power to reject at least one hypothesis is the probability that any result
+  # in a row is TRUE. This one is just like if a success function was defined as
+  # rejecting any hypothesis in the graph
+  # * Power to reject all hypotheses is the mean of a success vector where
+  # success is only triggered when the whole results vector is TRUE
+  power <- list(
+    power_local = colMeans(simulation_test_results),
+    power_expected = sum(simulation_test_results) / sim_n,
+    power_at_least_1 = mean(rowSums(simulation_test_results) > 0),
+    power_all =
+      mean(rowSums(simulation_test_results) == length(power_marginal)),
+    power_success = power_success
+  )
+
+  # The core output of a power report is the 5 power summaries. It also includes
+  # the main testing and simulation input parameters (similar to test results).
+  # For completion, the full matrix of simulations and corresponding matrix of
+  # test results are included. They are truncated in the print method so as to
+  # not blow up output space. It may be preferred for these to be an optional
+  # output with e.g. `verbose = TRUE/FALSE`.
+  structure(
+    list(
+      inputs = list(
+        graph = graph,
+        alpha = alpha,
+        test_groups = NULL,
+        test_types = NULL,
+        test_corr = NULL,
+        sim_n = sim_n,
+        power_marginal = power_marginal,
+        sim_corr = sim_corr,
+        sim_success = sim_success
+      ),
+      power = power,
+      details = if (verbose) {
+        list(
+          p_sim = p_sim,
+          test_results = simulation_test_results
+        )
+      }
+    ),
+    class = "power_report"
+  )
+}
+```
+
+## Power simulations using parent-child relationships
+
+The key to allow this approach is to efficiently identify the row of the weighting strategy, given which hypotheses are rejected. Remembering the pattern we found for Approach 2, the bottom half (rows 9 - 15) of `matrix_intersections` is the same as the top half (rows 1 - 7), except flipping $H_1$ from 1 to 0. This means that if $H_1$ has not been rejected (1 for $H_1$ in `matrix_intersections`), the row number of that index should be in the top half. For example, assume that $H_2$ and $H_4$ have been rejected and the index in `matrix_intersections` should be $(1, 0, 1, 0)$. Since $H_1$ is 1, the corresponding row should be in the top half (rows 1- 7). But $H_2$ is 0 and thus the corresponding row should be in the bottom half within the top half (rows 5 - 7). Since $H_3$ is 1 and thus the corresponding row should be in the top half (rows 5 - 6). But $H_4$ is 0 and thus the corresponding row should be 6. A useful way to calculate the row number for an index of XXXX is `2^m - sum(XXXX * 2^(m:1 - 1))`. For example for XXXX=1010, its row number should be `(1 - 1) * 8 + (1 - 0) * 4 + (1 - 1) * 2 + (1 - 0) * 1 + 1 = 16 - 10 = 6`.               
+
+With the above way of efficiently identifying rows of `weighting_strategy`, power simulations could be implemented as follows:
+
+1. Obtain the weighting strategy (once for all simulations)
+2. Simulate a set of p-values
+3. Run the graphical multiple comparison procedure to
+    + Determine which hypothesis can be rejected
+    + Remove the rejected hypothesis and identify the row of the weighting strategy
+    + Repeat until no more hypotheses can be rejected
+
+The small modification in Step 3b makes this approach much faster than the conventional approach for power simulations.
+
+## Comparing different approaches to power simulations
+
+To benchmark against existing approaches to calculating weighting strategies, we compare the following approaches: `gMCP::calcPower()`, Approach 1 (graphicalMCP conventional), and Approach 2 (graphicalMCP parent-child). Both Holm and fixed sequence procedures are considered with the numbers of hypotheses of 4, 8, 12, and 16. Computing time (in median log-10 seconds) is plotted below. We can see that `gMCP::calcPower()` is the fastest and Approach 1 (graphicalMCP conventional) is the lowest. Note that `gMCP::calcPower()` implements the simulation using C, which is known to be faster than R but is not easy to extend to other situations. Given that the computing time of Approach 2 (graphicalMCP parent-child) is acceptable, we implement it in `graphicalMCP::graph_calculate_power()`.
+
+![](img/power-benchmarks-plot.png)
+
+# Reference
+
+```{r power-benchmarks-holm, eval = FALSE}
+vec_num_hyps <- 2:8 * 2
+
+benchmark_list <- lapply(
+  vec_num_hyps,
+  function(num_hyps) {
+    # A graph for the Holm procedure
+    transitions <- matrix(1 / (num_hyps - 1), num_hyps, num_hyps)
+    diag(transitions) <- 0
+    
+    graph <- graph_create(rep(1 / num_hyps, num_hyps), transitions)
+    
+    corr <- diag(num_hyps)
+    
+    benchmark <- mark(
+      `gMCP (C)` = gMCP::calcPower(
+        graph$hypotheses, 
+        .025, 
+        graph$transitions,
+        n.sim = 2^14, 
+        corr.sim = corr
+      ),
+      `graphicalMCP conventional (R)` = 
+        gcp_conventional(
+          graph, 
+          .025,
+          power_marginal = rep(.9, num_hyps),
+          sim_n = 2^14
+        ),
+      `graphicalMCP parent-child (R)` =
+        graph_calculate_power(
+          graph, 
+          .025,
+          power_marginal = rep(.9, num_hyps),
+          sim_n = 2^14
+        ),
+      check = FALSE,
+      memory = FALSE,
+      time_unit = "s",
+      min_iterations = 5
+    )[, 1:5]
+    
+    benchmark <- benchmark[benchmark$median > .00001, ]
+    benchmark$char_expression <- as.character(benchmark$expression)
+    benchmark <- benchmark[, c("char_expression", "median")]
+    
+    cbind(data.frame(num_hyps = num_hyps), benchmark)
+  }
+)
+
+benchmarks <- do.call(rbind, benchmark_list)
+
+benchmarks$char_expression <- ordered(
+  benchmarks$char_expression,
+  c(
+    "gMCP (C)",
+    "graphicalMCP conventional (R)",
+    "graphicalMCP parent-child (R)"
+  )
+)
+
+write.csv(
+  benchmarks,
+  here::here("vignettes/cache/power_benchmarks_holm.csv"),
+  row.names = FALSE
+)
+```
+
+```{r power-benchmarks-fixed-sequence, eval = FALSE}
+vec_num_hyps <- 2:8 * 2
+
+benchmark_list <- lapply(
+  vec_num_hyps,
+  function(num_hyps) {
+    # A graph for the fixed sequence procedure
+    graph <- fixed_sequence(num_hyps)
+
+    corr <- diag(num_hyps)
+    
+    benchmark <- mark(
+      `gMCP (C)` = gMCP::calcPower(
+        graph$hypotheses, 
+        .025, 
+        graph$transitions,
+        n.sim = 2^14, 
+        corr.sim = corr
+      ),
+      `graphicalMCP conventional (R)` = 
+        gcp_conventional(
+          graph, 
+          .025,
+          power_marginal = rep(.9, num_hyps),
+          sim_n = 2^14
+        ),
+      `graphicalMCP parent-child (R)` =
+        graph_calculate_power(
+          graph, 
+          .025,
+          power_marginal = rep(.9, num_hyps),
+          sim_n = 2^14
+        ),
+      check = FALSE,
+      memory = FALSE,
+      time_unit = "s",
+      min_iterations = 5
+    )[, 1:5]
+    
+    benchmark <- benchmark[benchmark$median > .00001, ]
+    benchmark$char_expression <- as.character(benchmark$expression)
+    benchmark <- benchmark[, c("char_expression", "median")]
+    
+    cbind(data.frame(num_hyps = num_hyps), benchmark)
+  }
+)
+
+benchmarks <- do.call(rbind, benchmark_list)
+
+benchmarks$char_expression <- ordered(
+  benchmarks$char_expression,
+  c(
+    "gMCP (C)",
+    "graphicalMCP conventional (R)",
+    "graphicalMCP parent-child (R)"
+  )
+)
+
+write.csv(
+  benchmarks,
+  here::here("vignettes/cache/power_benchmarks_fixed_sequence.csv"),
+  row.names = FALSE
+)
+```
+
+```{r plot-power-benchmarks, fig.dim=c(8, 5), eval=FALSE}
+benchmarks_holm <- 
+  read.csv(here::here("vignettes/cache/power_benchmarks_holm.csv"))
+benchmarks_fixed_sequence <-
+  read.csv(here::here("vignettes/cache/power_benchmarks_fixed_sequence.csv"))
+benchmarks <- data.frame(
+  rbind(benchmarks_holm, benchmarks_fixed_sequence),
+  Procedure = rep(c("Holm", "Fixed sequence"), each = nrow(benchmarks_holm))
+)
+benchmarks$char_expression <- factor(benchmarks$char_expression,
+  levels = c(
+    "gMCP (C)",
+    "graphicalMCP conventional (R)",
+    "graphicalMCP parent-child (R)"
+  )
+)
+benchmarks$Procedure <- factor(benchmarks$Procedure,
+  levels = c(
+    "Holm",
+    "Fixed sequence"
+  )
+)
+benchmarks_plot_standard <-
+  ggplot(benchmarks, aes(num_hyps, median, color = char_expression)) +
+  geom_point(size = 2) +
+  geom_line(size = 1) +
+  # scale_y_continuous(labels = scales::label_comma(suffix = "ms")) +
+  scale_color_discrete() +
+  facet_wrap(~ Procedure, labeller = label_both)+
+  labs(
+    title = "Computing time of power simulations",
+    subtitle = "Median runtime in seconds",
+    x = "Number of hypotheses",
+    y = NULL,
+    color = "Approach"
+  ) +
+  scale_y_log10(
+    breaks = c(0, 0.1, 0.3, 1, 3, 9, 27, 81, 243),
+    labels = c("0", "0.1", "0.3", "1", "3", "9", "27", "81", "243")
+  ) +
+  labs(subtitle = "Log10(median runtime) in seconds 2^14=16,384 simulations")
+benchmarks_plot_standard
+```

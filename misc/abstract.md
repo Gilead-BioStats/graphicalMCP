@@ -1,0 +1,16 @@
+# Versatile and efficient graphical multiple comparison procedures with {graphicalMCP}
+
+Multiple comparison procedures (MCPs) are widely used in confirmatory clinical trials to control the probability of making false positive claims. Graphical approaches provide a flexible framework to accommodate commonly-used MCPs and to create more powerful procedures. To allow both flexibility and efficiency, we've created graphicalMCP, an R-native package that is lightweight, performant, and educational. Using an extensible approach to allow different test types in different parts of a graph, the package covers all existing R packages that use graphical approaches. Using vectorization and shortcuts, it greatly reduces simulation times compared to other similar packages, without using more efficient languages such as C++, which allows better compatibility with different computing environments. It also has the capability to draw graphical MCPs using nodes and directed edges, giving users great visualization along with full quantitative details.
+
+Prior versions:
+
+# Introducing graphicalMCP: A package & primer for the graphical approach to multiple comparison procedures using R
+
+Multiple comparison procedures provide a method to compare several groups with a control in a single experiment, while controlling the family-wise error rate. The graphical approach to MCPs divides them into separate weighting and testing strategies, where the weighting is (mostly) agnostic to the test chosen. This system allows classic approaches like Bonferroni to be used, while also being flexible enough to enable full customization for how the significance level can be divided among hypotheses. This customization may improve power, and an accompanying visualization of the graph aids in communication about the study design. The graphicalMCP R package is a lightweight, R-native implementation of this graphical approach, built to easily generalize to many classes of tests while still being efficient. Furthermore, the code itself is written descriptively to serve as a knowledge source for the core methods in this field. Written as a partnership between Gilead and Atorus Research.
+
+# Running 100,000 clinical trials in under 5 seconds
+
+Multiple comparison procedures (MCPs) control the family-wise error rate in clinical trials that have multiple endpoints, but standard procedures like Bonferroni or fixed sequence can be unnecessarily conservative. Meanwhile, procedures with more complexity are difficult to implement and communicate. Gilead and Atorus have brought to R the full graphical approach to MCPs, allowing clinical teams to maximize how their significance level is spent across endpoints, while also providing visualizations to communicate about these procedures, both simple and complex.
+
+graphicalMCP is an R-native package that is lightweight, performant, and educational. Using an extensible approach from the start, it supports any valid weighting strategy and a wide variety of tests. It can also run power simulations of 100,000 Monte Carlo trial simulations in a matter of seconds locally. These simulations, plus graph analytics and full test calculation details, allow graphicalMCP to give clinical teams total insight into a trial's design and assessment.
+

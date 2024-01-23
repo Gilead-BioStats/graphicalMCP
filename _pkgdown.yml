@@ -1,0 +1,74 @@
+url: https://urban-sniffle-p11zlpj.pages.github.io/
+
+template:
+  bootstrap: 5
+
+reference:
+- title: Creating an initial graph
+- desc: Functions for creating a multiple comparison procedure graph
+- contents:
+  - graph_create
+  - print.initial_graph
+  - plot.initial_graph
+  - as_initial_graph
+  - as_graphMCP
+  - as_igraph
+- title: Updating a graph
+- desc: Functions for removing hypotheses from a graph
+- contents:
+  - graph_update
+  - print.updated_graph
+  - plot.updated_graph
+- title: Calculating sub-graph weights
+- desc: Functions for generating the weights of the closure
+- contents:
+  - graph_generate_weights
+- title: Test a graph
+- desc: Functions for running Bonferroni, parametric, and Simes tests
+- contents:
+  - graph_test_closure
+  - graph_test_shortcut
+  - print.graph_report
+  - graph_rejection_orderings
+- title: Run a power simulation
+- desc: Functions for running power simulations
+- contents:
+  - graph_calculate_power
+  - print.power_report
+- title: Example graphs
+- desc: Functions for creating example graphs from a variety of papers
+- contents:
+  - bonferroni
+  - bonferroni_holm
+  - fallback
+  - fixed_sequence
+  - huque_alosh_bhore_2011
+  - random_graph
+  - simple_successive_1
+  - simple_successive_2
+  - wiens_dmitrienko_2005
+
+navbar:
+  structure:
+    left:  [intro, glossary, reference, articles, tutorials, news]
+  components:
+    glossary:
+      text: Glossary
+      href: articles/glossary.html
+    reference:
+      text: Function reference
+      href: reference/index.html
+
+articles:
+- title: Vignettes
+  navbar: ~
+  contents:
+  - shortcut-testing
+  - closed-testing
+  - graph-examples
+  - comparisons
+  - generate-closure
+
+- title: Glossary
+  contents:
+  - glossary

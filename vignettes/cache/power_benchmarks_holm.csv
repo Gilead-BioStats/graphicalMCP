@@ -1,0 +1,22 @@
+"num_hyps","char_expression","median"
+4,"gMCP (C)",0.0238305000000008
+4,"graphicalMCP conventional (R)",7.1016341
+4,"graphicalMCP parent-child (R)",0.133238600000002
+6,"gMCP (C)",0.0250533000000015
+6,"graphicalMCP conventional (R)",12.3999523
+6,"graphicalMCP parent-child (R)",0.1700523
+8,"gMCP (C)",0.0441957999999998
+8,"graphicalMCP conventional (R)",21.4898488
+8,"graphicalMCP parent-child (R)",0.196084400000002
+10,"gMCP (C)",0.0517875500000011
+10,"graphicalMCP conventional (R)",37.5187789
+10,"graphicalMCP parent-child (R)",0.2433665
+12,"gMCP (C)",0.0567057000000002
+12,"graphicalMCP conventional (R)",60.0837836
+12,"graphicalMCP parent-child (R)",0.3502963
+14,"gMCP (C)",0.0733688000000008
+14,"graphicalMCP conventional (R)",97.3078827
+14,"graphicalMCP parent-child (R)",0.927549600000001
+16,"gMCP (C)",0.0826242999999991
+16,"graphicalMCP conventional (R)",142.9901201
+16,"graphicalMCP parent-child (R)",3.0425396

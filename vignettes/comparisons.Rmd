@@ -1,0 +1,353 @@
+---
+title: "Comparisons with other packages"
+output: rmarkdown::html_vignette
+bibliography: "`r system.file('references.bib', package='graphicalMCP')`"
+vignette: >
+  %\VignetteIndexEntry{Comparisons with other packages}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup, message = FALSE, warning = FALSE}
+library(graphicalMCP)
+library(lrstat)
+library(gMCP)
+```
+
+# Introduction
+
+There are two R packages that cover graphical multiple comparison procedures (MCPs): `gMCP` [@rohmeyer-2020-gmcp] and `lrstat` [@lu-2023-lrstat]. The development of `graphicalMCP` benefited from these two packages. Here we provide some comparisons between `graphicalMCP` and other packages with respect to key functions.
+
+# List of comparisons
+
+- Weighting strategy for the closure
+  - `graphicalMCP::graph_generate_weights()`
+  - `gMCP::generateWeights()`
+- Sequentially rejective procedures based on Bonferroni tests
+  - `graphicalMCP::graph_test_shortcut()`
+  - `gMCP::gMCP()`
+- Power simulation for sequentially rejective procedures
+  - `graphicalMCP::graph_calculate_power()`
+  - `gMCP::calcPower()`
+- Closed procedures with parametric tests
+  - `graphicalMCP::graph_test_closure()`
+  - `gMCP::gMCP()`
+- Power simulation for closed procedures with parametric tests
+  - `graphicalMCP::graph_calculate_power()`
+  - `gMCP::calcPower()`
+- Closed procedures with Simes tests
+  - `graphicalMCP::graph_test_closure()`
+  - `gMCP::gMCP()`
+- Power simulation for closed procedures with Simes tests
+  - `graphicalMCP::graph_calculate_power()`
+  - `gMCP::calcPower()`
+
+# Comparisons of weighting strategies
+
+A random graph for five hypotheses will be generated and used for the comparison. Weighting strategies from the following two functions will be compared: `graphicalMCP::graph_generate_weights()` and `gMCP::generateWeights()`. This process is repeated 1000 times. Weighting strategies are matched for all 1000 cases.
+
+```{r generate-weights}
+set.seed(1234)
+identical <- NULL
+for (i in 1:1000) {
+  graph <- random_graph(5)
+  graphicalmcp_weights <- graphicalMCP::graph_generate_weights(graph)
+  dimnames(graphicalmcp_weights) <- list(NULL, NULL)
+  gmcp_weights <- 
+    gMCP::generateWeights(graph$transitions, graph$hypotheses)
+  gmcp_weights <- gmcp_weights[nrow(gmcp_weights):1, ] # Reorder rows
+  identical <- c(
+    identical, 
+    all.equal(gmcp_weights, graphicalmcp_weights, tolerance = 1e-7)
+  )
+}
+all(identical)
+```
+
+# Comparisons of sequentially rejective procedures based on Bonferroni tests
+
+## Adjusted p-values for testing
+A random graph for five hypotheses will be generated and used for the comparison. A set of p-values is randomly generated to be used for the graphical MCP. Adjusted p-values are calculated and compared using the following functions: `graphicalMCP::graph_test_shortcut()` and `gMCP::gMCP()`. This process is repeated 10000 times. Adjusted p-values are matched for all 10000 cases.
+
+```{r shortcut}
+set.seed(1234)
+alpha <- 0.025
+identical <- NULL
+for (i in 1:10000) {
+  graph <- random_graph(5)
+  p <- runif(5, 0, alpha)
+  graphicalmcp_test_shortcut <- 
+    graph_test_shortcut(graph, p, alpha = alpha)$outputs$adjusted_p
+  gmcp_test_shortcut <- 
+    gMCP(as_graphMCP(graph), p, alpha = alpha)@adjPValues
+  identical <- c(
+    identical, 
+    all.equal(graphicalmcp_test_shortcut, gmcp_test_shortcut, tolerance = 1e-7)
+  )
+}
+all(identical)
+```
+
+## Power simulations
+
+A random graph for five hypotheses will be generated and used for the comparison. A set of marginal power (without multiplicity adjustment) is randomly generated. Local power (with multiplicity adjustment) is calculated and compared using the following functions: `graphicalMCP::graph_calculate_power()` and `gMCP::calcPower()`. Since different simulation methods are used, results are slightly different. The maximum absolute difference in local power is 0.0051 (0.51%) among 1000 cases, which is relatively small.
+
+```{r power-shortcut, eval = FALSE}
+set.seed(1234)
+alpha <- 0.025
+sim_corr <- matrix(.5, 5, 5)
+diag(sim_corr) <- 1
+graphicalmcp_power <- NULL
+gmcp_power <- NULL
+for (i in 1:1000) {
+  graph <- random_graph(5)
+  marginal_power <- runif(5, 0.5, 0.9)
+  noncentrality_parameter <-
+  qnorm(1 - 0.025, lower.tail = TRUE) -
+  qnorm(1 - marginal_power, lower.tail = TRUE)
+  
+  set.seed(1234 + i - 1)
+  graphicalmcp_power <- rbind(
+    graphicalmcp_power,
+    graph_calculate_power(
+      graph,
+      alpha = alpha,
+      power_marginal = marginal_power,
+      sim_corr = sim_corr,
+      sim_n = 2^17
+    )$power$power_local
+  )
+  
+  set.seed(1234 + i - 1)
+  gmcp_power <- rbind(
+    gmcp_power,
+    calcPower(
+      graph$hypotheses,
+      alpha = alpha,
+      graph$transitions,
+      mean = noncentrality_parameter,
+      corr.sim = sim_corr,
+      n.sim = 2^17
+    )$LocalPower
+  )
+}
+
+diff <- data.frame(
+  rbind(graphicalmcp_power, gmcp_power),
+  procedure = rep(c("graphicalMCP", "gMCP"), each = nrow(graphicalmcp_power))
+)
+  
+write.csv(
+  diff,
+  here::here("vignettes/cache/comparisons_power_shortcut.csv"),
+  row.names = FALSE
+)
+
+diff <- read.csv(here::here("vignettes/cache/comparisons_power_shortcut.csv"))
+graphicalmcp_power <- subset(diff, procedure == "graphicalMCP")
+gmcp_power <- subset(diff, procedure == "gMCP")
+round(
+  max(
+    abs(
+      graphicalmcp_power[, - ncol(graphicalmcp_power)] - 
+        gmcp_power[, - ncol(gmcp_power)]
+      )
+    ),
+  4
+) # Maximum difference in local power among 1000 cases
+```
+
+# Comparisons of closed test procedures with parametric tests
+
+## Adjusted p-values for testing
+A successive graph with two primary and two secondary hypotheses will be generated and used for the comparison. A set of p-values is randomly generated to be used for the graphical MCP. Adjusted p-values are calculated and compared using the following functions: `graphicalMCP::graph_test_closure()` and `gMCP::gMCP()`. Parametric tests are used for two primary hypotheses. This process is repeated 10000 times. Adjusted p-values are matched for all 10000 cases.
+
+```{r parametric}
+hypotheses <- c(.5, .5, 0, 0)
+transitions <- rbind(
+  c(0, .5, .5, 0),
+  c(.5, 0, 0, .5),
+  c(0, 1, 0, 0),
+  c(1, 0, 0, 0)
+)
+graph <- graph_create(hypotheses, transitions)
+
+set.seed(1234)
+alpha <- 0.025
+identical <- NULL
+test_corr <- rbind(
+  c(1, .5, NA, NA),
+  c(.5, 1, NA, NA),
+  c(NA, NA, 1, NA),
+  c(NA, NA, NA, 1)
+)
+for (i in 1:10000) {
+  p <- runif(4, 0, alpha)
+  graphicalmcp_test_parametric <- graph_test_closure(
+    graph, 
+    p, 
+    alpha = alpha,
+    test_groups = list(1:2, 3:4),
+    test_types = c("parametric", "bonferroni"),
+    test_corr = list(test_corr[1:2, 1:2], NA)
+  )$outputs$adjusted_p
+  gmcp_test_parametric <- gMCP(
+    as_graphMCP(graph),
+    p,
+    alpha = 0.025,
+    correlation = test_corr
+  )@adjPValues
+  identical <- c(
+    identical, 
+    all.equal(graphicalmcp_test_parametric, gmcp_test_parametric, tolerance = 1e-7)
+  )
+}
+all(identical)
+```
+
+## Power simulations
+
+A successive graph with two primary and two secondary hypotheses will be generated and used for the comparison. A set of marginal power (without multiplicity adjustment) is randomly generated. Local power (with multiplicity adjustment) is calculated and compared using the following functions: `graphicalMCP::graph_calculate_power()` and `gMCP::calcPower()`. Parametric tests are used for two primary hypotheses. This process is repeated 100 times. Since different simulation methods are used, results are slightly different. The maximum absolute difference in local power is 0.0142 (1.42%) among 100 cases, which is small.
+
+```{r power-parametric, eval = FALSE}
+hypotheses <- c(.5, .5, 0, 0)
+transitions <- rbind(
+  c(0, .5, .5, 0),
+  c(.5, 0, 0, .5),
+  c(0, 1, 0, 0),
+  c(1, 0, 0, 0)
+)
+graph <- graph_create(hypotheses, transitions)
+test_corr <- rbind(
+  c(1, .5, NA, NA),
+  c(.5, 1, NA, NA),
+  c(NA, NA, 1, NA),
+  c(NA, NA, NA, 1)
+)
+sim_corr <- matrix(.5, 4, 4)
+diag(sim_corr) <- 1
+set.seed(1234)
+alpha <- 0.025
+graphicalmcp_power_parametric <- NULL
+gmcp_power_parametric <- NULL
+for (i in 1:100) {
+  marginal_power <- runif(4, 0.5, 0.9)
+  noncentrality_parameter <-
+    qnorm(1 - 0.025, lower.tail = TRUE) -
+      qnorm(1 - marginal_power, lower.tail = TRUE)
+
+  set.seed(1234 + i - 1)
+  graphicalmcp_power_parametric <- rbind(
+    graphicalmcp_power_parametric,
+    graph_calculate_power(
+      graph,
+      alpha = alpha,
+      test_groups = list(1:2, 3:4),
+      test_types = c("parametric", "bonferroni"),
+      test_corr = list(test_corr[1:2, 1:2], NA),
+      power_marginal = marginal_power,
+      sim_corr = sim_corr,
+      sim_n = 2^14
+    )$power$power_local
+  )
+  
+  set.seed(1234 + i - 1)
+  gmcp_power_parametric <- rbind(
+    gmcp_power_parametric,
+    calcPower(
+      graph$hypotheses,
+      alpha = alpha,
+      graph$transitions,
+      corr.test = test_corr,
+      mean = noncentrality_parameter,
+      corr.sim = sim_corr,
+      n.sim = 2^14
+    )$LocalPower
+  )
+}
+
+diff <- data.frame(
+  rbind(graphicalmcp_power_parametric, gmcp_power_parametric),
+  procedure = rep(c("graphicalMCP", "gMCP"), each = nrow(gmcp_power_parametric))
+)
+  
+write.csv(
+  diff,
+  here::here("vignettes/cache/comparisons_power_parametric.csv"),
+  row.names = FALSE
+)
+
+diff <- read.csv(here::here("vignettes/cache/comparisons_power_parametric.csv"))
+graphicalmcp_power <- subset(diff, procedure == "graphicalMCP")
+gmcp_power <- subset(diff, procedure == "gMCP")
+round(
+  max(
+    abs(
+      graphicalmcp_power_parametric[, - ncol(graphicalmcp_power_parametric)] - 
+        gmcp_power_parametric[, - ncol(gmcp_power)]
+      )
+    ), 4
+) # Maximum difference in local power among 100 cases
+```
+
+# Comparisons of closed test procedures with Simes tests
+
+## Adjusted p-values for testing
+A successive graph with two primary and two secondary hypotheses will be generated and used for the comparison. A set of p-values is randomly generated to be used for the graphical MCP. Adjusted p-values are calculated and compared using the following functions: `graphicalMCP::graph_test_closure()` and `lrstat::fadjpsim()`. Simes tests are used for two primary hypotheses. This process is repeated 10000 times. Adjusted p-values are matched for all 10000 cases.
+
+```{r simes}
+hypotheses <- c(.5, .5, 0, 0)
+eps <- 0.0001
+transitions <- rbind(
+  c(0, 1 - eps, eps, 0),
+  c(1 - eps, 0, 0, eps),
+  c(0, 1, 0, 0),
+  c(1, 0, 0, 0)
+)
+graph <- graph_create(hypotheses, transitions)
+
+set.seed(1234)
+alpha <- 0.025
+identical <- NULL
+family <- rbind(
+  c(1, 1, 0, 0),
+  c(0, 0, 1, 0),
+  c(0, 0, 0, 1)
+)
+for (i in 1:10000) {
+  p <- runif(4, 0, alpha)
+  graphicalmcp_test_simes <- graph_test_closure(
+    graph, 
+    p, 
+    alpha = alpha,
+    test_groups = list(1:2, 3:4),
+    test_types = c("simes", "bonferroni")
+  )$outputs$adjusted_p
+  names(graphicalmcp_test_simes) <- NULL
+  lrstat_test_simes <-
+    fadjpsim(
+      fwgtmat(graph$hypotheses, graph$transitions),
+      p,
+      family
+  )
+  
+  identical <- c(
+    identical, 
+    all.equal(graphicalmcp_test_simes, lrstat_test_simes, tolerance = 1e-7)
+  )
+}
+all(identical)
+```
+
+## Power simulations
+
+Power simulations are not available in `lrstat`. Thus a comparison could be done to compare `graphicalMCP::graph_calculate_power()` and a manual repetition of `lrstat::fadjpsim()` for many sets of marginal power. This process is the same as the above comparison of adjusted p-values, and thus omitted.
+
+# Reference
