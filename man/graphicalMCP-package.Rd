@@ -13,7 +13,7 @@ A multiple comparison procedure (or multiple test procedure) is a a statistical 
 \seealso{
 Useful links:
 \itemize{
-  \item \url{https://urban-sniffle-p11zlpj.pages.github.io/}
+  \item \url{https://gilead-biostats.github.io/graphicalMCP/}
   \item Report bugs at \url{https://github.com/Gilead-BioStats/graphicalMCP/issues}
 }
 
