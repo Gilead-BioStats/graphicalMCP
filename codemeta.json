@@ -236,6 +236,6 @@
       "description": "version 0.1.0"
     }
   ],
-  "relatedLink": "https://urban-sniffle-p11zlpj.pages.github.io/",
+  "relatedLink": "https://gilead-biostats.github.io/graphicalMCP/",
   "contIntegration": ["https://app.codecov.io/gh/Gilead-BioStats/graphicalMCP?branch=s3-graph_mcp", "https://github.com/Gilead-BioStats/graphicalMCP/actions/workflows/R-CMD-check.yaml"]
 }

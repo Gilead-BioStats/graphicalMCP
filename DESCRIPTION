@@ -13,7 +13,7 @@ Description: Graphical multiple comparison procedures (MCPs) control
     implementation of graphical MCPs which allow mixed types of tests.
     It also includes power simulations and visualization of graphical MCPs.
 License: Apache License (>= 2)
-URL: https://urban-sniffle-p11zlpj.pages.github.io/
+URL: https://gilead-biostats.github.io/graphicalMCP/
 BugReports: https://github.com/Gilead-BioStats/graphicalMCP/issues
 Depends:
     R (>= 4.1.0)
