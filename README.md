@@ -26,7 +26,7 @@ using the following code:
 
 ``` r
 # install.packages("pak")
-pak::pak("Gilead-BioStats/graphicalMCP@dev")
+pak::pak("Gilead-BioStats/graphicalMCP")
 ```
 
 # Documentation
