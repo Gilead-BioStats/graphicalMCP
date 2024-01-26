@@ -33,7 +33,7 @@ Graphical approaches for multiple comparison procedures (MCPs) are a general fra
 
 ```{r eval = FALSE}
 # install.packages("pak")
-pak::pak("Gilead-BioStats/graphicalMCP@dev")
+pak::pak("Gilead-BioStats/graphicalMCP")
 ```
 
 # Documentation
