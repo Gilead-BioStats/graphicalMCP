@@ -44,6 +44,7 @@ pak::pak("Gilead-BioStats/graphicalMCP")
   - see `vignette("generate-closure")` for rationales to generate the
     closure and the weighting strategy of a graph
   - see `vignette("comparisons")` for comparisons to other R packages
+- To view vignettes in R after properly installing 'graphicalMCP' from GitHub, we can build vignettes by 'devtools::install(build_vignettes = TRUE)', and then use 'browseVignettes("graphicalMCP")' to view the full list of vignettes
 
 # Related work
 
