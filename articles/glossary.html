@@ -277,43 +277,23 @@ combined with a <strong>graph</strong>.</td>
 <strong>significance level</strong> <code>alpha</code> (without
 multiplicity adjustment).</td>
 <td></td>
-<td><code>marginal_ power</code></td>
+<td><code>marginal_power</code></td>
 </tr>
 <tr class="even">
 <td><ul>
 <li><strong>Correlation matrix</strong></li>
 </ul></td>
 <td>Specification of correlations between test statistics for
-<strong>hypotheses</strong>.</td>
+<strong>hypotheses</strong>. The correlation for testing
+<code>test_corr</code> is used to perform parametric tests. The
+correlation for simulation <code>test_sim</code> is used to simulate
+<strong>p-values</strong> from the alternative hypotheses for to assess
+<strong>power</strong>, under assumptions.</td>
 <td></td>
-<td><code>corr</code></td>
-</tr>
-<tr class="odd">
-<td><strong>Marginal power</strong></td>
-<td colspan="3">The power to reject a null <strong>hypothesis</strong>
-at the <strong>significance level</strong> <code>alpha</code> (without
-multiplicity adjustment). This is closely related to the non-centrality
-parameter, which is the expected mean of the standardized test
-statistics under the alternative hypothesis. In this package, the
-asymptotic normal distribution with a variance of 1 is assumed and then
-the non-centrality is the mean of this distribution. The relationship
-between the <strong>marginal power</strong> and the non-centrality
-parameter is
-<code>noncentrality_parameter=qnorm(1-alpha)-qnorm(1-marginal_power)</code>.
-| | <code>marginal_ power</code> |</td>
-</tr>
-<tr class="even">
-<td><ul>
-<li><strong>Correlation matrix</strong></li>
-</ul></td>
-<td colspan="3">Specification of correlations between test statistics
-for <strong>hypotheses</strong>. There are two types of the correlation
-matrix. The correlation for testing <code>test_corr</code> is used to
-perform parametric tests. The correlation for simulation
-<code>test_sim</code> is used to simulate <strong>p-values</strong> from
-the alternative hypotheses for to assess <strong>power</strong>, under
-assumptions. | | <code>corr</code>, <code>test_corr</code>,
-<code>sim_corr</code> |</td>
+<td>
+<code>corr</code>, <code>test_corr</code>,
+<code>sim_corr</code>
+</td>
 </tr>
 <tr class="odd">
 <td><strong>Power</strong></td>
