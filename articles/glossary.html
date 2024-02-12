@@ -111,14 +111,12 @@ submit an issue to the GitHub repository.</p>
 <col width="82%">
 <col width="6%">
 <col width="5%">
-<col width="0%">
 </colgroup>
 <thead><tr class="header">
 <th>Entity</th>
 <th>Definition</th>
 <th>Aliases</th>
 <th>Variable(s)</th>
-<th></th>
 </tr></thead>
 <tbody>
 <tr class="odd">
@@ -129,7 +127,6 @@ comparison procedure. Each node correspond to
 <strong>transition</strong>.</td>
 <td></td>
 <td><code>graph</code></td>
-<td></td>
 </tr>
 <tr class="even">
 <td><ul>
@@ -141,7 +138,6 @@ graph according to algorithm 1 of <span class="citation">Bretz et al.
 (2011)</span>. This is an operation on a graph.</td>
 <td></td>
 <td><code>updated_graph</code></td>
-<td></td>
 </tr>
 <tr class="odd">
 <td><ul>
@@ -154,7 +150,6 @@ its <strong>p-value</strong> is sufficiently small, which is determined
 by the graphical multiple comparison procedure.</td>
 <td></td>
 <td></td>
-<td></td>
 </tr>
 <tr class="even">
 <td><strong>Hypothesis</strong></td>
@@ -164,7 +159,6 @@ weights. The corresponding <strong>significance level</strong> is the
 weight times <code>alpha</code>.</td>
 <td>weight, hypothesis weight</td>
 <td><code>hypotheses</code></td>
-<td></td>
 </tr>
 <tr class="odd">
 <td></td>
@@ -174,7 +168,6 @@ names: hypothesis name, and number of hypotheses.</td>
 <td>
 <code>hyp_names</code>, <code>num_hyps</code>
 </td>
-<td></td>
 </tr>
 <tr class="even">
 <td><strong>Transition</strong></td>
@@ -184,7 +177,6 @@ propagated from the origin hypothesis to the end hypothesis, when the
 origin is rejected.</td>
 <td>edge, transition weight</td>
 <td><code>transitions</code></td>
-<td></td>
 </tr>
 <tr class="odd">
 <td><strong>Intersection hypothesis</strong></td>
@@ -194,7 +186,6 @@ Plural often implies all intersections of all subsets of
 hypotheses.</td>
 <td>intersection, sub-graph(s), closure</td>
 <td><code>intersections</code></td>
-<td></td>
 </tr>
 <tr class="even">
 <td><strong>Weighting strategy</strong></td>
@@ -202,7 +193,6 @@ hypotheses.</td>
 <strong>weights</strong> according to Algorithm 1 in <span class="citation">Bretz et al. (2011)</span>.</td>
 <td>intersection weights, closure weights</td>
 <td><code>weighting_strategy</code></td>
-<td></td>
 </tr>
 <tr class="odd">
 <td><strong>Adjusted weight</strong></td>
@@ -222,7 +212,6 @@ weight</strong> times <code>alpha</code>.</li>
 </td>
 <td></td>
 <td><code>adjusted_weights</code></td>
-<td></td>
 </tr>
 <tr class="even">
 <td><strong>P-value</strong></td>
@@ -230,7 +219,6 @@ weight</strong> times <code>alpha</code>.</li>
 unadjusted p-value or a raw p-value.</td>
 <td></td>
 <td><code>p</code></td>
-<td></td>
 </tr>
 <tr class="odd">
 <td><strong>Ordered p-value</strong></td>
@@ -238,7 +226,6 @@ unadjusted p-value or a raw p-value.</td>
 They are mainly used to perform Simes tests.</td>
 <td></td>
 <td><code>ordered_p</code></td>
-<td></td>
 </tr>
 <tr class="even">
 <td><strong>Adjusted p-value</strong></td>
@@ -247,7 +234,7 @@ multiple comparison procedure. A hypothesis may be rejected if its
 <strong>adjusted p-value</strong> is less than or equal to
 <code>alpha</code>.</td>
 <td></td>
-<td colspan="2"><code>adjusted_p</code></td>
+<td><code>adjusted_p</code></td>
 </tr>
 <tr class="odd">
 <td><strong>Significance level</strong></td>
@@ -257,7 +244,6 @@ if its <strong>p-value</strong> is less than or equal to its
 test all hypotheses is <code>alpha</code>.</td>
 <td></td>
 <td><code>alpha</code></td>
-<td></td>
 </tr>
 <tr class="even">
 <td><strong>Test type</strong></td>
@@ -266,7 +252,6 @@ test all hypotheses is <code>alpha</code>.</td>
 parametric are currently supported.</td>
 <td>tests</td>
 <td><code>test_types</code></td>
-<td></td>
 </tr>
 <tr class="odd">
 <td><strong>Test group</strong></td>
@@ -277,7 +262,6 @@ using a <strong>test type</strong>.</td>
 <td>
 <code>groups</code>, <code>test_groups</code>
 </td>
-<td></td>
 </tr>
 <tr class="even">
 <td><strong>Testing strategy</strong></td>
@@ -286,11 +270,27 @@ using a <strong>test type</strong>.</td>
 combined with a <strong>graph</strong>.</td>
 <td>multiple comparison procedure</td>
 <td></td>
-<td></td>
 </tr>
 <tr class="odd">
 <td><strong>Marginal power</strong></td>
-<td colspan="4">The power to reject a null <strong>hypothesis</strong>
+<td>The power to reject a null <strong>hypothesis</strong> at the
+<strong>significance level</strong> <code>alpha</code> (without
+multiplicity adjustment).</td>
+<td></td>
+<td><code>marginal_ power</code></td>
+</tr>
+<tr class="even">
+<td><ul>
+<li><strong>Correlation matrix</strong></li>
+</ul></td>
+<td>Specification of correlations between test statistics for
+<strong>hypotheses</strong>.</td>
+<td></td>
+<td><code>corr</code></td>
+</tr>
+<tr class="odd">
+<td><strong>Marginal power</strong></td>
+<td colspan="3">The power to reject a null <strong>hypothesis</strong>
 at the <strong>significance level</strong> <code>alpha</code> (without
 multiplicity adjustment). This is closely related to the non-centrality
 parameter, which is the expected mean of the standardized test
@@ -299,22 +299,21 @@ asymptotic normal distribution with a variance of 1 is assumed and then
 the non-centrality is the mean of this distribution. The relationship
 between the <strong>marginal power</strong> and the non-centrality
 parameter is
-<code>noncentrality_parameter = qnorm(1 - alpha) - qnorm(1 - marginal_power)</code>.
+<code>noncentrality_parameter=qnorm(1-alpha)-qnorm(1-marginal_power)</code>.
 | | <code>marginal_ power</code> |</td>
 </tr>
 <tr class="even">
 <td><ul>
 <li><strong>Correlation matrix</strong></li>
 </ul></td>
-<td colspan="4">Specification of correlations between test statistics
+<td colspan="3">Specification of correlations between test statistics
 for <strong>hypotheses</strong>. There are two types of the correlation
 matrix. The correlation for testing <code>test_corr</code> is used to
-perform parametric tests. It may contain <code>NA</code>s. The
-correlation for simulation <code>test_sim</code> is used to simulate
-<strong>p-values</strong> from the alternative hypotheses for to assess
-<strong>power</strong>, under assumptions. It does not contain
-<code>NA</code>s. | | <code>corr</code>, <code>test_ corr</code>,
-<code>sim _corr</code> |</td>
+perform parametric tests. The correlation for simulation
+<code>test_sim</code> is used to simulate <strong>p-values</strong> from
+the alternative hypotheses for to assess <strong>power</strong>, under
+assumptions. | | <code>corr</code>, <code>test_corr</code>,
+<code>sim_corr</code> |</td>
 </tr>
 <tr class="odd">
 <td><strong>Power</strong></td>
@@ -325,7 +324,6 @@ likelihood that a particular <strong>success</strong> criterion is
 met.</td>
 <td>probability of achieving success criterion</td>
 <td><code>power_*</code></td>
-<td></td>
 </tr>
 <tr class="even">
 <td><ul>
@@ -336,7 +334,6 @@ of null <strong>hypotheses</strong>. Being success means that the
 combination of null hypotheses has been rejected.</td>
 <td></td>
 <td><code>sim_success</code></td>
-<td></td>
 </tr>
 </tbody>
 </table>
