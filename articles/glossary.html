@@ -120,46 +120,52 @@ submit an issue to the GitHub repository.</p>
 </tr></thead>
 <tbody>
 <tr class="odd">
-<td><strong>Graph</strong></td>
-<td>A set of nodes and directed edges representing a graphical multiple
-comparison procedure. Each node correspond to
-<strong>hypothesis</strong> and each edge corresponds to
-<strong>transition</strong>.</td>
-<td></td>
-<td><code>graph</code></td>
-</tr>
-<tr class="even">
-<td><ul>
+<td>
+<p><strong>Graph</strong></p>
+<ul>
 <li>Delete a <strong>hypothesis</strong>
 </li>
 <li>Reject a <strong>hypothesis</strong>
 </li>
-</ul></td>
-<td>Remove a <strong>hypothesis</strong> from a graph, and update the
+</ul>
+</td>
+<td>
+<p>A set of nodes and directed edges representing a graphical
+multiple comparison procedure. Each node correspond to
+<strong>hypothesis</strong> and each edge corresponds to
+<strong>transition</strong>.</p>
+<p>Remove a <strong>hypothesis</strong> from a graph, and update the
 graph according to algorithm 1 of <span class="citation">Bretz et al.
 (2011)</span>. This is an operation on a graph. Under a given
 <strong>graph</strong>, <strong>testing strategy</strong>, and
 <code>alpha</code>, a hypothesis is rejected if its
 <strong>p-value</strong> is sufficiently small, which is determined by
-the graphical multiple comparison procedure.</td>
+the graphical multiple comparison procedure.</p>
+</td>
 <td></td>
-<td><code>updated_graph</code></td>
-</tr>
-<tr class="odd">
-<td><strong>Hypothesis</strong></td>
-<td>A node with weight in a <strong>graph</strong>. Each node represents
-a null hypothesis, associated with a <strong>hypothesis</strong>
-weights. The corresponding <strong>significance level</strong> is the
-weight times <code>alpha</code>. Terms associated with
-<strong>hypothesis</strong> get their variable names: hypothesis name,
-and number of hypotheses.</td>
-<td>weight, hypothesis weight</td>
 <td>
-<code>hypotheses</code> <code>hyp_names</code>,
-<code>num_hyps</code>
+<p><code>graph</code></p>
+<p><code>updated_graph</code></p>
 </td>
 </tr>
 <tr class="even">
+<td><strong>Hypothesis</strong></td>
+<td>
+<p>A node with weight in a <strong>graph</strong>. Each node
+represents a null hypothesis, associated with a
+<strong>hypothesis</strong> weights. The corresponding
+<strong>significance level</strong> is the weight times
+<code>alpha</code>.</p>
+<p>Terms associated with <strong>hypothesis</strong> get their variable
+names: hypothesis name, and number of hypotheses.</p>
+</td>
+<td>weight, hypothesis weight</td>
+<td>
+<p><code>hypotheses</code></p>
+<p><code>hyp_names</code>, <code>num_hyps</code></p>
+</td>
+</tr>
+<tr class="odd">
 <td><strong>Transition</strong></td>
 <td>A directed edge with weight in a <strong>graph</strong>. Each edge
 defines the proportion of the <strong>hypothesis</strong> weight to be
@@ -168,7 +174,7 @@ origin is rejected.</td>
 <td>edge, transition weight</td>
 <td><code>transitions</code></td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td><strong>Intersection hypothesis</strong></td>
 <td>An intersection hypothesis is an intersection of multiple null
 hypotheses, which means that all associated null hypotheses are true.
@@ -177,14 +183,14 @@ hypotheses.</td>
 <td>intersection, sub-graph(s), closure</td>
 <td><code>intersections</code></td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td><strong>Weighting strategy</strong></td>
 <td>The set of all <strong>intersections</strong> and their hypothesis
 <strong>weights</strong> according to Algorithm 1 in <span class="citation">Bretz et al. (2011)</span>.</td>
 <td>intersection weights, closure weights</td>
 <td><code>weighting_strategy</code></td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td><strong>Adjusted weight</strong></td>
 <td>
 <p>The hypothesis <strong>weight</strong>, adjusted according to a
@@ -203,21 +209,21 @@ weight</strong> times <code>alpha</code>.</li>
 <td></td>
 <td><code>adjusted_weights</code></td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td><strong>P-value</strong></td>
 <td>A p-value before multiplicity adjustment. Also could be called as an
 unadjusted p-value or a raw p-value.</td>
 <td></td>
 <td><code>p</code></td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td><strong>Ordered p-value</strong></td>
 <td>A <strong>p-value</strong> sorted from the smallest to the largest.
 They are mainly used to perform Simes tests.</td>
 <td></td>
 <td><code>ordered_p</code></td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td><strong>Adjusted p-value</strong></td>
 <td>A <strong>p-value</strong> that has been adjusted according to a
 multiple comparison procedure. A hypothesis may be rejected if its
@@ -226,7 +232,7 @@ multiple comparison procedure. A hypothesis may be rejected if its
 <td></td>
 <td><code>adjusted_p</code></td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td><strong>Significance level</strong></td>
 <td>A threshold chosen to test a null hypothesis, which may be rejected
 if its <strong>p-value</strong> is less than or equal to its
@@ -235,7 +241,7 @@ test all hypotheses is <code>alpha</code>.</td>
 <td></td>
 <td><code>alpha</code></td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td><strong>Test type</strong></td>
 <td>A specification of which testing type to use for an
 <strong>intersection hypothesis</strong> - Bonferroni, Simes, and
@@ -243,7 +249,7 @@ parametric are currently supported.</td>
 <td>tests</td>
 <td><code>test_types</code></td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td><strong>Test group</strong></td>
 <td>A partition of all null hypotheses in a <strong>graph</strong>
 specifying which <strong>hypotheses</strong> should be tested together
@@ -253,7 +259,7 @@ using a <strong>test type</strong>.</td>
 <code>groups</code>, <code>test_groups</code>
 </td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td><strong>Testing strategy</strong></td>
 <td>
 <strong>Test types</strong> and <strong>test groups</strong>
@@ -261,39 +267,52 @@ combined with a <strong>graph</strong>.</td>
 <td>multiple comparison procedure</td>
 <td></td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td>
-<strong>Marginal power</strong> - <strong>Correlation
-matrix</strong>
+<p><strong>Marginal power</strong></p>
+<ul>
+<li><strong>Correlation matrix</strong></li>
+</ul>
 </td>
-<td>The power to reject a null <strong>hypothesis</strong> at the
+<td>
+<p>The power to reject a null <strong>hypothesis</strong> at the
 <strong>significance level</strong> <code>alpha</code> (without
-multiplicity adjustment). Specification of correlations between test
-statistics for <strong>hypotheses</strong>. The correlation for testing
+multiplicity adjustment).</p>
+<p>Specification of correlations between test statistics for
+<strong>hypotheses</strong>. The correlation for testing
 <code>test_corr</code> is used to perform parametric tests. The
 correlation for simulation <code>test_sim</code> is used to simulate
 <strong>p-values</strong> from the alternative hypotheses for to assess
-<strong>power</strong>, under assumptions.</td>
+<strong>power</strong>, under assumptions.</p>
+</td>
 <td></td>
 <td>
-<code>marginal_power</code> <code>corr</code>,
-<code>test_corr</code>, <code>sim_corr</code>
+<p><code>marginal_power</code></p>
+<p><code>corr</code>, <code>test_corr</code>,
+<code>sim_corr</code></p>
 </td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td>
-<strong>Power</strong> - <strong>Success</strong>
+<p><strong>Power</strong></p>
+<ul>
+<li><strong>Success</strong></li>
+</ul>
 </td>
-<td>With a given <strong>graph</strong>, <strong>testing
+<td>
+<p>With a given <strong>graph</strong>, <strong>testing
 strategy</strong>, <code>alpha</code>, and the underlying distribution
 of test statistics under the alternative hypotheses, the estimated
-likelihood that a particular <strong>success</strong> criterion is met.
-Specification of the success criterion, which could be a combination of
-null <strong>hypotheses</strong>. Being success means that the
-combination of null hypotheses has been rejected.</td>
+likelihood that a particular <strong>success</strong> criterion is
+met.</p>
+<p>Specification of the success criterion, which could be a combination
+of null <strong>hypotheses</strong>. Being success means that the
+combination of null hypotheses has been rejected.</p>
+</td>
 <td>probability of achieving success criterion</td>
 <td>
-<code>power_*</code> <code>sim_success</code>
+<p><code>power_*</code></p>
+<p><code>sim_success</code></p>
 </td>
 </tr>
 </tbody>
