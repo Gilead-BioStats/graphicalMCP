@@ -120,36 +120,23 @@ submit an issue to the GitHub repository.</p>
 </tr></thead>
 <tbody>
 <tr class="odd">
-<td><strong>Graph</strong></td>
+<td>
+<strong>Graph</strong> - Delete a <strong>hypothesis</strong> -
+Reject a <strong>hypothesis</strong>
+</td>
 <td>A set of nodes and directed edges representing a graphical multiple
 comparison procedure. Each node correspond to
 <strong>hypothesis</strong> and each edge corresponds to
-<strong>transition</strong>.</td>
-<td></td>
-<td><code>graph</code></td>
-</tr>
-<tr class="even">
-<td><ul>
-<li>Delete a <strong>hypothesis</strong>
-</li>
-</ul></td>
-<td>Remove a <strong>hypothesis</strong> from a graph, and update the
-graph according to algorithm 1 of <span class="citation">Bretz et al.
-(2011)</span>. This is an operation on a graph.</td>
-<td></td>
-<td><code>updated_graph</code></td>
-</tr>
-<tr class="odd">
-<td><ul>
-<li>Reject a <strong>hypothesis</strong>
-</li>
-</ul></td>
-<td>Under a given <strong>graph</strong>, <strong>testing
+<strong>transition</strong>. Remove a <strong>hypothesis</strong> from a
+graph, and update the graph according to algorithm 1 of <span class="citation">Bretz et al. (2011)</span>. This is an operation on a
+graph. Under a given <strong>graph</strong>, <strong>testing
 strategy</strong>, and <code>alpha</code>, a hypothesis is rejected if
 its <strong>p-value</strong> is sufficiently small, which is determined
 by the graphical multiple comparison procedure.</td>
 <td></td>
-<td></td>
+<td>
+<code>graph</code> <code>updated_graph</code>
+</td>
 </tr>
 <tr class="even">
 <td><strong>Hypothesis</strong></td>
