@@ -31,8 +31,6 @@ library(gt)
 
 # Motivating example
 
-# Motivating example
-
 Consider a simple successive graph with four hypotheses. It has two primary hypotheses $H_1$ and $H_2$ and two secondary hypotheses $H_3$ and $H_4$. Initially, hypothesis weights are split equally between $H_1$ and $H_2$ with 0.5. Hypotheses $H_3$ and $H_4$ receive 0 hypothesis weights because $H_3 (H_4)$ is tested only if $H_1 (H_2)$ is rejected. Thus there is an edge from $H_1 (H_2)$ to $H_3 (H_4)$ with a transition weight of 1. When both $H_1$ and $H_3$ are rejected, their hypothesis weights are propagated to $H_2$; similarly, when both $H_2$ and $H_4$ are rejected, their hypothesis weights are propagated to $H_1$. Thus there is an edge from $H_3 (H_4)$ to $H_2 (H_1)$ with a transition weight of 1. A graphical multiple comparison procedure is illustrated below.
 
 ```{r base-graph-1, fig.dim=c(3, 3)}
@@ -292,7 +290,7 @@ gcp_conventional <- function(
   # success is only triggered when the whole results vector is TRUE
   power <- list(
     power_local = colMeans(simulation_test_results),
-    power_expected = sum(simulation_test_results) / sim_n,
+    rejection_expected = sum(simulation_test_results) / sim_n,
     power_at_least_1 = mean(rowSums(simulation_test_results) > 0),
     power_all =
       mean(rowSums(simulation_test_results) == length(power_marginal)),

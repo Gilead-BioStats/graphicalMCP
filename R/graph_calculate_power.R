@@ -50,7 +50,7 @@
 #'   * inputs - A list of input parameters
 #'   * power - A list of measures of how often hypotheses are rejected
 #'       * power_local - Rejection proportion for each hypothesis individually
-#'       * power_expected - Average number of hypotheses rejected in a single
+#'       * rejection_expected - Average number of hypotheses rejected in a single
 #'       simulation
 #'       * power_at_least_1 - Proportion of simulations which reject any
 #'       hypothesis
@@ -343,7 +343,7 @@ graph_calculate_power <- function(graph,
   # success is only triggered when the whole results vector is TRUE
   power <- list(
     power_local = colMeans(simulation_test_results),
-    power_expected = sum(simulation_test_results) / sim_n,
+    rejection_expected = sum(simulation_test_results) / sim_n,
     power_at_least_1 = mean(rowSums(simulation_test_results) > 0),
     power_all =
       mean(rowSums(simulation_test_results) == length(power_marginal)),

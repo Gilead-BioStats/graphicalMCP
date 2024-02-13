@@ -124,7 +124,7 @@ print.power_report <- function(x, ..., precision = 4, indent = 2, rows = 10) {
   cat(
     pad,
     "Expected no. of rejections: ",
-    format(x$power$power_expected, digits = precision),
+    format(x$power$rejection_expected, digits = precision),
     "\n",
     sep = ""
   )
