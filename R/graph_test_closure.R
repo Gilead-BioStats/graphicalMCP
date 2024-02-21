@@ -314,7 +314,7 @@ graph_test_closure <- function(graph,
     # "c" value is only used in parametric testing, so there's no need to
     # include this column when there are no parametric groups
     if (!any(test_types == "parametric")) {
-      df_test_values[c("c_value", "*")] <- NULL
+      df_test_values[c("c_value", "*_a")] <- NULL
     }
   }
 

@@ -199,6 +199,8 @@ print.graph_report <- function(x, ..., precision = 4, indent = 2, rows = 10) {
         format(as.numeric(num_col), digits = precision)
       }
     )
+
+    names(crit_res)[grep("\\*_", names(crit_res))] <- "*"
     if (any(x$inputs$test_types == "parametric")) {
       crit_res$c_value <- ifelse(
         trimws(crit_res$c_value) == "NA",

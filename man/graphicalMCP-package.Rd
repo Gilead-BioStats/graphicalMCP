@@ -4,11 +4,11 @@
 \name{graphicalMCP-package}
 \alias{graphicalMCP}
 \alias{graphicalMCP-package}
-\title{graphicalMCP: Graphical Approach for Multiple Comparison Procedures}
+\title{graphicalMCP: Graphical Multiple Comparison Procedures}
 \description{
 \if{html}{\figure{logo.png}{options: style='float: right' alt='logo' width='120'}}
 
-A multiple comparison procedure (or multiple test procedure) is a a statistical analysis method for determining efficacy of multiple drugs, or multiple doses of the same drug, in a single clinical trial. (Bretz et al., 2011) laid out a graph-based approach to these multiple comparison procedures, in which the weights of the vertices and edges of the graph are determined independently of the particular statistical test used to assess results. This is a low-dependency implementation of the methods described in that and subsequent papers.
+Graphical multiple comparison procedures (MCPs) control the familywise error rate. This class includes many commonly used procedures as special cases. This package is a low-dependency implementation of graphical MCPs which allow mixed types of tests. It also includes power simulations and visualization of graphical MCPs.
 }
 \seealso{
 Useful links:
