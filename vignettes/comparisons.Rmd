@@ -60,11 +60,11 @@ for (i in 1:1000) {
   graph <- random_graph(5)
   graphicalmcp_weights <- graphicalMCP::graph_generate_weights(graph)
   dimnames(graphicalmcp_weights) <- list(NULL, NULL)
-  gmcp_weights <- 
+  gmcp_weights <-
     gMCP::generateWeights(graph$transitions, graph$hypotheses)
   gmcp_weights <- gmcp_weights[nrow(gmcp_weights):1, ] # Reorder rows
   identical <- c(
-    identical, 
+    identical,
     all.equal(gmcp_weights, graphicalmcp_weights, tolerance = 1e-7)
   )
 }
@@ -83,12 +83,12 @@ identical <- NULL
 for (i in 1:10000) {
   graph <- random_graph(5)
   p <- runif(5, 0, alpha)
-  graphicalmcp_test_shortcut <- 
+  graphicalmcp_test_shortcut <-
     graph_test_shortcut(graph, p, alpha = alpha)$outputs$adjusted_p
-  gmcp_test_shortcut <- 
+  gmcp_test_shortcut <-
     gMCP(as_graphMCP(graph), p, alpha = alpha)@adjPValues
   identical <- c(
-    identical, 
+    identical,
     all.equal(graphicalmcp_test_shortcut, gmcp_test_shortcut, tolerance = 1e-7)
   )
 }
@@ -110,9 +110,9 @@ for (i in 1:1000) {
   graph <- random_graph(5)
   marginal_power <- runif(5, 0.5, 0.9)
   noncentrality_parameter <-
-  qnorm(1 - 0.025, lower.tail = TRUE) -
-  qnorm(1 - marginal_power, lower.tail = TRUE)
-  
+    qnorm(1 - 0.025, lower.tail = TRUE) -
+    qnorm(1 - marginal_power, lower.tail = TRUE)
+
   set.seed(1234 + i - 1)
   graphicalmcp_power <- rbind(
     graphicalmcp_power,
@@ -124,7 +124,7 @@ for (i in 1:1000) {
       sim_n = 2^17
     )$power$power_local
   )
-  
+
   set.seed(1234 + i - 1)
   gmcp_power <- rbind(
     gmcp_power,
@@ -143,7 +143,7 @@ diff <- data.frame(
   rbind(graphicalmcp_power, gmcp_power),
   procedure = rep(c("graphicalMCP", "gMCP"), each = nrow(graphicalmcp_power))
 )
-  
+
 write.csv(
   diff,
   here::here("vignettes/cache/comparisons_power_shortcut.csv"),
@@ -156,10 +156,10 @@ gmcp_power <- subset(diff, procedure == "gMCP")
 round(
   max(
     abs(
-      graphicalmcp_power[, - ncol(graphicalmcp_power)] - 
-        gmcp_power[, - ncol(gmcp_power)]
-      )
-    ),
+      graphicalmcp_power[, -ncol(graphicalmcp_power)] -
+        gmcp_power[, -ncol(gmcp_power)]
+    )
+  ),
   4
 ) # Maximum difference in local power among 1000 cases
 ```
@@ -191,8 +191,8 @@ test_corr <- rbind(
 for (i in 1:10000) {
   p <- runif(4, 0, alpha)
   graphicalmcp_test_parametric <- graph_test_closure(
-    graph, 
-    p, 
+    graph,
+    p,
     alpha = alpha,
     test_groups = list(1:2, 3:4),
     test_types = c("parametric", "bonferroni"),
@@ -205,7 +205,7 @@ for (i in 1:10000) {
     correlation = test_corr
   )@adjPValues
   identical <- c(
-    identical, 
+    identical,
     all.equal(graphicalmcp_test_parametric, gmcp_test_parametric, tolerance = 1e-7)
   )
 }
@@ -241,7 +241,7 @@ for (i in 1:100) {
   marginal_power <- runif(4, 0.5, 0.9)
   noncentrality_parameter <-
     qnorm(1 - 0.025, lower.tail = TRUE) -
-      qnorm(1 - marginal_power, lower.tail = TRUE)
+    qnorm(1 - marginal_power, lower.tail = TRUE)
 
   set.seed(1234 + i - 1)
   graphicalmcp_power_parametric <- rbind(
@@ -257,7 +257,7 @@ for (i in 1:100) {
       sim_n = 2^14
     )$power$power_local
   )
-  
+
   set.seed(1234 + i - 1)
   gmcp_power_parametric <- rbind(
     gmcp_power_parametric,
@@ -277,7 +277,7 @@ diff <- data.frame(
   rbind(graphicalmcp_power_parametric, gmcp_power_parametric),
   procedure = rep(c("graphicalMCP", "gMCP"), each = nrow(gmcp_power_parametric))
 )
-  
+
 write.csv(
   diff,
   here::here("vignettes/cache/comparisons_power_parametric.csv"),
@@ -290,10 +290,10 @@ gmcp_power <- subset(diff, procedure == "gMCP")
 round(
   max(
     abs(
-      graphicalmcp_power_parametric[, - ncol(graphicalmcp_power_parametric)] - 
-        gmcp_power_parametric[, - ncol(gmcp_power)]
-      )
-    ), 4
+      graphicalmcp_power_parametric[, -ncol(graphicalmcp_power_parametric)] -
+        gmcp_power_parametric[, -ncol(gmcp_power)]
+    )
+  ), 4
 ) # Maximum difference in local power among 100 cases
 ```
 
@@ -324,8 +324,8 @@ family <- rbind(
 for (i in 1:10000) {
   p <- runif(4, 0, alpha)
   graphicalmcp_test_simes <- graph_test_closure(
-    graph, 
-    p, 
+    graph,
+    p,
     alpha = alpha,
     test_groups = list(1:2, 3:4),
     test_types = c("simes", "bonferroni")
@@ -336,10 +336,10 @@ for (i in 1:10000) {
       fwgtmat(graph$hypotheses, graph$transitions),
       p,
       family
-  )
-  
+    )
+
   identical <- c(
-    identical, 
+    identical,
     all.equal(graphicalmcp_test_simes, lrstat_test_simes, tolerance = 1e-7)
   )
 }

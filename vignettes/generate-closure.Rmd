@@ -218,10 +218,10 @@ gcp_conventional <- function(
   num_hyps <- length(graph$hypotheses)
 
   graphicalMCP:::power_input_val(
-    graph, 
-    sim_n, 
-    power_marginal, 
-    sim_corr, 
+    graph,
+    sim_n,
+    power_marginal,
+    sim_corr,
     sim_success
   )
 
@@ -361,29 +361,29 @@ benchmark_list <- lapply(
     # A graph for the Holm procedure
     transitions <- matrix(1 / (num_hyps - 1), num_hyps, num_hyps)
     diag(transitions) <- 0
-    
+
     graph <- graph_create(rep(1 / num_hyps, num_hyps), transitions)
-    
+
     corr <- diag(num_hyps)
-    
+
     benchmark <- mark(
       `gMCP (C)` = gMCP::calcPower(
-        graph$hypotheses, 
-        .025, 
+        graph$hypotheses,
+        .025,
         graph$transitions,
-        n.sim = 2^14, 
+        n.sim = 2^14,
         corr.sim = corr
       ),
-      `graphicalMCP conventional (R)` = 
+      `graphicalMCP conventional (R)` =
         gcp_conventional(
-          graph, 
+          graph,
           .025,
           power_marginal = rep(.9, num_hyps),
           sim_n = 2^14
         ),
       `graphicalMCP parent-child (R)` =
         graph_calculate_power(
-          graph, 
+          graph,
           .025,
           power_marginal = rep(.9, num_hyps),
           sim_n = 2^14
@@ -393,11 +393,11 @@ benchmark_list <- lapply(
       time_unit = "s",
       min_iterations = 5
     )[, 1:5]
-    
+
     benchmark <- benchmark[benchmark$median > .00001, ]
     benchmark$char_expression <- as.character(benchmark$expression)
     benchmark <- benchmark[, c("char_expression", "median")]
-    
+
     cbind(data.frame(num_hyps = num_hyps), benchmark)
   }
 )
@@ -430,25 +430,25 @@ benchmark_list <- lapply(
     graph <- fixed_sequence(num_hyps)
 
     corr <- diag(num_hyps)
-    
+
     benchmark <- mark(
       `gMCP (C)` = gMCP::calcPower(
-        graph$hypotheses, 
-        .025, 
+        graph$hypotheses,
+        .025,
         graph$transitions,
-        n.sim = 2^14, 
+        n.sim = 2^14,
         corr.sim = corr
       ),
-      `graphicalMCP conventional (R)` = 
+      `graphicalMCP conventional (R)` =
         gcp_conventional(
-          graph, 
+          graph,
           .025,
           power_marginal = rep(.9, num_hyps),
           sim_n = 2^14
         ),
       `graphicalMCP parent-child (R)` =
         graph_calculate_power(
-          graph, 
+          graph,
           .025,
           power_marginal = rep(.9, num_hyps),
           sim_n = 2^14
@@ -458,11 +458,11 @@ benchmark_list <- lapply(
       time_unit = "s",
       min_iterations = 5
     )[, 1:5]
-    
+
     benchmark <- benchmark[benchmark$median > .00001, ]
     benchmark$char_expression <- as.character(benchmark$expression)
     benchmark <- benchmark[, c("char_expression", "median")]
-    
+
     cbind(data.frame(num_hyps = num_hyps), benchmark)
   }
 )
@@ -486,7 +486,7 @@ write.csv(
 ```
 
 ```{r plot-power-benchmarks, fig.dim=c(8, 5), eval=FALSE}
-benchmarks_holm <- 
+benchmarks_holm <-
   read.csv(here::here("vignettes/cache/power_benchmarks_holm.csv"))
 benchmarks_fixed_sequence <-
   read.csv(here::here("vignettes/cache/power_benchmarks_fixed_sequence.csv"))
@@ -513,7 +513,7 @@ benchmarks_plot_standard <-
   geom_line(size = 1) +
   # scale_y_continuous(labels = scales::label_comma(suffix = "ms")) +
   scale_color_discrete() +
-  facet_wrap(~ Procedure, labeller = label_both)+
+  facet_wrap(~Procedure, labeller = label_both) +
   labs(
     title = "Computing time of power simulations",
     subtitle = "Median runtime in seconds",
