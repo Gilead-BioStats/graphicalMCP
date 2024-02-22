@@ -315,6 +315,7 @@ graph_test_closure <- function(graph,
     # include this column when there are no parametric groups
     if (!any(test_types == "parametric")) {
       df_test_values[c("c_value", "*_a")] <- NULL
+      names(df_test_values)[names(df_test_values) == "*_b"] <- "*"
     }
   }
 
