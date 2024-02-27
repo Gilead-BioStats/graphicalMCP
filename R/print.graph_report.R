@@ -200,7 +200,7 @@ print.graph_report <- function(x, ..., precision = 4, indent = 2, rows = 10) {
       }
     )
     if (any(x$inputs$test_types == "parametric")) {
-      crit_res$c_value <- ifelse(
+      crit_res$"c_value*" <- ifelse(
         trimws(crit_res$"c_value*") == "NA",
         "",
         crit_res$"c_value*"
