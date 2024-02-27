@@ -55,19 +55,19 @@ hyp_names <- c("H1", "H2", "H3", "H4", "H5", "H6")
 g <- graph_create(hypotheses, transitions, hyp_names)
 
 plot_layout <- rbind(
-  c(.15, .5),
-  c(.65, .5),
+  c(0.15, 0.5),
+  c(0.65, 0.5),
   c(0, 0),
-  c(.5, 0),
-  c(.3, 0),
-  c(.8, 0)
+  c(0.5, 0),
+  c(0.3, 0),
+  c(0.8, 0)
 )
 
 plot(
   g,
   layout = plot_layout,
   eps = epsilon,
-  edge_curves = c(pairs = .8),
+  edge_curves = c(pairs = 0.8),
   vertex.size = 35
 )
 ```
@@ -80,12 +80,12 @@ Given a set of p-values for $H_1, \ldots, H_6$, the graphical multiple compariso
 ```{r graph-test-bonferroni}
 p_values <- c(0.015, 0.013, 0.01, 0.007, 0.1, 0.0124)
 test_results <- graph_test_closure(
-  g, 
-  p = p_values, 
-  alpha = 0.025, 
-  verbose = TRUE, 
+  g,
+  p = p_values,
+  alpha = 0.025,
+  verbose = TRUE,
   test_values = TRUE
-  )
+)
 
 test_results$outputs$adjusted_p
 
@@ -203,7 +203,7 @@ sample_size <- rep(200, 3)
 
 unpooled_variance <-
   prop[-1] * (1 - prop[-1]) / sample_size[-1] +
-  prop[1]  * (1 - prop[1])  / sample_size[1]
+  prop[1] * (1 - prop[1]) / sample_size[1]
 
 noncentrality_parameter_primary <-
   -(prop[-1] - prop[1]) / sqrt(unpooled_variance)
@@ -230,7 +230,7 @@ variance <- sd[-1]^2 / sample_size[-1] + sd[1]^2 / sample_size[1]
 
 noncentrality_parameter_se1 <-
   (mean_change_se1[-1] - mean_change_se1[1]) /
-  sqrt(variance)
+    sqrt(variance)
 
 marginal_power_se1 <- pnorm(
   qnorm(alpha, lower.tail = FALSE),
@@ -246,7 +246,7 @@ mean_change_se2 <- c(6, 8, 9)
 
 noncentrality_parameter_se2 <-
   (mean_change_se2[-1] - mean_change_se2[1]) /
-  sqrt(variance)
+    sqrt(variance)
 
 marginal_power_se2 <- pnorm(
   qnorm(alpha, lower.tail = FALSE),
@@ -309,20 +309,20 @@ These are the default outputs from the `graph_calculate_power` function. In addi
 success_fns <- list(
   # Probability to reject H1
   H1 = function(x) x[1],
-  
+
   # Expected number of rejections
   `Expected no. of rejections` =
     function(x) x[1] + x[2] + x[3] + x[4] + x[5] + x[6],
 
   # Probability to reject at least one hypothesis
   `AtLeast1` = function(x) x[1] | x[2] | x[3] | x[4] | x[5] | x[6],
-  
+
   # Probability to reject all hypotheses
   `All` = function(x) x[1] & x[2] & x[3] & x[4] & x[5] & x[6],
-  
+
   # Probability to reject both H1 and H2
   `H1andH2` = function(x) x[1] & x[2],
-  
+
   # Probability to reject all hypotheses for the low dose or the high dose
   `(H1andH3andH5)or(H2andH4andH6)` <-
     function(x) (x[1] & x[3] & x[5]) | (x[2] & x[4] & x[6])

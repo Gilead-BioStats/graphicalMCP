@@ -308,7 +308,6 @@ test_that("compare adjusted p-values to lrstat - Bonferroni & Simes", {
         ignore_attr = TRUE
       )
     }
-
   }
 })
 

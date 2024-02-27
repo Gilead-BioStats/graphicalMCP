@@ -58,7 +58,7 @@ plot(g, vertex.size = 60)
 Given a set of p-values for $H_1, \ldots, H_4$, the graphical multiple comparison procedure can be performed to control the familywise error rate (FWER) at the significance level `alpha`. The `graph_test_shortcut` function is agnostic to one-sided or two-sided tests. For one-sided p-values, `alpha` is often set to 0.025 (default); for two-sided p-values, `alpha` is often set to 0.05. We consider one-sided tests here. A hypothesis is rejected if its adjusted p-value is less than or equal to `alpha`. After running the procedure, hypotheses $H_1$, $H_2$, and $H_4$ are rejected with their adjusted p-value calculated. 
 
 ```{r graph-test}
-p_values <- c(.018, .01, .105, .006)
+p_values <- c(0.018, 0.01, 0.105, 0.006)
 test_results <- graph_test_shortcut(g, p = p_values, alpha = 0.025)
 
 test_results$outputs$adjusted_p # Adjusted p-values
@@ -93,7 +93,7 @@ The order of rejections may not be unique and not all orders are valid. For this
 
 ```{r graph-test-order}
 # Obtain all valid orders of rejections
-orders <- graph_rejection_orderings(test_results)$valid_orderings 
+orders <- graph_rejection_orderings(test_results)$valid_orderings
 orders
 
 # Intermediate graphs following the order of H2 and H4
@@ -130,7 +130,7 @@ sample_size <- rep(200, 3)
 
 unpooled_variance <-
   prop[-1] * (1 - prop[-1]) / sample_size[-1] +
-  prop[1]  * (1 - prop[1] ) / sample_size[1]
+  prop[1] * (1 - prop[1]) / sample_size[1]
 
 noncentrality_parameter_primary <-
   -(prop[-1] - prop[1]) / sqrt(unpooled_variance)
@@ -208,19 +208,19 @@ These are the default outputs from the `graph_calculate_power` function. In addi
 success_fns <- list(
   # Probability to reject H1
   H1 = function(x) x[1],
-  
+
   # Expected number of rejections
   `Expected no. of rejections` = function(x) x[1] + x[2] + x[3] + x[4],
 
   # Probability to reject at least one hypothesis
   `AtLeast1` = function(x) x[1] | x[2] | x[3] | x[4],
-  
+
   # Probability to reject all hypotheses
   `All` = function(x) x[1] & x[2] & x[3] & x[4],
-  
+
   # Probability to reject both H1 and H2
   `H1andH2` = function(x) x[1] & x[2],
-  
+
   # Probability to reject both hypotheses for the low dose or the high dose
   `(H1andH3)or(H2andH4)` = function(x) (x[1] & x[3]) | (x[2] & x[4])
 )
@@ -234,7 +234,7 @@ Given the above inputs, we can estimate "power" via simulation for the graphical
 set.seed(1234)
 power_output <- graph_calculate_power(
   g,
-  alpha = .025,
+  alpha = 0.025,
   sim_corr = corr,
   sim_n = 1e5,
   power_marginal = c(power_marginal_primary, power_marginal_secondary),
@@ -253,7 +253,7 @@ To see the detailed outputs of all simulated p-values and rejection decisions fo
 set.seed(1234)
 power_verbose_output <- graph_calculate_power(
   g,
-  alpha = .025,
+  alpha = 0.025,
   sim_corr = corr,
   sim_n = 1e5,
   power_marginal = c(power_marginal_primary, power_marginal_secondary),

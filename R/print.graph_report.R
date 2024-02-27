@@ -186,9 +186,9 @@ print.graph_report <- function(x, ..., precision = 4, indent = 2, rows = 10) {
     section_break("Detailed test values ($test_values)")
 
     if (any(x$inputs$test_types == "parametric")) {
-      num_cols <- c("p", "c_value", "Weight", "Alpha")
+      num_cols <- c("p", "c_value*", "Weight*", "Alpha")
     } else {
-      num_cols <- c("p", "Weight", "Alpha")
+      num_cols <- c("p", "Weight*", "Alpha")
     }
 
     crit_res <- x$test_values$results
@@ -201,9 +201,9 @@ print.graph_report <- function(x, ..., precision = 4, indent = 2, rows = 10) {
     )
     if (any(x$inputs$test_types == "parametric")) {
       crit_res$c_value <- ifelse(
-        trimws(crit_res$c_value) == "NA",
+        trimws(crit_res$"c_value*") == "NA",
         "",
-        crit_res$c_value
+        crit_res$"c_value*"
       )
     }
 

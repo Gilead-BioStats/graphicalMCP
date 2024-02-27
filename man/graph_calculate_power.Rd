@@ -57,7 +57,7 @@ A list with three elements
 \item power - A list of measures of how often hypotheses are rejected
 \itemize{
 \item power_local - Rejection proportion for each hypothesis individually
-\item power_expected - Average number of hypotheses rejected in a single
+\item rejection_expected - Average number of hypotheses rejected in a single
 simulation
 \item power_at_least_1 - Proportion of simulations which reject any
 hypothesis

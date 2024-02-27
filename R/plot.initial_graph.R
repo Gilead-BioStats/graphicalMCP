@@ -64,23 +64,23 @@
 #'
 #' epsilon <- 1e-5
 #' transitions <- rbind(
-#'   c(0,       0.5,     0.25,        0,    0.25, 0),
-#'   c(0.5,     0,       0,           0.25, 0,    0.25),
-#'   c(0,       0,       0,           0,    1,    0),
-#'   c(epsilon, 0,       0,           0,    0,    1 - epsilon),
-#'   c(0,       epsilon, 1 - epsilon, 0,    0,    0),
-#'   c(0,       0,       0,           1,    0,    0)
+#'   c(0, 0.5, 0.25, 0, 0.25, 0),
+#'   c(0.5, 0, 0, 0.25, 0, 0.25),
+#'   c(0, 0, 0, 0, 1, 0),
+#'   c(epsilon, 0, 0, 0, 0, 1 - epsilon),
+#'   c(0, epsilon, 1 - epsilon, 0, 0, 0),
+#'   c(0, 0, 0, 1, 0, 0)
 #' )
 #'
 #' g <- graph_create(hypotheses, transitions)
 #'
 #' plot_layout <- rbind(
-#'   c(.15, .5),
-#'   c(.65, .5),
-#'   c(  0,  0),
-#'   c( .5,  0),
-#'   c( .3,  0),
-#'   c( .8,  0)
+#'   c(0.15, 0.5),
+#'   c(0.65, 0.5),
+#'   c(0, 0),
+#'   c(0.5, 0),
+#'   c(0.3, 0),
+#'   c(0.8, 0)
 #' )
 #'
 #' plot(g, layout = plot_layout, eps = epsilon, edge_curves = c(pairs = .5))

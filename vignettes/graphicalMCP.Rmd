@@ -71,8 +71,9 @@ Given the set of p-values of all hypotheses, graphical MCPs can be performed usi
 ```{r test-graph-shortcut}
 test_results <- graph_test_shortcut(
   example_graph,
-  p = c(.01, .005, .03, .01),
-  alpha = .025)
+  p = c(0.01, 0.005, 0.03, 0.01),
+  alpha = 0.025
+)
 test_results$outputs$rejected
 ```
 
@@ -81,8 +82,8 @@ A similar testing procedure can be performed using the closure principle. This w
 ```{r test-graph}
 test_results_closed <- graph_test_closure(
   example_graph,
-  p = c(.01, .005, .03, .01),
-  alpha = .025,
+  p = c(0.01, 0.005, 0.03, 0.01),
+  alpha = 0.025,
   test_types = "bonferroni",
   test_groups = list(1:4)
 )
@@ -91,14 +92,14 @@ test_results_closed$outputs$rejected
 
 # Power simulations
 
-With multiplicity adjustment, such as graphical MCPs, the "power" to reject each hypothesis will be affected, compared to its marginal power. The latter is the power to rejected a hypothesis at the significance level `alpha` without multiplicity adjustment. The marginal power is usually obtained from other pieces of statistical software. `graph_calculate_power()` performs power simulations to assess the power after adjusting for the graphical MCP [@bretz-2011-test]. Assume that the marginal power to reject H1-H4 is 90%, 90%, 80%, and 80% and all test statistics are independent of each other. The local power after the multiplicity adjustment is 87.7%, 87.7, 67.2%, and 67.2% respectively for H1-H4. Additional details about power simulations can be found in `vignette("shortcut-testing")` and `vignette("closed-testing")`.
+With multiplicity adjustment, such as graphical MCPs, the "power" to reject each hypothesis will be affected, compared to its marginal power. The latter is the power to rejected a hypothesis at the significance level `alpha` without multiplicity adjustment. The marginal power is usually obtained from other pieces of statistical software. `graph_calculate_power()` performs power simulations to assess the power after adjusting for the graphical MCP [@bretz-2011-test]. Assume that the marginal power to reject H1-H4 is 90%, 90%, 80%, and 80% and all test statistics are independent of each other. The local power after the multiplicity adjustment is 87.7%, 87.7%, 67.2%, and 67.2% respectively for H1-H4. Additional details about power simulations can be found in `vignette("shortcut-testing")` and `vignette("closed-testing")`.
 
 ```{r power}
 set.seed(1234)
 power_results <- graph_calculate_power(
   example_graph,
   sim_n = 1e6,
-  power_marginal = c(.9, .9, .8, .8)
+  power_marginal = c(0.9, 0.9, 0.8, 0.8)
 )
 power_results$power$power_local
 ```
