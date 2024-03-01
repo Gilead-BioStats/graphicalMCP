@@ -171,17 +171,17 @@
         H4 NA NA NA NA
       
       Detailed test values ($test_values) --------------------------------------------
-        Intersection Hypothesis       Test    p <= Weight* Alpha Inequality_holds
-                1111         H1 bonferroni 0.01 <=     0.5 0.025             TRUE
-                1111         H2 bonferroni 0.01 <=     0.5 0.025             TRUE
-                1111         H3 bonferroni 0.01 <=     0.0 0.025            FALSE
-                1111         H4 bonferroni 0.01 <=     0.0 0.025            FALSE
-                1110         H1 bonferroni 0.01 <=     0.5 0.025             TRUE
-                1110         H2 bonferroni 0.01 <=     0.5 0.025             TRUE
-                1110         H3 bonferroni 0.01 <=     0.0 0.025            FALSE
-                1101         H1 bonferroni 0.01 <=     0.5 0.025             TRUE
-                1101         H2 bonferroni 0.01 <=     0.5 0.025             TRUE
-                1101         H4 bonferroni 0.01 <=     0.0 0.025            FALSE
+        Intersection Hypothesis       Test    p <= Weight Alpha Inequality_holds
+                1111         H1 bonferroni 0.01 <=    0.5 0.025             TRUE
+                1111         H2 bonferroni 0.01 <=    0.5 0.025             TRUE
+                1111         H3 bonferroni 0.01 <=    0.0 0.025            FALSE
+                1111         H4 bonferroni 0.01 <=    0.0 0.025            FALSE
+                1110         H1 bonferroni 0.01 <=    0.5 0.025             TRUE
+                1110         H2 bonferroni 0.01 <=    0.5 0.025             TRUE
+                1110         H3 bonferroni 0.01 <=    0.0 0.025            FALSE
+                1101         H1 bonferroni 0.01 <=    0.5 0.025             TRUE
+                1101         H2 bonferroni 0.01 <=    0.5 0.025             TRUE
+                1101         H4 bonferroni 0.01 <=    0.0 0.025            FALSE
         ... (Use `print(x, rows = <nn>)` for more)
       
 
@@ -330,17 +330,17 @@
         ... (Use `print(x, rows = <nn>)` for more)
       
       Detailed test values ($test_values) --------------------------------------------
-        Intersection Hypothesis       Test    p <= c_value* Weight* Alpha
-                1111         H1 parametric 0.01 <=    1.006     0.5 0.025
-                1111         H2 parametric 0.01 <=    1.006     0.5 0.025
-                1111         H3      simes 0.01 <=              0.0 0.025
-                1111         H4      simes 0.01 <=              0.0 0.025
-                1110         H1 parametric 0.01 <=    1.006     0.5 0.025
-                1110         H2 parametric 0.01 <=    1.006     0.5 0.025
-                1110         H3      simes 0.01 <=              0.0 0.025
-                1101         H1 parametric 0.01 <=    1.006     0.5 0.025
-                1101         H2 parametric 0.01 <=    1.006     0.5 0.025
-                1101         H4      simes 0.01 <=              0.0 0.025
+        Intersection Hypothesis       Test    p <= c_value Weight Alpha
+                1111         H1 parametric 0.01 <=   1.006    0.5 0.025
+                1111         H2 parametric 0.01 <=   1.006    0.5 0.025
+                1111         H3      simes 0.01 <=            0.0 0.025
+                1111         H4      simes 0.01 <=            0.0 0.025
+                1110         H1 parametric 0.01 <=   1.006    0.5 0.025
+                1110         H2 parametric 0.01 <=   1.006    0.5 0.025
+                1110         H3      simes 0.01 <=            0.0 0.025
+                1101         H1 parametric 0.01 <=   1.006    0.5 0.025
+                1101         H2 parametric 0.01 <=   1.006    0.5 0.025
+                1101         H4      simes 0.01 <=            0.0 0.025
         Inequality_holds
                     TRUE
                     TRUE
@@ -442,17 +442,17 @@
         ... (Use `print(x, rows = <nn>)` for more)
       
       Detailed test values ($test_values) --------------------------------------------
-        Intersection Hypothesis       Test    p <= c_value* Weight* Alpha
-                1111         H1 parametric 0.01 <=    1.006     0.5 0.025
-                1111         H2 parametric 0.01 <=    1.006     0.5 0.025
-                1111         H3 parametric 0.01 <=    1.000     0.0 0.025
-                1111         H4 parametric 0.01 <=    1.000     0.0 0.025
-                1110         H1 parametric 0.01 <=    1.006     0.5 0.025
-                1110         H2 parametric 0.01 <=    1.006     0.5 0.025
-                1110         H3 parametric 0.01 <=    1.000     0.0 0.025
-                1101         H1 parametric 0.01 <=    1.006     0.5 0.025
-                1101         H2 parametric 0.01 <=    1.006     0.5 0.025
-                1101         H4 parametric 0.01 <=    1.000     0.0 0.025
+        Intersection Hypothesis       Test    p <= c_value Weight Alpha
+                1111         H1 parametric 0.01 <=   1.006    0.5 0.025
+                1111         H2 parametric 0.01 <=   1.006    0.5 0.025
+                1111         H3 parametric 0.01 <=   1.000    0.0 0.025
+                1111         H4 parametric 0.01 <=   1.000    0.0 0.025
+                1110         H1 parametric 0.01 <=   1.006    0.5 0.025
+                1110         H2 parametric 0.01 <=   1.006    0.5 0.025
+                1110         H3 parametric 0.01 <=   1.000    0.0 0.025
+                1101         H1 parametric 0.01 <=   1.006    0.5 0.025
+                1101         H2 parametric 0.01 <=   1.006    0.5 0.025
+                1101         H4 parametric 0.01 <=   1.000    0.0 0.025
         Inequality_holds
                     TRUE
                     TRUE
@@ -895,17 +895,17 @@
           ... (Use `print(x, rows = <nn>)` for more)
       
       Detailed test values ($test_values) --------------------------------------------
-          Intersection Hypothesis       Test    p <= Weight* Alpha Inequality_holds
-                  1111         H1 bonferroni 0.01 <=     0.5 0.025             TRUE
-                  1111         H2 bonferroni 0.01 <=     0.5 0.025             TRUE
-                  1111         H3 bonferroni 0.01 <=     0.0 0.025            FALSE
-                  1111         H4 bonferroni 0.01 <=     0.0 0.025            FALSE
-                  1110         H1 bonferroni 0.01 <=     0.5 0.025             TRUE
-                  1110         H2 bonferroni 0.01 <=     0.5 0.025             TRUE
-                  1110         H3 bonferroni 0.01 <=     0.0 0.025            FALSE
-                  1101         H1 bonferroni 0.01 <=     0.5 0.025             TRUE
-                  1101         H2 bonferroni 0.01 <=     0.5 0.025             TRUE
-                  1101         H4 bonferroni 0.01 <=     0.0 0.025            FALSE
+          Intersection Hypothesis       Test    p <= Weight Alpha Inequality_holds
+                  1111         H1 bonferroni 0.01 <=    0.5 0.025             TRUE
+                  1111         H2 bonferroni 0.01 <=    0.5 0.025             TRUE
+                  1111         H3 bonferroni 0.01 <=    0.0 0.025            FALSE
+                  1111         H4 bonferroni 0.01 <=    0.0 0.025            FALSE
+                  1110         H1 bonferroni 0.01 <=    0.5 0.025             TRUE
+                  1110         H2 bonferroni 0.01 <=    0.5 0.025             TRUE
+                  1110         H3 bonferroni 0.01 <=    0.0 0.025            FALSE
+                  1101         H1 bonferroni 0.01 <=    0.5 0.025             TRUE
+                  1101         H2 bonferroni 0.01 <=    0.5 0.025             TRUE
+                  1101         H4 bonferroni 0.01 <=    0.0 0.025            FALSE
           ... (Use `print(x, rows = <nn>)` for more)
       
 
@@ -1054,11 +1054,11 @@
                H4 NA NA NA NA
       
       Detailed test values ($test_values) --------------------------------------------
-               Step Hypothesis    p <= Weight* Alpha Inequality_holds
-                  1         H1 0.01 <=     0.5 0.025             TRUE
-                  2         H2 0.01 <=     0.5 0.025             TRUE
-                  3         H3 0.01 <=     0.5 0.025             TRUE
-                  4         H4 0.01 <=     1.0 0.025             TRUE
+               Step Hypothesis    p <= Weight Alpha Inequality_holds
+                  1         H1 0.01 <=    0.5 0.025             TRUE
+                  2         H2 0.01 <=    0.5 0.025             TRUE
+                  3         H3 0.01 <=    0.5 0.025             TRUE
+                  4         H4 0.01 <=    1.0 0.025             TRUE
       
 
 ---
@@ -1247,13 +1247,13 @@
         H6 NA NA NA NA NA NA
       
       Detailed test values ($test_values) --------------------------------------------
-        Step Hypothesis     p <= Weight* Alpha Inequality_holds
-           1         H4 0.010 <=    0.50 0.025             TRUE
-           2         H6 0.000 <=    0.25 0.025             TRUE
-           3         H5 0.005 <=    0.50 0.025             TRUE
-           4         H1 0.025 <=    1.00 0.025             TRUE
-           5         H3 0.015 <=    0.50 0.025            FALSE
-           5         H2 0.020 <=    0.50 0.025            FALSE
+        Step Hypothesis     p <= Weight Alpha Inequality_holds
+           1         H4 0.010 <=   0.50 0.025             TRUE
+           2         H6 0.000 <=   0.25 0.025             TRUE
+           3         H5 0.005 <=   0.50 0.025             TRUE
+           4         H1 0.025 <=   1.00 0.025             TRUE
+           5         H3 0.015 <=   0.50 0.025            FALSE
+           5         H2 0.020 <=   0.50 0.025            FALSE
       
 
 ---
@@ -1480,13 +1480,13 @@
         H6 NA NA NA NA NA NA
       
       Detailed test values ($test_values) --------------------------------------------
-        Step Hypothesis      p <= Weight* Alpha Inequality_holds
-           1         H4 0.0075 <=    0.50 0.025             TRUE
-           2         H6 0.0025 <=    0.25 0.025             TRUE
-           3         H5 0.0050 <=    0.50 0.025             TRUE
-           4         H1 0.0150 <=    1.00 0.025             TRUE
-           5         H3 0.0100 <=    0.50 0.025             TRUE
-           6         H2 0.0125 <=    1.00 0.025             TRUE
+        Step Hypothesis      p <= Weight Alpha Inequality_holds
+           1         H4 0.0075 <=   0.50 0.025             TRUE
+           2         H6 0.0025 <=   0.25 0.025             TRUE
+           3         H5 0.0050 <=   0.50 0.025             TRUE
+           4         H1 0.0150 <=   1.00 0.025             TRUE
+           5         H3 0.0100 <=   0.50 0.025             TRUE
+           6         H2 0.0125 <=   1.00 0.025             TRUE
       
       Alternate rejection orderings ($valid_rejection_orderings) ---------------------
       H4 H5 H6 H1 H2 H3 

@@ -146,7 +146,7 @@ graph_test_shortcut <- function(graph,
       # algorithm")
       names(test_values_step)[[1]] <- "Step"
       test_values_step$Step <- step_num
-      test_values_step[c("Test", "c_value*")] <- NULL
+      test_values_step[c("Test", "c_value")] <- NULL
 
       df_test_values <- rbind(df_test_values, test_values_step)
 
