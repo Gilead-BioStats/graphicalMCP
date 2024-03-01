@@ -5,4 +5,4 @@
 # graphicalMCP 0.1.1
 
 * Added compilation of vignettes (#73)
-* De-duplicated test values column names (#75)
+* Removed duplicated columns of "*" in test values (#75)
