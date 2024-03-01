@@ -120,6 +120,8 @@ An equivalent way to obtain rejections is via adjusting significance levels. A h
 test_results_test_values <-
   graph_test_closure(
     g,
+    test_types = "p",
+    test_corr = list(diag(6)),
     p = p_values,
     alpha = 0.025,
     test_values = TRUE
