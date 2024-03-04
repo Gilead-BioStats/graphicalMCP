@@ -33,7 +33,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">graphicalMCP</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.1</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -222,7 +222,7 @@ testing stops. For each hypothesis, it will be tested at the full <span class="m
 <span><span class="co"># )</span></span>
 <span><span class="co"># fixed_sequence_graph &lt;- graph_create(c(1, 0, 0), transitions)</span></span>
 <span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">fixed_sequence_graph</span>, nrow <span class="op">=</span> <span class="fl">1</span>, asp <span class="op">=</span> <span class="fl">.05</span>, vertex.size <span class="op">=</span> <span class="fl">40</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">fixed_sequence_graph</span>, nrow <span class="op">=</span> <span class="fl">1</span>, asp <span class="op">=</span> <span class="fl">0.05</span>, vertex.size <span class="op">=</span> <span class="fl">40</span><span class="op">)</span></span></code></pre></div>
 <p><img src="graph-examples_files/figure-html/fixed-sequence-1-1.png" width="432" style="display: block; margin: auto;"></p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span></span>
@@ -258,7 +258,7 @@ levels <span class="citation">(Wiens 2003)</span>.</p>
 <span></span>
 <span><span class="va">fallback_graph_2003</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/graph_create.html">graph_create</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="fl">1</span> <span class="op">/</span> <span class="va">m</span>, <span class="va">m</span><span class="op">)</span>, <span class="va">transitions</span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">fallback_graph_2003</span>, nrow <span class="op">=</span> <span class="fl">1</span>, asp <span class="op">=</span> <span class="fl">.05</span>, vertex.size <span class="op">=</span> <span class="fl">40</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">fallback_graph_2003</span>, nrow <span class="op">=</span> <span class="fl">1</span>, asp <span class="op">=</span> <span class="fl">0.05</span>, vertex.size <span class="op">=</span> <span class="fl">40</span><span class="op">)</span></span></code></pre></div>
 <p><img src="graph-examples_files/figure-html/fallback-1.png" width="432" style="display: block; margin: auto;"></p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span></span>
@@ -295,7 +295,7 @@ hypothesis is rejected before an earlier hypothesis can be rejected
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span></span>
 <span>  <span class="va">fallback_graph_2005</span>,</span>
 <span>  nrow <span class="op">=</span> <span class="fl">1</span>,</span>
-<span>  asp <span class="op">=</span> <span class="fl">.05</span>,</span>
+<span>  asp <span class="op">=</span> <span class="fl">0.05</span>,</span>
 <span>  vertex.size <span class="op">=</span> <span class="fl">40</span>,</span>
 <span>  edge_curves <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"pairs"</span> <span class="op">=</span> <span class="fl">7</span>, <span class="st">"H3|H1"</span> <span class="op">=</span> <span class="op">-</span><span class="fl">10</span><span class="op">)</span></span>
 <span><span class="op">)</span></span></code></pre></div>
@@ -315,8 +315,8 @@ hypothesis is rejected before an earlier hypothesis can be rejected
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span></span>
 <span>  <span class="va">fallback_graph_2008</span>,</span>
 <span>  nrow <span class="op">=</span> <span class="fl">1</span>,</span>
-<span>  asp <span class="op">=</span> <span class="fl">.05</span>,</span>
-<span>  eps <span class="op">=</span> <span class="fl">.0001</span>,</span>
+<span>  asp <span class="op">=</span> <span class="fl">0.05</span>,</span>
+<span>  eps <span class="op">=</span> <span class="fl">0.0001</span>,</span>
 <span>  edge_curves <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"pairs"</span> <span class="op">=</span> <span class="fl">7</span>, <span class="st">"H3|H1"</span> <span class="op">=</span> <span class="op">-</span><span class="fl">10</span><span class="op">)</span>,</span>
 <span>  vertex.size <span class="op">=</span> <span class="fl">40</span></span>
 <span><span class="op">)</span></span></code></pre></div>
@@ -371,8 +371,8 @@ than the smallest p-value observed.</p>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span></span>
 <span>  <span class="va">serial_gatekeeping_graph</span>,</span>
 <span>  nrow <span class="op">=</span> <span class="fl">1</span>,</span>
-<span>  asp <span class="op">=</span> <span class="fl">.05</span>,</span>
-<span>  eps <span class="op">=</span> <span class="fl">.0001</span>,</span>
+<span>  asp <span class="op">=</span> <span class="fl">0.05</span>,</span>
+<span>  eps <span class="op">=</span> <span class="fl">0.0001</span>,</span>
 <span>  edge_curves <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"pairs"</span> <span class="op">=</span> <span class="fl">7</span>, <span class="st">"H3|H1"</span> <span class="op">=</span> <span class="op">-</span><span class="fl">10</span><span class="op">)</span>,</span>
 <span>  vertex.size <span class="op">=</span> <span class="fl">40</span></span>
 <span><span class="op">)</span></span></code></pre></div>
@@ -456,7 +456,7 @@ hypothesis not rejected <span class="citation">(Bretz et al.
 <span><span class="va">parallel_gatekeeping_improved_graph</span> <span class="op">&lt;-</span></span>
 <span>  <span class="fu"><a href="../reference/graph_create.html">graph_create</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.5</span>, <span class="fl">0.5</span>, <span class="fl">0</span>, <span class="fl">0</span><span class="op">)</span>, <span class="va">transitions</span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">parallel_gatekeeping_improved_graph</span>, eps <span class="op">=</span> <span class="fl">.0001</span>, vertex.size <span class="op">=</span> <span class="fl">70</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">parallel_gatekeeping_improved_graph</span>, eps <span class="op">=</span> <span class="fl">0.0001</span>, vertex.size <span class="op">=</span> <span class="fl">70</span><span class="op">)</span></span></code></pre></div>
 <p><img src="graph-examples_files/figure-html/parallel-gatekeeping-improved-1.png" width="288" style="display: block; margin: auto;"></p>
 <div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span></span>
@@ -529,7 +529,7 @@ variable to determine the propagation between <span class="math inline">\(H_1\)<
 <span></span>
 <span><span class="va">successive_var</span> <span class="op">&lt;-</span> <span class="va">simple_successive_var</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">gamma</span><span class="op">)</span> <span class="op">{</span></span>
 <span>  <span class="fu"><a href="../reference/graph_create.html">graph_create</a></span><span class="op">(</span></span>
-<span>    <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">.5</span>, <span class="fl">.5</span>, <span class="fl">0</span>, <span class="fl">0</span><span class="op">)</span>,</span>
+<span>    <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.5</span>, <span class="fl">0.5</span>, <span class="fl">0</span>, <span class="fl">0</span><span class="op">)</span>,</span>
 <span>    <span class="fu"><a href="https://rdrr.io/r/base/cbind.html" class="external-link">rbind</a></span><span class="op">(</span></span>
 <span>      <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="va">gamma</span>, <span class="fl">1</span> <span class="op">-</span> <span class="va">gamma</span>, <span class="fl">0</span><span class="op">)</span>,</span>
 <span>      <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">gamma</span>, <span class="fl">0</span>, <span class="fl">0</span>, <span class="fl">1</span> <span class="op">-</span> <span class="va">gamma</span><span class="op">)</span>,</span>
@@ -650,7 +650,7 @@ step-down Dunnett procedure by specifying <code>test_type</code> to be
 <div class="section level2">
 <h2 class="unnumbered" id="reference">Reference<a class="anchor" aria-label="anchor" href="#reference"></a>
 </h2>
-<div id="refs" class="references csl-bib-body hanging-indent">
+<div id="refs" class="references csl-bib-body hanging-indent" entry-spacing="0">
 <div id="ref-bretz-2009-graphical" class="csl-entry">
 Bretz, Frank, Willi Maurer, Werner Branath, and Martin Posch. 2009.
 <span>“A Graphical Approach to Sequentially Rejective Multiple Test

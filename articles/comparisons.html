@@ -33,7 +33,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">graphicalMCP</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.1</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -176,11 +176,11 @@ times. Weighting strategies are matched for all 1000 cases.</p>
 <span>  <span class="va">graph</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/example-graphs.html">random_graph</a></span><span class="op">(</span><span class="fl">5</span><span class="op">)</span></span>
 <span>  <span class="va">graphicalmcp_weights</span> <span class="op">&lt;-</span> <span class="fu">graphicalMCP</span><span class="fu">::</span><span class="fu"><a href="../reference/graph_generate_weights.html">graph_generate_weights</a></span><span class="op">(</span><span class="va">graph</span><span class="op">)</span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/base/dimnames.html" class="external-link">dimnames</a></span><span class="op">(</span><span class="va">graphicalmcp_weights</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="cn">NULL</span>, <span class="cn">NULL</span><span class="op">)</span></span>
-<span>  <span class="va">gmcp_weights</span> <span class="op">&lt;-</span> </span>
+<span>  <span class="va">gmcp_weights</span> <span class="op">&lt;-</span></span>
 <span>    <span class="fu">gMCP</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/gMCP/man/generateWeights.html" class="external-link">generateWeights</a></span><span class="op">(</span><span class="va">graph</span><span class="op">$</span><span class="va">transitions</span>, <span class="va">graph</span><span class="op">$</span><span class="va">hypotheses</span><span class="op">)</span></span>
 <span>  <span class="va">gmcp_weights</span> <span class="op">&lt;-</span> <span class="va">gmcp_weights</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">gmcp_weights</span><span class="op">)</span><span class="op">:</span><span class="fl">1</span>, <span class="op">]</span> <span class="co"># Reorder rows</span></span>
 <span>  <span class="va">identical</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span></span>
-<span>    <span class="va">identical</span>, </span>
+<span>    <span class="va">identical</span>,</span>
 <span>    <span class="fu"><a href="https://rdrr.io/r/base/all.equal.html" class="external-link">all.equal</a></span><span class="op">(</span><span class="va">gmcp_weights</span>, <span class="va">graphicalmcp_weights</span>, tolerance <span class="op">=</span> <span class="fl">1e-7</span><span class="op">)</span></span>
 <span>  <span class="op">)</span></span>
 <span><span class="op">}</span></span>
@@ -207,12 +207,12 @@ Adjusted p-values are matched for all 10000 cases.</p>
 <span><span class="kw">for</span> <span class="op">(</span><span class="va">i</span> <span class="kw">in</span> <span class="fl">1</span><span class="op">:</span><span class="fl">10000</span><span class="op">)</span> <span class="op">{</span></span>
 <span>  <span class="va">graph</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/example-graphs.html">random_graph</a></span><span class="op">(</span><span class="fl">5</span><span class="op">)</span></span>
 <span>  <span class="va">p</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/Uniform.html" class="external-link">runif</a></span><span class="op">(</span><span class="fl">5</span>, <span class="fl">0</span>, <span class="va">alpha</span><span class="op">)</span></span>
-<span>  <span class="va">graphicalmcp_test_shortcut</span> <span class="op">&lt;-</span> </span>
+<span>  <span class="va">graphicalmcp_test_shortcut</span> <span class="op">&lt;-</span></span>
 <span>    <span class="fu"><a href="../reference/testing.html">graph_test_shortcut</a></span><span class="op">(</span><span class="va">graph</span>, <span class="va">p</span>, alpha <span class="op">=</span> <span class="va">alpha</span><span class="op">)</span><span class="op">$</span><span class="va">outputs</span><span class="op">$</span><span class="va">adjusted_p</span></span>
-<span>  <span class="va">gmcp_test_shortcut</span> <span class="op">&lt;-</span> </span>
+<span>  <span class="va">gmcp_test_shortcut</span> <span class="op">&lt;-</span></span>
 <span>    <span class="fu"><a href="https://rdrr.io/pkg/gMCP/man/gMCP.html" class="external-link">gMCP</a></span><span class="op">(</span><span class="fu"><a href="../reference/as-graph.html">as_graphMCP</a></span><span class="op">(</span><span class="va">graph</span><span class="op">)</span>, <span class="va">p</span>, alpha <span class="op">=</span> <span class="va">alpha</span><span class="op">)</span><span class="op">@</span><span class="va">adjPValues</span></span>
 <span>  <span class="va">identical</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span></span>
-<span>    <span class="va">identical</span>, </span>
+<span>    <span class="va">identical</span>,</span>
 <span>    <span class="fu"><a href="https://rdrr.io/r/base/all.equal.html" class="external-link">all.equal</a></span><span class="op">(</span><span class="va">graphicalmcp_test_shortcut</span>, <span class="va">gmcp_test_shortcut</span>, tolerance <span class="op">=</span> <span class="fl">1e-7</span><span class="op">)</span></span>
 <span>  <span class="op">)</span></span>
 <span><span class="op">}</span></span>
@@ -242,9 +242,9 @@ small.</p>
 <span>  <span class="va">graph</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/example-graphs.html">random_graph</a></span><span class="op">(</span><span class="fl">5</span><span class="op">)</span></span>
 <span>  <span class="va">marginal_power</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/Uniform.html" class="external-link">runif</a></span><span class="op">(</span><span class="fl">5</span>, <span class="fl">0.5</span>, <span class="fl">0.9</span><span class="op">)</span></span>
 <span>  <span class="va">noncentrality_parameter</span> <span class="op">&lt;-</span></span>
-<span>  <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">qnorm</a></span><span class="op">(</span><span class="fl">1</span> <span class="op">-</span> <span class="fl">0.025</span>, lower.tail <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span> <span class="op">-</span></span>
-<span>  <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">qnorm</a></span><span class="op">(</span><span class="fl">1</span> <span class="op">-</span> <span class="va">marginal_power</span>, lower.tail <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
-<span>  </span>
+<span>    <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">qnorm</a></span><span class="op">(</span><span class="fl">1</span> <span class="op">-</span> <span class="fl">0.025</span>, lower.tail <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span> <span class="op">-</span></span>
+<span>    <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">qnorm</a></span><span class="op">(</span><span class="fl">1</span> <span class="op">-</span> <span class="va">marginal_power</span>, lower.tail <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">1234</span> <span class="op">+</span> <span class="va">i</span> <span class="op">-</span> <span class="fl">1</span><span class="op">)</span></span>
 <span>  <span class="va">graphicalmcp_power</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/cbind.html" class="external-link">rbind</a></span><span class="op">(</span></span>
 <span>    <span class="va">graphicalmcp_power</span>,</span>
@@ -256,7 +256,7 @@ small.</p>
 <span>      sim_n <span class="op">=</span> <span class="fl">2</span><span class="op">^</span><span class="fl">17</span></span>
 <span>    <span class="op">)</span><span class="op">$</span><span class="va">power</span><span class="op">$</span><span class="va">power_local</span></span>
 <span>  <span class="op">)</span></span>
-<span>  </span>
+<span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">1234</span> <span class="op">+</span> <span class="va">i</span> <span class="op">-</span> <span class="fl">1</span><span class="op">)</span></span>
 <span>  <span class="va">gmcp_power</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/cbind.html" class="external-link">rbind</a></span><span class="op">(</span></span>
 <span>    <span class="va">gmcp_power</span>,</span>
@@ -275,7 +275,7 @@ small.</p>
 <span>  <span class="fu"><a href="https://rdrr.io/r/base/cbind.html" class="external-link">rbind</a></span><span class="op">(</span><span class="va">graphicalmcp_power</span>, <span class="va">gmcp_power</span><span class="op">)</span>,</span>
 <span>  procedure <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"graphicalMCP"</span>, <span class="st">"gMCP"</span><span class="op">)</span>, each <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">graphicalmcp_power</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="op">)</span></span>
-<span>  </span>
+<span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/write.table.html" class="external-link">write.csv</a></span><span class="op">(</span></span>
 <span>  <span class="va">diff</span>,</span>
 <span>  <span class="fu">here</span><span class="fu">::</span><span class="fu"><a href="https://here.r-lib.org//reference/here.html" class="external-link">here</a></span><span class="op">(</span><span class="st">"vignettes/cache/comparisons_power_shortcut.csv"</span><span class="op">)</span>,</span>
@@ -288,10 +288,10 @@ small.</p>
 <span><span class="fu"><a href="https://rdrr.io/r/base/Round.html" class="external-link">round</a></span><span class="op">(</span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html" class="external-link">max</a></span><span class="op">(</span></span>
 <span>    <span class="fu"><a href="https://rdrr.io/r/base/MathFun.html" class="external-link">abs</a></span><span class="op">(</span></span>
-<span>      <span class="va">graphicalmcp_power</span><span class="op">[</span>, <span class="op">-</span> <span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">ncol</a></span><span class="op">(</span><span class="va">graphicalmcp_power</span><span class="op">)</span><span class="op">]</span> <span class="op">-</span> </span>
-<span>        <span class="va">gmcp_power</span><span class="op">[</span>, <span class="op">-</span> <span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">ncol</a></span><span class="op">(</span><span class="va">gmcp_power</span><span class="op">)</span><span class="op">]</span></span>
-<span>      <span class="op">)</span></span>
-<span>    <span class="op">)</span>,</span>
+<span>      <span class="va">graphicalmcp_power</span><span class="op">[</span>, <span class="op">-</span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">ncol</a></span><span class="op">(</span><span class="va">graphicalmcp_power</span><span class="op">)</span><span class="op">]</span> <span class="op">-</span></span>
+<span>        <span class="va">gmcp_power</span><span class="op">[</span>, <span class="op">-</span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">ncol</a></span><span class="op">(</span><span class="va">gmcp_power</span><span class="op">)</span><span class="op">]</span></span>
+<span>    <span class="op">)</span></span>
+<span>  <span class="op">)</span>,</span>
 <span>  <span class="fl">4</span></span>
 <span><span class="op">)</span> <span class="co"># Maximum difference in local power among 1000 cases</span></span></code></pre></div>
 </div>
@@ -311,10 +311,10 @@ calculated and compared using the following functions:
 hypotheses. This process is repeated 10000 times. Adjusted p-values are
 matched for all 10000 cases.</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">hypotheses</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">.5</span>, <span class="fl">.5</span>, <span class="fl">0</span>, <span class="fl">0</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="va">hypotheses</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.5</span>, <span class="fl">0.5</span>, <span class="fl">0</span>, <span class="fl">0</span><span class="op">)</span></span>
 <span><span class="va">transitions</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/cbind.html" class="external-link">rbind</a></span><span class="op">(</span></span>
-<span>  <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">.5</span>, <span class="fl">.5</span>, <span class="fl">0</span><span class="op">)</span>,</span>
-<span>  <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">.5</span>, <span class="fl">0</span>, <span class="fl">0</span>, <span class="fl">.5</span><span class="op">)</span>,</span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">0.5</span>, <span class="fl">0.5</span>, <span class="fl">0</span><span class="op">)</span>,</span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.5</span>, <span class="fl">0</span>, <span class="fl">0</span>, <span class="fl">0.5</span><span class="op">)</span>,</span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">1</span>, <span class="fl">0</span>, <span class="fl">0</span><span class="op">)</span>,</span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">0</span>, <span class="fl">0</span>, <span class="fl">0</span><span class="op">)</span></span>
 <span><span class="op">)</span></span>
@@ -324,16 +324,16 @@ matched for all 10000 cases.</p>
 <span><span class="va">alpha</span> <span class="op">&lt;-</span> <span class="fl">0.025</span></span>
 <span><span class="va">identical</span> <span class="op">&lt;-</span> <span class="cn">NULL</span></span>
 <span><span class="va">test_corr</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/cbind.html" class="external-link">rbind</a></span><span class="op">(</span></span>
-<span>  <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">.5</span>, <span class="cn">NA</span>, <span class="cn">NA</span><span class="op">)</span>,</span>
-<span>  <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">.5</span>, <span class="fl">1</span>, <span class="cn">NA</span>, <span class="cn">NA</span><span class="op">)</span>,</span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">0.5</span>, <span class="cn">NA</span>, <span class="cn">NA</span><span class="op">)</span>,</span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.5</span>, <span class="fl">1</span>, <span class="cn">NA</span>, <span class="cn">NA</span><span class="op">)</span>,</span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="cn">NA</span>, <span class="cn">NA</span>, <span class="fl">1</span>, <span class="cn">NA</span><span class="op">)</span>,</span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="cn">NA</span>, <span class="cn">NA</span>, <span class="cn">NA</span>, <span class="fl">1</span><span class="op">)</span></span>
 <span><span class="op">)</span></span>
 <span><span class="kw">for</span> <span class="op">(</span><span class="va">i</span> <span class="kw">in</span> <span class="fl">1</span><span class="op">:</span><span class="fl">10000</span><span class="op">)</span> <span class="op">{</span></span>
 <span>  <span class="va">p</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/Uniform.html" class="external-link">runif</a></span><span class="op">(</span><span class="fl">4</span>, <span class="fl">0</span>, <span class="va">alpha</span><span class="op">)</span></span>
 <span>  <span class="va">graphicalmcp_test_parametric</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/testing.html">graph_test_closure</a></span><span class="op">(</span></span>
-<span>    <span class="va">graph</span>, </span>
-<span>    <span class="va">p</span>, </span>
+<span>    <span class="va">graph</span>,</span>
+<span>    <span class="va">p</span>,</span>
 <span>    alpha <span class="op">=</span> <span class="va">alpha</span>,</span>
 <span>    test_groups <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">2</span>, <span class="fl">3</span><span class="op">:</span><span class="fl">4</span><span class="op">)</span>,</span>
 <span>    test_types <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"parametric"</span>, <span class="st">"bonferroni"</span><span class="op">)</span>,</span>
@@ -346,7 +346,7 @@ matched for all 10000 cases.</p>
 <span>    correlation <span class="op">=</span> <span class="va">test_corr</span></span>
 <span>  <span class="op">)</span><span class="op">@</span><span class="va">adjPValues</span></span>
 <span>  <span class="va">identical</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span></span>
-<span>    <span class="va">identical</span>, </span>
+<span>    <span class="va">identical</span>,</span>
 <span>    <span class="fu"><a href="https://rdrr.io/r/base/all.equal.html" class="external-link">all.equal</a></span><span class="op">(</span><span class="va">graphicalmcp_test_parametric</span>, <span class="va">gmcp_test_parametric</span>, tolerance <span class="op">=</span> <span class="fl">1e-7</span><span class="op">)</span></span>
 <span>  <span class="op">)</span></span>
 <span><span class="op">}</span></span>
@@ -367,21 +367,21 @@ simulation methods are used, results are slightly different. The maximum
 absolute difference in local power is 0.0142 (1.42%) among 100 cases,
 which is small.</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">hypotheses</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">.5</span>, <span class="fl">.5</span>, <span class="fl">0</span>, <span class="fl">0</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="va">hypotheses</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.5</span>, <span class="fl">0.5</span>, <span class="fl">0</span>, <span class="fl">0</span><span class="op">)</span></span>
 <span><span class="va">transitions</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/cbind.html" class="external-link">rbind</a></span><span class="op">(</span></span>
-<span>  <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">.5</span>, <span class="fl">.5</span>, <span class="fl">0</span><span class="op">)</span>,</span>
-<span>  <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">.5</span>, <span class="fl">0</span>, <span class="fl">0</span>, <span class="fl">.5</span><span class="op">)</span>,</span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">0.5</span>, <span class="fl">0.5</span>, <span class="fl">0</span><span class="op">)</span>,</span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.5</span>, <span class="fl">0</span>, <span class="fl">0</span>, <span class="fl">0.5</span><span class="op">)</span>,</span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">1</span>, <span class="fl">0</span>, <span class="fl">0</span><span class="op">)</span>,</span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">0</span>, <span class="fl">0</span>, <span class="fl">0</span><span class="op">)</span></span>
 <span><span class="op">)</span></span>
 <span><span class="va">graph</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/graph_create.html">graph_create</a></span><span class="op">(</span><span class="va">hypotheses</span>, <span class="va">transitions</span><span class="op">)</span></span>
 <span><span class="va">test_corr</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/cbind.html" class="external-link">rbind</a></span><span class="op">(</span></span>
-<span>  <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">.5</span>, <span class="cn">NA</span>, <span class="cn">NA</span><span class="op">)</span>,</span>
-<span>  <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">.5</span>, <span class="fl">1</span>, <span class="cn">NA</span>, <span class="cn">NA</span><span class="op">)</span>,</span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">0.5</span>, <span class="cn">NA</span>, <span class="cn">NA</span><span class="op">)</span>,</span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.5</span>, <span class="fl">1</span>, <span class="cn">NA</span>, <span class="cn">NA</span><span class="op">)</span>,</span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="cn">NA</span>, <span class="cn">NA</span>, <span class="fl">1</span>, <span class="cn">NA</span><span class="op">)</span>,</span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="cn">NA</span>, <span class="cn">NA</span>, <span class="cn">NA</span>, <span class="fl">1</span><span class="op">)</span></span>
 <span><span class="op">)</span></span>
-<span><span class="va">sim_corr</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">matrix</a></span><span class="op">(</span><span class="fl">.5</span>, <span class="fl">4</span>, <span class="fl">4</span><span class="op">)</span></span>
+<span><span class="va">sim_corr</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">matrix</a></span><span class="op">(</span><span class="fl">0.5</span>, <span class="fl">4</span>, <span class="fl">4</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/diag.html" class="external-link">diag</a></span><span class="op">(</span><span class="va">sim_corr</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fl">1</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">1234</span><span class="op">)</span></span>
 <span><span class="va">alpha</span> <span class="op">&lt;-</span> <span class="fl">0.025</span></span>
@@ -391,7 +391,7 @@ which is small.</p>
 <span>  <span class="va">marginal_power</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/Uniform.html" class="external-link">runif</a></span><span class="op">(</span><span class="fl">4</span>, <span class="fl">0.5</span>, <span class="fl">0.9</span><span class="op">)</span></span>
 <span>  <span class="va">noncentrality_parameter</span> <span class="op">&lt;-</span></span>
 <span>    <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">qnorm</a></span><span class="op">(</span><span class="fl">1</span> <span class="op">-</span> <span class="fl">0.025</span>, lower.tail <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span> <span class="op">-</span></span>
-<span>      <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">qnorm</a></span><span class="op">(</span><span class="fl">1</span> <span class="op">-</span> <span class="va">marginal_power</span>, lower.tail <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<span>    <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">qnorm</a></span><span class="op">(</span><span class="fl">1</span> <span class="op">-</span> <span class="va">marginal_power</span>, lower.tail <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
 <span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">1234</span> <span class="op">+</span> <span class="va">i</span> <span class="op">-</span> <span class="fl">1</span><span class="op">)</span></span>
 <span>  <span class="va">graphicalmcp_power_parametric</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/cbind.html" class="external-link">rbind</a></span><span class="op">(</span></span>
@@ -407,7 +407,7 @@ which is small.</p>
 <span>      sim_n <span class="op">=</span> <span class="fl">2</span><span class="op">^</span><span class="fl">14</span></span>
 <span>    <span class="op">)</span><span class="op">$</span><span class="va">power</span><span class="op">$</span><span class="va">power_local</span></span>
 <span>  <span class="op">)</span></span>
-<span>  </span>
+<span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">1234</span> <span class="op">+</span> <span class="va">i</span> <span class="op">-</span> <span class="fl">1</span><span class="op">)</span></span>
 <span>  <span class="va">gmcp_power_parametric</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/cbind.html" class="external-link">rbind</a></span><span class="op">(</span></span>
 <span>    <span class="va">gmcp_power_parametric</span>,</span>
@@ -427,7 +427,7 @@ which is small.</p>
 <span>  <span class="fu"><a href="https://rdrr.io/r/base/cbind.html" class="external-link">rbind</a></span><span class="op">(</span><span class="va">graphicalmcp_power_parametric</span>, <span class="va">gmcp_power_parametric</span><span class="op">)</span>,</span>
 <span>  procedure <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"graphicalMCP"</span>, <span class="st">"gMCP"</span><span class="op">)</span>, each <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">gmcp_power_parametric</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="op">)</span></span>
-<span>  </span>
+<span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/write.table.html" class="external-link">write.csv</a></span><span class="op">(</span></span>
 <span>  <span class="va">diff</span>,</span>
 <span>  <span class="fu">here</span><span class="fu">::</span><span class="fu"><a href="https://here.r-lib.org//reference/here.html" class="external-link">here</a></span><span class="op">(</span><span class="st">"vignettes/cache/comparisons_power_parametric.csv"</span><span class="op">)</span>,</span>
@@ -440,10 +440,11 @@ which is small.</p>
 <span><span class="fu"><a href="https://rdrr.io/r/base/Round.html" class="external-link">round</a></span><span class="op">(</span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html" class="external-link">max</a></span><span class="op">(</span></span>
 <span>    <span class="fu"><a href="https://rdrr.io/r/base/MathFun.html" class="external-link">abs</a></span><span class="op">(</span></span>
-<span>      <span class="va">graphicalmcp_power_parametric</span><span class="op">[</span>, <span class="op">-</span> <span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">ncol</a></span><span class="op">(</span><span class="va">graphicalmcp_power_parametric</span><span class="op">)</span><span class="op">]</span> <span class="op">-</span> </span>
-<span>        <span class="va">gmcp_power_parametric</span><span class="op">[</span>, <span class="op">-</span> <span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">ncol</a></span><span class="op">(</span><span class="va">gmcp_power</span><span class="op">)</span><span class="op">]</span></span>
-<span>      <span class="op">)</span></span>
-<span>    <span class="op">)</span>, <span class="fl">4</span></span>
+<span>      <span class="va">graphicalmcp_power_parametric</span><span class="op">[</span>, <span class="op">-</span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">ncol</a></span><span class="op">(</span><span class="va">graphicalmcp_power_parametric</span><span class="op">)</span><span class="op">]</span> <span class="op">-</span></span>
+<span>        <span class="va">gmcp_power_parametric</span><span class="op">[</span>, <span class="op">-</span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">ncol</a></span><span class="op">(</span><span class="va">gmcp_power</span><span class="op">)</span><span class="op">]</span></span>
+<span>    <span class="op">)</span></span>
+<span>  <span class="op">)</span>,</span>
+<span>  <span class="fl">4</span></span>
 <span><span class="op">)</span> <span class="co"># Maximum difference in local power among 100 cases</span></span></code></pre></div>
 </div>
 </div>
@@ -462,7 +463,7 @@ calculated and compared using the following functions:
 hypotheses. This process is repeated 10000 times. Adjusted p-values are
 matched for all 10000 cases.</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">hypotheses</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">.5</span>, <span class="fl">.5</span>, <span class="fl">0</span>, <span class="fl">0</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="va">hypotheses</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.5</span>, <span class="fl">0.5</span>, <span class="fl">0</span>, <span class="fl">0</span><span class="op">)</span></span>
 <span><span class="va">eps</span> <span class="op">&lt;-</span> <span class="fl">0.0001</span></span>
 <span><span class="va">transitions</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/cbind.html" class="external-link">rbind</a></span><span class="op">(</span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">1</span> <span class="op">-</span> <span class="va">eps</span>, <span class="va">eps</span>, <span class="fl">0</span><span class="op">)</span>,</span>
@@ -483,8 +484,8 @@ matched for all 10000 cases.</p>
 <span><span class="kw">for</span> <span class="op">(</span><span class="va">i</span> <span class="kw">in</span> <span class="fl">1</span><span class="op">:</span><span class="fl">10000</span><span class="op">)</span> <span class="op">{</span></span>
 <span>  <span class="va">p</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/Uniform.html" class="external-link">runif</a></span><span class="op">(</span><span class="fl">4</span>, <span class="fl">0</span>, <span class="va">alpha</span><span class="op">)</span></span>
 <span>  <span class="va">graphicalmcp_test_simes</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/testing.html">graph_test_closure</a></span><span class="op">(</span></span>
-<span>    <span class="va">graph</span>, </span>
-<span>    <span class="va">p</span>, </span>
+<span>    <span class="va">graph</span>,</span>
+<span>    <span class="va">p</span>,</span>
 <span>    alpha <span class="op">=</span> <span class="va">alpha</span>,</span>
 <span>    test_groups <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">2</span>, <span class="fl">3</span><span class="op">:</span><span class="fl">4</span><span class="op">)</span>,</span>
 <span>    test_types <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"simes"</span>, <span class="st">"bonferroni"</span><span class="op">)</span></span>
@@ -495,10 +496,10 @@ matched for all 10000 cases.</p>
 <span>      <span class="fu"><a href="https://rdrr.io/pkg/lrstat/man/fwgtmat.html" class="external-link">fwgtmat</a></span><span class="op">(</span><span class="va">graph</span><span class="op">$</span><span class="va">hypotheses</span>, <span class="va">graph</span><span class="op">$</span><span class="va">transitions</span><span class="op">)</span>,</span>
 <span>      <span class="va">p</span>,</span>
 <span>      <span class="va">family</span></span>
-<span>  <span class="op">)</span></span>
-<span>  </span>
+<span>    <span class="op">)</span></span>
+<span></span>
 <span>  <span class="va">identical</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span></span>
-<span>    <span class="va">identical</span>, </span>
+<span>    <span class="va">identical</span>,</span>
 <span>    <span class="fu"><a href="https://rdrr.io/r/base/all.equal.html" class="external-link">all.equal</a></span><span class="op">(</span><span class="va">graphicalmcp_test_simes</span>, <span class="va">lrstat_test_simes</span>, tolerance <span class="op">=</span> <span class="fl">1e-7</span><span class="op">)</span></span>
 <span>  <span class="op">)</span></span>
 <span><span class="op">}</span></span>
@@ -519,7 +520,7 @@ p-values, and thus omitted.</p>
 <div class="section level2">
 <h2 class="unnumbered" id="reference">Reference<a class="anchor" aria-label="anchor" href="#reference"></a>
 </h2>
-<div id="refs" class="references csl-bib-body hanging-indent">
+<div id="refs" class="references csl-bib-body hanging-indent" entry-spacing="0">
 <div id="ref-lu-2023-lrstat" class="csl-entry">
 Lu, Kaifeng. 2023. <span>“<span class="nocase">lrstat</span>: Power and
 Sample Size Calculation for Non-Proportional Hazards.”</span> <a href="https://cran.r-project.org/package=lrstat" class="external-link">https://cran.r-project.org/package=lrstat</a>.

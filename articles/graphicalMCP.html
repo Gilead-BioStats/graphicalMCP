@@ -33,7 +33,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">graphicalMCP</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.1</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -221,8 +221,9 @@ can be found in <code><a href="../articles/shortcut-testing.html">vignette("shor
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">test_results</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/testing.html">graph_test_shortcut</a></span><span class="op">(</span></span>
 <span>  <span class="va">example_graph</span>,</span>
-<span>  p <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">.01</span>, <span class="fl">.005</span>, <span class="fl">.03</span>, <span class="fl">.01</span><span class="op">)</span>,</span>
-<span>  alpha <span class="op">=</span> <span class="fl">.025</span><span class="op">)</span></span>
+<span>  p <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.01</span>, <span class="fl">0.005</span>, <span class="fl">0.03</span>, <span class="fl">0.01</span><span class="op">)</span>,</span>
+<span>  alpha <span class="op">=</span> <span class="fl">0.025</span></span>
+<span><span class="op">)</span></span>
 <span><span class="va">test_results</span><span class="op">$</span><span class="va">outputs</span><span class="op">$</span><span class="va">rejected</span></span>
 <span><span class="co">#&gt;    H1    H2    H3    H4 </span></span>
 <span><span class="co">#&gt;  TRUE  TRUE FALSE  TRUE</span></span></code></pre></div>
@@ -235,8 +236,8 @@ above. Additional details about closed testing can be found in
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">test_results_closed</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/testing.html">graph_test_closure</a></span><span class="op">(</span></span>
 <span>  <span class="va">example_graph</span>,</span>
-<span>  p <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">.01</span>, <span class="fl">.005</span>, <span class="fl">.03</span>, <span class="fl">.01</span><span class="op">)</span>,</span>
-<span>  alpha <span class="op">=</span> <span class="fl">.025</span>,</span>
+<span>  p <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.01</span>, <span class="fl">0.005</span>, <span class="fl">0.03</span>, <span class="fl">0.01</span><span class="op">)</span>,</span>
+<span>  alpha <span class="op">=</span> <span class="fl">0.025</span>,</span>
 <span>  test_types <span class="op">=</span> <span class="st">"bonferroni"</span>,</span>
 <span>  test_groups <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">4</span><span class="op">)</span></span>
 <span><span class="op">)</span></span>
@@ -256,7 +257,7 @@ power is usually obtained from other pieces of statistical software.
 assess the power after adjusting for the graphical MCP <span class="citation">(Bretz, Maurer, and Hommel 2011)</span>. Assume that
 the marginal power to reject H1-H4 is 90%, 90%, 80%, and 80% and all
 test statistics are independent of each other. The local power after the
-multiplicity adjustment is 87.7%, 87.7, 67.2%, and 67.2% respectively
+multiplicity adjustment is 87.7%, 87.7%, 67.2%, and 67.2% respectively
 for H1-H4. Additional details about power simulations can be found in
 <code><a href="../articles/shortcut-testing.html">vignette("shortcut-testing")</a></code> and
 <code><a href="../articles/closed-testing.html">vignette("closed-testing")</a></code>.</p>
@@ -265,7 +266,7 @@ for H1-H4. Additional details about power simulations can be found in
 <span><span class="va">power_results</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/graph_calculate_power.html">graph_calculate_power</a></span><span class="op">(</span></span>
 <span>  <span class="va">example_graph</span>,</span>
 <span>  sim_n <span class="op">=</span> <span class="fl">1e6</span>,</span>
-<span>  power_marginal <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">.9</span>, <span class="fl">.9</span>, <span class="fl">.8</span>, <span class="fl">.8</span><span class="op">)</span></span>
+<span>  power_marginal <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.9</span>, <span class="fl">0.9</span>, <span class="fl">0.8</span>, <span class="fl">0.8</span><span class="op">)</span></span>
 <span><span class="op">)</span></span>
 <span><span class="va">power_results</span><span class="op">$</span><span class="va">power</span><span class="op">$</span><span class="va">power_local</span></span>
 <span><span class="co">#&gt;       H1       H2       H3       H4 </span></span>
@@ -274,7 +275,7 @@ for H1-H4. Additional details about power simulations can be found in
 <div class="section level2">
 <h2 class="unnumbered" id="references">References<a class="anchor" aria-label="anchor" href="#references"></a>
 </h2>
-<div id="refs" class="references csl-bib-body hanging-indent">
+<div id="refs" class="references csl-bib-body hanging-indent" entry-spacing="0">
 <div id="ref-bretz-2009-graphical" class="csl-entry">
 Bretz, Frank, Willi Maurer, Werner Branath, and Martin Posch. 2009.
 <span>“A Graphical Approach to Sequentially Rejective Multiple Test

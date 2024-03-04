@@ -10,7 +10,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">graphicalMCP</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.1</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -142,38 +142,33 @@ Procedures</em>. R package version 0.8-15,
 <span class="r-in"><span><span class="va">p</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">.024</span>, <span class="fl">.01</span>, <span class="fl">.026</span>, <span class="fl">.027</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="fu">graphicalMCP</span><span class="fu">:::</span><span class="fu">test_values_bonferroni</span><span class="op">(</span><span class="va">p</span>, <span class="va">w</span>, <span class="fl">.05</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    Intersection Hypothesis       Test     p &lt;= c_value * Weight * Alpha</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> H1           NA         H1 bonferroni 0.024 &lt;=              0.5 *  0.05</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> H2           NA         H2 bonferroni 0.010 &lt;=              0.5 *  0.05</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> H3           NA         H3 bonferroni 0.026 &lt;=              0.0 *  0.05</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> H4           NA         H4 bonferroni 0.027 &lt;=              0.0 *  0.05</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    Intersection Hypothesis       Test     p c_value Weight Alpha</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> H1           NA         H1 bonferroni 0.024            0.5  0.05</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> H2           NA         H2 bonferroni 0.010            0.5  0.05</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> H3           NA         H3 bonferroni 0.026            0.0  0.05</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> H4           NA         H4 bonferroni 0.027            0.0  0.05</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>    Inequality_holds</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> H1             TRUE</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> H2             TRUE</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> H3            FALSE</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> H4            FALSE</span>
 <span class="r-in"><span><span class="fu">graphicalMCP</span><span class="fu">:::</span><span class="fu">test_values_parametric</span><span class="op">(</span><span class="va">p</span>, <span class="va">w</span>, <span class="fl">.05</span>, test_corr <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/diag.html" class="external-link">diag</a></span><span class="op">(</span><span class="fl">4</span><span class="op">)</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    Intersection Hypothesis       Test     p &lt;=  c_value * Weight * Alpha</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> H1           NA         H1 parametric 0.024 &lt;= 1.012823 *    0.5 *  0.05</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> H2           NA         H2 parametric 0.010 &lt;= 1.012823 *    0.5 *  0.05</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> H3           NA         H3 parametric 0.026 &lt;= 1.012823 *    0.0 *  0.05</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> H4           NA         H4 parametric 0.027 &lt;= 1.012823 *    0.0 *  0.05</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    Intersection Hypothesis       Test     p  c_value Weight Alpha</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> H1           NA         H1 parametric 0.024 1.012823    0.5  0.05</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> H2           NA         H2 parametric 0.010 1.012823    0.5  0.05</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> H3           NA         H3 parametric 0.026 1.012823    0.0  0.05</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> H4           NA         H4 parametric 0.027 1.012823    0.0  0.05</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>    Inequality_holds</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> H1             TRUE</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> H2             TRUE</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> H3            FALSE</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> H4            FALSE</span>
 <span class="r-in"><span><span class="fu">graphicalMCP</span><span class="fu">:::</span><span class="fu">test_values_simes</span><span class="op">(</span><span class="va">p</span>, <span class="va">w</span>, <span class="fl">.05</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   Intersection Hypothesis  Test     p &lt;= c_value * Weight * Alpha</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1           NA         H1 simes 0.024 &lt;=              1.0 *  0.05</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2           NA         H2 simes 0.010 &lt;=              0.5 *  0.05</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3           NA         H3 simes 0.026 &lt;=              1.0 *  0.05</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4           NA         H4 simes 0.027 &lt;=              1.0 *  0.05</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   Inequality_holds</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1             TRUE</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2             TRUE</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3             TRUE</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4             TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Intersection Hypothesis  Test     p c_value Weight Alpha Inequality_holds</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1           NA         H1 simes 0.024            1.0  0.05             TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2           NA         H2 simes 0.010            0.5  0.05             TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3           NA         H3 simes 0.026            1.0  0.05             TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4           NA         H4 simes 0.027            1.0  0.05             TRUE</span>
 </code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>

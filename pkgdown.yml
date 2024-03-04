@@ -1,4 +1,4 @@
-pandoc: 2.19.2
+pandoc: 3.1.11
 pkgdown: 2.0.7
 pkgdown_sha: ~
 articles:
@@ -9,7 +9,7 @@ articles:
   graph-examples: graph-examples.html
   graphicalMCP: graphicalMCP.html
   shortcut-testing: shortcut-testing.html
-last_built: 2024-02-13T20:08Z
+last_built: 2024-03-04T16:09Z
 urls:
   reference: https://gilead-biostats.github.io/graphicalMCP/reference
   article: https://gilead-biostats.github.io/graphicalMCP/articles
