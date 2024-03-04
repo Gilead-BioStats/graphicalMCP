@@ -309,12 +309,10 @@ graph_test_closure <- function(graph,
     df_test_values <- do.call(rbind, test_values_list)
     rownames(df_test_values) <- NULL
 
-
-
     # "c" value is only used in parametric testing, so there's no need to
     # include this column when there are no parametric groups
     if (!any(test_types == "parametric")) {
-      df_test_values[c("c_value", "*")] <- NULL
+      df_test_values[c("c_value")] <- NULL
     }
   }
 

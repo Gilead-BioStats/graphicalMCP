@@ -199,11 +199,31 @@ print.graph_report <- function(x, ..., precision = 4, indent = 2, rows = 10) {
         format(as.numeric(num_col), digits = precision)
       }
     )
+
+    p_col_index <- which(names(crit_res) == "p")
     if (any(x$inputs$test_types == "parametric")) {
-      crit_res$c_value <- ifelse(
-        trimws(crit_res$c_value) == "NA",
+      crit_res$"c_value" <- ifelse(
+        trimws(crit_res$"c_value") == "NA",
         "",
-        crit_res$c_value
+        crit_res$"c_value"
+      )
+
+      crit_res <- cbind(
+        crit_res[1:p_col_index],
+        data.frame("<=" = "<=", check.names = FALSE),
+        crit_res[p_col_index + 1],
+        data.frame("*" = "*", check.names = FALSE),
+        crit_res[p_col_index + 2],
+        data.frame("*" = "*", check.names = FALSE),
+        crit_res[(p_col_index + 3):(p_col_index + 4)]
+      )
+    } else {
+      crit_res <- cbind(
+        crit_res[1:p_col_index],
+        data.frame("<=" = "<=", check.names = FALSE),
+        crit_res[p_col_index + 1],
+        data.frame("*" = "*", check.names = FALSE),
+        crit_res[(p_col_index + 2):(p_col_index + 3)]
       )
     }
 

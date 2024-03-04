@@ -308,7 +308,6 @@ test_that("compare adjusted p-values to lrstat - Bonferroni & Simes", {
         ignore_attr = TRUE
       )
     }
-
   }
 })
 
@@ -352,7 +351,7 @@ test_that("closure internal consistency", {
   if (requireNamespace("dplyr", quietly = TRUE)) {
     df_test_values_inter_reject <- dplyr::mutate(
       dplyr::group_by(
-        tibble::as_tibble(closure_results$test_values$results[-c(7, 9)]),
+        tibble::as_tibble(closure_results$test_values$results),
         Intersection
       ),
       Hypothesis = Hypothesis,

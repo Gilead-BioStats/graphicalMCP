@@ -44,7 +44,7 @@ graph_rejection_orderings <- function(shortcut_test_result) {
     rev(expand.grid(rep(list(rejected), length(rejected)))),
     1,
     function(row) {
-      if (length(unique(row)) == length(row)){
+      if (length(unique(row)) == length(row)) {
         structure(row, names = hyp_names[row])
       } else {
         NULL
@@ -61,7 +61,6 @@ graph_rejection_orderings <- function(shortcut_test_result) {
     intermediate_graph <- graph
 
     for (hyp_num in hyp_ordering) {
-
       if (p[[hyp_num]] <= intermediate_graph$hypotheses[[hyp_num]] * alpha) {
         intermediate_graph <-
           graph_update(intermediate_graph, hyp_num)$updated_graph

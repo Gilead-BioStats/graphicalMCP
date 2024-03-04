@@ -333,14 +333,14 @@
         Intersection Hypothesis       Test    p <= c_value * Weight * Alpha
                 1111         H1 parametric 0.01 <=   1.006 *    0.5 * 0.025
                 1111         H2 parametric 0.01 <=   1.006 *    0.5 * 0.025
-                1111         H3      simes 0.01 <=              0.0 * 0.025
-                1111         H4      simes 0.01 <=              0.0 * 0.025
+                1111         H3      simes 0.01 <=         *    0.0 * 0.025
+                1111         H4      simes 0.01 <=         *    0.0 * 0.025
                 1110         H1 parametric 0.01 <=   1.006 *    0.5 * 0.025
                 1110         H2 parametric 0.01 <=   1.006 *    0.5 * 0.025
-                1110         H3      simes 0.01 <=              0.0 * 0.025
+                1110         H3      simes 0.01 <=         *    0.0 * 0.025
                 1101         H1 parametric 0.01 <=   1.006 *    0.5 * 0.025
                 1101         H2 parametric 0.01 <=   1.006 *    0.5 * 0.025
-                1101         H4      simes 0.01 <=              0.0 * 0.025
+                1101         H4      simes 0.01 <=         *    0.0 * 0.025
         Inequality_holds
                     TRUE
                     TRUE

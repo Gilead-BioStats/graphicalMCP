@@ -45,10 +45,10 @@ as_initial_graph.igraph <- function(graph) {
   hypotheses <- igraph::vertex_attr(graph, "weight")
   names(hypotheses) <- igraph::vertex_attr(graph, "name")
 
-  transitions <- matrix(0, length(graph), length(graph))
-  dimnames(transitions) <- rep(list(igraph::vertex_attr(graph, "name")), 2)
+  transitions <- matrix(0, length(hypotheses), length(hypotheses))
+  dimnames(transitions) <- rep(list(names(hypotheses)), 2)
 
-  for (tail in seq_along(graph)) {
+  for (tail in seq_along(hypotheses)) {
     transitions[tail, ] <- graph[tail]
   }
 
