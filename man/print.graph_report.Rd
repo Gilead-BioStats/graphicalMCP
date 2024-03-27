@@ -2,30 +2,57 @@
 % Please edit documentation in R/print.graph_report.R
 \name{print.graph_report}
 \alias{print.graph_report}
-\title{S3 print method for class \code{graph_report}}
+\title{S3 print method for the class \code{graph_report}}
 \usage{
 \method{print}{graph_report}(x, ..., precision = 4, indent = 2, rows = 10)
 }
 \arguments{
-\item{x}{An object of class \code{graph_report} to print}
+\item{x}{An object of class \code{graph_report} to print.}
 
 \item{...}{Other values passed on to other methods (currently unused)}
 
-\item{precision}{An integer scalar indicating the number of significant
-figures to include in numeric values}
+\item{precision}{An integer scalar indicating the number of decimal places
+to to display.}
 
-\item{indent}{An integer scalar indicating how many spaces to indent results}
+\item{indent}{An integer scalar indicating how many spaces to indent results.}
 
-\item{rows}{An integer scalar indicating how many rows of verbose and test
-values output to print}
+\item{rows}{An integer scalar indicating how many rows of detailed test
+results to print.}
 }
 \description{
-A graph report displays
+A printed \code{graph_report} displays the initial graph, p-values and
+significance levels, rejection decisions, and optional detailed test results.
+}
+\examples{
+# A graphical multiple comparison procedure with two primary hypotheses (H1
+# and H2) and two secondary hypotheses (H3 and H4)
+# See Figure 1 in \insertCite{bretz-2011-graphical;textual}{graphicalMCP}.
+hypotheses <- c(0.5, 0.5, 0, 0)
+transitions <- rbind(
+  c(0, 0, 1, 0),
+  c(0, 0, 0, 1),
+  c(0, 1, 0, 0),
+  c(1, 0, 0, 0)
+)
+g <- graph_create(hypotheses, transitions)
+
+p <- c(0.018, 0.01, 0.105, 0.006)
+alpha <- 0.025
+graph_test_shortcut(g, p, alpha)
+}
+\references{
 \itemize{
-\item The initial graph being tested,
-\item p-values & significance level used for tests,
-\item Which hypotheses can be rejected, and
-\item Optional detailed test results, which vary depending on whether shortcut or
-closed testing was used
+\item \insertRef{bretz-2011-graphical}{graphicalMCP}
 }
 }
+\seealso{
+Other graphical tests: 
+\code{\link{adjust_p_bonferroni}()},
+\code{\link{adjust_weights_parametric}()},
+\code{\link{graph_rejection_orderings}()},
+\code{\link{graph_test_closure_fast}()},
+\code{\link{graph_test_closure}()},
+\code{\link{graph_test_shortcut}()},
+\code{\link{test_values_bonferroni}()}
+}
+\concept{graphical tests}

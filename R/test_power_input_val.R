@@ -47,7 +47,7 @@ test_input_val <- function(graph,
   )
 
   # Additional correlation matrix checks ---------------------------------------
-  corr_parametric <- test_corr[test_types == "parametric"]
+  corr_parametric <- test_corr[names(test_types)[test_types == "parametric"]]
 
   missing_corr <- any(
     vapply(corr_parametric, function(cr) any(is.na(cr)), logical(1))
@@ -79,8 +79,8 @@ test_input_val <- function(graph,
     "Correlation matrix must be symmetric" = symmetric_corr,
     "Dimensions of correlation matrices must match the parametric test groups" =
       all(
-        lengths(test_corr[test_types == "parametric"]) ==
-          lengths(test_groups[test_types == "parametric"])^2
+        lengths(test_corr[names(test_types)[test_types == "parametric"]]) ==
+          lengths(test_groups[names(test_types)[test_types == "parametric"]])^2
       ),
     "Correlation values must be between 0 & 1" = bounded_corr,
     "Correlation matrix must be positive definite for parametric test groups" =

@@ -75,13 +75,13 @@ test_that("power results are identical under a given seed", {
 })
 
 test_that("size one groups are turned into Bonferroni", {
-  g <- fallback()
+  g <- fallback(rep(1 / 3, 3))
 
   set.seed(42823)
   expect_equal(
     graph_calculate_power(
       graph = g,
-      alpha = .05,
+      alpha = 0.05,
       test_groups = list(1, 2, 3),
       test_types = c("s", "p", "p"),
       sim_n = 1e5
@@ -120,8 +120,8 @@ test_that("medium graph runs without error", {
 
   expect_no_error(
     graph_calculate_power(
-      graph = bonferroni(9),
-      alpha = .025,
+      graph = bonferroni(rep(1 / 9, 9)),
+      alpha = 0.025,
       test_groups = list(c(1, 4, 7), 2:3, 5:6, 8:9),
       test_types = c("p", "s", "s", "s"),
       test_corr = list(t_corr_para, NA, NA, NA),
@@ -142,8 +142,8 @@ test_that("verbose output", {
   expect_equal(
     names(
       graph_calculate_power(
-        graph = wiens_dmitrienko_2005(),
-        alpha = .025,
+        graph = fallback_improved_1(rep(1 / 3, 3)),
+        alpha = 0.025,
         sim_n = 1e4,
         power_marginal = runif(3, min = 0, max = 1),
         verbose = TRUE

@@ -2,29 +2,74 @@
 % Please edit documentation in R/print.power_report.R
 \name{print.power_report}
 \alias{print.power_report}
-\title{S3 print method for class \code{power_report}}
+\title{S3 print method for the class \code{power_report}}
 \usage{
 \method{print}{power_report}(x, ..., precision = 4, indent = 2, rows = 10)
 }
 \arguments{
-\item{x}{An object of class \code{power_report} to print}
+\item{x}{An object of the class \code{power_report} to print}
 
 \item{...}{Other values passed on to other methods (currently unused)}
 
-\item{precision}{An integer scalar indicating the number of significant figures
-to include in numeric values}
+\item{precision}{An integer scalar indicating the number of decimal places
+to to display.}
 
-\item{indent}{An integer scalar indicating how many spaces to indent results}
+\item{indent}{An integer scalar indicating how many spaces to indent results.}
 
-\item{rows}{An integer scalar indicating how many rows of verbose output to
-print}
+\item{rows}{An integer scalar indicating how many rows of detailed test
+results to print.}
 }
 \description{
-A power report displays:
+A printed \code{power_report} displays the initial graph, testing and simulation
+options, power outputs, and optional detailed simulations and test results.
+}
+\examples{
+# A graphical multiple comparison procedure with two primary hypotheses (H1
+# and H2) and two secondary hypotheses (H3 and H4)
+# See Figure 4 in \insertCite{bretz-2011-graphical;textual}{graphicalMCP}.
+alpha <- 0.025
+hypotheses <- c(0.5, 0.5, 0, 0)
+delta <- 0.5
+transitions <- rbind(
+  c(0, delta, 1 - delta, 0),
+  c(delta, 0, 0, 1 - delta),
+  c(0, 1, 0, 0),
+  c(1, 0, 0, 0)
+)
+g <- graph_create(hypotheses, transitions)
+
+marginal_power <- c(0.8, 0.8, 0.7, 0.9)
+corr1 <- matrix(0.5, nrow = 2, ncol = 2)
+diag(corr1) <- 1
+corr <- rbind(
+  cbind(corr1, 0.5 * corr1),
+  cbind(0.5 * corr1, corr1)
+)
+success_fns <- list(
+  # Probability to reject both H1 and H2
+  `H1andH2` = function(x) x[1] & x[2],
+  # Probability to reject both (H1 and H3) or (H2 and H4)
+  `(H1andH3)or(H2andH4)` = function(x) (x[1] & x[3]) | (x[2] & x[4])
+)
+set.seed(1234)
+# Bonferroni tests
+power_output <- graph_calculate_power(
+  g,
+  alpha,
+  sim_corr = corr,
+  sim_n = 1e5,
+  power_marginal = marginal_power,
+  sim_success = success_fns
+)
+}
+\references{
 \itemize{
-\item The initial graph being tested,
-\item Testing and simulation options,
-\item Final power calculations, and
-\item (Optionally) Detailed p-values and test results for each simulation
+\item \insertRef{bretz-2011-graphical}{graphicalMCP}
+\item \insertRef{bretz-2011-test}{graphicalMCP}
 }
 }
+\seealso{
+Other graphical power: 
+\code{\link{graph_calculate_power}()}
+}
+\concept{graphical power}

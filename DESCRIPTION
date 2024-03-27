@@ -1,7 +1,7 @@
 Type: Package
 Package: graphicalMCP
 Title: Graphical Multiple Comparison Procedures
-Version: 0.1.1
+Version: 0.1.2
 Authors@R: c(
     person("Dong", "Xi", , "dong.xi1@gilead.com", role = c("aut", "cre")),
     person("Ethan", "Brockmann", , "ethan.brockmann@atorusresearch.com", role = "aut"),
@@ -19,7 +19,8 @@ Depends:
     R (>= 4.1.0)
 Imports: 
     matrixStats,
-    mvtnorm
+    mvtnorm,
+    Rdpack
 Suggests: 
     bench,
     dplyr,
@@ -42,6 +43,8 @@ Suggests:
     xfun
 VignetteBuilder: 
     knitr
+RdMacros:
+    Rdpack
 Config/testthat/edition: 3
 Encoding: UTF-8
 LazyData: true

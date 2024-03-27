@@ -13,67 +13,71 @@ adjust_p_parametric(p, hypotheses, test_corr = NULL)
 adjust_p_simes(p, hypotheses)
 }
 \arguments{
-\item{p}{A numeric vector of p-values}
+\item{p}{A numeric vector of p-values (unadjusted, raw), whose values should
+be between 0 & 1. The length should match the length of \code{hypotheses}.}
 
-\item{hypotheses}{A numeric vector of hypothesis weights}
+\item{hypotheses}{A numeric vector of hypothesis weights. Must be a vector of
+values between 0 & 1 (inclusive). The length should match the length of
+\code{p}. The sum of hypothesis weights should not exceed 1.}
 
-\item{test_corr}{(Optional) A numeric matrix of correlations between
-hypotheses' test statistics}
+\item{test_corr}{(Optional) A numeric matrix of correlations between test
+statistics, which is needed to perform parametric tests using
+\code{graphicalMCP:::adjust_p_parametric()}. The number of rows and columns of
+this correlation matrix should match the length of \code{p}.}
 }
 \value{
-A single adjusted p-value for the given group
+A single adjusted p-value for the intersection hypothesis.
 }
 \description{
-Calculate adjusted p-values
+For an intersection hypothesis, an adjusted p-value is the smallest
+significance level at which the intersection hypothesis can be rejected.
+The intersection hypothesis can be rejected if its adjusted p-value is less
+than or equal to \eqn{\alpha}. Currently, there are three test types supported:
+\itemize{
+\item Bonferroni tests for \code{graphicalMCP:::adjust_p_bonferroni()},
+\item Parametric tests \insertCite{xi-2017-unified}{graphicalMCP} for
+\code{graphicalMCP:::adjust_p_parametric()},
+\itemize{
+\item Note that one-sided tests are required for parametric tests.
+}
+\item Simes tests \insertCite{lu-2016-graphical}{graphicalMCP} for
+\code{graphicalMCP:::adjust_p_simes()}.
+}
 }
 \examples{
 set.seed(22723)
 
-w <- c("H1" = .75, "H2" = .25, "H3" = 0)
-p <- c("H1" = .019, "H2" = .025, "H3" = .05)
+hypotheses <- c(H1 = 0.5, H2 = 0.25, H3 = 0.25)
+p <- c(0.019, 0.025, 0.05)
 
-graphicalMCP:::adjust_p_bonferroni(p, w)
-graphicalMCP:::adjust_p_simes(p, w)
+# Bonferroni test
+graphicalMCP:::adjust_p_bonferroni(p, hypotheses)
 
-corr1 <- diag(3)
-corr2 <- corr1
-corr2[lower.tri(corr2)] <- corr2[upper.tri(corr2)] <- runif(3, -1, 1)
+# Simes test
+graphicalMCP:::adjust_p_simes(p, hypotheses)
 
-# No correlation
-graphicalMCP:::adjust_p_parametric(p, w, corr1)
-
-# Uniform random pairwise correlations
-graphicalMCP:::adjust_p_parametric(p, w, corr2)
+# Parametric test
+# Using the `mvtnorm::GenzBretz` algorithm with `abseps = 1e-6`
+corr <- matrix(0.5, nrow = 3, ncol = 3)
+diag(corr) <- 1
+graphicalMCP:::adjust_p_parametric(p, hypotheses, corr)
 }
 \references{
-Bretz, F., Maurer, W., Brannath, W., and Posch, M. (2009). A graphical
-approach to sequentially rejective multiple test procedures. Statistics in
-Medicine, 28(4), 586–604. \url{https://doi.org/10.1002/sim.3495}
-
-Bretz, F., Maurer, W., and Hommel, G. (2011). Test and power considerations
-for multiple endpoint analyses using sequentially rejective graphical
-procedures. Statistics in Medicine, 30(13), 1489–1501.
-\url{https://doi.org/10.1002/sim.3988}
-
-Bretz, F., Posch, M., Glimm, E., Klinglmueller, F., Maurer, W., and Rohmeyer,
-K. (2011). Graphical approaches for multiple comparison procedures using
-weighted Bonferroni, Simes, or parametric tests. Biometrical Journal, 53(6),
-894–913. \url{https://doi.org/10.1002/bimj.201000239}
-
-Lu, K. (2016). Graphical approaches using a Bonferroni mixture of weighted
-Simes tests. Statistics in Medicine, 35(22), 4041–4055.
-\url{https://doi.org/10.1002/sim.6985}
-
-Xi, D., Glimm, E., Maurer, W., and Bretz, F. (2017). A unified framework for
-weighted parametric multiple test procedures. Biometrical Journal, 59(5),
-918–931. \url{https://doi.org/10.1002/bimj.201600233}
-
-Xi, D., and Bretz, F. (2019). Symmetric graphs for equally weighted tests,
-with application to the Hochberg procedure. Statistics in Medicine, 38(27),
-5268–5282. \url{https://doi.org/10.1002/sim.8375}
-
-Rohmeyer K, Klinglmueller F (2020). \emph{gMCP: Graph Based Multiple Test
-Procedures}. R package version 0.8-15,
-\url{https://cran.r-project.org/package=gMCP}.
+\itemize{
+\item \insertRef{bretz-2009-graphical}{graphicalMCP}
+\item \insertRef{lu-2016-graphical}{graphicalMCP}
+\item \insertRef{xi-2017-unified}{graphicalMCP}
 }
+}
+\seealso{
+Other graphical tests: 
+\code{\link{adjust_weights_parametric}()},
+\code{\link{graph_rejection_orderings}()},
+\code{\link{graph_test_closure_fast}()},
+\code{\link{graph_test_closure}()},
+\code{\link{graph_test_shortcut}()},
+\code{\link{print.graph_report}()},
+\code{\link{test_values_bonferroni}()}
+}
+\concept{graphical tests}
 \keyword{internal}

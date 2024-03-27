@@ -7,16 +7,54 @@
 \method{print}{updated_graph}(x, ..., precision = 6, indent = 2)
 }
 \arguments{
-\item{x}{An object of class \code{updated_graph} to print}
+\item{x}{An object of the class \code{updated_graph} to print.}
 
-\item{...}{Other values passed on to other methods (currently unused)}
+\item{...}{Other values passed on to other methods (currently unused).}
 
-\item{precision}{An integer scalar indicating the number of significant
-figures to include in numeric values}
+\item{precision}{An integer scalar indicating the number of decimal places
+to to display.}
 
-\item{indent}{An integer scalar indicating how many spaces to indent results}
+\item{indent}{An integer scalar indicating how many spaces to indent results.}
+}
+\value{
+NULL, after printing the updated graph.
 }
 \description{
-A printed \code{updated_graph} displays the initial graph, the updated graph, and
-the sequence of graphs between the two (if it's available).
+A printed \code{updated_graph} displays the initial graph, the (final) updated
+graph, and the sequence of intermediate updated graphs after hypotheses are
+deleted (if available).
 }
+\examples{
+# A graphical multiple comparison procedure with two primary hypotheses (H1
+# and H2) and two secondary hypotheses (H3 and H4)
+# See Figure 1 in \insertCite{bretz-2011-graphical;textual}{graphicalMCP}.
+hypotheses <- c(0.5, 0.5, 0, 0)
+transitions <- rbind(
+  c(0, 0, 1, 0),
+  c(0, 0, 0, 1),
+  c(0, 1, 0, 0),
+  c(1, 0, 0, 0)
+)
+g <- graph_create(hypotheses, transitions)
+
+# Delete the second and third hypotheses in the "unordered mode"
+graph_update(g, delete = c(FALSE, TRUE, TRUE, FALSE))
+
+# Equivalent way in the "ordered mode" to obtain the updated graph after
+# deleting the second and third hypotheses
+# Additional intermediate updated graphs are also provided
+graph_update(g, delete = 2:3)
+}
+\references{
+\itemize{
+\item \insertRef{bretz-2011-graphical}{graphicalMCP}
+}
+}
+\seealso{
+\code{\link[=print.initial_graph]{print.initial_graph()}} for the print method for the initial graph.
+
+Other updated graphs: 
+\code{\link{graph_update}()},
+\code{\link{plot.updated_graph}()}
+}
+\concept{updated graphs}

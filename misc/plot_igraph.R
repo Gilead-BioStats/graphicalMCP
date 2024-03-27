@@ -1,8 +1,8 @@
 library(igraph)
 
-hab <- huque_alosh_bhore_2011()
-wd <- wiens_dmitrienko_2005()
-bh <- bonferroni_holm(9)
+hab <- huque_etal()
+wd <- fallback_improved_1(rep(1 / 3, 3))
+bh <- bonferroni_holm(rep(1 / 9, 9))
 gex <- simple_successive_1(names = c("Non-inferiority Low",
                                      "Non-inferiority High",
                                      "Superiority Low",

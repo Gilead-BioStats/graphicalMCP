@@ -1,8 +1,90 @@
-#' @rdname testing
+#' Perform shortcut (sequentially rejective) graphical multiple comparison
+#' procedures
+#'
+#' @description
+#' Shortcut graphical multiple comparison procedures are sequentially rejective
+#' procedure based on \insertCite{bretz-2009-graphical;textual}{graphicalMCP}.
+#' With $m$ hypotheses, there are at most $m$ steps to obtain all rejection
+#' decisions. These procedure are equivalent to closed graphical multiple
+#' comparison procedures using Bonferroni tests for intersection hypotheses,
+#' but shortcut procedures are faster to perform. See
+#' `vignette("shortcut-testing")` for more illustration of shortcut procedures
+#' and interpretation of their outputs.
+#'
+#' @inheritParams graph_update
+#' @param p A numeric vector of p-values (unadjusted, raw), whose values should
+#'   be between 0 & 1. The length should match the number of hypotheses in
+#'   `graph`.
+#' @param alpha A numeric scalar of the overall significance level, which should
+#'   be between 0 & 1. The default is 0.025 for one-sided hypothesis testing
+#'   problems; another common choice is 0.05 for two-sided hypothesis testing
+#'   problems.
+#' @param verbose A logical scalar specifying whether the details of
+#'   intermediate update graphs should be included in results. When
+#'   `verbose = TRUE`, intermediate update graphs are provided after deleting
+#'   each hypothesis, which has been rejected. The default is `verbose = FALSE`.
+#' @param test_values A logical scalar specifying whether adjusted significance
+#'   levels should be provided for each hypothesis. When `test_values = TRUE`,
+#'   it provides an equivalent way of performing graphical multiple comparison
+#'   procedures by comparing each p-value with its significance level. If the
+#'   p-value of a hypothesis is less than or equal to its significance level,
+#'   the hypothesis is rejected. The order of rejection is based on the order
+#'   of adjusted p-values from the smallest to the largest. The default is
+#'   `test_values = FALSE`.
+#'
+#' @return An S3 object of class `graph_report` with a list of 4 elements:
+#'   * `inputs` - Input parameters, which is a list of:
+#'     * `graph` - Initial graph,
+#'     *`p` - (Unadjusted or raw) p-values,
+#'     * `alpha` - Overall significance level,
+#'     * `test_groups` - Groups of hypotheses for different types of tests,
+#'     which are the list of all hypotheses for [graph_test_shortcut()],
+#'     * `test_types` - Different types of tests, which are "bonferroni" for
+#'     [graph_test_shortcut()].
+#'   * Output parameters `outputs`, which is a list of:
+#'     * `adjusted_p` - Adjusted p-values,
+#'     * `rejected` - Rejected hypotheses,
+#'     * `graph` - Updated graph after deleting all rejected hypotheses.
+#'   * `details` - Verbose outputs with intermediate updated graphs, if
+#'   `verbose = TRUE`.
+#'   * `test_values` - Adjusted significance levels, if `test_values = TRUE`.
+#'
+#' @family graphical tests
+#'
+#' @seealso
+#'   * [graph_test_closure()] for graphical multiple comparison procedures using
+#'   the closed test,
+#'   * [graph_rejection_orderings()] for all possible rejection orderings.
+#'
+#' @rdname graph_test_shortcut
+#'
+#' @importFrom Rdpack reprompt
+#'
 #' @export
+#'
+#' @references
+#'  * \insertRef{bretz-2009-graphical}{graphicalMCP}
+#'  * \insertRef{bretz-2011-graphical}{graphicalMCP}
+#'
+#' @examples
+#' # A graphical multiple comparison procedure with two primary hypotheses (H1
+#' # and H2) and two secondary hypotheses (H3 and H4)
+#' # See Figure 1 in \insertCite{bretz-2011-graphical;textual}{graphicalMCP}.
+#' hypotheses <- c(0.5, 0.5, 0, 0)
+#' transitions <- rbind(
+#'   c(0, 0, 1, 0),
+#'   c(0, 0, 0, 1),
+#'   c(0, 1, 0, 0),
+#'   c(1, 0, 0, 0)
+#' )
+#' g <- graph_create(hypotheses, transitions)
+#'
+#' p <- c(0.018, 0.01, 0.105, 0.006)
+#' alpha <- 0.025
+#' graph_test_shortcut(g, p, alpha)
 graph_test_shortcut <- function(graph,
                                 p,
-                                alpha = .025,
+                                alpha = 0.025,
                                 verbose = FALSE,
                                 test_values = FALSE) {
   # Input validation -----------------------------------------------------------

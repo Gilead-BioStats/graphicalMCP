@@ -19,17 +19,17 @@
 )
 }
 \arguments{
-\item{x}{An initial graph as returned by \code{\link[=graph_create]{graph_create()}}}
+\item{x}{An object of class \code{initial_graph} to plot.}
 
-\item{...}{Other arguments passed on to \code{\link[igraph:plot.igraph]{igraph::plot.igraph()}}}
+\item{...}{Other arguments passed on to \code{\link[igraph:plot.igraph]{igraph::plot.igraph()}}.}
 
 \item{v_palette}{A character vector of length two specifying the colors for
 retained and deleted hypotheses. More extensive color customization must be
-done with \code{vertex.color}}
+done with \code{vertex.color}.}
 
 \item{layout}{An igraph layout specification (See \code{?igraph.plotting}), or
 \code{"grid"}, which lays out hypotheses left-to-right and top-to-bottom. \code{nrow}
-and \code{ncol} control the grid shape}
+and \code{ncol} control the grid shape.}
 
 \item{nrow}{An integer scalar specifying the number of rows in the vertex
 grid. If row and column counts are not specified, vertices will be laid out
@@ -39,36 +39,39 @@ as close to a square as possible.}
 grid. If row and column counts are not specified, vertices will be laid out
 as close to a square as possible.}
 
-\item{edge_curves}{A named numeric vector specifying the curvature  of
+\item{edge_curves}{A named numeric vector specifying the curvature of
 specific edges. Edge pairs (Where two vertices share an edge in each
 possible direction) are detected automatically and get 0.25 curvature.
 Adjust edges by adding an entry with name \verb{"vertex1|vertex2}, and adjust
 default edge pairs curvature by adding an entry with name \code{"pairs"} -
-\code{edge_curves = c("pairs" = .5, "H1|H3" = .25, "H3|H4" = .75)}}
+\code{edge_curves = c("pairs" = .5, "H1|H3" = .25, "H3|H4" = .75)}.}
 
-\item{precision}{An integer scalar specifying how many significant figures
-should be displayed for weights}
+\item{precision}{An integer scalar indicating the number of decimal places
+to to display.}
 
-\item{eps}{A numeric scalar. Edge weights between 0 and \code{eps} will be
-displayed as \eqn{\epsilon}, and edge weights between \code{1 - eps} and 1 will
-be displayed as \eqn{1 - \epsilon}}
+\item{eps}{A numeric scalar. The transition weight of \code{eps} will be
+displayed as \eqn{\epsilon}, which indicates edges with infinitesimally small
+weights. See Bretz et al. (2009) for more details.}
 
 \item{background_color}{A character scalar specifying a background color for
-the whole plotting area. Passed directly to \code{\link[graphics:par]{graphics::par()}} (\code{bg})}
+the whole plotting area. Passed directly to \code{\link[graphics:par]{graphics::par()}} (\code{bg}).}
 
 \item{margins}{A length 4 numeric vector specifying the margins for the plot.
 Defaults to all 0, since igraph plots tend to have large margins. It is
-passed directly to \code{\link[graphics:par]{graphics::par()}} (\code{mar})}
+passed directly to \code{\link[graphics:par]{graphics::par()}} (\code{mar}).}
 }
 \value{
-NULL, after plotting the graph
+NULL, after plotting the initial graph.
 }
 \description{
 The plot of an \code{initial_graph} translates the \code{hypotheses} into vertices and
 \code{transitions} into edges to create a network plot. Vertices are labeled with
-hypothesis names and weights, and edges are labeled with weights.
+hypothesis names and hypothesis weights, and edges are labeled with
+transition weights. See \code{vignette("graph-examples")} for more illustration
+of commonly used multiple comparison procedure using graphs.
 }
-\details{
+\section{Customization of graphs}{
+
 There are a few values for \code{\link[igraph:plot.igraph]{igraph::plot.igraph()}} that get their defaults
 changed for graphicalMCP. These values can still be changed by passing them
 as arguments to \code{plot.initial_graph()}. Here are the new defaults:
@@ -79,22 +82,37 @@ as arguments to \code{plot.initial_graph()}. Here are the new defaults:
 \item \code{edge.arrow.size = 1},
 \item \code{edge.arrow.width = 1},
 \item \code{edge.label.color = "black"}
-\item \code{asp = 0}
+\item \code{asp = 0}.
 }
 
-Neither graphicalMCP nor igraph does anything about overlapping edge labels.
-If you run into this problem, and vertices can't practically be moved enough
-to avoid collisions of edge labels, using edge curves can help. igraph puts
-edge labels closer to the tail of an edge when an edge is straight, and
-closer to the head of an edge when it's curved. By setting an edge's curve to
-some very small value, an effectively straight edge can be shifted to a new
-position.
+Neither \code{graphicalMCP} nor \code{igraph} does anything about overlapping edge
+labels. If you run into this problem, and vertices can't practically be
+moved enough to avoid collisions of edge labels, using edge curves can help.
+\code{igraph} puts edge labels closer to the tail of an edge when an edge is
+straight, and closer to the head of an edge when it's curved. By setting an
+edge's curve to some very small value, an effectively straight edge can be
+shifted to a new position.
 }
+
 \examples{
-plot(simple_successive_2(), layout = "grid")
+# A graphical multiple comparison procedure with two primary hypotheses (H1
+# and H2) and two secondary hypotheses (H3 and H4)
+# See Figure 4 in \insertCite{bretz-2011-graphical;textual}{graphicalMCP}.
+hypotheses <- c(0.5, 0.5, 0, 0)
+delta <- 0.5
+transitions <- rbind(
+  c(0, delta, 1 - delta, 0),
+  c(delta, 0, 0, 1 - delta),
+  c(0, 1, 0, 0),
+  c(1, 0, 0, 0)
+)
+g <- graph_create(hypotheses, transitions)
+plot(g)
 
+# A graphical multiple comparison procedure with two primary hypotheses (H1
+# and H2) and four secondary hypotheses (H31, H32, H41, and H42)
+# See Figure 6 in \insertCite{xi-2019-symmetric;textual}{graphicalMCP}.
 hypotheses <- c(0.5, 0.5, 0, 0, 0, 0)
-
 epsilon <- 1e-5
 transitions <- rbind(
   c(0, 0.5, 0.25, 0, 0.25, 0),
@@ -104,8 +122,8 @@ transitions <- rbind(
   c(0, epsilon, 1 - epsilon, 0, 0, 0),
   c(0, 0, 0, 1, 0, 0)
 )
-
-g <- graph_create(hypotheses, transitions)
+hyp_names <- c("H1", "H2", "H31", "H32", "H41", "H42")
+g <- graph_create(hypotheses, transitions, hyp_names)
 
 plot_layout <- rbind(
   c(0.15, 0.5),
@@ -118,3 +136,20 @@ plot_layout <- rbind(
 
 plot(g, layout = plot_layout, eps = epsilon, edge_curves = c(pairs = .5))
 }
+\references{
+\itemize{
+\item \insertRef{bretz-2011-graphical}{graphicalMCP}
+\item \insertRef{xi-2019-symmetric}{graphicalMCP}
+}
+}
+\seealso{
+\code{\link[=plot.updated_graph]{plot.updated_graph()}} for the plot method for the updated graph after
+hypotheses being deleted from the initial graph.
+
+Other initial graphs: 
+\code{\link{as_initial_graph}()},
+\code{\link{bonferroni}()},
+\code{\link{graph_create}()},
+\code{\link{print.initial_graph}()}
+}
+\concept{initial graphs}

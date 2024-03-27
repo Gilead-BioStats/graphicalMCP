@@ -1,36 +1,59 @@
 #' Calculate adjusted p-values
 #'
-#' @param p A numeric vector of p-values
-#' @param hypotheses A numeric vector of hypothesis weights
-#' @param test_corr (Optional) A numeric matrix of correlations between
-#'   hypotheses' test statistics
+#' @description
+#' For an intersection hypothesis, an adjusted p-value is the smallest
+#' significance level at which the intersection hypothesis can be rejected.
+#' The intersection hypothesis can be rejected if its adjusted p-value is less
+#' than or equal to \eqn{\alpha}. Currently, there are three test types supported:
+#' * Bonferroni tests for `graphicalMCP:::adjust_p_bonferroni()`,
+#' * Parametric tests \insertCite{xi-2017-unified}{graphicalMCP} for
+#'   `graphicalMCP:::adjust_p_parametric()`,
+#'     - Note that one-sided tests are required for parametric tests.
+#' * Simes tests \insertCite{lu-2016-graphical}{graphicalMCP} for
+#'   `graphicalMCP:::adjust_p_simes()`.
 #'
-#' @return A single adjusted p-value for the given group
+#' @param p A numeric vector of p-values (unadjusted, raw), whose values should
+#'   be between 0 & 1. The length should match the length of `hypotheses`.
+#' @param hypotheses A numeric vector of hypothesis weights. Must be a vector of
+#'   values between 0 & 1 (inclusive). The length should match the length of
+#'   `p`. The sum of hypothesis weights should not exceed 1.
+#' @param test_corr (Optional) A numeric matrix of correlations between test
+#'   statistics, which is needed to perform parametric tests using
+#'   `graphicalMCP:::adjust_p_parametric()`. The number of rows and columns of
+#'   this correlation matrix should match the length of `p`.
+#'
+#' @return A single adjusted p-value for the intersection hypothesis.
+#'
+#' @family graphical tests
 #'
 #' @rdname adjust_p
 #'
+#' @importFrom Rdpack reprompt
+#'
 #' @keywords internal
 #'
-#' @template references
+#' @references
+#'  * \insertRef{bretz-2009-graphical}{graphicalMCP}
+#'  * \insertRef{lu-2016-graphical}{graphicalMCP}
+#'  * \insertRef{xi-2017-unified}{graphicalMCP}
 #'
 #' @examples
 #' set.seed(22723)
 #'
-#' w <- c("H1" = .75, "H2" = .25, "H3" = 0)
-#' p <- c("H1" = .019, "H2" = .025, "H3" = .05)
+#' hypotheses <- c(H1 = 0.5, H2 = 0.25, H3 = 0.25)
+#' p <- c(0.019, 0.025, 0.05)
 #'
-#' graphicalMCP:::adjust_p_bonferroni(p, w)
-#' graphicalMCP:::adjust_p_simes(p, w)
+#' # Bonferroni test
+#' graphicalMCP:::adjust_p_bonferroni(p, hypotheses)
 #'
-#' corr1 <- diag(3)
-#' corr2 <- corr1
-#' corr2[lower.tri(corr2)] <- corr2[upper.tri(corr2)] <- runif(3, -1, 1)
+#' # Simes test
+#' graphicalMCP:::adjust_p_simes(p, hypotheses)
 #'
-#' # No correlation
-#' graphicalMCP:::adjust_p_parametric(p, w, corr1)
-#'
-#' # Uniform random pairwise correlations
-#' graphicalMCP:::adjust_p_parametric(p, w, corr2)
+#' # Parametric test
+#' # Using the `mvtnorm::GenzBretz` algorithm with `abseps = 1e-6`
+#' corr <- matrix(0.5, nrow = 3, ncol = 3)
+#' diag(corr) <- 1
+#' graphicalMCP:::adjust_p_parametric(p, hypotheses, corr)
 adjust_p_bonferroni <- function(p, hypotheses) {
   if (sum(hypotheses) == 0) {
     return(Inf)

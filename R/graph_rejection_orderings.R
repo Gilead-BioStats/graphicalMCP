@@ -1,34 +1,69 @@
-#' Find alternate rejection orderings for shortcut testing
+#' Find alternate rejection orderings (sequences) for shortcut tests
 #'
-#' When using `graph_test_shortcut()`, there may be multiple hypotheses which
-#' can be rejected at each step. The specific hypothesis chosen is decided based
-#' on the minimum adjusted p-value, but final results don't change if rejection
-#' order changes. This function shows every other order that deletes the same
-#' hypotheses, where each hypothesis is still a valid rejection at the step it
-#' is deleted.
+#' @description
+#' When multiple hypotheses are rejected by using [graph_test_shortcut()],
+#' there may be multiple orderings or sequences in which hypotheses are rejected
+#' one by one. The default order in [graph_test_shortcut()] is based on the
+#' adjusted p-values, from the smallest to the largest. This function
+#' [graph_rejection_orderings()] provides all possible and valid orders
+#' (or sequences) of rejections. Although the order of rejection does not affect
+#' the final rejection decisions \insertCite{bretz-2009-graphical}{graphicalMCP},
+#' different sequences could offer different ways to explain the step-by-step
+#' process of shortcut graphical multiple comparison procedures.
 #'
 #' @param shortcut_test_result A `graph_report` object as returned by
-#'   [graph_test_shortcut()]
+#'   [graph_test_shortcut()].
 #'
-#' @return A modified `graph_report` object containing all valid orderings for
-#'   deleting the significant hypotheses
+#' @return A modified `graph_report` object containing all valid orderings of
+#'   rejections of hypotheses
+#'
+#' @family graphical tests
+#'
+#' @seealso
+#'   [graph_test_shortcut()] for shortcut graphical multiple comparison
+#'   procedures.
+#'
+#' @rdname graph_rejection_orderings
+#'
+#' @importFrom Rdpack reprompt
+#'
 #' @export
 #'
-#' @examples
-#' graph <- simple_successive_2()
+#' @references
+#'  * \insertRef{bretz-2009-graphical}{graphicalMCP}
+#'  * \insertRef{bretz-2011-graphical}{graphicalMCP}
 #'
-#' short_res <- graph_test_shortcut(graph, c(.018, .01, .03, .004))
+#' @examples
+#' # A graphical multiple comparison procedure with two primary hypotheses (H1
+#' # and H2) and two secondary hypotheses (H3 and H4)
+#' # See Figure 4 in \insertCite{bretz-2011-graphical;textual}{graphicalMCP}.
+#' hypotheses <- c(0.5, 0.5, 0, 0)
+#' delta <- 0.5
+#' transitions <- rbind(
+#'   c(0, delta, 1 - delta, 0),
+#'   c(delta, 0, 0, 1 - delta),
+#'   c(0, 1, 0, 0),
+#'   c(1, 0, 0, 0)
+#' )
+#' g <- graph_create(hypotheses, transitions)
+#'
+#' p <- c(0.018, 0.01, 0.105, 0.006)
+#' alpha <- 0.025
+#'
+#' shortcut_testing <- graph_test_shortcut(g, p, alpha, verbose = TRUE)
 #'
 #' # Reject H1, H2, and H4
-#' short_res$outputs$rejected
+#' shortcut_testing$outputs$rejected
 #'
-#' # But these cannot be rejected in any order - For instance, H4 has 0 weight
-#' # in the initial graph and cannot be rejected first
-#' graph_rejection_orderings(short_res)
+#' # Default order of rejections: H2, H1, H4
+#' shortcut_testing$details$del_seq
 #'
-#' # Finally, intermediate graphs can be obtained by putting one of the
-#' # orderings outputs into `graph_update()`
-#' graph_update(graph, delete = c(2, 1, 4))
+#' # There is another valid sequence of rejection: H2, H4, H1
+#' graph_rejection_orderings(shortcut_testing)$valid_orderings
+#'
+#' # Finally, intermediate updated graphs can be obtained by providing the order
+#' # of rejections into `[graph_update()]`
+#' graph_update(g, delete = c(2, 4, 1))
 graph_rejection_orderings <- function(shortcut_test_result) {
   # Extract basic testing values -----------------------------------------------
   graph <- shortcut_test_result$inputs$graph

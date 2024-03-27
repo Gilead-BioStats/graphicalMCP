@@ -23,7 +23,7 @@ library(gMCP)
 
 # Introduction
 
-There are two R packages that cover graphical multiple comparison procedures (MCPs): `gMCP` [@rohmeyer-2020-gmcp] and `lrstat` [@lu-2023-lrstat]. The development of `graphicalMCP` benefited from these two packages. Here we provide some comparisons between `graphicalMCP` and other packages with respect to key functions.
+There are two R packages that cover graphical multiple comparison procedures (MCPs): `gMCP` [@rohmeyer-2024-gmcp] and `lrstat` [@lu-2023-lrstat]. The development of `graphicalMCP` benefited from these two packages. Here we provide some comparisons between `graphicalMCP` and other packages with respect to key functions.
 
 # List of comparisons
 

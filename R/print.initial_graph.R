@@ -1,14 +1,46 @@
 #' S3 print method for the class `initial_graph`
 #'
-#' A printed `initial_graph` displays a header stating what the object is, the
-#' hypothesis weights, and the transition weights.
+#' @description
+#' A printed `initial_graph` displays a header stating "Initial graph",
+#' hypothesis weights, and transition weights.
 #'
-#' @param x An object of class `initial_graph` to print
-#' @param ... Other values passed on to other methods (currently unused)
-#' @param precision An integer scalar indicating the number of significant figures
-#'   to include in numeric values
-#' @param indent An integer scalar indicating how many spaces to indent results
+#' @param x An object of class `initial_graph` to print.
+#' @param ... Other values passed on to other methods (currently unused).
+#' @param precision An integer scalar indicating the number of decimal places
+#'   to to display.
+#' @param indent An integer scalar indicating how many spaces to indent results.
+#'
+#' @return NULL, after printing the initial graph.
+#'
+#' @family initial graphs
+#'
+#' @seealso
+#'   [print.updated_graph()] for the print method for the updated graph after
+#'   hypotheses being deleted from the initial graph.
+#'
+#' @rdname print.initial_graph
+#'
+#' @importFrom Rdpack reprompt
+#'
 #' @export
+#'
+#' @references
+#'  * \insertRef{bretz-2011-graphical}{graphicalMCP}
+#'
+#' @examples
+#' # A graphical multiple comparison procedure with two primary hypotheses (H1
+#' # and H2) and two secondary hypotheses (H3 and H4)
+#' # See Figure 1 in \insertCite{bretz-2011-graphical;textual}{graphicalMCP}.
+#' hypotheses <- c(0.5, 0.5, 0, 0)
+#' transitions <- rbind(
+#'   c(0, 0, 1, 0),
+#'   c(0, 0, 0, 1),
+#'   c(0, 1, 0, 0),
+#'   c(1, 0, 0, 0)
+#' )
+#' hyp_names <- c("H11", "H12", "H21", "H22")
+#' g <- graph_create(hypotheses, transitions, hyp_names)
+#' g
 print.initial_graph <- function(x,
                                 ...,
                                 precision = 4,
