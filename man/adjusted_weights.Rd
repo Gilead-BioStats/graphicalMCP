@@ -134,8 +134,8 @@ graphicalMCP:::solve_c_parametric(
 Other graphical tests: 
 \code{\link{adjust_p_bonferroni}()},
 \code{\link{graph_rejection_orderings}()},
-\code{\link{graph_test_closure_fast}()},
 \code{\link{graph_test_closure}()},
+\code{\link{graph_test_closure_fast}()},
 \code{\link{graph_test_shortcut}()},
 \code{\link{print.graph_report}()},
 \code{\link{test_values_bonferroni}()}

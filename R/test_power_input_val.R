@@ -47,7 +47,11 @@ test_input_val <- function(graph,
   )
 
   # Additional correlation matrix checks ---------------------------------------
-  corr_parametric <- test_corr[names(test_types)[test_types == "parametric"]]
+  if (is.null(names(test_types))) {
+    corr_parametric <- test_corr[test_types == "parametric"]
+  } else {
+    corr_parametric <- test_corr[names(test_types)[test_types == "parametric"]]
+  }
 
   missing_corr <- any(
     vapply(corr_parametric, function(cr) any(is.na(cr)), logical(1))
