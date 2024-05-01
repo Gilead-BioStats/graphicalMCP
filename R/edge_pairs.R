@@ -1,3 +1,9 @@
+#' Find pairs of vertices that are connected in both directions
+#'
+#' @param graph An initial graph as returned by [graph_create()].
+#'
+#' @return A list of vertex pairs which are connected in both directions. NULL
+#'   if no such pairs are found
 edge_pairs <- function(graph) {
   g_names <- names(graph$hypotheses)
 
