@@ -78,7 +78,7 @@ $m$ is the number of hypotheses.
 To benchmark against existing approaches to calculating weighting strategies, we compare the following approaches: `gMCP::generateWeights()` [@rohmeyer-2024-gmcp], `lrstat::fwgtmat()` [@lu-2016-graphical], Approach 1 (graphicalMCP simple) and Approach 2 (graphicalMCP parent-child). Random graphs are generated for the numbers of hypotheses of 4, 8, 12, and 16. Computing time (in median log-10 milliseconds) is plotted below. We can see that `gMCP::generateWeights()` is the slowest and `lrstat::fwgtmat()` is the fastest. Approach 2 (graphicalMCP parent-child) is faster than Approach 1 (graphicalMCP simple). Note that `lrstat::fwgtmat()` implements the calculation using C++, which is known to be faster than R. But it is less stable than other approaches, e.g., giving errors more often than others. Given that the computing time of R-based approaches is acceptable, adding Rcpp dependency is not considered in `graphicalMCP`. For these considerations, we implement Approach 2 in `graphicalMCP::graph_generate_weights()`.
 
 ```{r gw-benchmarks-plot}
-knitr::include_graphics(here::here("img\\gw-benchmarks-plot.png"))
+knitr::include_graphics("img\\gw-benchmarks-plot.png")
 ```
 
 ```{r gw-benchmarks-functions, eval=FALSE}
@@ -354,7 +354,7 @@ The small modification in Step 3b makes this approach much faster than the conve
 To benchmark against existing approaches to calculating weighting strategies, we compare the following approaches: `gMCP::calcPower()`, Approach 1 (graphicalMCP conventional), and Approach 2 (graphicalMCP parent-child). Both Holm and fixed sequence procedures are considered with the numbers of hypotheses of 4, 8, 12, and 16. Computing time (in median log-10 seconds) is plotted below. We can see that `gMCP::calcPower()` is the fastest and Approach 1 (graphicalMCP conventional) is the lowest. Note that `gMCP::calcPower()` implements the simulation using C, which is known to be faster than R but is not easy to extend to other situations. Given that the computing time of Approach 2 (graphicalMCP parent-child) is acceptable, we implement it in `graphicalMCP::graph_calculate_power()`.
 
 ```{r power-benchmarks-plot}
-knitr::include_graphics(here::here("img\\power-benchmarks-plot.png"))
+knitr::include_graphics("img\\power-benchmarks-plot.png")
 ```
 
 # Reference
