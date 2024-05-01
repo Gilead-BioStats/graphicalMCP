@@ -48,6 +48,7 @@
 #' @return Returns `graph` invisibly
 #'
 #' @rdname input_val
+#' @keywords internal
 test_input_val <- function(graph,
                            p,
                            alpha,
@@ -145,6 +146,7 @@ test_input_val <- function(graph,
 }
 
 #' @rdname input_val
+#' @keywords internal
 power_input_val <- function(graph, sim_n, power_marginal, test_corr, success) {
   num_hyps <- length(graph$hypotheses)
 

@@ -16,3 +16,4 @@ if no such pairs are found
 \description{
 Find pairs of vertices that are connected in both directions
 }
+\keyword{internal}

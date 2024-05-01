@@ -79,3 +79,4 @@ Returns \code{graph} invisibly
 \description{
 Validate inputs for testing and power simulations
 }
+\keyword{internal}

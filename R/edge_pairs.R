@@ -4,6 +4,8 @@
 #'
 #' @return A list of vertex pairs which are connected in both directions. NULL
 #'   if no such pairs are found
+#'
+#' @keywords internal
 edge_pairs <- function(graph) {
   g_names <- names(graph$hypotheses)
 
