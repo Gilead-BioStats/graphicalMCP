@@ -7,7 +7,6 @@
 #' For example, generating weights and calculating adjusted weights can be done
 #' only once. Vectorization has been applied where possible.
 #'
-#' @param graph An initial graph as returned by [graph_create()].
 #' @param p A numeric vector of one-sided p-values (unadjusted, raw), whose
 #'   values should be between 0 & 1. The length should match the number of
 #'   hypotheses in `graph`.
