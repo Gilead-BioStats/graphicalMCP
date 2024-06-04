@@ -22,7 +22,7 @@
 #' @return A numeric matrix of all intersection hypotheses and their hypothesis
 #' weights. For a graphical multiple comparison procedure with \eqn{m} hypotheses,
 #' the number of rows is \eqn{2^{m}-1}, each of which corresponds to an intersection
-#' hypothesis. The number of columns is \eqn{2\cdot m}$. The first \eqn{m} columns
+#' hypothesis. The number of columns is \eqn{2\cdot m}. The first \eqn{m} columns
 #' indicate which individual hypotheses are included in a given intersection
 #' hypothesis and the second half of columns provide hypothesis weights for each
 #' individual hypothesis for a given intersection hypothesis.
