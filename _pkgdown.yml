@@ -14,8 +14,7 @@ reference:
   - as_graphMCP
   - as_igraph
 - title: Updating a graph
-- desc: Functions for updating a graphical multiple comparison procedure after
-  deleting hypotheses
+- desc: Functions for updating a graphical multiple comparison procedure after deleting hypotheses
 - contents:
   - graph_update
   - print.updated_graph
