@@ -40,22 +40,19 @@
     <loc>https://gilead-biostats.github.io/graphicalMCP/news/index.html</loc>
   </url>
   <url>
-    <loc>https://gilead-biostats.github.io/graphicalMCP/pull_request_template.html</loc>
-  </url>
-  <url>
     <loc>https://gilead-biostats.github.io/graphicalMCP/reference/adjust_p.html</loc>
   </url>
   <url>
-    <loc>https://gilead-biostats.github.io/graphicalMCP/reference/adjusted-weights.html</loc>
+    <loc>https://gilead-biostats.github.io/graphicalMCP/reference/adjust_weights.html</loc>
   </url>
   <url>
-    <loc>https://gilead-biostats.github.io/graphicalMCP/reference/as-graph.html</loc>
+    <loc>https://gilead-biostats.github.io/graphicalMCP/reference/as_graph.html</loc>
   </url>
   <url>
-    <loc>https://gilead-biostats.github.io/graphicalMCP/reference/calc-test_values.html</loc>
+    <loc>https://gilead-biostats.github.io/graphicalMCP/reference/edge_pairs.html</loc>
   </url>
   <url>
-    <loc>https://gilead-biostats.github.io/graphicalMCP/reference/example-graphs.html</loc>
+    <loc>https://gilead-biostats.github.io/graphicalMCP/reference/example_graphs.html</loc>
   </url>
   <url>
     <loc>https://gilead-biostats.github.io/graphicalMCP/reference/graph_calculate_power.html</loc>
@@ -70,6 +67,15 @@
     <loc>https://gilead-biostats.github.io/graphicalMCP/reference/graph_rejection_orderings.html</loc>
   </url>
   <url>
+    <loc>https://gilead-biostats.github.io/graphicalMCP/reference/graph_test_closure.html</loc>
+  </url>
+  <url>
+    <loc>https://gilead-biostats.github.io/graphicalMCP/reference/graph_test_fast.html</loc>
+  </url>
+  <url>
+    <loc>https://gilead-biostats.github.io/graphicalMCP/reference/graph_test_shortcut.html</loc>
+  </url>
+  <url>
     <loc>https://gilead-biostats.github.io/graphicalMCP/reference/graph_update.html</loc>
   </url>
   <url>
@@ -77,6 +83,9 @@
   </url>
   <url>
     <loc>https://gilead-biostats.github.io/graphicalMCP/reference/index.html</loc>
+  </url>
+  <url>
+    <loc>https://gilead-biostats.github.io/graphicalMCP/reference/input_val.html</loc>
   </url>
   <url>
     <loc>https://gilead-biostats.github.io/graphicalMCP/reference/plot.initial_graph.html</loc>
@@ -97,9 +106,6 @@
     <loc>https://gilead-biostats.github.io/graphicalMCP/reference/print.updated_graph.html</loc>
   </url>
   <url>
-    <loc>https://gilead-biostats.github.io/graphicalMCP/reference/testing-fast.html</loc>
-  </url>
-  <url>
-    <loc>https://gilead-biostats.github.io/graphicalMCP/reference/testing.html</loc>
+    <loc>https://gilead-biostats.github.io/graphicalMCP/reference/test_values.html</loc>
   </url>
 </urlset>
