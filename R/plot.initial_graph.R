@@ -8,7 +8,7 @@
 #' of commonly used multiple comparison procedure using graphs.
 #'
 #' @param x An object of class `initial_graph` to plot.
-#' @param ... Other arguments passed on to [igraph::plot.igraph()].
+#' @param ... Other arguments passed on to `igraph::plot.igraph()`.
 #' @param v_palette A character vector of length two specifying the colors for
 #'   retained and deleted hypotheses. More extensive color customization must be
 #'   done with `vertex.color`.

@@ -53,8 +53,8 @@
 #'   dimensions as `matrix_weights`, whose hypothesis weights have been
 #'   adjusted according to Simes tests.
 #' * `graphicalMCP:::c_value_function()` returns the difference between
-#'   \eqn{\alpha} and the Type I error of the parametric test with the $c$ value
-#'   of `x`, adjusted for the correlation between test statistics using
+#'   \eqn{\alpha} and the Type I error of the parametric test with the \eqn{c}
+#'   value of `x`, adjusted for the correlation between test statistics using
 #'   parametric tests based on equation (6) of Xi et al. (2017).
 #' * `graphicalMCP:::solve_c_parametric()` returns the c value adjusted for the
 #'   correlation between test statistics using parametric tests based on

@@ -10,7 +10,7 @@
 #' true simultaneously.
 #'
 #' For a graphical multiple comparison procedure with $m$ hypotheses, there are
-#' $2^{m}-1$ intersection hypotheses. For each intersection hypothesis, a test
+#' \eqn{2^m-1} intersection hypotheses. For each intersection hypothesis, a test
 #' type could be chosen to determine how to reject the intersection hypothesis.
 #' Current choices of test types include Bonferroni, Simes and parametric. This
 #' implementation offers a more general framework covering Bretz et al. (2011),
