@@ -5,7 +5,7 @@ template:
 
 reference:
 - title: Creating an initial graph
-- desc: Functions for creating a multiple comparison procedure graph
+- desc: Functions for creating a graphical multiple comparison procedure
 - contents:
   - graph_create
   - print.initial_graph
@@ -14,29 +14,29 @@ reference:
   - as_graphMCP
   - as_igraph
 - title: Updating a graph
-- desc: Functions for removing hypotheses from a graph
+- desc: Functions for updating a graphical multiple comparison procedure after deleting hypotheses
 - contents:
   - graph_update
   - print.updated_graph
   - plot.updated_graph
-- title: Calculating sub-graph weights
-- desc: Functions for generating the weights of the closure
+- title: Calculating hypothesis weights in a closure
+- desc: Function for generating the weighting strategy
 - contents:
   - graph_generate_weights
-- title: Test a graph
-- desc: Functions for running Bonferroni, parametric, and Simes tests
+- title: Testing a graphical multiple comparison procedure
+- desc: Functions for performing a graphical multiple comparison procedure
 - contents:
   - graph_test_closure
   - graph_test_shortcut
   - print.graph_report
   - graph_rejection_orderings
-- title: Run a power simulation
-- desc: Functions for running power simulations
+- title: Power simulation
+- desc: Functions for performing power simulations
 - contents:
   - graph_calculate_power
   - print.power_report
 - title: Example graphs
-- desc: Functions for creating example graphs from a variety of papers
+- desc: Functions for creating example graphical multiple comparison procedures
 - contents:
   - bonferroni
   - bonferroni_holm
