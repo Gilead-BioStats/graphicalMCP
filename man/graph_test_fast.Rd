@@ -25,8 +25,6 @@ the appropriate test types (Bonferroni, Simes, or parametric).}
 
 \item{matrix_intersections}{A matrix of hypothesis indicators in a weighting
 strategy, which are the first half the \code{\link[=graph_generate_weights]{graph_generate_weights()}} output.}
-
-\item{graph}{An initial graph as returned by \code{\link[=graph_create]{graph_create()}}.}
 }
 \value{
 A logical or integer vector indicating whether each hypothesis can
@@ -69,15 +67,5 @@ procedures.
 \item \code{\link[=graph_test_shortcut]{graph_test_shortcut()}} for shortcut graphical multiple comparison
 procedures.
 }
-
-Other graphical tests: 
-\code{\link{adjust_p_bonferroni}()},
-\code{\link{adjust_weights_parametric}()},
-\code{\link{graph_rejection_orderings}()},
-\code{\link{graph_test_closure}()},
-\code{\link{graph_test_shortcut}()},
-\code{\link{print.graph_report}()},
-\code{\link{test_values_bonferroni}()}
 }
-\concept{graphical tests}
 \keyword{internal}

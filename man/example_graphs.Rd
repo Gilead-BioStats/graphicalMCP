@@ -72,43 +72,57 @@ bonferroni_holm(hypotheses = rep(1 / 3, 3))
 # Huque et al. (2011)
 huque_etal()
 # Wiens (2003)
-fallback(rep(1 / 3, 3))
+fallback(hypotheses = rep(1 / 3, 3))
 # Wiens and Dmitrienko (2005)
-fallback_improved_1(rep(1 / 3, 3))
+fallback_improved_1(hypotheses = rep(1 / 3, 3))
 # Bretz et al. (2009)
-fallback_improved_2(rep(1 / 3, 3))
+fallback_improved_2(hypotheses = rep(1 / 3, 3))
 # Maurer et al. (1995); Westfall and Krishen (2001)
-fixed_sequence(3)
+fixed_sequence(num_hyps = 3)
 # Figure 1 in Bretz et al. (2011)
 simple_successive_1()
 # Figure 4 in Bretz et al. (2011)
 simple_successive_2()
 # Create a random graph with three hypotheses
-random_graph(3)
+random_graph(num_hyps = 3)
 # Figure 6 in Xi and Bretz et al. (2019)
 two_doses_two_primary_two_secondary()
 # Add another dose to Figure 6 in Xi and Bretz et al. (2019)
 three_doses_two_primary_two_secondary()
 }
 \references{
-\itemize{
-\item \insertRef{bretz-2009-graphical}{graphicalMCP}
-\item \insertRef{bretz-2011-graphical}{graphicalMCP}
-\item \insertRef{huque-2011-addressing}{graphicalMCP}
-\item \insertRef{maurer-1995-multiple}{graphicalMCP}
-\item \insertRef{westfall-2001-optimally}{graphicalMCP}
-\item \insertRef{wiens-2003-fixed}{graphicalMCP}
-\item \insertRef{wiens-2005-fallback}{graphicalMCP}
-\item \insertRef{xi-2019-symmetric}{graphicalMCP}
-}
+Bretz, F., Maurer, W., Brannath, W., and Posch, M. (2009). A graphical
+approach to sequentially rejective multiple test procedures.
+\emph{Statistics in Medicine}, 28(4), 586-604.
+
+Bretz, F., Posch, M., Glimm, E., Klinglmueller, F., Maurer, W., and
+Rohmeyer, K. (2011). Graphical approaches for multiple comparison
+procedures using weighted Bonferroni, Simes, or parametric tests.
+\emph{Biometrical Journal}, 53(6), 894-913.
+
+Huque, M. F., Alosh, M., and Bhore, R. (2011). Addressing multiplicity
+issues of a composite endpoint and its components in clinical trials.
+\emph{Journal of Biopharmaceutical Statistics}, 21(4), 610-634.
+
+Maurer, W., Hothorn, L., and Lehmacher, W. (1995). Multiple comparisons in
+drug clinical trials and preclinical assays: a-priori ordered hypotheses.
+\emph{Biometrie in der chemisch-pharmazeutischen Industrie}, 6, 3-18.
+
+Westfall, P. H., and Krishen, A. (2001). Optimally weighted, fixed sequence
+and gatekeeper multiple testing procedures.
+\emph{Journal of Statistical Planning and Inference}, 99(1), 25-40.
+
+Wiens, B. L. (2003). A fixed sequence Bonferroni procedure for testing
+multiple endpoints. \emph{Pharmaceutical Statistics}, 2(3), 211-215.
+
+Wiens, B. L., and Dmitrienko, A. (2005). The fallback procedure for
+evaluating a single family of hypotheses.
+\emph{Journal of Biopharmaceutical Statistics}, 15(6), 929-942.
+
+Xi, D., and Bretz, F. (2019). Symmetric graphs for equally weighted tests,
+with application to the Hochberg procedure. \emph{Statistics in Medicine},
+38(27), 5268-5282.
 }
 \seealso{
 \code{\link[=graph_create]{graph_create()}} for a general way to create the initial graph.
-
-Other initial graphs: 
-\code{\link{as_initial_graph}()},
-\code{\link{graph_create}()},
-\code{\link{plot.initial_graph}()},
-\code{\link{print.initial_graph}()}
 }
-\concept{initial graphs}

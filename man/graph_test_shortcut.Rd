@@ -65,18 +65,17 @@ which are the list of all hypotheses for \code{\link[=graph_test_shortcut]{graph
 }
 \description{
 Shortcut graphical multiple comparison procedures are sequentially rejective
-procedure based on \insertCite{bretz-2009-graphical;textual}{graphicalMCP}.
-With $m$ hypotheses, there are at most $m$ steps to obtain all rejection
-decisions. These procedure are equivalent to closed graphical multiple
-comparison procedures using Bonferroni tests for intersection hypotheses,
-but shortcut procedures are faster to perform. See
-\code{vignette("shortcut-testing")} for more illustration of shortcut procedures
-and interpretation of their outputs.
+procedure based on Bretz et al. (2009). With $m$ hypotheses, there are at
+most $m$ steps to obtain all rejection decisions. These procedure are
+equivalent to closed graphical multiple comparison procedures using
+Bonferroni tests for intersection hypotheses, but shortcut procedures are
+faster to perform. See \code{vignette("shortcut-testing")} for more illustration
+of shortcut procedures and interpretation of their outputs.
 }
 \examples{
 # A graphical multiple comparison procedure with two primary hypotheses (H1
 # and H2) and two secondary hypotheses (H3 and H4)
-# See Figure 1 in \insertCite{bretz-2011-graphical;textual}{graphicalMCP}.
+# See Figure 1 in Bretz et al. (2011).
 hypotheses <- c(0.5, 0.5, 0, 0)
 transitions <- rbind(
   c(0, 0, 1, 0),
@@ -91,10 +90,14 @@ alpha <- 0.025
 graph_test_shortcut(g, p, alpha)
 }
 \references{
-\itemize{
-\item \insertRef{bretz-2009-graphical}{graphicalMCP}
-\item \insertRef{bretz-2011-graphical}{graphicalMCP}
-}
+Bretz, F., Maurer, W., Brannath, W., and Posch, M. (2009). A graphical
+approach to sequentially rejective multiple test procedures.
+\emph{Statistics in Medicine}, 28(4), 586-604.
+
+Bretz, F., Posch, M., Glimm, E., Klinglmueller, F., Maurer, W., and
+Rohmeyer, K. (2011). Graphical approaches for multiple comparison
+procedures using weighted Bonferroni, Simes, or parametric tests.
+\emph{Biometrical Journal}, 53(6), 894-913.
 }
 \seealso{
 \itemize{
@@ -102,14 +105,4 @@ graph_test_shortcut(g, p, alpha)
 the closed test,
 \item \code{\link[=graph_rejection_orderings]{graph_rejection_orderings()}} for all possible rejection orderings.
 }
-
-Other graphical tests: 
-\code{\link{adjust_p_bonferroni}()},
-\code{\link{adjust_weights_parametric}()},
-\code{\link{graph_rejection_orderings}()},
-\code{\link{graph_test_closure}()},
-\code{\link{graph_test_closure_fast}()},
-\code{\link{print.graph_report}()},
-\code{\link{test_values_bonferroni}()}
 }
-\concept{graphical tests}

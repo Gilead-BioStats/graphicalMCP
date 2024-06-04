@@ -7,22 +7,24 @@
 #' @param x An object of the class `power_report` to print
 #' @inheritParams print.graph_report
 #'
-#' @family graphical power
-#'
 #' @rdname print.power_report
-#'
-#' @importFrom Rdpack reprompt
 #'
 #' @export
 #'
 #' @references
-#'  * \insertRef{bretz-2011-graphical}{graphicalMCP}
-#'  * \insertRef{bretz-2011-test}{graphicalMCP}
+#'   Bretz, F., Posch, M., Glimm, E., Klinglmueller, F., Maurer, W., and
+#'   Rohmeyer, K. (2011a). Graphical approaches for multiple comparison
+#'   procedures using weighted Bonferroni, Simes, or parametric tests.
+#'   \emph{Biometrical Journal}, 53(6), 894-913.
+#'
+#'   Bretz, F., Maurer, W., and Hommel, G. (2011b). Test and power
+#'   considerations for multiple endpoint analyses using sequentially rejective
+#'   graphical procedures. \emph{Statistics in Medicine}, 30(13), 1489-1501.
 #'
 #' @examples
 #' # A graphical multiple comparison procedure with two primary hypotheses (H1
 #' # and H2) and two secondary hypotheses (H3 and H4)
-#' # See Figure 4 in \insertCite{bretz-2011-graphical;textual}{graphicalMCP}.
+#' # See Figure 4 in Bretz et al. (2011).
 #' alpha <- 0.025
 #' hypotheses <- c(0.5, 0.5, 0, 0)
 #' delta <- 0.5

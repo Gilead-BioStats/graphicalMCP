@@ -11,9 +11,13 @@ edge_pairs(graph)
 }
 \value{
 A list of vertex pairs which are connected in both directions. NULL
-if no such pairs are found
+if no such pairs are found.
 }
 \description{
-Find pairs of vertices that are connected in both directions
+For an initial graph, find pairs of hypotheses that are connected in both
+directions. This is used to plot graphs using \code{\link[=plot.initial_graph]{plot.initial_graph()}}.
+}
+\examples{
+graphicalMCP:::edge_pairs(bonferroni_holm(hypotheses = rep(1 / 3, 3)))
 }
 \keyword{internal}

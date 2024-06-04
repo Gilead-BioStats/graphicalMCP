@@ -26,7 +26,7 @@
 #'   possible direction) are detected automatically and get 0.25 curvature.
 #'   Adjust edges by adding an entry with name `"vertex1|vertex2`, and adjust
 #'   default edge pairs curvature by adding an entry with name `"pairs"` -
-#'   `edge_curves = c("pairs" = .5, "H1|H3" = .25, "H3|H4" = .75)`.
+#'   `edge_curves = c("pairs" = 0.5, "H1|H3" = 0.25, "H3|H4" = 0.75)`.
 #' @param precision An integer scalar indicating the number of decimal places
 #'   to to display.
 #' @param eps A numeric scalar. The transition weight of `eps` will be
@@ -60,26 +60,28 @@
 #' edge's curve to some very small value, an effectively straight edge can be
 #' shifted to a new position.
 #'
-#' @family initial graphs
-#'
 #' @seealso
 #'   [plot.updated_graph()] for the plot method for the updated graph after
 #'   hypotheses being deleted from the initial graph.
 #'
 #' @rdname plot.initial_graph
 #'
-#' @importFrom Rdpack reprompt
-#'
 #' @export
 #'
 #' @references
-#'  * \insertRef{bretz-2011-graphical}{graphicalMCP}
-#'  * \insertRef{xi-2019-symmetric}{graphicalMCP}
+#'   Bretz, F., Posch, M., Glimm, E., Klinglmueller, F., Maurer, W., and
+#'   Rohmeyer, K. (2011). Graphical approaches for multiple comparison
+#'   procedures using weighted Bonferroni, Simes, or parametric tests.
+#'   \emph{Biometrical Journal}, 53(6), 894-913.
+#'
+#'   Xi, D., and Bretz, F. (2019). Symmetric graphs for equally weighted tests,
+#'   with application to the Hochberg procedure. \emph{Statistics in Medicine},
+#'   38(27), 5268-5282.
 #'
 #' @examples
 #' # A graphical multiple comparison procedure with two primary hypotheses (H1
 #' # and H2) and two secondary hypotheses (H3 and H4)
-#' # See Figure 4 in \insertCite{bretz-2011-graphical;textual}{graphicalMCP}.
+#' # See Figure 4 in Bretz et al. (2011).
 #' hypotheses <- c(0.5, 0.5, 0, 0)
 #' delta <- 0.5
 #' transitions <- rbind(
@@ -93,7 +95,7 @@
 #'
 #' # A graphical multiple comparison procedure with two primary hypotheses (H1
 #' # and H2) and four secondary hypotheses (H31, H32, H41, and H42)
-#' # See Figure 6 in \insertCite{xi-2019-symmetric;textual}{graphicalMCP}.
+#' # See Figure 6 in Xi and Bretz (2019).
 #' hypotheses <- c(0.5, 0.5, 0, 0, 0, 0)
 #' epsilon <- 1e-5
 #' transitions <- rbind(

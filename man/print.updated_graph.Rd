@@ -27,7 +27,7 @@ deleted (if available).
 \examples{
 # A graphical multiple comparison procedure with two primary hypotheses (H1
 # and H2) and two secondary hypotheses (H3 and H4)
-# See Figure 1 in \insertCite{bretz-2011-graphical;textual}{graphicalMCP}.
+# See Figure 1 in Bretz et al. (2011).
 hypotheses <- c(0.5, 0.5, 0, 0)
 transitions <- rbind(
   c(0, 0, 1, 0),
@@ -46,15 +46,11 @@ graph_update(g, delete = c(FALSE, TRUE, TRUE, FALSE))
 graph_update(g, delete = 2:3)
 }
 \references{
-\itemize{
-\item \insertRef{bretz-2011-graphical}{graphicalMCP}
-}
+Bretz, F., Posch, M., Glimm, E., Klinglmueller, F., Maurer, W., and
+Rohmeyer, K. (2011a). Graphical approaches for multiple comparison
+procedures using weighted Bonferroni, Simes, or parametric tests.
+\emph{Biometrical Journal}, 53(6), 894-913.
 }
 \seealso{
 \code{\link[=print.initial_graph]{print.initial_graph()}} for the print method for the initial graph.
-
-Other updated graphs: 
-\code{\link{graph_update}()},
-\code{\link{plot.updated_graph}()}
 }
-\concept{updated graphs}

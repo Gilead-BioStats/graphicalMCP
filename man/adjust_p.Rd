@@ -8,7 +8,14 @@
 \usage{
 adjust_p_bonferroni(p, hypotheses)
 
-adjust_p_parametric(p, hypotheses, test_corr = NULL)
+adjust_p_parametric(
+  p,
+  hypotheses,
+  test_corr = NULL,
+  maxpts = 25000,
+  abseps = 1e-06,
+  releps = 0
+)
 
 adjust_p_simes(p, hypotheses)
 }
@@ -24,6 +31,18 @@ values between 0 & 1 (inclusive). The length should match the length of
 statistics, which is needed to perform parametric tests using
 \code{graphicalMCP:::adjust_p_parametric()}. The number of rows and columns of
 this correlation matrix should match the length of \code{p}.}
+
+\item{maxpts}{(Optional) An integer scalar for the maximum number of function
+values, which is needed to perform parametric tests using the
+\code{mvtnorm::GenzBretz} algorithm. The default is 25000.}
+
+\item{abseps}{(Optional) A numeric scalar for the absolute error tolerance,
+which is needed to perform parametric tests using the \code{mvtnorm::GenzBretz}
+algorithm. The default is 1e-6.}
+
+\item{releps}{(Optional) A numeric scalar for the relative error tolerance
+as double, which is needed to perform parametric tests using the
+\code{mvtnorm::GenzBretz} algorithm. The default is 0.}
 }
 \value{
 A single adjusted p-value for the intersection hypothesis.
@@ -32,20 +51,19 @@ A single adjusted p-value for the intersection hypothesis.
 For an intersection hypothesis, an adjusted p-value is the smallest
 significance level at which the intersection hypothesis can be rejected.
 The intersection hypothesis can be rejected if its adjusted p-value is less
-than or equal to \eqn{\alpha}. Currently, there are three test types supported:
+than or equal to \eqn{\alpha}. Currently, there are three test types
+supported:
 \itemize{
 \item Bonferroni tests for \code{graphicalMCP:::adjust_p_bonferroni()},
-\item Parametric tests \insertCite{xi-2017-unified}{graphicalMCP} for
-\code{graphicalMCP:::adjust_p_parametric()},
+\item Parametric tests for \code{graphicalMCP:::adjust_p_parametric()},
 \itemize{
 \item Note that one-sided tests are required for parametric tests.
 }
-\item Simes tests \insertCite{lu-2016-graphical}{graphicalMCP} for
-\code{graphicalMCP:::adjust_p_simes()}.
+\item Simes tests for \code{graphicalMCP:::adjust_p_simes()}.
 }
 }
 \examples{
-set.seed(22723)
+set.seed(1234)
 
 hypotheses <- c(H1 = 0.5, H2 = 0.25, H3 = 0.25)
 p <- c(0.019, 0.025, 0.05)
@@ -57,27 +75,26 @@ graphicalMCP:::adjust_p_bonferroni(p, hypotheses)
 graphicalMCP:::adjust_p_simes(p, hypotheses)
 
 # Parametric test
-# Using the `mvtnorm::GenzBretz` algorithm with `abseps = 1e-6`
+# Using the `mvtnorm::GenzBretz` algorithm
 corr <- matrix(0.5, nrow = 3, ncol = 3)
 diag(corr) <- 1
 graphicalMCP:::adjust_p_parametric(p, hypotheses, corr)
 }
 \references{
-\itemize{
-\item \insertRef{bretz-2009-graphical}{graphicalMCP}
-\item \insertRef{lu-2016-graphical}{graphicalMCP}
-\item \insertRef{xi-2017-unified}{graphicalMCP}
-}
+Bretz, F., Maurer, W., Brannath, W., and Posch, M. (2009). A graphical
+approach to sequentially rejective multiple test procedures.
+\emph{Statistics in Medicine}, 28(4), 586-604.
+
+Lu, K. (2016). Graphical approaches using a Bonferroni mixture of weighted
+Simes tests. \emph{Statistics in Medicine}, 35(22), 4041-4055.
+
+Xi, D., Glimm, E., Maurer, W., and Bretz, F. (2017). A unified framework
+for weighted parametric multiple test procedures.
+\emph{Biometrical Journal}, 59(5), 918-931.
 }
 \seealso{
-Other graphical tests: 
-\code{\link{adjust_weights_parametric}()},
-\code{\link{graph_rejection_orderings}()},
-\code{\link{graph_test_closure}()},
-\code{\link{graph_test_closure_fast}()},
-\code{\link{graph_test_shortcut}()},
-\code{\link{print.graph_report}()},
-\code{\link{test_values_bonferroni}()}
+\code{graphicalMCP:::adjust_weights_parametric()} for adjusted hypothesis
+weights using parametric tests, \code{graphicalMCP:::adjust_weights_simes()}
+for adjusted hypothesis weights using Simes tests.
 }
-\concept{graphical tests}
 \keyword{internal}

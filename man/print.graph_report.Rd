@@ -26,7 +26,7 @@ significance levels, rejection decisions, and optional detailed test results.
 \examples{
 # A graphical multiple comparison procedure with two primary hypotheses (H1
 # and H2) and two secondary hypotheses (H3 and H4)
-# See Figure 1 in \insertCite{bretz-2011-graphical;textual}{graphicalMCP}.
+# See Figure 1 in Bretz et al. (2011).
 hypotheses <- c(0.5, 0.5, 0, 0)
 transitions <- rbind(
   c(0, 0, 1, 0),
@@ -41,18 +41,8 @@ alpha <- 0.025
 graph_test_shortcut(g, p, alpha)
 }
 \references{
-\itemize{
-\item \insertRef{bretz-2011-graphical}{graphicalMCP}
+Bretz, F., Posch, M., Glimm, E., Klinglmueller, F., Maurer, W., and
+Rohmeyer, K. (2011). Graphical approaches for multiple comparison
+procedures using weighted Bonferroni, Simes, or parametric tests.
+\emph{Biometrical Journal}, 53(6), 894-913.
 }
-}
-\seealso{
-Other graphical tests: 
-\code{\link{adjust_p_bonferroni}()},
-\code{\link{adjust_weights_parametric}()},
-\code{\link{graph_rejection_orderings}()},
-\code{\link{graph_test_closure}()},
-\code{\link{graph_test_closure_fast}()},
-\code{\link{graph_test_shortcut}()},
-\code{\link{test_values_bonferroni}()}
-}
-\concept{graphical tests}

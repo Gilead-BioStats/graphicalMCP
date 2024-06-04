@@ -44,7 +44,7 @@ specific edges. Edge pairs (Where two vertices share an edge in each
 possible direction) are detected automatically and get 0.25 curvature.
 Adjust edges by adding an entry with name \verb{"vertex1|vertex2}, and adjust
 default edge pairs curvature by adding an entry with name \code{"pairs"} -
-\code{edge_curves = c("pairs" = .5, "H1|H3" = .25, "H3|H4" = .75)}.}
+\code{edge_curves = c("pairs" = 0.5, "H1|H3" = 0.25, "H3|H4" = 0.75)}.}
 
 \item{precision}{An integer scalar indicating the number of decimal places
 to to display.}
@@ -97,7 +97,7 @@ shifted to a new position.
 \examples{
 # A graphical multiple comparison procedure with two primary hypotheses (H1
 # and H2) and two secondary hypotheses (H3 and H4)
-# See Figure 4 in \insertCite{bretz-2011-graphical;textual}{graphicalMCP}.
+# See Figure 4 in Bretz et al. (2011).
 hypotheses <- c(0.5, 0.5, 0, 0)
 delta <- 0.5
 transitions <- rbind(
@@ -111,7 +111,7 @@ plot(g)
 
 # A graphical multiple comparison procedure with two primary hypotheses (H1
 # and H2) and four secondary hypotheses (H31, H32, H41, and H42)
-# See Figure 6 in \insertCite{xi-2019-symmetric;textual}{graphicalMCP}.
+# See Figure 6 in Xi and Bretz (2019).
 hypotheses <- c(0.5, 0.5, 0, 0, 0, 0)
 epsilon <- 1e-5
 transitions <- rbind(
@@ -137,19 +137,16 @@ plot_layout <- rbind(
 plot(g, layout = plot_layout, eps = epsilon, edge_curves = c(pairs = .5))
 }
 \references{
-\itemize{
-\item \insertRef{bretz-2011-graphical}{graphicalMCP}
-\item \insertRef{xi-2019-symmetric}{graphicalMCP}
-}
+Bretz, F., Posch, M., Glimm, E., Klinglmueller, F., Maurer, W., and
+Rohmeyer, K. (2011). Graphical approaches for multiple comparison
+procedures using weighted Bonferroni, Simes, or parametric tests.
+\emph{Biometrical Journal}, 53(6), 894-913.
+
+Xi, D., and Bretz, F. (2019). Symmetric graphs for equally weighted tests,
+with application to the Hochberg procedure. \emph{Statistics in Medicine},
+38(27), 5268-5282.
 }
 \seealso{
 \code{\link[=plot.updated_graph]{plot.updated_graph()}} for the plot method for the updated graph after
 hypotheses being deleted from the initial graph.
-
-Other initial graphs: 
-\code{\link{as_initial_graph}()},
-\code{\link{bonferroni}()},
-\code{\link{graph_create}()},
-\code{\link{print.initial_graph}()}
 }
-\concept{initial graphs}

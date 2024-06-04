@@ -29,7 +29,7 @@ specific edges. Edge pairs (Where two vertices share an edge in each
 possible direction) are detected automatically and get 0.25 curvature.
 Adjust edges by adding an entry with name \verb{"vertex1|vertex2}, and adjust
 default edge pairs curvature by adding an entry with name \code{"pairs"} -
-\code{edge_curves = c("pairs" = .5, "H1|H3" = .25, "H3|H4" = .75)}.}
+\code{edge_curves = c("pairs" = 0.5, "H1|H3" = 0.25, "H3|H4" = 0.75)}.}
     \item{\code{precision}}{An integer scalar indicating the number of decimal places
 to to display.}
     \item{\code{eps}}{A numeric scalar. The transition weight of \code{eps} will be
@@ -53,7 +53,7 @@ for deleted hypotheses.
 \examples{
 # A graphical multiple comparison procedure with two primary hypotheses (H1
 # and H2) and two secondary hypotheses (H3 and H4)
-# See Figure 1 in \insertCite{bretz-2011-graphical;textual}{graphicalMCP}.
+# See Figure 1 in Bretz et al. (2011).
 hypotheses <- c(0.5, 0.5, 0, 0)
 transitions <- rbind(
   c(0, 0, 1, 0),
@@ -73,15 +73,11 @@ plot(
 )
 }
 \references{
-\itemize{
-\item \insertRef{bretz-2011-graphical}{graphicalMCP}
-}
+Bretz, F., Posch, M., Glimm, E., Klinglmueller, F., Maurer, W., and
+Rohmeyer, K. (2011). Graphical approaches for multiple comparison
+procedures using weighted Bonferroni, Simes, or parametric tests.
+\emph{Biometrical Journal}, 53(6), 894-913.
 }
 \seealso{
 \code{\link[=plot.initial_graph]{plot.initial_graph()}} for the plot method for the initial graph.
-
-Other updated graphs: 
-\code{\link{graph_update}()},
-\code{\link{print.updated_graph}()}
 }
-\concept{updated graphs}

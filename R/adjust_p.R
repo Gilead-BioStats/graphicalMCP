@@ -4,13 +4,12 @@
 #' For an intersection hypothesis, an adjusted p-value is the smallest
 #' significance level at which the intersection hypothesis can be rejected.
 #' The intersection hypothesis can be rejected if its adjusted p-value is less
-#' than or equal to \eqn{\alpha}. Currently, there are three test types supported:
+#' than or equal to \eqn{\alpha}. Currently, there are three test types
+#' supported:
 #' * Bonferroni tests for `graphicalMCP:::adjust_p_bonferroni()`,
-#' * Parametric tests \insertCite{xi-2017-unified}{graphicalMCP} for
-#'   `graphicalMCP:::adjust_p_parametric()`,
+#' * Parametric tests for `graphicalMCP:::adjust_p_parametric()`,
 #'     - Note that one-sided tests are required for parametric tests.
-#' * Simes tests \insertCite{lu-2016-graphical}{graphicalMCP} for
-#'   `graphicalMCP:::adjust_p_simes()`.
+#' * Simes tests for `graphicalMCP:::adjust_p_simes()`.
 #'
 #' @param p A numeric vector of p-values (unadjusted, raw), whose values should
 #'   be between 0 & 1. The length should match the length of `hypotheses`.
@@ -21,24 +20,41 @@
 #'   statistics, which is needed to perform parametric tests using
 #'   `graphicalMCP:::adjust_p_parametric()`. The number of rows and columns of
 #'   this correlation matrix should match the length of `p`.
+#' @param maxpts (Optional) An integer scalar for the maximum number of function
+#'   values, which is needed to perform parametric tests using the
+#'   `mvtnorm::GenzBretz` algorithm. The default is 25000.
+#' @param abseps (Optional) A numeric scalar for the absolute error tolerance,
+#'   which is needed to perform parametric tests using the `mvtnorm::GenzBretz`
+#'   algorithm. The default is 1e-6.
+#' @param releps (Optional) A numeric scalar for the relative error tolerance
+#'   as double, which is needed to perform parametric tests using the
+#'   `mvtnorm::GenzBretz` algorithm. The default is 0.
 #'
 #' @return A single adjusted p-value for the intersection hypothesis.
 #'
-#' @family graphical tests
+#' @seealso
+#'   `graphicalMCP:::adjust_weights_parametric()` for adjusted hypothesis
+#'   weights using parametric tests, `graphicalMCP:::adjust_weights_simes()`
+#'   for adjusted hypothesis weights using Simes tests.
 #'
 #' @rdname adjust_p
-#'
-#' @importFrom Rdpack reprompt
 #'
 #' @keywords internal
 #'
 #' @references
-#'  * \insertRef{bretz-2009-graphical}{graphicalMCP}
-#'  * \insertRef{lu-2016-graphical}{graphicalMCP}
-#'  * \insertRef{xi-2017-unified}{graphicalMCP}
+#'   Bretz, F., Maurer, W., Brannath, W., and Posch, M. (2009). A graphical
+#'   approach to sequentially rejective multiple test procedures.
+#'   \emph{Statistics in Medicine}, 28(4), 586-604.
+#'
+#'   Lu, K. (2016). Graphical approaches using a Bonferroni mixture of weighted
+#'   Simes tests. \emph{Statistics in Medicine}, 35(22), 4041-4055.
+#'
+#'   Xi, D., Glimm, E., Maurer, W., and Bretz, F. (2017). A unified framework
+#'   for weighted parametric multiple test procedures.
+#'   \emph{Biometrical Journal}, 59(5), 918-931.
 #'
 #' @examples
-#' set.seed(22723)
+#' set.seed(1234)
 #'
 #' hypotheses <- c(H1 = 0.5, H2 = 0.25, H3 = 0.25)
 #' p <- c(0.019, 0.025, 0.05)
@@ -50,7 +66,7 @@
 #' graphicalMCP:::adjust_p_simes(p, hypotheses)
 #'
 #' # Parametric test
-#' # Using the `mvtnorm::GenzBretz` algorithm with `abseps = 1e-6`
+#' # Using the `mvtnorm::GenzBretz` algorithm
 #' corr <- matrix(0.5, nrow = 3, ncol = 3)
 #' diag(corr) <- 1
 #' graphicalMCP:::adjust_p_parametric(p, hypotheses, corr)
@@ -68,7 +84,13 @@ adjust_p_bonferroni <- function(p, hypotheses) {
 }
 
 #' @rdname adjust_p
-adjust_p_parametric <- function(p, hypotheses, test_corr = NULL) {
+#' @keywords internal
+adjust_p_parametric <- function(p,
+                                hypotheses,
+                                test_corr = NULL,
+                                maxpts = 25000,
+                                abseps = 1e-6,
+                                releps = 0) {
   if (sum(hypotheses) == 0) {
     return(Inf)
   }
@@ -84,7 +106,11 @@ adjust_p_parametric <- function(p, hypotheses, test_corr = NULL) {
       lower = -Inf,
       upper = z,
       corr = test_corr[w_nonzero, w_nonzero, drop = FALSE],
-      algorithm = mvtnorm::GenzBretz(maxpts = 25000, abseps = 1e-6, releps = 0)
+      algorithm = mvtnorm::GenzBretz(
+        maxpts = maxpts,
+        abseps = abseps,
+        releps = releps
+      )
     )[[1]]
   )
 
@@ -95,6 +121,7 @@ adjust_p_parametric <- function(p, hypotheses, test_corr = NULL) {
 }
 
 #' @rdname adjust_p
+#' @keywords internal
 adjust_p_simes <- function(p, hypotheses) {
   if (sum(hypotheses) == 0) {
     return(Inf)

@@ -22,18 +22,21 @@
 #'       - For parametric tests, the significance level is the c value times
 #'         the hypothesis weight times \eqn{\alpha}.
 #'
-#' @family graphical tests
-#'
 #' @rdname test_values
-#'
-#' @importFrom Rdpack reprompt
 #'
 #' @keywords internal
 #'
 #' @references
-#'  * \insertRef{bretz-2011-graphical}{graphicalMCP}
-#'  * \insertRef{lu-2016-graphical}{graphicalMCP}
-#'  * \insertRef{xi-2017-unified}{graphicalMCP}
+#'   Bretz, F., Maurer, W., Brannath, W., and Posch, M. (2009). A graphical
+#'   approach to sequentially rejective multiple test procedures.
+#'   \emph{Statistics in Medicine}, 28(4), 586-604.
+#'
+#'   Lu, K. (2016). Graphical approaches using a Bonferroni mixture of weighted
+#'   Simes tests. \emph{Statistics in Medicine}, 35(22), 4041-4055.
+#'
+#'   Xi, D., Glimm, E., Maurer, W., and Bretz, F. (2017). A unified framework
+#'   for weighted parametric multiple test procedures.
+#'   \emph{Biometrical Journal}, 59(5), 918-931.
 #'
 #' @examples
 #' alpha <- 0.025
@@ -71,6 +74,7 @@ test_values_bonferroni <- function(p, hypotheses, alpha, intersection = NA) {
 }
 
 #' @rdname test_values
+#' @keywords internal
 test_values_parametric <- function(p,
                                    hypotheses,
                                    alpha,
@@ -100,6 +104,7 @@ test_values_parametric <- function(p,
 }
 
 #' @rdname test_values
+#' @keywords internal
 test_values_simes <- function(p, hypotheses, alpha, intersection = NA) {
   if (length(p) == 0) {
     NULL

@@ -22,8 +22,6 @@
 #' @return A logical or integer vector indicating whether each hypothesis can
 #'   be rejected or not.
 #'
-#' @family graphical tests
-#'
 #' @seealso
 #'   * [graph_test_closure()] for closed graphical multiple comparison
 #'   procedures.
@@ -33,8 +31,6 @@
 #' @rdname graph_test_fast
 #'
 #' @keywords internal
-#'
-#' @export
 #'
 #' @examples
 #' set.seed(1234)
@@ -72,6 +68,7 @@ graph_test_closure_fast <- function(p,
 }
 
 #' @rdname graph_test_fast
+#' @keywords internal
 graph_test_shortcut_fast <- function(p, alpha, adjusted_weights) {
   num_hyps <- ncol(adjusted_weights)
   # There is a mapping from current rejected hypotheses to corresponding row of

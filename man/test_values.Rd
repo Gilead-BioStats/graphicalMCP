@@ -80,21 +80,15 @@ graphicalMCP:::test_values_parametric(
 graphicalMCP:::test_values_simes(p, hypotheses, alpha)
 }
 \references{
-\itemize{
-\item \insertRef{bretz-2011-graphical}{graphicalMCP}
-\item \insertRef{lu-2016-graphical}{graphicalMCP}
-\item \insertRef{xi-2017-unified}{graphicalMCP}
+Bretz, F., Maurer, W., Brannath, W., and Posch, M. (2009). A graphical
+approach to sequentially rejective multiple test procedures.
+\emph{Statistics in Medicine}, 28(4), 586-604.
+
+Lu, K. (2016). Graphical approaches using a Bonferroni mixture of weighted
+Simes tests. \emph{Statistics in Medicine}, 35(22), 4041-4055.
+
+Xi, D., Glimm, E., Maurer, W., and Bretz, F. (2017). A unified framework
+for weighted parametric multiple test procedures.
+\emph{Biometrical Journal}, 59(5), 918-931.
 }
-}
-\seealso{
-Other graphical tests: 
-\code{\link{adjust_p_bonferroni}()},
-\code{\link{adjust_weights_parametric}()},
-\code{\link{graph_rejection_orderings}()},
-\code{\link{graph_test_closure}()},
-\code{\link{graph_test_closure_fast}()},
-\code{\link{graph_test_shortcut}()},
-\code{\link{print.graph_report}()}
-}
-\concept{graphical tests}
 \keyword{internal}

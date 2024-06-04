@@ -10,4 +10,4 @@
 # graphicalMCP 0.1.2
 
 * Updated function documentation
-* Updated reference and added the dependency package Rdpack
+* Updated references

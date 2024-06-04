@@ -59,7 +59,7 @@ than 1.
 \examples{
 # A graphical multiple comparison procedure with two primary hypotheses (H1
 # and H2) and two secondary hypotheses (H3 and H4)
-# See Figure 1 in \insertCite{bretz-2011-graphical;textual}{graphicalMCP}.
+# See Figure 1 in Bretz et al. (2011).
 hypotheses <- c(0.5, 0.5, 0, 0)
 transitions <- rbind(
   c(0, 0, 1, 0),
@@ -116,19 +116,16 @@ g <- graph_create(hypotheses, transitions)
 g
 }
 \references{
-\itemize{
-\item \insertRef{bretz-2009-graphical}{graphicalMCP}
-\item \insertRef{bretz-2011-graphical}{graphicalMCP}
-}
+Bretz, F., Maurer, W., Brannath, W., and Posch, M. (2009). A graphical
+approach to sequentially rejective multiple test procedures.
+\emph{Statistics in Medicine}, 28(4), 586-604.
+
+Bretz, F., Posch, M., Glimm, E., Klinglmueller, F., Maurer, W., and
+Rohmeyer, K. (2011). Graphical approaches for multiple comparison
+procedures using weighted Bonferroni, Simes, or parametric tests.
+\emph{Biometrical Journal}, 53(6), 894-913.
 }
 \seealso{
 \code{\link[=graph_update]{graph_update()}} for the updated graph after hypotheses being deleted
 from the initial graph.
-
-Other initial graphs: 
-\code{\link{as_initial_graph}()},
-\code{\link{bonferroni}()},
-\code{\link{plot.initial_graph}()},
-\code{\link{print.initial_graph}()}
 }
-\concept{initial graphs}

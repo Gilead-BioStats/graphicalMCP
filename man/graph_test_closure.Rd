@@ -93,12 +93,9 @@ For a graphical multiple comparison procedure with $m$ hypotheses, there are
 $2^{m}-1$ intersection hypotheses. For each intersection hypothesis, a test
 type could be chosen to determine how to reject the intersection hypothesis.
 Current choices of test types include Bonferroni, Simes and parametric. This
-implementation offers a more general framework covering
-\insertCite{bretz-2011-graphical;textual}{graphicalMCP},
-\insertCite{lu-2016-graphical}{graphicalMCP} and
-\insertCite{xi-2017-unified}{graphicalMCP}. See \code{vignette("closed-testing")}
-for more illustration of closed test procedures and interpretation of their
-outputs.
+implementation offers a more general framework covering Bretz et al. (2011),
+Lu (2016), and Xi et al. (2017). See \code{vignette("closed-testing")} for more
+illustration of closed test procedures and interpretation of their outputs.
 }
 \section{Details for test specification}{
 
@@ -116,7 +113,7 @@ of \code{test_groups}. Consistency should be ensured for correct implementation.
 \examples{
 # A graphical multiple comparison procedure with two primary hypotheses
 # (H1 and H2) and two secondary hypotheses (H3 and H4)
-# See Figure 4 in \insertCite{bretz-2011-graphical;textual}{graphicalMCP}.
+# See Figure 4 in Bretz et al. (2011).
 hypotheses <- c(0.5, 0.5, 0, 0)
 delta <- 0.5
 transitions <- rbind(
@@ -172,23 +169,19 @@ graph_test_closure(
 )
 }
 \references{
-\itemize{
-\item \insertRef{bretz-2011-graphical}{graphicalMCP}
-\item \insertRef{lu-2016-graphical}{graphicalMCP}
-\item \insertRef{xi-2017-unified}{graphicalMCP}
-}
+Bretz, F., Posch, M., Glimm, E., Klinglmueller, F., Maurer, W., and
+Rohmeyer, K. (2011). Graphical approaches for multiple comparison
+procedures using weighted Bonferroni, Simes, or parametric tests.
+\emph{Biometrical Journal}, 53(6), 894-913.
+
+Lu, K. (2016). Graphical approaches using a Bonferroni mixture of weighted
+Simes tests. \emph{Statistics in Medicine}, 35(22), 4041-4055.
+
+Xi, D., Glimm, E., Maurer, W., and Bretz, F. (2017). A unified framework
+for weighted parametric multiple test procedures.
+\emph{Biometrical Journal}, 59(5), 918-931.
 }
 \seealso{
 \code{\link[=graph_test_shortcut]{graph_test_shortcut()}} for shortcut graphical multiple comparison
 procedures.
-
-Other graphical tests: 
-\code{\link{adjust_p_bonferroni}()},
-\code{\link{adjust_weights_parametric}()},
-\code{\link{graph_rejection_orderings}()},
-\code{\link{graph_test_closure_fast}()},
-\code{\link{graph_test_shortcut}()},
-\code{\link{print.graph_report}()},
-\code{\link{test_values_bonferroni}()}
 }
-\concept{graphical tests}

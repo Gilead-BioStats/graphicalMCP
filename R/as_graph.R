@@ -5,7 +5,7 @@
 #' `gMCP`, and `igraph` R packages. These functions convert between different
 #' classes to increase compatibility.
 #'
-#' Note that`igraph` and `gMCP` have additional attributes for vertices, edges,
+#' Note that `igraph` and `gMCP` have additional attributes for vertices, edges,
 #' or a graph itself. These conversion functions only handle attributes related
 #' to hypothesis names, hypothesis weights and transition weights. Other
 #' attributes will be dropped when converting.
@@ -20,20 +20,21 @@
 #'   * `as_initial_graph()` returns an `initial_graph` object for the
 #'   `graphicalMCP` package.
 #'
-#' @family initial graphs
-#'
 #' @seealso
 #'   [graph_create()] for the initial graph used in the `graphicalMCP` package.
 #'
 #' @rdname as_graph
 #'
-#' @importFrom Rdpack reprompt
-#'
 #' @export
 #'
 #' @references
-#'  * \insertRef{csardi-2024-igraph}{graphicalMCP}
-#'  * \insertRef{rohmeyer-2024-gmcp}{graphicalMCP}
+#'  Cs{\'a}rdi, G., Nepusz, T., Traag, V., Horv{\'a}t, S., Zanini, F., Noom, D.,
+#'  and M{\"u}ller, K. (2024). \emph{igraph}: Network analysis and visualization
+#'  in R. R package version 2.0.3. \url{https://CRAN.R-project.org/package=igraph}.
+#'
+#'  Rohmeyer, K., and Klinglmueller, K. (2024). \emph{gMCP}: Graph based
+#'  multiple test procedures. R package version 0.8-17.
+#'  \url{https://cran.r-project.org/package=gMCP}.
 #'
 #' @examples
 #' g_graphicalMCP <- random_graph(5)

@@ -31,8 +31,7 @@
 #' Generation of intersection hypotheses is closely related to the power set
 #' of a given set of indices. As the number of hypotheses increases, the memory
 #' and time usage can grow quickly (e.g., at a rate of $O(2^n)$). There are also
-#' multiple ways to implement Algorithm 1 in
-#' \insertCite{bretz-2011-graphical;textual}{graphicalMCP}. See
+#' multiple ways to implement Algorithm 1 in Bretz et al. (2011). See
 #' `vignette("generate-closure")` for more information about generating
 #' intersection hypotheses and comparisons of different approaches to calculate
 #' weighting strategies.
@@ -43,12 +42,13 @@
 #'
 #' @rdname graph_generate_weights
 #'
-#' @importFrom Rdpack reprompt
-#'
 #' @export
 #'
 #' @references
-#'  * \insertRef{bretz-2011-graphical}{graphicalMCP}
+#'   Bretz, F., Posch, M., Glimm, E., Klinglmueller, F., Maurer, W., and
+#'   Rohmeyer, K. (2011). Graphical approaches for multiple comparison
+#'   procedures using weighted Bonferroni, Simes, or parametric tests.
+#'   \emph{Biometrical Journal}, 53(6), 894-913.
 #'
 #' @examples
 #' # A graphical multiple comparison procedure with two primary hypotheses (H1

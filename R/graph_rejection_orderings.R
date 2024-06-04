@@ -7,9 +7,9 @@
 #' adjusted p-values, from the smallest to the largest. This function
 #' [graph_rejection_orderings()] provides all possible and valid orders
 #' (or sequences) of rejections. Although the order of rejection does not affect
-#' the final rejection decisions \insertCite{bretz-2009-graphical}{graphicalMCP},
-#' different sequences could offer different ways to explain the step-by-step
-#' process of shortcut graphical multiple comparison procedures.
+#' the final rejection decisions Bretz et al. (2009), different sequences could
+#' offer different ways to explain the step-by-step process of shortcut
+#' graphical multiple comparison procedures.
 #'
 #' @param shortcut_test_result A `graph_report` object as returned by
 #'   [graph_test_shortcut()].
@@ -17,26 +17,28 @@
 #' @return A modified `graph_report` object containing all valid orderings of
 #'   rejections of hypotheses
 #'
-#' @family graphical tests
-#'
 #' @seealso
 #'   [graph_test_shortcut()] for shortcut graphical multiple comparison
 #'   procedures.
 #'
 #' @rdname graph_rejection_orderings
 #'
-#' @importFrom Rdpack reprompt
-#'
 #' @export
 #'
 #' @references
-#'  * \insertRef{bretz-2009-graphical}{graphicalMCP}
-#'  * \insertRef{bretz-2011-graphical}{graphicalMCP}
+#'   Bretz, F., Maurer, W., Brannath, W., and Posch, M. (2009). A graphical
+#'   approach to sequentially rejective multiple test procedures.
+#'   \emph{Statistics in Medicine}, 28(4), 586-604.
+#'
+#'   Bretz, F., Posch, M., Glimm, E., Klinglmueller, F., Maurer, W., and
+#'   Rohmeyer, K. (2011). Graphical approaches for multiple comparison
+#'   procedures using weighted Bonferroni, Simes, or parametric tests.
+#'   \emph{Biometrical Journal}, 53(6), 894-913.
 #'
 #' @examples
 #' # A graphical multiple comparison procedure with two primary hypotheses (H1
 #' # and H2) and two secondary hypotheses (H3 and H4)
-#' # See Figure 4 in \insertCite{bretz-2011-graphical;textual}{graphicalMCP}.
+#' # See Figure 4 in Bretz et al. (2011).
 #' hypotheses <- c(0.5, 0.5, 0, 0)
 #' delta <- 0.5
 #' transitions <- rbind(

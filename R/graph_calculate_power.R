@@ -68,8 +68,8 @@
 #' which is often called the non-centrality parameter or the drift parameter.
 #' Here \eqn{d_i} is the marginal power `power_marginal` of hypothesis \eqn{i}.
 #' Given the correlation matrix `sim_corr`, we can simulate from this
-#' multivariate normal distribution using the `mvtnorm` R package
-#' \insertCite{genz-2009-mvtnorm}{graphicalMCP}.
+#' multivariate normal distribution using the `mvtnorm` R package (Genz and
+#' Bretz, 2009).
 #'
 #' Each set simulated values can be used to calculate the corresponding
 #' one-sided p-values. Then this set of p-values are plugged into the graphical
@@ -77,25 +77,35 @@
 #' This process is repeated `n_sim` times to produce the power values as the
 #' proportion of simulations in which a particular success criterion is met.
 #'
-#' @family graphical power
-#'
 #' @rdname graph_calculate_power
-#'
-#' @importFrom Rdpack reprompt
 #'
 #' @export
 #'
 #' @references
-#'  * \insertRef{bretz-2011-graphical}{graphicalMCP}
-#'  * \insertRef{bretz-2011-test}{graphicalMCP}
-#'  * \insertRef{genz-2009-mvtnorm}{graphicalMCP}
-#'  * \insertRef{lu-2016-graphical}{graphicalMCP}
-#'  * \insertRef{xi-2017-unified}{graphicalMCP}
+#'   Bretz, F., Posch, M., Glimm, E., Klinglmueller, F., Maurer, W., and
+#'   Rohmeyer, K. (2011a). Graphical approaches for multiple comparison
+#'   procedures using weighted Bonferroni, Simes, or parametric tests.
+#'   \emph{Biometrical Journal}, 53(6), 894-913.
+#'
+#'   Bretz, F., Maurer, W., and Hommel, G. (2011b). Test and power
+#'   considerations for multiple endpoint analyses using sequentially rejective
+#'   graphical procedures. \emph{Statistics in Medicine}, 30(13), 1489-1501.
+#'
+#'   Genz, A., and Bretz, F. (2009). \emph{Computation of Multivariate Normal
+#'   and t Probabilities}, series Lecture Notes in Statistics. Springer-Verlag,
+#'   Heidelberg.
+#'
+#'   Lu, K. (2016). Graphical approaches using a Bonferroni mixture of weighted
+#'   Simes tests. \emph{Statistics in Medicine}, 35(22), 4041-4055.
+#'
+#'   Xi, D., Glimm, E., Maurer, W., and Bretz, F. (2017). A unified framework
+#'   for weighted parametric multiple test procedures.
+#'   \emph{Biometrical Journal}, 59(5), 918-931.
 #'
 #' @examples
 #' # A graphical multiple comparison procedure with two primary hypotheses (H1
 #' # and H2) and two secondary hypotheses (H3 and H4)
-#' # See Figure 4 in \insertCite{bretz-2011-graphical;textual}{graphicalMCP}.
+#' # See Figure 4 in Bretz et al. (2011a).
 #' alpha <- 0.025
 #' hypotheses <- c(0.5, 0.5, 0, 0)
 #' delta <- 0.5

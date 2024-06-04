@@ -38,8 +38,7 @@ to the sequence specified by \code{delete}.
 After a hypothesis is deleted, an initial graph will be updated. The deleted
 hypothesis will have the hypothesis weight of 0 and the transition weight of
 0. Remaining hypotheses will have updated hypothesis weights and transition
-weights according to Algorithm 1 of
-\insertCite{bretz-2009-graphical;textual}{graphicalMCP}.
+weights according to Algorithm 1 of Bretz et al. (2009).
 }
 \section{Sequence of deletion}{
 
@@ -47,17 +46,17 @@ When there are multiple hypotheses to be deleted from a graph, there are many
 sequences of deletion in which an initial graph is updated to an updated
 graph. If the interest is in the updated graph after all hypotheses specified
 by \code{delete} are deleted, this updated graph is the same no matter which
-sequence of deletion is used. This property has been proved by
-\insertCite{bretz-2009-graphical;textual}{graphicalMCP}. If the interest is
-in the intermediate updated graph after each hypothesis is deleted according
-to the sequence specified by \code{delete}, an integer vector of \code{delete} should
-be specified and these detailed outputs will be provided.
+sequence of deletion is used. This property has been proved by Bretz et al.
+(2009). If the interest is in the intermediate updated graph after each
+hypothesis is deleted according to the sequence specified by \code{delete}, an
+integer vector of \code{delete} should be specified and these detailed outputs
+will be provided.
 }
 
 \examples{
 # A graphical multiple comparison procedure with two primary hypotheses (H1
 # and H2) and two secondary hypotheses (H3 and H4)
-# See Figure 1 in \insertCite{bretz-2011-graphical;textual}{graphicalMCP}.
+# See Figure 1 in Bretz et al. (2011).
 hypotheses <- c(0.5, 0.5, 0, 0)
 transitions <- rbind(
   c(0, 0, 1, 0),
@@ -76,10 +75,14 @@ graph_update(g, delete = c(FALSE, TRUE, TRUE, FALSE))
 graph_update(g, delete = 2:3)
 }
 \references{
-\itemize{
-\item \insertRef{bretz-2009-graphical}{graphicalMCP}
-\item \insertRef{bretz-2011-graphical}{graphicalMCP}
-}
+Bretz, F., Maurer, W., Brannath, W., and Posch, M. (2009). A graphical
+approach to sequentially rejective multiple test procedures.
+\emph{Statistics in Medicine}, 28(4), 586-604.
+
+Bretz, F., Posch, M., Glimm, E., Klinglmueller, F., Maurer, W., and
+Rohmeyer, K. (2011). Graphical approaches for multiple comparison
+procedures using weighted Bonferroni, Simes, or parametric tests.
+\emph{Biometrical Journal}, 53(6), 894-913.
 }
 \seealso{
 \itemize{
@@ -87,9 +90,4 @@ graph_update(g, delete = 2:3)
 \item \code{\link[=graph_rejection_orderings]{graph_rejection_orderings()}} for possible sequences of rejections for a
 graphical multiple comparison procedure using shortcut testing.
 }
-
-Other updated graphs: 
-\code{\link{plot.updated_graph}()},
-\code{\link{print.updated_graph}()}
 }
-\concept{updated graphs}

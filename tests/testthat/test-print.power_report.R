@@ -16,8 +16,10 @@ test_that("printing Simes power", {
 
   set.seed(51223)
   expect_snapshot(
-    print(graph_calculate_power(g, test_types = "s", sim_n = 100), indent = 6,
-          precision = 3)
+    print(graph_calculate_power(g, test_types = "s", sim_n = 100),
+      indent = 6,
+      precision = 3
+    )
   )
 })
 
@@ -33,14 +35,14 @@ test_that("printing parametric power", {
   expect_snapshot(
     print(
       graph_calculate_power(g,
-                            test_types = "p",
-                            sim_n = 100,
-                            test_corr = list(diag(4))
-                            ),
+        test_types = "p",
+        sim_n = 100,
+        test_corr = list(diag(4))
+      ),
       indent = 6,
       precision = 3
-      )
     )
+  )
 })
 
 test_that("printing blended power", {

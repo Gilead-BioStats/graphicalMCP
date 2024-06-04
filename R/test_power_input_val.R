@@ -48,6 +48,7 @@
 #' @return Returns `graph` invisibly
 #'
 #' @rdname input_val
+#'
 #' @keywords internal
 test_input_val <- function(graph,
                            p,
