@@ -1,31 +1,56 @@
-#' Test hypotheses with the adjusted significance method
+#' Tests for an intersection hypothesis
 #'
-#' @param p A numeric vector of p-values
-#' @param hypotheses A numeric vector of hypothesis hypotheses
-#' @param alpha A numeric scalar specifying the global significance level for
-#'   testing
-#' @param intersection A numeric scalar used to track which intersection the
-#'   test values are from
-#' @param test_corr A numeric matrix of correlations between hypotheses' test
-#'   statistics
+#' @inheritParams graph_test_closure
+#' @inheritParams graph_create
+#' @param intersection (optional) A numeric scalar used to name the
+#'   intersection hypothesis in a weighting strategy.
 #'
-#' @return A data frame with columns specifying the values used to calculate
-#'   each hypothesis test
+#' @return A data frame with rows corresponding to individual hypotheses
+#'   involved in the intersection hypothesis with hypothesis weights
+#'   `hypotheses`. There are following columns:
+#'   * `Intersection` - Name of this intersection hypothesis,
+#'   * `Hypothesis` - Name of an individual hypothesis,
+#'   * `Test` - Test type for an individual hypothesis,
+#'   * `p` - (Unadjusted or raw) p-values for a individual hypothesis,
+#'   * `c_value`- C value for parametric tests,
+#'   * `Weight` - Hypothesis weight for an individual hypothesis,
+#'   * `Alpha` - Overall significance level \eqn{\alpha},
+#'   * `Inequality_holds` - Indicator to show if the p-value is less than or
+#'     equal to its significance level.
+#'       - For Bonferroni and Simes tests, the significance level is the
+#'         hypothesis weight times \eqn{\alpha}.
+#'       - For parametric tests, the significance level is the c value times
+#'         the hypothesis weight times \eqn{\alpha}.
 #'
-#' @rdname calc-test_values
+#' @rdname test_values
 #'
 #' @keywords internal
 #'
-#' @template references
+#' @references
+#'   Bretz, F., Maurer, W., Brannath, W., and Posch, M. (2009). A graphical
+#'   approach to sequentially rejective multiple test procedures.
+#'   \emph{Statistics in Medicine}, 28(4), 586-604.
+#'
+#'   Lu, K. (2016). Graphical approaches using a Bonferroni mixture of weighted
+#'   Simes tests. \emph{Statistics in Medicine}, 35(22), 4041-4055.
+#'
+#'   Xi, D., Glimm, E., Maurer, W., and Bretz, F. (2017). A unified framework
+#'   for weighted parametric multiple test procedures.
+#'   \emph{Biometrical Journal}, 59(5), 918-931.
 #'
 #' @examples
-#' w <- c(H1 = .5, H2 = .5, H3 = 0, H4 = 0)
+#' alpha <- 0.025
+#' hypotheses <- c(H1 = 0.5, H2 = 0.5, H3 = 0, H4 = 0)
+#' p <- c(0.018, 0.01, 0.105, 0.006)
 #'
-#' p <- c(.024, .01, .026, .027)
-#'
-#' graphicalMCP:::test_values_bonferroni(p, w, .05)
-#' graphicalMCP:::test_values_parametric(p, w, .05, test_corr = diag(4))
-#' graphicalMCP:::test_values_simes(p, w, .05)
+#' graphicalMCP:::test_values_bonferroni(p, hypotheses, alpha)
+#' graphicalMCP:::test_values_parametric(
+#'   p,
+#'   hypotheses,
+#'   alpha,
+#'   test_corr = diag(4)
+#' )
+#' graphicalMCP:::test_values_simes(p, hypotheses, alpha)
 test_values_bonferroni <- function(p, hypotheses, alpha, intersection = NA) {
   if (length(p) == 0) {
     NULL
@@ -48,7 +73,8 @@ test_values_bonferroni <- function(p, hypotheses, alpha, intersection = NA) {
   }
 }
 
-#' @rdname calc-test_values
+#' @rdname test_values
+#' @keywords internal
 test_values_parametric <- function(p,
                                    hypotheses,
                                    alpha,
@@ -77,7 +103,8 @@ test_values_parametric <- function(p,
   }
 }
 
-#' @rdname calc-test_values
+#' @rdname test_values
+#' @keywords internal
 test_values_simes <- function(p, hypotheses, alpha, intersection = NA) {
   if (length(p) == 0) {
     NULL

@@ -37,29 +37,29 @@ A weighted Bonferroni test splits $\alpha$ among hypotheses by testing every hyp
 set.seed(1234)
 alpha <- 0.025
 m <- 3
-bonferroni_graph <- bonferroni(m)
+bonferroni_graph <- bonferroni(rep(1 / m, m))
 # transitions <- matrix(0, m, m)
 # bonferroni_graph <- graph_create(rep(1 / m, m), transitions)
 
-plot(
-  bonferroni_graph,
-  layout = igraph::layout_in_circle(
-    as_igraph(bonferroni_graph),
-    order = c(2, 1, 3)
-  ),
-  vertex.size = 70
-)
-
-p_values <- runif(m, 0, alpha)
-
-test_results <-
-  graph_test_shortcut(
-    bonferroni_graph,
-    p = p_values,
-    alpha = alpha
-  )
-
-test_results$outputs$rejected
+# plot(
+#   bonferroni_graph,
+#   layout = igraph::layout_in_circle(
+#     as_igraph(bonferroni_graph),
+#     order = c(2, 1, 3)
+#   ),
+#   vertex.size = 70
+# )
+#
+# p_values <- runif(m, 0, alpha)
+#
+# test_results <-
+#   graph_test_shortcut(
+#     bonferroni_graph,
+#     p = p_values,
+#     alpha = alpha
+#   )
+#
+# test_results$outputs$rejected
 ```
 
 ## Holm Procedure
@@ -70,7 +70,7 @@ Holm (or Bonferroni-Holm) procedures improve over Bonferroni tests by allowing p
 set.seed(1234)
 alpha <- 0.025
 m <- 3
-holm_graph <- bonferroni_holm(m)
+holm_graph <- bonferroni_holm(rep(1 / m, m))
 # transitions <- matrix(1 / (m - 1), m, m)
 # diag(transitions) <- 0
 # holm_graph <- graph_create(rep(1 / m, m), transitions)
@@ -128,22 +128,21 @@ Fallback procedures have one-way propagation (like fixed sequence procedures) bu
 set.seed(1234)
 alpha <- 0.025
 m <- 3
+fallback_graph <- fallback(rep(1 / 3, 3))
+# transitions <- rbind(
+#   c(0, 1, 0),
+#   c(0, 0, 1),
+#   c(0, 0, 0)
+# )
+# fallback_graph <- graph_create(rep(1 / 3, 3), transitions)
 
-transitions <- rbind(
-  c(0, 1, 0),
-  c(0, 0, 1),
-  c(0, 0, 0)
-)
-
-fallback_graph_2003 <- graph_create(rep(1 / m, m), transitions)
-
-plot(fallback_graph_2003, nrow = 1, asp = 0.05, vertex.size = 40)
+plot(fallback_graph, nrow = 1, asp = 0.05, vertex.size = 40)
 
 p_values <- runif(m, 0, alpha)
 
 test_results <-
   graph_test_shortcut(
-    fallback_graph_2003,
+    fallback_graph,
     p = p_values,
     alpha = alpha
   )
@@ -151,25 +150,23 @@ test_results <-
 test_results$outputs$rejected
 ```
 
-Further they can be improved to allow propagation from later hypotheses to earlier 
-hypotheses, because it is possible that a later hypothesis is rejected before an earlier 
-hypothesis can be rejected [@wiens-2005-fallback;@hommel-2008-aesthetics].
+Further they can be improved to allow propagation from later hypotheses to earlier hypotheses, because it is possible that a later hypothesis is rejected before an earlier hypothesis can be rejected. There are two versions of improvement: `fallback_improved_1` due to [@wiens-2005-fallback] and `fallback_improved_2` due to [@bretz-2009-graphical] respectively.
 
 ```{r fallback-improved, fig.dim=c(4.5, 0.9)}
 set.seed(1234)
 alpha <- 0.025
 m <- 3
-
-transitions <- rbind(
-  c(0, 1, 0),
-  c(0, 0, 1),
-  c(0.5, 0.5, 0)
-)
-# Wiens and Dmitrienko (2005)
-fallback_graph_2005 <- graph_create(rep(1 / m, m), transitions)
+fallback_improved_1_graph <- fallback_improved_1(rep(1 / 3, 3))
+# hypotheses <- rep(1 / 3, 3)
+# transitions <- rbind(
+#   c(0, 1, 0),
+#   c(0, 0, 1),
+#   c(hypotheses[seq_len(m - 1)] / sum(hypotheses[seq_len(m - 1)]), 0)
+# )
+# fallback_improved_1_graph <- graph_create(rep(1 / 3, 3), transitions)
 
 plot(
-  fallback_graph_2005,
+  fallback_improved_1_graph,
   nrow = 1,
   asp = 0.05,
   vertex.size = 40,
@@ -177,17 +174,17 @@ plot(
 )
 
 epsilon <- 0.0001
-
-transitions <- rbind(
-  c(0, 1, 0),
-  c(1 - epsilon, 0, epsilon),
-  c(1, 0, 0)
-)
-# Hommel and Bretz (2008)
-fallback_graph_2008 <- graph_create(rep(1 / m, m), transitions)
+fallback_improved_2_graph <- fallback_improved_2(rep(1 / 3, 3), epsilon)
+# hypotheses <- rep(1 / 3, 3)
+# transitions <- rbind(
+#   c(0, 1, 0),
+#   c(1 - epsilon, 0, epsilon),
+#   c(1, 0, 0)
+# )
+# fallback_improved_2_graph <- graph_create(rep(1 / 3, 3), transitions)
 
 plot(
-  fallback_graph_2008,
+  fallback_improved_2_graph,
   nrow = 1,
   asp = 0.05,
   eps = 0.0001,
@@ -199,7 +196,7 @@ p_values <- runif(m, 0, alpha)
 
 test_results <-
   graph_test_shortcut(
-    fallback_graph_2008,
+    fallback_improved_2_graph,
     p = p_values,
     alpha = alpha
   )
@@ -386,7 +383,7 @@ Hommel procedure [@hommel-1988-stagewise] is a closed test procedure which uses 
 set.seed(1234)
 alpha <- 0.025
 m <- 3
-hommel_graph <- bonferroni_holm(m)
+hommel_graph <- bonferroni_holm(rep(1 / m, m))
 
 plot(
   hommel_graph,
@@ -419,7 +416,7 @@ Step-down Dunnett procedures are a closed test procedure and an improvement from
 set.seed(1234)
 alpha <- 0.025
 m <- 3
-dunnett_graph <- bonferroni_holm(m)
+dunnett_graph <- bonferroni_holm(rep(1 / m, m))
 
 plot(
   dunnett_graph,

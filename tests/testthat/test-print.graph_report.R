@@ -94,7 +94,7 @@ test_that("additional printing options for graph report", {
   expect_snapshot(
     print(
       graph_test_shortcut(
-        complex_example_1(),
+        two_doses_two_primary_two_secondary(),
         5:0 / 200,
         verbose = TRUE,
         test_values = TRUE
@@ -106,7 +106,7 @@ test_that("additional printing options for graph report", {
     print(
       graph_rejection_orderings(
         graph_test_shortcut(
-          complex_example_1(),
+          two_doses_two_primary_two_secondary(),
           6:1 / 400,
           verbose = TRUE,
           test_values = TRUE

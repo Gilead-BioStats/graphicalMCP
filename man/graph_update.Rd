@@ -2,39 +2,61 @@
 % Please edit documentation in R/graph_update.R
 \name{graph_update}
 \alias{graph_update}
-\title{Delete hypotheses from a graph}
+\title{Obtain an updated graph by updating an initial graphical after deleting
+hypotheses}
 \usage{
 graph_update(graph, delete)
 }
 \arguments{
-\item{graph}{An initial graph as returned by \code{\link[=graph_create]{graph_create()}}}
+\item{graph}{An initial graph as returned by \code{\link[=graph_create]{graph_create()}}.}
 
 \item{delete}{A logical or integer vector, denoting which hypotheses to
-keep/delete. A logical vector must match the size of the graph, with one
-entry per hypothesis, and it results in "unordered mode," where selected
-hypotheses are deleted in sequential order. An integer vector can be any
-length, but must only contain valid hypothesis numbers (greater than 0, and
-less than or equal to the size of the graph). This will trigger "ordered
-mode," where selected hypotheses are deleted in the order they appear in
-\code{delete}}
+delete. A logical vector results in the "unordered mode", which means that
+hypotheses corresponding to \code{TRUE} in \code{delete} will be deleted. The
+sequence of deletion will follow the sequence of \code{TRUE}'s in \code{delete}. In
+this case, the length of the logical vector must match the number of
+hypotheses in \code{graph}. An integer vector results in the "ordered mode",
+which means that \code{delete} specifies the sequence in which hypotheses
+should be deleted by indicating the location of deleted hypotheses, e.g.,
+1st, 2nd, etc. In this case, the integer vector can have any length, but
+must only contain valid hypothesis numbers (greater than 0, and less than
+or equal to he number of hypotheses in \code{graph}).}
 }
 \value{
-An object of class \code{updated_graph} with 4 elements
+An S3 object of class \code{updated_graph} with a list of 4 elements:
 \itemize{
-\item The initial graph object
-\item The updated graph object with specified hypotheses deleted
-\item A numeric vector indicating which hypotheses were deleted
-\item When using ordered mode, a list of intermediate graphs for each deletion
-step
+\item \code{initial_graph}: The initial graph object.
+\item \code{updated_graph}: The updated graph object with specified hypotheses
+deleted.
+\item \code{deleted}: A numeric vector indicating which hypotheses were deleted.
+\item \code{intermediate_graphs}: When using the ordered mode, a list of
+intermediate updated graphs after each hypothesis is deleted according
+to the sequence specified by \code{delete}.
 }
 }
 \description{
-It is not always obvious what a graph's weights will look like after deleting
-one or more hypotheses. While \code{\link[=graph_generate_weights]{graph_generate_weights()}} calculates all
-sub-graphs' hypothesis weights, \code{graph_update()} gives a more detailed view
-for a single set of deletions, including transition weights.
+After a hypothesis is deleted, an initial graph will be updated. The deleted
+hypothesis will have the hypothesis weight of 0 and the transition weight of
+0. Remaining hypotheses will have updated hypothesis weights and transition
+weights according to Algorithm 1 of Bretz et al. (2009).
 }
+\section{Sequence of deletion}{
+
+When there are multiple hypotheses to be deleted from a graph, there are many
+sequences of deletion in which an initial graph is updated to an updated
+graph. If the interest is in the updated graph after all hypotheses specified
+by \code{delete} are deleted, this updated graph is the same no matter which
+sequence of deletion is used. This property has been proved by Bretz et al.
+(2009). If the interest is in the intermediate updated graph after each
+hypothesis is deleted according to the sequence specified by \code{delete}, an
+integer vector of \code{delete} should be specified and these detailed outputs
+will be provided.
+}
+
 \examples{
+# A graphical multiple comparison procedure with two primary hypotheses (H1
+# and H2) and two secondary hypotheses (H3 and H4)
+# See Figure 1 in Bretz et al. (2011).
 hypotheses <- c(0.5, 0.5, 0, 0)
 transitions <- rbind(
   c(0, 0, 1, 0),
@@ -44,40 +66,28 @@ transitions <- rbind(
 )
 g <- graph_create(hypotheses, transitions)
 
-# Delete the second and third hypotheses in any order
-graph_update(g, c(FALSE, TRUE, TRUE, FALSE))
+# Delete the second and third hypotheses in the "unordered mode"
+graph_update(g, delete = c(FALSE, TRUE, TRUE, FALSE))
 
-# Equivalent in ordered mode
-graph_update(g, 2:3)
+# Equivalent way in the "ordered mode" to obtain the updated graph after
+# deleting the second and third hypotheses
+# Additional intermediate updated graphs are also provided
+graph_update(g, delete = 2:3)
 }
 \references{
 Bretz, F., Maurer, W., Brannath, W., and Posch, M. (2009). A graphical
-approach to sequentially rejective multiple test procedures. Statistics in
-Medicine, 28(4), 586–604. \url{https://doi.org/10.1002/sim.3495}
+approach to sequentially rejective multiple test procedures.
+\emph{Statistics in Medicine}, 28(4), 586-604.
 
-Bretz, F., Maurer, W., and Hommel, G. (2011). Test and power considerations
-for multiple endpoint analyses using sequentially rejective graphical
-procedures. Statistics in Medicine, 30(13), 1489–1501.
-\url{https://doi.org/10.1002/sim.3988}
-
-Bretz, F., Posch, M., Glimm, E., Klinglmueller, F., Maurer, W., and Rohmeyer,
-K. (2011). Graphical approaches for multiple comparison procedures using
-weighted Bonferroni, Simes, or parametric tests. Biometrical Journal, 53(6),
-894–913. \url{https://doi.org/10.1002/bimj.201000239}
-
-Lu, K. (2016). Graphical approaches using a Bonferroni mixture of weighted
-Simes tests. Statistics in Medicine, 35(22), 4041–4055.
-\url{https://doi.org/10.1002/sim.6985}
-
-Xi, D., Glimm, E., Maurer, W., and Bretz, F. (2017). A unified framework for
-weighted parametric multiple test procedures. Biometrical Journal, 59(5),
-918–931. \url{https://doi.org/10.1002/bimj.201600233}
-
-Xi, D., and Bretz, F. (2019). Symmetric graphs for equally weighted tests,
-with application to the Hochberg procedure. Statistics in Medicine, 38(27),
-5268–5282. \url{https://doi.org/10.1002/sim.8375}
-
-Rohmeyer K, Klinglmueller F (2020). \emph{gMCP: Graph Based Multiple Test
-Procedures}. R package version 0.8-15,
-\url{https://cran.r-project.org/package=gMCP}.
+Bretz, F., Posch, M., Glimm, E., Klinglmueller, F., Maurer, W., and
+Rohmeyer, K. (2011). Graphical approaches for multiple comparison
+procedures using weighted Bonferroni, Simes, or parametric tests.
+\emph{Biometrical Journal}, 53(6), 894-913.
+}
+\seealso{
+\itemize{
+\item \code{\link[=graph_create]{graph_create()}} for the initial graph.
+\item \code{\link[=graph_rejection_orderings]{graph_rejection_orderings()}} for possible sequences of rejections for a
+graphical multiple comparison procedure using shortcut testing.
+}
 }

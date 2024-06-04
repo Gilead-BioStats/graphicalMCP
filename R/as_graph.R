@@ -1,45 +1,66 @@
 #' Convert between graphicalMCP, gMCP, and igraph graph classes
 #'
-#' Graphs are handled with a different object in graphicalMCP, gMCP, and igraph.
-#' These functions convert minimally between the different classes.
+#' @description
+#' Graph objects have different structures and attributes in `graphicalMCP`,
+#' `gMCP`, and `igraph` R packages. These functions convert between different
+#' classes to increase compatibility.
 #'
-#' Note that igraph and gMCP can set various attributes for vertices, edges, or
-#' a graph itself. These conversion functions only handle attributes related to
-#' names and weights. Other attributes will be dropped when converting.
+#' Note that `igraph` and `gMCP` have additional attributes for vertices, edges,
+#' or a graph itself. These conversion functions only handle attributes related
+#' to hypothesis names, hypothesis weights and transition weights. Other
+#' attributes will be dropped when converting.
 #'
-#' @param graph An `initial_graph` object from graphicalMCP, a `graphMCP` object
-#'   from gMCP, or an `igraph` object from igraph, depending on conversion type
+#' @param graph An `initial_graph` object from the `graphicalMCP` package, a
+#'   `graphMCP` object from the `gMCP` package, or an `igraph` object from the
+#'   `igraph` package, depending on the conversion type.
 #'
-#' @return For `as_graphMCP()`, a gMCP graph object, for `as_igraph()`, an
-#'   igraph object, and for `as_initial_graph()`, a graphicalMCP graph object
-#' @rdname as-graph
+#' @return
+#'   * `as_graphMCP()` returns a `graphMCP` object for the `gMCP` package.
+#'   * `as_igraph()` returns an `igraph` object for the `igraph` package.
+#'   * `as_initial_graph()` returns an `initial_graph` object for the
+#'   `graphicalMCP` package.
+#'
+#' @seealso
+#'   [graph_create()] for the initial graph used in the `graphicalMCP` package.
+#'
+#' @rdname as_graph
+#'
 #' @export
 #'
+#' @references
+#'  Cs{\'a}rdi, G., Nepusz, T., Traag, V., Horv{\'a}t, S., Zanini, F., Noom, D.,
+#'  and M{\"u}ller, K. (2024). \emph{igraph}: Network analysis and visualization
+#'  in R. R package version 2.0.3. \url{https://CRAN.R-project.org/package=igraph}.
+#'
+#'  Rohmeyer, K., and Klinglmueller, K. (2024). \emph{gMCP}: Graph based
+#'  multiple test procedures. R package version 0.8-17.
+#'  \url{https://cran.r-project.org/package=gMCP}.
+#'
 #' @examples
-#' g1 <- random_graph(5)
+#' g_graphicalMCP <- random_graph(5)
 #'
 #' if (requireNamespace("gMCP", quietly = TRUE)) {
-#'   g2 <- as_graphMCP(g1)
+#'   g_gMCP <- as_graphMCP(g_graphicalMCP)
 #'
-#'   all.equal(g1, as_initial_graph(g2))
+#'   all.equal(g_graphicalMCP, as_initial_graph(g_gMCP))
 #' }
 #'
 #' if (requireNamespace("igraph", quietly = TRUE)) {
-#'   g3 <- as_igraph(g1)
+#'   g_igraph <- as_igraph(g_graphicalMCP)
 #'
-#'   all.equal(g1, as_initial_graph(g3))
+#'   all.equal(g_graphicalMCP, as_initial_graph(g_igraph))
 #' }
 as_initial_graph <- function(graph) {
   UseMethod("as_initial_graph", graph)
 }
 
-#' @rdname as-graph
+#' @rdname as_graph
 #' @export
 as_initial_graph.graphMCP <- function(graph) {
   graph_create(graph@weights, graph@m)
 }
 
-#' @rdname as-graph
+#' @rdname as_graph
 #' @export
 as_initial_graph.igraph <- function(graph) {
   hypotheses <- igraph::vertex_attr(graph, "weight")
@@ -55,13 +76,13 @@ as_initial_graph.igraph <- function(graph) {
   graph_create(hypotheses, transitions)
 }
 
-#' @rdname as-graph
+#' @rdname as_graph
 #' @export
 as_graphMCP <- function(graph) {
   UseMethod("as_graphMCP", graph)
 }
 
-#' @rdname as-graph
+#' @rdname as_graph
 #' @export
 as_graphMCP.initial_graph <- function(graph) {
   if (!requireNamespace("gMCP", quietly = TRUE)) {
@@ -71,13 +92,13 @@ as_graphMCP.initial_graph <- function(graph) {
   }
 }
 
-#' @rdname as-graph
+#' @rdname as_graph
 #' @export
 as_igraph <- function(graph) {
   UseMethod("as_igraph", graph)
 }
 
-#' @rdname as-graph
+#' @rdname as_graph
 #' @export
 as_igraph.initial_graph <- function(graph) {
   if (!requireNamespace("igraph", quietly = TRUE)) {

@@ -13,16 +13,17 @@ test_that("results match graph_test_closure()", {
     graph_test_shortcut(rando, p)$outputs$rejected,
     graph_test_shortcut_fast(
       p,
-      .025,
+      0.025,
       graph_generate_weights(rando)[, 5:8, drop = FALSE]
-    )
+    ),
+    ignore_attr = TRUE
   )
 
   expect_equal(
     graph_test_shortcut(rando, p)$outputs$rejected,
     graph_test_closure_fast(
       p,
-      .025,
+      0.025,
       graph_generate_weights(rando)[, 5:8, drop = FALSE],
       graph_generate_weights(rando)[, 1:4, drop = FALSE]
     ),
@@ -96,12 +97,12 @@ test_that("shortcut testing handles 0 cases", {
   )
 
   expect_equal(
-    graph_test_shortcut(bonferroni_holm(3), p_zero_2)$outputs$adjusted_p,
+    graph_test_shortcut(bonferroni_holm(rep(1 / 3, 3)), p_zero_2)$outputs$adjusted_p,
     rep(0, 3),
     ignore_attr = TRUE
   )
 
-  expect_no_error(graph_test_shortcut(bonferroni_holm(3), p_zero_2))
+  expect_no_error(graph_test_shortcut(bonferroni_holm(rep(1 / 3, 3)), p_zero_2))
 })
 
 test_that("shortcut testing rejects none when adjusted p-values exceed 1", {

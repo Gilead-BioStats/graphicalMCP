@@ -41,12 +41,15 @@ reference:
   - bonferroni
   - bonferroni_holm
   - fallback
+  - fallback_improved_1
+  - fallback_improved_2
   - fixed_sequence
-  - huque_alosh_bhore_2011
+  - huque_etal
   - random_graph
   - simple_successive_1
   - simple_successive_2
-  - wiens_dmitrienko_2005
+  - two_doses_two_primary_two_secondary
+  - three_doses_two_primary_two_secondary
 
 navbar:
   structure:

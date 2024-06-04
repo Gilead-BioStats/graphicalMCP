@@ -1,57 +1,58 @@
-#' Calculate hypothesis rejection results efficiently
+#' Perform graphical multiple comparison procedures efficiently for power
+#' calculation
 #'
-#' For insight and nice reporting, prefer [graph_test_closure()] or
-#' [graph_test_shortcut()] with all of their options. They are reasonably fast
-#' for interactive use. However in order to minimize power run time, more
-#' efficient testing functions are available. The power simulation can be
-#' segmented so that certain parts, like generating weights and calculating some
-#' adjusted weights, can be done only a single time. The closure testing
-#' function has been stripped down to just a few vectorized lines for
-#' efficiency. A separate optimized function is available for testing a graph
-#' with the Bonferroni sequential shortcut.
+#' @description
+#' These functions performs similarly to [graph_test_closure()] or
+#' [graph_test_shortcut()] but are optimized for efficiently calculating power.
+#' For example, generating weights and calculating adjusted weights can be done
+#' only once. Vectorization has been applied where possible.
 #'
-#' @param graph An initial graph as returned by [graph_create()]
-#' @param p A numeric vector of p-values
-#' @param alpha A numeric scalar specifying the global significance level for
-#'   testing
-#' @param adjusted_weights The weights (second half of columns) from
-#'   [graph_generate_weights()] output, adjusted by the appropriate testing
-#'   algorithm (Bonferroni, Simes, or parametric)
-#' @param intersections The first half of columns from
-#'   [graph_generate_weights()] output, indicating which hypotheses are
-#'   contained in each intersection
+#' @param p A numeric vector of one-sided p-values (unadjusted, raw), whose
+#'   values should be between 0 & 1. The length should match the number of
+#'   hypotheses in `graph`.
+#' @param alpha A numeric value of the one-sided overall significance level,
+#'   which should be between 0 & 1. The default is 0.025 for one-sided
+#'   hypothesis testing. Note that only one-sided tests are supported.
+#' @param adjusted_weights The adjusted hypothesis weights, which are the
+#'   second half of columns from [graph_generate_weights()] output, adjusted by
+#'   the appropriate test types (Bonferroni, Simes, or parametric).
+#' @param matrix_intersections A matrix of hypothesis indicators in a weighting
+#'   strategy, which are the first half the [graph_generate_weights()] output.
 #'
-#' @return A logical or integer vector of results indicating whether each
-#'   hypothesis can be accepted or rejected globally.
+#' @return A logical or integer vector indicating whether each hypothesis can
+#'   be rejected or not.
 #'
-#' @rdname testing-fast
+#' @seealso
+#'   * [graph_test_closure()] for closed graphical multiple comparison
+#'   procedures.
+#'   * [graph_test_shortcut()] for shortcut graphical multiple comparison
+#'   procedures.
+#'
+#' @rdname graph_test_fast
 #'
 #' @keywords internal
 #'
-#' @seealso [graph_test_closure()], [graph_test_shortcut()]
-#'
-#' @template references
-#'
 #' @examples
-#' par_gate <- simple_successive_1()
-#' num_hyps <- length(par_gate$hypotheses)
+#' set.seed(1234)
+#' alpha <- 0.025
+#' p <- c(0.018, 0.01, 0.105, 0.006)
+#' num_hyps <- length(p)
+#' g <- bonferroni_holm(rep(1 / 4, 4))
+#' weighting_strategy <- graph_generate_weights(g)
 #'
-#' p <- c(.001, .02, .002, .03)
-#'
-#' weighting_strategy <- graph_generate_weights(par_gate)
-#' intersections <- weighting_strategy[, seq_len(num_hyps), drop = FALSE]
+#' matrix_intersections <- weighting_strategy[, seq_len(num_hyps), drop = FALSE]
 #' adjusted_weights <-
-#'   weighting_strategy[, seq_len(num_hyps) + num_hyps, drop = FALSE]
+#'   weighting_strategy[, -seq_len(num_hyps), drop = FALSE]
 #'
 #' graphicalMCP:::graph_test_closure_fast(
 #'   p,
-#'   .025,
+#'   alpha,
 #'   adjusted_weights,
-#'   intersections
+#'   matrix_intersections
 #' )
 #' graphicalMCP:::graph_test_shortcut_fast(
 #'   p,
-#'   .025,
+#'   alpha,
 #'   adjusted_weights
 #' )
 graph_test_closure_fast <- function(p,
@@ -66,10 +67,10 @@ graph_test_closure_fast <- function(p,
   ) == 2^(ncol(adjusted_weights) - 1)
 }
 
-#' @rdname testing-fast
+#' @rdname graph_test_fast
+#' @keywords internal
 graph_test_shortcut_fast <- function(p, alpha, adjusted_weights) {
   num_hyps <- ncol(adjusted_weights)
-
   # There is a mapping from current rejected hypotheses to corresponding row of
   # the closure weights matrix by treating the rejected vector as a binary
   # number. This line creates a vector of binary place values.

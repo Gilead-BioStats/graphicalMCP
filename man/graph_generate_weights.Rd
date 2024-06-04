@@ -2,77 +2,72 @@
 % Please edit documentation in R/graph_generate_weights.R
 \name{graph_generate_weights}
 \alias{graph_generate_weights}
-\title{Calculate weights for the closure of a graph}
+\title{Generate the weighting strategy based on a graphical multiple comparison
+procedure}
 \usage{
 graph_generate_weights(graph)
 }
 \arguments{
-\item{graph}{An initial graph as returned by \code{\link[=graph_create]{graph_create()}}}
+\item{graph}{An initial graph as returned by \code{\link[=graph_create]{graph_create()}}.}
 }
 \value{
-A numeric matrix of all intersection hypothesis weights. Each row
-corresponds to a single intersection hypothesis. The first half of the
-columns indicate which hypotheses are included in the given intersection
-hypothesis, and the second half of columns are the weights.
+A numeric matrix of all intersection hypotheses and their hypothesis
+weights. For a graphical multiple comparison procedure with $m$ hypotheses,
+the number of rows is $2^{m}-1$, each of which corresponds to an intersection
+hypothesis. The number of columns is \eqn{2\cdot m}$. The first $m$ columns
+indicate which individual hypotheses are included in a given intersection
+hypothesis and the second half of columns provide hypothesis weights for each
+individual hypothesis for a given intersection hypothesis.
 }
 \description{
-The closure of a graph is the set of all sub-graphs, or intersections
-hypotheses, of a graph. Weights for each sub-graph are calculated using the
-weighting strategy defined in Bretz et al (2011).
+A graphical multiple comparison procedure defines a closed test procedure,
+which tests each intersection hypothesis and reject an individual hypothesis
+if all intersection hypotheses involving it have been rejected. An
+intersection hypothesis represents the parameter space where individual null
+hypotheses involved are true simultaneously.
+
+The closure based on a graph consists of all updated graphs (corresponding
+to intersection hypotheses) after all combinations of hypotheses are deleted.
+For a graphical multiple comparison procedure with $m$ hypotheses, there are
+$2^{m}-1$ updated graphs (intersection hypotheses), including the initial
+graph (the overall intersection hypothesis). The weighting strategy of this
+graph consists of hypothesis weights from all $2^{m}-1$ updated graphs
+(intersection hypotheses). The algorithm to derive the weighting strategy is
+based on Algorithm 1 in Bretz et al. (2011).
 }
 \section{Performance}{
 
-Much thought was given to the performance of this code, as the memory and
-time usage can grow quickly as graph size grows. On the systems used for
-testing, a size 10 graph had a median run time of 20-60 ms. Run time
-increases at a rate of O(2 ^ n), so e.g. a size 5 graph takes approximately
-twice as long to run as a size 4 graph. See \code{vignette("generate-closure")}
-for more information about using the closure, including performance metrics.
+Generation of intersection hypotheses is closely related to the power set
+of a given set of indices. As the number of hypotheses increases, the memory
+and time usage can grow quickly (e.g., at a rate of $O(2^n)$). There are also
+multiple ways to implement Algorithm 1 in Bretz et al. (2011). See
+\code{vignette("generate-closure")} for more information about generating
+intersection hypotheses and comparisons of different approaches to calculate
+weighting strategies.
 }
 
 \examples{
-
-par_gate <- graph_create(
-  hypotheses = c(.5, .5, 0, 0),
-  transitions = rbind(
-    c(0, 0, 1, 0),
-    c(0, 0, 0, 1),
-    c(0, 1, 0, 0),
-    c(1, 0, 0, 0)
-  )
+# A graphical multiple comparison procedure with two primary hypotheses (H1
+# and H2) and two secondary hypotheses (H3 and H4)
+# See Figure 1 in Bretz et al. (2011).
+hypotheses <- c(0.5, 0.5, 0, 0)
+transitions <- rbind(
+  c(0, 0, 1, 0),
+  c(0, 0, 0, 1),
+  c(0, 1, 0, 0),
+  c(1, 0, 0, 0)
 )
+g <- graph_create(hypotheses, transitions)
 
-graph_generate_weights(par_gate)
-
+graph_generate_weights(g)
 }
 \references{
-Bretz, F., Maurer, W., Brannath, W., and Posch, M. (2009). A graphical
-approach to sequentially rejective multiple test procedures. Statistics in
-Medicine, 28(4), 586–604. \url{https://doi.org/10.1002/sim.3495}
-
-Bretz, F., Maurer, W., and Hommel, G. (2011). Test and power considerations
-for multiple endpoint analyses using sequentially rejective graphical
-procedures. Statistics in Medicine, 30(13), 1489–1501.
-\url{https://doi.org/10.1002/sim.3988}
-
-Bretz, F., Posch, M., Glimm, E., Klinglmueller, F., Maurer, W., and Rohmeyer,
-K. (2011). Graphical approaches for multiple comparison procedures using
-weighted Bonferroni, Simes, or parametric tests. Biometrical Journal, 53(6),
-894–913. \url{https://doi.org/10.1002/bimj.201000239}
-
-Lu, K. (2016). Graphical approaches using a Bonferroni mixture of weighted
-Simes tests. Statistics in Medicine, 35(22), 4041–4055.
-\url{https://doi.org/10.1002/sim.6985}
-
-Xi, D., Glimm, E., Maurer, W., and Bretz, F. (2017). A unified framework for
-weighted parametric multiple test procedures. Biometrical Journal, 59(5),
-918–931. \url{https://doi.org/10.1002/bimj.201600233}
-
-Xi, D., and Bretz, F. (2019). Symmetric graphs for equally weighted tests,
-with application to the Hochberg procedure. Statistics in Medicine, 38(27),
-5268–5282. \url{https://doi.org/10.1002/sim.8375}
-
-Rohmeyer K, Klinglmueller F (2020). \emph{gMCP: Graph Based Multiple Test
-Procedures}. R package version 0.8-15,
-\url{https://cran.r-project.org/package=gMCP}.
+Bretz, F., Posch, M., Glimm, E., Klinglmueller, F., Maurer, W., and
+Rohmeyer, K. (2011). Graphical approaches for multiple comparison
+procedures using weighted Bonferroni, Simes, or parametric tests.
+\emph{Biometrical Journal}, 53(6), 894-913.
+}
+\seealso{
+\code{\link[=graph_test_closure]{graph_test_closure()}} for graphical multiple comparison procedures using
+the closed test.
 }

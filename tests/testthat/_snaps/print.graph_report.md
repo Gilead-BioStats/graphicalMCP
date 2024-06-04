@@ -1064,8 +1064,8 @@
 ---
 
     Code
-      print(graph_test_shortcut(complex_example_1(), 5:0 / 200, verbose = TRUE,
-      test_values = TRUE))
+      print(graph_test_shortcut(two_doses_two_primary_two_secondary(), 5:0 / 200,
+      verbose = TRUE, test_values = TRUE))
     Output
       
       Test parameters ($inputs) ------------------------------------------------------
@@ -1259,8 +1259,9 @@
 ---
 
     Code
-      print(graph_rejection_orderings(graph_test_shortcut(complex_example_1(), 6:1 /
-        400, verbose = TRUE, test_values = TRUE)))
+      print(graph_rejection_orderings(graph_test_shortcut(
+        two_doses_two_primary_two_secondary(), 6:1 / 400, verbose = TRUE,
+        test_values = TRUE)))
     Output
       
       Test parameters ($inputs) ------------------------------------------------------

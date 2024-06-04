@@ -1,49 +1,65 @@
-#' Define a graph representing a multiple comparison procedure
+#' Create the initial graph for a multiple comparison procedure
 #'
-#' A multiple comparison procedure graph can be represented by 1) a vector of
-#' initial hypothesis weights, and 2) a matrix of initial transition weights.
-#' This function creates an initial graph object using such a vector and matrix.
-#' It also validates the inputs to make sure that they combine to form a valid
-#' graph.
-#'
-#' The validations performed are:
-#'   * Weights are numeric
-#'   * Length of `hypotheses` and dimensions of `transitions` match
-#'   * Explicit `hyp_names` override names in `hypotheses` or `transitions`
-#'   * Hypothesis weights must be non-negative and sum to no more than 1
-#'   * Transition weights matrix:
-#'     * Diagonal must be all 0
-#'     * Rows must sum to no more than 1
-#'     * Values must be non-negative
+#' @description
+#' A graphical multiple comparison procedure is represented by 1) a vector of
+#' initial hypothesis weights `hypotheses`, and 2) a matrix of initial
+#' transition weights `transitions`. This function creates the initial graph
+#' object using hypothesis weights and transition weights.
 #'
 #' @param hypotheses A numeric vector of hypothesis weights in a graphical
 #'   multiple comparison procedure. Must be a vector of values between 0 & 1
 #'   (inclusive). The length should match the row and column lengths of
-#'   `transitions`. The sum of hypothesis weights cannot exceed 1
+#'   `transitions`. The sum of hypothesis weights should not exceed 1.
 #' @param transitions A numeric matrix of transition weights between hypotheses
 #'   in a graphical multiple comparison procedure. Must be a square matrix of
 #'   values between 0 & 1 (inclusive). The row and column lengths should match
 #'   the length of `hypotheses`. Each row (Transition weights leaving a
-#'   hypothesis) can sum to no more than 1. The diagonal (Transition weights
-#'   from a hypothesis to itself) must be all 0s
+#'   hypothesis) can sum to no more than 1. The diagonal entries (Transition
+#'   weights from a hypothesis to itself) must be all 0s.
 #' @param hyp_names (Optional) A character vector of hypothesis names. If not
 #'   provided, names from `hypotheses` and `transitions` will be used. If names
-#'   are not specified, hypotheses will be named sequentially as H1, H2, ...
+#'   are not specified, hypotheses will be named sequentially as H1, H2, .......
 #'
-#' @return An S3 object of class `initial_graph`. The underlying structure is a
-#'   list with elements `hypotheses` and `transitions`
+#' @return An S3 object of class `initial_graph` with a list of 2 elements:
+#'   * Hypothesis weights `hypotheses`.
+#'   * Transition weights `transitions`.
+#'
+#' @section Validation of inputs:
+#'  Inputs are also validated to make sure of the validity of the graph:
+#'   * Hypothesis weights `hypotheses` are numeric.
+#'   * Transition weights `transitions` are numeric.
+#'   * Length of `hypotheses` and dimensions of `transitions` match.
+#'   * Hypothesis weights `hypotheses` must be non-negative and sum to no more
+#'     than 1.
+#'   * Transition weights `transitions`:
+#'      + Values must be non-negative.
+#'      + Rows must sum to no more than 1.
+#'      + Diagonal entries must be all 0.
+#'   * Hypothesis names `hyp_names` override names in `hypotheses` or
+#'     `transitions`.
+#'
+#' @seealso
+#'   [graph_update()] for the updated graph after hypotheses being deleted
+#'   from the initial graph.
+#'
+#' @rdname graph_create
 #'
 #' @export
 #'
-#' @template references
+#' @references
+#'   Bretz, F., Maurer, W., Brannath, W., and Posch, M. (2009). A graphical
+#'   approach to sequentially rejective multiple test procedures.
+#'   \emph{Statistics in Medicine}, 28(4), 586-604.
+#'
+#'   Bretz, F., Posch, M., Glimm, E., Klinglmueller, F., Maurer, W., and
+#'   Rohmeyer, K. (2011). Graphical approaches for multiple comparison
+#'   procedures using weighted Bonferroni, Simes, or parametric tests.
+#'   \emph{Biometrical Journal}, 53(6), 894-913.
 #'
 #' @examples
 #' # A graphical multiple comparison procedure with two primary hypotheses (H1
 #' # and H2) and two secondary hypotheses (H3 and H4)
-#' # See Figure 1 in Bretz, F., Posch, M., Glimm, E., Klinglmueller, F., Maurer,
-#' # W., & Rohmeyer, K. (2011). Graphical approaches for multiple comparison
-#' # procedures using weighted Bonferroni, Simes, or parametric tests.
-#' # Biometrical Journal, 53(6), 894-913.
+#' # See Figure 1 in Bretz et al. (2011).
 #' hypotheses <- c(0.5, 0.5, 0, 0)
 #' transitions <- rbind(
 #'   c(0, 0, 1, 0),
@@ -63,7 +79,7 @@
 #'   c(0, 1, 0, 0),
 #'   c(1, 0, 0, 0)
 #' )
-#' g <- graph_create(hypotheses, transitions)
+#' g <- graph_create(hypotheses, transitions, hyp_names)
 #' g
 #'
 #' # Use names in `transitions`
@@ -76,6 +92,16 @@
 #' )
 #' g <- graph_create(hypotheses, transitions)
 #' g
+#'
+#' # Unmatched names in `hypotheses` and `transitions` (with an error)
+#' hypotheses <- c(h1 = 0.5, h2 = 0.5, h3 = 0, h4 = 0)
+#' transitions <- rbind(
+#'   H1 = c(0, 0, 1, 0),
+#'   H2 = c(0, 0, 0, 1),
+#'   H3 = c(0, 1, 0, 0),
+#'   H4 = c(1, 0, 0, 0)
+#' )
+#' # g <- graph_create(hypotheses, transitions)
 #'
 #' # When names are not specified, hypotheses are numbered sequentially as
 #' # H1, H2, ...

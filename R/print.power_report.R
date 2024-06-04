@@ -1,20 +1,64 @@
-#' S3 print method for class `power_report`
+#' S3 print method for the class `power_report`
 #'
-#' A power report displays:
-#'   * The initial graph being tested,
-#'   * Testing and simulation options,
-#'   * Final power calculations, and
-#'   * (Optionally) Detailed p-values and test results for each simulation
+#' @description
+#' A printed `power_report` displays the initial graph, testing and simulation
+#' options, power outputs, and optional detailed simulations and test results.
 #'
-#' @param x An object of class `power_report` to print
-#' @param ... Other values passed on to other methods (currently unused)
-#' @param precision An integer scalar indicating the number of significant figures
-#'   to include in numeric values
-#' @param indent An integer scalar indicating how many spaces to indent results
-#' @param rows An integer scalar indicating how many rows of verbose output to
-#'   print
+#' @param x An object of the class `power_report` to print
+#' @inheritParams print.graph_report
+#'
+#' @rdname print.power_report
 #'
 #' @export
+#'
+#' @references
+#'   Bretz, F., Posch, M., Glimm, E., Klinglmueller, F., Maurer, W., and
+#'   Rohmeyer, K. (2011a). Graphical approaches for multiple comparison
+#'   procedures using weighted Bonferroni, Simes, or parametric tests.
+#'   \emph{Biometrical Journal}, 53(6), 894-913.
+#'
+#'   Bretz, F., Maurer, W., and Hommel, G. (2011b). Test and power
+#'   considerations for multiple endpoint analyses using sequentially rejective
+#'   graphical procedures. \emph{Statistics in Medicine}, 30(13), 1489-1501.
+#'
+#' @examples
+#' # A graphical multiple comparison procedure with two primary hypotheses (H1
+#' # and H2) and two secondary hypotheses (H3 and H4)
+#' # See Figure 4 in Bretz et al. (2011).
+#' alpha <- 0.025
+#' hypotheses <- c(0.5, 0.5, 0, 0)
+#' delta <- 0.5
+#' transitions <- rbind(
+#'   c(0, delta, 1 - delta, 0),
+#'   c(delta, 0, 0, 1 - delta),
+#'   c(0, 1, 0, 0),
+#'   c(1, 0, 0, 0)
+#' )
+#' g <- graph_create(hypotheses, transitions)
+#'
+#' marginal_power <- c(0.8, 0.8, 0.7, 0.9)
+#' corr1 <- matrix(0.5, nrow = 2, ncol = 2)
+#' diag(corr1) <- 1
+#' corr <- rbind(
+#'   cbind(corr1, 0.5 * corr1),
+#'   cbind(0.5 * corr1, corr1)
+#' )
+#' success_fns <- list(
+#'   # Probability to reject both H1 and H2
+#'   `H1andH2` = function(x) x[1] & x[2],
+#'   # Probability to reject both (H1 and H3) or (H2 and H4)
+#'   `(H1andH3)or(H2andH4)` = function(x) (x[1] & x[3]) | (x[2] & x[4])
+#' )
+#' set.seed(1234)
+#' # Bonferroni tests
+#' power_output <- graph_calculate_power(
+#'   g,
+#'   alpha,
+#'   sim_corr = corr,
+#'   sim_n = 1e5,
+#'   power_marginal = marginal_power,
+#'   sim_success = success_fns
+#' )
 print.power_report <- function(x, ..., precision = 4, indent = 2, rows = 10) {
   pad <- paste(rep(" ", indent), collapse = "")
   pad_less_1 <- paste(rep(" ", max(indent - 1, 0)), collapse = "")

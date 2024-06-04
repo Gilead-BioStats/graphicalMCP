@@ -6,3 +6,8 @@
 
 * Added compilation of vignettes (#73)
 * Removed duplicated columns of "*" in test values (#75)
+
+# graphicalMCP 0.1.2
+
+* Updated function documentation
+* Updated references

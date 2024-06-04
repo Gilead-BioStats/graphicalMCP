@@ -1,6 +1,6 @@
 test_that("basic creation", {
   expect_equal(
-    bonferroni_holm(3),
+    bonferroni_holm(rep(1 / 3, 3)),
     structure(
       list(
         hypotheses = c(

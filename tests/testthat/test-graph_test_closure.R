@@ -382,7 +382,7 @@ test_that("closure internal consistency", {
 test_that("parametric floating point errors", {
   # Parametric adjusted p-values and c-values are now rounded to 10 decimals to
   # avoid floating point errors. These tests fail without this rounding.
-  bh <- bonferroni_holm(3)
+  bh <- bonferroni_holm(rep(1 / 3, 3))
   p <- rep(.025, 3)
 
   t_corr <- list(matrix(1, 3, 3))

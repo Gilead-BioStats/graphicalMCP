@@ -4,7 +4,7 @@ devtools::load_all()
 eps <- .0001
 
 # ex 1 -------------------------------------------------------------------------
-g1 <- complex_example_1()
+g1 <- two_doses_two_primary_two_secondary()
 
 igraph <- as_igraph(g1)
 
@@ -26,7 +26,7 @@ plot(
   )
 
 # ex 2 -------------------------------------------------------------------------
-g2 <- complex_example_2()
+g2 <- three_doses_two_primary_two_secondary()
 
 igraph <- as_igraph(g2)
 

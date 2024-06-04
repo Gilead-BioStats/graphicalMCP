@@ -7,43 +7,43 @@
 \method{plot}{updated_graph}(x, ...)
 }
 \arguments{
-\item{x}{An \code{updated_graph} object as returned by \code{graph_update()}}
+\item{x}{An object of class \code{updated_graph} to plot.}
 
 \item{...}{
   Arguments passed on to \code{\link[=plot.initial_graph]{plot.initial_graph}}
   \describe{
     \item{\code{v_palette}}{A character vector of length two specifying the colors for
 retained and deleted hypotheses. More extensive color customization must be
-done with \code{vertex.color}}
+done with \code{vertex.color}.}
     \item{\code{layout}}{An igraph layout specification (See \code{?igraph.plotting}), or
 \code{"grid"}, which lays out hypotheses left-to-right and top-to-bottom. \code{nrow}
-and \code{ncol} control the grid shape}
+and \code{ncol} control the grid shape.}
     \item{\code{nrow}}{An integer scalar specifying the number of rows in the vertex
 grid. If row and column counts are not specified, vertices will be laid out
 as close to a square as possible.}
     \item{\code{ncol}}{An integer scalar specifying the number of columns in the vertex
 grid. If row and column counts are not specified, vertices will be laid out
 as close to a square as possible.}
-    \item{\code{edge_curves}}{A named numeric vector specifying the curvature  of
+    \item{\code{edge_curves}}{A named numeric vector specifying the curvature of
 specific edges. Edge pairs (Where two vertices share an edge in each
 possible direction) are detected automatically and get 0.25 curvature.
 Adjust edges by adding an entry with name \verb{"vertex1|vertex2}, and adjust
 default edge pairs curvature by adding an entry with name \code{"pairs"} -
-\code{edge_curves = c("pairs" = .5, "H1|H3" = .25, "H3|H4" = .75)}}
-    \item{\code{precision}}{An integer scalar specifying how many significant figures
-should be displayed for weights}
-    \item{\code{eps}}{A numeric scalar. Edge weights between 0 and \code{eps} will be
-displayed as \eqn{\epsilon}, and edge weights between \code{1 - eps} and 1 will
-be displayed as \eqn{1 - \epsilon}}
+\code{edge_curves = c("pairs" = 0.5, "H1|H3" = 0.25, "H3|H4" = 0.75)}.}
+    \item{\code{precision}}{An integer scalar indicating the number of decimal places
+to to display.}
+    \item{\code{eps}}{A numeric scalar. The transition weight of \code{eps} will be
+displayed as \eqn{\epsilon}, which indicates edges with infinitesimally small
+weights. See Bretz et al. (2009) for more details.}
     \item{\code{background_color}}{A character scalar specifying a background color for
-the whole plotting area. Passed directly to \code{\link[graphics:par]{graphics::par()}} (\code{bg})}
+the whole plotting area. Passed directly to \code{\link[graphics:par]{graphics::par()}} (\code{bg}).}
     \item{\code{margins}}{A length 4 numeric vector specifying the margins for the plot.
 Defaults to all 0, since igraph plots tend to have large margins. It is
-passed directly to \code{\link[graphics:par]{graphics::par()}} (\code{mar})}
+passed directly to \code{\link[graphics:par]{graphics::par()}} (\code{mar}).}
   }}
 }
 \value{
-NULL, after plotting the graph
+NULL, after plotting the updated graph.
 }
 \description{
 Plotting an updated graph is a \emph{very} light wrapper around
@@ -51,11 +51,33 @@ Plotting an updated graph is a \emph{very} light wrapper around
 for deleted hypotheses.
 }
 \examples{
+# A graphical multiple comparison procedure with two primary hypotheses (H1
+# and H2) and two secondary hypotheses (H3 and H4)
+# See Figure 1 in Bretz et al. (2011).
+hypotheses <- c(0.5, 0.5, 0, 0)
+transitions <- rbind(
+  c(0, 0, 1, 0),
+  c(0, 0, 0, 1),
+  c(0, 1, 0, 0),
+  c(1, 0, 0, 0)
+)
+g <- graph_create(hypotheses, transitions)
+
+# Delete the second and third hypotheses in the "unordered mode"
 plot(
   graph_update(
-    simple_successive_2(),
-    c(TRUE, FALSE, TRUE, TRUE)
+    g,
+    c(FALSE, TRUE, TRUE, FALSE)
   ),
   layout = "grid"
 )
+}
+\references{
+Bretz, F., Posch, M., Glimm, E., Klinglmueller, F., Maurer, W., and
+Rohmeyer, K. (2011). Graphical approaches for multiple comparison
+procedures using weighted Bonferroni, Simes, or parametric tests.
+\emph{Biometrical Journal}, 53(6), 894-913.
+}
+\seealso{
+\code{\link[=plot.initial_graph]{plot.initial_graph()}} for the plot method for the initial graph.
 }
