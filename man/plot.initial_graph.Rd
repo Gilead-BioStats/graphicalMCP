@@ -21,7 +21,7 @@
 \arguments{
 \item{x}{An object of class \code{initial_graph} to plot.}
 
-\item{...}{Other arguments passed on to \code{\link[igraph:plot.igraph]{igraph::plot.igraph()}}.}
+\item{...}{Other arguments passed on to \code{igraph::plot.igraph()}.}
 
 \item{v_palette}{A character vector of length two specifying the colors for
 retained and deleted hypotheses. More extensive color customization must be
