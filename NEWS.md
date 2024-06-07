@@ -11,3 +11,9 @@
 
 * Updated function documentation
 * Updated references
+
+# graphicalMCP 0.2.0
+
+* Corrected typos
+* First CRAN release
+
