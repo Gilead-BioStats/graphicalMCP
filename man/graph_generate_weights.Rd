@@ -12,9 +12,9 @@ graph_generate_weights(graph)
 }
 \value{
 A numeric matrix of all intersection hypotheses and their hypothesis
-weights. For a graphical multiple comparison procedure with $m$ hypotheses,
-the number of rows is $2^{m}-1$, each of which corresponds to an intersection
-hypothesis. The number of columns is \eqn{2\cdot m}$. The first $m$ columns
+weights. For a graphical multiple comparison procedure with \eqn{m} hypotheses,
+the number of rows is \eqn{2^{m}-1}, each of which corresponds to an intersection
+hypothesis. The number of columns is \eqn{2\cdot m}. The first \eqn{m} columns
 indicate which individual hypotheses are included in a given intersection
 hypothesis and the second half of columns provide hypothesis weights for each
 individual hypothesis for a given intersection hypothesis.
@@ -28,18 +28,18 @@ hypotheses involved are true simultaneously.
 
 The closure based on a graph consists of all updated graphs (corresponding
 to intersection hypotheses) after all combinations of hypotheses are deleted.
-For a graphical multiple comparison procedure with $m$ hypotheses, there are
-$2^{m}-1$ updated graphs (intersection hypotheses), including the initial
-graph (the overall intersection hypothesis). The weighting strategy of this
-graph consists of hypothesis weights from all $2^{m}-1$ updated graphs
-(intersection hypotheses). The algorithm to derive the weighting strategy is
-based on Algorithm 1 in Bretz et al. (2011).
+For a graphical multiple comparison procedure with \eqn{m} hypotheses, there
+are \eqn{2^{m}-1} updated graphs (intersection hypotheses), including the
+initial graph (the overall intersection hypothesis). The weighting strategy
+of this graph consists of hypothesis weights from all \eqn{2^{m}-1} updated
+graphs (intersection hypotheses). The algorithm to derive the weighting
+strategy is based on Algorithm 1 in Bretz et al. (2011).
 }
 \section{Performance}{
 
 Generation of intersection hypotheses is closely related to the power set
 of a given set of indices. As the number of hypotheses increases, the memory
-and time usage can grow quickly (e.g., at a rate of $O(2^n)$). There are also
+and time usage can grow quickly (e.g., at a rate of \eqn{O(2^n)}). There are also
 multiple ways to implement Algorithm 1 in Bretz et al. (2011). See
 \code{vignette("generate-closure")} for more information about generating
 intersection hypotheses and comparisons of different approaches to calculate

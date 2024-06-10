@@ -123,7 +123,7 @@ The conventional approach for power simulations is to repeat the following proce
     + Remove the rejected hypothesis and update the graph
     + Repeat until no more hypotheses can be rejected
 
-Note that the same step to update the graph may repeat in many replications, whichmay be repetitive. For $m$ hypotheses, there are at most $2^m-1$ graphs depending on which hypotheses are rejected. These graphs correspond to the closure and the weighting strategy. Thus an idea to avoid redundant updating of graphs is to utilize the weighting strategy.
+Note that the same step to update the graph may repeat in many replications, which may be repetitive. For $m$ hypotheses, there are at most $2^m-1$ graphs depending on which hypotheses are rejected. These graphs correspond to the closure and the weighting strategy. Thus an idea to avoid redundant updating of graphs is to utilize the weighting strategy.
 
 ## Power simulations using parent-child relationships
 
