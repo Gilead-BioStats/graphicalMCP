@@ -167,13 +167,14 @@ power_output <- graph_calculate_power(
 
 # Parametric tests for H1 and H2; Simes tests for H3 and H4
 # User-defined success: to reject H1 or H2; to reject H1 and H2
+# Reduce the number of simulations to save time for package compilation
 graph_calculate_power(
   g,
   alpha,
   test_groups = list(1:2, 3:4),
   test_types = c("parametric", "simes"),
   test_corr = list(corr1, NA),
-  sim_n = 1e5,
+  sim_n = 1e3,
   sim_success = list(
     function(.) .[1] || .[2],
     function(.) .[1] && .[2]

@@ -63,8 +63,8 @@ if (requireNamespace("igraph", quietly = TRUE)) {
 }
 }
 \references{
-Cs{\'a}rdi, G., Nepusz, T., Traag, V., Horv{\'a}t, S., Zanini, F., Noom, D.,
-and M{\"u}ller, K. (2024). \emph{igraph}: Network analysis and visualization
+Csardi, G., Nepusz, T., Traag, V., Horvat, S., Zanini, F., Noom, D.,
+and Mueller, K. (2024). \emph{igraph}: Network analysis and visualization
 in R. R package version 2.0.3. \url{https://CRAN.R-project.org/package=igraph}.
 
 Rohmeyer, K., and Klinglmueller, K. (2024). \emph{gMCP}: Graph based
