@@ -21,3 +21,8 @@
 
 * Corrected typos
 * First CRAN release
+
+# graphicalMCP 0.2.2
+
+* Updated citations
+* Resubmission for first CRAN release
