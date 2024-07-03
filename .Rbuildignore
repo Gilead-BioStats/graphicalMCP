@@ -19,3 +19,6 @@
 ^vignettes/.*\.R$
 ^codemeta\.json$
 ^man-roxygen$
+^cran-comments\.md$
+^CRAN-SUBMISSION$
+^CRAN-RELEASE$

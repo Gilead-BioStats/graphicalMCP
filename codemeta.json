@@ -7,7 +7,7 @@
   "codeRepository": "https://github.com/Gilead-BioStats/graphicalMCP",
   "issueTracker": "https://github.com/Gilead-BioStats/graphicalMCP/issues",
   "license": "Apache License 2",
-  "version": "0.2.2",
+  "version": "0.2.3",
   "programmingLanguage": {
     "@type": "ComputerLanguage",
     "name": "R",
@@ -312,7 +312,7 @@
     },
     "SystemRequirements": null
   },
-  "fileSize": "713.292KB",
+  "fileSize": "713.316KB",
   "citation": [
     {
       "@type": "SoftwareSourceCode",
