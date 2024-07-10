@@ -17,7 +17,8 @@ to to display.}
 \item{indent}{An integer scalar indicating how many spaces to indent results.}
 }
 \value{
-NULL, after printing the updated graph.
+An object x of the class \code{updated_graph}, after printing the updated
+graph.
 }
 \description{
 A printed \code{updated_graph} displays the initial graph, the (final) updated

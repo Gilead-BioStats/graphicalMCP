@@ -19,6 +19,11 @@ to to display.}
 \item{rows}{An integer scalar indicating how many rows of detailed test
 results to print.}
 }
+\value{
+An object x of the class \code{power_report}, after printing the report of
+conducting power simulations based on a graphical multiple comparison
+procedure.
+}
 \description{
 A printed \code{power_report} displays the initial graph, testing and simulation
 options, power outputs, and optional detailed simulations and test results.

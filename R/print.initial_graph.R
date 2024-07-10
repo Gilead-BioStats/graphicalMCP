@@ -10,7 +10,8 @@
 #'   to to display.
 #' @param indent An integer scalar indicating how many spaces to indent results.
 #'
-#' @return NULL, after printing the initial graph.
+#' @return An object x of class `initial_graph`, after printing the initial
+#'   graph.
 #'
 #' @seealso
 #'   [print.updated_graph()] for the print method for the updated graph after
@@ -92,4 +93,6 @@ print.initial_graph <- function(x,
   transitions_text <- data.frame(df_trn, check.names = FALSE)
 
   print(transitions_text, row.names = FALSE)
+
+  invisible(x)
 }

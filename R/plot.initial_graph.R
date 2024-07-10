@@ -38,7 +38,8 @@
 #'   Defaults to all 0, since igraph plots tend to have large margins. It is
 #'   passed directly to [graphics::par()] (`mar`).
 #'
-#' @return NULL, after plotting the initial graph.
+#' @return An object x of class `initial_graph`, after plotting the initial
+#'   graph.
 #'
 #' @section Customization of graphs:
 #' There are a few values for [igraph::plot.igraph()] that get their defaults
@@ -232,4 +233,6 @@ plot.initial_graph <- function(x,
     edge.arrow.width = 1,
     asp = 0
   )
+
+  invisible(x)
 }

@@ -12,6 +12,9 @@
 #' @param rows An integer scalar indicating how many rows of detailed test
 #' results to print.
 #'
+#' @return An object x of class `graph_report`, after printing the report of
+#'   conducting a graphical multiple comparison procedure.
+#'
 #' @rdname print.graph_report
 #'
 #' @export

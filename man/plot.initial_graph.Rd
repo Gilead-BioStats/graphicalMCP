@@ -61,7 +61,8 @@ Defaults to all 0, since igraph plots tend to have large margins. It is
 passed directly to \code{\link[graphics:par]{graphics::par()}} (\code{mar}).}
 }
 \value{
-NULL, after plotting the initial graph.
+An object x of class \code{initial_graph}, after plotting the initial
+graph.
 }
 \description{
 The plot of an \code{initial_graph} translates the \code{hypotheses} into vertices and

@@ -31,3 +31,8 @@
 
 * Included cran-comments.ms in .Rbuildignore
 * Resubmission for first CRAN release
+
+# graphicalMCP 0.2.4
+
+* Updated documentation according to issue #84
+* Resubmission for first CRAN release

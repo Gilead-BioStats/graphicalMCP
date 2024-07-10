@@ -43,7 +43,8 @@ passed directly to \code{\link[graphics:par]{graphics::par()}} (\code{mar}).}
   }}
 }
 \value{
-NULL, after plotting the updated graph.
+An object x of class \code{updated_graph}, after plotting the updated
+graph.
 }
 \description{
 Plotting an updated graph is a \emph{very} light wrapper around

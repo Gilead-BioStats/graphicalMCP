@@ -7,6 +7,10 @@
 #' @param x An object of the class `power_report` to print
 #' @inheritParams print.graph_report
 #'
+#' @return An object x of the class `power_report`, after printing the report of
+#'   conducting power simulations based on a graphical multiple comparison
+#'   procedure.
+#'
 #' @rdname print.power_report
 #'
 #' @export
