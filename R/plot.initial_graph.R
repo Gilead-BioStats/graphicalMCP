@@ -131,6 +131,9 @@ plot.initial_graph <- function(x,
                                eps = NULL,
                                background_color = "white",
                                margins = c(0, 0, 0, 0)) {
+  oldpar <- par("bg", "mar")
+  on.exit(suppressWarnings(par(oldpar)))
+
   if (length(v_palette) != 2) {
     stop("Choose 2 palette colors or use `vertex.color` for more customization")
   }
