@@ -5,7 +5,6 @@
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<meta name="description" content="graphicalMCP">
 <title>Graphical multiple comparison procedures based on the closure principle • graphicalMCP</title>
 <!-- favicons --><link rel="icon" type="image/png" sizes="16x16" href="../favicon-16x16.png">
 <link rel="icon" type="image/png" sizes="32x32" href="../favicon-32x32.png">
@@ -15,73 +14,53 @@
 <link rel="apple-touch-icon" type="image/png" sizes="60x60" href="../apple-touch-icon-60x60.png">
 <script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <link href="../deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet">
-<script src="../deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous">
-<!-- bootstrap-toc --><script src="https://cdn.jsdelivr.net/gh/afeld/bootstrap-toc@v1.0.1/dist/bootstrap-toc.min.js" integrity="sha256-4veVQbu7//Lk5TSmc7YV48MxtMy98e26cf5MrgZYnwo=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.11/clipboard.min.js" integrity="sha512-7O5pXpc0oCRrxk8RUfDYFgn0nO1t+jLuIOQdOMRp4APB7uZ4vSjspzp5y6YDtDs4VzUSTbWzBFZ/LKJhnyFOKw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script><!-- search --><script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/6.4.6/fuse.js" integrity="sha512-zv6Ywkjyktsohkbp9bb45V6tEMoWhzFzXis+LrMehmJZZSys19Yxf1dopHx7WzIKxr5tK2dVcYmaCk2uqdjF4A==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/autocomplete.js/0.38.0/autocomplete.jquery.min.js" integrity="sha512-GU9ayf+66Xx2TmpxqJpliWbT5PiGYxpaG8rfnBEk1LL8l1KGkRShhngwdXK1UgqhAzWpZHSiYPc09/NwDQIGyg==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/mark.min.js" integrity="sha512-5CYOlHXGh6QpOFA/TeTylKLWfB3ftPsde7AnmhuitiTX4K5SqCLBeKro6sPS8ilsz1Q4NRx3v8Ko2IBiszzdww==" crossorigin="anonymous"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="Graphical multiple comparison procedures based on the closure principle">
-<meta property="og:description" content="graphicalMCP">
-<meta property="og:image" content="https://gilead-biostats.github.io/graphicalMCP/logo.png">
-<!-- mathjax --><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js" integrity="sha256-nvJJv9wWKEm88qvoQl9ekL2J+k/RWIsaSScxxlsrv8k=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/config/TeX-AMS-MML_HTMLorMML.js" integrity="sha256-84DKXVJXs0/F8OTMzX4UR909+jtl4G7SPypPavF+GfA=" crossorigin="anonymous"></script><!--[if lt IE 9]>
-<script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
-<script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
-<![endif]-->
+<script src="../deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="../deps/font-awesome-6.4.2/css/all.min.css" rel="stylesheet">
+<link href="../deps/font-awesome-6.4.2/css/v4-shims.min.css" rel="stylesheet">
+<script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="Graphical multiple comparison procedures based on the closure principle">
 </head>
 <body>
     <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
-    
 
-    <nav class="navbar fixed-top navbar-light navbar-expand-lg bg-light" data-bs-theme="light"><div class="container">
-    
+
+    <nav class="navbar navbar-expand-lg fixed-top bg-light" data-bs-theme="light" aria-label="Site navigation"><div class="container">
+
     <a class="navbar-brand me-2" href="../index.html">graphicalMCP</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.3</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.4</small>
 
-    
+
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
 
     <div id="navbar" class="collapse navbar-collapse ms-3">
       <ul class="navbar-nav me-auto">
-<li class="nav-item">
-  <a class="nav-link" href="../articles/graphicalMCP.html">Get started</a>
-</li>
-<li class="nav-item">
-  <a class="nav-link" href="../articles/glossary.html">Glossary</a>
-</li>
-<li class="nav-item">
-  <a class="nav-link" href="../reference/index.html">Function reference</a>
-</li>
+<li class="nav-item"><a class="nav-link" href="../articles/graphicalMCP.html">Get started</a></li>
+<li class="nav-item"><a class="nav-link" href="../articles/glossary.html">Glossary</a></li>
+<li class="nav-item"><a class="nav-link" href="../reference/index.html">Function reference</a></li>
 <li class="active nav-item dropdown">
-  <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" id="dropdown-articles">Articles</a>
-  <div class="dropdown-menu" aria-labelledby="dropdown-articles">
-    <a class="dropdown-item" href="../articles/shortcut-testing.html">Sequentially rejective graphical multiple comparison procedures based on Bonferroni tests</a>
-    <a class="dropdown-item" href="../articles/closed-testing.html">Graphical multiple comparison procedures based on the closure principle</a>
-    <a class="dropdown-item" href="../articles/graph-examples.html">Common multiple comparison procedures illustrated using graphicalMCP</a>
-    <a class="dropdown-item" href="../articles/comparisons.html">Comparisons with other packages</a>
-    <a class="dropdown-item" href="../articles/generate-closure.html">Rationales to generate the closure and the weighting strategy of a graph</a>
-    <div class="dropdown-divider"></div>
-    <a class="dropdown-item" href="../articles/index.html">More articles...</a>
-  </div>
+  <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
+  <ul class="dropdown-menu" aria-labelledby="dropdown-articles">
+<li><a class="dropdown-item" href="../articles/shortcut-testing.html">Sequentially rejective graphical multiple comparison procedures based on Bonferroni tests</a></li>
+    <li><a class="dropdown-item" href="../articles/closed-testing.html">Graphical multiple comparison procedures based on the closure principle</a></li>
+    <li><a class="dropdown-item" href="../articles/graph-examples.html">Common multiple comparison procedures illustrated using graphicalMCP</a></li>
+    <li><a class="dropdown-item" href="../articles/comparisons.html">Comparisons with other packages</a></li>
+    <li><a class="dropdown-item" href="../articles/generate-closure.html">Rationales to generate the closure and the weighting strategy of a graph</a></li>
+    <li><hr class="dropdown-divider"></li>
+    <li><a class="dropdown-item" href="../articles/index.html">More articles...</a></li>
+  </ul>
 </li>
-<li class="nav-item">
-  <a class="nav-link" href="../news/index.html">Changelog</a>
-</li>
+<li class="nav-item"><a class="nav-link" href="../news/index.html">Changelog</a></li>
       </ul>
-<form class="form-inline my-2 my-lg-0" role="search">
-        <input type="search" class="form-control me-sm-2" aria-label="Toggle navigation" name="search-input" data-search-index="../search.json" id="search-input" placeholder="Search for" autocomplete="off">
-</form>
-
-      <ul class="navbar-nav">
-<li class="nav-item">
-  <a class="external-link nav-link" href="https://github.com/Gilead-BioStats/graphicalMCP/" aria-label="github">
-    <span class="fab fa fab fa-github fa-lg"></span>
-     
-  </a>
-</li>
+<ul class="navbar-nav">
+<li class="nav-item"><form class="form-inline" role="search">
+ <input class="form-control" type="search" name="search-input" id="search-input" autocomplete="off" aria-label="Search site" placeholder="Search for" data-search-index="../search.json">
+</form></li>
+<li class="nav-item"><a class="external-link nav-link" href="https://github.com/Gilead-BioStats/graphicalMCP/" aria-label="GitHub"><span class="fa fab fa-github fa-lg"></span></a></li>
       </ul>
 </div>
 
-    
+
   </div>
 </nav><div class="container template-article">
 
@@ -93,7 +72,7 @@
       <img src="../logo.png" class="logo" alt=""><h1>Graphical multiple comparison procedures based on the closure principle</h1>
             
       
-      <small class="dont-index">Source: <a href="https://github.com/Gilead-BioStats/graphicalMCP/blob/HEAD/vignettes/closed-testing.Rmd" class="external-link"><code>vignettes/closed-testing.Rmd</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/Gilead-BioStats/graphicalMCP/blob/main/vignettes/closed-testing.Rmd" class="external-link"><code>vignettes/closed-testing.Rmd</code></a></small>
       <div class="d-none name"><code>closed-testing.Rmd</code></div>
     </div>
 
@@ -112,9 +91,19 @@
 are two doses of treatment: the low dose and the high dose. There are
 three endpoints included in the multiplicity adjustment strategy, which
 are the primary endpoint (PE) and two secondary endpoints (SE1 and SE2).
-In total, there are six null hypotheses: <span class="math inline">\(H_1\)</span>, <span class="math inline">\(H_3\)</span> and <span class="math inline">\(H_5\)</span> are the primary hypothesis and two
-secondary hypotheses respectively for the low dose versus control; <span class="math inline">\(H_2\)</span>, <span class="math inline">\(H_4\)</span> and <span class="math inline">\(H_6\)</span> are the primary hypothesis and two
-secondary hypotheses respectively for the high dose versus control.</p>
+In total, there are six null hypotheses:
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>H</mi><mn>1</mn></msub><annotation encoding="application/x-tex">H_1</annotation></semantics></math>,
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>H</mi><mn>3</mn></msub><annotation encoding="application/x-tex">H_3</annotation></semantics></math>
+and
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>H</mi><mn>5</mn></msub><annotation encoding="application/x-tex">H_5</annotation></semantics></math>
+are the primary hypothesis and two secondary hypotheses respectively for
+the low dose versus control;
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>H</mi><mn>2</mn></msub><annotation encoding="application/x-tex">H_2</annotation></semantics></math>,
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>H</mi><mn>4</mn></msub><annotation encoding="application/x-tex">H_4</annotation></semantics></math>
+and
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>H</mi><mn>6</mn></msub><annotation encoding="application/x-tex">H_6</annotation></semantics></math>
+are the primary hypothesis and two secondary hypotheses respectively for
+the high dose versus control.</p>
 <p>There are clinical considerations which constrain the structure of
 multiple comparison procedures, and which can be flexibly incorporated
 using graphical approaches. First, the low and the high doses are
@@ -122,20 +111,35 @@ considered equally important, which means that rejecting the primary
 hypothesis for either dose versus control leads to a successful trial.
 Regarding secondary hypotheses, each one is tested only if its
 corresponding primary hypothesis has been rejected. This means that
-<span class="math inline">\(H_3\)</span> and <span class="math inline">\(H_5\)</span> are tested only after <span class="math inline">\(H_1\)</span> has been rejected; <span class="math inline">\(H_4\)</span> and <span class="math inline">\(H_6\)</span> are tested only after <span class="math inline">\(H_2\)</span> has been rejected.</p>
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>H</mi><mn>3</mn></msub><annotation encoding="application/x-tex">H_3</annotation></semantics></math>
+and
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>H</mi><mn>5</mn></msub><annotation encoding="application/x-tex">H_5</annotation></semantics></math>
+are tested only after
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>H</mi><mn>1</mn></msub><annotation encoding="application/x-tex">H_1</annotation></semantics></math>
+has been rejected;
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>H</mi><mn>4</mn></msub><annotation encoding="application/x-tex">H_4</annotation></semantics></math>
+and
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>H</mi><mn>6</mn></msub><annotation encoding="application/x-tex">H_6</annotation></semantics></math>
+are tested only after
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>H</mi><mn>2</mn></msub><annotation encoding="application/x-tex">H_2</annotation></semantics></math>
+has been rejected.</p>
 <p>In addition, there are some statistical considerations to complete
-the graph. The primary hypotheses <span class="math inline">\(H_1\)</span> and <span class="math inline">\(H_2\)</span> will have an equal hypothesis weight
-of 0.5. The secondary hypotheses have a hypothesis weight of 0. When a
-primary hypothesis has been rejected, its weight will propagate along
-three outgoing edges: one to the other primary hypothesis and two to its
-descendant secondary hypotheses. The edge to the other primary
-hypothesis will have a transition weight of 0.5; the two edges to the
-descendant secondary hypotheses will have an equal transition weight of
-0.25. Between the secondary hypotheses for each dose-control comparison,
-we will have an edge of a transition weight of 1 (or very close to 1 to
-allow <span class="math inline">\(\epsilon\)</span> edges). The
-hypothesis weights for a dose-control comparison group will be
-propagated to the primary hypothesis for the other dose-control
+the graph. The primary hypotheses
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>H</mi><mn>1</mn></msub><annotation encoding="application/x-tex">H_1</annotation></semantics></math>
+and
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>H</mi><mn>2</mn></msub><annotation encoding="application/x-tex">H_2</annotation></semantics></math>
+will have an equal hypothesis weight of 0.5. The secondary hypotheses
+have a hypothesis weight of 0. When a primary hypothesis has been
+rejected, its weight will propagate along three outgoing edges: one to
+the other primary hypothesis and two to its descendant secondary
+hypotheses. The edge to the other primary hypothesis will have a
+transition weight of 0.5; the two edges to the descendant secondary
+hypotheses will have an equal transition weight of 0.25. Between the
+secondary hypotheses for each dose-control comparison, we will have an
+edge of a transition weight of 1 (or very close to 1 to allow
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>ϵ</mi><annotation encoding="application/x-tex">\epsilon</annotation></semantics></math>
+edges). The hypothesis weights for a dose-control comparison group will
+be propagated to the primary hypothesis for the other dose-control
 comparison, but only after all hypotheses in the first dose-control
 comparison group have been deleted. With these specifications, we can
 create the following graph.</p>
@@ -184,14 +188,16 @@ closure principle<a class="anchor" aria-label="anchor" href="#perform-the-graphi
 <div class="section level3">
 <h3 id="bonferroni-tests">Bonferroni tests<a class="anchor" aria-label="anchor" href="#bonferroni-tests"></a>
 </h3>
-<p>Given a set of p-values for <span class="math inline">\(H_1, \ldots,
-H_6\)</span>, the graphical multiple comparison procedure can be
-performed to control the family-wise error rate (FWER) at the
-significance level <code>alpha</code>. For one-sided p-values,
-<code>alpha</code> is often set to 0.025 (default). First, we perform a
-Bonferroni-based procedure using the closure principle <span class="citation">(Bretz et al. 2009)</span>. After running the
-procedure, none of these hypotheses is rejected. These results are
-identical to using <code><a href="../reference/graph_test_shortcut.html">graph_test_shortcut()</a></code>.</p>
+<p>Given a set of p-values for
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>H</mi><mn>1</mn></msub><mo>,</mo><mi>…</mi><mo>,</mo><msub><mi>H</mi><mn>6</mn></msub></mrow><annotation encoding="application/x-tex">H_1, \ldots, H_6</annotation></semantics></math>,
+the graphical multiple comparison procedure can be performed to control
+the family-wise error rate (FWER) at the significance level
+<code>alpha</code>. For one-sided p-values, <code>alpha</code> is often
+set to 0.025 (default). First, we perform a Bonferroni-based procedure
+using the closure principle <span class="citation">(Bretz et al.
+2009)</span>. After running the procedure, none of these hypotheses is
+rejected. These results are identical to using
+<code><a href="../reference/graph_test_shortcut.html">graph_test_shortcut()</a></code>.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">p_values</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.015</span>, <span class="fl">0.013</span>, <span class="fl">0.01</span>, <span class="fl">0.007</span>, <span class="fl">0.1</span>, <span class="fl">0.0124</span><span class="op">)</span></span>
 <span><span class="va">test_results</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/graph_test_closure.html">graph_test_closure</a></span><span class="op">(</span></span>
@@ -204,14 +210,12 @@ identical to using <code><a href="../reference/graph_test_shortcut.html">graph_t
 <span></span>
 <span><span class="va">test_results</span><span class="op">$</span><span class="va">outputs</span><span class="op">$</span><span class="va">adjusted_p</span></span>
 <span><span class="co">#&gt;    H1    H2    H3    H4    H5    H6 </span></span>
-<span><span class="co">#&gt; 0.026 0.026 0.028 0.028 0.100 0.028</span></span></code></pre></div>
-<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span></span>
+<span><span class="co">#&gt; 0.026 0.026 0.028 0.028 0.100 0.028</span></span>
+<span></span>
 <span><span class="va">test_results</span><span class="op">$</span><span class="va">outputs</span><span class="op">$</span><span class="va">rejected</span></span>
 <span><span class="co">#&gt;    H1    H2    H3    H4    H5    H6 </span></span>
-<span><span class="co">#&gt; FALSE FALSE FALSE FALSE FALSE FALSE</span></span></code></pre></div>
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># Same testing results as</span></span>
+<span><span class="co">#&gt; FALSE FALSE FALSE FALSE FALSE FALSE</span></span>
+<span><span class="co"># Same testing results as</span></span>
 <span><span class="co"># 'graph_test_shortcut(g, p = p_values, alpha = 0.025)$outputs$rejected'</span></span></code></pre></div>
 <div class="section level4">
 <h4 id="obtain-the-closure">Obtain the closure<a class="anchor" aria-label="anchor" href="#obtain-the-closure"></a>
@@ -231,7 +235,7 @@ is the minimum across groups within that intersection. Finally, the
 adjusted p-value for an individual hypothesis for the whole procedure is
 equal to the maximum of adjusted p-values across intersections involving
 that hypothesis.</p>
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">test_results_verbose</span> <span class="op">&lt;-</span></span>
 <span>  <span class="fu"><a href="../reference/graph_test_closure.html">graph_test_closure</a></span><span class="op">(</span></span>
 <span>    <span class="va">g</span>,</span>
@@ -261,7 +265,7 @@ rejected by the closed testing procedure if <em>all</em> intersection
 hypotheses involving it have been rejected. An intersection hypothesis
 is rejected if <em>any</em> null hypotheses within it have been
 rejected.</p>
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">test_results_test_values</span> <span class="op">&lt;-</span></span>
 <span>  <span class="fu"><a href="../reference/graph_test_closure.html">graph_test_closure</a></span><span class="op">(</span></span>
 <span>    <span class="va">g</span>,</span>
@@ -298,45 +302,97 @@ parametric tests to primary hypotheses.</p>
 </h4>
 <p>In this example, we assume that the test statistics for primary
 hypotheses follow an asymptotic bivariate normal distribution. Under
-their null hypotheses <span class="math inline">\(H_1\)</span> and <span class="math inline">\(H_2\)</span>, the mean of the distribution is 0.
-The correlation between test statistics for <span class="math inline">\(H_1\)</span> and <span class="math inline">\(H_2\)</span> can be calculated as a function of
-sample size. Assume that the sample size for the control, the low and
-the high doses is <span class="math inline">\(n_0\)</span>, <span class="math inline">\(n_1\)</span> and <span class="math inline">\(n_2\)</span>, respectively. Then the correlation
-between test statistics for <span class="math inline">\(H_1\)</span> and
-<span class="math inline">\(H_2\)</span> is <span class="math inline">\(\rho_{12}=\left(\frac{n_1}{n_1+n_0}\right)^{1/2}\left(\frac{n_2}{n_2+n_0}\right)^{1/2}\)</span>.
+their null hypotheses
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>H</mi><mn>1</mn></msub><annotation encoding="application/x-tex">H_1</annotation></semantics></math>
+and
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>H</mi><mn>2</mn></msub><annotation encoding="application/x-tex">H_2</annotation></semantics></math>,
+the mean of the distribution is 0. The correlation between test
+statistics for
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>H</mi><mn>1</mn></msub><annotation encoding="application/x-tex">H_1</annotation></semantics></math>
+and
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>H</mi><mn>2</mn></msub><annotation encoding="application/x-tex">H_2</annotation></semantics></math>
+can be calculated as a function of sample size. Assume that the sample
+size for the control, the low and the high doses is
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>n</mi><mn>0</mn></msub><annotation encoding="application/x-tex">n_0</annotation></semantics></math>,
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>n</mi><mn>1</mn></msub><annotation encoding="application/x-tex">n_1</annotation></semantics></math>
+and
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>n</mi><mn>2</mn></msub><annotation encoding="application/x-tex">n_2</annotation></semantics></math>,
+respectively. Then the correlation between test statistics for
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>H</mi><mn>1</mn></msub><annotation encoding="application/x-tex">H_1</annotation></semantics></math>
+and
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>H</mi><mn>2</mn></msub><annotation encoding="application/x-tex">H_2</annotation></semantics></math>
+is
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>ρ</mi><mn>12</mn></msub><mo>=</mo><msup><mrow><mo stretchy="true" form="prefix">(</mo><mfrac><msub><mi>n</mi><mn>1</mn></msub><mrow><msub><mi>n</mi><mn>1</mn></msub><mo>+</mo><msub><mi>n</mi><mn>0</mn></msub></mrow></mfrac><mo stretchy="true" form="postfix">)</mo></mrow><mrow><mn>1</mn><mi>/</mi><mn>2</mn></mrow></msup><msup><mrow><mo stretchy="true" form="prefix">(</mo><mfrac><msub><mi>n</mi><mn>2</mn></msub><mrow><msub><mi>n</mi><mn>2</mn></msub><mo>+</mo><msub><mi>n</mi><mn>0</mn></msub></mrow></mfrac><mo stretchy="true" form="postfix">)</mo></mrow><mrow><mn>1</mn><mi>/</mi><mn>2</mn></mrow></msup></mrow><annotation encoding="application/x-tex">\rho_{12}=\left(\frac{n_1}{n_1+n_0}\right)^{1/2}\left(\frac{n_2}{n_2+n_0}\right)^{1/2}</annotation></semantics></math>.
 Under the equal randomization, this correlation is 0.5.</p>
-<p>For the intersection hypothesis <span class="math inline">\(H_1\cap
-H_2\cap H_3\cap H_4\cap H_5\cap H_6\)</span>, hypothesis weights are
-0.5, 0.5, 0, 0, 0, and 0, respectively for <span class="math inline">\(H_1,\ldots, H_6\)</span>. Assume one-sided
-p-values for these hypotheses are <span class="math inline">\(p_1,\ldots,p_6\)</span>, respectively. The
-intersection hypothesis is rejected by the Bonferroni test if <span class="math inline">\(p_1\leq 0.5\alpha\)</span> or <span class="math inline">\(p_2\leq 0.5\alpha\)</span>. Alternatively, a
-parametric test utilizes the correlation between test statistics <span class="math inline">\(t_1=\Phi^{-1}(1 - p_1)\)</span> and <span class="math inline">\(t_2=\Phi^{-1}(1 - p_2)\)</span>. The intersection
-hypothesis can be rejected if <span class="math inline">\(p_1\leq
-c\times 0.5\alpha\)</span> or <span class="math inline">\(p_2\leq
-c\times 0.5\alpha\)</span>, where the <span class="math inline">\(c\)</span> value is the adjustment due to the
-correlation between <span class="math inline">\(t_1\)</span> and <span class="math inline">\(t_2\)</span>. More specifically, <span class="math inline">\(c\)</span> can be solved as a solution to <span class="math inline">\(Pr\{(p_1\leq c\times 0.5\alpha)\cup (p_2\leq
-c\times 0.5\alpha)\}=\alpha\)</span>. For a given correlation <span class="math inline">\(\rho_{12}\)</span>, the <span class="math inline">\(c\)</span> value can be solved using the
-<code>uniroot</code> function and the <code>mvtnorm</code> package. For
-example, if <span class="math inline">\(\rho_{12}=0.5\)</span>, the
-<span class="math inline">\(c\)</span> value is 1.078. Then we can
-obtain the adjusted significance level for <span class="math inline">\(H_1\)</span> and <span class="math inline">\(H_2\)</span> as <span class="math inline">\(c\times 0.5\alpha\)</span>. Alternatively, we can
-calculate the adjusted p-value for <span class="math inline">\(H_1\cap
-H_2\cap H_3\cap H_4\cap H_5\cap H_6\)</span> as <span class="math inline">\(Pr\{(P_1\leq \min{\{p_1, p_2\}})\cup (P_2\leq
-\min{\{p_1, p_2\}})\}\)</span>.</p>
+<p>For the intersection hypothesis
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>H</mi><mn>1</mn></msub><mo>∩</mo><msub><mi>H</mi><mn>2</mn></msub><mo>∩</mo><msub><mi>H</mi><mn>3</mn></msub><mo>∩</mo><msub><mi>H</mi><mn>4</mn></msub><mo>∩</mo><msub><mi>H</mi><mn>5</mn></msub><mo>∩</mo><msub><mi>H</mi><mn>6</mn></msub></mrow><annotation encoding="application/x-tex">H_1\cap H_2\cap H_3\cap H_4\cap H_5\cap H_6</annotation></semantics></math>,
+hypothesis weights are 0.5, 0.5, 0, 0, 0, and 0, respectively for
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>H</mi><mn>1</mn></msub><mo>,</mo><mi>…</mi><mo>,</mo><msub><mi>H</mi><mn>6</mn></msub></mrow><annotation encoding="application/x-tex">H_1,\ldots, H_6</annotation></semantics></math>.
+Assume one-sided p-values for these hypotheses are
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>p</mi><mn>1</mn></msub><mo>,</mo><mi>…</mi><mo>,</mo><msub><mi>p</mi><mn>6</mn></msub></mrow><annotation encoding="application/x-tex">p_1,\ldots,p_6</annotation></semantics></math>,
+respectively. The intersection hypothesis is rejected by the Bonferroni
+test if
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>p</mi><mn>1</mn></msub><mo>≤</mo><mn>0.5</mn><mi>α</mi></mrow><annotation encoding="application/x-tex">p_1\leq 0.5\alpha</annotation></semantics></math>
+or
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>p</mi><mn>2</mn></msub><mo>≤</mo><mn>0.5</mn><mi>α</mi></mrow><annotation encoding="application/x-tex">p_2\leq 0.5\alpha</annotation></semantics></math>.
+Alternatively, a parametric test utilizes the correlation between test
+statistics
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>t</mi><mn>1</mn></msub><mo>=</mo><msup><mi>Φ</mi><mrow><mo>−</mo><mn>1</mn></mrow></msup><mrow><mo stretchy="true" form="prefix">(</mo><mn>1</mn><mo>−</mo><msub><mi>p</mi><mn>1</mn></msub><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">t_1=\Phi^{-1}(1 - p_1)</annotation></semantics></math>
+and
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>t</mi><mn>2</mn></msub><mo>=</mo><msup><mi>Φ</mi><mrow><mo>−</mo><mn>1</mn></mrow></msup><mrow><mo stretchy="true" form="prefix">(</mo><mn>1</mn><mo>−</mo><msub><mi>p</mi><mn>2</mn></msub><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">t_2=\Phi^{-1}(1 - p_2)</annotation></semantics></math>.
+The intersection hypothesis can be rejected if
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>p</mi><mn>1</mn></msub><mo>≤</mo><mi>c</mi><mo>×</mo><mn>0.5</mn><mi>α</mi></mrow><annotation encoding="application/x-tex">p_1\leq c\times 0.5\alpha</annotation></semantics></math>
+or
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>p</mi><mn>2</mn></msub><mo>≤</mo><mi>c</mi><mo>×</mo><mn>0.5</mn><mi>α</mi></mrow><annotation encoding="application/x-tex">p_2\leq c\times 0.5\alpha</annotation></semantics></math>,
+where the
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>c</mi><annotation encoding="application/x-tex">c</annotation></semantics></math>
+value is the adjustment due to the correlation between
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>t</mi><mn>1</mn></msub><annotation encoding="application/x-tex">t_1</annotation></semantics></math>
+and
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>t</mi><mn>2</mn></msub><annotation encoding="application/x-tex">t_2</annotation></semantics></math>.
+More specifically,
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>c</mi><annotation encoding="application/x-tex">c</annotation></semantics></math>
+can be solved as a solution to
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>P</mi><mi>r</mi><mo stretchy="false" form="prefix">{</mo><mrow><mo stretchy="true" form="prefix">(</mo><msub><mi>p</mi><mn>1</mn></msub><mo>≤</mo><mi>c</mi><mo>×</mo><mn>0.5</mn><mi>α</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo>∪</mo><mrow><mo stretchy="true" form="prefix">(</mo><msub><mi>p</mi><mn>2</mn></msub><mo>≤</mo><mi>c</mi><mo>×</mo><mn>0.5</mn><mi>α</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo stretchy="false" form="postfix">}</mo><mo>=</mo><mi>α</mi></mrow><annotation encoding="application/x-tex">Pr\{(p_1\leq c\times 0.5\alpha)\cup (p_2\leq c\times 0.5\alpha)\}=\alpha</annotation></semantics></math>.
+For a given correlation
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>ρ</mi><mn>12</mn></msub><annotation encoding="application/x-tex">\rho_{12}</annotation></semantics></math>,
+the
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>c</mi><annotation encoding="application/x-tex">c</annotation></semantics></math>
+value can be solved using the <code>uniroot</code> function and the
+<code>mvtnorm</code> package. For example, if
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>ρ</mi><mn>12</mn></msub><mo>=</mo><mn>0.5</mn></mrow><annotation encoding="application/x-tex">\rho_{12}=0.5</annotation></semantics></math>,
+the
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>c</mi><annotation encoding="application/x-tex">c</annotation></semantics></math>
+value is 1.078. Then we can obtain the adjusted significance level for
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>H</mi><mn>1</mn></msub><annotation encoding="application/x-tex">H_1</annotation></semantics></math>
+and
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>H</mi><mn>2</mn></msub><annotation encoding="application/x-tex">H_2</annotation></semantics></math>
+as
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>c</mi><mo>×</mo><mn>0.5</mn><mi>α</mi></mrow><annotation encoding="application/x-tex">c\times 0.5\alpha</annotation></semantics></math>.
+Alternatively, we can calculate the adjusted p-value for
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>H</mi><mn>1</mn></msub><mo>∩</mo><msub><mi>H</mi><mn>2</mn></msub><mo>∩</mo><msub><mi>H</mi><mn>3</mn></msub><mo>∩</mo><msub><mi>H</mi><mn>4</mn></msub><mo>∩</mo><msub><mi>H</mi><mn>5</mn></msub><mo>∩</mo><msub><mi>H</mi><mn>6</mn></msub></mrow><annotation encoding="application/x-tex">H_1\cap H_2\cap H_3\cap H_4\cap H_5\cap H_6</annotation></semantics></math>
+as
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>P</mi><mi>r</mi><mo stretchy="false" form="prefix">{</mo><mrow><mo stretchy="true" form="prefix">(</mo><msub><mi>P</mi><mn>1</mn></msub><mo>≤</mo><mo>min</mo><mrow><mo stretchy="false" form="prefix">{</mo><msub><mi>p</mi><mn>1</mn></msub><mo>,</mo><msub><mi>p</mi><mn>2</mn></msub><mo stretchy="false" form="postfix">}</mo></mrow><mo stretchy="true" form="postfix">)</mo></mrow><mo>∪</mo><mrow><mo stretchy="true" form="prefix">(</mo><msub><mi>P</mi><mn>2</mn></msub><mo>≤</mo><mo>min</mo><mrow><mo stretchy="false" form="prefix">{</mo><msub><mi>p</mi><mn>1</mn></msub><mo>,</mo><msub><mi>p</mi><mn>2</mn></msub><mo stretchy="false" form="postfix">}</mo></mrow><mo stretchy="true" form="postfix">)</mo></mrow><mo stretchy="false" form="postfix">}</mo></mrow><annotation encoding="application/x-tex">Pr\{(P_1\leq \min{\{p_1, p_2\}})\cup (P_2\leq \min{\{p_1, p_2\}})\}</annotation></semantics></math>.</p>
 <p>To implement this procedure, we need to create two subgroups: one for
-<span class="math inline">\(H_1\)</span> and <span class="math inline">\(H_2\)</span>, and one for the rest of the
-hypotheses. For the first subgroup of hypotheses, we apply parametric
-tests; for the second subgroup (and its subsets), we apply Bonferroni
-tests. Three additional inputs are needed: to specify the grouping
-information with <code>test_groups</code>, to identify the types of
-tests for every subgroup with <code>test_types</code>, and to provide
-the correlation matrix for parametric tests with <code>test_corr</code>.
-Assume the correlation is 0.5 between test statistics for primary
-hypotheses. The procedure rejects <span class="math inline">\(H_1\)</span> and <span class="math inline">\(H_2\)</span>, but no others. Compared with the
-Bonferroni-based graphical approach which didn’t rejected any
-hypothesis, this illustrates the power improvement of using parametric
-tests over Bonferroni tests.</p>
-<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>H</mi><mn>1</mn></msub><annotation encoding="application/x-tex">H_1</annotation></semantics></math>
+and
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>H</mi><mn>2</mn></msub><annotation encoding="application/x-tex">H_2</annotation></semantics></math>,
+and one for the rest of the hypotheses. For the first subgroup of
+hypotheses, we apply parametric tests; for the second subgroup (and its
+subsets), we apply Bonferroni tests. Three additional inputs are needed:
+to specify the grouping information with <code>test_groups</code>, to
+identify the types of tests for every subgroup with
+<code>test_types</code>, and to provide the correlation matrix for
+parametric tests with <code>test_corr</code>. Assume the correlation is
+0.5 between test statistics for primary hypotheses. The procedure
+rejects
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>H</mi><mn>1</mn></msub><annotation encoding="application/x-tex">H_1</annotation></semantics></math>
+and
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>H</mi><mn>2</mn></msub><annotation encoding="application/x-tex">H_2</annotation></semantics></math>,
+but no others. Compared with the Bonferroni-based graphical approach
+which didn’t rejected any hypothesis, this illustrates the power
+improvement of using parametric tests over Bonferroni tests.</p>
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">corr_12</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">matrix</a></span><span class="op">(</span><span class="fl">0.5</span>, nrow <span class="op">=</span> <span class="fl">2</span>, ncol <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/diag.html" class="external-link">diag</a></span><span class="op">(</span><span class="va">corr_12</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fl">1</span></span>
 <span></span>
@@ -353,13 +409,11 @@ tests over Bonferroni tests.</p>
 <span></span>
 <span><span class="va">test_results_parametric</span><span class="op">$</span><span class="va">outputs</span><span class="op">$</span><span class="va">adjusted_p</span></span>
 <span><span class="co">#&gt;         H1         H2         H3         H4         H5         H6 </span></span>
-<span><span class="co">#&gt; 0.02413846 0.02413846 0.02800000 0.02800000 0.10000000 0.02800000</span></span></code></pre></div>
-<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">test_results_parametric</span><span class="op">$</span><span class="va">outputs</span><span class="op">$</span><span class="va">rejected</span></span>
+<span><span class="co">#&gt; 0.02413846 0.02413846 0.02800000 0.02800000 0.10000000 0.02800000</span></span>
+<span><span class="va">test_results_parametric</span><span class="op">$</span><span class="va">outputs</span><span class="op">$</span><span class="va">rejected</span></span>
 <span><span class="co">#&gt;    H1    H2    H3    H4    H5    H6 </span></span>
-<span><span class="co">#&gt;  TRUE  TRUE FALSE FALSE FALSE FALSE</span></span></code></pre></div>
-<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span></span>
+<span><span class="co">#&gt;  TRUE  TRUE FALSE FALSE FALSE FALSE</span></span>
+<span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">test_results_parametric</span><span class="op">$</span><span class="va">test_values</span><span class="op">$</span><span class="va">results</span><span class="op">)</span></span>
 <span><span class="co">#&gt;   Intersection Hypothesis       Test      p      c_value Weight Alpha</span></span>
 <span><span class="co">#&gt; 1       111111         H1 parametric 0.0150 1.0782936582    0.5 0.025</span></span>
@@ -386,37 +440,94 @@ way is to apply Simes tests to secondary hypotheses<span class="citation">(Bretz
 improve over Bonferroni tests because they may reject an intersection
 hypothesis if all p-values are relatively small, even if they’re larger
 than adjusted significance levels of Bonferroni tests.</p>
-<p>For the intersection hypothesis <span class="math inline">\(H_3\cap
-H_5\)</span>, hypothesis weights are 0.5 and 0.5, respectively for <span class="math inline">\(H_3\)</span> and <span class="math inline">\(H_5\)</span>. The intersection hypothesis is
-rejected by the Bonferroni test if <span class="math inline">\(p_3\leq
-0.5\alpha\)</span> or <span class="math inline">\(p_5\leq
-0.5\alpha\)</span>. In addition to these conditions, the Simes test can
-also reject the intersection hypothesis if both <span class="math inline">\(p_3\)</span> and <span class="math inline">\(p_5\)</span> are less than or equal to <span class="math inline">\(\alpha\)</span>. In order to control the Type I
-error for the Simes test, a distributional requirement is needed, which
-is called <span class="math inline">\(MTP_2\)</span> <span class="citation">(Sarkar 1998)</span>. In this case, it means that the
-correlation between test statistics for <span class="math inline">\(H_3\)</span> and <span class="math inline">\(H_5\)</span> should be non-negative.</p>
+<p>For the intersection hypothesis
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>H</mi><mn>3</mn></msub><mo>∩</mo><msub><mi>H</mi><mn>5</mn></msub></mrow><annotation encoding="application/x-tex">H_3\cap H_5</annotation></semantics></math>,
+hypothesis weights are 0.5 and 0.5, respectively for
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>H</mi><mn>3</mn></msub><annotation encoding="application/x-tex">H_3</annotation></semantics></math>
+and
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>H</mi><mn>5</mn></msub><annotation encoding="application/x-tex">H_5</annotation></semantics></math>.
+The intersection hypothesis is rejected by the Bonferroni test if
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>p</mi><mn>3</mn></msub><mo>≤</mo><mn>0.5</mn><mi>α</mi></mrow><annotation encoding="application/x-tex">p_3\leq 0.5\alpha</annotation></semantics></math>
+or
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>p</mi><mn>5</mn></msub><mo>≤</mo><mn>0.5</mn><mi>α</mi></mrow><annotation encoding="application/x-tex">p_5\leq 0.5\alpha</annotation></semantics></math>.
+In addition to these conditions, the Simes test can also reject the
+intersection hypothesis if both
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>p</mi><mn>3</mn></msub><annotation encoding="application/x-tex">p_3</annotation></semantics></math>
+and
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>p</mi><mn>5</mn></msub><annotation encoding="application/x-tex">p_5</annotation></semantics></math>
+are less than or equal to
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>α</mi><annotation encoding="application/x-tex">\alpha</annotation></semantics></math>.
+In order to control the Type I error for the Simes test, a
+distributional requirement is needed, which is called
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>M</mi><mi>T</mi><msub><mi>P</mi><mn>2</mn></msub></mrow><annotation encoding="application/x-tex">MTP_2</annotation></semantics></math><span class="citation">(Sarkar 1998)</span>. In this case, it means that
+the correlation between test statistics for
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>H</mi><mn>3</mn></msub><annotation encoding="application/x-tex">H_3</annotation></semantics></math>
+and
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>H</mi><mn>5</mn></msub><annotation encoding="application/x-tex">H_5</annotation></semantics></math>
+should be non-negative.</p>
 <p>To illustrate the possibility of using mixed tests in this example,
 we keep parametric tests for primary hypotheses and apply Simes tests
 for secondary hypotheses. There are two sets of secondary hypotheses:
-<span class="math inline">\(H_3\)</span> and <span class="math inline">\(H_5\)</span> for the secondary hypotheses for the
-low dose versus control, and <span class="math inline">\(H_4\)</span>
-and <span class="math inline">\(H_6\)</span> for the secondary
-hypotheses for the high dose versus control. It is believed that the
-correlation between test statistics for <span class="math inline">\(H_3\)</span> and <span class="math inline">\(H_5\)</span> is non-negative and it is the same
-case for <span class="math inline">\(H_4\)</span> and <span class="math inline">\(H_6\)</span>. Thus one can apply Simes tests to
-<span class="math inline">\(H_3\)</span> and <span class="math inline">\(H_5\)</span>, and separately to <span class="math inline">\(H_4\)</span> and <span class="math inline">\(H_6\)</span>. Note that this is different from
-applying Simes tests to all <span class="math inline">\(H_3\ldots,H_6\)</span> which requires a stronger
-<span class="math inline">\(MTP_2\)</span> condition.</p>
-<p>To implement this procedure, we create three subgroups: one for <span class="math inline">\(H_1\)</span> and <span class="math inline">\(H_2\)</span>, one for <span class="math inline">\(H_3\)</span> and <span class="math inline">\(H_5\)</span>, and one for <span class="math inline">\(H_4\)</span> and <span class="math inline">\(H_6\)</span>. For the first subgroup of
-hypotheses, we apply the parametric tests; for the second and the third
-subgroups, we apply separate Simes tests. Assume the correlation is 0.5
-between test statistics for primary hypotheses. The procedure rejects
-<span class="math inline">\(H_1\)</span>, <span class="math inline">\(H_2\)</span>, <span class="math inline">\(H_4\)</span>, <span class="math inline">\(H_6\)</span>, and <span class="math inline">\(H_3\)</span>. Compared to the results of only
-using parametric tests for primary hypotheses (and Bonferroni tests for
-secondary hypotheses), <span class="math inline">\(H_3\)</span>, <span class="math inline">\(H_4\)</span> and <span class="math inline">\(H_6\)</span> are the additional hypotheses
-rejected because of using Simes tests, showing the power improvement of
-using Simes tests.</p>
-<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>H</mi><mn>3</mn></msub><annotation encoding="application/x-tex">H_3</annotation></semantics></math>
+and
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>H</mi><mn>5</mn></msub><annotation encoding="application/x-tex">H_5</annotation></semantics></math>
+for the secondary hypotheses for the low dose versus control, and
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>H</mi><mn>4</mn></msub><annotation encoding="application/x-tex">H_4</annotation></semantics></math>
+and
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>H</mi><mn>6</mn></msub><annotation encoding="application/x-tex">H_6</annotation></semantics></math>
+for the secondary hypotheses for the high dose versus control. It is
+believed that the correlation between test statistics for
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>H</mi><mn>3</mn></msub><annotation encoding="application/x-tex">H_3</annotation></semantics></math>
+and
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>H</mi><mn>5</mn></msub><annotation encoding="application/x-tex">H_5</annotation></semantics></math>
+is non-negative and it is the same case for
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>H</mi><mn>4</mn></msub><annotation encoding="application/x-tex">H_4</annotation></semantics></math>
+and
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>H</mi><mn>6</mn></msub><annotation encoding="application/x-tex">H_6</annotation></semantics></math>.
+Thus one can apply Simes tests to
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>H</mi><mn>3</mn></msub><annotation encoding="application/x-tex">H_3</annotation></semantics></math>
+and
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>H</mi><mn>5</mn></msub><annotation encoding="application/x-tex">H_5</annotation></semantics></math>,
+and separately to
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>H</mi><mn>4</mn></msub><annotation encoding="application/x-tex">H_4</annotation></semantics></math>
+and
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>H</mi><mn>6</mn></msub><annotation encoding="application/x-tex">H_6</annotation></semantics></math>.
+Note that this is different from applying Simes tests to all
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>H</mi><mn>3</mn></msub><mi>…</mi><mo>,</mo><msub><mi>H</mi><mn>6</mn></msub></mrow><annotation encoding="application/x-tex">H_3\ldots,H_6</annotation></semantics></math>
+which requires a stronger
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>M</mi><mi>T</mi><msub><mi>P</mi><mn>2</mn></msub></mrow><annotation encoding="application/x-tex">MTP_2</annotation></semantics></math>
+condition.</p>
+<p>To implement this procedure, we create three subgroups: one for
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>H</mi><mn>1</mn></msub><annotation encoding="application/x-tex">H_1</annotation></semantics></math>
+and
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>H</mi><mn>2</mn></msub><annotation encoding="application/x-tex">H_2</annotation></semantics></math>,
+one for
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>H</mi><mn>3</mn></msub><annotation encoding="application/x-tex">H_3</annotation></semantics></math>
+and
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>H</mi><mn>5</mn></msub><annotation encoding="application/x-tex">H_5</annotation></semantics></math>,
+and one for
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>H</mi><mn>4</mn></msub><annotation encoding="application/x-tex">H_4</annotation></semantics></math>
+and
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>H</mi><mn>6</mn></msub><annotation encoding="application/x-tex">H_6</annotation></semantics></math>.
+For the first subgroup of hypotheses, we apply the parametric tests; for
+the second and the third subgroups, we apply separate Simes tests.
+Assume the correlation is 0.5 between test statistics for primary
+hypotheses. The procedure rejects
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>H</mi><mn>1</mn></msub><annotation encoding="application/x-tex">H_1</annotation></semantics></math>,
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>H</mi><mn>2</mn></msub><annotation encoding="application/x-tex">H_2</annotation></semantics></math>,
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>H</mi><mn>4</mn></msub><annotation encoding="application/x-tex">H_4</annotation></semantics></math>,
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>H</mi><mn>6</mn></msub><annotation encoding="application/x-tex">H_6</annotation></semantics></math>,
+and
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>H</mi><mn>3</mn></msub><annotation encoding="application/x-tex">H_3</annotation></semantics></math>.
+Compared to the results of only using parametric tests for primary
+hypotheses (and Bonferroni tests for secondary hypotheses),
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>H</mi><mn>3</mn></msub><annotation encoding="application/x-tex">H_3</annotation></semantics></math>,
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>H</mi><mn>4</mn></msub><annotation encoding="application/x-tex">H_4</annotation></semantics></math>
+and
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>H</mi><mn>6</mn></msub><annotation encoding="application/x-tex">H_6</annotation></semantics></math>
+are the additional hypotheses rejected because of using Simes tests,
+showing the power improvement of using Simes tests.</p>
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">test_results_parametric_simes</span> <span class="op">&lt;-</span></span>
 <span>  <span class="fu"><a href="../reference/graph_test_closure.html">graph_test_closure</a></span><span class="op">(</span></span>
 <span>    <span class="va">g</span>,</span>
@@ -429,13 +540,11 @@ using Simes tests.</p>
 <span></span>
 <span><span class="va">test_results_parametric_simes</span><span class="op">$</span><span class="va">outputs</span><span class="op">$</span><span class="va">adjusted_p</span></span>
 <span><span class="co">#&gt;         H1         H2         H3         H4         H5         H6 </span></span>
-<span><span class="co">#&gt; 0.02413846 0.02413846 0.02480008 0.02480000 0.10000000 0.02480008</span></span></code></pre></div>
-<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">test_results_parametric_simes</span><span class="op">$</span><span class="va">outputs</span><span class="op">$</span><span class="va">rejected</span></span>
+<span><span class="co">#&gt; 0.02413846 0.02413846 0.02480008 0.02480000 0.10000000 0.02480008</span></span>
+<span><span class="va">test_results_parametric_simes</span><span class="op">$</span><span class="va">outputs</span><span class="op">$</span><span class="va">rejected</span></span>
 <span><span class="co">#&gt;    H1    H2    H3    H4    H5    H6 </span></span>
-<span><span class="co">#&gt;  TRUE  TRUE  TRUE  TRUE FALSE  TRUE</span></span></code></pre></div>
-<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span></span>
+<span><span class="co">#&gt;  TRUE  TRUE  TRUE  TRUE FALSE  TRUE</span></span>
+<span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">test_results_parametric_simes</span><span class="op">$</span><span class="va">test_values</span><span class="op">$</span><span class="va">results</span><span class="op">)</span></span>
 <span><span class="co">#&gt;   Intersection Hypothesis       Test      p      c_value Weight Alpha</span></span>
 <span><span class="co">#&gt; 1       111111         H1 parametric 0.0150 1.0782936582    0.5 0.025</span></span>
@@ -478,17 +587,20 @@ the better. Assume that the proportions are 0.181 for the low and the
 high doses, and 0.3 for control. Using the equal randomization among the
 three treatment groups, the clinical trial team chooses a total sample
 size of 600 with 200 per group. This leads to a marginal power of 80%
-for <span class="math inline">\(H_1\)</span> and <span class="math inline">\(H_2\)</span>, respectively, using the two-sample
-test for difference in proportions with unpooled variance each at
-one-sided significance level 0.025. In this calculation, we use the
-marginal power to combine the information from the treatment effect, any
-nuisance parameter, and sample sizes for each hypothesis. Note that the
-significance level used for the marginal power should be the same as
-<code>alpha</code> which is used in the power calculation as the
-significance level for the FWER control. In addition, the marginal power
-has a one-to-one relationship with the noncentrality parameter, which is
-illustrated below.</p>
-<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
+for
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>H</mi><mn>1</mn></msub><annotation encoding="application/x-tex">H_1</annotation></semantics></math>
+and
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>H</mi><mn>2</mn></msub><annotation encoding="application/x-tex">H_2</annotation></semantics></math>,
+respectively, using the two-sample test for difference in proportions
+with unpooled variance each at one-sided significance level 0.025. In
+this calculation, we use the marginal power to combine the information
+from the treatment effect, any nuisance parameter, and sample sizes for
+each hypothesis. Note that the significance level used for the marginal
+power should be the same as <code>alpha</code> which is used in the
+power calculation as the significance level for the FWER control. In
+addition, the marginal power has a one-to-one relationship with the
+noncentrality parameter, which is illustrated below.</p>
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">alpha</span> <span class="op">&lt;-</span> <span class="fl">0.025</span></span>
 <span><span class="va">prop</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.3</span>, <span class="fl">0.181</span>, <span class="fl">0.181</span><span class="op">)</span></span>
 <span><span class="va">sample_size</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="fl">200</span>, <span class="fl">3</span><span class="op">)</span></span>
@@ -527,11 +639,19 @@ and 5 for control. Also assume that the mean change from baseline for
 SE2 is the reduction of 8 and 9, respectively for the low and the high
 doses, and 6 for control. Further assume a known common standard
 deviation of 10. Given the sample size of 200 per treatment group, the
-marginal power is 71% and 90% for <span class="math inline">\(H_3\)</span> and <span class="math inline">\(H_4\)</span>, respectively and 52% and 85% for
-<span class="math inline">\(H_5\)</span> and <span class="math inline">\(H_6\)</span>, respectively using the two-sample
-<span class="math inline">\(z\)</span>-test for the difference in means
-each at the one-sided significance level 0.025.</p>
-<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
+marginal power is 71% and 90% for
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>H</mi><mn>3</mn></msub><annotation encoding="application/x-tex">H_3</annotation></semantics></math>
+and
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>H</mi><mn>4</mn></msub><annotation encoding="application/x-tex">H_4</annotation></semantics></math>,
+respectively and 52% and 85% for
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>H</mi><mn>5</mn></msub><annotation encoding="application/x-tex">H_5</annotation></semantics></math>
+and
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>H</mi><mn>6</mn></msub><annotation encoding="application/x-tex">H_6</annotation></semantics></math>,
+respectively using the two-sample
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>z</mi><annotation encoding="application/x-tex">z</annotation></semantics></math>-test
+for the difference in means each at the one-sided significance level
+0.025.</p>
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">mean_change_se1</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">5</span>, <span class="fl">7.5</span>, <span class="fl">8.25</span><span class="op">)</span></span>
 <span><span class="va">sd</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="fl">10</span>, <span class="fl">3</span><span class="op">)</span></span>
 <span><span class="va">variance</span> <span class="op">&lt;-</span> <span class="va">sd</span><span class="op">[</span><span class="op">-</span><span class="fl">1</span><span class="op">]</span><span class="op">^</span><span class="fl">2</span> <span class="op">/</span> <span class="va">sample_size</span><span class="op">[</span><span class="op">-</span><span class="fl">1</span><span class="op">]</span> <span class="op">+</span> <span class="va">sd</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span><span class="op">^</span><span class="fl">2</span> <span class="op">/</span> <span class="va">sample_size</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span></span>
@@ -550,9 +670,8 @@ each at the one-sided significance level 0.025.</p>
 <span><span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">marginal_power_se1</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"H3"</span>, <span class="st">"H4"</span><span class="op">)</span></span>
 <span><span class="va">marginal_power_se1</span></span>
 <span><span class="co">#&gt;        H3        H4 </span></span>
-<span><span class="co">#&gt; 0.7054139 0.9014809</span></span></code></pre></div>
-<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span></span>
+<span><span class="co">#&gt; 0.7054139 0.9014809</span></span>
+<span></span>
 <span><span class="va">mean_change_se2</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">6</span>, <span class="fl">8</span>, <span class="fl">9</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">noncentrality_parameter_se2</span> <span class="op">&lt;-</span></span>
@@ -578,29 +697,52 @@ each at the one-sided significance level 0.025.</p>
 about the joint distribution of test statistics. In this example, we
 assume that they follow a multivariate normal distribution which means
 they’re defined by the noncentrality parameters above and the
-correlation matrix <span class="math inline">\(R\)</span>. To obtain the
-correlations, it is helpful to understand that there are two types of
-correlations in this example. The correlation between two dose-control
-comparisons for the same endpoint and the correlation between endpoints.
-The former correlation can be calculated as a function of sample size.
-For example, the correlation between test statistics for <span class="math inline">\(H_1\)</span> and <span class="math inline">\(H_2\)</span> is <span class="math inline">\(\rho_{12}=\left(\frac{n_1}{n_1+n_0}\right)^{1/2}\left(\frac{n_2}{n_3+n_0}\right)^{1/2}\)</span>.
+correlation matrix
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>R</mi><annotation encoding="application/x-tex">R</annotation></semantics></math>.
+To obtain the correlations, it is helpful to understand that there are
+two types of correlations in this example. The correlation between two
+dose-control comparisons for the same endpoint and the correlation
+between endpoints. The former correlation can be calculated as a
+function of sample size. For example, the correlation between test
+statistics for
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>H</mi><mn>1</mn></msub><annotation encoding="application/x-tex">H_1</annotation></semantics></math>
+and
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>H</mi><mn>2</mn></msub><annotation encoding="application/x-tex">H_2</annotation></semantics></math>
+is
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>ρ</mi><mn>12</mn></msub><mo>=</mo><msup><mrow><mo stretchy="true" form="prefix">(</mo><mfrac><msub><mi>n</mi><mn>1</mn></msub><mrow><msub><mi>n</mi><mn>1</mn></msub><mo>+</mo><msub><mi>n</mi><mn>0</mn></msub></mrow></mfrac><mo stretchy="true" form="postfix">)</mo></mrow><mrow><mn>1</mn><mi>/</mi><mn>2</mn></mrow></msup><msup><mrow><mo stretchy="true" form="prefix">(</mo><mfrac><msub><mi>n</mi><mn>2</mn></msub><mrow><msub><mi>n</mi><mn>3</mn></msub><mo>+</mo><msub><mi>n</mi><mn>0</mn></msub></mrow></mfrac><mo stretchy="true" form="postfix">)</mo></mrow><mrow><mn>1</mn><mi>/</mi><mn>2</mn></mrow></msup></mrow><annotation encoding="application/x-tex">\rho_{12}=\left(\frac{n_1}{n_1+n_0}\right)^{1/2}\left(\frac{n_2}{n_3+n_0}\right)^{1/2}</annotation></semantics></math>.
 Under the equal randomization, this correlation is 0.5. The correlation
-between test statistics for <span class="math inline">\(H_3\)</span> and
-<span class="math inline">\(H_4\)</span> and for <span class="math inline">\(H_5\)</span> and <span class="math inline">\(H_6\)</span> is the same as the above. On the
-other hand, the correlation between endpoints for the same dose-control
-comparison is often estimated based on prior knowledge or from previous
-trials. Without the information, we assume it to be <span class="math inline">\(\rho_{13}=\rho_{15}=\rho_{24}=\rho_{26}=\rho_{35}=\rho_{46}=0.5\)</span>.
+between test statistics for
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>H</mi><mn>3</mn></msub><annotation encoding="application/x-tex">H_3</annotation></semantics></math>
+and
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>H</mi><mn>4</mn></msub><annotation encoding="application/x-tex">H_4</annotation></semantics></math>
+and for
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>H</mi><mn>5</mn></msub><annotation encoding="application/x-tex">H_5</annotation></semantics></math>
+and
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>H</mi><mn>6</mn></msub><annotation encoding="application/x-tex">H_6</annotation></semantics></math>
+is the same as the above. On the other hand, the correlation between
+endpoints for the same dose-control comparison is often estimated based
+on prior knowledge or from previous trials. Without the information, we
+assume it to be
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>ρ</mi><mn>13</mn></msub><mo>=</mo><msub><mi>ρ</mi><mn>15</mn></msub><mo>=</mo><msub><mi>ρ</mi><mn>24</mn></msub><mo>=</mo><msub><mi>ρ</mi><mn>26</mn></msub><mo>=</mo><msub><mi>ρ</mi><mn>35</mn></msub><mo>=</mo><msub><mi>ρ</mi><mn>46</mn></msub><mo>=</mo><mn>0.5</mn></mrow><annotation encoding="application/x-tex">\rho_{13}=\rho_{15}=\rho_{24}=\rho_{26}=\rho_{35}=\rho_{46}=0.5</annotation></semantics></math>.
 In practice, one could set this correlation as a parameter and try
 multiple values to assess the sensitivity of this assumption. Regarding
-the correlation between test statistics for <span class="math inline">\(H_1\)</span> and <span class="math inline">\(H_4
-(H_6)\)</span> and for <span class="math inline">\(H_2\)</span> and
-<span class="math inline">\(H_3 (H_5)\)</span>, they are even more
-difficult to estimate. Here we use a simple product rule, which means
-that this correlation is a product of correlations of the two previously
-assumed correlations. For example, <span class="math inline">\(\rho_{14}=\rho_{12}*\rho_{24}\)</span> and <span class="math inline">\(\rho_{23}=\rho_{12}*\rho_{13}\)</span>. In
-practice, further assumptions may be made and tested, instead of using
-the product rule.</p>
-<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
+the correlation between test statistics for
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>H</mi><mn>1</mn></msub><annotation encoding="application/x-tex">H_1</annotation></semantics></math>
+and
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>H</mi><mn>4</mn></msub><mrow><mo stretchy="true" form="prefix">(</mo><msub><mi>H</mi><mn>6</mn></msub><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">H_4 (H_6)</annotation></semantics></math>
+and for
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>H</mi><mn>2</mn></msub><annotation encoding="application/x-tex">H_2</annotation></semantics></math>
+and
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>H</mi><mn>3</mn></msub><mrow><mo stretchy="true" form="prefix">(</mo><msub><mi>H</mi><mn>5</mn></msub><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">H_3 (H_5)</annotation></semantics></math>,
+they are even more difficult to estimate. Here we use a simple product
+rule, which means that this correlation is a product of correlations of
+the two previously assumed correlations. For example,
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>ρ</mi><mn>14</mn></msub><mo>=</mo><msub><mi>ρ</mi><mn>12</mn></msub><mo>*</mo><msub><mi>ρ</mi><mn>24</mn></msub></mrow><annotation encoding="application/x-tex">\rho_{14}=\rho_{12}*\rho_{24}</annotation></semantics></math>
+and
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>ρ</mi><mn>23</mn></msub><mo>=</mo><msub><mi>ρ</mi><mn>12</mn></msub><mo>*</mo><msub><mi>ρ</mi><mn>13</mn></msub></mrow><annotation encoding="application/x-tex">\rho_{23}=\rho_{12}*\rho_{13}</annotation></semantics></math>.
+In practice, further assumptions may be made and tested, instead of
+using the product rule.</p>
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">corr</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">matrix</a></span><span class="op">(</span><span class="fl">0</span>, nrow <span class="op">=</span> <span class="fl">6</span>, ncol <span class="op">=</span> <span class="fl">6</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">corr</span><span class="op">[</span><span class="fl">1</span>, <span class="fl">2</span><span class="op">]</span> <span class="op">&lt;-</span></span>
@@ -652,7 +794,7 @@ probability to reject all hypotheses These are the default outputs from
 the <code>graph_calculate_power</code> function. In addition, an user
 could customize success criteria to define other versions of
 “power”.</p>
-<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">success_fns</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
 <span>  <span class="co"># Probability to reject H1</span></span>
 <span>  H1 <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="va">x</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span>,</span>
@@ -685,16 +827,18 @@ and the random seed 1234. There are three procedures to compare: the
 Bonferroni-based procedure, the procedure using parametric tests for
 primary hypotheses, and the procedure using parametric tests for primary
 hypotheses and Simes tests for two sets of secondary hypotheses
-separately. The local power for hypotheses <span class="math inline">\(H_1, \ldots, H_6\)</span> is - 0.760, 0.752,
-0.510, 0.665, 0.391, and 0.625, respectively using the Bonferroni-based
-procedure, - 0.764, 0.756, 0.511, 0.668, 0.392, and 0.628, respectively
-using the procedure using parametric tests for primary hypotheses, -
-0.764, 0.757, 0.521, 0.673, 0.402, and 0.633, respectively using the
-procedure using parametric tests for primary hypotheses and Simes tests
-for two sets of secondary hypotheses separately. Note that the local
-power is improved for all hypotheses after parametric tests and Simes
-tests being applied over the Bonferroni-based procedure.</p>
-<div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
+separately. The local power for hypotheses
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>H</mi><mn>1</mn></msub><mo>,</mo><mi>…</mi><mo>,</mo><msub><mi>H</mi><mn>6</mn></msub></mrow><annotation encoding="application/x-tex">H_1, \ldots, H_6</annotation></semantics></math>
+is - 0.760, 0.752, 0.510, 0.665, 0.391, and 0.625, respectively using
+the Bonferroni-based procedure, - 0.764, 0.756, 0.511, 0.668, 0.392, and
+0.628, respectively using the procedure using parametric tests for
+primary hypotheses, - 0.764, 0.757, 0.521, 0.673, 0.402, and 0.633,
+respectively using the procedure using parametric tests for primary
+hypotheses and Simes tests for two sets of secondary hypotheses
+separately. Note that the local power is improved for all hypotheses
+after parametric tests and Simes tests being applied over the
+Bonferroni-based procedure.</p>
+<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">1234</span><span class="op">)</span></span>
 <span><span class="va">power_bonferroni</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/graph_calculate_power.html">graph_calculate_power</a></span><span class="op">(</span></span>
 <span>  <span class="va">g</span>,</span>
@@ -711,9 +855,8 @@ tests being applied over the Bonferroni-based procedure.</p>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/Round.html" class="external-link">round</a></span><span class="op">(</span><span class="va">power_bonferroni</span><span class="op">$</span><span class="va">power</span><span class="op">$</span><span class="va">power_local</span>, <span class="fl">3</span><span class="op">)</span></span>
 <span><span class="co">#&gt;    H1    H2    H3    H4    H5    H6 </span></span>
-<span><span class="co">#&gt; 0.760 0.752 0.510 0.665 0.391 0.625</span></span></code></pre></div>
-<div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span></span>
+<span><span class="co">#&gt; 0.760 0.752 0.510 0.665 0.391 0.625</span></span>
+<span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">1234</span><span class="op">)</span></span>
 <span><span class="va">power_parametric</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/graph_calculate_power.html">graph_calculate_power</a></span><span class="op">(</span></span>
 <span>  <span class="va">g</span>,</span>
@@ -733,9 +876,8 @@ tests being applied over the Bonferroni-based procedure.</p>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/Round.html" class="external-link">round</a></span><span class="op">(</span><span class="va">power_parametric</span><span class="op">$</span><span class="va">power</span><span class="op">$</span><span class="va">power_local</span>, <span class="fl">3</span><span class="op">)</span></span>
 <span><span class="co">#&gt;    H1    H2    H3    H4    H5    H6 </span></span>
-<span><span class="co">#&gt; 0.764 0.756 0.511 0.668 0.392 0.628</span></span></code></pre></div>
-<div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span></span>
+<span><span class="co">#&gt; 0.764 0.756 0.511 0.668 0.392 0.628</span></span>
+<span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">1234</span><span class="op">)</span></span>
 <span><span class="va">power_parametric_simes</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/graph_calculate_power.html">graph_calculate_power</a></span><span class="op">(</span></span>
 <span>  <span class="va">g</span>,</span>
@@ -763,7 +905,7 @@ allow flexible printing functions, a user can change the following: -
 The indented space with the default setting of <code>indent = 2</code> -
 The precision of numeric values (i.e., the number of decimal places)
 with the default setting of <code>precision = 6</code></p>
-<div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">1234</span><span class="op">)</span></span>
 <span><span class="va">power_verbose_output_parametric_simes</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/graph_calculate_power.html">graph_calculate_power</a></span><span class="op">(</span></span>
 <span>  <span class="va">g</span>,</span>
@@ -804,9 +946,8 @@ with the default setting of <code>precision = 6</code></p>
 <span><span class="co">#&gt;  [7,] 0.0297658510</span></span>
 <span><span class="co">#&gt;  [8,] 0.1097032475</span></span>
 <span><span class="co">#&gt;  [9,] 0.0620564532</span></span>
-<span><span class="co">#&gt; [10,] 0.0114581872</span></span></code></pre></div>
-<div class="sourceCode" id="cb23"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span></span>
+<span><span class="co">#&gt; [10,] 0.0114581872</span></span>
+<span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">power_verbose_output_parametric_simes</span>,</span>
 <span>  indent <span class="op">=</span> <span class="fl">4</span>,</span>
 <span>  precision <span class="op">=</span> <span class="fl">6</span></span>
@@ -939,7 +1080,7 @@ Procedures.”</span> <em>Biometrical Journal</em> 59 (5): 918–31. <a href="ht
 </div>
 </div>
 </div>
-  </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
+  </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside>
 </div>
 
@@ -950,15 +1091,15 @@ Procedures.”</span> <em>Biometrical Journal</em> 59 (5): 918–31. <a href="ht
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.9.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.0.</p>
 </div>
 
     </footer>
 </div>
 
-  
 
-  
+
+
 
   </body>
 </html>
