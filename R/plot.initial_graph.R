@@ -131,7 +131,7 @@ plot.initial_graph <- function(x,
                                eps = NULL,
                                background_color = "white",
                                margins = c(0, 0, 0, 0)) {
-  oldpar <- par("bg", "mar")
+  oldpar <- graphics::par("bg", "mar")
   on.exit(suppressWarnings(par(oldpar)))
 
   if (length(v_palette) != 2) {
