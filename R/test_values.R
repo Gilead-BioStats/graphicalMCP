@@ -1,4 +1,9 @@
-#' Tests for an intersection hypothesis
+#' Organize outputs for testing an intersection hypothesis
+#'
+#' @description
+#' An intersection hypothesis can be tested by a mixture of test types including
+#'   Bonferroni, parametric and Simes tests. This function organize outputs of
+#'   testing and prepare them for `graph_report`.
 #'
 #' @inheritParams graph_test_closure
 #' @inheritParams graph_create
