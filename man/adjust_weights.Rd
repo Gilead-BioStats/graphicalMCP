@@ -107,7 +107,7 @@ weighting_strategy <- graph_generate_weights(g)
 matrix_intersections <- weighting_strategy[, seq_len(num_hyps)]
 matrix_weights <- weighting_strategy[, -seq_len(num_hyps)]
 
-graphicalMCP:::adjust_weights_simes(
+adjust_weights_simes(
   matrix_weights = matrix_weights,
   p = p,
   test_groups = list(1:4)

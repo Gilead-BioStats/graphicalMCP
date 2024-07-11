@@ -38,19 +38,6 @@
 #'   for weighted parametric multiple test procedures.
 #'   \emph{Biometrical Journal}, 59(5), 918-931.
 #'
-#' @examples
-#' alpha <- 0.025
-#' hypotheses <- c(H1 = 0.5, H2 = 0.5, H3 = 0, H4 = 0)
-#' p <- c(0.018, 0.01, 0.105, 0.006)
-#'
-#' graphicalMCP:::test_values_bonferroni(p, hypotheses, alpha)
-#' graphicalMCP:::test_values_parametric(
-#'   p,
-#'   hypotheses,
-#'   alpha,
-#'   test_corr = diag(4)
-#' )
-#' graphicalMCP:::test_values_simes(p, hypotheses, alpha)
 test_values_bonferroni <- function(p, hypotheses, alpha, intersection = NA) {
   if (length(p) == 0) {
     NULL

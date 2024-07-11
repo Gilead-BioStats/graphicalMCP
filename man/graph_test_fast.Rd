@@ -36,30 +36,6 @@ These functions performs similarly to \code{\link[=graph_test_closure]{graph_tes
 For example, generating weights and calculating adjusted weights can be done
 only once. Vectorization has been applied where possible.
 }
-\examples{
-set.seed(1234)
-alpha <- 0.025
-p <- c(0.018, 0.01, 0.105, 0.006)
-num_hyps <- length(p)
-g <- bonferroni_holm(rep(1 / 4, 4))
-weighting_strategy <- graph_generate_weights(g)
-
-matrix_intersections <- weighting_strategy[, seq_len(num_hyps), drop = FALSE]
-adjusted_weights <-
-  weighting_strategy[, -seq_len(num_hyps), drop = FALSE]
-
-graphicalMCP:::graph_test_closure_fast(
-  p,
-  alpha,
-  adjusted_weights,
-  matrix_intersections
-)
-graphicalMCP:::graph_test_shortcut_fast(
-  p,
-  alpha,
-  adjusted_weights
-)
-}
 \seealso{
 \itemize{
 \item \code{\link[=graph_test_closure]{graph_test_closure()}} for closed graphical multiple comparison

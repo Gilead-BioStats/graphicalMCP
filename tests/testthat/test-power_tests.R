@@ -10,13 +10,13 @@ test_that("vectorized testing matches standard testing (single-group)", {
 
   groups1 <- list(seq_len(m))
 
-  gw_compact_simes <- graphicalMCP:::adjust_weights_simes(
+  gw_compact_simes <- adjust_weights_simes(
     gw_weights,
     p,
     groups1
   )
 
-  gw_compact_parametric <- graphicalMCP:::adjust_weights_parametric(
+  gw_compact_parametric <- adjust_weights_parametric(
     gw_weights,
     gw_h,
     diag(m),
@@ -73,13 +73,13 @@ test_that("vectorized testing matches standard testing (multi-group)", {
   simes_groups_reduce <- list(1:2)
   para_groups <- list(5:m)
 
-  adjusted_weights_simes <- graphicalMCP:::adjust_weights_simes(
+  adjusted_weights_simes <- adjust_weights_simes(
     gw_weights[, unlist(simes_groups)],
     p[unlist(simes_groups)],
     simes_groups_reduce
   )
 
-  adjusted_weights_para <- graphicalMCP:::adjust_weights_parametric(
+  adjusted_weights_para <- adjust_weights_parametric(
     gw_weights,
     gw_h,
     diag(m),

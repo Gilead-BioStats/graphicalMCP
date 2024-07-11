@@ -180,12 +180,12 @@ inter_h <- gw[, seq_len(m)]
 gw_bonf <- ifelse(inter_h, gw[, seq_len(m) + m], NA)
 
 gw_para <-
-  graphicalMCP:::adjust_weights_parametric(gw_bonf, diag(m), .05, list(1:m))
+  adjust_weights_parametric(gw_bonf, diag(m), .05, list(1:m))
 
 p <- runif(m, .0001, .03)
 sim_corr <- diag(m)
 
-gw_simes <- graphicalMCP:::adjust_weights_simes(gw_bonf, p, list(1:m))
+gw_simes <- adjust_weights_simes(gw_bonf, p, list(1:m))
 groups <- list(1:floor(m / 2), (floor(m / 2) + 1):m)
 
 h <- as.integer(rep(0, m))
@@ -219,7 +219,7 @@ simes_bench <- bench::mark(
     graphicalMCP:::graph_test_closure_fast(
       p,
       .05,
-      graphicalMCP:::adjust_weights_simes(gw_bonf, p, list(1:m)),
+      adjust_weights_simes(gw_bonf, p, list(1:m)),
       inter_h
     ),
   `gMCP::gMCP` =
