@@ -16,18 +16,12 @@
 #'   hypothesis testing problems. Note when parametric tests are used, only
 #'   one-sided tests are supported.
 #' @param hypotheses A numeric vector of hypothesis weights. Must be a vector of
-#'   values between 0 & 1 (inclusive). The length should match the length of
-#'   `p`. The sum of hypothesis weights should not exceed 1.
-#' @param p (Optional) A numeric vector of p-values (unadjusted, raw), whose
-#'   values should be between 0 & 1. The length should match the length of
-#'   `hypotheses`.
+#'   values between 0 & 1 (inclusive). The sum of hypothesis weights should not
+#'   exceed 1.
 #' @param test_corr (Optional) A numeric matrix of correlations between test
 #'   statistics, which is needed to perform parametric tests using
 #'   [adjust_weights_parametric()]. The number of rows and columns of
 #'   this correlation matrix should match the length of `p`.
-#' @param test_groups (Optional) A list of numeric vectors specifying hypotheses
-#'   to test together. Grouping is needed to correctly perform Simes and
-#'   parametric tests.
 #' @param maxpts (Optional) An integer scalar for the maximum number of function
 #'   values, which is needed to perform parametric tests using the
 #'   `mvtnorm::GenzBretz` algorithm. The default is 25000.

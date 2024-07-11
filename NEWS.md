@@ -36,3 +36,8 @@
 
 * Updated documentation according to issue #84
 * Resubmission for first CRAN release
+
+# graphicalMCP 0.2.5
+
+* Updated adjust_weights_parametric_util.Rd
+* Resubmission for first CRAN release

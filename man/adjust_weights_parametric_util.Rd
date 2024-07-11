@@ -28,8 +28,8 @@ solve_c_parametric(
 \item{x}{The root to solve for with \code{stats::uniroot()}.}
 
 \item{hypotheses}{A numeric vector of hypothesis weights. Must be a vector of
-values between 0 & 1 (inclusive). The length should match the length of
-\code{p}. The sum of hypothesis weights should not exceed 1.}
+values between 0 & 1 (inclusive). The sum of hypothesis weights should not
+exceed 1.}
 
 \item{test_corr}{(Optional) A numeric matrix of correlations between test
 statistics, which is needed to perform parametric tests using
@@ -53,14 +53,6 @@ algorithm. The default is 1e-6.}
 \item{releps}{(Optional) A numeric scalar for the relative error tolerance
 as double, which is needed to perform parametric tests using the
 \code{mvtnorm::GenzBretz} algorithm. The default is 0.}
-
-\item{p}{(Optional) A numeric vector of p-values (unadjusted, raw), whose
-values should be between 0 & 1. The length should match the length of
-\code{hypotheses}.}
-
-\item{test_groups}{(Optional) A list of numeric vectors specifying hypotheses
-to test together. Grouping is needed to correctly perform Simes and
-parametric tests.}
 }
 \value{
 \itemize{

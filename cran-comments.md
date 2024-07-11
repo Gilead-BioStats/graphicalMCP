@@ -1,3 +1,14 @@
+# Version 0.2.5
+
+- This is the fifth submission to CRAN.
+  + Updated adjust_weights_parametric_util.Rd
+  + There is one note regarding the spelling of "al", "et", "Bretz", "MCPs" and
+    "familywise". This is to confirm that they are correct.
+
+## R CMD check results
+
+0 errors | 0 warnings | 0 notes
+
 # Version 0.2.4
 
 - This is the fourth submission to CRAN.
