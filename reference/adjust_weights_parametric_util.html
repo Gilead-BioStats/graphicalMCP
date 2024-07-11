@@ -25,7 +25,7 @@ Note that one-sided tests are required for parametric tests.
 
     <a class="navbar-brand me-2" href="../index.html">graphicalMCP</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.4</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.5</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -58,7 +58,7 @@ Note that one-sided tests are required for parametric tests.
 <div class="row">
   <main id="main" class="col-md-9"><div class="page-header">
       <img src="../logo.png" class="logo" alt=""><h1>Calculate adjusted hypothesis weights for parametric tests</h1>
-      <small class="dont-index">Source: <a href="https://github.com/Gilead-BioStats/graphicalMCP/blob/v0.2.4/R/adjust_weights_parametric_util.R" class="external-link"><code>R/adjust_weights_parametric_util.R</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/Gilead-BioStats/graphicalMCP/blob/main/R/adjust_weights_parametric_util.R" class="external-link"><code>R/adjust_weights_parametric_util.R</code></a></small>
       <div class="d-none name"><code>adjust_weights_parametric_util.Rd</code></div>
     </div>
 
@@ -103,8 +103,8 @@ hypothesis. Additional adjustment is needed for parametric tests:</p><ul><li><p>
 
 <dt id="arg-hypotheses">hypotheses<a class="anchor" aria-label="anchor" href="#arg-hypotheses"></a></dt>
 <dd><p>A numeric vector of hypothesis weights. Must be a vector of
-values between 0 &amp; 1 (inclusive). The length should match the length of
-<code>p</code>. The sum of hypothesis weights should not exceed 1.</p></dd>
+values between 0 &amp; 1 (inclusive). The sum of hypothesis weights should not
+exceed 1.</p></dd>
 
 
 <dt id="arg-test-corr">test_corr<a class="anchor" aria-label="anchor" href="#arg-test-corr"></a></dt>
@@ -138,18 +138,6 @@ algorithm. The default is 1e-6.</p></dd>
 <dd><p>(Optional) A numeric scalar for the relative error tolerance
 as double, which is needed to perform parametric tests using the
 <code><a href="https://rdrr.io/pkg/mvtnorm/man/algorithms.html" class="external-link">mvtnorm::GenzBretz</a></code> algorithm. The default is 0.</p></dd>
-
-
-<dt id="arg-p">p<a class="anchor" aria-label="anchor" href="#arg-p"></a></dt>
-<dd><p>(Optional) A numeric vector of p-values (unadjusted, raw), whose
-values should be between 0 &amp; 1. The length should match the length of
-<code>hypotheses</code>.</p></dd>
-
-
-<dt id="arg-test-groups">test_groups<a class="anchor" aria-label="anchor" href="#arg-test-groups"></a></dt>
-<dd><p>(Optional) A list of numeric vectors specifying hypotheses
-to test together. Grouping is needed to correctly perform Simes and
-parametric tests.</p></dd>
 
 </dl></div>
     <div class="section level2">
