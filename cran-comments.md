@@ -1,3 +1,14 @@
+# Version 0.2.4
+
+- This is the fourth submission to CRAN.
+  + Updated documentation according to issue #84
+  + There is one note regarding the spelling of "MCPs" and "familywise". This is
+    to confirm that they are correct.
+
+## R CMD check results
+
+0 errors | 0 warnings | 0 notes
+
 # Version 0.2.3
 
 - This is the third submission to CRAN.

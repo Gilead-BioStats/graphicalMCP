@@ -17,7 +17,8 @@ to to display.}
 \item{indent}{An integer scalar indicating how many spaces to indent results.}
 }
 \value{
-NULL, after printing the initial graph.
+An object x of class \code{initial_graph}, after printing the initial
+graph.
 }
 \description{
 A printed \code{initial_graph} displays a header stating "Initial graph",

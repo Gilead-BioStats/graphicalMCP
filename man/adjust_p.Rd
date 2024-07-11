@@ -29,7 +29,7 @@ values between 0 & 1 (inclusive). The length should match the length of
 
 \item{test_corr}{(Optional) A numeric matrix of correlations between test
 statistics, which is needed to perform parametric tests using
-\code{graphicalMCP:::adjust_p_parametric()}. The number of rows and columns of
+\code{\link[=adjust_p_parametric]{adjust_p_parametric()}}. The number of rows and columns of
 this correlation matrix should match the length of \code{p}.}
 
 \item{maxpts}{(Optional) An integer scalar for the maximum number of function
@@ -54,31 +54,28 @@ The intersection hypothesis can be rejected if its adjusted p-value is less
 than or equal to \eqn{\alpha}. Currently, there are three test types
 supported:
 \itemize{
-\item Bonferroni tests for \code{graphicalMCP:::adjust_p_bonferroni()},
-\item Parametric tests for \code{graphicalMCP:::adjust_p_parametric()},
+\item Bonferroni tests for \code{\link[=adjust_p_bonferroni]{adjust_p_bonferroni()}},
+\item Parametric tests for \code{\link[=adjust_p_parametric]{adjust_p_parametric()}},
 \itemize{
 \item Note that one-sided tests are required for parametric tests.
 }
-\item Simes tests for \code{graphicalMCP:::adjust_p_simes()}.
+\item Simes tests for \code{\link[=adjust_p_simes]{adjust_p_simes()}}.
 }
 }
 \examples{
-set.seed(1234)
-
 hypotheses <- c(H1 = 0.5, H2 = 0.25, H3 = 0.25)
 p <- c(0.019, 0.025, 0.05)
-
-# Bonferroni test
-graphicalMCP:::adjust_p_bonferroni(p, hypotheses)
-
-# Simes test
-graphicalMCP:::adjust_p_simes(p, hypotheses)
-
-# Parametric test
+adjust_p_bonferroni(p, hypotheses)
+set.seed(1234)
+hypotheses <- c(H1 = 0.5, H2 = 0.25, H3 = 0.25)
+p <- c(0.019, 0.025, 0.05)
 # Using the `mvtnorm::GenzBretz` algorithm
 corr <- matrix(0.5, nrow = 3, ncol = 3)
 diag(corr) <- 1
-graphicalMCP:::adjust_p_parametric(p, hypotheses, corr)
+adjust_p_parametric(p, hypotheses, corr)
+hypotheses <- c(H1 = 0.5, H2 = 0.25, H3 = 0.25)
+p <- c(0.019, 0.025, 0.05)
+adjust_p_simes(p, hypotheses)
 }
 \references{
 Bretz, F., Maurer, W., Brannath, W., and Posch, M. (2009). A graphical
@@ -93,8 +90,7 @@ for weighted parametric multiple test procedures.
 \emph{Biometrical Journal}, 59(5), 918-931.
 }
 \seealso{
-\code{graphicalMCP:::adjust_weights_parametric()} for adjusted hypothesis
-weights using parametric tests, \code{graphicalMCP:::adjust_weights_simes()}
-for adjusted hypothesis weights using Simes tests.
+\code{\link[=adjust_weights_parametric]{adjust_weights_parametric()}} for adjusted hypothesis weights using
+parametric tests, \code{\link[=adjust_weights_simes]{adjust_weights_simes()}} for adjusted hypothesis weights
+using Simes tests.
 }
-\keyword{internal}

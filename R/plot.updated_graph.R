@@ -8,7 +8,8 @@
 #' @param x An object of class `updated_graph` to plot.
 #' @inheritDotParams plot.initial_graph
 #'
-#' @return NULL, after plotting the updated graph.
+#' @return An object x of class `updated_graph`, after plotting the updated
+#'   graph.
 #'
 #' @seealso
 #'   [plot.initial_graph()] for the plot method for the initial graph.
@@ -49,4 +50,6 @@ plot.updated_graph <- function(x, ...) {
   v_colors[x$deleted] <- "#cccccc"
 
   plot(x$updated_graph, vertex.color = v_colors, ...)
+
+  invisible(x)
 }

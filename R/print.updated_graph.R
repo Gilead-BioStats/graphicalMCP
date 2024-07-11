@@ -11,7 +11,8 @@
 #'   to to display.
 #' @param indent An integer scalar indicating how many spaces to indent results.
 #'
-#' @return NULL, after printing the updated graph.
+#' @return An object x of the class `updated_graph`, after printing the updated
+#'   graph.
 #'
 #' @seealso
 #'   [print.initial_graph()] for the print method for the initial graph.
@@ -107,4 +108,6 @@ print.updated_graph <- function(x, ..., precision = 6, indent = 2) {
     )
     cat("\n")
   }
+
+  invisible(x)
 }

@@ -13,8 +13,6 @@
 #'
 #' @keywords internal
 #'
-#' @examples
-#' graphicalMCP:::edge_pairs(bonferroni_holm(hypotheses = rep(1 / 3, 3)))
 edge_pairs <- function(graph) {
   g_names <- names(graph$hypotheses)
 

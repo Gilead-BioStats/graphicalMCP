@@ -101,7 +101,9 @@
 #'   H3 = c(0, 1, 0, 0),
 #'   H4 = c(1, 0, 0, 0)
 #' )
-#' # g <- graph_create(hypotheses, transitions)
+#' \dontrun{
+#' g <- graph_create(hypotheses, transitions)
+#' }
 #'
 #' # When names are not specified, hypotheses are numbered sequentially as
 #' # H1, H2, ...

@@ -4,7 +4,7 @@
 \alias{test_values_bonferroni}
 \alias{test_values_parametric}
 \alias{test_values_simes}
-\title{Tests for an intersection hypothesis}
+\title{Organize outputs for testing an intersection hypothesis}
 \usage{
 test_values_bonferroni(p, hypotheses, alpha, intersection = NA)
 
@@ -63,21 +63,9 @@ the hypothesis weight times \eqn{\alpha}.
 }
 }
 \description{
-Tests for an intersection hypothesis
-}
-\examples{
-alpha <- 0.025
-hypotheses <- c(H1 = 0.5, H2 = 0.5, H3 = 0, H4 = 0)
-p <- c(0.018, 0.01, 0.105, 0.006)
-
-graphicalMCP:::test_values_bonferroni(p, hypotheses, alpha)
-graphicalMCP:::test_values_parametric(
-  p,
-  hypotheses,
-  alpha,
-  test_corr = diag(4)
-)
-graphicalMCP:::test_values_simes(p, hypotheses, alpha)
+An intersection hypothesis can be tested by a mixture of test types including
+Bonferroni, parametric and Simes tests. This function organize outputs of
+testing and prepare them for \code{graph_report}.
 }
 \references{
 Bretz, F., Maurer, W., Brannath, W., and Posch, M. (2009). A graphical
